@@ -1,5 +1,6 @@
 import * as $ from "jquery";
 import { SurveyModel, Question } from "survey-core";
+import "./datatables.scss";
 
 export class DataTables {
   constructor(
@@ -11,6 +12,8 @@ export class DataTables {
   render() {
     const tableNode = document.createElement("table");
     const columns = this.getColumns();
+
+    tableNode.className = "sa-datatables";
 
     $(tableNode).DataTable({
       columns: columns,

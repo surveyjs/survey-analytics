@@ -7,6 +7,8 @@ var rimraf = require("rimraf");
 var GenerateJsonPlugin = require("generate-json-webpack-plugin");
 var fs = require("fs");
 
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+
 var packageJson = require("./package.json");
 
 var banner = [
@@ -25,6 +27,14 @@ var dts_banner = [
 
 module.exports = function(options) {
   var packagePath = "./packages/";
+
+  var extractCSS = new ExtractTextPlugin({
+    filename:
+      packagePath +
+      (options.buildType === "prod"
+        ? "survey.analytics.min.css"
+        : "survey.analytics.css")
+  });
 
   var percentage_handler = function handler(percentage, msg) {
     if (0 === percentage) {
@@ -66,6 +76,28 @@ module.exports = function(options) {
               }
             }
           }
+        },
+        {
+          test: /\.scss$/,
+          use: extractCSS.extract({
+            fallback: "style-loader",
+            use: [
+              {
+                loader: "css-loader",
+                options: {
+                  sourceMap: true,
+                  minimize: options.buildType === "prod",
+                  importLoaders: true
+                }
+              },
+              {
+                loader: "sass-loader",
+                options: {
+                  sourceMap: true
+                }
+              }
+            ]
+          })
         }
       ]
     },
@@ -101,7 +133,8 @@ module.exports = function(options) {
       }),
       new webpack.BannerPlugin({
         banner: banner
-      })
+      }),
+      extractCSS
     ],
     devtool: "inline-source-map"
   };

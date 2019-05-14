@@ -30,7 +30,7 @@ xhr.onload = function() {
   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
   var surveyAnalyticsDataTables = new SurveyAnalytics.DataTables(
-    document.getElementById("tableContainer"),
+    document.getElementById("dataTablesContainer"),
     survey,
     result.Data
   );
