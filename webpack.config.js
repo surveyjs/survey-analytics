@@ -80,6 +80,12 @@ module.exports = function(options) {
       umdNamedDefine: true
     },
     externals: {
+      jquery: {
+        root: "jQuery",
+        commonjs2: "jquery",
+        commonjs: "jquery",
+        amd: "jquery"
+      },
       "survey-core": {
         root: "Survey",
         commonjs2: "Survey",

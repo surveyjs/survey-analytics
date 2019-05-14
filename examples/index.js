@@ -1,7 +1,7 @@
 var surveyId = "0edf84f9-14f7-4944-a857-e327e1dceebb";
 var accessKey = "dc736a6f384d48f9b71a1dd94d9d5c24";
 
-var survey = Survey.SurveyModel({
+var survey = new Survey.SurveyModel({
   pages: [
     {
       name: "page1",
@@ -29,13 +29,12 @@ xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhr.onload = function() {
   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
-  var data = result.map(function(r) {
-    return JSON.parse(r || "{}");
-  });
-
   var surveyAnalyticsDataTables = new SurveyAnalytics.DataTables(
     document.getElementById("tableContainer"),
     survey,
-    data
+    result.Data
   );
+
+  surveyAnalyticsDataTables.render();
 };
+xhr.send();
