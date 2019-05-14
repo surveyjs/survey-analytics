@@ -152,10 +152,15 @@ xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhr.onload = function() {
   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
+  var options = {
+    buttons: ["copy", "csv", "print"]
+  };
+
   var surveyAnalyticsDataTables = new SurveyAnalytics.DataTables(
     document.getElementById("dataTablesContainer"),
     survey,
-    result.Data
+    result.Data,
+    options
   );
 
   surveyAnalyticsDataTables.render();

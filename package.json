@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@types/datatables.net": "1.10.17",
+    "@types/datatables.net-buttons": "^1.4.2",
     "@types/jest": "23.3.3",
     "@types/jquery": "3.3.29",
     "@types/lodash": "4.14.121",
@@ -57,6 +58,7 @@
     "jest": "23.6.0",
     "jquery": "3.4.1",
     "live-server": "1.2.0",
+    "node-sass": "4.9.2",
     "node-uuid": "1.4.7",
     "replace-in-file": "3.1.1",
     "rimraf": "2.5.4",
@@ -68,7 +70,6 @@
     "typescript": "3.4.3",
     "url-loader": "0.6.2",
     "val-loader": "0.5.0",
-    "webpack": "2.2.1",
-    "node-sass": "4.9.2"
+    "webpack": "2.2.1"
   }
 }

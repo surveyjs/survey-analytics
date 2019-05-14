@@ -2,25 +2,36 @@ import * as $ from "jquery";
 import { SurveyModel, Question } from "survey-core";
 import "./datatables.scss";
 
+interface DataTablesOptions {
+  buttons:
+    | boolean
+    | string[]
+    | DataTables.ButtonsSettings
+    | DataTables.ButtonSettings[];
+}
+
 export class DataTables {
   constructor(
     private targetNode: HTMLElement,
     private survey: SurveyModel,
-    private data: Array<Object>
+    private data: Array<Object>,
+    private options: DataTablesOptions
   ) {}
 
   render() {
     const tableNode = document.createElement("table");
     const columns = this.getColumns();
+    const options = this.options;
 
+    this.targetNode.appendChild(tableNode);
     tableNode.className = "sa-datatables";
 
     $(tableNode).DataTable({
       columns: columns,
-      data: this.data
+      data: this.data,
+      dom: "Bfrtip",
+      buttons: (this.options && this.options.buttons) || []
     });
-
-    this.targetNode.appendChild(tableNode);
   }
 
   getColumns(): Array<Object> {
