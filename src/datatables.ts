@@ -8,6 +8,8 @@ interface DataTablesOptions {
     | string[]
     | DataTables.ButtonsSettings
     | DataTables.ButtonSettings[];
+
+  dom: string;
 }
 
 export class DataTables {
@@ -29,8 +31,8 @@ export class DataTables {
     $(tableNode).DataTable({
       columns: columns,
       data: this.data,
-      dom: "Bfrtip",
-      buttons: (this.options && this.options.buttons) || []
+      dom: (options && options.dom) || "Bfrtip",
+      buttons: (options && options.buttons) || []
     });
   }
 
