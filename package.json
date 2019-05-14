@@ -1,0 +1,70 @@
+{
+  "scripts": {
+    "start": "npm run build_dev && live-server --port=7777",
+    "serve": "live-server --port=7777",
+    "test": "jest",
+    "testDev": "jest --watch",
+    "release": "standard-version --message \"Release: %s\" ",
+    "build_dev": "webpack --env.buildType dev",
+    "build_prod": "npm run build_dev && webpack --env.buildType prod"
+  },
+  "version": "1.0.79",
+  "name": "survey-analytics",
+  "description": "SurveyJS analytics Library.",
+  "mainFile": "survey.analytics.js",
+  "files": [
+    "survey.analytics.d.ts",
+    "survey.analytics.js",
+    "survey.analytics.min.js"
+  ],
+  "typings": "survey.analytics.d.ts",
+  "private": true,
+  "keywords": [
+    "Survey",
+    "JavaScript",
+    "PDF",
+    "Library",
+    "SurveyJS",
+    "Analytics"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/surveyjs/survey-analytics.git"
+  },
+  "homepage": "https://surveyjs.io/",
+  "license": "Commercial",
+  "dependencies": {
+    "survey-core": "^1.0.81"
+  },
+  "devDependencies": {
+    "@types/datatables.net": "^1.10.17",
+    "@types/jest": "^23.3.3",
+    "@types/jquery": "^3.3.29",
+    "@types/lodash": "4.14.121",
+    "@types/node": "7.0.4",
+    "ajv": "4.11.2",
+    "css-loader": "0.26.1",
+    "datatables.net": "^1.10.19",
+    "datatables.net-dt": "^1.10.19",
+    "dotenv": "4.0.0",
+    "dts-bundle": "0.7.2",
+    "extract-text-webpack-plugin": "^2.0.0-rc.3",
+    "generate-json-webpack-plugin": "0.2.1",
+    "github-api": "^3.0.0",
+    "html-loader": "0.4.4",
+    "jest": "^23.6.0",
+    "jquery": "^3.4.1",
+    "live-server": "1.2.0",
+    "node-uuid": "1.4.7",
+    "replace-in-file": "^3.1.1",
+    "rimraf": "2.5.4",
+    "standard-version": "4.0.0",
+    "style-loader": "0.13.1",
+    "ts-jest": "^23.10.3",
+    "ts-loader": "2.3.4",
+    "typescript": "3.4.3",
+    "url-loader": "^0.6.2",
+    "val-loader": "0.5.0",
+    "webpack": "2.2.1"
+  }
+}
