@@ -26,12 +26,12 @@ export class DataTables {
     const options = this.options;
 
     this.targetNode.appendChild(tableNode);
-    tableNode.className = "sa-datatables";
+    tableNode.className = "sa-datatable display dataTable";
 
     $(tableNode).DataTable({
       columns: columns,
       data: this.data,
-      dom: (options && options.dom) || "Bfrtip",
+      dom: (options && options.dom) || "Blfrtip",
       buttons: (options && options.buttons) || []
     });
   }
