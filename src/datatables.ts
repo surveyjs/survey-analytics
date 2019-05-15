@@ -10,6 +10,10 @@ interface DataTablesOptions {
     | DataTables.ButtonSettings[];
 
   dom: string;
+
+  orderFixed: Array<(number | string)> | Array<Array<(number | string)>> | object;
+
+  rowGroup: boolean | DataTables.RowGroupSettings;
 }
 
 export class DataTables {
@@ -32,7 +36,9 @@ export class DataTables {
       columns: columns,
       data: this.data,
       dom: (options && options.dom) || "Blfrtip",
-      buttons: (options && options.buttons) || []
+      buttons: (options && options.buttons) || [],
+      orderFixed: (options && options.orderFixed) || null,
+      rowGroup: (options && options.rowGroup) || null
     });
   }
 

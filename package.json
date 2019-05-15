@@ -36,6 +36,7 @@
   "homepage": "https://surveyjs.io/",
   "license": "Commercial",
   "dependencies": {
+    "@types/datatables.net-rowgroup": "^1.0.1",
     "survey-core": "^1.0.81"
   },
   "devDependencies": {

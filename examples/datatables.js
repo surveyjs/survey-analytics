@@ -153,7 +153,13 @@ xhr.onload = function() {
   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
   var options = {
-    buttons: ["copy", "csv", "print"]
+    buttons: ["copy", "csv", "print"],
+    orderFixed: {
+      pre: [1, "asc"]
+    },
+    rowGroup: {
+      dataSrc: "satisfaction"
+    }
   };
 
   var surveyAnalyticsDataTables = new SurveyAnalytics.DataTables(
