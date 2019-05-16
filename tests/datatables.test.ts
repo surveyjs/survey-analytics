@@ -20,7 +20,8 @@ test("getColumns method", () => {
   const dataTables = new DataTables(
     document.createElement("table"),
     survey,
-    []
+    [],
+    null
   );
 
   const columns = <any>dataTables.getColumns();
