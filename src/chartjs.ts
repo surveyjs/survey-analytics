@@ -10,22 +10,71 @@ export class ChartJS {
     private options?: Object
   ) {}
 
+  chartType = "horizontalBar";
+
   render() {
     const chartNodeContainer = document.createElement("div");
+    const toolbarNodeContainer = document.createElement("div");
     const chartNode = <HTMLCanvasElement>document.createElement("canvas");
 
-    chartNode.id = "myChart";
-
+    chartNodeContainer.appendChild(toolbarNodeContainer);
     chartNodeContainer.appendChild(chartNode);
     this.targetNode.appendChild(chartNodeContainer);
 
+    let myChart = this.getChartJs(chartNode, this.chartType);
+
+    this.createToolbar(toolbarNodeContainer, (e: any) => {
+      if (this.chartType !== e.target.value) {
+        myChart.destroy();
+        this.chartType = e.target.value;
+        myChart = this.getChartJs(chartNode, this.chartType);
+      }
+    });
+  }
+
+  private createToolbar(
+    container: HTMLDivElement,
+    changeHandler: (e: any) => void
+  ) {
+    const chartTypes = ["bar", "horizontalBar", "line", "pie", "doughnut"];
+    const select = document.createElement("select");
+    chartTypes.forEach(chartType => {
+      let option = document.createElement("option");
+      option.value = chartType;
+      option.text = chartType;
+      option.selected = this.chartType === chartType;
+      select.appendChild(option);
+    });
+    select.onchange = changeHandler;
+    container.appendChild(select);
+  }
+
+  private getChartJs(chartNode: HTMLCanvasElement, chartType: string): Chart {
     const ctx = <CanvasRenderingContext2D>chartNode.getContext("2d");
     const question: QuestionSelectBase = <any>(
       this.survey.getQuestionByName(this.questionName)
     );
     const values = this.getValues();
-    const myChart = new Chart(ctx, {
-      type: "doughnut",
+
+    let options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales:
+        ["pie", "doughnut"].indexOf(chartType) !== -1
+          ? undefined
+          : {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }
+              ]
+            }
+    };
+
+    return new Chart(ctx, {
+      type: chartType,
       data: {
         labels: this.getLabels(values),
         datasets: [
@@ -36,19 +85,7 @@ export class ChartJS {
           }
         ]
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true
-              }
-            }
-          ]
-        }
-      }
+      options: options
     });
   }
 
