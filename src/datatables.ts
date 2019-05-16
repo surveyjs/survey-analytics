@@ -11,7 +11,7 @@ interface DataTablesOptions {
 
   dom: string;
 
-  orderFixed: Array<(number | string)> | Array<Array<(number | string)>> | object;
+  orderFixed: Array<number | string> | Array<Array<number | string>> | object;
 
   rowGroup: boolean | DataTables.RowGroupSettings;
 }
@@ -27,7 +27,16 @@ export class DataTables {
   render() {
     const tableNode = document.createElement("table");
     const columns = this.getColumns();
-    const options = this.options;
+    const options = this.options || {
+      buttons: ["copy", "csv", "print"],
+      orderFixed: {
+        pre: [1, "asc"]
+      },
+      rowGroup: {
+        dataSrc: "satisfaction"
+      },
+      dom: "Blfrtip"
+    };
 
     this.targetNode.appendChild(tableNode);
     tableNode.className = "sa-datatable display dataTable";
@@ -35,10 +44,10 @@ export class DataTables {
     $(tableNode).DataTable({
       columns: columns,
       data: this.data,
-      dom: (options && options.dom) || "Blfrtip",
-      buttons: (options && options.buttons) || [],
-      orderFixed: (options && options.orderFixed) || null,
-      rowGroup: (options && options.rowGroup) || null
+      dom: options.dom,
+      buttons: options.buttons,
+      orderFixed: options.orderFixed,
+      rowGroup: options.rowGroup
     });
   }
 

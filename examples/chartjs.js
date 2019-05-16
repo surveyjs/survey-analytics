@@ -153,14 +153,11 @@ xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhr.onload = function() {
   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
-  var options = {};
-
   var surveyAnalyticsChartJS = new SurveyAnalytics.ChartJS(
     document.getElementById("chartjsContainer"),
     survey,
     questionName,
-    result.Data,
-    options
+    result.Data
   );
 
   surveyAnalyticsChartJS.render();
