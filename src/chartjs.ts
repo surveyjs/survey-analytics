@@ -5,12 +5,22 @@ export class ChartJS {
   constructor(
     private targetNode: HTMLElement,
     private survey: SurveyModel,
-    private questionName: string,
+    public questionName: string,
     private data: Array<{ [index: string]: any }>,
     private options?: Object
   ) {}
 
+  private chart: Chart;
+
   chartType = "horizontalBar";
+
+  destroy() {
+    if (!!this.chart) {
+      this.chart.destroy();
+      this.chart = undefined;
+      this.targetNode.innerHTML = "";
+    }
+  }
 
   render() {
     const chartNodeContainer = document.createElement("div");
@@ -21,13 +31,13 @@ export class ChartJS {
     chartNodeContainer.appendChild(chartNode);
     this.targetNode.appendChild(chartNodeContainer);
 
-    let myChart = this.getChartJs(chartNode, this.chartType);
+    this.chart = this.getChartJs(chartNode, this.chartType);
 
     this.createToolbar(toolbarNodeContainer, (e: any) => {
       if (this.chartType !== e.target.value) {
-        myChart.destroy();
         this.chartType = e.target.value;
-        myChart = this.getChartJs(chartNode, this.chartType);
+        this.chart.destroy();
+        this.chart = this.getChartJs(chartNode, this.chartType);
       }
     });
   }

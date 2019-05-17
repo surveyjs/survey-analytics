@@ -62,7 +62,7 @@ export class DataTables {
                 createGroupingButton(datatableApi, columnsData[index])
               );
               thNode.prepend(
-                createSelectButton(datatableApi, index)
+                createSelectButton(datatableApi, index, columnsData[index])
               );
             }
           });
@@ -85,7 +85,8 @@ export class DataTables {
 
   createSelectButton = (
     datatableApi: DataTables.Api,
-    colIdx: number
+    colIdx: number,
+    columnName: string
   ): HTMLButtonElement => {
     const button = document.createElement("button");
     button.innerHTML = "Select Me";
@@ -93,7 +94,8 @@ export class DataTables {
       e.stopPropagation();
       (<any>datatableApi.columns()).deselect();
       (<any>datatableApi.column(colIdx)).select();
-    };    
+      !!this.onColumnSelected && this.onColumnSelected(columnName);
+    };
     return button;
   };
 
@@ -147,4 +149,6 @@ export class DataTables {
 
     return columns;
   }
+
+  public onColumnSelected: (dataName: string) => void;
 }

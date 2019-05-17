@@ -153,13 +153,6 @@ xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhr.onload = function() {
   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
-  var surveyAnalyticsChartJS = new SurveyAnalytics.ChartJS(
-    document.getElementById("chartjsContainer"),
-    survey,
-    questionName,
-    result.Data
-  );
-
   var data = result.Data.map(function(item) {
     survey.getAllQuestions().forEach(function(q) {
       if (!item[q.name]) {
@@ -169,13 +162,25 @@ xhr.onload = function() {
     return item;
   });
 
+  var surveyAnalyticsChartJS = new SurveyAnalytics.ChartJS(
+    document.getElementById("chartjsContainer"),
+    survey,
+    questionName,
+    result.Data
+  );
+
   var surveyAnalyticsDataTables = new SurveyAnalytics.DataTables(
     document.getElementById("dataTablesContainer"),
     survey,
     data
   );
 
-  surveyAnalyticsChartJS.render();
+  surveyAnalyticsDataTables.onColumnSelected = function(columnName) {
+    surveyAnalyticsChartJS.destroy();
+    surveyAnalyticsChartJS.questionName = columnName;
+    surveyAnalyticsChartJS.render();
+  };
+
   surveyAnalyticsDataTables.render();
 };
 xhr.send();
