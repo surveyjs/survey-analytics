@@ -1,17 +1,19 @@
-import { SurveyModel, QuestionSelectBase, ItemValue } from "survey-core";
+import { SurveyModel, QuestionSelectBase, ItemValue, QuestionMatrixModel } from "survey-core";
 import Chart from "chart.js";
+import { inherits } from 'util';
 
 export class ChartJS {
   constructor(
     private targetNode: HTMLElement,
-    private survey: SurveyModel,
+    protected survey: SurveyModel,
     public questionName: string,
-    private data: Array<{ [index: string]: any }>,
+    protected data: Array<{ [index: string]: any }>,
     private options?: Object
-  ) {}
+  ) { }
 
   private chart: Chart;
 
+  protected chartTypes = ["bar", "horizontalBar", "line", "pie", "doughnut"];
   chartType = "horizontalBar";
 
   destroy() {
@@ -46,17 +48,18 @@ export class ChartJS {
     container: HTMLDivElement,
     changeHandler: (e: any) => void
   ) {
-    const chartTypes = ["bar", "horizontalBar", "line", "pie", "doughnut"];
-    const select = document.createElement("select");
-    chartTypes.forEach(chartType => {
-      let option = document.createElement("option");
-      option.value = chartType;
-      option.text = chartType;
-      option.selected = this.chartType === chartType;
-      select.appendChild(option);
-    });
-    select.onchange = changeHandler;
-    container.appendChild(select);
+    if (this.chartTypes.length > 0) {
+      const select = document.createElement("select");
+      this.chartTypes.forEach(chartType => {
+        let option = document.createElement("option");
+        option.value = chartType;
+        option.text = chartType;
+        option.selected = this.chartType === chartType;
+        select.appendChild(option);
+      });
+      select.onchange = changeHandler;
+      container.appendChild(select);
+    }
   }
 
   private getChartJs(chartNode: HTMLCanvasElement, chartType: string): Chart {
@@ -66,37 +69,34 @@ export class ChartJS {
     );
     const values = this.getValues();
 
-    let options = {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales:
-        ["pie", "doughnut"].indexOf(chartType) !== -1
-          ? undefined
-          : {
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true
-                  }
-                }
-              ]
-            }
-    };
-
     return new Chart(ctx, {
       type: chartType,
       data: {
-        labels: this.getLabels(values),
-        datasets: [
-          {
-            label: question.title,
-            data: this.getData(values),
-            backgroundColor: values.map(_ => this.getRandomColor())
-          }
-        ]
+        labels: this.getLabels(),
+        datasets: this.getDatasets(values)
       },
-      options: options
+      options: this.getOptions()
     });
+  }
+
+  getOptions(): Chart.ChartOptions {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales:
+        ["pie", "doughnut"].indexOf(this.chartType) !== -1
+          ? undefined
+          : {
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true
+                }
+              }
+            ]
+          }
+    };
+
   }
 
   getRandomColor() {
@@ -107,25 +107,27 @@ export class ChartJS {
     return "rgba(" + color.join(", ") + ", 0.4)";
   }
 
-  getValues(): Array<any> {
+  valuesSource(): any[] {
     const question: QuestionSelectBase = <any>(
       this.survey.getQuestionByName(this.questionName)
     );
-    const values: Array<any> = question.choices.map(choice => choice.value);
+    return question.choices;
+  }
+
+  getValues(): Array<any> {
+    const values: Array<any> = this.valuesSource().map(choice => choice.value);
     return values;
   }
 
-  getLabels(values: Array<any>): Array<string> {
-    const question: QuestionSelectBase = <any>(
-      this.survey.getQuestionByName(this.questionName)
-    );
-    const labels: Array<string> = question.choices.map(choice =>
-      ItemValue.getTextOrHtmlByValue(question.choices, choice.value)
+  getLabels(): Array<string> {
+    const values: Array<any> = this.getValues();
+    const labels: Array<string> = this.valuesSource().map(choice =>
+      ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value)
     );
     return labels;
   }
 
-  getData(values: Array<any>): number[] {
+  getData(values: Array<any>): any[] {
     const statistics = values.map(v => 0);
     this.data.forEach(row => {
       const rowValue: any = row[this.questionName];
@@ -138,7 +140,7 @@ export class ChartJS {
           });
         } else {
           values.forEach((val: any, index: number) => {
-            if (rowValue === val) {
+            if (rowValue == val) {
               statistics[index]++;
             }
           });
@@ -147,4 +149,86 @@ export class ChartJS {
     });
     return statistics;
   }
+
+  getDatasets(values: Array<any>): any[] {
+    const question: QuestionMatrixModel = <any>(
+      this.survey.getQuestionByName(this.questionName)
+    );
+    return [
+      {
+        label: question.title,
+        data: this.getData(values),
+        backgroundColor: values.map(_ => this.getRandomColor())
+      }
+    ]
+  }
+
+}
+
+export class MatrixChartJS extends ChartJS {
+
+  constructor(
+    targetNode: HTMLElement,
+    survey: SurveyModel,
+    questionName: string,
+    data: Array<{ [index: string]: any }>,
+    options?: Object
+  ) {
+    super(targetNode, survey, questionName, data, options);
+    this.chartTypes = [];
+    this.chartType = "bar";
+  }
+
+  valuesSource(): any[] {
+    const question: QuestionMatrixModel = <any>(
+      this.survey.getQuestionByName(this.questionName)
+    );
+    return question.columns;
+  }
+
+  getLabels(): any[] {
+    return undefined;
+  }
+
+  getOptions() {
+    let options = super.getOptions();
+    options.scales = undefined;
+    // options.scales = {
+    //   xAxes: [{ stacked: true }],
+    //   yAxes: [{ stacked: true }]
+    // }
+    return options;
+  }
+
+  getData(values: Array<any>): any[] {
+    return undefined;
+  }
+
+  getDatasets(values: Array<any>): any[] {
+    const question: QuestionMatrixModel = <any>(
+      this.survey.getQuestionByName(this.questionName)
+    );
+    const datasets: Array<any> = question.rows.map(row => {
+      return {
+        label: ItemValue.getTextOrHtmlByValue(question.rows, row.value),
+        data: values.map(v => 0),
+        backgroundColor: this.getRandomColor()
+      }
+    });
+
+    this.data.forEach(rowData => {
+      const questionValue: any = rowData[this.questionName];
+      if (!!questionValue) {
+        question.rows.forEach((row: any, dsIndex: number) => {
+          values.forEach((val: any, index: number) => {
+            if (questionValue[row.value] == val) {
+              datasets[dsIndex].data[index]++;
+            }
+          });
+        });
+      }
+    });
+    return datasets;
+  }
+
 }
