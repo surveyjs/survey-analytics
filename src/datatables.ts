@@ -30,7 +30,8 @@ export class DataTables {
 
   render() {
     const tableNode = document.createElement("table");
-    const createButton = this.createGroupingButton;
+    const createGroupingButton = this.createGroupingButton;
+    const createSelectButton = this.createSelectButton;
 
     var columnsData: any = this.getColumns().map((c: any) => c.data);
 
@@ -41,8 +42,12 @@ export class DataTables {
       columns: this.getColumns(),
       // orderFixed: [[1, "asc"]],
       rowGroup: {
-        dataSrc: columnsData[0]
+        dataSrc: columnsData[0],
+        endRender: function(rows, group) {
+          return "Count: " + rows.data().count();
+        }
       },
+      select: "api",
       headerCallback: (thead, data, start, end, display) => {
         var datatableApi = $(tableNode)
           .dataTable()
@@ -53,7 +58,12 @@ export class DataTables {
             var thNode = $(this);
 
             if (thNode.has("button").length === 0) {
-              thNode.prepend(createButton(datatableApi, columnsData[index]));
+              thNode.prepend(
+                createGroupingButton(datatableApi, columnsData[index])
+              );
+              thNode.prepend(
+                createSelectButton(datatableApi, index)
+              );
             }
           });
       }
@@ -72,6 +82,20 @@ export class DataTables {
     // datatableApi.order.fixed({ pre: [[columnsData.indexOf(val), "asc"]] }).draw();
     // });
   }
+
+  createSelectButton = (
+    datatableApi: DataTables.Api,
+    colIdx: number
+  ): HTMLButtonElement => {
+    const button = document.createElement("button");
+    button.innerHTML = "Select Me";
+    button.onclick = e => {
+      e.stopPropagation();
+      (<any>datatableApi.columns()).deselect();
+      (<any>datatableApi.column(colIdx)).select();
+    };    
+    return button;
+  };
 
   createGroupingButton = (
     datatableApi: DataTables.Api,
@@ -93,10 +117,8 @@ export class DataTables {
       }
 
       datatableApi.rowGroup().enable(this.groupBy.length > 0);
-      if(this.groupBy.length > 0) {
-        datatableApi
-        .rowGroup()
-        .dataSrc(<any>this.groupBy);
+      if (this.groupBy.length > 0) {
+        datatableApi.rowGroup().dataSrc(<any>this.groupBy);
       }
       datatableApi.draw();
     };
