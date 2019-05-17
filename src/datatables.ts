@@ -14,6 +14,8 @@ interface DataTablesOptions {
   orderFixed: Array<number | string> | Array<Array<number | string>> | object;
 
   rowGroup: boolean | DataTables.RowGroupSettings;
+
+  headerCallback: DataTables.FunctionHeaderCallback;
 }
 
 export class DataTables {
@@ -26,29 +28,69 @@ export class DataTables {
 
   render() {
     const tableNode = document.createElement("table");
-    const columns = this.getColumns();
+    const createButton = this.createGroupingButton;
+
+    var columnsData: any = this.getColumns().map((c: any) => c.data);
+
     const options = this.options || {
       buttons: ["copy", "csv", "print"],
-      orderFixed: {
-        pre: [1, "asc"]
-      },
+      dom: "Blfrtip",
+      data: this.data,
+      columns: this.getColumns(),
+      // orderFixed: [[1, "asc"]],
       rowGroup: {
-        dataSrc: "satisfaction"
+        dataSrc: columnsData[0]
       },
-      dom: "Blfrtip"
+      headerCallback: (thead, data, start, end, display) => {
+        var datatableApi = $(tableNode)
+          .dataTable()
+          .api();
+        $(thead)
+          .children("th")
+          .each(function(index, node) {
+            var thNode = $(this);
+
+            if (thNode.has("button").length === 0) {
+              thNode.append(createButton(datatableApi, columnsData[index]));
+            }
+          });
+      }
     };
 
     this.targetNode.appendChild(tableNode);
     tableNode.className = "sa-datatable display dataTable";
 
-    $(tableNode).DataTable({
-      columns: columns,
-      data: this.data,
-      dom: options.dom,
-      buttons: options.buttons,
-      orderFixed: options.orderFixed,
-      rowGroup: options.rowGroup
-    });
+    const datatableApi = $(tableNode).DataTable(options);
+    datatableApi
+      .rowGroup()
+      .enable(false)
+      .draw();
+
+    // datatableApi.on("rowgroup-datasrc", function(e, dt, val) {
+    // datatableApi.order.fixed({ pre: [[columnsData.indexOf(val), "asc"]] }).draw();
+    // });
+  }
+
+  createGroupingButton(
+    datatableApi: DataTables.Api,
+    columnName: any
+  ): HTMLButtonElement {
+    const button = document.createElement("button");
+    button.innerHTML = "Group By Me";
+
+    button.onclick = e => {
+      e.stopPropagation();
+
+      datatableApi.rowGroup().enable();
+      datatableApi
+        .rowGroup()
+        .dataSrc(columnName)
+        .draw();
+      // datatableApi.rowGroup().enable();
+      // datatableApi.draw();
+    };
+
+    return button;
   }
 
   getColumns(): Array<Object> {

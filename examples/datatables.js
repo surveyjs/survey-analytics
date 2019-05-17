@@ -152,10 +152,19 @@ xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhr.onload = function() {
   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
+  var data = result.Data.map(function(item) {
+    survey.getAllQuestions().forEach(function(q) {
+      if (!item[q.name]) {
+        item[q.name] = q.name;
+      }
+    });
+    return item;
+  });
+
   var surveyAnalyticsDataTables = new SurveyAnalytics.DataTables(
     document.getElementById("dataTablesContainer"),
     survey,
-    result.Data
+    data
   );
 
   surveyAnalyticsDataTables.render();
