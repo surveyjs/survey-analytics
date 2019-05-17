@@ -26,6 +26,8 @@ export class DataTables {
     private options: DataTablesOptions
   ) {}
 
+  groupBy: Array<string> = [];
+
   render() {
     const tableNode = document.createElement("table");
     const createButton = this.createGroupingButton;
@@ -51,7 +53,7 @@ export class DataTables {
             var thNode = $(this);
 
             if (thNode.has("button").length === 0) {
-              thNode.append(createButton(datatableApi, columnsData[index]));
+              thNode.prepend(createButton(datatableApi, columnsData[index]));
             }
           });
       }
@@ -71,27 +73,36 @@ export class DataTables {
     // });
   }
 
-  createGroupingButton(
+  createGroupingButton = (
     datatableApi: DataTables.Api,
-    columnName: any
-  ): HTMLButtonElement {
+    columnName: string
+  ): HTMLButtonElement => {
     const button = document.createElement("button");
     button.innerHTML = "Group By Me";
 
     button.onclick = e => {
       e.stopPropagation();
 
-      datatableApi.rowGroup().enable();
-      datatableApi
+      const index = this.groupBy.indexOf(columnName);
+      if (index === -1) {
+        this.groupBy.push(columnName);
+        button.innerHTML = "Ungroup By Me";
+      } else {
+        button.innerHTML = "Group By Me";
+        this.groupBy.splice(index, 1);
+      }
+
+      datatableApi.rowGroup().enable(this.groupBy.length > 0);
+      if(this.groupBy.length > 0) {
+        datatableApi
         .rowGroup()
-        .dataSrc(columnName)
-        .draw();
-      // datatableApi.rowGroup().enable();
-      // datatableApi.draw();
+        .dataSrc(<any>this.groupBy);
+      }
+      datatableApi.draw();
     };
 
     return button;
-  }
+  };
 
   getColumns(): Array<Object> {
     const columns = this.survey.getAllQuestions().map(question => {
