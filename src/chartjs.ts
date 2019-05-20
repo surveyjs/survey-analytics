@@ -175,7 +175,6 @@ export class MatrixChartJS extends ChartJS {
     options?: Object
   ) {
     super(targetNode, survey, questionName, data, options);
-    this.chartTypes = [];
     this.chartType = "bar";
   }
 
@@ -187,7 +186,10 @@ export class MatrixChartJS extends ChartJS {
   }
 
   getLabels(): any[] {
-    return undefined;
+    const question: QuestionMatrixModel = <any>(
+      this.survey.getQuestionByName(this.questionName)
+    );
+    return question.rows.map(row => ItemValue.getTextOrHtmlByValue(question.rows, row.value));
   }
 
   getOptions() {
@@ -208,10 +210,10 @@ export class MatrixChartJS extends ChartJS {
     const question: QuestionMatrixModel = <any>(
       this.survey.getQuestionByName(this.questionName)
     );
-    const datasets: Array<any> = question.rows.map(row => {
+    const datasets: Array<any> = this.valuesSource().map(choice => {
       return {
-        label: ItemValue.getTextOrHtmlByValue(question.rows, row.value),
-        data: values.map(v => 0),
+        label: ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value),
+        data: question.rows.map(v => 0),
         backgroundColor: this.getRandomColor()
       }
     });
@@ -219,8 +221,8 @@ export class MatrixChartJS extends ChartJS {
     this.data.forEach(rowData => {
       const questionValue: any = rowData[this.questionName];
       if (!!questionValue) {
-        question.rows.forEach((row: any, dsIndex: number) => {
-          values.forEach((val: any, index: number) => {
+        question.rows.forEach((row: any, index: number) => {
+          values.forEach((val: any, dsIndex: number) => {
             if (questionValue[row.value] == val) {
               datasets[dsIndex].data[index]++;
             }
