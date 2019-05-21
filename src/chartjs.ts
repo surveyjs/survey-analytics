@@ -1,6 +1,12 @@
-import { SurveyModel, QuestionSelectBase, ItemValue, QuestionMatrixModel } from "survey-core";
+import {
+  SurveyModel,
+  QuestionSelectBase,
+  ItemValue,
+  QuestionMatrixModel
+} from "survey-core";
 import Chart from "chart.js";
-import { inherits } from 'util';
+import "chartjs-chart-radial-gauge";
+import { inherits } from "util";
 
 export class ChartJS {
   constructor(
@@ -9,7 +15,7 @@ export class ChartJS {
     public questionName: string,
     protected data: Array<{ [index: string]: any }>,
     private options?: Object
-  ) { }
+  ) {}
 
   private chart: Chart;
 
@@ -87,16 +93,15 @@ export class ChartJS {
         ["pie", "doughnut"].indexOf(this.chartType) !== -1
           ? undefined
           : {
-            yAxes: [
-              {
-                ticks: {
-                  beginAtZero: true
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true
+                  }
                 }
-              }
-            ]
-          }
+              ]
+            }
     };
-
   }
 
   getRandomColor() {
@@ -160,13 +165,11 @@ export class ChartJS {
         data: this.getData(values),
         backgroundColor: values.map(_ => this.getRandomColor())
       }
-    ]
+    ];
   }
-
 }
 
 export class MatrixChartJS extends ChartJS {
-
   constructor(
     targetNode: HTMLElement,
     survey: SurveyModel,
@@ -189,7 +192,9 @@ export class MatrixChartJS extends ChartJS {
     const question: QuestionMatrixModel = <any>(
       this.survey.getQuestionByName(this.questionName)
     );
-    return question.rows.map(row => ItemValue.getTextOrHtmlByValue(question.rows, row.value));
+    return question.rows.map(row =>
+      ItemValue.getTextOrHtmlByValue(question.rows, row.value)
+    );
   }
 
   getOptions() {
@@ -212,10 +217,13 @@ export class MatrixChartJS extends ChartJS {
     );
     const datasets: Array<any> = this.valuesSource().map(choice => {
       return {
-        label: ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value),
+        label: ItemValue.getTextOrHtmlByValue(
+          this.valuesSource(),
+          choice.value
+        ),
         data: question.rows.map(v => 0),
         backgroundColor: this.getRandomColor()
-      }
+      };
     });
 
     this.data.forEach(rowData => {
@@ -232,5 +240,57 @@ export class MatrixChartJS extends ChartJS {
     });
     return datasets;
   }
+}
 
+export class RadialGaugeChartJS extends ChartJS {
+  constructor(
+    targetNode: HTMLElement,
+    survey: SurveyModel,
+    questionName: string,
+    data: Array<{ [index: string]: any }>,
+    options?: Object
+  ) {
+    super(targetNode, survey, questionName, data, options);
+    this.chartType = "radialGauge";
+  }
+
+  getLabels(): any[] {
+    return [this.questionName];
+  }
+
+  getOptions() {
+    let options = super.getOptions();
+    options.scales = undefined;
+    return options;
+  }
+
+  getData(values: Array<any>): any[] {
+    return undefined;
+  }
+
+  getValues(): Array<any> {
+    return null;
+  }
+
+  getDatasets(values: Array<any>): any[] {
+    const datasets: Array<any> = [];
+
+    this.data.forEach(rowData => {
+      const questionValue: any = rowData[this.questionName];
+      if (!!questionValue) {
+        datasets.push(questionValue);
+      }
+    });
+
+    const result =
+      datasets.reduce((a, b) => {
+        return a + b;
+      }) / datasets.length;
+
+    return [
+      {
+        data: [result]
+      }
+    ];
+  }
 }

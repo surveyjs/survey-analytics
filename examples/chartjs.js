@@ -139,7 +139,7 @@ var survey = new Survey.SurveyModel({
     }
   ]
 });
-var questionName = "price to competitors";
+var questionName = "satisfaction";
 
 var xhr = new XMLHttpRequest();
 xhr.open(
@@ -153,7 +153,7 @@ xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhr.onload = function() {
   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
-  var surveyAnalyticsChartJS = new SurveyAnalytics.ChartJS(
+  var surveyAnalyticsChartJS = new SurveyAnalytics.RadialGaugeChartJS(
     document.getElementById("chartjsContainer"),
     survey,
     questionName,
