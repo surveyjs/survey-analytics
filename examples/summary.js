@@ -308,41 +308,49 @@ xhr.onload = function() {
     }
   ];
 
-  var normalizedData = data.map(function(item) {
-    survey.getAllQuestions().forEach(function(q) {
-      if (!item[q.name]) {
-        item[q.name] = "";
-      }
-    });
-    return item;
-  });
+  var visPanel = new SurveyAnalytics.VisualizationPanel(
+    document.getElementById("summaryContainer"),
+    survey,
+    survey.getAllQuestions(),
+    data
+  );
+  visPanel.render();
 
-  var model = {
-    questions: survey.getAllQuestions(),
-    survey: survey,
-    data: normalizedData
-  };
+  // var normalizedData = data.map(function(item) {
+  //   survey.getAllQuestions().forEach(function(q) {
+  //     if (!item[q.name]) {
+  //       item[q.name] = "";
+  //     }
+  //   });
+  //   return item;
+  // });
 
-  ko.applyBindings(model);
+  // var model = {
+  //   questions: survey.getAllQuestions(),
+  //   survey: survey,
+  //   data: normalizedData
+  // };
+
+  // ko.applyBindings(model);
 };
 xhr.send();
 
-ko.components.register("question-visualizer", {
-  viewModel: {
-    createViewModel: function(params, componentInfo) {
-      var itemElelemt = componentInfo.element.children[0];
-      var visualizers = SurveyAnalytics.VisualizationManager.getVisualizers(
-        params.question.getType()
-      );
-      var visualizer = new visualizers[0](
-        itemElelemt,
-        params.survey,
-        params.question.name,
-        params.data
-      );
-      visualizer.render();
-      return {};
-    }
-  },
-  template: "<div style='height: 120px; width: 50%;'></div>"
-});
+// ko.components.register("question-visualizer", {
+//   viewModel: {
+//     createViewModel: function(params, componentInfo) {
+//       var itemElelemt = componentInfo.element.children[0];
+//       var visualizers = SurveyAnalytics.VisualizationManager.getVisualizers(
+//         params.question.getType()
+//       );
+//       var visualizer = new visualizers[0](
+//         itemElelemt,
+//         params.survey,
+//         params.question.name,
+//         params.data
+//       );
+//       visualizer.render();
+//       return {};
+//     }
+//   },
+//   template: "<div style='height: 120px; width: 50%;'></div>"
+// });

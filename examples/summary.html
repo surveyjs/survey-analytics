@@ -27,15 +27,7 @@
   </head>
 
   <body>
-    <!-- ko foreach: questions -->
-    <div>
-      <div><h3 data-bind="text: title"></h3></div>
-      <question-visualizer
-        params="question: $data, survey: $parent.survey, data: $parent.data"
-        style="display: block; position:relative; height: 200px; width: 50%;"
-      ></question-visualizer>
-    </div>
-    <!-- /ko -->
+    <div id="summaryContainer"></div>
     <script src="./summary.js"></script>
   </body>
 </html>
