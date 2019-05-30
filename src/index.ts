@@ -1,3 +1,3 @@
 export * from "./datatables";
-export * from "./chartjs";
+export * from "./chartjs/index";
 export * from "./visualizationManager";
