@@ -44,4 +44,12 @@ export class VisualizerBase {
   render() {
     this.targetElement.innerHTML = "This question type is not vesualized yet";
   }
+
+  getRandomColor() {
+    let color = [];
+    for (let i = 0; i < 3; i++) {
+      color[i] = Math.floor(Math.random() * 255);
+    }
+    return "rgba(" + color.join(", ") + ", 0.4)";
+  }
 }

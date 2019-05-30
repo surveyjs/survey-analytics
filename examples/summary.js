@@ -181,13 +181,13 @@ ko.components.register("question-visualizer", {
       var visualizers = SurveyAnalytics.VisualizationManager.getVisualizers(
         params.question.getType()
       );
-      var surveyAnalyticsChartJS = new visualizers[0](
+      var visualizer = new visualizers[0](
         itemElelemt,
         params.survey,
         params.question.name,
         params.data
       );
-      surveyAnalyticsChartJS.render();
+      visualizer.render();
       return {};
     }
   },

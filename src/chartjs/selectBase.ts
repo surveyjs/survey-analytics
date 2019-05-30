@@ -105,14 +105,6 @@ export class ChartJS extends VisualizerBase {
     };
   }
 
-  getRandomColor() {
-    let color = [];
-    for (let i = 0; i < 3; i++) {
-      color[i] = Math.floor(Math.random() * 255);
-    }
-    return "rgba(" + color.join(", ") + ", 0.4)";
-  }
-
   valuesSource(): any[] {
     const question: QuestionSelectBase = <any>(
       this.survey.getQuestionByName(this.questionName)
@@ -174,6 +166,3 @@ VisualizationManager.registerVisualizer("checkbox", ChartJS);
 VisualizationManager.registerVisualizer("radiogroup", ChartJS);
 VisualizationManager.registerVisualizer("dropdown", ChartJS);
 VisualizationManager.registerVisualizer("imagepicker", ChartJS);
-
-
-
