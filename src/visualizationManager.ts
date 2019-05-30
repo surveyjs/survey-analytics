@@ -42,7 +42,7 @@ export class VisualizerBase {
   destroy() {}
 
   render() {
-    this.targetElement.innerHTML = "This question type is not vesualized yet";
+    this.targetElement.innerHTML = "This question type is not visualized yet";
   }
 
   getRandomColor() {
