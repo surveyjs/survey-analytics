@@ -6,16 +6,18 @@ import {
 } from "survey-core";
 import Chart from "chart.js";
 import "chartjs-chart-radial-gauge";
-import { inherits } from "util";
+import { VisualizationManager, VisualizerBase } from "./visualizationManager";
 
-export class ChartJS {
+export class ChartJS extends VisualizerBase {
   constructor(
     private targetNode: HTMLElement,
     protected survey: SurveyModel,
     public questionName: string,
     protected data: Array<{ [index: string]: any }>,
     private options?: Object
-  ) {}
+  ) {
+    super(targetNode, survey, questionName, data, options);
+  }
 
   private chart: Chart;
 
@@ -169,6 +171,11 @@ export class ChartJS {
   }
 }
 
+VisualizationManager.registerVisualizer("checkbox", ChartJS);
+VisualizationManager.registerVisualizer("radiogroup", ChartJS);
+VisualizationManager.registerVisualizer("dropdown", ChartJS);
+VisualizationManager.registerVisualizer("imagepicker", ChartJS);
+
 export class MatrixChartJS extends ChartJS {
   constructor(
     targetNode: HTMLElement,
@@ -242,6 +249,8 @@ export class MatrixChartJS extends ChartJS {
   }
 }
 
+VisualizationManager.registerVisualizer("matrix", MatrixChartJS);
+
 export class RadialGaugeChartJS extends ChartJS {
   constructor(
     targetNode: HTMLElement,
@@ -294,3 +303,5 @@ export class RadialGaugeChartJS extends ChartJS {
     ];
   }
 }
+
+VisualizationManager.registerVisualizer("rating", RadialGaugeChartJS);
