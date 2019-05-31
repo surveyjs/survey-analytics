@@ -25,16 +25,6 @@ export class VisualizationPanel {
       questionContainerElement.appendChild(vizualizerElement);
       this.targetElement.appendChild(questionContainerElement);
 
-      //   if (question.getType() === "paneldynamic") {
-      //     var visPanel = new VisualizationPanel(
-      //       document.getElementById("summaryContainer"),
-      //       survey,
-      //       (<any>question)["panels"][0].questions,
-      //       this.data
-      //     );
-      //     visPanel.render();
-      //   }
-
       this.renderQuestionVisualication(
         vizualizerElement,
         question,
