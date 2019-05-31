@@ -278,52 +278,48 @@ xhr.onload = function() {
 
   var data = result.Data;
 
-  data = [
-    {
-      relatives: [
-        {
-          relativeType: "father",
-          isalive: "Yes",
-          liveage: 17,
-          relativeillness: [
-            { illness: "High Blood Pressure", description: "22" }
-          ]
-        },
-        {
-          relativeType: "mother",
-          relativeillness: [
-            { illness: "Anesthesia Complications", description: "44" }
-          ],
-          isalive: "Yes",
-          liveage: 5
-        },
-        {
-          relativeType: "mother",
-          isalive: "No",
-          relativeillness: [{ illness: "Cancer", description: "213" }],
-          deceasedage: 16,
-          causeofdeathknown: "No"
-        }
-      ]
-    }
-  ];
+  result.Data.push({
+    relatives: [
+      {
+        relativeType: "father",
+        isalive: "Yes",
+        liveage: 17,
+        relativeillness: [{ illness: "High Blood Pressure", description: "22" }]
+      },
+      {
+        relativeType: "mother",
+        relativeillness: [
+          { illness: "Anesthesia Complications", description: "44" }
+        ],
+        isalive: "Yes",
+        liveage: 5
+      },
+      {
+        relativeType: "mother",
+        isalive: "No",
+        relativeillness: [{ illness: "Cancer", description: "213" }],
+        deceasedage: 16,
+        causeofdeathknown: "No"
+      }
+    ]
+  });
+
+  var normalizedData = data.map(function(item) {
+    survey.getAllQuestions().forEach(function(q) {
+      if (!item[q.name]) {
+        item[q.name] = "";
+      }
+    });
+    return item;
+  });
 
   var visPanel = new SurveyAnalytics.VisualizationPanel(
     document.getElementById("summaryContainer"),
     survey,
     survey.getAllQuestions(),
-    data
+    normalizedData
   );
   visPanel.render();
-
-  // var normalizedData = data.map(function(item) {
-  //   survey.getAllQuestions().forEach(function(q) {
-  //     if (!item[q.name]) {
-  //       item[q.name] = "";
-  //     }
-  //   });
-  //   return item;
-  // });
 
   // var model = {
   //   questions: survey.getAllQuestions(),

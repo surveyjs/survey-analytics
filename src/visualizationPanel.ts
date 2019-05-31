@@ -14,38 +14,32 @@ export class VisualizationPanel {
     const survey = this.survey;
     const questions = this.questions;
 
-    var normalizedData = this.data.map(function(item) {
-      questions.forEach(function(q) {
-        if (!item[q.name]) {
-          item[q.name] = "";
-        }
-      });
-      return item;
-    });
-
     questions.forEach(question => {
       let questionContainerElement = document.createElement("div");
       let titleElement = document.createElement("h3");
+      let vizualizerElement = document.createElement("div");
+
       titleElement.innerText = (<any>question)["title"];
 
       questionContainerElement.appendChild(titleElement);
+      questionContainerElement.appendChild(vizualizerElement);
       this.targetElement.appendChild(questionContainerElement);
 
-      if (question.getType() === "paneldynamic") {
-        var visPanel = new VisualizationPanel(
-          document.getElementById("summaryContainer"),
-          survey,
-          (<any>question)["panels"][0].questions,
-          normalizedData
-        );
-        visPanel.render();
-      }
+      //   if (question.getType() === "paneldynamic") {
+      //     var visPanel = new VisualizationPanel(
+      //       document.getElementById("summaryContainer"),
+      //       survey,
+      //       (<any>question)["panels"][0].questions,
+      //       this.data
+      //     );
+      //     visPanel.render();
+      //   }
 
       this.renderQuestionVisualication(
-        questionContainerElement,
+        vizualizerElement,
         question,
         survey,
-        normalizedData
+        this.data
       );
     });
   }
@@ -55,14 +49,14 @@ export class VisualizationPanel {
   }
 
   renderQuestionVisualication(
-    questionContainerElement: HTMLElement,
+    vizualizerElement: HTMLElement,
     question: IQuestion,
     survey: SurveyModel,
     data: Array<{ [index: string]: any }>
   ): void {
     var visualizers = VisualizationManager.getVisualizers(question.getType());
     var visualizer = new visualizers[0](
-      questionContainerElement,
+      vizualizerElement,
       survey,
       question.name,
       data
