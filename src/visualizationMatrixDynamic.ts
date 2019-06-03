@@ -23,3 +23,8 @@ VisualizationManager.registerVisualizer(
   "matrixdynamic",
   VisualizationMatrixDynamic
 );
+
+VisualizationManager.registerVisualizer(
+  "matrixdropdown",
+  VisualizationMatrixDynamic
+);
