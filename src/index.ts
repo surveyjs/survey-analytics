@@ -4,3 +4,4 @@ export * from "./wordcloud";
 export * from "./visualizationManager";
 export * from "./visualizationPanel";
 export * from "./visualizationPanelDynamic";
+export * from "./visualizationMatrixDynamic";

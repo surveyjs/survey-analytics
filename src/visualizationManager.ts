@@ -1,8 +1,7 @@
-import { SurveyModel, Question } from "survey-core";
+import { Question } from "survey-core";
 
 declare type VisualizerConstructor = new (
   targetElement: HTMLElement,
-  survey: SurveyModel,
   question: Question,
   data: Array<{ [index: string]: any }>,
   options?: Object
@@ -33,7 +32,6 @@ export class VisualizationManager {
 export class VisualizerBase {
   constructor(
     protected targetElement: HTMLElement,
-    survey: SurveyModel,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object

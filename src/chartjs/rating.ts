@@ -1,4 +1,4 @@
-import { SurveyModel, Question } from "survey-core";
+import { Question } from "survey-core";
 import "chartjs-chart-radial-gauge";
 
 import { VisualizationManager } from "../visualizationManager";
@@ -7,12 +7,11 @@ import { ChartJS } from "./selectBase";
 export class RadialGaugeChartJS extends ChartJS {
   constructor(
     targetNode: HTMLElement,
-    survey: SurveyModel,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetNode, survey, question, data, options);
+    super(targetNode, question, data, options);
     this.chartType = "radialGauge";
   }
 

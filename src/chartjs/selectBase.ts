@@ -1,10 +1,8 @@
 import {
-  SurveyModel,
   Question,
   QuestionSelectBase,
   ItemValue,
-  QuestionMatrixModel,
-  IQuestion
+  QuestionMatrixModel
 } from "survey-core";
 import Chart from "chart.js";
 import { VisualizationManager, VisualizerBase } from "../visualizationManager";
@@ -12,12 +10,11 @@ import { VisualizationManager, VisualizerBase } from "../visualizationManager";
 export class ChartJS extends VisualizerBase {
   constructor(
     private targetNode: HTMLElement,
-    protected survey: SurveyModel,
     public question: Question,
     protected data: Array<{ [index: string]: any }>,
     private options?: Object
   ) {
-    super(targetNode, survey, question, data, options);
+    super(targetNode, question, data, options);
   }
 
   private chart: Chart;

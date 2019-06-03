@@ -1,5 +1,4 @@
 import {
-  SurveyModel,
   ItemValue,
   QuestionMatrixModel,
   Question
@@ -11,12 +10,11 @@ import { ChartJS } from "./selectBase";
 export class MatrixChartJS extends ChartJS {
   constructor(
     targetNode: HTMLElement,
-    survey: SurveyModel,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetNode, survey, question, data, options);
+    super(targetNode, question, data, options);
     this.chartType = "bar";
   }
 
