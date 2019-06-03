@@ -1,4 +1,4 @@
-import { SurveyModel } from "survey-core";
+import { SurveyModel, Question } from "survey-core";
 import "chartjs-chart-radial-gauge";
 
 import { VisualizationManager } from "../visualizationManager";
@@ -8,16 +8,16 @@ export class RadialGaugeChartJS extends ChartJS {
   constructor(
     targetNode: HTMLElement,
     survey: SurveyModel,
-    questionName: string,
+    question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetNode, survey, questionName, data, options);
+    super(targetNode, survey, question, data, options);
     this.chartType = "radialGauge";
   }
 
   getLabels(): any[] {
-    return [this.questionName];
+    return [this.question.name];
   }
 
   getOptions() {
@@ -38,7 +38,7 @@ export class RadialGaugeChartJS extends ChartJS {
     const datasets: Array<any> = [];
 
     this.data.forEach(rowData => {
-      const questionValue: any = rowData[this.questionName];
+      const questionValue: any = rowData[this.question.name];
       if (!!questionValue) {
         datasets.push(questionValue);
       }

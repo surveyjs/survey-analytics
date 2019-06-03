@@ -1,11 +1,11 @@
 import { VisualizationManager } from "./visualizationManager";
-import { SurveyModel, IQuestion, QuestionPanelDynamicModel } from "survey-core";
+import { SurveyModel, Question, QuestionPanelDynamicModel } from "survey-core";
 
 export class VisualizationPanel {
   constructor(
     protected targetElement: HTMLElement,
     protected survey: SurveyModel,
-    protected questions: Array<IQuestion>,
+    protected questions: Array<Question>,
     protected data: Array<{ [index: string]: any }>,
     protected options?: Object
   ) {}
@@ -40,7 +40,7 @@ export class VisualizationPanel {
 
   renderQuestionVisualication(
     vizualizerElement: HTMLElement,
-    question: IQuestion,
+    question: Question,
     survey: SurveyModel,
     data: Array<{ [index: string]: any }>
   ): void {
@@ -48,7 +48,7 @@ export class VisualizationPanel {
     var visualizer = new visualizers[0](
       vizualizerElement,
       survey,
-      question.name,
+      question,
       data
     );
     visualizer.render();

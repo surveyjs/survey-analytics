@@ -1,4 +1,4 @@
-import { SurveyModel } from "survey-core";
+import { SurveyModel, Question } from "survey-core";
 import WordCloudLib from "wordcloud";
 import { VisualizationManager, VisualizerBase } from "./visualizationManager";
 
@@ -6,11 +6,11 @@ export class WordCloud extends VisualizerBase {
   constructor(
     private targetNode: HTMLElement,
     protected survey: SurveyModel,
-    public questionName: string,
+    public question: Question,
     protected data: Array<{ [index: string]: any }>,
     private options?: Object
   ) {
-    super(targetNode, survey, questionName, data, options);
+    super(targetNode, survey, question, data, options);
   }
 
   private cloud: any;
@@ -30,7 +30,7 @@ export class WordCloud extends VisualizerBase {
     };
 
     this.data.forEach(row => {
-      const rowValue: any = row[this.questionName];
+      const rowValue: any = row[this.question.name];
       if (!!rowValue) {
         if (Array.isArray(rowValue)) {
           rowValue.forEach(processString);

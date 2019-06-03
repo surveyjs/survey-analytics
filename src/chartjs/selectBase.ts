@@ -1,8 +1,10 @@
 import {
   SurveyModel,
+  Question,
   QuestionSelectBase,
   ItemValue,
-  QuestionMatrixModel
+  QuestionMatrixModel,
+  IQuestion
 } from "survey-core";
 import Chart from "chart.js";
 import { VisualizationManager, VisualizerBase } from "../visualizationManager";
@@ -11,11 +13,11 @@ export class ChartJS extends VisualizerBase {
   constructor(
     private targetNode: HTMLElement,
     protected survey: SurveyModel,
-    public questionName: string,
+    public question: Question,
     protected data: Array<{ [index: string]: any }>,
     private options?: Object
   ) {
-    super(targetNode, survey, questionName, data, options);
+    super(targetNode, survey, question, data, options);
   }
 
   private chart: Chart;
@@ -71,9 +73,7 @@ export class ChartJS extends VisualizerBase {
 
   private getChartJs(chartNode: HTMLCanvasElement, chartType: string): Chart {
     const ctx = <CanvasRenderingContext2D>chartNode.getContext("2d");
-    const question: QuestionSelectBase = <any>(
-      this.survey.getQuestionByName(this.questionName)
-    );
+    const question: QuestionSelectBase = <any>this.question;
     const values = this.getValues();
 
     return new Chart(ctx, {
@@ -106,9 +106,7 @@ export class ChartJS extends VisualizerBase {
   }
 
   valuesSource(): any[] {
-    const question: QuestionSelectBase = <any>(
-      this.survey.getQuestionByName(this.questionName)
-    );
+    const question: QuestionSelectBase = <any>this.question;
     return question.choices;
   }
 
@@ -128,7 +126,7 @@ export class ChartJS extends VisualizerBase {
   getData(values: Array<any>): any[] {
     const statistics = values.map(v => 0);
     this.data.forEach(row => {
-      const rowValue: any = row[this.questionName];
+      const rowValue: any = row[this.question.name];
       if (!!rowValue) {
         if (Array.isArray(rowValue)) {
           values.forEach((val: any, index: number) => {
@@ -149,9 +147,7 @@ export class ChartJS extends VisualizerBase {
   }
 
   getDatasets(values: Array<any>): any[] {
-    const question: QuestionMatrixModel = <any>(
-      this.survey.getQuestionByName(this.questionName)
-    );
+    const question: QuestionMatrixModel = <any>this.question;
     return [
       {
         label: question.title,

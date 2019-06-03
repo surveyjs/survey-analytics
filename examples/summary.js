@@ -299,7 +299,8 @@ xhr.onload = function() {
         isalive: "No",
         relativeillness: [{ illness: "Cancer", description: "213" }],
         deceasedage: 16,
-        causeofdeathknown: "No"
+        causeofdeathknown: "Yes",
+        causeofdeath: "Cancer"
       }
     ]
   });
@@ -320,33 +321,5 @@ xhr.onload = function() {
     normalizedData
   );
   visPanel.render();
-
-  // var model = {
-  //   questions: survey.getAllQuestions(),
-  //   survey: survey,
-  //   data: normalizedData
-  // };
-
-  // ko.applyBindings(model);
 };
 xhr.send();
-
-// ko.components.register("question-visualizer", {
-//   viewModel: {
-//     createViewModel: function(params, componentInfo) {
-//       var itemElelemt = componentInfo.element.children[0];
-//       var visualizers = SurveyAnalytics.VisualizationManager.getVisualizers(
-//         params.question.getType()
-//       );
-//       var visualizer = new visualizers[0](
-//         itemElelemt,
-//         params.survey,
-//         params.question.name,
-//         params.data
-//       );
-//       visualizer.render();
-//       return {};
-//     }
-//   },
-//   template: "<div style='height: 120px; width: 50%;'></div>"
-// });

@@ -1,22 +1,24 @@
 import { VisualizationManager, VisualizerBase } from "./visualizationManager";
-import { VisualizationPanel } from "./VisualizationPanel";
-import { SurveyModel, IQuestion, QuestionPanelDynamicModel } from "survey-core";
+import { VisualizationPanel } from "./visualizationPanel";
+import { SurveyModel, Question, QuestionPanelDynamicModel } from "survey-core";
 
 export class VisualizationPanelDynamic extends VisualizerBase {
   constructor(
     private targetNode: HTMLElement,
     protected survey: SurveyModel,
-    public questionName: string,
+    public question: Question,
     protected data: Array<{ [index: string]: any }>,
     private options?: Object
   ) {
-    super(targetNode, survey, questionName, data, options);
+    super(targetNode, survey, question, data, options);
+    this.data = [];
+    data.forEach(dataItem => !!dataItem[question.name] && (this.data = this.data.concat(dataItem[question.name])));
   }
 
   render() {
     const survey = this.survey;
-    const paneldynamic = this.survey.getQuestionByName(this.questionName);
-    const questions = (<any>paneldynamic).panels[0].questions;
+    const paneldynamic: QuestionPanelDynamicModel = <any>this.question;
+    const questions = paneldynamic.panels[0].questions;
 
     var visPanel = new VisualizationPanel(
       document.getElementById("summaryContainer"),
