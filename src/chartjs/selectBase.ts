@@ -9,12 +9,12 @@ import { VisualizationManager, VisualizerBase } from "../visualizationManager";
 
 export class ChartJS extends VisualizerBase {
   constructor(
-    private targetNode: HTMLElement,
-    public question: Question,
-    protected data: Array<{ [index: string]: any }>,
-    private options?: Object
+    targetElement: HTMLElement,
+    question: Question,
+    data: Array<{ [index: string]: any }>,
+    options?: Object
   ) {
-    super(targetNode, question, data, options);
+    super(targetElement, question, data, options);
   }
 
   private chart: Chart;
@@ -26,7 +26,7 @@ export class ChartJS extends VisualizerBase {
     if (!!this.chart) {
       this.chart.destroy();
       this.chart = undefined;
-      this.targetNode.innerHTML = "";
+      this.targetElement.innerHTML = "";
     }
   }
 
@@ -37,7 +37,7 @@ export class ChartJS extends VisualizerBase {
 
     chartNodeContainer.appendChild(toolbarNodeContainer);
     chartNodeContainer.appendChild(chartNode);
-    this.targetNode.appendChild(chartNodeContainer);
+    this.targetElement.appendChild(chartNodeContainer);
 
     this.chart = this.getChartJs(chartNode, this.chartType);
 

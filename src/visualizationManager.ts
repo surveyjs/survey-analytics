@@ -32,9 +32,9 @@ export class VisualizationManager {
 export class VisualizerBase {
   constructor(
     protected targetElement: HTMLElement,
-    question: Question,
-    data: Array<{ [index: string]: any }>,
-    options?: Object
+    public question: Question,
+    protected data: Array<{ [index: string]: any }>,
+    protected options?: Object
   ) {}
 
   destroy() {}

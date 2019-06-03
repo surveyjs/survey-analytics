@@ -4,17 +4,18 @@ import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
 
 export class VisualizationMatrixDynamic extends VisualizationPanelDynamic {
   constructor(
-    protected targetNode: HTMLElement,
-    public question: Question,
-    protected data: Array<{ [index: string]: any }>,
-    protected options?: Object
+    targetElement: HTMLElement,
+    question: Question,
+    data: Array<{ [index: string]: any }>,
+    options?: Object
   ) {
-    super(targetNode, question, data, options);
+    super(targetElement, question, data, options);
   }
 
   getQuestions() {
     const matrixdynamic: QuestionMatrixDropdownModel = <any>this.question;
     return matrixdynamic.columns.map(c => c.templateQuestion);
+    // return matrixdynamic.visibleRows[0].cells.map(c => c.question);
   }
 }
 

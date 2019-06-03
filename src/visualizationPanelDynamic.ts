@@ -4,10 +4,10 @@ import { Question, QuestionPanelDynamicModel } from "survey-core";
 
 export class VisualizationPanelDynamic extends VisualizerBase {
   constructor(
-    protected targetNode: HTMLElement,
-    public question: Question,
-    protected data: Array<{ [index: string]: any }>,
-    protected options?: Object
+    targetNode: HTMLElement,
+    question: Question,
+    data: Array<{ [index: string]: any }>,
+    options?: Object
   ) {
     super(targetNode, question, data, options);
     this.data = [];

@@ -4,12 +4,12 @@ import { VisualizationManager, VisualizerBase } from "./visualizationManager";
 
 export class WordCloud extends VisualizerBase {
   constructor(
-    private targetNode: HTMLElement,
-    public question: Question,
-    protected data: Array<{ [index: string]: any }>,
-    private options?: Object
+    targetElement: HTMLElement,
+    question: Question,
+    data: Array<{ [index: string]: any }>,
+    options?: Object
   ) {
-    super(targetNode, question, data, options);
+    super(targetElement, question, data, options);
   }
 
   private cloud: any;
@@ -50,7 +50,7 @@ export class WordCloud extends VisualizerBase {
 
   render() {
     const canvasNode = <HTMLCanvasElement>document.createElement("canvas");
-    this.targetNode.appendChild(canvasNode);
+    this.targetElement.appendChild(canvasNode);
 
     this.cloud = WordCloudLib(canvasNode, {
       list: this.getData(),
@@ -70,7 +70,7 @@ export class WordCloud extends VisualizerBase {
   destroy() {
     if (!!this.cloud) {
       this.cloud = undefined;
-      this.targetNode.innerHTML = "";
+      this.targetElement.innerHTML = "";
     }
   }
 }
