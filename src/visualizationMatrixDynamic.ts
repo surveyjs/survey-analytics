@@ -14,8 +14,11 @@ export class VisualizationMatrixDynamic extends VisualizationPanelDynamic {
 
   getQuestions() {
     const matrixdynamic: QuestionMatrixDropdownModel = <any>this.question;
-    return matrixdynamic.columns.map(c => c.templateQuestion);
-    // return matrixdynamic.visibleRows[0].cells.map(c => c.question);
+    const visibleRows = matrixdynamic.visibleRows;
+
+    if (visibleRows.length === 0) return [];
+
+    return visibleRows[0].cells.map(c => c.question);
   }
 }
 
