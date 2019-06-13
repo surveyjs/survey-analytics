@@ -32,16 +32,26 @@ export class SelectBaseC3 extends VisualizerBase {
     return c3.generate({
       bindto: chartNode,
       data: {
-        columns: this.getLabels().map((label, index) => {
-          return [label, statistics[index]];
-        }),
+        x: "x",
+        columns: [["x"].concat(this.getLabels()), ["y"].concat(statistics)],
         type: this.chartType
       },
       color: {
         pattern: this.getLabels().map(_ => this.getRandomColor())
       },
       axis: {
+        x: {
+          type: "category"
+        },
+        y: {
+          tick: {
+            values: statistics
+          }
+        },
         rotated: true
+      },
+      legend: {
+        show: false
       }
     });
   }
