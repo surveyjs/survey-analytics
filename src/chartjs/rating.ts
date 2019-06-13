@@ -1,10 +1,11 @@
 import { Question } from "survey-core";
-import "chartjs-chart-radial-gauge";
 
 import { VisualizationManager } from "../visualizationManager";
 import { ChartJS } from "./selectBase";
 
 export class RadialGaugeChartJS extends ChartJS {
+  private _result;
+
   constructor(
     targetNode: HTMLElement,
     question: Question,
@@ -12,16 +13,41 @@ export class RadialGaugeChartJS extends ChartJS {
     options?: Object
   ) {
     super(targetNode, question, data, options);
-    this.chartType = "radialGauge";
+    this.chartTypes = ["doughnut", "pie"];
+    this.chartType = "doughnut";
+  }
+
+  get result() {
+    if (this._result === undefined) {
+      const questionValues: Array<any> = [];
+
+      this.data.forEach(rowData => {
+        const questionValue: any = rowData[this.question.name];
+        if (!!questionValue) {
+          questionValues.push(questionValue);
+        }
+      });
+
+      this._result =
+        questionValues.reduce((a, b) => {
+          return a + b;
+        }) / questionValues.length;
+      this._result = Math.ceil(this._result * 100) / 100;
+    }
+    return this._result;
   }
 
   getLabels(): any[] {
-    return [this.question.name];
+    return [];
   }
 
   getOptions() {
-    let options = super.getOptions();
-    options.scales = undefined;
+    let options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      rotation: 1 * Math.PI,
+      circumference: 1 * Math.PI
+    };
     return options;
   }
 
@@ -34,24 +60,21 @@ export class RadialGaugeChartJS extends ChartJS {
   }
 
   getDatasets(values: Array<any>): any[] {
-    const datasets: Array<any> = [];
-
-    this.data.forEach(rowData => {
-      const questionValue: any = rowData[this.question.name];
-      if (!!questionValue) {
-        datasets.push(questionValue);
-      }
-    });
-
-    const result =
-      datasets.reduce((a, b) => {
-        return a + b;
-      }) / datasets.length;
-
     return [
       {
-        data: [result]
+        data: [
+          this.result - this.question.rateMin,
+          this.question.rateMax - this.question.rateMin - this.result
+        ],
+        backgroundColor: [this.getRandomColor(), this.getRandomColor()]
       }
+      // {
+      //   data: [
+      //     this.question.rateMin,
+      //     this.question.rateMax - this.question.rateMin
+      //   ],
+      //   backgroundColor: ["rgba(255, 0, 0, 0.4)", "rgba(0, 255, 0, 0.4)"]
+      // }
     ];
   }
 }
