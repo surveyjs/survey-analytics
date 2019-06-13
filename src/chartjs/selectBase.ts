@@ -155,7 +155,7 @@ export class ChartJS extends VisualizerBase {
   }
 }
 
-VisualizationManager.registerVisualizer("checkbox", ChartJS);
-VisualizationManager.registerVisualizer("radiogroup", ChartJS);
-VisualizationManager.registerVisualizer("dropdown", ChartJS);
-VisualizationManager.registerVisualizer("imagepicker", ChartJS);
+// VisualizationManager.registerVisualizer("checkbox", ChartJS);
+// VisualizationManager.registerVisualizer("radiogroup", ChartJS);
+// VisualizationManager.registerVisualizer("dropdown", ChartJS);
+// VisualizationManager.registerVisualizer("imagepicker", ChartJS);

@@ -17,6 +17,7 @@ export class GaugeC3 extends VisualizerBase {
   }
 
   destroy() {
+    if (!this.chart) return;
     this.chart.destroy();
   }
 
@@ -63,4 +64,4 @@ export class GaugeC3 extends VisualizerBase {
   }
 }
 
-// VisualizationManager.registerVisualizer("rating", GaugeC3);
+VisualizationManager.registerVisualizer("rating", GaugeC3);

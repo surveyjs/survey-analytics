@@ -7,3 +7,4 @@ export * from "./visualizationPanelDynamic";
 export * from "./visualizationMatrixDynamic";
 
 export * from "./c3/rating";
+export * from "./c3/selectBase";

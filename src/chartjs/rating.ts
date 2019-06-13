@@ -4,7 +4,7 @@ import { VisualizationManager } from "../visualizationManager";
 import { ChartJS } from "./selectBase";
 
 export class RadialGaugeChartJS extends ChartJS {
-  private _result;
+  private _result: number;
 
   constructor(
     targetNode: HTMLElement,
@@ -79,4 +79,4 @@ export class RadialGaugeChartJS extends ChartJS {
   }
 }
 
-VisualizationManager.registerVisualizer("rating", RadialGaugeChartJS);
+// VisualizationManager.registerVisualizer("rating", RadialGaugeChartJS);
