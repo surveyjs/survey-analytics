@@ -36,7 +36,7 @@
   "homepage": "https://surveyjs.io/",
   "license": "Commercial",
   "dependencies": {
-    "chartjs-chart-radial-gauge": "^1.0.3",
+    "c3": "^0.7.1",
     "datatables.net": "latest",
     "datatables.net-buttons": "latest",
     "datatables.net-rowgroup": "latest",
@@ -56,6 +56,7 @@
     "@types/lodash": "4.14.121",
     "@types/node": "7.0.4",
     "@types/wordcloud": "^1.1.1",
+    "@types/c3": "^0.7.0",
     "ajv": "4.11.2",
     "chart.js": "^2.8.0",
     "css-loader": "0.26.1",

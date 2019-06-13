@@ -5,3 +5,5 @@ export * from "./visualizationManager";
 export * from "./visualizationPanel";
 export * from "./visualizationPanelDynamic";
 export * from "./visualizationMatrixDynamic";
+
+export * from "./c3/rating";
