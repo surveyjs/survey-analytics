@@ -5,9 +5,9 @@ import {
 } from "survey-core";
 
 import { VisualizationManager } from "../visualizationManager";
-import { ChartJS } from "./selectBase";
+import { SelectBaseChartJS } from "./selectBase";
 
-export class MatrixChartJS extends ChartJS {
+export class MatrixChartJS extends SelectBaseChartJS {
   constructor(
     targetNode: HTMLElement,
     question: Question,

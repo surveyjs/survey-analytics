@@ -7,6 +7,13 @@ var survey = new Survey.SurveyModel({
       name: "page1",
       elements: [
         {
+          type: "rating",
+          name: "satisfaction",
+          title: "How satisfied are you with the Product?",
+          minRateDescription: "Not Satisfied",
+          maxRateDescription: "Completely satisfied"
+        },
+        {
           type: "matrixdynamic",
           name: "teachersRate",
           title: "Please rate your teachers",
@@ -299,13 +306,6 @@ var survey = new Survey.SurveyModel({
               text: "Product is easy to use"
             }
           ]
-        },
-        {
-          type: "rating",
-          name: "satisfaction",
-          title: "How satisfied are you with the Product?",
-          minRateDescription: "Not Satisfied",
-          maxRateDescription: "Completely satisfied"
         },
         {
           type: "rating",

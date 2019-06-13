@@ -19,7 +19,7 @@ export class SelectBaseC3 extends VisualizerBase {
   }
 
   private chart: c3.ChartAPI;
-  protected chartTypes = ["bar"];
+  protected chartTypes = ["bar", "line", "pie", "donut"];
   chartType = "bar";
 
   destroy() {
@@ -27,10 +27,10 @@ export class SelectBaseC3 extends VisualizerBase {
     this.chart.destroy();
   }
 
-  render() {
+  private getChartC3(chartNode: HTMLElement, chartType: string): c3.ChartAPI {
     var statistics = this.getData(this.getValues());
-    this.chart = c3.generate({
-      bindto: this.targetElement,
+    return c3.generate({
+      bindto: chartNode,
       data: {
         columns: this.getLabels().map((label, index) => {
           return [label, statistics[index]];
@@ -44,6 +44,26 @@ export class SelectBaseC3 extends VisualizerBase {
         rotated: true
       }
     });
+  }
+
+  render() {
+    const chartNodeContainer = document.createElement("div");
+    const toolbarNodeContainer = document.createElement("div");
+    const chartNode = <HTMLElement>document.createElement("div");
+
+    chartNodeContainer.appendChild(toolbarNodeContainer);
+    chartNodeContainer.appendChild(chartNode);
+    this.targetElement.appendChild(chartNodeContainer);
+
+    this.createToolbar(toolbarNodeContainer, (e: any) => {
+      if (this.chartType !== e.target.value) {
+        this.chartType = e.target.value;
+        this.chart.destroy();
+        this.chart = this.getChartC3(chartNode, this.chartType);
+      }
+    });
+
+    this.chart = this.getChartC3(chartNode, this.chartType);
   }
 
   private createToolbar(

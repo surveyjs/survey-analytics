@@ -7,7 +7,7 @@ import {
 import Chart from "chart.js";
 import { VisualizationManager, VisualizerBase } from "../visualizationManager";
 
-export class ChartJS extends VisualizerBase {
+export class SelectBaseChartJS extends VisualizerBase {
   constructor(
     targetElement: HTMLElement,
     question: Question,
@@ -155,7 +155,7 @@ export class ChartJS extends VisualizerBase {
   }
 }
 
-// VisualizationManager.registerVisualizer("checkbox", ChartJS);
-// VisualizationManager.registerVisualizer("radiogroup", ChartJS);
-// VisualizationManager.registerVisualizer("dropdown", ChartJS);
-// VisualizationManager.registerVisualizer("imagepicker", ChartJS);
+// VisualizationManager.registerVisualizer("checkbox", SelectBaseChartJS);
+// VisualizationManager.registerVisualizer("radiogroup", SelectBaseChartJS);
+// VisualizationManager.registerVisualizer("dropdown", SelectBaseChartJS);
+// VisualizationManager.registerVisualizer("imagepicker", SelectBaseChartJS);

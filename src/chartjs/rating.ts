@@ -1,9 +1,9 @@
 import { Question } from "survey-core";
 
 import { VisualizationManager } from "../visualizationManager";
-import { ChartJS } from "./selectBase";
+import { SelectBaseChartJS } from "./selectBase";
 
-export class RadialGaugeChartJS extends ChartJS {
+export class RadialGaugeChartJS extends SelectBaseChartJS {
   private _result: number;
 
   constructor(
