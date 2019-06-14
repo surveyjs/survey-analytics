@@ -1,9 +1,9 @@
 import { ItemValue, QuestionMatrixModel, Question } from "survey-core";
 
 import { VisualizationManager } from "../visualizationManager";
-import { SelectBaseChartJS } from "./selectBase";
+import { SelectBaseC3 } from "./selectBase";
 
-export class MatrixChartJS extends SelectBaseChartJS {
+export class MatrixС3 extends SelectBaseC3 {
   constructor(
     targetNode: HTMLElement,
     question: Question,
@@ -26,21 +26,7 @@ export class MatrixChartJS extends SelectBaseChartJS {
     );
   }
 
-  getOptions() {
-    let options = super.getOptions();
-    options.scales = undefined;
-    // options.scales = {
-    //   xAxes: [{ stacked: true }],
-    //   yAxes: [{ stacked: true }]
-    // }
-    return options;
-  }
-
   getData(values: Array<any>): any[] {
-    return undefined;
-  }
-
-  getDatasets(values: Array<any>): any[] {
     const question: QuestionMatrixModel = <any>this.question;
     const datasets: Array<any> = this.valuesSource().map(choice => {
       return {
@@ -69,4 +55,4 @@ export class MatrixChartJS extends SelectBaseChartJS {
   }
 }
 
-// VisualizationManager.registerVisualizer("matrix", MatrixChartJS);
+VisualizationManager.registerVisualizer("matrix", MatrixС3);
