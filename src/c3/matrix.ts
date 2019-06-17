@@ -29,14 +29,7 @@ export class MatrixС3 extends SelectBaseC3 {
   getData(values: Array<any>): any[] {
     const question: QuestionMatrixModel = <any>this.question;
     const datasets: Array<any> = this.valuesSource().map(choice => {
-      return {
-        label: ItemValue.getTextOrHtmlByValue(
-          this.valuesSource(),
-          choice.value
-        ),
-        data: question.rows.map(v => 0),
-        backgroundColor: this.getRandomColor()
-      };
+      return question.rows.map(v => 0);
     });
 
     this.data.forEach(rowData => {
@@ -45,7 +38,7 @@ export class MatrixС3 extends SelectBaseC3 {
         question.rows.forEach((row: any, index: number) => {
           values.forEach((val: any, dsIndex: number) => {
             if (questionValue[row.value] == val) {
-              datasets[dsIndex].data[index]++;
+              datasets[dsIndex][index]++;
             }
           });
         });

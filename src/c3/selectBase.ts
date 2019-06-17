@@ -28,12 +28,19 @@ export class SelectBaseC3 extends VisualizerBase {
   }
 
   private getChartC3(chartNode: HTMLElement, chartType: string): c3.ChartAPI {
-    var statistics = this.getData(this.getValues());
+    var data = this.getData(this.getValues());
+    var statistics = data[0];
+    var columns = [["x"].concat(this.getLabels())];
+
+    data.forEach((dataset, index) => {
+      columns.push(["" + index].concat(dataset));
+    });
+
     return c3.generate({
       bindto: chartNode,
       data: {
         x: "x",
-        columns: [["x"].concat(this.getLabels()), ["y"].concat(statistics)],
+        columns: columns,
         type: this.chartType
       },
       color: {
@@ -132,7 +139,7 @@ export class SelectBaseC3 extends VisualizerBase {
         }
       }
     });
-    return statistics;
+    return [statistics];
   }
 }
 
