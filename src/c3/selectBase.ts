@@ -102,8 +102,8 @@ export class SelectBaseC3 extends VisualizerBase {
   }
 
   valuesSource(): any[] {
-    const question: QuestionSelectBase = <any>this.question;
-    return question.choices;
+    const question = <QuestionSelectBase>this.question;
+    return question["activeChoices"];
   }
 
   getValues(): Array<any> {
