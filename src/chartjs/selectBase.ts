@@ -1,13 +1,9 @@
-import {
-  Question,
-  QuestionSelectBase,
-  ItemValue,
-  QuestionMatrixModel
-} from "survey-core";
+import { Question, QuestionSelectBase, QuestionMatrixModel } from "survey-core";
 import Chart from "chart.js";
-import { VisualizationManager, VisualizerBase } from "../visualizationManager";
+import { VisualizationManager } from "../visualizationManager";
+import { SelectBase } from "../selectBase";
 
-export class SelectBaseChartJS extends VisualizerBase {
+export class SelectBaseChartJS extends SelectBase {
   constructor(
     targetElement: HTMLElement,
     question: Question,
@@ -21,6 +17,7 @@ export class SelectBaseChartJS extends VisualizerBase {
 
   protected chartTypes = ["bar", "horizontalBar", "line", "pie", "doughnut"];
   chartType = "horizontalBar";
+  chartNode = <HTMLCanvasElement>document.createElement("canvas");
 
   destroy() {
     if (!!this.chart) {
@@ -30,46 +27,20 @@ export class SelectBaseChartJS extends VisualizerBase {
     }
   }
 
-  render() {
-    const chartNodeContainer = document.createElement("div");
-    const toolbarNodeContainer = document.createElement("div");
-    const chartNode = <HTMLCanvasElement>document.createElement("canvas");
-
-    chartNodeContainer.appendChild(toolbarNodeContainer);
-    chartNodeContainer.appendChild(chartNode);
-    this.targetElement.appendChild(chartNodeContainer);
-
-    this.chart = this.getChartJs(chartNode, this.chartType);
-
-    this.createToolbar(toolbarNodeContainer, (e: any) => {
-      if (this.chartType !== e.target.value) {
-        this.chartType = e.target.value;
-        this.chart.destroy();
-        this.chart = this.getChartJs(chartNode, this.chartType);
-      }
-    });
-  }
-
-  private createToolbar(
-    container: HTMLDivElement,
-    changeHandler: (e: any) => void
-  ) {
-    if (this.chartTypes.length > 0) {
-      const select = document.createElement("select");
-      this.chartTypes.forEach(chartType => {
-        let option = document.createElement("option");
-        option.value = chartType;
-        option.text = chartType;
-        option.selected = this.chartType === chartType;
-        select.appendChild(option);
-      });
-      select.onchange = changeHandler;
-      container.appendChild(select);
+  toolbarChangeHandler(e: any) {
+    if (this.chartType !== e.target.value) {
+      this.chartType = e.target.value;
+      this.chart.destroy();
+      this.chart = this.getChartJs(this.chartNode, this.chartType);
     }
   }
 
-  private getChartJs(chartNode: HTMLCanvasElement, chartType: string): Chart {
-    const ctx = <CanvasRenderingContext2D>chartNode.getContext("2d");
+  createChart() {
+    this.chart = this.getChartJs(this.chartNode, this.chartType);
+  }
+
+  private getChartJs(chartNode: HTMLElement, chartType: string): Chart {
+    const ctx = (<any>chartNode).getContext("2d");
     const question: QuestionSelectBase = <any>this.question;
     const values = this.getValues();
 
@@ -102,24 +73,6 @@ export class SelectBaseChartJS extends VisualizerBase {
     };
   }
 
-  valuesSource(): any[] {
-    const question = <QuestionSelectBase>this.question;
-    return question["activeChoices"];
-  }
-
-  getValues(): Array<any> {
-    const values: Array<any> = this.valuesSource().map(choice => choice.value);
-    return values;
-  }
-
-  getLabels(): Array<string> {
-    const values: Array<any> = this.getValues();
-    const labels: Array<string> = this.valuesSource().map(choice =>
-      ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value)
-    );
-    return labels;
-  }
-
   getData(values: Array<any>): any[] {
     const statistics = values.map(v => 0);
     this.data.forEach(row => {
@@ -140,7 +93,7 @@ export class SelectBaseChartJS extends VisualizerBase {
         }
       }
     });
-    return statistics;
+    return [statistics];
   }
 
   getDatasets(values: Array<any>): any[] {
@@ -148,7 +101,7 @@ export class SelectBaseChartJS extends VisualizerBase {
     return [
       {
         label: question.title,
-        data: this.getData(values),
+        data: this.getData(values)[0],
         backgroundColor: values.map(_ => this.getRandomColor())
       }
     ];

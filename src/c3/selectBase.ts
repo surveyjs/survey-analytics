@@ -1,14 +1,9 @@
-import {
-  Question,
-  QuestionSelectBase,
-  ItemValue,
-  QuestionMatrixModel
-} from "survey-core";
+import { Question } from "survey-core";
 import c3 from "c3";
+import { VisualizationManager } from "../visualizationManager";
+import { SelectBase } from "../selectBase";
 
-import { VisualizationManager, VisualizerBase } from "../visualizationManager";
-
-export class SelectBaseC3 extends VisualizerBase {
+export class SelectBaseC3 extends SelectBase {
   constructor(
     protected targetElement: HTMLElement,
     question: Question,
@@ -21,10 +16,23 @@ export class SelectBaseC3 extends VisualizerBase {
   private chart: c3.ChartAPI;
   protected chartTypes = ["bar", "line", "pie", "donut"];
   chartType = "bar";
+  chartNode = <HTMLElement>document.createElement("div");
 
   destroy() {
     if (!this.chart) return;
     this.chart.destroy();
+  }
+
+  toolbarChangeHandler(e: any) {
+    if (this.chartType !== e.target.value) {
+      this.chartType = e.target.value;
+      this.chart.destroy();
+      this.chart = this.getChartC3(this.chartNode, this.chartType);
+    }
+  }
+
+  createChart() {
+    this.chart = this.getChartC3(this.chartNode, this.chartType);
   }
 
   private getChartC3(chartNode: HTMLElement, chartType: string): c3.ChartAPI {
@@ -61,62 +69,6 @@ export class SelectBaseC3 extends VisualizerBase {
         show: false
       }
     });
-  }
-
-  render() {
-    const chartNodeContainer = document.createElement("div");
-    const toolbarNodeContainer = document.createElement("div");
-    const chartNode = <HTMLElement>document.createElement("div");
-
-    chartNodeContainer.appendChild(toolbarNodeContainer);
-    chartNodeContainer.appendChild(chartNode);
-    this.targetElement.appendChild(chartNodeContainer);
-
-    this.createToolbar(toolbarNodeContainer, (e: any) => {
-      if (this.chartType !== e.target.value) {
-        this.chartType = e.target.value;
-        this.chart.destroy();
-        this.chart = this.getChartC3(chartNode, this.chartType);
-      }
-    });
-
-    this.chart = this.getChartC3(chartNode, this.chartType);
-  }
-
-  private createToolbar(
-    container: HTMLDivElement,
-    changeHandler: (e: any) => void
-  ) {
-    if (this.chartTypes.length > 0) {
-      const select = document.createElement("select");
-      this.chartTypes.forEach(chartType => {
-        let option = document.createElement("option");
-        option.value = chartType;
-        option.text = chartType;
-        option.selected = this.chartType === chartType;
-        select.appendChild(option);
-      });
-      select.onchange = changeHandler;
-      container.appendChild(select);
-    }
-  }
-
-  valuesSource(): any[] {
-    const question = <QuestionSelectBase>this.question;
-    return question["activeChoices"];
-  }
-
-  getValues(): Array<any> {
-    const values: Array<any> = this.valuesSource().map(choice => choice.value);
-    return values;
-  }
-
-  getLabels(): Array<string> {
-    const values: Array<any> = this.getValues();
-    const labels: Array<string> = this.valuesSource().map(choice =>
-      ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value)
-    );
-    return labels;
   }
 
   getData(values: Array<any>): any[] {

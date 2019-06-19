@@ -1,6 +1,6 @@
 import { SurveyModel, Question } from "survey-core";
 import WordCloudLib from "wordcloud";
-import { VisualizationManager, VisualizerBase } from "./visualizationManager";
+import { VisualizationManager, VisualizerBase } from "../visualizationManager";
 
 export class WordCloud extends VisualizerBase {
   constructor(

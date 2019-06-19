@@ -1,5 +1,5 @@
 import { SurveyModel, Question } from "survey-core";
-import { DataTables } from "../src/datatables";
+import { DataTables } from "../src/datatables/datatables";
 
 test("getColumns method", () => {
   const json = {
