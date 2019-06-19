@@ -23,7 +23,7 @@ export class SelectBaseC3 extends SelectBase {
     this.chart.destroy();
   }
 
-  toolbarChangeHandler(e: any) {
+  toolbarChangeHandler = (e: any) =>{
     if (this.chartType !== e.target.value) {
       this.chartType = e.target.value;
       this.chart.destroy();

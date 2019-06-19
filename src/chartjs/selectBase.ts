@@ -27,13 +27,13 @@ export class SelectBaseChartJS extends SelectBase {
     }
   }
 
-  toolbarChangeHandler(e: any) {
+  toolbarChangeHandler = (e: any) => {
     if (this.chartType !== e.target.value) {
       this.chartType = e.target.value;
       this.chart.destroy();
       this.chart = this.getChartJs(this.chartNode, this.chartType);
     }
-  }
+  };
 
   createChart() {
     this.chart = this.getChartJs(this.chartNode, this.chartType);
