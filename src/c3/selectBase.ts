@@ -36,7 +36,7 @@ export class SelectBaseC3 extends SelectBase {
   }
 
   private getChartC3(chartNode: HTMLElement, chartType: string): c3.ChartAPI {
-    var data = this.getData(this.getValues());
+    var data = this.getData();
     var statistics = data[0];
     var columns = [["x"].concat(this.getLabels())];
 
@@ -69,29 +69,6 @@ export class SelectBaseC3 extends SelectBase {
         show: false
       }
     });
-  }
-
-  getData(values: Array<any>): any[] {
-    const statistics = values.map(v => 0);
-    this.data.forEach(row => {
-      const rowValue: any = row[this.question.name];
-      if (!!rowValue) {
-        if (Array.isArray(rowValue)) {
-          values.forEach((val: any, index: number) => {
-            if (rowValue.indexOf(val) !== -1) {
-              statistics[index]++;
-            }
-          });
-        } else {
-          values.forEach((val: any, index: number) => {
-            if (rowValue == val) {
-              statistics[index]++;
-            }
-          });
-        }
-      }
-    });
-    return [statistics];
   }
 }
 

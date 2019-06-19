@@ -41,14 +41,12 @@ export class SelectBaseChartJS extends SelectBase {
 
   private getChartJs(chartNode: HTMLElement, chartType: string): Chart {
     const ctx = (<any>chartNode).getContext("2d");
-    const question: QuestionSelectBase = <any>this.question;
-    const values = this.getValues();
 
     return new Chart(ctx, {
       type: chartType,
       data: {
         labels: this.getLabels(),
-        datasets: this.getDatasets(values)
+        datasets: this.getDatasets()
       },
       options: this.getOptions()
     });
@@ -73,36 +71,13 @@ export class SelectBaseChartJS extends SelectBase {
     };
   }
 
-  getData(values: Array<any>): any[] {
-    const statistics = values.map(v => 0);
-    this.data.forEach(row => {
-      const rowValue: any = row[this.question.name];
-      if (!!rowValue) {
-        if (Array.isArray(rowValue)) {
-          values.forEach((val: any, index: number) => {
-            if (rowValue.indexOf(val) !== -1) {
-              statistics[index]++;
-            }
-          });
-        } else {
-          values.forEach((val: any, index: number) => {
-            if (rowValue == val) {
-              statistics[index]++;
-            }
-          });
-        }
-      }
-    });
-    return [statistics];
-  }
-
-  getDatasets(values: Array<any>): any[] {
+  getDatasets(): any[] {
     const question: QuestionMatrixModel = <any>this.question;
     return [
       {
         label: question.title,
-        data: this.getData(values)[0],
-        backgroundColor: values.map(_ => this.getRandomColor())
+        data: this.getData()[0],
+        backgroundColor: this.getValues().map(_ => this.getRandomColor())
       }
     ];
   }

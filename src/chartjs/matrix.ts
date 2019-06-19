@@ -36,11 +36,11 @@ export class MatrixChartJS extends SelectBaseChartJS {
     return options;
   }
 
-  getData(values: Array<any>): any[] {
+  getData(): any[] {
     return undefined;
   }
 
-  getDatasets(values: Array<any>): any[] {
+  getDatasets(): any[] {
     const question: QuestionMatrixModel = <any>this.question;
     const datasets: Array<any> = this.valuesSource().map(choice => {
       return {
@@ -48,7 +48,7 @@ export class MatrixChartJS extends SelectBaseChartJS {
           this.valuesSource(),
           choice.value
         ),
-        data: question.rows.map(v => 0),
+        data: question.rows.map(() => 0),
         backgroundColor: this.getRandomColor()
       };
     });
@@ -57,7 +57,7 @@ export class MatrixChartJS extends SelectBaseChartJS {
       const questionValue: any = rowData[this.question.name];
       if (!!questionValue) {
         question.rows.forEach((row: any, index: number) => {
-          values.forEach((val: any, dsIndex: number) => {
+          this.getValues().forEach((val: any, dsIndex: number) => {
             if (questionValue[row.value] == val) {
               datasets[dsIndex].data[index]++;
             }

@@ -26,7 +26,7 @@ export class MatrixС3 extends SelectBaseC3 {
     );
   }
 
-  getData(values: Array<any>): any[] {
+  getData(): any[] {
     const question: QuestionMatrixModel = <any>this.question;
     const datasets: Array<any> = this.valuesSource().map(choice => {
       return question.rows.map(v => 0);
@@ -36,7 +36,7 @@ export class MatrixС3 extends SelectBaseC3 {
       const questionValue: any = rowData[this.question.name];
       if (!!questionValue) {
         question.rows.forEach((row: any, index: number) => {
-          values.forEach((val: any, dsIndex: number) => {
+          this.getValues().forEach((val: any, dsIndex: number) => {
             if (questionValue[row.value] == val) {
               datasets[dsIndex][index]++;
             }

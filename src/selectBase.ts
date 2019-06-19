@@ -66,4 +66,28 @@ export class SelectBase extends VisualizerBase {
     );
     return labels;
   }
+
+  getData(): any[] {
+    const values = this.getValues();
+    const statistics = values.map(v => 0);
+    this.data.forEach(row => {
+      const rowValue: any = row[this.question.name];
+      if (!!rowValue) {
+        if (Array.isArray(rowValue)) {
+          values.forEach((val: any, index: number) => {
+            if (rowValue.indexOf(val) !== -1) {
+              statistics[index]++;
+            }
+          });
+        } else {
+          values.forEach((val: any, index: number) => {
+            if (rowValue == val) {
+              statistics[index]++;
+            }
+          });
+        }
+      }
+    });
+    return [statistics];
+  }
 }

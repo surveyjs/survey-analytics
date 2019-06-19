@@ -37,3 +37,7 @@ test("getValues method", () => {
 test("getLabels method", () => {
   expect(selectBase.getLabels()).toEqual(choices);
 });
+
+test("getData method", () => {
+  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0]]);
+});

@@ -51,7 +51,7 @@ export class RadialGaugeChartJS extends SelectBaseChartJS {
     return options;
   }
 
-  getData(values: Array<any>): any[] {
+  getData(): any[] {
     return undefined;
   }
 
@@ -59,7 +59,7 @@ export class RadialGaugeChartJS extends SelectBaseChartJS {
     return null;
   }
 
-  getDatasets(values: Array<any>): any[] {
+  getDatasets(): any[] {
     return [
       {
         data: [
@@ -68,13 +68,6 @@ export class RadialGaugeChartJS extends SelectBaseChartJS {
         ],
         backgroundColor: [this.getRandomColor(), this.getRandomColor()]
       }
-      // {
-      //   data: [
-      //     this.question.rateMin,
-      //     this.question.rateMax - this.question.rateMin
-      //   ],
-      //   backgroundColor: ["rgba(255, 0, 0, 0.4)", "rgba(0, 255, 0, 0.4)"]
-      // }
     ];
   }
 }
