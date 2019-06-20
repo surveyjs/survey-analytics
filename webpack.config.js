@@ -123,6 +123,24 @@ module.exports = function(options) {
         commonjs2: "Survey",
         commonjs: "Survey",
         amd: "Survey"
+      },
+      "chart.js": {
+        root: "Chart",
+        commonjs2: "Chart",
+        commonjs: "Chart",
+        amd: "Chart"
+      },
+      c3: {
+        root: "c3",
+        commonjs2: "c3",
+        commonjs: "c3",
+        amd: "c3"
+      },
+      wordcloud: {
+        root: "WordCloud",
+        commonjs2: "WordCloud",
+        commonjs: "WordCloud",
+        amd: "WordCloud"
       }
     },
     plugins: [
