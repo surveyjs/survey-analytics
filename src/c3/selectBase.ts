@@ -23,13 +23,13 @@ export class SelectBaseC3 extends SelectBase {
     this.chart.destroy();
   }
 
-  toolbarChangeHandler = (e: any) =>{
+  toolbarChangeHandler = (e: any) => {
     if (this.chartType !== e.target.value) {
       this.chartType = e.target.value;
       this.chart.destroy();
       this.chart = this.getChartC3(this.chartNode, this.chartType);
     }
-  }
+  };
 
   createChart() {
     this.chart = this.getChartC3(this.chartNode, this.chartType);
@@ -52,7 +52,23 @@ export class SelectBaseC3 extends SelectBase {
         type: this.chartType
       },
       color: {
-        pattern: this.getLabels().map(_ => this.getRandomColor())
+        pattern: [
+          "86e1fb",
+          "3999fb",
+          "ff6771",
+          "1eb496",
+          "ffc152",
+          "aba1ff",
+          "7d8da5",
+          "4ec46c",
+          "cf37a6",
+          "4e6198"
+        ]
+      },
+      bar: {
+        width: {
+          ratio: 0.5 // this makes bar width 50% of length between ticks
+        }
       },
       axis: {
         x: {
@@ -62,8 +78,7 @@ export class SelectBaseC3 extends SelectBase {
           tick: {
             values: statistics
           }
-        },
-        rotated: true
+        }
       },
       legend: {
         show: false
