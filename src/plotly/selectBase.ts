@@ -50,6 +50,7 @@ export class SelectBasePlotly extends SelectBase {
         y: labels,
         x: data[0],
         orientation: "h",
+        mode: "markers",
         marker: {
           color: colors
         }
