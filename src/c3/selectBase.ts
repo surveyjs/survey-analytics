@@ -52,18 +52,7 @@ export class SelectBaseC3 extends SelectBase {
         type: this.chartType
       },
       color: {
-        pattern: [
-          "86e1fb",
-          "3999fb",
-          "ff6771",
-          "1eb496",
-          "ffc152",
-          "aba1ff",
-          "7d8da5",
-          "4ec46c",
-          "cf37a6",
-          "4e6198"
-        ]
+        pattern: this.getColors()
       },
       bar: {
         width: {

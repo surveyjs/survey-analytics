@@ -1,3 +1,4 @@
+export * from "./visualizerBase";
 export * from "./visualizationManager";
 export * from "./visualizationPanel";
 export * from "./visualizationPanelDynamic";

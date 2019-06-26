@@ -1,6 +1,7 @@
-import { SurveyModel, Question } from "survey-core";
+import { Question } from "survey-core";
 import WordCloudLib from "wordcloud";
-import { VisualizationManager, VisualizerBase } from "../visualizationManager";
+import { VisualizerBase } from "../visualizerBase";
+import { VisualizationManager } from "../visualizationManager";
 
 export class WordCloud extends VisualizerBase {
   constructor(
@@ -49,13 +50,15 @@ export class WordCloud extends VisualizerBase {
   }
 
   render() {
+    const colors = this.getColors();
     const canvasNode = <HTMLCanvasElement>document.createElement("canvas");
+
     this.targetElement.appendChild(canvasNode);
 
     this.cloud = WordCloudLib(canvasNode, {
       list: this.getData(),
       weightFactor: 20,
-      fontFamily: "Segoe UI Bold, cursive, sans-serif",
+      fontFamily: "Segoe UI Bold, sans-serif",
       color: (word: string, weight: number) => {
         return this.getRandomColor();
       },

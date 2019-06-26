@@ -1,4 +1,5 @@
 import { Question } from "survey-core";
+import { VisualizerBase } from "./visualizerBase";
 
 declare type VisualizerConstructor = new (
   targetElement: HTMLElement,
@@ -26,28 +27,5 @@ export class VisualizationManager {
       return [VisualizerBase];
     }
     return vizualizers;
-  }
-}
-
-export class VisualizerBase {
-  constructor(
-    protected targetElement: HTMLElement,
-    public question: Question,
-    protected data: Array<{ [index: string]: any }>,
-    protected options?: Object
-  ) {}
-
-  destroy() {}
-
-  render() {
-    this.targetElement.innerHTML = "This question type is not visualized yet";
-  }
-
-  getRandomColor() {
-    let color = [];
-    for (let i = 0; i < 3; i++) {
-      color[i] = Math.floor(Math.random() * 255);
-    }
-    return "rgba(" + color.join(", ") + ", 0.4)";
   }
 }

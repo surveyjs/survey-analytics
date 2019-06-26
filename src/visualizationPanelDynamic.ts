@@ -1,4 +1,5 @@
-import { VisualizationManager, VisualizerBase } from "./visualizationManager";
+import { VisualizerBase } from "./visualizerBase";
+import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanel } from "./visualizationPanel";
 import { Question, QuestionPanelDynamicModel } from "survey-core";
 

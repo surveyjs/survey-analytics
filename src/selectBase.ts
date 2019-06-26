@@ -1,5 +1,5 @@
 import { Question, QuestionSelectBase, ItemValue } from "survey-core";
-import { VisualizerBase } from "./visualizationManager";
+import { VisualizerBase } from "./visualizerBase";
 
 export class SelectBase extends VisualizerBase {
   constructor(

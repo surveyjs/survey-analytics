@@ -1,5 +1,6 @@
 import { Question } from "survey-core";
-import { VisualizationManager, VisualizerBase } from "../visualizationManager";
+import { VisualizerBase } from "../visualizerBase";
+import { VisualizationManager } from "../visualizationManager";
 
 import c3 from "c3";
 
