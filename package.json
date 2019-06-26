@@ -36,12 +36,14 @@
   "homepage": "https://surveyjs.io/",
   "license": "Commercial",
   "dependencies": {
+    "@types/plotly.js": "^1.44.9",
     "c3": "^0.7.1",
     "datatables.net": "latest",
     "datatables.net-buttons": "latest",
     "datatables.net-rowgroup": "latest",
     "datatables.net-select": "latest",
     "jquery": "3.4.1",
+    "plotly.js": "^1.48.3",
     "survey-core": "latest",
     "wordcloud": "^1.1.0"
   },

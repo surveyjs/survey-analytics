@@ -80,6 +80,9 @@ export class SelectBaseC3 extends SelectBase {
           }
         }
       },
+      tooltip: {
+        show: true
+      },
       legend: {
         show: false
       }
@@ -87,7 +90,7 @@ export class SelectBaseC3 extends SelectBase {
   }
 }
 
-VisualizationManager.registerVisualizer("checkbox", SelectBaseC3);
-VisualizationManager.registerVisualizer("radiogroup", SelectBaseC3);
-VisualizationManager.registerVisualizer("dropdown", SelectBaseC3);
-VisualizationManager.registerVisualizer("imagepicker", SelectBaseC3);
+// VisualizationManager.registerVisualizer("checkbox", SelectBaseC3);
+// VisualizationManager.registerVisualizer("radiogroup", SelectBaseC3);
+// VisualizationManager.registerVisualizer("dropdown", SelectBaseC3);
+// VisualizationManager.registerVisualizer("imagepicker", SelectBaseC3);

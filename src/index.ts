@@ -6,4 +6,5 @@ export * from "./visualizationMatrixDynamic";
 export * from "./datatables/datatables";
 export * from "./chartjs/index";
 export * from "./c3/index";
+export * from "./plotly/index";
 export * from "./wordcloud/wordcloud";

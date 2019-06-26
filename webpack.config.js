@@ -141,6 +141,12 @@ module.exports = function(options) {
         commonjs2: "WordCloud",
         commonjs: "WordCloud",
         amd: "WordCloud"
+      },
+      "plotly.js": {
+        root: "Plotly",
+        commonjs2: "Plotly",
+        commonjs: "Plotly",
+        amd: "Plotly"
       }
     },
     plugins: [
