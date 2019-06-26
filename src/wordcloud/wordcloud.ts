@@ -55,7 +55,7 @@ export class WordCloud extends VisualizerBase {
     this.cloud = WordCloudLib(canvasNode, {
       list: this.getData(),
       weightFactor: 20,
-      fontFamily: "Finger Paint, cursive, sans-serif",
+      fontFamily: "Segoe UI Bold, cursive, sans-serif",
       color: (word: string, weight: number) => {
         return this.getRandomColor();
       },
