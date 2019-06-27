@@ -160,7 +160,7 @@ export class GaugePlotly extends VisualizerBase {
     this.chartNode.style.overflow = "hidden";
 
     const config = {
-      responsive: true
+      displayModeBar: false
     };
 
     this.chart = Plotly.newPlot(this.chartNode, data, layout, config);
