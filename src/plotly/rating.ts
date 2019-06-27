@@ -159,7 +159,11 @@ export class GaugePlotly extends VisualizerBase {
     this.chartNode.style.maxHeight = "600px"; // fixed chart height
     this.chartNode.style.overflow = "hidden";
 
-    this.chart = Plotly.newPlot(this.chartNode, data, layout);
+    const config = {
+      responsive: true
+    };
+
+    this.chart = Plotly.newPlot(this.chartNode, data, layout, config);
   }
 
   get result() {

@@ -39,23 +39,25 @@ export class SelectBasePlotly extends SelectBase {
     chartType: string
   ): Promise<Plotly.PlotlyHTMLElement> {
     const question = this.question;
-    const data = this.getData();
+    const datasets = this.getData();
     const labels = this.getLabels();
-
+    const traces: any = [];
     const colors = this.getColors();
 
-    const trace1: any = [
-      {
-        type: chartType,
-        y: labels,
-        x: data[0],
-        orientation: "h",
-        mode: "markers",
-        marker: {
-          color: colors
-        }
-      }
-    ];
+    const traceConfig: any = {
+      type: chartType,
+      y: labels,
+      orientation: "h",
+      mode: "markers"
+    };
+
+    if (datasets.length === 1) {
+      traceConfig["marker"] = { color: colors };
+    }
+
+    datasets.forEach(dataset => {
+      traces.push(Object.assign({}, traceConfig, { x: dataset }));
+    });
 
     const layout: any = {
       title: question.name,
@@ -69,10 +71,11 @@ export class SelectBasePlotly extends SelectBase {
     };
 
     const config = {
-      displaylogo: false
+      displaylogo: false,
+      responsive: true
     };
 
-    return Plotly.newPlot(chartNode, trace1, layout, config);
+    return Plotly.newPlot(chartNode, traces, layout, config);
   }
 }
 

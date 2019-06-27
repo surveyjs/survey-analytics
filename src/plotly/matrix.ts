@@ -1,9 +1,8 @@
 import { ItemValue, QuestionMatrixModel, Question } from "survey-core";
-
 import { VisualizationManager } from "../visualizationManager";
-import { SelectBaseC3 } from "./selectBase";
+import { SelectBasePlotly } from "./selectBase";
 
-export class MatrixС3 extends SelectBaseC3 {
+export class MatrixPlotly extends SelectBasePlotly {
   constructor(
     targetNode: HTMLElement,
     question: Question,
@@ -48,4 +47,4 @@ export class MatrixС3 extends SelectBaseC3 {
   }
 }
 
-// VisualizationManager.registerVisualizer("matrix", MatrixС3);
+VisualizationManager.registerVisualizer("matrix", MatrixPlotly);
