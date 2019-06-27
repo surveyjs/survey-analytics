@@ -65,4 +65,4 @@ export class GaugeC3 extends VisualizerBase {
   }
 }
 
-VisualizationManager.registerVisualizer("rating", GaugeC3);
+// VisualizationManager.registerVisualizer("rating", GaugeC3);
