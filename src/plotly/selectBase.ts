@@ -63,7 +63,8 @@ export class SelectBasePlotly extends SelectBase {
       title: question.name,
       colorway: colors,
       yaxis: {
-        automargin: true
+        automargin: true,
+        type: "category"
       },
       xaxis: {
         automargin: true
