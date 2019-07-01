@@ -57,6 +57,9 @@ export class SelectBase extends VisualizerBase {
 
   getValues(): Array<any> {
     const values: Array<any> = this.valuesSource().map(choice => choice.value);
+
+    if (this.question.hasOther) values.unshift("other");
+
     return values;
   }
 
@@ -64,6 +67,9 @@ export class SelectBase extends VisualizerBase {
     const labels: Array<string> = this.valuesSource().map(choice =>
       ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value)
     );
+
+    if (this.question.hasOther) labels.unshift("Other");
+
     return labels;
   }
 
