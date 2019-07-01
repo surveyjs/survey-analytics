@@ -50,13 +50,21 @@ export class WordCloud extends VisualizerBase {
   }
 
   render() {
+    const data = this.getData();
     const colors = this.getColors();
     const canvasNode = <HTMLCanvasElement>document.createElement("canvas");
+    const emptyTextNode = <HTMLElement>document.createElement("p");
+    emptyTextNode.innerHTML = "There is no results yet";
+
+    if (data.length === 0) {
+      this.targetElement.appendChild(emptyTextNode);
+      return;
+    }
 
     this.targetElement.appendChild(canvasNode);
 
     this.cloud = WordCloudLib(canvasNode, {
-      list: this.getData(),
+      list: data,
       weightFactor: 20,
       fontFamily: "Segoe UI Bold, sans-serif",
       color: (word: string, weight: number) => {
