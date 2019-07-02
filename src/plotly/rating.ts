@@ -115,9 +115,9 @@ export class GaugePlotly extends VisualizerBase {
         text: text,
         textinfo: "text",
         textposition: "inside",
-        textfont: {
-          size: 20
-        },
+        // textfont: {
+        //   size: 20
+        // },
         marker: {
           colors: colors
         },
@@ -140,8 +140,8 @@ export class GaugePlotly extends VisualizerBase {
         }
       ],
       title: level,
-      height: 1000,
-      width: 1000,
+      height: 600,
+      width: 600,
       xaxis: {
         zeroline: false,
         showticklabels: false,
@@ -158,7 +158,7 @@ export class GaugePlotly extends VisualizerBase {
       paper_bgcolor: this.backgroundColor
     };
 
-    this.chartNode.style.maxHeight = "600px"; // fixed chart height
+    this.chartNode.style.maxHeight = "400px"; // fixed chart height
     this.chartNode.style.overflow = "hidden";
 
     const config = {

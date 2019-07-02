@@ -1,7 +1,6 @@
 $background-color: #f4f4f4;
 
 .sva-question {
-  margin: 1em 0;
   display: inline-block;
   width: 100%;
   vertical-align: top;
@@ -10,7 +9,7 @@ $background-color: #f4f4f4;
   padding: 1em;
   font-family: Segoe UI Bold, sans-serif;
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 1400px) {
     width: 50%;
   }
 }
