@@ -14,7 +14,7 @@ export class SelectBasePlotly extends SelectBase {
   }
 
   private chart: Promise<Plotly.PlotlyHTMLElement>;
-  protected chartTypes = ["bar", "scatter"];
+  protected chartTypes = ["bar", "pie", "scatter"];
   chartType = "bar";
   chartNode = <HTMLElement>document.createElement("div");
 
@@ -47,6 +47,7 @@ export class SelectBasePlotly extends SelectBase {
     const traceConfig: any = {
       type: chartType,
       y: labels,
+      labels: labels,
       orientation: "h",
       mode: "markers"
     };
@@ -56,7 +57,11 @@ export class SelectBasePlotly extends SelectBase {
     }
 
     datasets.forEach(dataset => {
-      traces.push(Object.assign({}, traceConfig, { x: dataset }));
+      if (this.chartType === "pie") {
+        traces.push(Object.assign({}, traceConfig, { values: dataset }));
+      } else {
+        traces.push(Object.assign({}, traceConfig, { x: dataset }));
+      }
     });
 
     const layout: any = {
