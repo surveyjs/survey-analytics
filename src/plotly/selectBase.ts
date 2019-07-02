@@ -65,7 +65,7 @@ export class SelectBasePlotly extends SelectBase {
     });
 
     const layout: any = {
-      title: question.name,
+      // title: question.name,
       colorway: colors,
       yaxis: {
         automargin: true,
@@ -73,7 +73,9 @@ export class SelectBasePlotly extends SelectBase {
       },
       xaxis: {
         automargin: true
-      }
+      },
+      plot_bgcolor: this.backgroundColor,
+      paper_bgcolor: this.backgroundColor
     };
 
     const config = {

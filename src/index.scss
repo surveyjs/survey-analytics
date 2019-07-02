@@ -1,0 +1,26 @@
+$background-color: #f4f4f4;
+
+.sva-question {
+  margin: 1em 0;
+  display: inline-block;
+  width: 100%;
+  vertical-align: top;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 1em;
+  font-family: Segoe UI Bold, sans-serif;
+
+  @media screen and (min-width: 800px) {
+    width: 50%;
+  }
+}
+
+.sva-question__content {
+  background-color: $background-color;
+  padding: 1em;
+}
+
+.sva-question__title {
+  margin: 0;
+  margin-bottom: 1em;
+}

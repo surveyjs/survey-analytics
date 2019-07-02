@@ -26,6 +26,8 @@ export class VisualizerBase {
     return "#" + colors[Math.floor(Math.random() * colors.length)];
   }
 
+  backgroundColor = "#f4f4f4";
+
   getColors() {
     const colors = [
       "4e6198",

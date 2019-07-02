@@ -139,7 +139,7 @@ export class GaugePlotly extends VisualizerBase {
           }
         }
       ],
-      title: question.name + " : " + level,
+      title: level,
       height: 1000,
       width: 1000,
       xaxis: {
@@ -153,7 +153,9 @@ export class GaugePlotly extends VisualizerBase {
         showticklabels: false,
         showgrid: false,
         range: [-1, 1]
-      }
+      },
+      plot_bgcolor: this.backgroundColor,
+      paper_bgcolor: this.backgroundColor
     };
 
     this.chartNode.style.maxHeight = "600px"; // fixed chart height

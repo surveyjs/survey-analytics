@@ -71,7 +71,7 @@ export class WordCloud extends VisualizerBase {
         return this.getRandomColor();
       },
       rotateRatio: 0.5,
-      backgroundColor: "white",
+      backgroundColor: this.backgroundColor,
       click: function(item) {
         console.log(item[0] + ": " + item[1]);
       }

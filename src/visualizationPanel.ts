@@ -1,5 +1,6 @@
 import { VisualizationManager } from "./visualizationManager";
 import { Question, QuestionPanelDynamicModel } from "survey-core";
+import "./index.scss";
 
 export class VisualizationPanel {
   constructor(
@@ -11,15 +12,21 @@ export class VisualizationPanel {
 
   render() {
     this.questions.forEach(question => {
-      let questionContainerElement = document.createElement("div");
+      let questionElement = document.createElement("div");
+      let questionContent = document.createElement("div");
       let titleElement = document.createElement("h3");
       let vizualizerElement = document.createElement("div");
 
       titleElement.innerText = (<any>question)["title"];
 
-      questionContainerElement.appendChild(titleElement);
-      questionContainerElement.appendChild(vizualizerElement);
-      this.targetElement.appendChild(questionContainerElement);
+      questionElement.className = "sva-question";
+      questionContent.className = "sva-question__content";
+      titleElement.className = "sva-question__title";
+
+      questionContent.appendChild(titleElement);
+      questionContent.appendChild(vizualizerElement);
+      questionElement.appendChild(questionContent);
+      this.targetElement.appendChild(questionElement);
 
       this.renderQuestionVisualication(vizualizerElement, question, this.data);
     });
