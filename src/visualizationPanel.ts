@@ -12,17 +12,26 @@ export class VisualizationPanel {
   ) {}
 
   render() {
+    const gridSizerClassName = "sva-grid__grid-sizer";
+    const questionElementClassName = "sva-question";
+
+    const gridSizer = document.createElement("div"); //Masonry gridSizer empty element, only used for element sizing
+
+    this.targetElement.className = "sva-grid";
+    gridSizer.className = gridSizerClassName;
+    this.targetElement.appendChild(gridSizer);
+
     this.questions.forEach(question => {
-      let questionElement = document.createElement("div");
-      let questionContent = document.createElement("div");
-      let titleElement = document.createElement("h3");
-      let vizualizerElement = document.createElement("div");
+      const questionElement = document.createElement("div");
+      const questionContent = document.createElement("div");
+      const titleElement = document.createElement("h3");
+      const vizualizerElement = document.createElement("div");
 
       titleElement.innerText = (<any>question)["title"];
 
-      questionElement.className = "sva-question";
-      questionContent.className = "sva-question__content";
-      titleElement.className = "sva-question__title";
+      questionElement.className = questionElementClassName;
+      questionContent.className = questionElementClassName + "__content";
+      titleElement.className = questionElementClassName + "__title";
 
       questionContent.appendChild(titleElement);
       questionContent.appendChild(vizualizerElement);
@@ -33,7 +42,8 @@ export class VisualizationPanel {
     });
 
     var msnry = new Masonry(this.targetElement, {
-      itemSelector: ".sva-question"
+      columnWidth: "." + gridSizerClassName,
+      itemSelector: "." + questionElementClassName
     });
   }
 

@@ -1,5 +1,13 @@
 $background-color: #f4f4f4;
 
+.sva-grid__grid-sizer {
+  width: 100%;
+  box-sizing: border-box;
+  @media screen and (min-width: 1400px) {
+    width: 50%;
+  }
+}
+
 .sva-question {
   display: inline-block;
   width: 100%;
