@@ -1,5 +1,6 @@
 import { VisualizationManager } from "./visualizationManager";
 import { Question, QuestionPanelDynamicModel } from "survey-core";
+import Masonry from "masonry-layout";
 import "./index.scss";
 
 export class VisualizationPanel {
@@ -29,6 +30,10 @@ export class VisualizationPanel {
       this.targetElement.appendChild(questionElement);
 
       this.renderQuestionVisualication(vizualizerElement, question, this.data);
+    });
+
+    var msnry = new Masonry(this.targetElement, {
+      itemSelector: ".sva-question"
     });
   }
 
