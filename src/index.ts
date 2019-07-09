@@ -9,3 +9,4 @@ export * from "./chartjs/index";
 export * from "./c3/index";
 export * from "./plotly/index";
 export * from "./wordcloud/wordcloud";
+export * from "./wordcloud/stopwords/index";

@@ -2,6 +2,7 @@ import { Question } from "survey-core";
 import WordCloudLib from "wordcloud";
 import { VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
+import { textHelper } from "./stopwords/index";
 
 export class WordCloud extends VisualizerBase {
   constructor(
@@ -18,13 +19,25 @@ export class WordCloud extends VisualizerBase {
   getData() {
     let result: { [key: string]: number } = {};
 
+    let stopWords = textHelper.getStopWords();
+    let stopTheWord = (word: string) => {
+      if (stopWords.indexOf(word) !== -1) {
+        return "";
+      }
+      return word;
+    };
+
     let processString = (row: string) => {
       if (!!row) {
         row.split(" ").forEach(word => {
-          if (!result[word]) {
-            result[word] = 1;
+          word = stopTheWord(word.toLowerCase() || "");
+          if (!!word) {
+            if (!result[word]) {
+              result[word] = 1;
+            } else {
+              result[word]++;
+            }
           }
-          result[word]++;
         });
       }
     };
