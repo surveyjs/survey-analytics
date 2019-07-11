@@ -76,7 +76,7 @@ export class WordCloud extends VisualizerBase {
 
     this.targetElement.appendChild(canvasNode);
 
-    this.cloud = WordCloudLib(canvasNode, {
+    const config = {
       list: data,
       weightFactor: 20,
       fontFamily: "Segoe UI Bold, sans-serif",
@@ -84,11 +84,14 @@ export class WordCloud extends VisualizerBase {
         return this.getRandomColor();
       },
       rotateRatio: 0.5,
+      rotationSteps: 2,
       backgroundColor: this.backgroundColor,
-      click: function(item) {
+      click: function(item: any) {
         console.log(item[0] + ": " + item[1]);
       }
-    });
+    };
+
+    this.cloud = WordCloudLib(canvasNode, config);
   }
 
   destroy() {

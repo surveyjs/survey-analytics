@@ -30,16 +30,16 @@ export class VisualizerBase {
 
   getColors() {
     const colors = [
-      "4e6198",
-      "cf37a6",
-      "4ec46c",
-      "7d8da5",
-      "aba1ff",
-      "ffc152",
-      "1eb496",
-      "ff6771",
+      "86e1fb",
       "3999fb",
-      "86e1fb"
+      "ff6771",
+      "1eb496",
+      "ffc152",
+      "aba1ff",
+      "7d8da5",
+      "4ec46c",
+      "cf37a6",
+      "4e6198"
     ];
 
     let manyColors: any = [];
