@@ -69,7 +69,9 @@ export class SelectBasePlotly extends SelectBase {
       colorway: colors,
       yaxis: {
         automargin: true,
-        type: "category"
+        type: "category",
+        ticklen: 5,
+        tickcolor: "transparent"
       },
       xaxis: {
         automargin: true
