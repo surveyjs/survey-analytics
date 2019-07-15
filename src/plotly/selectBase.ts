@@ -66,6 +66,17 @@ export class SelectBasePlotly extends SelectBase {
 
     const layout: any = {
       // title: question.name,
+      font: {
+        family: "Segoe UI, sans-serif",
+        size: 14,
+        weight: "normal",
+        color: "#404040"
+      },
+      margin: {
+        t: 0,
+        b: 0,
+        r: 10
+      },
       colorway: colors,
       yaxis: {
         automargin: true,
