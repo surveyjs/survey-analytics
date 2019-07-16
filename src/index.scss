@@ -111,6 +111,7 @@ $form-element-height: 34px;
     border-right: 2px solid $text-color;
     border-bottom: 2px solid $text-color;
     transform: rotate(45deg);
+    box-sizing: content-box;
   }
 }
 // EO custom select

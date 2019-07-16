@@ -41,7 +41,7 @@ export class SelectBase extends VisualizerBase {
       toolbar.className = "sva-question__toolbar";
 
       const select = document.createElement("select");
-      select.className = "form-control sva-question__select";
+      select.className = "sva-question__select";
       this.chartTypes.forEach(chartType => {
         let option = document.createElement("option");
         option.value = chartType;
