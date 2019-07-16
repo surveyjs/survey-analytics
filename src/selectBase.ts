@@ -37,8 +37,11 @@ export class SelectBase extends VisualizerBase {
     changeHandler: (e: any) => void
   ) {
     if (this.chartTypes.length > 0) {
+      const toolbar = document.createElement("div");
+      toolbar.className = "sva-question__toolbar";
+
       const select = document.createElement("select");
-      select.className = "form-control sva-question__toolbar";
+      select.className = "form-control sva-question__select";
       this.chartTypes.forEach(chartType => {
         let option = document.createElement("option");
         option.value = chartType;
@@ -47,7 +50,9 @@ export class SelectBase extends VisualizerBase {
         select.appendChild(option);
       });
       select.onchange = changeHandler;
-      container.appendChild(select);
+
+      toolbar.appendChild(select);
+      container.appendChild(toolbar);
     }
   }
 

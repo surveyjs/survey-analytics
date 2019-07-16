@@ -1,4 +1,26 @@
-$background-color: #f4f4f4;
+$main-color: #1ab394;
+$auxiliary-color: #ff9814;
+$auxiliary-color-1: #666666;
+$auxiliary-color-2: #1948b3;
+$danger-color: #d9534f;
+$disabled-color: #b0b0b0;
+
+$blue-color: #394cff;
+$purple-color: #aa42d0;
+$green-color: #41c02c;
+
+$text-color-inverse: #fff;
+$text-color: #404040;
+
+$content-max-width: 1170px;
+
+$background-color: #f7f7f7;
+$background-color-dark: #eeeeee;
+$background-disabled-color: #b7b7b7;
+
+$border-color: #e7e7e7;
+
+$form-element-height: 34px;
 
 .sva-grid__grid-sizer {
   width: 100%;
@@ -27,14 +49,68 @@ $background-color: #f4f4f4;
 }
 
 .sva-question__title {
+  margin-left: 30px;
   font-family: Raleway;
   font-size: 18px;
   font-weight: bold;
-  color: #404040;
+  color: $text-color;
   margin: 0;
   margin-bottom: 1em;
+  margin-left: 30px;
 }
 
 .sva-question__toolbar {
-  width: 100px;
+  margin-bottom: 25px;
+  margin-left: 30px;
 }
+
+// custom select
+.sva-question__toolbar {
+  position: relative;
+  display: inline-block;
+  width: 170px;
+
+  .sva-question__select {
+    width: 100%;
+    display: block;
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-radius: 2px;
+    background: $text-color-inverse;
+    border-color: $border-color;
+    height: $form-element-height;
+    padding: 5px 5px 5px 15px;
+    font-size: 14px;
+    color: $text-color;
+
+    &::-ms-expand {
+      display: none;
+    }
+
+    &:focus {
+      outline: 0;
+      box-shadow: none;
+    }
+
+    &:disabled {
+      color: $disabled-color;
+    }
+  }
+
+  &:before {
+    margin-top: -4px;
+    top: 50%;
+    right: 10px;
+    z-index: 1;
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-right: 2px solid $text-color;
+    border-bottom: 2px solid $text-color;
+    transform: rotate(45deg);
+  }
+}
+// EO custom select
