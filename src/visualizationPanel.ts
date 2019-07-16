@@ -14,6 +14,8 @@ export class VisualizationPanel {
   render() {
     const gridSizerClassName = "sva-grid__grid-sizer";
     const questionElementClassName = "sva-question";
+    let msnry: any = undefined;
+    let getMasonry = () => msnry;
 
     const gridSizer = document.createElement("div"); //Masonry gridSizer empty element, only used for element sizing
 
@@ -38,10 +40,20 @@ export class VisualizationPanel {
       questionElement.appendChild(questionContent);
       this.targetElement.appendChild(questionElement);
 
-      this.renderQuestionVisualication(vizualizerElement, question, this.data);
+      const visualizer = this.renderQuestionVisualication(
+        vizualizerElement,
+        question,
+        this.data
+      );
+
+      visualizer.onUpdate = () => {
+        if (getMasonry()) {
+          getMasonry().layout();
+        }
+      };
     });
 
-    var msnry = new Masonry(this.targetElement, {
+    msnry = new Masonry(this.targetElement, {
       columnWidth: "." + gridSizerClassName,
       itemSelector: "." + questionElementClassName
     });
@@ -55,9 +67,10 @@ export class VisualizationPanel {
     vizualizerElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>
-  ): void {
+  ) {
     var visualizers = VisualizationManager.getVisualizers(question.getType());
     var visualizer = new visualizers[0](vizualizerElement, question, data);
     visualizer.render();
+    return visualizer;
   }
 }

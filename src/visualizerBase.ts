@@ -8,10 +8,16 @@ export class VisualizerBase {
     protected options?: Object
   ) {}
 
+  onUpdate: () => void;
+
   destroy() {}
 
   render() {
     this.targetElement.innerHTML = "This question type is not visualized yet";
+  }
+
+  invokeOnUpdate() {
+    this.onUpdate && this.onUpdate();
   }
 
   getRandomColor() {

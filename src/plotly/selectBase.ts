@@ -27,6 +27,7 @@ export class SelectBasePlotly extends SelectBase {
       this.chartType = e.target.value;
       this.destroy();
       this.chart = this.getPlotlyChart(this.chartNode, this.chartType);
+      this.invokeOnUpdate();
     }
   };
 
@@ -65,6 +66,11 @@ export class SelectBasePlotly extends SelectBase {
       }
     });
 
+    const height =
+      chartType === "pie"
+        ? 450
+        : (labels.length + (labels.length + 1) * 0.5) * 20;
+
     const layout: any = {
       // title: question.name,
       font: {
@@ -73,7 +79,7 @@ export class SelectBasePlotly extends SelectBase {
         weight: "normal",
         color: "#404040"
       },
-      height: (labels.length + (labels.length + 1) * 0.5) * 20,
+      height: height,
       margin: {
         t: 0,
         b: 0,
