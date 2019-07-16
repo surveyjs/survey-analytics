@@ -49,7 +49,8 @@ export class SelectBasePlotly extends SelectBase {
       y: labels,
       labels: labels,
       orientation: "h",
-      mode: "markers"
+      mode: "markers",
+      width: 0.5
     };
 
     if (datasets.length === 1) {
@@ -72,6 +73,7 @@ export class SelectBasePlotly extends SelectBase {
         weight: "normal",
         color: "#404040"
       },
+      height: (labels.length + (labels.length + 1) * 0.5) * 20,
       margin: {
         t: 0,
         b: 0,
