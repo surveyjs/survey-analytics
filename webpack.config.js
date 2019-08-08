@@ -120,15 +120,15 @@ module.exports = function(options) {
       },
       "survey-core": {
         root: "Survey",
-        commonjs2: "Survey",
-        commonjs: "Survey",
-        amd: "Survey"
+        commonjs2: "survey-core",
+        commonjs: "survey-core",
+        amd: "survey-core"
       },
       "chart.js": {
         root: "Chart",
-        commonjs2: "Chart",
-        commonjs: "Chart",
-        amd: "Chart"
+        commonjs2: "chart.js",
+        commonjs: "chart.js",
+        amd: "chart.js"
       },
       c3: {
         root: "c3",
@@ -138,15 +138,15 @@ module.exports = function(options) {
       },
       wordcloud: {
         root: "WordCloud",
-        commonjs2: "WordCloud",
-        commonjs: "WordCloud",
-        amd: "WordCloud"
+        commonjs2: "wordcloud2",
+        commonjs: "wordcloud2",
+        amd: "wordcloud2"
       },
       "plotly.js": {
         root: "Plotly",
-        commonjs2: "Plotly",
-        commonjs: "Plotly",
-        amd: "Plotly"
+        commonjs2: "plotly.js-dist",
+        commonjs: "plotly.js-dist",
+        amd: "plotly.js-dist"
       }
     },
     plugins: [
