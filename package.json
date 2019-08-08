@@ -44,7 +44,6 @@
     "datatables.net-rowgroup": "latest",
     "datatables.net-select": "latest",
     "jquery": "3.4.1",
-    "masonry-layout": "^4.2.2",
     "plotly.js": "^1.48.3",
     "survey-core": "latest",
     "wordcloud": "^1.1.0"
@@ -61,6 +60,7 @@
     "@types/node": "7.0.4",
     "@types/wordcloud": "^1.1.1",
     "@types/c3": "^0.7.0",
+    "masonry-layout": "^4.2.2",
     "ajv": "4.11.2",
     "chart.js": "^2.8.0",
     "css-loader": "0.26.1",

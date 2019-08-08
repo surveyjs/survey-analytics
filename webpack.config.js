@@ -138,9 +138,9 @@ module.exports = function(options) {
       },
       wordcloud: {
         root: "WordCloud",
-        commonjs2: "wordcloud2",
-        commonjs: "wordcloud2",
-        amd: "wordcloud2"
+        commonjs2: "wordcloud",
+        commonjs: "wordcloud",
+        amd: "wordcloud"
       },
       "plotly.js": {
         root: "Plotly",
