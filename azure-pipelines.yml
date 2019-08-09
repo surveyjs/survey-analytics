@@ -4,10 +4,13 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- master
+  batch: true
+  branches:
+    include:
+    - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'Ubuntu-16.04'
 
 steps:
 - task: NodeTool@0
@@ -17,5 +20,33 @@ steps:
 
 - script: |
     npm install
-    npm run build
-  displayName: 'npm install and build'
+  displayName: 'npm install'
+
+- task: DownloadBuildArtifacts@0
+  inputs:
+    buildType: 'specific'
+    project: 'af2804d2-859a-4705-9ef5-cdf46d1d5d4f'
+    pipeline: '7'
+    specificBuildWithTriggering: true
+    buildVersionToDownload: 'latest'
+    downloadType: 'single'
+    artifactName: 'SurveyJSLibraryBuild'
+    downloadPath: '$(System.ArtifactsDirectory)'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(System.ArtifactsDirectory)/SurveyJSLibraryBuild/packages/survey-core'
+    Contents: '**'
+    TargetFolder: '$(Build.Repository.LocalPath)/node_modules/survey-core'
+    OverWrite: true
+
+- script: |
+    npm run build_prod
+    npm test
+  displayName: 'npm build and test'
+
+- script: |
+    npm run doc_update
+  env:
+    GTTOKEN: $(GTTOKEN)
+  displayName: 'Update documentation'
