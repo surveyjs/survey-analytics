@@ -9,7 +9,7 @@
     "build_dev": "webpack --env.buildType dev",
     "build_prod": "npm run build_dev && webpack --env.buildType prod"
   },
-  "version": "1.0.2",
+  "version": "0.0.1",
   "name": "survey-analytics",
   "description": "SurveyJS analytics Library.",
   "mainFile": "survey.analytics.js",
@@ -21,7 +21,7 @@
     "survey.analytics.min.css"
   ],
   "typings": "survey.analytics.d.ts",
-  "private": true,
+  "private": false,
   "keywords": [
     "Survey",
     "JavaScript",
