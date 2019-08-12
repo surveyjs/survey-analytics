@@ -42,8 +42,8 @@ module.exports = function(options) {
     } else if (1 === percentage) {
       if (options.buildType === "prod") {
         dts.bundle({
-          name: "../../survey.analytics",
-          main: packagePath + "typings/" + packageJson.typings,
+          name: "../survey.analytics",
+          main: packagePath + "typings/index.d.ts",
           outputAsModuleFolder: true,
           headerText: dts_banner
         });
@@ -144,9 +144,9 @@ module.exports = function(options) {
       },
       "plotly.js": {
         root: "Plotly",
-        commonjs2: "plotly.js-dist",
-        commonjs: "plotly.js-dist",
-        amd: "plotly.js-dist"
+        commonjs2: "plotly.js",
+        commonjs: "plotly.js",
+        amd: "plotly.js"
       }
     },
     plugins: [

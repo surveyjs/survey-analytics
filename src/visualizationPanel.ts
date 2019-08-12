@@ -6,7 +6,7 @@ import "./index.scss";
 export class VisualizationPanel {
   constructor(
     protected targetElement: HTMLElement,
-    protected questions: Array<Question>,
+    protected questions: Array<any>,
     protected data: Array<{ [index: string]: any }>,
     protected options?: Object
   ) {}
