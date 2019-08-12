@@ -1,5 +1,5 @@
 import { Question } from "survey-core";
-import Plotly from "plotly.js";
+var Plotly = <any>require("plotly.js-dist");
 import { VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
 

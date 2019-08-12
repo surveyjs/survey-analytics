@@ -144,9 +144,9 @@ module.exports = function(options) {
       },
       "plotly.js": {
         root: "Plotly",
-        commonjs2: "plotly.js",
-        commonjs: "plotly.js",
-        amd: "plotly.js"
+        commonjs2: "plotly.js-dist",
+        commonjs: "plotly.js-dist",
+        amd: "plotly.js-dist"
       }
     },
     plugins: [
