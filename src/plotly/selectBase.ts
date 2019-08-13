@@ -47,8 +47,13 @@ export class SelectBasePlotly extends SelectBase {
 
     const traceConfig: any = {
       type: chartType,
-      y: labels,
-      labels: labels,
+      y: labels.map(l => {
+        if (l.length > 30) {
+          return l.substring(0, 27) + "...";
+        }
+        return l;
+      }),
+      text: labels,
       orientation: "h",
       mode: "markers",
       width: 0.5
@@ -71,13 +76,7 @@ export class SelectBasePlotly extends SelectBase {
         ? 450
         : (labels.length + (labels.length + 1) * 0.5) * 20;
 
-    var maxLabelLength = Math.max.apply(null, labels.map(l => l.length));
-    const letterWidth = 7;
-
-    console.log(this.question.name + " " + maxLabelLength * letterWidth);
-
     const layout: any = {
-      // title: question.name,
       font: {
         family: "Segoe UI, sans-serif",
         size: 14,
@@ -88,8 +87,7 @@ export class SelectBasePlotly extends SelectBase {
       margin: {
         t: 0,
         b: 0,
-        r: 10,
-        l: maxLabelLength * letterWidth
+        r: 10
       },
       colorway: colors,
       yaxis: {
