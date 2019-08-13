@@ -71,6 +71,11 @@ export class SelectBasePlotly extends SelectBase {
         ? 450
         : (labels.length + (labels.length + 1) * 0.5) * 20;
 
+    var maxLabelLength = Math.max.apply(null, labels.map(l => l.length));
+    const letterWidth = 7;
+
+    console.log(this.question.name + " " + maxLabelLength * letterWidth);
+
     const layout: any = {
       // title: question.name,
       font: {
@@ -83,7 +88,8 @@ export class SelectBasePlotly extends SelectBase {
       margin: {
         t: 0,
         b: 0,
-        r: 10
+        r: 10,
+        l: maxLabelLength * letterWidth
       },
       colorway: colors,
       yaxis: {
