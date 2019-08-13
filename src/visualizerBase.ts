@@ -34,23 +34,30 @@ export class VisualizerBase {
 
   backgroundColor = "#f7f7f7";
 
-  getColors() {
-    const colors = [
-      "86e1fb",
-      "3999fb",
-      "ff6771",
-      "1eb496",
-      "ffc152",
-      "aba1ff",
-      "7d8da5",
-      "4ec46c",
-      "cf37a6",
-      "4e6198"
-    ];
+  static customColors: string[] = [];
+  private static colors = [
+    "86e1fb",
+    "3999fb",
+    "ff6771",
+    "1eb496",
+    "ffc152",
+    "aba1ff",
+    "7d8da5",
+    "4ec46c",
+    "cf37a6",
+    "4e6198"
+  ];
+
+  getColors(count = 10) {
+    const colors =
+      Array.isArray(VisualizerBase.customColors) &&
+      VisualizerBase.customColors.length > 0
+        ? VisualizerBase.customColors
+        : VisualizerBase.colors;
 
     let manyColors: any = [];
 
-    for (let index = 0; index < 10; index++) {
+    for (let index = 0; index < count; index++) {
       manyColors = manyColors.concat(colors);
     }
 
