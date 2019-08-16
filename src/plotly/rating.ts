@@ -3,11 +3,18 @@ var Plotly = <any>require("plotly.js-dist");
 import { VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
 
-import c3 from "c3";
-
 export class GaugePlotly extends VisualizerBase {
   private _result: any;
   private chart: Promise<Plotly.PlotlyHTMLElement>;
+
+  public static stepsCount = 5;
+  public static generateTextsCallback: (
+    question: Question,
+    maxValue: number,
+    minValue: number,
+    stepsCount: number,
+    texts: string[]
+  ) => string[];
 
   constructor(
     protected chartNode: HTMLElement,
@@ -23,22 +30,35 @@ export class GaugePlotly extends VisualizerBase {
   }
 
   generateText(maxValue: number, minValue: number, stepsCount: number) {
-    const text: any = [];
-    //"21-25", "16-20", "11-15", "6-10", "0-5"
+    let texts: any = [];
 
-    // text.push(maxValue);
-    // for (let i = 0; i < stepsCount - 2; i++) {
-    //   text.push("");
-    // }
-    // text.push(minValue);
+    if (stepsCount === 5) {
+      texts = [
+        "very high (" + maxValue + ")",
+        "high",
+        "medium",
+        "low",
+        "very low (" + minValue + ")"
+      ];
+    } else {
+      texts.push(maxValue);
+      for (let i = 0; i < stepsCount - 2; i++) {
+        texts.push("");
+      }
+      texts.push(minValue);
+    }
 
-    return [
-      "very hight (" + maxValue + ")",
-      "hight",
-      "medium",
-      "low",
-      "very low (" + minValue + ")"
-    ];
+    if (!!GaugePlotly.generateTextsCallback) {
+      return GaugePlotly.generateTextsCallback(
+        this.question,
+        maxValue,
+        minValue,
+        stepsCount,
+        texts
+      );
+    }
+
+    return texts;
   }
 
   generateValues(maxValue: number, stepsCount: number) {
@@ -72,10 +92,13 @@ export class GaugePlotly extends VisualizerBase {
 
     const maxValue = question.rateMax;
     const minValue = question.rateMin;
-    const stepsCount = 5;
-    const values = this.generateValues(maxValue, stepsCount);
-    const text = this.generateText(maxValue, minValue, stepsCount);
-    const colors = this.generateColors(maxValue, minValue, stepsCount);
+    const values = this.generateValues(maxValue, GaugePlotly.stepsCount);
+    const text = this.generateText(maxValue, minValue, GaugePlotly.stepsCount);
+    const colors = this.generateColors(
+      maxValue,
+      minValue,
+      GaugePlotly.stepsCount
+    );
 
     // Enter a speed between 0 and 180
     var level = this.result;
