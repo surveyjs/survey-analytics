@@ -2,6 +2,7 @@ import { Question } from "survey-core";
 var Plotly = <any>require("plotly.js-dist");
 import { VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
+import { timeThursday } from "d3";
 
 export class GaugePlotly extends VisualizerBase {
   private _result: any;
@@ -16,13 +17,50 @@ export class GaugePlotly extends VisualizerBase {
     texts: string[]
   ) => string[];
 
+  protected chartTypes = ["gauge", "bullet"];
+  chartType = "gauge";
+  chartNode = <HTMLElement>document.createElement("div");
+
   constructor(
-    protected chartNode: HTMLElement,
+    protected targetElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(chartNode, question, data, options);
+    super(targetElement, question, data, options);
+  }
+
+  private toolbarChangeHandler = (e: any) => {
+    if (this.chartType !== e.target.value) {
+      this.chartType = e.target.value;
+      this.destroy();
+      this.createChart();
+      this.invokeOnUpdate();
+    }
+  };
+
+  private createToolbar(
+    container: HTMLDivElement,
+    changeHandler: (e: any) => void
+  ) {
+    if (this.chartTypes.length > 0) {
+      const toolbar = document.createElement("div");
+      toolbar.className = "sva-question__toolbar";
+
+      const select = document.createElement("select");
+      select.className = "sva-question__select";
+      this.chartTypes.forEach(chartType => {
+        let option = document.createElement("option");
+        option.value = chartType;
+        option.text = chartType;
+        option.selected = this.chartType === chartType;
+        select.appendChild(option);
+      });
+      select.onchange = changeHandler;
+
+      toolbar.appendChild(select);
+      container.appendChild(toolbar);
+    }
   }
 
   destroy() {
@@ -86,7 +124,18 @@ export class GaugePlotly extends VisualizerBase {
     return colors;
   }
 
-  render() {
+  private createToolbarContainer() {
+    const chartNodeContainer = document.createElement("div");
+    const toolbarNodeContainer = document.createElement("div");
+
+    chartNodeContainer.appendChild(toolbarNodeContainer);
+    chartNodeContainer.appendChild(this.chartNode);
+    this.targetElement.appendChild(chartNodeContainer);
+
+    this.createToolbar(toolbarNodeContainer, this.toolbarChangeHandler);
+  }
+
+  private createChart() {
     const question = this.question;
     const arrowColor = "#4e6198";
 
@@ -120,69 +169,28 @@ export class GaugePlotly extends VisualizerBase {
 
     var data: any = [
       {
-        type: "scatter",
-        x: [0],
-        y: [0],
-        marker: {
-          size: 28,
-          color: arrowColor
+        type: "indicator",
+        mode: "gauge+number",
+        gauge: {
+          shape: this.chartType,
+          bgcolor: "white",
+          bar: { color: colors[0] }
         },
-        name: question.name,
-        text: level,
-        showlegend: false,
-        hoverinfo: "text+name"
-      },
-      {
-        values: values,
-        rotation: 90,
-        text: text,
-        textinfo: "text",
-        textposition: "inside",
-        // textfont: {
-        //   size: 20
-        // },
-        marker: {
-          colors: colors
-        },
-        hoverinfo: "skip",
-        hole: 0.5,
-        type: "pie",
-        showlegend: false
+        value: level,
+        text: question.name,
+        domain: { x: [0, 1], y: [0, 1] }
       }
     ];
 
-    var layout: any = {
-      shapes: [
-        {
-          type: "path",
-          path: path,
-          fillcolor: arrowColor,
-          line: {
-            color: arrowColor
-          }
-        }
-      ],
-      title: level,
-      height: 600,
+    var layout = {
       width: 600,
-      xaxis: {
-        zeroline: false,
-        showticklabels: false,
-        showgrid: false,
-        range: [-1, 1]
-      },
-      yaxis: {
-        zeroline: false,
-        showticklabels: false,
-        showgrid: false,
-        range: [-1, 1]
-      },
+      height: 400,
       plot_bgcolor: this.backgroundColor,
       paper_bgcolor: this.backgroundColor
     };
 
-    this.chartNode.style.maxHeight = "400px"; // fixed chart height
-    this.chartNode.style.overflow = "hidden";
+    // this.chartNode.style.maxHeight = "400px"; // fixed chart height
+    // this.chartNode.style.overflow = "hidden";
 
     const config = {
       displayModeBar: false,
@@ -190,6 +198,11 @@ export class GaugePlotly extends VisualizerBase {
     };
 
     this.chart = Plotly.newPlot(this.chartNode, data, layout, config);
+  }
+
+  render() {
+    this.createToolbarContainer();
+    this.createChart();
   }
 
   get result() {
