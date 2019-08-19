@@ -11,11 +11,12 @@ export class SelectBasePlotly extends SelectBase {
     options?: Object
   ) {
     super(targetElement, question, data, options);
+    this.chartTypes = SelectBasePlotly.types;
   }
 
   private chart: Promise<Plotly.PlotlyHTMLElement>;
-  protected chartTypes = ["bar", "pie", "scatter"];
-  chartType = "bar";
+  public static types = ["bar", "pie", "scatter"];
+  chartType = SelectBasePlotly.types[0];
   chartNode = <HTMLElement>document.createElement("div");
 
   destroy() {
