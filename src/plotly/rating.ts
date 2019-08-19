@@ -152,21 +152,6 @@ export class GaugePlotly extends VisualizerBase {
     // Enter a speed between 0 and 180
     var level = this.result;
 
-    // Trig to calc meter point
-    var degrees = maxValue - level,
-      radius = 0.5;
-    var radians = (degrees * Math.PI) / maxValue;
-    var x = radius * Math.cos(radians);
-    var y = radius * Math.sin(radians);
-
-    // Path: may have to change to create a better triangle
-    var mainPath = "M -.0 -0.025 L .0 0.025 L ",
-      pathX = String(x),
-      space = " ",
-      pathY = String(y),
-      pathEnd = " Z";
-    var path = mainPath.concat(pathX, space, pathY, pathEnd);
-
     var data: any = [
       {
         type: "indicator",
