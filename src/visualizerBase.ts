@@ -21,14 +21,7 @@ export class VisualizerBase {
   }
 
   getRandomColor() {
-    let color = [];
-    for (let i = 0; i < 3; i++) {
-      color[i] = Math.floor(Math.random() * 255);
-    }
-    return "rgba(" + color.join(", ") + ", 0.4)";
-
     const colors = this.getColors();
-
     return "#" + colors[Math.floor(Math.random() * colors.length)];
   }
 
