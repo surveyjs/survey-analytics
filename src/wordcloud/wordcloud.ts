@@ -28,6 +28,7 @@ export class WordCloud extends VisualizerBase {
     };
 
     let processString = (row: string) => {
+      row = "" + row;
       if (!!row) {
         row.split(" ").forEach(word => {
           word = stopTheWord(word.toLowerCase() || "");
