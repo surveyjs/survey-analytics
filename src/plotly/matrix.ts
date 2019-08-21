@@ -10,7 +10,6 @@ export class MatrixPlotly extends SelectBasePlotly {
     options?: Object
   ) {
     super(targetNode, question, data, options);
-    this.chartType = "bar";
   }
 
   valuesSource(): any[] {

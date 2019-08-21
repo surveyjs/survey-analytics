@@ -1,15 +1,23 @@
 import { VisualizationManager } from "./visualizationManager";
+import { VisualizerBase } from "./visualizerBase";
 import { Question, QuestionPanelDynamicModel } from "survey-core";
 import Masonry from "masonry-layout";
 import "./index.scss";
+import { SelectBase } from "./selectBase";
 
 export class VisualizationPanel {
+  protected filteredData: Array<{ [index: string]: any }>;
+  protected filterValues: { [index: string]: any };
+  protected visualizers: Array<VisualizerBase> = [];
+
   constructor(
     protected targetElement: HTMLElement,
     protected questions: Array<any>,
     protected data: Array<{ [index: string]: any }>,
     protected options?: Object
-  ) {}
+  ) {
+    this.filteredData = data;
+  }
 
   render() {
     const gridSizerClassName = "sva-grid__grid-sizer";
@@ -40,10 +48,10 @@ export class VisualizationPanel {
       questionElement.appendChild(questionContent);
       this.targetElement.appendChild(questionElement);
 
-      const visualizer = this.renderQuestionVisualication(
+      const visualizer = this.renderQuestion(
         vizualizerElement,
         question,
-        this.data
+        this.filteredData
       );
 
       visualizer.onUpdate = () => {
@@ -51,6 +59,16 @@ export class VisualizationPanel {
           getMasonry().layout();
         }
       };
+      if (visualizer instanceof SelectBase) {
+        visualizer.onDataItemSelected = (
+          selectedValue: any,
+          clearSelection: boolean
+        ) => {
+          this.applyFilter(question.name, selectedValue, clearSelection);
+          this.update();
+        };
+      }
+      this.visualizers.push(visualizer);
     });
 
     msnry = new Masonry(this.targetElement, {
@@ -61,9 +79,39 @@ export class VisualizationPanel {
 
   destroy() {
     this.targetElement.innerHTML = "";
+    this.visualizers.forEach(visualizer => {
+      visualizer.onUpdate = undefined;
+      if (visualizer instanceof SelectBase) {
+        visualizer.onDataItemSelected = undefined;
+      }
+      visualizer.destroy();
+    });
+    this.visualizers = [];
   }
 
-  renderQuestionVisualication(
+  update() {
+    this.visualizers.forEach(visualizer =>
+      setTimeout(() => visualizer.update(this.filteredData), 10)
+    );
+  }
+
+  applyFilter(
+    questionName: string,
+    selectedValue: any,
+    clearSelection: boolean = true
+  ) {
+    if (clearSelection) {
+      this.filterValues = <any>{};
+    }
+    this.filterValues[questionName] = selectedValue;
+    this.filteredData = this.data.filter(item => {
+      return !Object.keys(this.filterValues).some(
+        key => item[key] !== this.filterValues[key]
+      );
+    });
+  }
+
+  renderQuestion(
     vizualizerElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>

@@ -2,7 +2,6 @@ import { Question } from "survey-core";
 var Plotly = <any>require("plotly.js-dist");
 import { VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
-import { timeThursday } from "d3";
 
 export class GaugePlotly extends VisualizerBase {
   private _result: any;
@@ -30,12 +29,17 @@ export class GaugePlotly extends VisualizerBase {
     super(targetElement, question, data, options);
   }
 
+  update(data: Array<{ [index: string]: any }>) {
+    super.update(data);
+    this.destroy();
+    this.createChart();
+    this.invokeOnUpdate();
+  }
+
   private toolbarChangeHandler = (e: any) => {
     if (this.chartType !== e.target.value) {
       this.chartType = e.target.value;
-      this.destroy();
-      this.createChart();
-      this.invokeOnUpdate();
+      this.update(this.data);
     }
   };
 
@@ -65,6 +69,7 @@ export class GaugePlotly extends VisualizerBase {
 
   destroy() {
     Plotly.purge(this.chartNode);
+    this._result = undefined;
   }
 
   generateText(maxValue: number, minValue: number, stepsCount: number) {

@@ -12,12 +12,14 @@ export class SelectBase extends VisualizerBase {
   }
 
   protected chartTypes: string[];
-  chartType: string;
-  chartNode: HTMLElement;
+  protected chartType: string;
+  protected chartNode: HTMLElement = <HTMLElement>document.createElement("div");
 
   toolbarChangeHandler(e: any) {}
 
   createChart() {}
+
+  onDataItemSelected: (selectedValue: any, clearSelection: boolean) => void;
 
   render() {
     const chartNodeContainer = document.createElement("div");

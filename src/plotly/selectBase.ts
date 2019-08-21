@@ -1,4 +1,4 @@
-import { Question } from "survey-core";
+import { Question, ItemValue } from "survey-core";
 var Plotly = <any>require("plotly.js-dist");
 import { VisualizationManager } from "../visualizationManager";
 import { SelectBase } from "../selectBase";
@@ -12,12 +12,18 @@ export class SelectBasePlotly extends SelectBase {
   ) {
     super(targetElement, question, data, options);
     this.chartTypes = SelectBasePlotly.types;
+    this.chartType = this.chartTypes[0];
   }
 
   private chart: Promise<Plotly.PlotlyHTMLElement>;
   public static types = ["bar", "pie", "scatter"];
-  chartType = SelectBasePlotly.types[0];
-  chartNode = <HTMLElement>document.createElement("div");
+
+  update(data: Array<{ [index: string]: any }>) {
+    super.update(data);
+    this.destroy();
+    this.chart = this.getPlotlyChart(this.chartNode, this.chartType);
+    this.invokeOnUpdate();
+  }
 
   destroy() {
     Plotly.purge(this.chartNode);
@@ -109,7 +115,23 @@ export class SelectBasePlotly extends SelectBase {
       responsive: true
     };
 
-    return Plotly.newPlot(chartNode, traces, layout, config);
+    const plot = Plotly.newPlot(chartNode, traces, layout, config);
+
+    // (<any>chartNode)["on"]("plotly_click", (data: any) => {
+    //   if (data.points.length > 0 && this.onDataItemSelected) {
+    //     const itemText = data.points[0].text;
+    //     const item: ItemValue = this.question.choices.filter(
+    //       (choice: ItemValue) => choice.text === itemText
+    //     )[0];
+    //     if (!!item) {
+    //       setTimeout(() =>
+    //         this.onDataItemSelected(item.value, !data.event.ctrlKey)
+    //       );
+    //     }
+    //   }
+    // });
+
+    return plot;
   }
 }
 

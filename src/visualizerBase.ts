@@ -8,9 +8,15 @@ export class VisualizerBase {
     protected options?: Object
   ) {}
 
+  update(data: Array<{ [index: string]: any }>) {
+    this.data = data;
+  }
+
   onUpdate: () => void;
 
-  destroy() {}
+  destroy() {
+    this.targetElement.innerHTML = "";
+  }
 
   render() {
     this.targetElement.innerHTML = "This question type is not visualized yet";
