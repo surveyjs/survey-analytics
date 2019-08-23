@@ -15,7 +15,16 @@ export class SelectBase extends VisualizerBase {
   protected chartType: string;
   protected chartNode: HTMLElement = <HTMLElement>document.createElement("div");
 
-  toolbarChangeHandler(e: any) {}
+  protected setChartType(chartType: string) {
+    if (
+      this.chartTypes.indexOf(chartType) !== -1 &&
+      this.chartType !== chartType
+    ) {
+      this.chartType = chartType;
+      this.createChart();
+      this.invokeOnUpdate();
+    }
+  }
 
   createChart() {}
 
@@ -29,19 +38,15 @@ export class SelectBase extends VisualizerBase {
     chartNodeContainer.appendChild(this.chartNode);
     this.targetElement.appendChild(chartNodeContainer);
 
-    this.createToolbar(toolbarNodeContainer, this.toolbarChangeHandler);
+    this.createToolbar(toolbarNodeContainer);
 
     this.createChart();
   }
 
-  private createToolbar(
-    container: HTMLDivElement,
-    changeHandler: (e: any) => void
-  ) {
+  protected createToolbarItems(toolbar: HTMLDivElement) {
     if (this.chartTypes.length > 0) {
-      const toolbar = document.createElement("div");
-      toolbar.className = "sva-question__toolbar";
-
+      const selectWrapper = document.createElement("div");
+      selectWrapper.className = "sva-question__select-wrapper";
       const select = document.createElement("select");
       select.className = "sva-question__select";
       this.chartTypes.forEach(chartType => {
@@ -51,11 +56,19 @@ export class SelectBase extends VisualizerBase {
         option.selected = this.chartType === chartType;
         select.appendChild(option);
       });
-      select.onchange = changeHandler;
-
-      toolbar.appendChild(select);
-      container.appendChild(toolbar);
+      select.onchange = (e: any) => {
+        this.setChartType(e.target.value);
+      };
+      selectWrapper.appendChild(select);
+      toolbar.appendChild(selectWrapper);
     }
+  }
+
+  protected createToolbar(container: HTMLDivElement) {
+    const toolbar = document.createElement("div");
+    toolbar.className = "sva-question__toolbar";
+    this.createToolbarItems(toolbar);
+    container.appendChild(toolbar);
   }
 
   valuesSource(): any[] {

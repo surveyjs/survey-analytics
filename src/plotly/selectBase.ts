@@ -16,6 +16,9 @@ export class SelectBasePlotly extends SelectBase {
   }
 
   private chart: Promise<Plotly.PlotlyHTMLElement>;
+  private selectedItem: ItemValue = undefined;
+  private filterText: HTMLSpanElement = undefined;
+  private filter: HTMLDivElement = undefined;
   public static types = ["bar", "pie", "scatter"];
 
   update(data: Array<{ [index: string]: any }>) {
@@ -29,17 +32,43 @@ export class SelectBasePlotly extends SelectBase {
     Plotly.purge(this.chartNode);
   }
 
-  toolbarChangeHandler = (e: any) => {
-    if (this.chartType !== e.target.value) {
-      this.chartType = e.target.value;
-      this.destroy();
-      this.chart = this.getPlotlyChart(this.chartNode, this.chartType);
-      this.invokeOnUpdate();
-    }
-  };
-
   createChart() {
     this.chart = this.getPlotlyChart(this.chartNode, this.chartType);
+  }
+
+  setSelection(item: ItemValue, clearSelection: boolean = false) {
+    this.selectedItem = item;
+    this.updateFilter();
+    this.onDataItemSelected((item && item.value) || undefined, clearSelection);
+  }
+
+  updateFilter() {
+    this.filter.style.display = !!this.selectedItem ? "inline-block" : "none";
+    this.filterText.innerHTML = !!this.selectedItem
+      ? "Filter: [" + this.selectedItem.text + "]"
+      : "";
+  }
+
+  protected createToolbarItems(toolbar: HTMLDivElement) {
+    super.createToolbarItems(toolbar);
+    this.filter = document.createElement("div");
+    this.filter.className = "sva-question__filter";
+
+    this.filterText = document.createElement("span");
+    this.filterText.className = "sva-question__filter-text";
+    this.filter.appendChild(this.filterText);
+
+    const filterClear = document.createElement("span");
+    filterClear.className = "sva-question__filter-clear";
+    filterClear.innerHTML = "Clear";
+    filterClear.onclick = () => {
+      this.setSelection(undefined);
+    };
+    this.filter.appendChild(filterClear);
+
+    toolbar.appendChild(this.filter);
+
+    this.updateFilter();
   }
 
   private getPlotlyChart(
@@ -117,19 +146,15 @@ export class SelectBasePlotly extends SelectBase {
 
     const plot = Plotly.newPlot(chartNode, traces, layout, config);
 
-    // (<any>chartNode)["on"]("plotly_click", (data: any) => {
-    //   if (data.points.length > 0 && this.onDataItemSelected) {
-    //     const itemText = data.points[0].text;
-    //     const item: ItemValue = this.question.choices.filter(
-    //       (choice: ItemValue) => choice.text === itemText
-    //     )[0];
-    //     if (!!item) {
-    //       setTimeout(() =>
-    //         this.onDataItemSelected(item.value, !data.event.ctrlKey)
-    //       );
-    //     }
-    //   }
-    // });
+    (<any>chartNode)["on"]("plotly_click", (data: any) => {
+      if (data.points.length > 0 && this.onDataItemSelected) {
+        const itemText = data.points[0].text;
+        const item: ItemValue = this.question.choices.filter(
+          (choice: ItemValue) => choice.text === itemText
+        )[0];
+        this.setSelection(item, !data.event.ctrlKey);
+      }
+    });
 
     return plot;
   }

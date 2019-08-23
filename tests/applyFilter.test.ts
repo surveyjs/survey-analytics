@@ -41,4 +41,14 @@ test("applyFilter method", () => {
       q1: "mother"
     }
   ]);
+  panel.applyFilter("q2", undefined, false);
+  expect(panel["filteredData"]).toEqual([
+    {
+      q2: "father",
+      q1: "mother"
+    },
+    {
+      q1: "mother"
+    }
+  ]);
 });

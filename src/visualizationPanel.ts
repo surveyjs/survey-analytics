@@ -103,7 +103,11 @@ export class VisualizationPanel {
     if (clearSelection) {
       this.filterValues = <any>{};
     }
-    this.filterValues[questionName] = selectedValue;
+    if (selectedValue !== undefined) {
+      this.filterValues[questionName] = selectedValue;
+    } else {
+      delete this.filterValues[questionName];
+    }
     this.filteredData = this.data.filter(item => {
       return !Object.keys(this.filterValues).some(
         key => item[key] !== this.filterValues[key]

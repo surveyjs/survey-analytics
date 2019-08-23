@@ -65,7 +65,7 @@ $form-element-height: 34px;
 }
 
 // custom select
-.sva-question__toolbar {
+.sva-question__select-wrapper {
   position: relative;
   display: inline-block;
   width: 170px;
@@ -115,3 +115,16 @@ $form-element-height: 34px;
   }
 }
 // EO custom select
+
+.sva-question__filter {
+  display: inline-block;
+  padding: 0 1em;
+}
+
+.sva-question__filter-clear {
+  cursor: pointer;
+  padding-left: 0.5em;
+  &:hover {
+    text-decoration: underline;
+  }
+}
