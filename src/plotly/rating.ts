@@ -51,6 +51,8 @@ export class GaugePlotly extends VisualizerBase {
       const toolbar = document.createElement("div");
       toolbar.className = "sva-question__toolbar";
 
+      const selectWrapper = document.createElement("div");
+      selectWrapper.className = "sva-question__select-wrapper";
       const select = document.createElement("select");
       select.className = "sva-question__select";
       this.chartTypes.forEach(chartType => {
@@ -61,8 +63,9 @@ export class GaugePlotly extends VisualizerBase {
         select.appendChild(option);
       });
       select.onchange = changeHandler;
+      selectWrapper.appendChild(select);
+      toolbar.appendChild(selectWrapper);
 
-      toolbar.appendChild(select);
       container.appendChild(toolbar);
     }
   }
