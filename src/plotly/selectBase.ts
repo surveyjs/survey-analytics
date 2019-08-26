@@ -66,6 +66,14 @@ export class SelectBasePlotly extends SelectBase {
     };
     this.filter.appendChild(filterClear);
 
+    // const filterClearAll = document.createElement("span");
+    // filterClearAll.className = "sva-question__filter-clear";
+    // filterClearAll.innerHTML = "Clear All";
+    // filterClearAll.onclick = () => {
+    //   this.setSelection(undefined, true);
+    // };
+    // this.filter.appendChild(filterClearAll);
+
     toolbar.appendChild(this.filter);
 
     this.updateFilter();
