@@ -156,6 +156,16 @@ export class SelectBasePlotly extends SelectBase {
       }
     });
 
+    var dragLayer = <HTMLElement>(
+      chartNode.getElementsByClassName("nsewdrag")[0]
+    );
+    (<any>chartNode)["on"]("plotly_hover", () => {
+      dragLayer.style.cursor = "pointer";
+    });
+    (<any>chartNode)["on"]("plotly_unhover", () => {
+      dragLayer.style.cursor = "";
+    });
+
     return plot;
   }
 }
