@@ -28,23 +28,23 @@ export class VisualizerBase {
 
   getRandomColor() {
     const colors = this.getColors();
-    return "#" + colors[Math.floor(Math.random() * colors.length)];
+    return colors[Math.floor(Math.random() * colors.length)];
   }
 
   backgroundColor = "#f7f7f7";
 
   static customColors: string[] = [];
   private static colors = [
-    "86e1fb",
-    "3999fb",
-    "ff6771",
-    "1eb496",
-    "ffc152",
-    "aba1ff",
-    "7d8da5",
-    "4ec46c",
-    "cf37a6",
-    "4e6198"
+    "#86e1fb",
+    "#3999fb",
+    "#ff6771",
+    "#1eb496",
+    "#ffc152",
+    "#aba1ff",
+    "#7d8da5",
+    "#4ec46c",
+    "#cf37a6",
+    "#4e6198"
   ];
 
   getColors(count = 10) {
