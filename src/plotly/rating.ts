@@ -203,7 +203,7 @@ export class GaugePlotly extends VisualizerBase {
       const questionValues: Array<any> = [];
 
       this.data.forEach(rowData => {
-        const questionValue: any = rowData[this.question.name];
+        const questionValue: any = +rowData[this.question.name];
         if (!!questionValue) {
           questionValues.push(questionValue);
         }
