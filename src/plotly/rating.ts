@@ -145,19 +145,17 @@ export class GaugePlotly extends VisualizerBase {
 
   private createChart() {
     const question = this.question;
-    const arrowColor = "#4e6198";
 
-    const maxValue = question.rateMax;
-    const minValue = question.rateMin;
-    const values = this.generateValues(maxValue, GaugePlotly.stepsCount);
-    const text = this.generateText(maxValue, minValue, GaugePlotly.stepsCount);
+    const rateValues = question.visibleRateValues;
+    const maxValue = rateValues[rateValues.length - 1].value;
+    const minValue = rateValues[0].value;
+
     const colors = this.generateColors(
       maxValue,
       minValue,
       GaugePlotly.stepsCount
     );
 
-    // Enter a speed between 0 and 180
     var level = this.result;
 
     var data: any = [
@@ -165,6 +163,7 @@ export class GaugePlotly extends VisualizerBase {
         type: "indicator",
         mode: "gauge+number",
         gauge: {
+          axis: { range: [minValue, maxValue] },
           shape: this.chartType,
           bgcolor: "white",
           bar: { color: colors[0] }
@@ -181,9 +180,6 @@ export class GaugePlotly extends VisualizerBase {
       plot_bgcolor: this.backgroundColor,
       paper_bgcolor: this.backgroundColor
     };
-
-    // this.chartNode.style.maxHeight = "400px"; // fixed chart height
-    // this.chartNode.style.overflow = "hidden";
 
     const config = {
       displayModeBar: false,
