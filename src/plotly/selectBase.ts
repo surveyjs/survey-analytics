@@ -1,4 +1,5 @@
-import { Question, ItemValue } from "survey-core";
+import { Question } from "survey-core";
+import { ItemValue } from "survey-core";
 var Plotly = <any>require("plotly.js-dist");
 import { VisualizationManager } from "../visualizationManager";
 import { SelectBase } from "../selectBase";

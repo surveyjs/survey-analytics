@@ -6,16 +6,16 @@ interface DataTablesOptions {
   buttons:
     | boolean
     | string[]
-    | DataTables.ButtonsSettings
-    | DataTables.ButtonSettings[];
+    | any
+    | any[];
 
   dom: string;
 
   orderFixed: Array<number | string> | Array<Array<number | string>> | object;
 
-  rowGroup: boolean | DataTables.RowGroupSettings;
+  rowGroup: boolean | any;
 
-  headerCallback: DataTables.FunctionHeaderCallback;
+  headerCallback: any;
 }
 
 export class DataTables {
@@ -43,12 +43,12 @@ export class DataTables {
       // orderFixed: [[1, "asc"]],
       rowGroup: {
         dataSrc: columnsData[0],
-        endRender: function(rows, group) {
+        endRender: function(rows: any, group: any) {
           return "Count: " + rows.data().count();
         }
       },
       select: "api",
-      headerCallback: (thead, data, start, end, display) => {
+      headerCallback: (thead: any, data: any, start: any, end: any, display: any) => {
         var datatableApi = $(tableNode)
           .dataTable()
           .api();
@@ -84,7 +84,7 @@ export class DataTables {
   }
 
   createSelectButton = (
-    datatableApi: DataTables.Api,
+    datatableApi: any,
     colIdx: number,
     columnName: string
   ): HTMLButtonElement => {
@@ -100,7 +100,7 @@ export class DataTables {
   };
 
   createGroupingButton = (
-    datatableApi: DataTables.Api,
+    datatableApi: any,
     columnName: string
   ): HTMLButtonElement => {
     const button = document.createElement("button");
