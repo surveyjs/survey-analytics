@@ -2,3 +2,18 @@ $main-color: #1ab394;
 
 .sa-datatable {
 }
+
+.sa-datatable th {
+    position: relative;
+}
+
+.sa-datatable-action-container {
+    position: absolute;
+    display: none;
+    top: 0;
+    z-index: 1;
+}
+
+th:hover > .sa-datatable-action-container {
+    display: block;
+}
