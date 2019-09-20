@@ -1,3 +1,5 @@
+export * from "./localization";
+
 export * from "./visualizerBase";
 export * from "./visualizationManager";
 export * from "./visualizationPanel";

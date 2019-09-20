@@ -1,6 +1,7 @@
 import * as $ from "jquery";
 import { SurveyModel, Question } from "survey-core";
 import { ITableColumn } from "./config";
+import { localization } from "../localization";
 
 import "./datatables.scss";
 
@@ -143,7 +144,7 @@ export class DataTables {
     columnName: string
   ): HTMLElement => {
     const button = document.createElement("button");
-    button.innerHTML = "Select Me";
+    button.innerHTML = localization.getString("selectButton");
     button.onclick = e => {
       e.stopPropagation();
       (<any>datatableApi.columns()).deselect();
@@ -159,7 +160,7 @@ export class DataTables {
     columnName: string
   ): HTMLElement => {
     const button = document.createElement("button");
-    button.innerHTML = "Group By Me";
+    button.innerHTML = localization.getString("groupButton");
 
     button.onclick = e => {
       e.stopPropagation();
@@ -167,9 +168,9 @@ export class DataTables {
       const index = this.groupBy.indexOf(columnName);
       if (index === -1) {
         this.groupBy.push(columnName);
-        button.innerHTML = "Ungroup By Me";
+        button.innerHTML = localization.getString("ungroupButton");
       } else {
-        button.innerHTML = "Group By Me";
+        button.innerHTML = localization.getString("groupButton");
         this.groupBy.splice(index, 1);
       }
 
@@ -189,7 +190,7 @@ export class DataTables {
     columnName: string
   ): HTMLElement => {
     const button = document.createElement("button");
-    button.innerHTML = "Hide column";
+    button.innerHTML = localization.getString("hideColumn");
 
     button.onclick = e => {
       e.stopPropagation();
@@ -215,7 +216,7 @@ export class DataTables {
     }
 
     var option = document.createElement("option");
-    option.text = "Show column";
+    option.text = localization.getString("showColumn");
     option.disabled = true;
     option.selected = true;
     selector.appendChild(option);
