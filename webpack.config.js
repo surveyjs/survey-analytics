@@ -142,7 +142,7 @@ module.exports = function(options) {
         commonjs: "wordcloud",
         amd: "wordcloud"
       },
-      "plotly.js": {
+      "plotly.js-dist": {
         root: "Plotly",
         commonjs2: "plotly.js-dist",
         commonjs: "plotly.js-dist",
