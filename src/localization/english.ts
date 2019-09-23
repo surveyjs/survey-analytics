@@ -7,6 +7,8 @@ export var englishStrings = {
   selectButton: "Select Me",
   hideColumn: "Hide column",
   showColumn: "Show column",
+  moveToDetail: "Move to Detail",
+  showAsColumn: "Show as Column"
 };
 
 //Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.

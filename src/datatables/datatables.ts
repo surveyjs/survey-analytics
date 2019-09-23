@@ -30,7 +30,8 @@ export class DataTables {
     private _columns: Array<ITableColumn> = [],
     private isTrustedAccess = false
   ) {
-    this.headerButtonCreators = [this.createGroupingButton, this.createSelectButton, this.createHideButton, this.createAddColumnButton];
+    this.headerButtonCreators = [ this.createGroupingButton, this.createSelectButton, this.createHideButton, this.createAddColumnButton, this.createMoveToDetailButton ];
+    this.detailButtonCreators = [ this.createShowAsColumnButton ];
     if(_columns.length === 0) {
       this._columns = this.buildColumns(survey);
     }
@@ -150,7 +151,7 @@ export class DataTables {
     });
   }
 
-  private createDetailMarkup(data: any) {
+  protected createDetailMarkup(data: any) {
     var table = document.createElement("table");
     table.cellPadding = "5";
     table.cellSpacing = "0";
@@ -165,27 +166,35 @@ export class DataTables {
         td1.textContent = column.displayName;
         var td2 = document.createElement("td");
         td2.textContent = data[column.name];
+        var td3 = document.createElement("td");
+        this.detailButtonCreators.forEach(creator => td3.appendChild(creator(column.name)));
         row.appendChild(td1);
         row.appendChild(td2);
+        row.appendChild(td3);
         table.appendChild(row);
     });
 
-    var row = document.createElement("tr");
-    var td = document.createElement("td");
-    this.renderDetailActions(td);
-    row.appendChild(td);
-    table.appendChild(row);
+    if(!this.renderDetailActions) {
+      var row = document.createElement("tr");
+      var td = document.createElement("td");
+      this.renderDetailActions(td);
+      row.appendChild(td);
+      table.appendChild(row);
+    }
 
     return table;
   }
 
-  renderDetailActions(container: HTMLElement) {
-  }
+  public renderDetailActions: (container: HTMLElement) => HTMLElement;
 
   public headerButtonCreators: Array<(
     datatableApi: any,
     colIdx: number,
     columnName: string
+  ) => HTMLElement> = [];
+
+  public detailButtonCreators: Array<(
+    columnName?: string
   ) => HTMLElement> = [];
 
   createSelectButton = (
@@ -299,6 +308,40 @@ export class DataTables {
     };
 
     return selector;
+  };
+
+  createMoveToDetailButton = (
+    datatableApi: any,
+    colIdx: number,
+    columnName: string
+  ): HTMLElement => {
+    const button = document.createElement("button");
+    button.innerHTML = localization.getString("moveToDetail");
+
+    button.onclick = e => {
+      e.stopPropagation();
+
+      this._columns.filter(column => column.name === columnName)[0].location = QuestionLocation.Row;
+      this.update();
+    };
+
+    return button;
+  };
+
+  createShowAsColumnButton = (
+    columnName?: string
+  ): HTMLElement => {
+    const button = document.createElement("button");
+    button.innerHTML = localization.getString("showAsColumn");
+
+    button.onclick = e => {
+      e.stopPropagation();
+
+      this._columns.filter(column => column.name === columnName)[0].location = QuestionLocation.Row;
+      this.update();
+    };
+
+    return button;
   };
 
   getColumns(): Array<Object> {

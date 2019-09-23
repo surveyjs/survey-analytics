@@ -101,3 +101,30 @@ test("pass columns through ctor", () => {
     '[{\"className\":\"sa-datatable-action-column\",\"orderable\":false,\"data\":null,\"defaultContent\":\"\"},{\"data\":\"id\",\"sTitle\":\"Id\",\"visible\":true}]'
   );
 });
+
+test("createDetailMarkup method", () => {
+  let dataTables = new DataTables(
+    document.createElement("table"),
+    new SurveyModel(),
+    [],
+    null,
+    [{
+      name: "id",
+      displayName: "Id",
+      location: QuestionLocation.Column,
+      visibility: ColumnVisibility.Visible,
+      dataType: ColumnDataType.Text
+    }, {
+      name: "happenedAt",
+      displayName: "Happened At",
+      location: QuestionLocation.Row,
+      visibility: ColumnVisibility.Visible,
+      dataType: ColumnDataType.Text
+    }]
+  );
+
+  const detailForm = dataTables["createDetailMarkup"]({});
+  expect(detailForm.innerHTML).toBe(
+    '<tr><td>Happened At</td><td></td><td><button>Show as Column</button></td></tr><tr><td></td></tr>'
+  );
+});
