@@ -174,10 +174,10 @@ export class DataTables {
         table.appendChild(row);
     });
 
-    if(!this.renderDetailActions) {
+    if(!!this.renderDetailActions) {
       var row = document.createElement("tr");
       var td = document.createElement("td");
-      this.renderDetailActions(td);
+      this.renderDetailActions(td, data);
       row.appendChild(td);
       table.appendChild(row);
     }
@@ -185,7 +185,7 @@ export class DataTables {
     return table;
   }
 
-  public renderDetailActions: (container: HTMLElement) => HTMLElement;
+  public renderDetailActions: (container: HTMLElement, data: any) => HTMLElement;
 
   public headerButtonCreators: Array<(
     datatableApi: any,
