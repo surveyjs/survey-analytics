@@ -1,6 +1,6 @@
 import * as $ from "jquery";
 import { SurveyModel, Question } from "survey-core";
-import { ITableColumn } from "./config";
+import { ITableColumn, ColumnVisibility, QuestionLocation, ColumnDataType } from "./config";
 import { localization } from "../localization";
 
 import "./datatables.scss";
@@ -27,24 +27,29 @@ export class DataTables {
     private survey: SurveyModel,
     private data: Array<Object>,
     private options: DataTablesOptions,
-    private _columns: Array<ITableColumn> = []
+    private _columns: Array<ITableColumn> = [],
+    private isTrustedAccess = false
   ) {
     this.headerButtonCreators = [this.createGroupingButton, this.createSelectButton, this.createHideButton, this.createAddColumnButton];
     if(_columns.length === 0) {
-      this.buildColumns(survey);
+      this._columns = this.buildColumns(survey);
     }
   }
 
-  private buildColumns(survey: SurveyModel) {
-    this._columns = this.survey.getAllQuestions().map((question: Question) => {
+  protected buildColumns(survey: SurveyModel) {
+    return this.survey.getAllQuestions().map((question: Question) => {
       return {
         name: question.name,
         displayName: (question.title || "").trim() || question.name,
-        dataType: question.getType() !== "file" ? "Text" : "FileLink",
-        visibility: question.getType() !== "file" ? "Visible" : "Invisible",
-        location: "Column"
+        dataType: question.getType() !== "file" ? ColumnDataType.Text : ColumnDataType.FileLink,
+        visibility: question.getType() !== "file" ? ColumnVisibility.Visible : ColumnVisibility.Invisible,
+        location: QuestionLocation.Column
       }
     });
+  }
+
+  public isVisible(visibility: ColumnVisibility) {
+    return this.isTrustedAccess && visibility !== ColumnVisibility.Invisible || !this.isTrustedAccess && visibility === ColumnVisibility.Visible;
   }
 
   public get columns() {
@@ -125,11 +130,56 @@ export class DataTables {
     // datatableApi.on("rowgroup-datasrc", (e, dt, val) => {
     //   datatableApi.order.fixed({ pre: [[columnsData.indexOf(val), "asc"]] }).draw();
     // });
-    datatableApi.on( 'column-reorder', (e, settings, details) => {
+    datatableApi.on('column-reorder', (e, settings, details) => {
       var columns = this._columns.splice(details.from, 1);
       this._columns.splice(details.to, 0, columns[0]);
       //console.log(this._columns);
-    });    
+    });
+    $(tableNode).find('tbody').on('click', 'td.sa-datatable-action-column', function () {
+      var tr = $(this).closest('tr');
+      var row = datatableApi.row(tr);
+
+      if (row.child.isShown()) {
+          row.child.hide();
+          tr.removeClass('sa-datatable-detail-row');
+      }
+      else {
+          row.child(self.createDetailMarkup(row.data())).show();
+          tr.addClass('sa-datatable-detail-row');
+      }
+    });
+  }
+
+  private createDetailMarkup(data: any) {
+    var table = document.createElement("table");
+    table.cellPadding = "5";
+    table.cellSpacing = "0";
+    table.border = "0";
+    table.className = "sa-datatable-detail";
+
+    this.columns
+      .filter(column => column.location === QuestionLocation.Row && this.isVisible(column.visibility))
+      .forEach(column => {
+        var row = document.createElement("tr");
+        var td1 = document.createElement("td");
+        td1.textContent = column.displayName;
+        var td2 = document.createElement("td");
+        td2.textContent = data[column.name];
+        row.appendChild(td1);
+        row.appendChild(td2);
+        table.appendChild(row);
+    });
+
+    var row = document.createElement("tr");
+    var td = document.createElement("td");
+    this.renderDetailActions(td);
+    row.appendChild(td);
+    table.appendChild(row);
+
+    return table;
+  }
+
+  renderDetailActions(container: HTMLElement) {
   }
 
   public headerButtonCreators: Array<(
@@ -195,7 +245,7 @@ export class DataTables {
     button.onclick = e => {
       e.stopPropagation();
 
-      this._columns.filter(column => column.name === columnName)[0].visibility = "Invisible";
+      this._columns.filter(column => column.name === columnName)[0].visibility = ColumnVisibility.Invisible;
       datatableApi.columns([colIdx]).visible(false);
 
       // TODO: Use datatables to update headers (show columns options)
@@ -222,12 +272,12 @@ export class DataTables {
     selector.appendChild(option);
 
     this.columns
-      .filter(column => column.visibility === "Invisible")
+      .filter(column => column.visibility === ColumnVisibility.Invisible)
       .forEach(column => {
         var option = document.createElement("option");
         var text = column.displayName;
-        if(text.length > 30) {
-          text = text.substring(0, 30) + "...";
+        if(text.length > 20) {
+          text = text.substring(0, 20) + "...";
         }
         option.text = text;
         option.title = column.displayName;
@@ -241,7 +291,7 @@ export class DataTables {
       if(!$(this).val()) return;
 
       var column = self._columns.filter(column => column.name === $(this).val())[0];
-      column.visibility = "Visible";
+      column.visibility = ColumnVisibility.Visible;
       datatableApi.columns([self._columns.indexOf(column)]).visible(true);
 
       // TODO: Use datatables to update headers (show columns options)
@@ -252,13 +302,14 @@ export class DataTables {
   };
 
   getColumns(): Array<Object> {
-    const columns = this.columns
+    const columns: any = this.columns
+    .filter(column => column.location === QuestionLocation.Column && this.isVisible(column.visibility))
     .map(column => {
       const question = this.survey.getQuestionByName(column.name);
       return {
         data: column.name,
         sTitle: column.displayName,
-        visible: column.visibility === "Visible",
+        visible: column.visibility !== ColumnVisibility.Invisible,
         mRender: (data: object, type: string, row: any) => {
           var displayValue = row[column.name];
           if(question) {
@@ -274,7 +325,12 @@ export class DataTables {
       };
     });
 
-    return columns;
+    return [{
+      "className": 'sa-datatable-action-column',
+      "orderable": false,
+      "data": null,
+      "defaultContent": ''
+    }].concat(columns);
   }
 
   public onColumnSelected: (dataName: string) => void;
