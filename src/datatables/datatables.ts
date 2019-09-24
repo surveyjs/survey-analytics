@@ -98,14 +98,16 @@ export class DataTables {
 
   render() {
     const tableNode = document.createElement("table");
-    var columnsData: any = this.getColumns().map((c: any) => c.data);
+    var columns = this.getColumns();
+    var columnsData: any = columns.map((c: any) => c.data);
     var self = this;
 
     const options = $.extend(true, {
       buttons: ["copy", "csv", "print"],
       dom: "Blfrtip",
       data: this.data,
-      columns: this.getColumns(),
+      //responsive: true,
+      columns: columns,
       // orderFixed: [[1, "asc"]],
       rowGroup: {
         dataSrc: columnsData[0],
@@ -122,7 +124,7 @@ export class DataTables {
           .children("th")
           .each(function(index, node) {
             var $thNode = $(this);
-            if ($thNode.has("button").length === 0) {
+            if (!!columnsData[index] && $thNode.has("button").length === 0) {
               var container = document.createElement("div");
               container.className = "sa-datatable-action-container";
               self.headerButtonCreators.forEach(creator => container.appendChild(creator(datatableApi, index, columnsData[index])));
@@ -133,6 +135,7 @@ export class DataTables {
     }, this.options);
 
     this.targetNode.appendChild(tableNode);
+    //tableNode.width = "100%";
     tableNode.className = "sa-datatable display dataTable";
 
     const datatableApi = $(tableNode).DataTable(options);
@@ -191,9 +194,13 @@ export class DataTables {
     if(!!this.renderDetailActions) {
       var row = document.createElement("tr");
       var td = document.createElement("td");
-      this.renderDetailActions(td, data);
       row.appendChild(td);
+      var td1 = document.createElement("td");
+      row.appendChild(td1);
+      var td2 = document.createElement("td");
+      row.appendChild(td2);
       table.appendChild(row);
+      this.renderDetailActions(td, data);
     }
 
     return table;
@@ -367,14 +374,14 @@ export class DataTables {
   };
 
   getColumns(): Array<Object> {
-    const columns: any = this.columns
-    .filter(column => column.location === QuestionLocation.Column && this.isVisible(column.visibility))
-    .map(column => {
+    const availableColumns = this.columns.filter(column => column.location === QuestionLocation.Column && this.isVisible(column.visibility));
+    const columns: any = availableColumns.map((column, index) => {
       const question = this.survey.getQuestionByName(column.name);
       return {
         data: column.name,
         sTitle: column.displayName,
         visible: column.visibility !== ColumnVisibility.Invisible,
+        //responsivePriority: availableColumns.length - index - 1,
         mRender: (data: object, type: string, row: any) => {
           var displayValue = row[column.name];
           if(question) {
