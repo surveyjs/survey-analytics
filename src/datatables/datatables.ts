@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import { SurveyModel, Question } from "survey-core";
+import { SurveyModel, Question, Event } from "survey-core";
 import { ITableColumn, ColumnVisibility, QuestionLocation, ColumnDataType } from "./config";
 import { localization } from "../localizationManager";
 
@@ -9,8 +9,8 @@ interface DataTablesOptions {
   buttons:
     | boolean
     | string[]
-    | any
-    | any[];
+    | any[]
+    | any;
 
   dom: string;
 
@@ -22,6 +22,15 @@ interface DataTablesOptions {
 }
 
 export class DataTables {
+
+  /**
+   * The event is fired columns configuration has been changed.
+   * <br/> sender the datatables adapter
+   * <br/> options.survey current survey
+   * @see getColumns
+   */
+  public columnsChanged: Event<(sender: DataTables, options: any) => any, any> = new Event<(sender: DataTables, options: any) => any, any>();
+
   constructor(
     private targetNode: HTMLElement,
     private survey: SurveyModel,
@@ -35,6 +44,10 @@ export class DataTables {
     if(_columns.length === 0) {
       this._columns = this.buildColumns(survey);
     }
+  }
+
+  protected onColumnsChanged() {
+    this.columnsChanged.fire(this, { survey: this.survey });
   }
 
   protected buildColumns(survey: SurveyModel) {
@@ -135,6 +148,7 @@ export class DataTables {
       var columns = this._columns.splice(details.from, 1);
       this._columns.splice(details.to, 0, columns[0]);
       //console.log(this._columns);
+      this.onColumnsChanged();
     });
     $(tableNode).find('tbody').on('click', 'td.sa-datatable-action-column', function () {
       var tr = $(this).closest('tr');
@@ -259,6 +273,8 @@ export class DataTables {
 
       // TODO: Use datatables to update headers (show columns options)
       this.update();
+
+      this.onColumnsChanged();
     };
 
     return button;
@@ -305,6 +321,8 @@ export class DataTables {
 
       // TODO: Use datatables to update headers (show columns options)
       self.update();
+
+      self.onColumnsChanged();
     };
 
     return selector;
@@ -323,6 +341,8 @@ export class DataTables {
 
       this._columns.filter(column => column.name === columnName)[0].location = QuestionLocation.Row;
       this.update();
+
+      this.onColumnsChanged();
     };
 
     return button;
@@ -339,6 +359,8 @@ export class DataTables {
 
       this._columns.filter(column => column.name === columnName)[0].location = QuestionLocation.Row;
       this.update();
+
+      this.onColumnsChanged();
     };
 
     return button;
