@@ -1,7 +1,7 @@
 import * as $ from "jquery";
 import { SurveyModel, Question } from "survey-core";
 import { ITableColumn, ColumnVisibility, QuestionLocation, ColumnDataType } from "./config";
-import { localization } from "../localization";
+import { localization } from "../localizationManager";
 
 import "./datatables.scss";
 

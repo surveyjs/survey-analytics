@@ -1,4 +1,4 @@
-export * from "./localization";
+export * from "./localizationManager";
 
 export * from "./visualizerBase";
 export * from "./visualizationManager";

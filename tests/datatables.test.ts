@@ -125,6 +125,6 @@ test("createDetailMarkup method", () => {
 
   const detailForm = dataTables["createDetailMarkup"]({});
   expect(detailForm.innerHTML).toBe(
-    '<tr><td>Happened At</td><td></td><td><button>Show as Column</button></td></tr><tr><td></td></tr>'
+    '<tr><td>Happened At</td><td></td><td><button>Show as Column</button></td></tr>'
   );
 });
