@@ -23,3 +23,16 @@ $main-color: #1ab394;
 th:hover > .sa-datatable-action-container {
     display: block;
 }
+
+td.sa-datatable-action-column {
+    width: 20px;
+    background-image: url(/images/Arrow_right_10x10.svg);
+    background-size: 10px 10px;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
+
+.sa-datatable-detail-row td.sa-datatable-action-column {
+    background-image: url(/images/Arrow_down_10x10.svg);
+}

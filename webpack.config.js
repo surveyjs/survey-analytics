@@ -98,6 +98,13 @@ module.exports = function(options) {
               }
             ]
           })
+        },
+        {
+          test: /\.(svg|png)$/,
+          use: {
+            loader: "url-loader",
+            options: {}
+          }
         }
       ]
     },
