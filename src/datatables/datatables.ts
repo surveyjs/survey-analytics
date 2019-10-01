@@ -22,6 +22,7 @@ interface DataTablesOptions {
 }
 
 export class DataTables {
+  private datatableApi: any;
 
   /**
    * The event is fired columns configuration has been changed.
@@ -93,6 +94,7 @@ export class DataTables {
     if ((<any>$.fn).DataTable.isDataTable(tableNode) ) {
       $(tableNode).DataTable().destroy();
     }
+    this.datatableApi = undefined;
     this.targetNode.innerHTML = "";
   }
 
@@ -106,7 +108,9 @@ export class DataTables {
       buttons: ["copy", "csv", "print"],
       dom: "Blfrtip",
       data: this.data,
-      //responsive: true,
+      responsive: {
+        details: false
+      },
       columns: columns,
       // orderFixed: [[1, "asc"]],
       rowGroup: {
@@ -140,19 +144,19 @@ export class DataTables {
     }, this.options);
 
     this.targetNode.appendChild(tableNode);
-    //tableNode.width = "100%";
+    tableNode.width = "100%";
     tableNode.className = "sa-datatable display responsive dataTable";
 
-    const datatableApi = $(tableNode).DataTable(options);
-    datatableApi
+    const datatableApiRef = this.datatableApi = $(tableNode).DataTable(options);
+    this.datatableApi
       .rowGroup()
       .enable(false)
       .draw();
 
-    // datatableApi.on("rowgroup-datasrc", (e, dt, val) => {
-    //   datatableApi.order.fixed({ pre: [[columnsData.indexOf(val), "asc"]] }).draw();
+    // this.datatableApi.on("rowgroup-datasrc", (e, dt, val) => {
+    //   this.datatableApi.order.fixed({ pre: [[columnsData.indexOf(val), "asc"]] }).draw();
     // });
-    datatableApi.on('column-reorder', (e, settings, details) => {
+    this.datatableApi.on('column-reorder', (e: any, settings: any, details: any) => {
       var columns = this._columns.splice(details.from, 1);
       this._columns.splice(details.to, 0, columns[0]);
       //console.log(this._columns);
@@ -160,7 +164,7 @@ export class DataTables {
     });
     $(tableNode).find('tbody').on('click', 'td.sa-datatable-action-column', function () {
       var tr = $(this).closest('tr');
-      var row = datatableApi.row(tr);
+      var row = datatableApiRef.row(tr);
 
       if (row.child.isShown()) {
           row.child.hide();
@@ -390,7 +394,6 @@ export class DataTables {
         data: column.name,
         sTitle: column.displayName,
         visible: column.visibility !== ColumnVisibility.Invisible,
-        //responsivePriority: availableColumns.length - index,
         mRender: (data: object, type: string, row: any) => {
           var displayValue = row[column.name];
           if(question) {
@@ -411,9 +414,12 @@ export class DataTables {
       "orderable": false,
       "data": null,
       "defaultContent": '',
-      //"responsivePriority": availableColumns.length
     }].concat(columns);
   }
 
   public onColumnSelected: (dataName: string) => void;
+
+  public layout() {
+    !!this.datatableApi && this.datatableApi.columns.adjust();
+  }
 }
