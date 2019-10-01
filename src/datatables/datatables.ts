@@ -218,7 +218,7 @@ export class DataTables {
         table.appendChild(row);
     });
 
-    if(this.datatableApi.responsive.hasHidden()) {
+    if(!!this.datatableApi && this.datatableApi.responsive.hasHidden()) {
       var columnsVisibility = this.datatableApi.columns().responsiveHidden();
       var columns = this.datatableApi.settings().init().columns;
       for(var index = 0; index < columnsVisibility.length; index++) {
