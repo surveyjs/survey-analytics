@@ -218,6 +218,27 @@ export class DataTables {
         table.appendChild(row);
     });
 
+    if(this.datatableApi.responsive.hasHidden()) {
+      var columnsVisibility = this.datatableApi.columns().responsiveHidden();
+      var columns = this.datatableApi.settings().init().columns;
+      for(var index = 0; index < columnsVisibility.length; index++) {
+        if(!columnsVisibility[index]) {
+          var column = columns[index];
+          var row = document.createElement("tr");
+          var td1 = document.createElement("td");
+          td1.textContent = column.displayName;
+          var td2 = document.createElement("td");
+          td2.textContent = data[column.name];
+          var td3 = document.createElement("td");
+          this.detailButtonCreators.forEach(creator => td3.appendChild(creator(column.name)));
+          row.appendChild(td1);
+          row.appendChild(td2);
+          row.appendChild(td3);
+          table.appendChild(row);
+        }
+      }
+    }
+
     if(!!this.renderDetailActions) {
       var row = document.createElement("tr");
       var td = document.createElement("td");
