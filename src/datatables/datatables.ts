@@ -23,6 +23,7 @@ interface DataTablesOptions {
 
 export class DataTables {
   private datatableApi: any;
+  private tableData: any;
 
   /**
    * The event is fired columns configuration has been changed.
@@ -45,6 +46,23 @@ export class DataTables {
     if(_columns.length === 0) {
       this._columns = this.buildColumns(survey);
     }
+    this.initTableData(data);
+  }
+
+  private initTableData(data: Array<any>) {
+    this.tableData = (data || []).map(item => {
+      var dataItem: any = {};
+      this.survey.data = item;
+      this._columns.forEach(column => {
+        var displayValue = item[column.name];
+        const question = this.survey.getQuestionByName(column.name);
+        if(question) {
+          displayValue = question.displayValue;
+        }
+        dataItem[column.name] = typeof displayValue === "string" ? displayValue : JSON.stringify(displayValue) || "";
+      });
+      return dataItem;
+    });
   }
 
   protected onColumnsChanged() {
@@ -107,7 +125,7 @@ export class DataTables {
     const options = $.extend(true, {
       buttons: ["copy", "csv", "print"],
       dom: "Blfrtip",
-      data: this.data,
+      data: this.tableData,
       responsive: {
         details: false
       },
@@ -199,6 +217,27 @@ export class DataTables {
         row.appendChild(td3);
         table.appendChild(row);
     });
+
+    if(this.datatableApi.responsive.hasHidden()) {
+      var columnsVisibility = this.datatableApi.columns().responsiveHidden();
+      var columns = this.datatableApi.settings().init().columns;
+      for(var index = 0; index < columnsVisibility.length; index++) {
+        if(!columnsVisibility[index]) {
+          var column = columns[index];
+          var row = document.createElement("tr");
+          var td1 = document.createElement("td");
+          td1.textContent = column.displayName;
+          var td2 = document.createElement("td");
+          td2.textContent = data[column.name];
+          var td3 = document.createElement("td");
+          this.detailButtonCreators.forEach(creator => td3.appendChild(creator(column.name)));
+          row.appendChild(td1);
+          row.appendChild(td2);
+          row.appendChild(td3);
+          table.appendChild(row);
+        }
+      }
+    }
 
     if(!!this.renderDetailActions) {
       var row = document.createElement("tr");
@@ -389,23 +428,11 @@ export class DataTables {
   getColumns(): Array<Object> {
     const availableColumns = this.columns.filter(column => column.location === QuestionLocation.Column && this.isVisible(column.visibility));
     const columns: any = availableColumns.map((column, index) => {
-      const question = this.survey.getQuestionByName(column.name);
       return {
         data: column.name,
         sTitle: column.displayName,
         visible: column.visibility !== ColumnVisibility.Invisible,
-        mRender: (data: object, type: string, row: any) => {
-          var displayValue = row[column.name];
-          if(question) {
-            this.survey.data = row;
-            displayValue = question.displayValue;
-          }
-          return (
-            (typeof displayValue === "string"
-              ? displayValue
-              : JSON.stringify(displayValue)) || ""
-          );
-        }
+        mRender: (data: object, type: string, row: any) => row[column.name]
       };
     });
 
