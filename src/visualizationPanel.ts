@@ -19,11 +19,13 @@ export class VisualizationPanel {
     this.filteredData = data;
   }
 
+  private getMasonry: () => Masonry;
+
   render() {
     const gridSizerClassName = "sva-grid__grid-sizer";
     const questionElementClassName = "sva-question";
     let msnry: any = undefined;
-    let getMasonry = () => msnry;
+    this.getMasonry = () => msnry;
 
     const gridSizer = document.createElement("div"); //Masonry gridSizer empty element, only used for element sizing
 
@@ -55,9 +57,7 @@ export class VisualizationPanel {
       );
 
       visualizer.onUpdate = () => {
-        if (getMasonry()) {
-          getMasonry().layout();
-        }
+        this.layout();
       };
       if (visualizer instanceof SelectBase) {
         visualizer.onDataItemSelected = (
@@ -93,6 +93,12 @@ export class VisualizationPanel {
     this.visualizers.forEach(visualizer =>
       setTimeout(() => visualizer.update(this.filteredData), 10)
     );
+  }
+
+  layout() {
+    if (this.getMasonry && this.getMasonry()) {
+      this.getMasonry().layout();
+    }
   }
 
   applyFilter(
