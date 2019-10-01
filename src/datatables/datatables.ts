@@ -39,7 +39,7 @@ export class DataTables {
     private _columns: Array<ITableColumn> = [],
     private isTrustedAccess = false
   ) {
-    this.headerButtonCreators = [ this.createGroupingButton, this.createSelectButton, this.createHideButton, this.createAddColumnButton, this.createMoveToDetailButton ];
+    this.headerButtonCreators = [ this.createGroupingButton, this.createHideButton, this.createAddColumnButton, this.createMoveToDetailButton ];
     this.detailButtonCreators = [ this.createShowAsColumnButton ];
     if(_columns.length === 0) {
       this._columns = this.buildColumns(survey);
@@ -127,7 +127,12 @@ export class DataTables {
             if (!!columnsData[index] && $thNode.has("button").length === 0) {
               var container = document.createElement("div");
               container.className = "sa-datatable-action-container";
-              self.headerButtonCreators.forEach(creator => container.appendChild(creator(datatableApi, index, columnsData[index])));
+              self.headerButtonCreators.forEach(creator => {
+                var element = creator(datatableApi, index, columnsData[index]);
+                if(!!element) {
+                  container.appendChild(element);
+                }
+              });
               $thNode.prepend(container);
             }
           });
@@ -136,7 +141,7 @@ export class DataTables {
 
     this.targetNode.appendChild(tableNode);
     //tableNode.width = "100%";
-    tableNode.className = "sa-datatable display dataTable";
+    tableNode.className = "sa-datatable display responsive dataTable";
 
     const datatableApi = $(tableNode).DataTable(options);
     datatableApi
@@ -297,15 +302,19 @@ export class DataTables {
       e.stopPropagation();
     }
 
+    var hiddenColumns = this.columns.filter(column => column.visibility === ColumnVisibility.Invisible);
+
+    if(hiddenColumns.length === 0) {
+      return;
+    }
+
     var option = document.createElement("option");
     option.text = localization.getString("showColumn");
     option.disabled = true;
     option.selected = true;
     selector.appendChild(option);
 
-    this.columns
-      .filter(column => column.visibility === ColumnVisibility.Invisible)
-      .forEach(column => {
+    hiddenColumns.forEach(column => {
         var option = document.createElement("option");
         var text = column.displayName;
         if(text.length > 20) {
@@ -381,7 +390,7 @@ export class DataTables {
         data: column.name,
         sTitle: column.displayName,
         visible: column.visibility !== ColumnVisibility.Invisible,
-        //responsivePriority: availableColumns.length - index - 1,
+        //responsivePriority: availableColumns.length - index,
         mRender: (data: object, type: string, row: any) => {
           var displayValue = row[column.name];
           if(question) {
@@ -401,7 +410,8 @@ export class DataTables {
       "className": 'sa-datatable-action-column',
       "orderable": false,
       "data": null,
-      "defaultContent": ''
+      "defaultContent": '',
+      //"responsivePriority": availableColumns.length
     }].concat(columns);
   }
 
