@@ -230,7 +230,7 @@ export class DataTables {
           var td2 = document.createElement("td");
           td2.textContent = data[column.mData];
           var td3 = document.createElement("td");
-          this.detailButtonCreators.forEach(creator => td3.appendChild(creator(column.mData)));
+          //this.detailButtonCreators.forEach(creator => td3.appendChild(creator(column.mData)));
           row.appendChild(td1);
           row.appendChild(td2);
           row.appendChild(td3);
