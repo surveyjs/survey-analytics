@@ -226,11 +226,11 @@ export class DataTables {
           var column = columns[index];
           var row = document.createElement("tr");
           var td1 = document.createElement("td");
-          td1.textContent = column.displayName;
+          td1.textContent = column.sTitle;
           var td2 = document.createElement("td");
-          td2.textContent = data[column.name];
+          td2.textContent = data[column.mData];
           var td3 = document.createElement("td");
-          this.detailButtonCreators.forEach(creator => td3.appendChild(creator(column.name)));
+          this.detailButtonCreators.forEach(creator => td3.appendChild(creator(column.mData)));
           row.appendChild(td1);
           row.appendChild(td2);
           row.appendChild(td3);
