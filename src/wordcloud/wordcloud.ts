@@ -68,7 +68,7 @@ export class WordCloud extends VisualizerBase {
     const colors = this.getColors();
     const canvasNode = <HTMLCanvasElement>document.createElement("canvas");
     const emptyTextNode = <HTMLElement>document.createElement("p");
-    emptyTextNode.innerHTML = "There is no results yet";
+    emptyTextNode.innerHTML = "There are no results yet";
 
     if (data.length === 0) {
       this.targetElement.appendChild(emptyTextNode);

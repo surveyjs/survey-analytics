@@ -2,7 +2,7 @@ import { VisualizationManager } from "./visualizationManager";
 import { VisualizerBase } from "./visualizerBase";
 import { Question, QuestionPanelDynamicModel } from "survey-core";
 import Masonry from "masonry-layout";
-import "./index.scss";
+import "./visualizationPanel.scss";
 import { SelectBase } from "./selectBase";
 
 export class VisualizationPanel {
