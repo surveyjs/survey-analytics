@@ -145,22 +145,36 @@ export class DataTables {
         var datatableApi = $(tableNode)
           .dataTable()
           .api();
+        var self = this;
         $(thead)
-          .children("th")
-          .each(function(index, node) {
-            var $thNode = $(this);
-            if (!!columnsData[index] && $thNode.has("button").length === 0) {
-              var container = document.createElement("div");
-              container.className = "sa-datatable-action-container";
-              self.headerButtonCreators.forEach(creator => {
-                var element = creator(datatableApi, index, columnsData[index]);
-                if(!!element) {
-                  container.appendChild(element);
-                }
-              });
-              $thNode.prepend(container);
-            }
-          });
+        .children("th")
+        .each(function(index: number) {
+          var $thNode = $(this);
+          if (!!columnsData[index] && $thNode.has("button").length === 0) {
+            var container = document.createElement("div");
+            container.className = "sa-datatable-action-container";
+            self.headerButtonCreators.forEach(creator => {
+              var element = creator(datatableApi, index, columnsData[index]);
+              if(!!element) {
+                container.appendChild(element);
+              }
+            });
+            $thNode.prepend(container);
+
+            var filterContainer = document.createElement("div");
+            filterContainer.className = "sa-datatable-filter-container";
+            filterContainer.innerHTML = "<input type='text' placeholder='Search...' />";
+            var column = datatableApi.column(index);
+            $('input', $(filterContainer)).on('click', e => e.stopPropagation());
+            $('input', $(filterContainer)).on('keyup change', function () {
+              let value = (<HTMLInputElement>this).value;
+              if (column.search() !== value) {
+                column.search(value).draw();
+              }
+            });
+            $thNode.append(filterContainer);
+          }
+        });
       }
     }, this.options);
 
