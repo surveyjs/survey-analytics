@@ -89,10 +89,15 @@ export class VisualizationPanel {
     this.visualizers = [];
   }
 
-  update() {
-    this.visualizers.forEach(visualizer =>
-      setTimeout(() => visualizer.update(this.filteredData), 10)
-    );
+  update(hard: boolean = false) {
+    if(hard) {
+      this.destroy();
+      this.render();
+    } else {
+      this.visualizers.forEach(visualizer =>
+        setTimeout(() => visualizer.update(this.filteredData), 10)
+      );
+    }
   }
 
   layout() {

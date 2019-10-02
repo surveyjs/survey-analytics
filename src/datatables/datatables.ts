@@ -93,8 +93,11 @@ export class DataTables {
     this.update();
   }
 
-  public update() {
+  public update(hard: boolean = false) {
     if(this.isRendered) {
+      if(hard) {
+        this.initTableData(this.data);
+      }
       this.destroy();
       this.render();
     }
@@ -428,9 +431,10 @@ export class DataTables {
   getColumns(): Array<Object> {
     const availableColumns = this.columns.filter(column => column.location === QuestionLocation.Column && this.isVisible(column.visibility));
     const columns: any = availableColumns.map((column, index) => {
+      var question = this.survey.getQuestionByName(column.name);
       return {
         data: column.name,
-        sTitle: column.displayName,
+        sTitle: question && question.title || column.displayName,
         visible: column.visibility !== ColumnVisibility.Invisible,
         mRender: (data: object, type: string, row: any) => row[column.name]
       };
