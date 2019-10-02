@@ -1,8 +1,16 @@
 import { Question } from "survey-core";
 import { ItemValue } from "survey-core";
-var Plotly = <any>require("plotly.js-dist");
 import { VisualizationManager } from "../visualizationManager";
 import { SelectBase } from "../selectBase";
+
+export function canLoadPlotly() {
+  return !!window.URL.createObjectURL;
+}
+
+var Plotly: any;
+if(canLoadPlotly()) {
+  Plotly = <any>require("plotly.js-dist");
+}
 
 export class SelectBasePlotly extends SelectBase {
   constructor(
@@ -78,6 +86,12 @@ export class SelectBasePlotly extends SelectBase {
     toolbar.appendChild(this.filter);
 
     this.updateFilter();
+  }
+
+  protected getSelectedItemByText(itemText: string) {
+    return this.question.choices.filter(
+      (choice: ItemValue) => choice.text === itemText
+    )[0];
   }
 
   private getPlotlyChart(
@@ -158,21 +172,21 @@ export class SelectBasePlotly extends SelectBase {
     (<any>chartNode)["on"]("plotly_click", (data: any) => {
       if (data.points.length > 0 && this.onDataItemSelected) {
         const itemText = data.points[0].text;
-        const item: ItemValue = this.question.choices.filter(
-          (choice: ItemValue) => choice.text === itemText
-        )[0];
+        const item: ItemValue = this.getSelectedItemByText(itemText);
         this.setSelection(item, !data.event.ctrlKey);
       }
     });
 
-    var dragLayer = <HTMLElement>(
+    var getDragLayer = () => <HTMLElement>(
       chartNode.getElementsByClassName("nsewdrag")[0]
     );
     (<any>chartNode)["on"]("plotly_hover", () => {
-      dragLayer.style.cursor = "pointer";
+      const dragLayer = getDragLayer();
+      dragLayer && (dragLayer.style.cursor = "pointer");
     });
     (<any>chartNode)["on"]("plotly_unhover", () => {
-      dragLayer.style.cursor = "";
+      const dragLayer = getDragLayer();
+      dragLayer && (dragLayer.style.cursor = "");
     });
 
     return plot;
