@@ -14,6 +14,10 @@ export class WordCloud extends VisualizerBase {
     super(targetElement, question, data, options);
   }
 
+  public get name() {
+    return "wordcloud";
+  }
+
   private cloud: any;
 
   getData() {
@@ -63,7 +67,7 @@ export class WordCloud extends VisualizerBase {
     });
   }
 
-  render() {
+  protected renderContent(container: HTMLDivElement) {
     const data = this.getData();
     const colors = this.getColors();
     const canvasNode = <HTMLCanvasElement>document.createElement("canvas");
@@ -71,11 +75,11 @@ export class WordCloud extends VisualizerBase {
     emptyTextNode.innerHTML = "There are no results yet";
 
     if (data.length === 0) {
-      this.targetElement.appendChild(emptyTextNode);
+      container.appendChild(emptyTextNode);
       return;
     }
 
-    this.targetElement.appendChild(canvasNode);
+    container.appendChild(canvasNode);
 
     const config = {
       list: data,
@@ -96,9 +100,9 @@ export class WordCloud extends VisualizerBase {
   }
 
   destroy() {
+    super.destroy();
     if (!!this.cloud) {
       this.cloud = undefined;
-      this.targetElement.innerHTML = "";
     }
   }
 }

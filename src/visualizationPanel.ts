@@ -1,5 +1,6 @@
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizerBase } from "./visualizerBase";
+import { AlternativeVizualizersWrapper } from "./alternativeVizualizersWrapper";
 import { Question, QuestionPanelDynamicModel } from "survey-core";
 import Masonry from "masonry-layout";
 import "./visualizationPanel.scss";
@@ -131,9 +132,14 @@ export class VisualizationPanel {
     question: Question,
     data: Array<{ [index: string]: any }>
   ) {
-    var visualizers = VisualizationManager.getVisualizers(question.getType());
-    var visualizer = new visualizers[0](vizualizerElement, question, data);
-    visualizer.render();
-    return visualizer;
+    var creators = VisualizationManager.getVisualizers(question.getType());
+    var visualizers = creators.map(creator => new creator(vizualizerElement, question, data));
+    if(visualizers.length > 1) {
+      let visualizer = new AlternativeVizualizersWrapper(visualizers, vizualizerElement, question, data);
+      visualizer.render();
+      return visualizer;
+    }
+    visualizers[0].render();
+    return visualizers[0];
   }
 }

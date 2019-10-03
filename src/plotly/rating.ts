@@ -2,6 +2,7 @@ import { Question } from "survey-core";
 var Plotly = <any>require("plotly.js-dist");
 import { VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
+import { localization } from "../localizationManager";
 
 export class GaugePlotly extends VisualizerBase {
   private _result: any;
@@ -43,14 +44,8 @@ export class GaugePlotly extends VisualizerBase {
     }
   };
 
-  private createToolbar(
-    container: HTMLDivElement,
-    changeHandler: (e: any) => void
-  ) {
+  protected createToolbarItems(toolbar: HTMLDivElement) {
     if (this.chartTypes.length > 0) {
-      const toolbar = document.createElement("div");
-      toolbar.className = "sva-question__toolbar";
-
       const selectWrapper = document.createElement("div");
       selectWrapper.className = "sva-question__select-wrapper";
       const select = document.createElement("select");
@@ -58,15 +53,13 @@ export class GaugePlotly extends VisualizerBase {
       this.chartTypes.forEach(chartType => {
         let option = document.createElement("option");
         option.value = chartType;
-        option.text = chartType;
+        option.text = localization.getString("chartType_" + chartType);
         option.selected = this.chartType === chartType;
         select.appendChild(option);
       });
-      select.onchange = changeHandler;
+      select.onchange = this.toolbarChangeHandler;
       selectWrapper.appendChild(select);
       toolbar.appendChild(selectWrapper);
-
-      container.appendChild(toolbar);
     }
   }
 
@@ -132,17 +125,6 @@ export class GaugePlotly extends VisualizerBase {
     return colors;
   }
 
-  private createToolbarContainer() {
-    const chartNodeContainer = document.createElement("div");
-    const toolbarNodeContainer = document.createElement("div");
-
-    chartNodeContainer.appendChild(toolbarNodeContainer);
-    chartNodeContainer.appendChild(this.chartNode);
-    this.targetElement.appendChild(chartNodeContainer);
-
-    this.createToolbar(toolbarNodeContainer, this.toolbarChangeHandler);
-  }
-
   private createChart() {
     const question = this.question;
 
@@ -189,9 +171,9 @@ export class GaugePlotly extends VisualizerBase {
     this.chart = Plotly.newPlot(this.chartNode, data, layout, config);
   }
 
-  render() {
-    this.createToolbarContainer();
+  protected renderContent(container: HTMLDivElement) {
     this.createChart();
+    container.appendChild(this.chartNode);
   }
 
   get result() {

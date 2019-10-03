@@ -14,6 +14,10 @@ export class Text extends VisualizerBase {
     super(targetElement, question, data, options);
   }
 
+  public get name() {
+    return "text";
+  }
+
   getData() {
     let result: Array<Array<string>> = [];
     let columnsCount = 0;
@@ -41,20 +45,20 @@ export class Text extends VisualizerBase {
     return { columnsCount, data: result };
   }
 
-  render() {
+  protected renderContent(container: HTMLDivElement) {
     const { columnsCount, data}  = this.getData();
     const emptyTextNode = <HTMLElement>document.createElement("p");
     emptyTextNode.innerHTML = "There are no results yet";
 
     if (data.length === 0) {
-      this.targetElement.appendChild(emptyTextNode);
+        container.appendChild(emptyTextNode);
       return;
     }
 
     const tableNode = <HTMLTableElement>document.createElement("table");
     tableNode.className = "sa-text-table";
     tableNode.style.backgroundColor = this.backgroundColor;
-    this.targetElement.appendChild(tableNode);
+    container.appendChild(tableNode);
 
     data.forEach(rowData => {
         var row = document.createElement("tr");
@@ -67,12 +71,12 @@ export class Text extends VisualizerBase {
         tableNode.appendChild(row);
     });
 
-    this.targetElement.className = "sa-text-table__container";
-    this.targetElement.appendChild(tableNode);
+    container.className = "sa-text-table__container";
+    container.appendChild(tableNode);
   }
 
   destroy() {
-    this.targetElement.innerHTML = "";
+    super.destroy();
     this.targetElement.className = "";
   }
 }

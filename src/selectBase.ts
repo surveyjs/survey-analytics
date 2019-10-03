@@ -1,5 +1,6 @@
 import { Question, QuestionSelectBase, ItemValue } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
+import { localization } from "./localizationManager";
 
 export class SelectBase extends VisualizerBase {
   constructor(
@@ -30,17 +31,9 @@ export class SelectBase extends VisualizerBase {
 
   onDataItemSelected: (selectedValue: any, clearSelection: boolean) => void;
 
-  render() {
-    const chartNodeContainer = document.createElement("div");
-    const toolbarNodeContainer = document.createElement("div");
-
-    chartNodeContainer.appendChild(toolbarNodeContainer);
-    chartNodeContainer.appendChild(this.chartNode);
-    this.targetElement.appendChild(chartNodeContainer);
-
-    this.createToolbar(toolbarNodeContainer);
-
+  protected renderContent(container: HTMLDivElement) {
     this.createChart();
+    container.appendChild(this.chartNode);
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
@@ -52,7 +45,7 @@ export class SelectBase extends VisualizerBase {
       this.chartTypes.forEach(chartType => {
         let option = document.createElement("option");
         option.value = chartType;
-        option.text = chartType;
+        option.text = localization.getString("chartType_" + chartType);
         option.selected = this.chartType === chartType;
         select.appendChild(option);
       });
@@ -62,13 +55,6 @@ export class SelectBase extends VisualizerBase {
       selectWrapper.appendChild(select);
       toolbar.appendChild(selectWrapper);
     }
-  }
-
-  protected createToolbar(container: HTMLDivElement) {
-    const toolbar = document.createElement("div");
-    toolbar.className = "sva-question__toolbar";
-    this.createToolbarItems(toolbar);
-    container.appendChild(toolbar);
   }
 
   valuesSource(): any[] {

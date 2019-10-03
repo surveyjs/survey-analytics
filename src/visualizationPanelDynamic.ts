@@ -33,9 +33,6 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     visPanel.render();
   }
 
-  destroy() {
-    this.targetElement.innerHTML = "";
-  }
 }
 
 VisualizationManager.registerVisualizer(

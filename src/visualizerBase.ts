@@ -8,6 +8,10 @@ export class VisualizerBase {
     protected options?: Object
   ) {}
 
+  public get name() {
+    return "visualizer";
+  }
+
   update(data: Array<{ [index: string]: any }>) {
     this.data = data;
   }
@@ -18,8 +22,31 @@ export class VisualizerBase {
     this.targetElement.innerHTML = "";
   }
 
-  render() {
-    this.targetElement.innerHTML = "This question type is not visualized yet";
+  protected renderContent(container: HTMLDivElement) {
+    container.innerHTML = "This question type is not visualized yet";
+  }
+
+  render(targetElement?: HTMLElement) {
+    this.targetElement = targetElement || this.targetElement;
+
+    const contentContainer = document.createElement("div");
+    const toolbarNodeContainer = document.createElement("div");
+
+    this.createToolbar(toolbarNodeContainer);
+    this.renderContent(contentContainer);
+
+    this.targetElement.appendChild(toolbarNodeContainer);
+    this.targetElement.appendChild(contentContainer);
+  }
+
+  protected createToolbarItems(toolbar: HTMLDivElement) {
+  }
+
+  protected createToolbar(container: HTMLDivElement) {
+    const toolbar = document.createElement("div");
+    toolbar.className = "sva-question__toolbar";
+    this.createToolbarItems(toolbar);
+    container.appendChild(toolbar);
   }
 
   invokeOnUpdate() {
