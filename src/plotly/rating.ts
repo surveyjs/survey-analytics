@@ -3,6 +3,7 @@ var Plotly = <any>require("plotly.js-dist");
 import { VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
 import { localization } from "../localizationManager";
+import { ToolbarHelper } from "../utils/index";
 
 export class GaugePlotly extends VisualizerBase {
   private _result: any;
@@ -46,20 +47,16 @@ export class GaugePlotly extends VisualizerBase {
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
     if (this.chartTypes.length > 0) {
-      const selectWrapper = document.createElement("div");
-      selectWrapper.className = "sva-question__select-wrapper";
-      const select = document.createElement("select");
-      select.className = "sva-question__select";
-      this.chartTypes.forEach(chartType => {
-        let option = document.createElement("option");
-        option.value = chartType;
-        option.text = localization.getString("chartType_" + chartType);
-        option.selected = this.chartType === chartType;
-        select.appendChild(option);
-      });
-      select.onchange = this.toolbarChangeHandler;
-      selectWrapper.appendChild(select);
-      toolbar.appendChild(selectWrapper);
+      ToolbarHelper.createSelector(toolbar,
+        this.chartTypes.map(chartType => {
+          return {
+            value: chartType,
+            text: localization.getString("chartType_" + chartType)
+          };
+        }),
+        (option: any) => this.chartType === option.value,
+        this.toolbarChangeHandler
+      );
     }
   }
 

@@ -1,6 +1,7 @@
 import { Question, QuestionSelectBase, ItemValue } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
+import { ToolbarHelper } from "./utils/index";
 
 export class SelectBase extends VisualizerBase {
   constructor(
@@ -38,22 +39,16 @@ export class SelectBase extends VisualizerBase {
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
     if (this.chartTypes.length > 0) {
-      const selectWrapper = document.createElement("div");
-      selectWrapper.className = "sva-question__select-wrapper";
-      const select = document.createElement("select");
-      select.className = "sva-question__select";
-      this.chartTypes.forEach(chartType => {
-        let option = document.createElement("option");
-        option.value = chartType;
-        option.text = localization.getString("chartType_" + chartType);
-        option.selected = this.chartType === chartType;
-        select.appendChild(option);
-      });
-      select.onchange = (e: any) => {
-        this.setChartType(e.target.value);
-      };
-      selectWrapper.appendChild(select);
-      toolbar.appendChild(selectWrapper);
+      ToolbarHelper.createSelector(toolbar,
+        this.chartTypes.map(chartType => {
+          return {
+            value: chartType,
+            text: localization.getString("chartType_" + chartType)
+          };
+        }),
+        (option: any) => this.chartType === option.value,
+        (e: any) => this.setChartType(e.target.value)
+      );
     }
   }
 

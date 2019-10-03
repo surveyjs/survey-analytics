@@ -1,6 +1,7 @@
 import { Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
+import { ToolbarHelper } from "./utils/index";
 
 export class AlternativeVizualizersWrapper extends VisualizerBase {
   constructor(
@@ -46,22 +47,15 @@ export class AlternativeVizualizersWrapper extends VisualizerBase {
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
-    const selectWrapper = document.createElement("div");
-    selectWrapper.className = "sva-question__select-wrapper";
-    const select = document.createElement("select");
-    select.className = "sva-question__select";
-    this.visualizers.forEach(visualizer => {
-      let option = document.createElement("option");
-      option.value = visualizer.name;
-      option.text = localization.getString("visualizer_" + visualizer.name);
-      option.selected = this.visualizer === visualizer;
-      select.appendChild(option);
-    });
-    select.onchange = (e: any) => {
-      this.setVisualizer(e.target.value);
-    };
-    selectWrapper.appendChild(select);
-    toolbar.appendChild(selectWrapper);
+    ToolbarHelper.createSelector(toolbar,
+      this.visualizers.map(visualizer => {
+        return {
+          value: visualizer.name,
+          text: localization.getString("visualizer_" + visualizer.name)
+        };
+      }),
+      (option: any) => this.visualizer.name === option.value,
+      (e: any) => this.setVisualizer(e.target.value)
+    );
   }
-
 }
