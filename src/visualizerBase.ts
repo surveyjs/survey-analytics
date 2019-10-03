@@ -29,8 +29,9 @@ export class VisualizerBase {
   render(targetElement?: HTMLElement) {
     this.targetElement = targetElement || this.targetElement;
 
-    const contentContainer = document.createElement("div");
     const toolbarNodeContainer = document.createElement("div");
+    const contentContainer = document.createElement("div");
+    contentContainer.className = "sa-visualizer__content";
 
     this.createToolbar(toolbarNodeContainer);
     this.renderContent(contentContainer);

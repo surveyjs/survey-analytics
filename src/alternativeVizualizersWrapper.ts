@@ -26,6 +26,7 @@ export class AlternativeVizualizersWrapper extends VisualizerBase {
     }
     this.visualizer = this.visualizers.filter(v => v.name === name)[0];
     this.visualizer.render(this.visualizerContainer);
+    this.invokeOnUpdate();
   }
 
   update(data: Array<{ [index: string]: any }>) {
