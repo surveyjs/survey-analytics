@@ -1,12 +1,15 @@
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizerBase } from "./visualizerBase";
-import { AlternativeVizualizersWrapper } from "./alternativeVizualizersWrapper";
+import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 import { Question, QuestionPanelDynamicModel } from "survey-core";
 import Masonry from "masonry-layout";
 import "./visualizationPanel.scss";
 import { SelectBase } from "./selectBase";
+import { ToolbarHelper } from "./utils/index";
+import { localization } from "./localizationManager";
 
 export class VisualizationPanel {
+  private _showHeader = false;
   protected filteredData: Array<{ [index: string]: any }>;
   protected filterValues: { [index: string]: any };
   protected visualizers: Array<VisualizerBase> = [];
@@ -28,11 +31,14 @@ export class VisualizationPanel {
     let msnry: any = undefined;
     this.getMasonry = () => msnry;
 
+    const panelHeader = document.createElement("div");
+    const panelContent = document.createElement("div");
+
     const gridSizer = document.createElement("div"); //Masonry gridSizer empty element, only used for element sizing
 
-    this.targetElement.className = "sva-grid";
+    panelContent.className = "sva-grid";
     gridSizer.className = gridSizerClassName;
-    this.targetElement.appendChild(gridSizer);
+    panelContent.appendChild(gridSizer);
 
     this.questions.forEach(question => {
       const questionElement = document.createElement("div");
@@ -49,13 +55,26 @@ export class VisualizationPanel {
       questionContent.appendChild(titleElement);
       questionContent.appendChild(vizualizerElement);
       questionElement.appendChild(questionContent);
-      this.targetElement.appendChild(questionElement);
+      panelContent.appendChild(questionElement);
 
-      const visualizer = this.renderQuestion(
+      const visualizer = this.createVizualizer(
         vizualizerElement,
         question,
         this.filteredData
       );
+
+      visualizer.registerToolbarItem("removeQuestion", (toolbar: HTMLDivElement) => {
+        return ToolbarHelper.createButton(toolbar, () => {
+          setTimeout(() => {
+            visualizer.destroy();
+            this.visualizers.splice(this.visualizers.indexOf(visualizer), 1);
+            this.getMasonry().remove([questionElement]);
+            panelContent.removeChild(questionElement);
+            this.layout();
+          }, 0 );
+        }, localization.getString("removeButton"));
+      });
+      visualizer.render();
 
       visualizer.onUpdate = () => {
         this.layout();
@@ -72,13 +91,21 @@ export class VisualizationPanel {
       this.visualizers.push(visualizer);
     });
 
-    msnry = new Masonry(this.targetElement, {
+    this.targetElement.appendChild(panelHeader);
+    this.targetElement.appendChild(panelContent);
+
+    msnry = new Masonry(panelContent, {
       columnWidth: "." + gridSizerClassName,
       itemSelector: "." + questionElementClassName
     });
   }
 
   destroy() {
+    let masonry = !!this.getMasonry && this.getMasonry();
+    if(!!masonry) {
+      masonry.destroy();
+      this.getMasonry = undefined;
+    }
     this.targetElement.innerHTML = "";
     this.visualizers.forEach(visualizer => {
       visualizer.onUpdate = undefined;
@@ -91,7 +118,7 @@ export class VisualizationPanel {
   }
 
   update(hard: boolean = false) {
-    if(hard) {
+    if(hard && this.visualizers.length > 0) {
       this.destroy();
       this.render();
     } else {
@@ -127,19 +154,27 @@ export class VisualizationPanel {
     });
   }
 
-  renderQuestion(
+  createVizualizer(
     vizualizerElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>
-  ) {
+  ): VisualizerBase {
     var creators = VisualizationManager.getVisualizers(question.getType());
     var visualizers = creators.map(creator => new creator(vizualizerElement, question, data));
     if(visualizers.length > 1) {
-      let visualizer = new AlternativeVizualizersWrapper(visualizers, vizualizerElement, question, data);
-      visualizer.render();
+      let visualizer = new AlternativeVisualizersWrapper(visualizers, vizualizerElement, question, data);
       return visualizer;
     }
-    visualizers[0].render();
     return visualizers[0];
+  }
+
+  get showHeader() {
+    return this._showHeader;
+  }
+  set showHeader(newValue: boolean) {
+    if(newValue != this._showHeader) {
+      this._showHeader = newValue;
+      this.update(true);
+    }
   }
 }

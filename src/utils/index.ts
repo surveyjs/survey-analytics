@@ -15,4 +15,12 @@ export class ToolbarHelper {
         selectWrapper.appendChild(select);
         toolbar.appendChild(selectWrapper);
     }
+    public static createButton(toolbar: HTMLDivElement, hander: (e: any) => void, text = "", cssClass = "") {
+        const button = document.createElement("span");
+        button.className = "sva-question__toolbar-button " + cssClass;
+        button.innerText = text;
+        button.onclick = hander;
+        toolbar.appendChild(button);
+        return button;
+    }
 }

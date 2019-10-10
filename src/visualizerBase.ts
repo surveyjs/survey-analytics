@@ -1,12 +1,19 @@
 import { Question } from "survey-core";
 
 export class VisualizerBase {
+
+  public toolbarItemCreators: { [name: string]: (toolbar: HTMLDivElement) => HTMLElement } = {};
+
   constructor(
     protected targetElement: HTMLElement,
     public question: Question,
     protected data: Array<{ [index: string]: any }>,
     protected options?: Object
   ) {}
+
+  public registerToolbarItem(name: string, creator: (toolbar: HTMLDivElement) => HTMLElement) {
+    this.toolbarItemCreators[name] = creator;
+  }
 
   public get name() {
     return "visualizer";
@@ -41,6 +48,7 @@ export class VisualizerBase {
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
+    Object.keys(this.toolbarItemCreators || {}).forEach(toolbarItemName => this.toolbarItemCreators[toolbarItemName](toolbar));
   }
 
   protected createToolbar(container: HTMLDivElement) {

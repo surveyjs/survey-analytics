@@ -3,7 +3,7 @@ import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { ToolbarHelper } from "./utils/index";
 
-export class AlternativeVizualizersWrapper extends VisualizerBase {
+export class AlternativeVisualizersWrapper extends VisualizerBase {
   constructor(
     private visualizers: Array<VisualizerBase>,
     targetElement: HTMLElement,
@@ -47,6 +47,7 @@ export class AlternativeVizualizersWrapper extends VisualizerBase {
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
+    super.createToolbarItems(toolbar);
     ToolbarHelper.createSelector(toolbar,
       this.visualizers.map(visualizer => {
         return {

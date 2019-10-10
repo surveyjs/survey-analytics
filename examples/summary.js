@@ -1160,6 +1160,7 @@ xhr.onload = function() {
     survey.getAllQuestions(),
     normalizedData
   );
+  visPanel.showHeader = true;
   visPanel.render();
 };
 xhr.send();

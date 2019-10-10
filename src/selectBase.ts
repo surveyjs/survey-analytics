@@ -38,6 +38,7 @@ export class SelectBase extends VisualizerBase {
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
+    super.createToolbarItems(toolbar);
     if (this.chartTypes.length > 0) {
       ToolbarHelper.createSelector(toolbar,
         this.chartTypes.map(chartType => {

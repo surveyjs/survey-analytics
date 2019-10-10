@@ -15,7 +15,8 @@ export var englishStrings = {
   chartType_pie: "Pie",
   chartType_scatter: "Scatter",
   chartType_gauge: "Gauge",
-  chartType_bullet: "Bullet"
+  chartType_bullet: "Bullet",
+  removeButton: "Remove"
 };
 
 //Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.

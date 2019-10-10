@@ -68,7 +68,7 @@ export class SelectBasePlotly extends SelectBase {
     this.filter.appendChild(this.filterText);
 
     const filterClear = document.createElement("span");
-    filterClear.className = "sva-question__filter-clear";
+    filterClear.className = "sva-question__toolbar-button";
     filterClear.innerHTML = "Clear";
     filterClear.onclick = () => {
       this.setSelection(undefined);
@@ -76,7 +76,7 @@ export class SelectBasePlotly extends SelectBase {
     this.filter.appendChild(filterClear);
 
     // const filterClearAll = document.createElement("span");
-    // filterClearAll.className = "sva-question__filter-clear";
+    // filterClearAll.className = "sva-question__toolbar-button";
     // filterClearAll.innerHTML = "Clear All";
     // filterClearAll.onclick = () => {
     //   this.setSelection(undefined, true);

@@ -38,8 +38,29 @@
 }
 
 .sva-question__toolbar {
+  font-family: SegoeUI, Arial, sans-serif;
+  font-size: 14px;
+  color: $text-color;
+  line-height: 34px;
   margin-bottom: 25px;
   margin-left: 30px;
+}
+
+.sva-question__toolbar-button {
+  font-size: 14px;
+  padding: 8px 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  &:hover {
+    border-color: $border-color;
+  }
+  margin: 0 10px;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 // custom select
@@ -60,8 +81,6 @@
     border-color: $border-color;
     height: $form-element-height;
     padding: 5px 5px 5px 15px;
-    font-size: 14px;
-    color: $text-color;
 
     &::-ms-expand {
       display: none;
@@ -97,14 +116,6 @@
 .sva-question__filter {
   display: inline-block;
   padding: 0 1em;
-}
-
-.sva-question__filter-clear {
-  cursor: pointer;
-  padding-left: 0.5em;
-  &:hover {
-    text-decoration: underline;
-  }
 }
 
 /* latin-ext */
