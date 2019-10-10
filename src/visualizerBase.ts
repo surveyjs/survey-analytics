@@ -53,7 +53,7 @@ export class VisualizerBase {
 
   protected createToolbar(container: HTMLDivElement) {
     const toolbar = document.createElement("div");
-    toolbar.className = "sva-question__toolbar";
+    toolbar.className = "sva-toolbar";
     this.createToolbarItems(toolbar);
     container.appendChild(toolbar);
   }

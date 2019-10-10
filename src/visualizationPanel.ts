@@ -7,23 +7,56 @@ import "./visualizationPanel.scss";
 import { SelectBase } from "./selectBase";
 import { ToolbarHelper } from "./utils/index";
 import { localization } from "./localizationManager";
+import { IVisualizerPanelElement, ElementVisibility } from "./config";
 
 export class VisualizationPanel {
   private _showHeader = false;
   protected filteredData: Array<{ [index: string]: any }>;
-  protected filterValues: { [index: string]: any };
+  protected filterValues: { [index: string]: any } = {};
   protected visualizers: Array<VisualizerBase> = [];
 
   constructor(
     protected targetElement: HTMLElement,
     protected questions: Array<any>,
     protected data: Array<{ [index: string]: any }>,
-    protected options?: Object
+    protected options?: Object,
+    private _elements: Array<IVisualizerPanelElement> = [],
+    private isTrustedAccess = false
   ) {
     this.filteredData = data;
+    if(_elements.length === 0) {
+      this._elements = this.buildElements(questions);
+    }
   }
 
   private getMasonry: () => Masonry;
+
+  protected buildElements(questions: any[]): IVisualizerPanelElement[] {
+    return (questions || []).map(question => {
+      return {
+        name: question.name,
+        displayName: question.title,
+        visibility: ElementVisibility.Visible,
+        type: undefined
+      }
+    });
+  }
+
+  public isVisible(visibility: ElementVisibility) {
+    return this.isTrustedAccess && visibility !== ElementVisibility.Invisible || !this.isTrustedAccess && visibility === ElementVisibility.Visible;
+  }
+
+  protected get visibleElements() {
+    return this._elements.filter(el => this.isVisible(el.visibility));
+  }
+
+  removeVisualizer(visualizer: VisualizerBase) {
+    if (visualizer instanceof SelectBase) {
+      visualizer.setSelection(undefined);
+    }
+    visualizer.destroy();
+    this.visualizers.splice(this.visualizers.indexOf(visualizer), 1);
+  }
 
   render() {
     const gridSizerClassName = "sva-grid__grid-sizer";
@@ -31,7 +64,6 @@ export class VisualizationPanel {
     let msnry: any = undefined;
     this.getMasonry = () => msnry;
 
-    const panelHeader = document.createElement("div");
     const panelContent = document.createElement("div");
 
     const gridSizer = document.createElement("div"); //Masonry gridSizer empty element, only used for element sizing
@@ -40,13 +72,14 @@ export class VisualizationPanel {
     gridSizer.className = gridSizerClassName;
     panelContent.appendChild(gridSizer);
 
-    this.questions.forEach(question => {
+    this.visibleElements.forEach(element => {
+      var question = this.questions.filter(q => q.name === element.name)[0];
       const questionElement = document.createElement("div");
       const questionContent = document.createElement("div");
       const titleElement = document.createElement("h3");
       const vizualizerElement = document.createElement("div");
 
-      titleElement.innerText = (<any>question)["title"];
+      titleElement.innerText = element.displayName;
 
       questionElement.className = questionElementClassName;
       questionContent.className = questionElementClassName + "__content";
@@ -66,38 +99,91 @@ export class VisualizationPanel {
       visualizer.registerToolbarItem("removeQuestion", (toolbar: HTMLDivElement) => {
         return ToolbarHelper.createButton(toolbar, () => {
           setTimeout(() => {
-            visualizer.destroy();
-            this.visualizers.splice(this.visualizers.indexOf(visualizer), 1);
+            this.removeVisualizer(visualizer);
             this.getMasonry().remove([questionElement]);
             panelContent.removeChild(questionElement);
             this.layout();
           }, 0 );
         }, localization.getString("removeButton"));
       });
-      visualizer.render();
 
-      visualizer.onUpdate = () => {
-        this.layout();
-      };
       if (visualizer instanceof SelectBase) {
+        var filterInfo = {
+          text: <HTMLElement>undefined,
+          element: <HTMLDivElement>undefined,
+          update: function(selection: any) {
+            if(!!selection && !!selection.value) {
+              this.element.style.display = "inline-block";
+              this.text.innerHTML = "Filter: [" + selection.text + "]";
+            } else {
+              this.element.style.display = "none";
+              this.text.innerHTML = "";
+            }
+          }
+        }
+
+        visualizer.registerToolbarItem("questionFilterInfo", (toolbar: HTMLDivElement) => {
+          filterInfo.element = document.createElement("div");
+          filterInfo.element.className = "sva-question__filter";
+      
+          filterInfo.text = document.createElement("span");
+          filterInfo.text.className = "sva-question__filter-text";
+          filterInfo.element.appendChild(filterInfo.text);
+      
+          const filterClear = document.createElement("span");
+          filterClear.className = "sva-toolbar__button";
+          filterClear.innerHTML = localization.getString("clearButton");
+          filterClear.onclick = () => {
+            visualizer.setSelection(undefined);
+          };
+          filterInfo.element.appendChild(filterClear);
+          toolbar.appendChild(filterInfo.element);
+
+          filterInfo.update(visualizer.selection);
+
+          return filterInfo.element;
+        });
+  
         visualizer.onDataItemSelected = (
           selectedValue: any,
-          clearSelection: boolean
+          selectedText: string
         ) => {
-          this.applyFilter(question.name, selectedValue, clearSelection);
-          this.update();
+          filterInfo.update({ value: selectedValue, text: selectedText });
+          this.applyFilter(question.name, selectedValue);
         };
       }
+
+      visualizer.render();
+      visualizer.onUpdate = () => this.layout();
       this.visualizers.push(visualizer);
     });
 
-    this.targetElement.appendChild(panelHeader);
+    if(this.showHeader) {
+      const panelHeader = document.createElement("div");
+      panelHeader.className = "sva-panel__header";
+      const toolobar = document.createElement("div");
+      toolobar.className = "sva-toolbar";
+      this.createToolbarItems(toolobar);
+      panelHeader.appendChild(toolobar);
+      this.targetElement.appendChild(panelHeader);
+    }
     this.targetElement.appendChild(panelContent);
 
     msnry = new Masonry(panelContent, {
       columnWidth: "." + gridSizerClassName,
       itemSelector: "." + questionElementClassName
     });
+  }
+
+  protected createToolbarItems(toolbar: HTMLDivElement) {
+    const resetFilterButton = ToolbarHelper.createButton(toolbar, () => {
+      this.visualizers.forEach(visualizer => {
+        if (visualizer instanceof SelectBase) {
+          visualizer.setSelection(undefined);
+        }
+      });
+    }, localization.getString("resetFilter"));
+    toolbar.appendChild(resetFilterButton);
   }
 
   destroy() {
@@ -136,22 +222,24 @@ export class VisualizationPanel {
 
   applyFilter(
     questionName: string,
-    selectedValue: any,
-    clearSelection: boolean = true
+    selectedValue: any
   ) {
-    if (clearSelection) {
-      this.filterValues = <any>{};
-    }
+    var filterChanged = true;
     if (selectedValue !== undefined) {
+      filterChanged = this.filterValues[questionName] !== selectedValue;
       this.filterValues[questionName] = selectedValue;
     } else {
+      filterChanged = this.filterValues[questionName] !== undefined;
       delete this.filterValues[questionName];
     }
-    this.filteredData = this.data.filter(item => {
-      return !Object.keys(this.filterValues).some(
-        key => item[key] !== this.filterValues[key]
-      );
-    });
+    if(filterChanged) {
+      this.filteredData = this.data.filter(item => {
+        return !Object.keys(this.filterValues).some(
+          key => item[key] !== this.filterValues[key]
+        );
+      });
+      this.update();
+    }
   }
 
   createVizualizer(

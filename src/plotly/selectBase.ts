@@ -25,7 +25,6 @@ export class SelectBasePlotly extends SelectBase {
   }
 
   private chart: Promise<Plotly.PlotlyHTMLElement>;
-  private selectedItem: ItemValue = undefined;
   private filterText: HTMLSpanElement = undefined;
   private filter: HTMLDivElement = undefined;
   public static types = ["bar", "pie", "scatter"];
@@ -43,49 +42,6 @@ export class SelectBasePlotly extends SelectBase {
 
   createChart() {
     this.chart = this.getPlotlyChart(this.chartNode, this.chartType);
-  }
-
-  setSelection(item: ItemValue, clearSelection: boolean = false) {
-    this.selectedItem = item;
-    this.updateFilter();
-    this.onDataItemSelected((item && item.value) || undefined, clearSelection);
-  }
-
-  updateFilter() {
-    this.filter.style.display = !!this.selectedItem ? "inline-block" : "none";
-    this.filterText.innerHTML = !!this.selectedItem
-      ? "Filter: [" + this.selectedItem.text + "]"
-      : "";
-  }
-
-  protected createToolbarItems(toolbar: HTMLDivElement) {
-    super.createToolbarItems(toolbar);
-    this.filter = document.createElement("div");
-    this.filter.className = "sva-question__filter";
-
-    this.filterText = document.createElement("span");
-    this.filterText.className = "sva-question__filter-text";
-    this.filter.appendChild(this.filterText);
-
-    const filterClear = document.createElement("span");
-    filterClear.className = "sva-question__toolbar-button";
-    filterClear.innerHTML = "Clear";
-    filterClear.onclick = () => {
-      this.setSelection(undefined);
-    };
-    this.filter.appendChild(filterClear);
-
-    // const filterClearAll = document.createElement("span");
-    // filterClearAll.className = "sva-question__toolbar-button";
-    // filterClearAll.innerHTML = "Clear All";
-    // filterClearAll.onclick = () => {
-    //   this.setSelection(undefined, true);
-    // };
-    // this.filter.appendChild(filterClearAll);
-
-    toolbar.appendChild(this.filter);
-
-    this.updateFilter();
   }
 
   protected getSelectedItemByText(itemText: string) {
@@ -173,7 +129,7 @@ export class SelectBasePlotly extends SelectBase {
       if (data.points.length > 0 && this.onDataItemSelected) {
         const itemText = data.points[0].text;
         const item: ItemValue = this.getSelectedItemByText(itemText);
-        this.setSelection(item, !data.event.ctrlKey);
+        this.setSelection(item);
       }
     });
 

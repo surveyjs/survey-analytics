@@ -1,5 +1,9 @@
 @import "globals";
 
+.sva-panel__header {
+  padding: 0 20px;
+}
+
 .sva-grid__grid-sizer {
   width: 100%;
   box-sizing: border-box;
@@ -37,7 +41,7 @@
   margin-left: 20px;
 }
 
-.sva-question__toolbar {
+.sva-toolbar {
   font-family: SegoeUI, Arial, sans-serif;
   font-size: 14px;
   color: $text-color;
@@ -46,13 +50,15 @@
   margin-left: 10px;
 }
 
-.sva-question__toolbar-button {
+.sva-toolbar__button {
   font-size: 14px;
-  padding: 8px 8px;
+  padding: 8px;
+  vertical-align: middle;
   cursor: pointer;
   border: 1px solid transparent;
   &:hover {
     border-color: $border-color;
+    background-blend-mode: darken;
   }
   margin: 0 10px;
   &:first-child {
@@ -116,6 +122,11 @@
 .sva-question__filter {
   display: inline-block;
   padding: 0 1em;
+}
+
+.sva-question__filter-text {
+  vertical-align: middle;
+  margin-top: 1px;
 }
 
 /* latin-ext */

@@ -4,6 +4,8 @@ import { localization } from "./localizationManager";
 import { ToolbarHelper } from "./utils/index";
 
 export class SelectBase extends VisualizerBase {
+  private selectedItem: ItemValue = undefined;
+
   constructor(
     protected targetElement: HTMLElement,
     question: Question,
@@ -30,7 +32,15 @@ export class SelectBase extends VisualizerBase {
 
   createChart() {}
 
-  onDataItemSelected: (selectedValue: any, clearSelection: boolean) => void;
+  setSelection(item: ItemValue) {
+    this.selectedItem = item;
+    this.onDataItemSelected((item && item.value) || undefined, (item && item.text) || "");
+  }
+  get selection() {
+    return this.selectedItem;
+  }
+
+  onDataItemSelected: (selectedValue: any, selectedText: string) => void;
 
   protected renderContent(container: HTMLDivElement) {
     this.createChart();
@@ -38,7 +48,6 @@ export class SelectBase extends VisualizerBase {
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
-    super.createToolbarItems(toolbar);
     if (this.chartTypes.length > 0) {
       ToolbarHelper.createSelector(toolbar,
         this.chartTypes.map(chartType => {
@@ -51,6 +60,7 @@ export class SelectBase extends VisualizerBase {
         (e: any) => this.setChartType(e.target.value)
       );
     }
+    super.createToolbarItems(toolbar);
   }
 
   valuesSource(): any[] {

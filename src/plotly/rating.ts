@@ -46,7 +46,6 @@ export class GaugePlotly extends VisualizerBase {
   };
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
-    super.createToolbarItems(toolbar);
     if (this.chartTypes.length > 0) {
       ToolbarHelper.createSelector(toolbar,
         this.chartTypes.map(chartType => {
@@ -59,6 +58,7 @@ export class GaugePlotly extends VisualizerBase {
         this.toolbarChangeHandler
       );
     }
+    super.createToolbarItems(toolbar);
   }
 
   destroy() {

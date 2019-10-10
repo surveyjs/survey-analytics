@@ -17,7 +17,7 @@ export class ToolbarHelper {
     }
     public static createButton(toolbar: HTMLDivElement, hander: (e: any) => void, text = "", cssClass = "") {
         const button = document.createElement("span");
-        button.className = "sva-question__toolbar-button " + cssClass;
+        button.className = "sva-toolbar__button " + cssClass;
         button.innerText = text;
         button.onclick = hander;
         toolbar.appendChild(button);
