@@ -74,7 +74,6 @@
   position: relative;
   display: inline-block;
   width: 200px;
-  padding-right: 25px;
 
   .sva-question__select {
     width: 100%;
@@ -88,6 +87,7 @@
     border-color: $border-color;
     height: $form-element-height;
     padding: 5px 5px 5px 15px;
+    padding-right: initial;
 
     &::-ms-expand {
       display: none;
