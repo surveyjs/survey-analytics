@@ -16,9 +16,10 @@ export var englishStrings = {
   chartType_scatter: "Scatter",
   chartType_gauge: "Gauge",
   chartType_bullet: "Bullet",
-  removeButton: "Remove",
+  hideButton: "Hide",
   resetFilter: "Reset Filter",
-  clearButton: "Clear"
+  clearButton: "Clear",
+  addElement: "Choose question to show..."
 };
 
 //Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.

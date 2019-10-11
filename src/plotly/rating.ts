@@ -47,7 +47,7 @@ export class GaugePlotly extends VisualizerBase {
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
     if (this.chartTypes.length > 0) {
-      ToolbarHelper.createSelector(toolbar,
+      const selectWrapper = ToolbarHelper.createSelector(toolbar,
         this.chartTypes.map(chartType => {
           return {
             value: chartType,
@@ -57,6 +57,7 @@ export class GaugePlotly extends VisualizerBase {
         (option: any) => this.chartType === option.value,
         this.toolbarChangeHandler
       );
+      toolbar.appendChild(selectWrapper);
     }
     super.createToolbarItems(toolbar);
   }
@@ -186,7 +187,7 @@ export class GaugePlotly extends VisualizerBase {
       });
 
       this._result =
-        questionValues.reduce((a, b) => {
+        (questionValues || []).reduce((a, b) => {
           return a + b;
         }) / questionValues.length;
       this._result = Math.ceil(this._result * 100) / 100;

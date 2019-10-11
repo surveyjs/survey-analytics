@@ -13,7 +13,7 @@ export class ToolbarHelper {
         });
         select.onchange = hander;
         selectWrapper.appendChild(select);
-        toolbar.appendChild(selectWrapper);
+        return selectWrapper;
     }
     public static createButton(toolbar: HTMLDivElement, hander: (e: any) => void, text = "", cssClass = "") {
         const button = document.createElement("span");
