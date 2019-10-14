@@ -32,6 +32,9 @@ export class GaugePlotly extends VisualizerBase {
   }
 
   update(data: Array<{ [index: string]: any }>) {
+    if(data !== undefined) {
+      this._result = undefined;
+    }
     super.update(data);
     this.destroy();
     this.createChart();
@@ -186,10 +189,7 @@ export class GaugePlotly extends VisualizerBase {
         }
       });
 
-      this._result =
-        (questionValues || []).reduce((a, b) => {
-          return a + b;
-        }) / questionValues.length;
+      this._result = questionValues && (questionValues.reduce((a, b) => a + b, 0) / questionValues.length) || 0;
       this._result = Math.ceil(this._result * 100) / 100;
     }
     return this._result;
