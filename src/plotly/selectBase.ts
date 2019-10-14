@@ -75,7 +75,11 @@ export class SelectBasePlotly extends SelectBase {
     };
 
     if (datasets.length === 1) {
-      traceConfig["marker"] = { color: colors };
+      traceConfig["marker"] = {
+        color: colors,
+        symbol: 'circle',
+        size: 16
+      };
     }
 
     datasets.forEach(dataset => {

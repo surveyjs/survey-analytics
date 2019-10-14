@@ -19,7 +19,7 @@ export class MatrixPlotly extends SelectBasePlotly {
 
   getLabels(): any[] {
     const question: QuestionMatrixModel = <any>this.question;
-    return question.rows.map(row =>
+    return question.rows.map((row: any) =>
       ItemValue.getTextOrHtmlByValue(question.rows, row.value)
     );
   }
@@ -27,7 +27,7 @@ export class MatrixPlotly extends SelectBasePlotly {
   getData(): any[] {
     const question: QuestionMatrixModel = <any>this.question;
     const datasets: Array<any> = this.valuesSource().map(choice => {
-      return question.rows.map(v => 0);
+      return question.rows.map((v: any) => 0);
     });
 
     this.data.forEach(rowData => {

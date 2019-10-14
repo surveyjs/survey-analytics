@@ -27,7 +27,7 @@ export var localization = {
     if (!loc || !loc[strName]) loc = this.locales[this.defaultLocale];
     var result = loc[strName];
     if(result === undefined) {
-      result = this.locales["en"][strName];
+      result = this.locales["en"][strName] || strName;
     }
     return result;
   },
