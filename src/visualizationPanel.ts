@@ -2,14 +2,13 @@ import { VisualizationManager } from "./visualizationManager";
 import { VisualizerBase } from "./visualizerBase";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 import { Question, QuestionPanelDynamicModel, Event } from "survey-core";
-import Masonry from "masonry-layout";
+const Muuri = require("muuri");
 import "./visualizationPanel.scss";
 import { SelectBase } from "./selectBase";
 import { ToolbarHelper } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, ElementVisibility } from "./config";
 
-const gridSizerClassName = "sva-grid__grid-sizer";
 const questionElementClassName = "sva-question";
 
 export class VisualizationPanel {
@@ -33,7 +32,7 @@ export class VisualizationPanel {
     }
   }
 
-  private getMasonry: () => Masonry;
+  private getLayoutEngine: () => any;
 
   protected buildElements(questions: any[]): IVisualizerPanelElement[] {
     return (questions || []).map(question => {
@@ -109,7 +108,7 @@ export class VisualizationPanel {
         setTimeout(() => {
           element.visibility = ElementVisibility.Invisible;
           this.destroyVisualizer(visualizer);
-          this.getMasonry().remove([questionElement]);
+          this.getLayoutEngine().remove([questionElement]);
           this.panelContent.removeChild(questionElement);
           this.visibleElementsCnahged();
         }, 0 );
@@ -170,16 +169,11 @@ export class VisualizationPanel {
   }
 
   render() {
-    let msnry: any = undefined;
-    this.getMasonry = () => msnry;
+    let layoutEngine: any = undefined;
+    this.getLayoutEngine = () => layoutEngine;
 
     this.panelContent = document.createElement("div");
-
-    const gridSizer = document.createElement("div"); //Masonry gridSizer empty element, only used for element sizing
-
     this.panelContent.className = "sva-grid";
-    gridSizer.className = gridSizerClassName;
-    this.panelContent.appendChild(gridSizer);
 
     this.visibleElements.forEach(element => {
       let questionElement = this.renderVisualizer(element);
@@ -197,10 +191,16 @@ export class VisualizationPanel {
     }
     this.targetElement.appendChild(this.panelContent);
 
-    msnry = new Masonry(this.panelContent, {
-      columnWidth: "." + gridSizerClassName,
-      itemSelector: "." + questionElementClassName
+    var moveHandler = (data: any) => {
+      var elements = this._elements.splice(data.fromIndex, 1);
+      this._elements.splice(data.toIndex, 0, elements[0]);
+    }
+
+    layoutEngine = new Muuri(this.panelContent, {
+      items: ".sva-question",
+      dragEnabled: true
     });
+    layoutEngine.on("move", moveHandler)
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
@@ -230,7 +230,7 @@ export class VisualizationPanel {
             element.visibility = ElementVisibility.Visible;            
             const questionElement = this.renderVisualizer(element);
             this.panelContent.appendChild(questionElement);
-            this.getMasonry().addItems([questionElement]);
+            this.getLayoutEngine().add([questionElement]);
             this.visibleElementsCnahged();
           }
         );
@@ -246,10 +246,11 @@ export class VisualizationPanel {
   }
 
   destroy() {
-    let masonry = !!this.getMasonry && this.getMasonry();
-    if(!!masonry) {
-      masonry.destroy();
-      this.getMasonry = undefined;
+    let layoutEngine = !!this.getLayoutEngine && this.getLayoutEngine();
+    if(!!layoutEngine) {
+      layoutEngine.off("move");
+      layoutEngine.destroy();
+      this.getLayoutEngine = undefined;
     }
     this.targetElement.innerHTML = "";
     this.panelContent = undefined;
@@ -275,8 +276,8 @@ export class VisualizationPanel {
   }
 
   layout() {
-    if (this.getMasonry && this.getMasonry()) {
-      this.getMasonry().layout();
+    if (this.getLayoutEngine && this.getLayoutEngine()) {
+      this.getLayoutEngine().layout();
     }
   }
 

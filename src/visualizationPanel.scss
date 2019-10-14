@@ -4,6 +4,10 @@
   padding: 0 20px;
 }
 
+.sva-grid {
+  position: relative;
+}
+
 .sva-grid__grid-sizer {
   width: 100%;
   box-sizing: border-box;
@@ -19,6 +23,7 @@
   box-sizing: border-box;
   overflow: hidden;
   padding: 1em;
+  position: absolute;
 
   @media screen and (min-width: 1400px) {
     width: 50%;
@@ -39,6 +44,7 @@
   margin: 0;
   margin-bottom: 1em;
   margin-left: 20px;
+  cursor: move;
 }
 
 .sva-toolbar {
