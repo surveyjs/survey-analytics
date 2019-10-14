@@ -33,6 +33,9 @@ export class VisualizationPanel {
   }
 
   private getLayoutEngine: () => any;
+  private get layoutEngine () {
+    return !!this.getLayoutEngine && this.getLayoutEngine();
+  }
 
   protected buildElements(questions: any[]): IVisualizerPanelElement[] {
     return (questions || []).map(question => {
@@ -108,7 +111,7 @@ export class VisualizationPanel {
         setTimeout(() => {
           element.visibility = ElementVisibility.Invisible;
           this.destroyVisualizer(visualizer);
-          this.getLayoutEngine().remove([questionElement]);
+          this.layoutEngine.remove([questionElement]);
           this.panelContent.removeChild(questionElement);
           this.visibleElementsCnahged();
         }, 0 );
@@ -230,7 +233,7 @@ export class VisualizationPanel {
             element.visibility = ElementVisibility.Visible;            
             const questionElement = this.renderVisualizer(element);
             this.panelContent.appendChild(questionElement);
-            this.getLayoutEngine().add([questionElement]);
+            this.layoutEngine.add([questionElement]);
             this.visibleElementsCnahged();
           }
         );
@@ -276,8 +279,10 @@ export class VisualizationPanel {
   }
 
   layout() {
-    if (this.getLayoutEngine && this.getLayoutEngine()) {
-      this.getLayoutEngine().layout();
+    const layoutEngine = this.layoutEngine;
+    if (!!layoutEngine) {
+      layoutEngine.refreshItems();
+      layoutEngine.layout();
     }
   }
 
