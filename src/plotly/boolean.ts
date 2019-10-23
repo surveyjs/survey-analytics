@@ -22,7 +22,9 @@ export class BooleanPlotly extends SelectBasePlotly {
   public static types = ["pie", "bar"];
 
   protected getSelectedItemByText(itemText: string) {
-    return new ItemValue(itemText);
+    const labels = this.getLabels();
+    const values = this.getValues();
+    return new ItemValue(values[labels.indexOf(itemText)], itemText);
   }
 
   getValues(): Array<any> {
@@ -30,21 +32,30 @@ export class BooleanPlotly extends SelectBasePlotly {
   }
 
   getLabels(): Array<string> {
-    return this.getValues();
+    var labels = this.getValues();
+    if(this.booleanQuestion.labelTrue !== undefined) {
+      labels[0] = this.booleanQuestion.labelTrue;
+    }
+    if(this.booleanQuestion.labelFalse !== undefined) {
+      labels[1] = this.booleanQuestion.labelFalse;
+    }
+    return labels;
   }
 
   getData(): any[] {
     const values = this.getValues();
-    const statistics = values.map(v => 0);
+    var trueCount = 0;
+    var falseCount = 0;
     this.data.forEach(row => {
       const rowValue: any = row[this.question.name];
-      values.forEach((val: any, index: number) => {
-        if (rowValue === val) {
-          statistics[index]++;
-        }
-      });
+      if(rowValue === values[0]) {
+        trueCount++;
+      }
+      if(rowValue === values[1]) {
+        falseCount++;
+      }
     });
-    return [statistics];
+    return [[trueCount, falseCount]];
   }
 
 }

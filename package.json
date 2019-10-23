@@ -51,7 +51,7 @@
     "jquery": "3.4.1",
     "muuri": "^0.8.0",
     "plotly.js-dist": "^1.49.5",
-    "survey-core": "^1.1.14",
+    "survey-core": "^1.1.17",
     "wordcloud": "^1.1.0"
   },
   "devDependencies": {

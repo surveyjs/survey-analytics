@@ -84,7 +84,7 @@ export class SelectBasePlotly extends SelectBase {
 
     datasets.forEach(dataset => {
       if (this.chartType === "pie") {
-        traces.push(Object.assign({}, traceConfig, { values: dataset }));
+        traces.push(Object.assign({}, traceConfig, { values: dataset, labels: labels }));
       } else {
         traces.push(Object.assign({}, traceConfig, { x: dataset }));
       }
@@ -92,7 +92,7 @@ export class SelectBasePlotly extends SelectBase {
 
     const height =
       chartType === "pie"
-        ? 450
+        ? (labels.length < 10 ? labels.length  * 50 + 100 : 550)
         : (labels.length + (labels.length + 1) * 0.5) * 20;
 
     const layout: any = {
