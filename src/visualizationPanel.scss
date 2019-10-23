@@ -94,7 +94,8 @@
     height: $form-element-height;
     padding: 5px 5px 5px 15px;
     padding-right: initial;
-
+    line-height: initial;
+    
     &::-ms-expand {
       display: none;
     }
