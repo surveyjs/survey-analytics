@@ -8,8 +8,8 @@ var json = {
             "name": "bool",
             "title": "Please answer the question",
             "label": "Are you 21 or older?",
-            "valueTrue": "true",
-            "valueFalse": "false",
+            //"valueTrue": "true",
+            //"valueFalse": "false",
             "labelTrue": "Label True",
             "labelFalse": "Label False"
           },
@@ -280,7 +280,7 @@ var json = {
   
 var data = [
 {
-    bool: "true",
+    bool: true,
     organization_type: "In-house",
     developer_count: "6-10",
     VerticalMarket: "Consumer",
@@ -309,7 +309,7 @@ var data = [
     survey_cloud_platform: ""
 },
 {
-    bool: "true",
+    bool: true,
     organization_type: "other",
     developer_count: "3-5",
     VerticalMarket: "Online",
@@ -336,7 +336,7 @@ var data = [
     survey_cloud_platform: ""
 },
 {
-    bool: "false",
+    bool: false,
     organization_type: "Custom",
     developer_count: "3-5",
     VerticalMarket: "Education",

@@ -46,7 +46,7 @@ var survey = new Survey.SurveyModel(json);
 
 var normalizedData = data.map(function(item) {
   survey.getAllQuestions().forEach(function(q) {
-    if (!item[q.name]) {
+    if (item[q.name] === undefined) {
       item[q.name] = "";
     }
   });
