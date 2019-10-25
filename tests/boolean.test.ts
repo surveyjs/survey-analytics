@@ -3,7 +3,8 @@ import { BooleanPlotly } from "../src/plotly/boolean";
 
 let boolean: BooleanPlotly;
 
-const values = [ true, false ]
+const values = [ true, false ];
+const labels = [ "Yes", "No" ];
 
 beforeEach(() => {
   var question = new QuestionBooleanModel("q1");
@@ -29,7 +30,7 @@ test("getValues method", () => {
 });
 
 test("getLabels method", () => {
-  expect(boolean.getLabels()).toEqual(values);
+  expect(boolean.getLabels()).toEqual(labels);
 });
 
 test("getData method", () => {
