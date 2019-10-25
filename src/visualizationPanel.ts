@@ -203,7 +203,8 @@ export class VisualizationPanel {
       items: ".sva-question",
       dragEnabled: true
     });
-    layoutEngine.on("move", moveHandler)
+    layoutEngine.on("move", moveHandler);
+    !!window && window.dispatchEvent(new UIEvent('resize'));
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
