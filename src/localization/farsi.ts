@@ -1,4 +1,4 @@
-import { localization } from "../localization";
+import { localization } from "../localizationManager";
 
 export var farsiStrings = {
   groupButton: "گروه بندی با",

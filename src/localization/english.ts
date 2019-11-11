@@ -1,5 +1,5 @@
 //Uncomment this line on creating a translation file
-//import { localization } from "../localization";
+//import { localization } from "../localizationManager";
 
 export var englishStrings = {
   groupButton: "Group By Me",
