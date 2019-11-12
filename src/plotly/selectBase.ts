@@ -8,7 +8,7 @@ export function canLoadPlotly() {
 }
 
 var Plotly: any;
-if(canLoadPlotly()) {
+if (canLoadPlotly()) {
   Plotly = <any>require("plotly.js-dist");
 }
 
@@ -50,6 +50,13 @@ export class SelectBasePlotly extends SelectBase {
     )[0];
   }
 
+  protected patchConfigParameters(
+    chartNode: object,
+    traces: Array<object>,
+    layout: object,
+    config: object
+  ) {}
+
   private getPlotlyChart(
     chartNode: HTMLElement,
     chartType: string
@@ -77,14 +84,19 @@ export class SelectBasePlotly extends SelectBase {
     if (datasets.length === 1) {
       traceConfig["marker"] = {
         color: colors,
-        symbol: 'circle',
+        symbol: "circle",
         size: 16
       };
     }
 
     datasets.forEach(dataset => {
       if (this.chartType === "pie") {
-        traces.push(Object.assign({}, traceConfig, { values: dataset, labels: labels }));
+        traces.push(
+          Object.assign({}, traceConfig, {
+            values: dataset,
+            labels: labels
+          })
+        );
       } else {
         traces.push(Object.assign({}, traceConfig, { x: dataset }));
       }
@@ -92,7 +104,9 @@ export class SelectBasePlotly extends SelectBase {
 
     const height =
       chartType === "pie"
-        ? (labels.length < 10 ? labels.length  * 50 + 100 : 550)
+        ? labels.length < 10
+          ? labels.length * 50 + 100
+          : 550
         : (labels.length + (labels.length + 1) * 0.5) * 20;
 
     const layout: any = {
@@ -127,6 +141,8 @@ export class SelectBasePlotly extends SelectBase {
       responsive: true
     };
 
+    this.patchConfigParameters(chartNode, traces, layout, config);
+
     const plot = Plotly.newPlot(chartNode, traces, layout, config);
 
     (<any>chartNode)["on"]("plotly_click", (data: any) => {
@@ -137,9 +153,8 @@ export class SelectBasePlotly extends SelectBase {
       }
     });
 
-    var getDragLayer = () => <HTMLElement>(
-      chartNode.getElementsByClassName("nsewdrag")[0]
-    );
+    var getDragLayer = () =>
+      <HTMLElement>chartNode.getElementsByClassName("nsewdrag")[0];
     (<any>chartNode)["on"]("plotly_hover", () => {
       const dragLayer = getDragLayer();
       dragLayer && (dragLayer.style.cursor = "pointer");
