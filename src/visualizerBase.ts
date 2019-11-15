@@ -1,5 +1,7 @@
 import { Question } from "survey-core";
 
+import "./visualizerBase.scss";
+
 export class VisualizerBase {
 
   public toolbarItemCreators: { [name: string]: (toolbar: HTMLDivElement) => HTMLElement } = {};
