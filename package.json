@@ -6,6 +6,8 @@
     "test": "jest",
     "testDev": "jest --watch",
     "release": "standard-version --message \"Release: %s\" ",
+    "doc_gen": "node doc_generator/lib_docgenerator.js src/index.ts",
+    "doc_update": "chmod +x ./docupdate_npm.sh && ./docupdate_npm.sh",
     "build_dev": "webpack --env.buildType dev",
     "build_prod": "npm run build_dev && webpack --env.buildType prod"
   },
@@ -79,6 +81,7 @@
     "sass-loader": "4.1.1",
     "standard-version": "4.0.0",
     "style-loader": "0.13.1",
+    "surveyjs-doc-generator": "git+https://github.com/surveyjs/surveyjs-doc-generator.git",
     "ts-jest": "23.10.3",
     "ts-loader": "2.3.4",
     "typescript": "3.4.3",

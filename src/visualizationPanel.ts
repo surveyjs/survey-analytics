@@ -11,6 +11,9 @@ import { IVisualizerPanelElement, ElementVisibility } from "./config";
 
 const questionElementClassName = "sva-question";
 
+/**
+ * VisualizationPanel is responsible for displaying an array of survey questions.
+ */
 export class VisualizationPanel {
   private _showHeader = false;
   private panelContent: HTMLDivElement = undefined;
@@ -48,6 +51,9 @@ export class VisualizationPanel {
     });
   }
 
+  /**
+   * Checks whether certain element is visible.
+   */
   public isVisible(visibility: ElementVisibility) {
     return this.isTrustedAccess && visibility !== ElementVisibility.Invisible || !this.isTrustedAccess && visibility === ElementVisibility.Visible;
   }
@@ -64,7 +70,10 @@ export class VisualizationPanel {
     return this._elements.filter(el => el.name === name)[0];
   }
 
-  onVisibleElementsCnahged = new Event<(sender: VisualizationPanel, options: any) => any, any>();
+  /**
+   * Fires when element visibility has been changed.
+   */
+  public onVisibleElementsCnahged = new Event<(sender: VisualizationPanel, options: any) => any, any>();
 
   visibleElementsCnahged() {
     if(!this.onVisibleElementsCnahged.isEmpty) {
@@ -73,7 +82,10 @@ export class VisualizationPanel {
     this.layout();
   }
 
-  destroyVisualizer(visualizer: VisualizerBase) {
+  /**
+   * Destroys given visualizer.
+   */
+  public destroyVisualizer(visualizer: VisualizerBase) {
     if (visualizer instanceof SelectBase) {
       visualizer.setSelection(undefined);
       visualizer.onDataItemSelected = undefined;
@@ -83,7 +95,10 @@ export class VisualizationPanel {
     this.visualizers.splice(this.visualizers.indexOf(visualizer), 1);
   }
 
-  renderVisualizer(element: IVisualizerPanelElement) {
+  /**
+   * Renders given element.
+   */
+  public renderVisualizer(element: IVisualizerPanelElement) {
     var question = this.questions.filter(q => q.name === element.name)[0];
     const questionElement = document.createElement("div");
     const questionContent = document.createElement("div");
@@ -171,7 +186,10 @@ export class VisualizationPanel {
     return questionElement;
   }
 
-  render() {
+  /**
+   * Renders all questions into given HTML container element.
+   */
+  public render() {
     let layoutEngine: any = undefined;
     this.getLayoutEngine = () => layoutEngine;
 
@@ -249,7 +267,10 @@ export class VisualizationPanel {
     this.onVisibleElementsCnahged.add(addElementSelectorUpdater);
   }
 
-  destroy() {
+  /**
+   * Destroys visualizer and all inner content.
+   */
+  public destroy() {
     let layoutEngine = !!this.getLayoutEngine && this.getLayoutEngine();
     if(!!layoutEngine) {
       layoutEngine.off("move");
@@ -268,7 +289,10 @@ export class VisualizationPanel {
     this.visualizers = [];
   }
 
-  update(hard: boolean = false) {
+  /**
+   * Updates visualizer and all inner content.
+   */
+  public update(hard: boolean = false) {
     if(hard && this.visualizers.length > 0) {
       this.destroy();
       this.render();
@@ -279,7 +303,10 @@ export class VisualizationPanel {
     }
   }
 
-  layout() {
+  /**
+   * Updates layout of visualizer inner content.
+   */
+  public layout() {
     const layoutEngine = this.layoutEngine;
     if (!!layoutEngine) {
       layoutEngine.refreshItems();
@@ -287,7 +314,10 @@ export class VisualizationPanel {
     }
   }
 
-  applyFilter(
+  /**
+   * Applies filter by question name and value.
+   */
+  public applyFilter(
     questionName: string,
     selectedValue: any
   ) {
@@ -309,7 +339,10 @@ export class VisualizationPanel {
     }
   }
 
-  createVizualizer(
+  /**
+   * Creates visuzlizer by question.
+   */
+  public createVizualizer(
     vizualizerElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>
