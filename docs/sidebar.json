@@ -1,14 +1,18 @@
 {
-    "Categories": [
+  "Categories": [
+    {
+      "Name": "AnalyticsOverview",
+      "Title": "Analytics Overview"
+    },
+    {
+      "Name": "api",
+      "Title": "Analytics API",
+      "Items": [
         {
-            "Name": "AnalyticsOverview",
-            "Title": "Analytics Overview"
-        },
-        {
-            "Name": "api",
-            "Title": "Analytics API",
-            "Items": []
+          "Name": "visualizationpanel",
+          "Title": "Visualization Panel"
         }
-    ]
+       ]
+    }
+  ]
 }
-  
