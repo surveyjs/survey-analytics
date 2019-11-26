@@ -18,8 +18,10 @@ export class GaugePlotly extends VisualizerBase {
     texts: string[]
   ) => string[];
 
-  protected chartTypes = ["gauge", "bullet"];
-  chartType = "gauge";
+
+  public static types = ["gauge", "bullet"];
+  protected chartTypes: Array<string>;
+  chartType: String;
   chartNode = <HTMLElement>document.createElement("div");
 
   constructor(
@@ -29,6 +31,8 @@ export class GaugePlotly extends VisualizerBase {
     options?: Object
   ) {
     super(targetElement, question, data, options);
+    this.chartTypes = GaugePlotly.types;
+    this.chartType = this.chartTypes[0];
   }
 
   update(data: Array<{ [index: string]: any }>) {
@@ -49,7 +53,7 @@ export class GaugePlotly extends VisualizerBase {
   };
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
-    if (this.chartTypes.length > 0) {
+    if (this.chartTypes.length > 1) {
       const selectWrapper = ToolbarHelper.createSelector(toolbar,
         this.chartTypes.map(chartType => {
           return {
