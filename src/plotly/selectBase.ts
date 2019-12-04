@@ -27,7 +27,7 @@ export class SelectBasePlotly extends SelectBase {
   private chart: Promise<Plotly.PlotlyHTMLElement>;
   private filterText: HTMLSpanElement = undefined;
   private filter: HTMLDivElement = undefined;
-  public static types = ["bar", "pie", "scatter"];
+  public static types = ["bar", "pie", "doughnut", "scatter"];
 
   update(data: Array<{ [index: string]: any }>) {
     super.update(data);
@@ -81,6 +81,11 @@ export class SelectBasePlotly extends SelectBase {
       width: 0.5
     };
 
+    if(this.chartType === "doughnut") {
+      traceConfig.type = "pie";
+      traceConfig.hole = .4;
+    }
+
     if (datasets.length === 1) {
       traceConfig["marker"] = {
         color: colors,
@@ -90,7 +95,7 @@ export class SelectBasePlotly extends SelectBase {
     }
 
     datasets.forEach(dataset => {
-      if (this.chartType === "pie") {
+      if (this.chartType === "pie" || this.chartType === "doughnut") {
         traces.push(
           Object.assign({}, traceConfig, {
             values: dataset,
@@ -103,7 +108,7 @@ export class SelectBasePlotly extends SelectBase {
     });
 
     const height =
-      chartType === "pie"
+      chartType === "pie" || this.chartType === "doughnut"
         ? labels.length < 10
           ? labels.length * 50 + 100
           : 550

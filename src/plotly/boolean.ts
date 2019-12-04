@@ -34,7 +34,7 @@ export class BooleanPlotly extends SelectBasePlotly {
       BooleanPlotly.falseColor || colors[1]
     ];
 
-    if (this.chartType === "pie") {
+    if (this.chartType === "pie" || this.chartType === "doughnut") {
       traces.forEach((trace: any) => {
         trace.marker.colors = boolColors;
       });
@@ -45,7 +45,7 @@ export class BooleanPlotly extends SelectBasePlotly {
     }
   }
 
-  public static types = ["pie", "bar"];
+  public static types = ["pie", "bar", "doughnut"];
 
   protected getSelectedItemByText(itemText: string) {
     const labels = this.getLabels();

@@ -12,6 +12,8 @@ export var englishStrings = {
   visualizer_text: "Texts in table",
   visualizer_wordcloud: "Wordcloud",
   chartType_bar: "Bar",
+  chartType_stackedbar: "Stacked Bar",
+  chartType_doughnut: "Doughnut",
   chartType_pie: "Pie",
   chartType_scatter: "Scatter",
   chartType_gauge: "Gauge",
