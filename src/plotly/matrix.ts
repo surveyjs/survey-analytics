@@ -23,11 +23,12 @@ export class MatrixPlotly extends SelectBasePlotly {
     config: any
   ) {
     const question: QuestionMatrixModel = <any>this.question;
+    //var valueTitles = question.columns.map(column => column.text);
     if (this.chartType === "pie" || this.chartType === "doughnut") {
       layout.grid = {rows: 1, columns: traces.length};
     } else if(this.chartType === "stackedbar") {
-        layout.height = undefined;
-        layout.barmode = 'stack';
+      layout.height = undefined;
+      layout.barmode = 'stack';
     } else {
       layout.height = undefined;
     }
