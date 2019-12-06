@@ -1,38 +1,84 @@
 $main-color: #1ab394;
+$background-color: #f7f7f7;
 
-.sa-datatable {
-    width: 100%;
+$text-color: #404040;
+$text-color-inverse: #ffffff;
+
+$root-font-size: 14px;
+
+@mixin button() {
+  background: none;
+  background-color: transparent;
+  border: 1px solid #1ab394;
+  border-radius: 12px;
+  color: $main-color;
+  cursor: pointer;
+  font-family: Segoe UI;
+  font-size: $root-font-size;
+  font-weight: bold;
+  outline: none;
+  padding: 2px 20px;
+
+  &:hover {
+    background-color: $main-color;
+    color: $text-color-inverse;
+  }
 }
 
-.sa-datatable th {
-    position: relative;
+.sa-datatables {
+  button {
+    @include button();
+  }
+
+  .dt-buttons {
+    margin-left: 20px;
+  }
+
+  .dt-button {
+    width: 79px;
+    margin-right: 5px;
+  }
+
+  .dataTables_wrapper {
+    background-color: $background-color;
+    padding-top: 30px;
+    padding-bottom: 25px;
+  }
 }
 
-.sa-datatable-detail {
-    width: 80%;
-    padding-left: 50px;
+.sa-datatables__table {
+  width: 100%;
 }
 
-.sa-datatable-action-container {
-    position: absolute;
-    display: none;
-    top: 0;
-    z-index: 1;
+.sa-datatables__table th {
+  position: relative;
 }
 
-th:hover > .sa-datatable-action-container {
-    display: block;
+.sa-datatables__detail {
+  width: 80%;
+  padding-left: 50px;
 }
 
-td.sa-datatable-action-column {
-    width: 20px;
-    background-image: url(/images/Arrow_right_10x10.svg);
-    background-size: 10px 10px;
-    background-repeat: no-repeat;
-    background-position: center;
-    cursor: pointer;
+.sa-datatables__action-container {
+  position: absolute;
+  display: none;
+  top: 0;
+  z-index: 1;
 }
 
-.sa-datatable-detail-row td.sa-datatable-action-column {
-    background-image: url(/images/Arrow_down_10x10.svg);
+th:hover > .sa-datatables__action-container {
+  display: block;
+}
+
+td.sa-datatables__action-column {
+  width: 20px;
+  background-image: url(/images/Arrow_right_10x10.svg);
+  background-size: 10px 10px;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+
+.sa-datatables__detail-row td.sa-datatables__action-column {
+  background-image: url(/images/Arrow_down_10x10.svg);
 }
