@@ -32,11 +32,17 @@ $root-font-size: 14px;
 
   .dt-buttons {
     margin-left: 20px;
+    float: left;
   }
 
   .dt-button {
     width: 79px;
     margin-right: 5px;
+  }
+
+  .dataTables_filter {
+    float: left;
+    margin-bottom: 10px;
   }
 
   .dataTables_wrapper {
@@ -48,6 +54,7 @@ $root-font-size: 14px;
 
 .sa-datatables__table {
   width: 100%;
+  background: $text-color-inverse;
 }
 
 .sa-datatables__table th {

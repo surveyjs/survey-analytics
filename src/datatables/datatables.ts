@@ -153,7 +153,7 @@ export class DataTables {
       true,
       {
         buttons: ["copy", "csv", "print"],
-        dom: "Blfrtip",
+        dom: "Bflrtip",
         data: this.tableData,
         responsive: {
           details: false
