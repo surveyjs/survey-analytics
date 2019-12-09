@@ -113,6 +113,27 @@ $root-font-size: 14px;
     float: left;
     margin-left: 20px;
   }
+
+  table {
+    border-spacing: 0;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .sa-datatables__detail {
+    border-bottom: none;
+  }
+
+  table.dataTable tbody th:first-child,
+  table.dataTable tbody td:first-child {
+    border-left: 1px solid #ddd;
+  }
+
+  table.dataTable tbody th,
+  table.dataTable tbody td {
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+  }
 }
 
 .sa-datatables__table {
