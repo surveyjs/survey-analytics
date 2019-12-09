@@ -3,6 +3,7 @@ $background-color: #f7f7f7;
 
 $text-color: #404040;
 $text-color-inverse: #ffffff;
+$text-gray: #a0a0a0;
 
 $root-font-size: 14px;
 
@@ -14,10 +15,10 @@ $root-font-size: 14px;
   color: $main-color;
   cursor: pointer;
   font-family: Segoe UI;
-  font-size: $root-font-size;
   font-weight: bold;
   outline: none;
   padding: 2px 20px;
+  font-size: $root-font-size;
 
   &:hover {
     background-color: $main-color;
@@ -25,7 +26,19 @@ $root-font-size: 14px;
   }
 }
 
+@mixin arrow() {
+  display: inline-block;
+  background: transparent;
+  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23a0a0a0;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat, repeat;
+  background-size: 9px 100%;
+  width: 10px;
+  height: 10px;
+}
+
 .sa-datatables {
+  font-size: $root-font-size;
+
   button {
     @include button();
   }
@@ -43,12 +56,62 @@ $root-font-size: 14px;
   .dataTables_filter {
     float: left;
     margin-bottom: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
   }
 
   .dataTables_wrapper {
     background-color: $background-color;
     padding-top: 30px;
     padding-bottom: 25px;
+  }
+
+  .dataTables_length {
+    float: left;
+  }
+
+  .dataTables_paginate {
+    float: right;
+    margin-right: 20px;
+
+    .ellipsis {
+      color: $text-gray;
+      margin-right: 15px;
+    }
+  }
+
+  .paginate_button {
+    color: $text-gray;
+    margin-right: 15px;
+    cursor: pointer;
+    outline: none;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .paginate_button.previous {
+    @include arrow();
+    transform: rotate(90deg);
+    margin-right: 20px;
+  }
+
+  .paginate_button.next {
+    @include arrow();
+    transform: rotate(270deg);
+    margin-left: 20px;
+  }
+
+  .paginate_button.current {
+    font-weight: bold;
+    border-bottom: 1px solid $text-gray;
+  }
+
+  .dataTables_info {
+    color: $text-gray;
+    float: left;
+    margin-left: 20px;
   }
 }
 

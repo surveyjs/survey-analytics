@@ -153,8 +153,10 @@ export class DataTables {
       true,
       {
         buttons: ["copy", "csv", "print"],
-        dom: "Bflrtip",
+        dom: "Bflprtip",
         data: this.tableData,
+        pageLength: 10,
+        lengthMenu: [1, 5, 10, 25, 50, 75, 100, "All"],
         responsive: {
           details: false
         },
@@ -164,6 +166,12 @@ export class DataTables {
           dataSrc: columnsData[0],
           endRender: (rows: any, group: any) => {
             return "Count: " + rows.data().count();
+          }
+        },
+        language: {
+          paginate: {
+            previous: " ",
+            next: " "
           }
         },
         select: "api",
