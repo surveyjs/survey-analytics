@@ -1,6 +1,10 @@
 import { SurveyModel, Question } from "survey-core";
 import { DataTables } from "../src/datatables/datatables";
-import { ColumnDataType, ColumnVisibility, QuestionLocation } from "../src/datatables/config";
+import {
+  ColumnDataType,
+  ColumnVisibility,
+  QuestionLocation
+} from "../src/datatables/config";
 
 const json = {
   questions: [
@@ -31,7 +35,7 @@ test("buildColumns method", () => {
   const columns = <any>dataTables["buildColumns"](survey);
 
   expect(JSON.stringify(columns)).toBe(
-    '[{\"name\":\"car\",\"displayName\":\"What car are you driving?\",\"dataType\":\"Text\",\"visibility\":\"Visible\",\"location\":\"Column\"},{\"name\":\"photo\",\"displayName\":\"photo\",\"dataType\":\"FileLink\",\"visibility\":\"Invisible\",\"location\":\"Column\"}]'
+    '[{"name":"car","displayName":"What car are you driving?","dataType":"Text","visibility":"Visible","location":"Column"},{"name":"photo","displayName":"photo","dataType":"FileLink","visibility":"Invisible","location":"Column"}]'
   );
 });
 
@@ -47,7 +51,7 @@ test("getColumns method", () => {
   const columns = <any>dataTables.getColumns();
 
   expect(JSON.stringify(columns)).toBe(
-    '[{\"className\":\"sa-datatable-action-column\",\"orderable\":false,\"data\":null,\"defaultContent\":\"\"},{\"data\":\"car\",\"sTitle\":\"What car are you driving?\",\"visible\":true}]'
+    '[{"className":"sa-datatables__action-column","orderable":false,"data":null,"defaultContent":""},{"data":"car","sTitle":"What car are you driving?","visible":true}]'
   );
 });
 
@@ -81,24 +85,27 @@ test("pass columns through ctor", () => {
     new SurveyModel(),
     [],
     null,
-    [{
-      name: "id",
-      displayName: "Id",
-      location: QuestionLocation.Column,
-      visibility: ColumnVisibility.Visible,
-      dataType: ColumnDataType.Text
-    }, {
-      name: "happenedAt",
-      displayName: "Happened At",
-      location: QuestionLocation.Row,
-      visibility: ColumnVisibility.Visible,
-      dataType: ColumnDataType.Text
-    }]
+    [
+      {
+        name: "id",
+        displayName: "Id",
+        location: QuestionLocation.Column,
+        visibility: ColumnVisibility.Visible,
+        dataType: ColumnDataType.Text
+      },
+      {
+        name: "happenedAt",
+        displayName: "Happened At",
+        location: QuestionLocation.Row,
+        visibility: ColumnVisibility.Visible,
+        dataType: ColumnDataType.Text
+      }
+    ]
   );
 
   const columns = <any>dataTables.getColumns();
   expect(JSON.stringify(columns)).toBe(
-    '[{\"className\":\"sa-datatable-action-column\",\"orderable\":false,\"data\":null,\"defaultContent\":\"\"},{\"data\":\"id\",\"sTitle\":\"Id\",\"visible\":true}]'
+    '[{"className":"sa-datatables__action-column","orderable":false,"data":null,"defaultContent":""},{"data":"id","sTitle":"Id","visible":true}]'
   );
 });
 
@@ -108,23 +115,26 @@ test("createDetailMarkup method", () => {
     new SurveyModel(),
     [],
     null,
-    [{
-      name: "id",
-      displayName: "Id",
-      location: QuestionLocation.Column,
-      visibility: ColumnVisibility.Visible,
-      dataType: ColumnDataType.Text
-    }, {
-      name: "happenedAt",
-      displayName: "Happened At",
-      location: QuestionLocation.Row,
-      visibility: ColumnVisibility.Visible,
-      dataType: ColumnDataType.Text
-    }]
+    [
+      {
+        name: "id",
+        displayName: "Id",
+        location: QuestionLocation.Column,
+        visibility: ColumnVisibility.Visible,
+        dataType: ColumnDataType.Text
+      },
+      {
+        name: "happenedAt",
+        displayName: "Happened At",
+        location: QuestionLocation.Row,
+        visibility: ColumnVisibility.Visible,
+        dataType: ColumnDataType.Text
+      }
+    ]
   );
 
   const detailForm = dataTables["createDetailMarkup"]({});
   expect(detailForm.innerHTML).toBe(
-    '<tr><td>Happened At</td><td></td><td><button>Show as Column</button></td></tr>'
+    "<tr><td>Happened At</td><td></td><td><button>Show as Column</button></td></tr>"
   );
 });
