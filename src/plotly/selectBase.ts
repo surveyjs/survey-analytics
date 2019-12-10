@@ -78,20 +78,24 @@ export class SelectBasePlotly extends SelectBase {
       text: labels,
       orientation: "h",
       mode: "markers",
-      width: 0.5
+      width: 0.5,
+      marker: {}
     };
 
-    if(this.chartType === "doughnut") {
+    if (this.chartType === "pie" || this.chartType === "doughnut") {
+      traceConfig["marker"].colors = colors;
+    } else if (this.chartType === "bar") {
+      traceConfig["marker"].color = colors;
+    }
+
+    if (this.chartType === "doughnut") {
       traceConfig.type = "pie";
-      traceConfig.hole = .4;
+      traceConfig.hole = 0.4;
     }
 
     if (datasets.length === 1) {
-      traceConfig["marker"] = {
-        color: colors,
-        symbol: "circle",
-        size: 16
-      };
+      traceConfig["marker"].symbol = "circle";
+      traceConfig["marker"].size = 16;
     }
 
     datasets.forEach(dataset => {
