@@ -5,6 +5,8 @@ $text-color: #404040;
 $text-color-inverse: #ffffff;
 $text-gray: #a0a0a0;
 
+$border-color: #d4d4d4;
+
 $root-font-size: 14px;
 
 @mixin button() {
@@ -36,11 +38,60 @@ $root-font-size: 14px;
   height: 10px;
 }
 
+@mixin dropdown() {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent;
+  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23404040;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat, repeat;
+  background-position: right 0.7em top 50%, 0 0;
+  background-size: 0.57em 100%;
+  border: none;
+  border-bottom: 0.06em solid $border-color;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.25em 1.5em 0.25em 0.87em;
+
+  &:focus {
+    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%231AB394;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E ");
+    border-color: $border-color;
+    outline: none;
+  }
+  &::-ms-expand {
+    display: none;
+  }
+}
+
+@mixin input() {
+  border: none;
+  border-bottom: 0.06em solid $border-color;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.25em 1.5em 0.25em 0.87em;
+  background: transparent;
+
+  &:focus {
+    border-color: $main-color;
+    outline: none;
+  }
+}
+
 .sa-datatables {
   font-size: $root-font-size;
 
   button {
     @include button();
+  }
+
+  select {
+    @include dropdown();
+  }
+
+  input {
+    @include input();
   }
 
   .dt-buttons {
@@ -55,7 +106,7 @@ $root-font-size: 14px;
 
   .dataTables_filter {
     float: left;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     margin-left: 20px;
     margin-right: 20px;
   }
@@ -63,7 +114,7 @@ $root-font-size: 14px;
   .dataTables_wrapper {
     background-color: $background-color;
     padding-top: 30px;
-    padding-bottom: 25px;
+    padding-bottom: 50px;
   }
 
   .dataTables_length {
@@ -73,6 +124,10 @@ $root-font-size: 14px;
   .dataTables_paginate {
     float: right;
     margin-right: 20px;
+
+    &:last-child {
+      margin-top: 15px;
+    }
 
     .ellipsis {
       color: $text-gray;
@@ -112,11 +167,13 @@ $root-font-size: 14px;
     color: $text-gray;
     float: left;
     margin-left: 20px;
+    margin-top: 15px;
   }
 
   table {
     border-spacing: 0;
     border-bottom: 1px solid #ddd;
+    padding-top: 20px;
   }
 
   .sa-datatables__detail {
@@ -150,16 +207,16 @@ $root-font-size: 14px;
   padding-left: 50px;
 }
 
-.sa-datatables__action-container {
-  position: absolute;
-  display: none;
-  top: 0;
-  z-index: 1;
-}
+// .sa-datatables__action-container {
+//   position: absolute;
+//   display: none;
+//   top: 0;
+//   z-index: 1;
+// }
 
-th:hover > .sa-datatables__action-container {
-  display: block;
-}
+// th:hover > .sa-datatables__action-container {
+//   display: block;
+// }
 
 td.sa-datatables__action-column {
   width: 20px;
@@ -172,4 +229,8 @@ td.sa-datatables__action-column {
 
 .sa-datatables__detail-row td.sa-datatables__action-column {
   background-image: url(/images/Arrow_down_10x10.svg);
+}
+
+.sa-datatables__filter-container {
+  margin-bottom: 20px;
 }

@@ -143,6 +143,13 @@ export class DataTables {
     this.targetNode.innerHTML = "";
   }
 
+  createActionContainer() {
+    var container = document.createElement("div");
+    container.className = "sa-datatables__action-container";
+
+    return container;
+  }
+
   render() {
     const tableNode = document.createElement("table");
     var columns = this.getColumns();
@@ -156,7 +163,7 @@ export class DataTables {
         dom: "Bflprtip",
         data: this.tableData,
         pageLength: 10,
-        lengthMenu: [1, 5, 10, 25, 50, 75, 100, "All"],
+        lengthMenu: [1, 5, 10, 25, 50, 75, 100],
         responsive: {
           details: false
         },
@@ -191,8 +198,7 @@ export class DataTables {
             .each(function(index: number) {
               var $thNode = $(this);
               if (!!columnsData[index] && $thNode.has("button").length === 0) {
-                var container = document.createElement("div");
-                container.className = "sa-datatables__action-container";
+                var container = self.createActionContainer();
                 self.headerButtonCreators.forEach(creator => {
                   var element = creator(
                     datatableApi,
