@@ -23,6 +23,8 @@ export class GaugePlotly extends VisualizerBase {
   chartType: String;
   chartNode = <HTMLElement>document.createElement("div");
 
+  public static showAsPercentage = false;
+
   constructor(
     protected targetElement: HTMLElement,
     question: Question,
@@ -131,12 +133,16 @@ export class GaugePlotly extends VisualizerBase {
     return colors;
   }
 
+  private toPercentage(value: number, maxValue: number) {
+    return (value / maxValue) * 100;
+  }
+
   private createChart() {
     const question = this.question;
 
     const rateValues = question.visibleRateValues;
-    const maxValue = rateValues[rateValues.length - 1].value;
-    const minValue = rateValues[0].value;
+    let maxValue = rateValues[rateValues.length - 1].value;
+    let minValue = rateValues[0].value;
 
     const colors = this.generateColors(
       maxValue,
@@ -145,6 +151,12 @@ export class GaugePlotly extends VisualizerBase {
     );
 
     var level = this.result;
+
+    if (GaugePlotly.showAsPercentage) {
+      level = this.toPercentage(level, maxValue);
+      minValue = this.toPercentage(minValue, maxValue);
+      maxValue = this.toPercentage(maxValue, maxValue);
+    }
 
     var data: any = [
       {
