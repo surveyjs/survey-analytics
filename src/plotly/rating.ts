@@ -18,7 +18,6 @@ export class GaugePlotly extends VisualizerBase {
     texts: string[]
   ) => string[];
 
-
   public static types = ["gauge", "bullet"];
   protected chartTypes: Array<string>;
   chartType: String;
@@ -36,7 +35,7 @@ export class GaugePlotly extends VisualizerBase {
   }
 
   update(data: Array<{ [index: string]: any }>) {
-    if(data !== undefined) {
+    if (data !== undefined) {
       this._result = undefined;
     }
     super.update(data);
@@ -54,7 +53,8 @@ export class GaugePlotly extends VisualizerBase {
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
     if (this.chartTypes.length > 1) {
-      const selectWrapper = ToolbarHelper.createSelector(toolbar,
+      const selectWrapper = ToolbarHelper.createSelector(
+        toolbar,
         this.chartTypes.map(chartType => {
           return {
             value: chartType,
@@ -162,9 +162,15 @@ export class GaugePlotly extends VisualizerBase {
       }
     ];
 
+    var height = 400;
+
+    if (this.chartType === "bullet") {
+      height = 250;
+    }
+
     var layout = {
       width: 600,
-      height: 400,
+      height: height,
       plot_bgcolor: this.backgroundColor,
       paper_bgcolor: this.backgroundColor
     };
@@ -193,7 +199,10 @@ export class GaugePlotly extends VisualizerBase {
         }
       });
 
-      this._result = questionValues && (questionValues.reduce((a, b) => a + b, 0) / questionValues.length) || 0;
+      this._result =
+        (questionValues &&
+          questionValues.reduce((a, b) => a + b, 0) / questionValues.length) ||
+        0;
       this._result = Math.ceil(this._result * 100) / 100;
     }
     return this._result;
