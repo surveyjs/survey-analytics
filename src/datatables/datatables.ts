@@ -47,7 +47,7 @@ export class DataTables {
   ) {
     targetNode.className += "sa-datatables";
     this.headerButtonCreators = [
-      this.createGroupingButton,
+      // this.createGroupingButton,
       this.createHideButton,
       this.createAddColumnButton,
       this.createMoveToDetailButton
@@ -160,7 +160,7 @@ export class DataTables {
       true,
       {
         buttons: ["copy", "csv", "print"],
-        dom: "Bflprtip",
+        dom: "Bfplrtip",
         data: this.tableData,
         pageLength: 10,
         lengthMenu: [1, 5, 10, 25, 50, 75, 100],
@@ -176,6 +176,9 @@ export class DataTables {
           }
         },
         language: {
+          sSearch: " ",
+          searchPlaceholder: "Search...",
+          sLengthMenu: "Show entries _MENU_",
           paginate: {
             previous: " ",
             next: " "
