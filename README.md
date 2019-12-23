@@ -16,7 +16,7 @@ SurveyJS Analytics library allows to render survey results as charts or tables
 
 ## Examples
 
-You may review the [analytics example](https://surveyjstest.azurewebsites.net/Examples/Library/?id=analytics-nps) or check this standalone plnkr [example](https://plnkr.co/edit/bCk64wdvOLShXkPyvGfk?p=preview) Other examples - [one question](https://next.plnkr.co/edit/3yIIFnbcn8RMJQHY?preview).
+You may review the [analytics example](https://surveyjstest.azurewebsites.net/Examples/Library/?id=analytics-nps) or check this standalone plnkr [example](https://plnkr.co/edit/bCk64wdvOLShXkPyvGfk?p=preview). Other examples - [one question](https://next.plnkr.co/edit/3yIIFnbcn8RMJQHY?preview).
 
 ## Licensing
 
