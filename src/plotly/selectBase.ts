@@ -23,7 +23,7 @@ export class SelectBasePlotly extends SelectBase {
     this.chartTypes = SelectBasePlotly.types;
     this.chartType = this.chartTypes[0];
   }
-
+  
   private chart: Promise<Plotly.PlotlyHTMLElement>;
   private filterText: HTMLSpanElement = undefined;
   private filter: HTMLDivElement = undefined;
@@ -62,11 +62,21 @@ export class SelectBasePlotly extends SelectBase {
     chartType: string
   ): Promise<Plotly.PlotlyHTMLElement> {
     const question = this.question;
-    const datasets = this.getData();
-    const labels = this.getLabels();
+    let datasets = this.getData();
+    let labels = this.getLabels();
+    let colors = this.getColors();
     const traces: any = [];
-    const colors = this.getColors();
 
+    if (this.orderByAnsweres == "asc" || this.orderByAnsweres == "desc") {
+      let dict = this.sortDictionary(
+        this.zipArrays(labels, colors),
+        datasets[0], this.orderByAnsweres == "desc"
+      );
+      let labelsAndColors = this.unzipArrays(dict.keys);
+      labels = labelsAndColors.first;
+      colors = labelsAndColors.second;
+      datasets[0] = dict.values;
+    }
     const traceConfig: any = {
       type: chartType,
       y: labels.map(l => {
@@ -176,8 +186,3 @@ export class SelectBasePlotly extends SelectBase {
     return plot;
   }
 }
-
-VisualizationManager.registerVisualizer("checkbox", SelectBasePlotly);
-VisualizationManager.registerVisualizer("radiogroup", SelectBasePlotly);
-VisualizationManager.registerVisualizer("dropdown", SelectBasePlotly);
-VisualizationManager.registerVisualizer("imagepicker", SelectBasePlotly);

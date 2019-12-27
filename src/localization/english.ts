@@ -21,7 +21,10 @@ export var englishStrings = {
   hideButton: "Hide",
   resetFilter: "Reset Filter",
   clearButton: "Clear",
-  addElement: "Choose question to show..."
+  addElement: "Choose question to show...",
+  defaultOrder: "Default", 
+  ascOrder: "Ascending",
+  descOrder: "Descending"
 };
 
 //Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.

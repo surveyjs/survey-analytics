@@ -5,7 +5,7 @@ import { ToolbarHelper } from "./utils/index";
 
 export class SelectBase extends VisualizerBase {
   private selectedItem: ItemValue = undefined;
-
+  protected orderByAnsweres: string = "default";
   constructor(
     protected targetElement: HTMLElement,
     question: Question,
@@ -18,7 +18,7 @@ export class SelectBase extends VisualizerBase {
   protected chartTypes: string[];
   protected chartType: string;
   protected chartNode: HTMLElement = <HTMLElement>document.createElement("div");
-
+  protected onChartTypeChanged() {}
   protected setChartType(chartType: string) {
     if (
       this.chartTypes.indexOf(chartType) !== -1 &&
@@ -39,7 +39,9 @@ export class SelectBase extends VisualizerBase {
   get selection() {
     return this.selectedItem;
   }
-
+  setLabelsOrder(value: string) {
+    this.orderByAnsweres = value;
+  }
   onDataItemSelected: (selectedValue: any, selectedText: string) => void;
 
   protected renderContent(container: HTMLDivElement) {
@@ -57,7 +59,10 @@ export class SelectBase extends VisualizerBase {
           };
         }),
         (option: any) => this.chartType === option.value,
-        (e: any) => this.setChartType(e.target.value)
+        (e: any) => {
+          this.setChartType(e.target.value);
+          this.onChartTypeChanged();
+        }
       );
       toolbar.appendChild(selectWrapper);
     }
@@ -109,5 +114,38 @@ export class SelectBase extends VisualizerBase {
       }
     });
     return [statistics];
+  }
+  zipArrays(first: any[], second: any[]): any[][] {
+    let zipArray: any[] = [];
+    for (let i = 0; i < Math.min(first.length, second.length); i++) {
+      zipArray[i] = [first[i], second[i]];
+    }
+    return zipArray;
+  }
+  unzipArrays(zipArray: any[][]): { first: any[]; second: any[] } {
+    let twoArrays: any = { first: [], second: [] };
+    zipArray.forEach((value, i) => {
+      twoArrays.first[i] = value[0];
+      twoArrays.second[i] = value[1];
+    });
+    return twoArrays;
+  }
+  sortDictionary(
+    keys: any[],
+    values: any[],
+    desc: boolean
+  ): { keys: any[]; values: any[] } {
+    let dictionary = this.zipArrays(keys, values);
+    let ascComparator = (a: any[], b: any[]) => {
+      return a[1] < b[1] ? 1 : a[1] == b[1] ? 0 : -1;
+    };
+    let descComparator = (a: any[], b: any[]) => {
+      return a[1] > b[1] ? 1 : a[1] == b[1] ? 0 : -1;
+    };
+    dictionary.sort((a: any[], b: any[]) => {
+      return desc ? descComparator(a, b) : ascComparator(a, b);
+    });
+    let keysAndValues = this.unzipArrays(dictionary);
+    return { keys: keysAndValues.first, values: keysAndValues.second };
   }
 }
