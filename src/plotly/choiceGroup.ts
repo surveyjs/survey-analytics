@@ -3,6 +3,7 @@ import { ToolbarHelper } from "../utils";
 import { localization, VisualizationManager } from "..";
 export class ChoiceGroupPlotly extends SelectBasePlotly {
   protected onChartTypeChanged() {
+    this.setLabelsOrder("default");
     this.updateOrderSelector();
   }
   private choicesOrder: HTMLDivElement;
