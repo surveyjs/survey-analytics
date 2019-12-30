@@ -12,8 +12,7 @@ export class ChoiceGroupPlotly extends SelectBasePlotly {
       this.choicesOrder.style.display = "inline-block";
     } else {
       this.choicesOrder.style.display = "none";
-      let select = this.choicesOrder.getElementsByTagName("select")[0];
-      select.selectedIndex = 0;
+      this.choicesOrder.getElementsByTagName("select")[0].value = "default";
     }
   }
   protected createToolbarItems(toolbar: HTMLDivElement) {
