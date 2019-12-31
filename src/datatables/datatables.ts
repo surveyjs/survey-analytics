@@ -170,11 +170,10 @@ export class DataTables {
         buttons: ["copy", "csv", "print"],
         dom: "Bfplrtip",
         data: this.tableData,
-        pageLength: 10,
+        pageLength: 5,
         lengthMenu: [1, 5, 10, 25, 50, 75, 100],
-        responsive: {
-          details: false
-        },
+        responsive: false,
+        scrollX: true,
         columns: columns,
         // orderFixed: [[1, "asc"]],
         rowGroup: {
@@ -460,7 +459,7 @@ export class DataTables {
     );
 
     if (hiddenColumns.length === 0) {
-        return;
+      return;
     }
 
     var option = document.createElement("option");
@@ -468,7 +467,7 @@ export class DataTables {
     option.disabled = true;
     option.selected = true;
     selector.appendChild(option);
-    
+
     hiddenColumns.forEach(column => {
       var option = document.createElement("option");
       var text = column.displayName;
