@@ -48,6 +48,7 @@ export class DataTables {
     targetNode.className += "sa-datatables";
     this.headerButtonCreators = [
       // this.createGroupingButton,
+      this.createSortButton,
       this.createHideButton,
       this.createMoveToDetailButton
     ];
@@ -148,14 +149,28 @@ export class DataTables {
 
     return container;
   }
-  createMinorColumnsButton() {
+  createMinorColumnsButton(datatableApiRef: DataTables.Api) {
     const button = document.createElement("button");
     //todo show minor columns localization
     button.title = "minor columns";
-    button.className = "sa-datatables__action-button";
+    button.className = "sa-datatables__svg-button";
     button.appendChild(
       this.createSvgElement("/images/Detail_16x16.svg#detail")
     );
+    var self = this;
+    $(button).on("click", function() {
+      var tr = $(this).closest("tr");
+      var row = datatableApiRef.row(tr);
+
+      if (row.child.isShown()) {
+        row.child.hide();
+        tr.removeClass("sa-datatables__detail-row");
+      } else {
+        row.child(self.createDetailMarkup(row.data())).show();
+        tr.addClass("sa-datatables__detail-row");
+      }
+    });
+
     return button;
   }
   render() {
@@ -163,11 +178,16 @@ export class DataTables {
     var columns = this.getColumns();
     var columnsData: any = columns.map((c: any) => c.data);
     var self = this;
-
+    var dtButtonClass =
+      "sa-datatables__button sa-datatables__button--small sa-datatables__button--gray";
     const options = $.extend(
       true,
       {
-        buttons: ["copy", "csv", "print"],
+        buttons: [
+          { extend: "copy", className: dtButtonClass },
+          { extend: "csv", className: dtButtonClass },
+          { extend: "print", className: dtButtonClass }
+        ],
         dom: "Bfplrtip",
         data: this.tableData,
         pageLength: 5,
@@ -271,19 +291,9 @@ export class DataTables {
         this.onColumnsChanged();
       }
     );
-    var actionButton = this.createMinorColumnsButton();
-    $(actionButton).on("click", function() {
-      var tr = $(this).closest("tr");
-      var row = datatableApiRef.row(tr);
 
-      if (row.child.isShown()) {
-        row.child.hide();
-        tr.removeClass("sa-datatables__detail-row");
-      } else {
-        row.child(self.createDetailMarkup(row.data())).show();
-        tr.addClass("sa-datatables__detail-row");
-      }
-    });
+    var actionButton = this.createMinorColumnsButton(datatableApiRef);
+
     $(tableNode)
       .find("tbody")
       .find("td.sa-datatables__action-column")
@@ -429,7 +439,7 @@ export class DataTables {
   ): HTMLElement => {
     const button = document.createElement("button");
     button.title = localization.getString("hideColumn");
-    button.className = "sa-datatables__action-button";
+    button.className = "sa-datatables__svg-button";
     button.appendChild(this.createSvgElement("/images/Hide_16x16.svg#hide"));
     button.onclick = e => {
       e.stopPropagation();
@@ -500,6 +510,22 @@ export class DataTables {
     return selector;
   };
 
+  createSortButton = (
+    datatableApi: any,
+    colIdx: any,
+    columnName: string
+  ): HTMLElement => {
+    const button = document.createElement("button");
+    button.className = "sa-datatables__svg-button";
+    button.title = "desc";
+    button.appendChild(
+      this.createSvgElement("/images/Sorting_16x16.svg#sorting")
+    );
+    button.onclick = e => {
+      button.title = button.title == "asc" ? "desc" : "asc";
+    };
+    return button;
+  };
   createMoveToDetailButton = (
     datatableApi: any,
     colIdx: number,
@@ -507,7 +533,7 @@ export class DataTables {
   ): HTMLElement => {
     const button = document.createElement("button");
     button.title = localization.getString("moveToDetail");
-    button.className = "sa-datatables__action-button";
+    button.className = "sa-datatables__svg-button";
     button.appendChild(
       this.createSvgElement("/images/MoveToDetail_16x16.svg#movetodetails")
     );
@@ -527,12 +553,12 @@ export class DataTables {
   createShowAsColumnButton = (columnName?: string): HTMLElement => {
     const button = document.createElement("button");
     button.innerHTML = localization.getString("showAsColumn");
-
+    button.className = "sa-datatables__button sa-datatables__button--gray";
     button.onclick = e => {
       e.stopPropagation();
 
       this._columns.filter(column => column.name === columnName)[0].location =
-        QuestionLocation.Row;
+        QuestionLocation.Column;
       this.update();
 
       this.onColumnsChanged();
