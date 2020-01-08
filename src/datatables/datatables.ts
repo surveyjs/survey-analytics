@@ -159,9 +159,8 @@ export class DataTables {
     );
     var self = this;
     $(button).on("click", function() {
-      var tr = $(this).closest("tr");
-      var row = datatableApiRef.row(tr);
-
+      const tr = $(this).closest("tr");
+      const row = datatableApiRef.row(tr);
       if (row.child.isShown()) {
         row.child.hide();
         tr.removeClass("sa-datatables__detail-row");
@@ -177,8 +176,7 @@ export class DataTables {
     const tableNode = document.createElement("table");
     var columns = this.getColumns();
     var columnsData: any = columns.map((c: any) => c.data);
-    var self = this;
-    var dtButtonClass =
+    const dtButtonClass =
       "sa-datatables__button sa-datatables__button--small sa-datatables__button--gray";
     const options = $.extend(
       true,
