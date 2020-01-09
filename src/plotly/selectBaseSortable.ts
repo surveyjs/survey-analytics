@@ -1,7 +1,7 @@
 import { SelectBasePlotly } from "./selectBase";
 import { ToolbarHelper } from "../utils";
 import { localization, VisualizationManager } from "..";
-export class ChoiceGroupPlotly extends SelectBasePlotly {
+export class SelectBaseSortablePlotly extends SelectBasePlotly {
   protected onChartTypeChanged() {
     this.setLabelsOrder("default");
     this.updateOrderSelector();
@@ -35,7 +35,7 @@ export class ChoiceGroupPlotly extends SelectBasePlotly {
     }
   }
 }
-VisualizationManager.registerVisualizer("checkbox", ChoiceGroupPlotly);
-VisualizationManager.registerVisualizer("radiogroup", ChoiceGroupPlotly);
-VisualizationManager.registerVisualizer("dropdown", ChoiceGroupPlotly);
-VisualizationManager.registerVisualizer("imagepicker", ChoiceGroupPlotly);
+VisualizationManager.registerVisualizer("checkbox", SelectBaseSortablePlotly);
+VisualizationManager.registerVisualizer("radiogroup", SelectBaseSortablePlotly);
+VisualizationManager.registerVisualizer("dropdown", SelectBaseSortablePlotly);
+VisualizationManager.registerVisualizer("imagepicker", SelectBaseSortablePlotly);

@@ -136,14 +136,12 @@ export class SelectBase extends VisualizerBase {
     desc: boolean
   ): { keys: any[]; values: any[] } {
     let dictionary = this.zipArrays(keys, values);
-    let ascComparator = (a: any[], b: any[]) => {
-      return a[1] < b[1] ? 1 : a[1] == b[1] ? 0 : -1;
-    };
-    let descComparator = (a: any[], b: any[]) => {
-      return a[1] > b[1] ? 1 : a[1] == b[1] ? 0 : -1;
+    let comparator = (a: any[], b: any[], asc: boolean = true) => {
+      let result = a[1] < b[1] ? 1 : a[1] == b[1] ? 0 : -1;
+      return asc ? result : result * -1;
     };
     dictionary.sort((a: any[], b: any[]) => {
-      return desc ? descComparator(a, b) : ascComparator(a, b);
+      return desc ? comparator(a, b, false) : comparator(a, b);
     });
     let keysAndValues = this.unzipArrays(dictionary);
     return { keys: keysAndValues.first, values: keysAndValues.second };

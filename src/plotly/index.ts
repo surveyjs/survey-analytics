@@ -2,4 +2,4 @@ export * from "./selectBase";
 export * from "./rating";
 export * from "./matrix";
 export * from "./boolean";
-export * from "./choiceGroup"
+export * from "./selectBaseSortable"
