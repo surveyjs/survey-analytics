@@ -151,22 +151,26 @@ export class DataTables {
   }
   createMinorColumnsButton(datatableApiRef: DataTables.Api) {
     const button = document.createElement("button");
-    //todo show minor columns localization
+    //TODO show minor columns localization
     button.title = "minor columns";
+    //
     button.className = "sa-datatables__svg-button";
     button.appendChild(
       this.createSvgElement("/images/Detail_16x16.svg#detail")
     );
     var self = this;
     $(button).on("click", function() {
-      const tr = $(this).closest("tr");
-      const row = datatableApiRef.row(tr);
-      if (row.child.isShown()) {
-        row.child.hide();
-        tr.removeClass("sa-datatables__detail-row");
+      const detailTr = $(this).closest("tr");
+      var row = datatableApiRef.row(detailTr);
+      if (detailTr.next().is("tr.sa-datatables__detail")) {
+        while (detailTr.next().is("tr.sa-datatables__detail")) {
+          detailTr.next().remove();
+        }
+        detailTr.removeClass("sa-datatables__detail-row");
       } else {
-        row.child(self.createDetailMarkup(row.data())).show();
-        tr.addClass("sa-datatables__detail-row");
+
+        $(self.createDetailMarkup(row.data())).insertAfter(detailTr);
+        detailTr.addClass("sa-datatables__detail-row");
       }
     });
 
@@ -300,11 +304,11 @@ export class DataTables {
 
   protected createDetailMarkup(data: any) {
     var table = document.createElement("table");
-    table.cellPadding = "5";
-    table.cellSpacing = "0";
-    table.border = "0";
-    table.className = "sa-datatables__detail";
-
+    // table.cellPadding = "5";
+    // table.cellSpacing = "0";
+    // table.border = "0";
+    // table.className = "sa-datatables__detail";
+    var rows = [];
     this.columns
       .filter(
         column =>
@@ -313,8 +317,10 @@ export class DataTables {
       )
       .forEach(column => {
         var row = document.createElement("tr");
+        row.className = "sa-datatables__detail";
         var td1 = document.createElement("td");
         td1.textContent = column.displayName;
+        td1.colSpan = 2;
         var td2 = document.createElement("td");
         td2.textContent = data[column.name];
         var td3 = document.createElement("td");
@@ -324,43 +330,46 @@ export class DataTables {
         row.appendChild(td1);
         row.appendChild(td2);
         row.appendChild(td3);
-        table.appendChild(row);
+        rows.push(row);
       });
 
-    if (!!this.datatableApi && this.datatableApi.responsive.hasHidden()) {
-      var columnsVisibility = this.datatableApi.columns().responsiveHidden();
-      var columns = this.datatableApi.settings().init().columns;
-      for (var index = 0; index < columnsVisibility.length; index++) {
-        if (!columnsVisibility[index]) {
-          var column = columns[index];
-          var row = document.createElement("tr");
-          var td1 = document.createElement("td");
-          td1.textContent = column.sTitle;
-          var td2 = document.createElement("td");
-          td2.textContent = data[column.mData];
-          var td3 = document.createElement("td");
-          //this.detailButtonCreators.forEach(creator => td3.appendChild(creator(column.mData)));
-          row.appendChild(td1);
-          row.appendChild(td2);
-          row.appendChild(td3);
-          table.appendChild(row);
-        }
-      }
-    }
+    // if (!!this.datatableApi && this.datatableApi.responsive.hasHidden()) {
+    //   var columnsVisibility = this.datatableApi.columns().responsiveHidden();
+    //   var columns = this.datatableApi.settings().init().columns;
+    //   for (var index = 0; index < columnsVisibility.length; index++) {
+    //     if (!columnsVisibility[index]) {
+    //       var column = columns[index];
+    //       var row = document.createElement("tr");
+    //       row.className = "sa-datatables__detail";
+
+    //       var td1 = document.createElement("td");
+    //       td1.textContent = column.sTitle;
+    //       var td2 = document.createElement("td");
+    //       td2.textContent = data[column.mData];
+    //       var td3 = document.createElement("td");
+    //       //this.detailButtonCreators.forEach(creator => td3.appendChild(creator(column.mData)));
+    //       row.appendChild(td1);
+    //       row.appendChild(td2);
+    //       row.appendChild(td3);
+    //       rows.push(row);
+    //     }
+    //   }
+    // }
 
     if (!!this.renderDetailActions) {
       var row = document.createElement("tr");
+      row.className = "sa-datatables__detail";
       var td = document.createElement("td");
       row.appendChild(td);
       var td1 = document.createElement("td");
       row.appendChild(td1);
       var td2 = document.createElement("td");
       row.appendChild(td2);
-      table.appendChild(row);
+      rows.push(row);
       this.renderDetailActions(td, data);
     }
 
-    return table;
+    return rows;
   }
 
   public renderDetailActions: (
