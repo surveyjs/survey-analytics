@@ -238,7 +238,6 @@ $root-font-size: 14px;
   table {
     border-spacing: 0;
     border-bottom: 1px solid #ddd;
-    padding-top: 20px;
     overflow: auto;
   }
   .sa-datatables__detail-row + .sa-datatables__detail td {
@@ -263,7 +262,6 @@ $root-font-size: 14px;
     border-left: 1px solid #ddd;
   }
 
-  table.dataTable tbody th,
   table.dataTable tbody td {
     padding: 20px;
     border-top: 1px solid #ddd;
@@ -271,20 +269,69 @@ $root-font-size: 14px;
   }
 }
 
+.sa-datatables__svg-button {
+  width: 15px;
+  height: 15px;
+  padding: 0;
+  border: none;
+  use {
+    fill: $column-action-color;
+  }
+  &:hover {
+    background-color: transparent;
+    use {
+      fill: $column-action-color-hover;
+    }
+  }
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.sa-datatables__action-container {
+  // float: right;
+  .sa-datatables__svg-button {
+    float: right;
+    margin: 0 0 13px 13px;
+    pointer-events: all;
+  }
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  .sa-datatables__drag-button {
+    float: left;
+    use {
+      fill: $main-color;
+    }
+    &:hover use {
+      fill: $main-color;
+    }
+  }
+}
+
 .sa-datatables__table {
   width: 100%;
   background: $text-color-inverse;
 }
+.dataTables_scrollHead table {
+  border-bottom: none;
+}
 
 .sa-datatables__table th {
-  padding: 13px 18px;
+  border: 1px solid $border-color;
+  border-left: none;
+  border-bottom: none;
+  &:first-child {
+    border-right: none;
+    border-left: 1px solid $border-color;
+  }
+  padding: 13px 20px;
   position: relative;
 }
 
-.sa-datatables__detail {
-  // width: 80%;
-  padding-left: 50px;
-}
 
 // .sa-datatables__action-container {
 //   position: absolute;
@@ -302,42 +349,10 @@ $root-font-size: 14px;
     pointer-events: none;
   }
 }
-.sa-datatables {
-  .sa-datatables__svg-button {
-    width: 15px;
-    height: 15px;
-    padding: 0;
-    border: none;
-    use {
-      fill: $column-action-color;
-    }
-    &:hover {
-      background-color: transparent;
-      use {
-        fill: $column-action-color-hover;
-      }
-    }
-    svg {
-      width: 15px;
-      height: 15px;
-    }
-  }
-}
-.sa-datatables__action-container {
-  // float: right;
-  .sa-datatables__svg-button {
-    float: right;
-    margin: 0 0 13px 13px;
-    pointer-events: all;
-  }
-  &:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-}
+
 .sa-datatables table.dataTable tbody td.sa-datatables__action-column {
   border-right: none;
+  padding-right: 0;
   .sa-datatables__svg-button {
     width: 17px;
     height: 5px;
