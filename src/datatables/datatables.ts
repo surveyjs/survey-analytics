@@ -516,7 +516,7 @@ export class DataTables {
         column => column.name === $(this).val()
       )[0];
       column.visibility = ColumnVisibility.Visible;
-      datatableApi.columns([self._columns.indexOf(column)]).visible(true);
+      datatableApi.column(column.name + ":name").visible(true);
 
       // TODO: Use datatables to update headers (show columns options)
       self.update();
