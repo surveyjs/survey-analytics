@@ -43,7 +43,6 @@ module.exports = function(options) {
   });
 
   function createSVGBundle() {
-    console.log(__dirname);
     var options = {
       fileName: path.resolve(__dirname, "./src/svgbundle.html"),
       template: path.resolve(__dirname, "./svgbundle.pug"),
@@ -54,7 +53,6 @@ module.exports = function(options) {
     };
 
     svgStoreUtils.filesMap(path.join("./src/images/**/*.svg"), files => {
-      console.log(files)
       const fileContent = svgStoreUtils.createSprite(
         svgStoreUtils.parseFiles(files, options),
         options.template
