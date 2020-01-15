@@ -7,8 +7,9 @@ $text-gray: #a0a0a0;
 $backgrond-gray: #9b9b9b;
 $border-color: #d4d4d4;
 $scroll-color: #e2e2e2;
-$column-action-color: rgba(#9f9f9f, 0.4);
-$column-action-color-hover: #9f9f9f;
+$svg-color: rgba(#9f9f9f, 0.4);
+$svg-hover-color: #9f9f9f;
+$detail-color: rgba($background-color, 0.5);
 $root-font-size: 14px;
 
 // @mixin button() {
@@ -89,7 +90,7 @@ $root-font-size: 14px;
 
   button {
     cursor: pointer;
-    background-color: transparent;
+    background-color: inherit;
     outline: none;
   }
 
@@ -243,19 +244,6 @@ $root-font-size: 14px;
   .sa-datatables__detail-row + .sa-datatables__detail td {
     border-top: none;
   }
-  .sa-datatables__table .sa-datatables__detail {
-    border-bottom: none;
-    tr:last-child td {
-      border-bottom: none;
-    }
-    td:first-child {
-      font-weight: bold;
-      padding-left: 75px;
-    }
-    td {
-      background-color: rgba($background-color, 0.5);
-    }
-  }
 
   table.dataTable tbody th:first-child,
   table.dataTable tbody td:first-child {
@@ -267,6 +255,38 @@ $root-font-size: 14px;
     border-top: 1px solid #ddd;
     border-right: 1px solid #ddd;
   }
+
+  .sa-datatables__add-column {
+    background: transparent;
+    background-image: url("/images/Icons_Results-05.svg"),
+      url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23404040;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E%0A");
+    background-repeat: no-repeat, no-repeat;
+    background-position: left 0.7em top 50%, right 0.7em top 50%;
+    background-size: 1em 100%, 0.57em 100%;
+    padding-left: 35px;
+    border: solid 1px $border-color;
+    pointer-events: all;
+
+    &:focus {
+      background-image: url("/images/Icons_Results-05.svg"),
+        url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%231AB394;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E ") !important;
+    }
+  }
+  .sa-datatables__table .sa-datatables__detail {
+    border-bottom: none;
+    background-color: $detail-color;
+    td:first-child {
+      font-weight: bold;
+      padding-left: 75px;
+    }
+  }
+
+  .sa-datatables__detail-row {
+    background-color: $detail-color;
+  }
+  table.dataTable tbody .sa-datatables__detail-row > td {
+    border-bottom: 1px solid $border-color;
+  }
 }
 
 .sa-datatables__svg-button {
@@ -275,12 +295,11 @@ $root-font-size: 14px;
   padding: 0;
   border: none;
   use {
-    fill: $column-action-color;
+    fill: $svg-color;
   }
   &:hover {
-    background-color: transparent;
     use {
-      fill: $column-action-color-hover;
+      fill: $svg-hover-color;
     }
   }
   svg {
@@ -290,7 +309,6 @@ $root-font-size: 14px;
 }
 
 .sa-datatables__action-container {
-  // float: right;
   .sa-datatables__svg-button {
     float: right;
     margin: 0 0 13px 13px;
@@ -303,6 +321,7 @@ $root-font-size: 14px;
   }
   .sa-datatables__drag-button {
     float: left;
+    cursor: move;
     use {
       fill: $main-color;
     }
@@ -332,7 +351,6 @@ $root-font-size: 14px;
   position: relative;
 }
 
-
 // .sa-datatables__action-container {
 //   position: absolute;
 //   display: none;
@@ -357,7 +375,7 @@ $root-font-size: 14px;
     width: 17px;
     height: 5px;
     use {
-      fill: $column-action-color-hover;
+      fill: $svg-hover-color;
     }
     &:hover {
       use {
@@ -375,13 +393,6 @@ $root-font-size: 14px;
 //   background-position: center;
 //   cursor: pointer;
 // }
-
-.sa-datatables__detail-row {
-  background-color: rgba($background-color, 0.5);
-}
-.sa-datatables table.dataTable tbody .sa-datatables__detail-row > td {
-  border-bottom: 1px solid $border-color;
-}
 
 .sa-datatables__filter-container {
   margin-bottom: 20px;
