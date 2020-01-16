@@ -1,5 +1,4 @@
 import * as $ from "jquery";
-import "./svgload";
 import { SurveyModel, Question, Event } from "survey-core";
 import {
   ITableColumn,
@@ -10,6 +9,14 @@ import {
 import { localization } from "../localizationManager";
 
 import "./datatables.scss";
+
+if (!!document) {
+  var svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");
+  var templateHolder = document.createElement("div");
+  templateHolder.style.display = "none";
+  templateHolder.innerHTML = svgTemplate;
+  document.head.append(templateHolder);
+}
 
 interface DataTablesOptions {
   buttons: boolean | string[] | any[] | any;
