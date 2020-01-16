@@ -54,6 +54,7 @@
     "muuri": "^0.8.0",
     "plotly.js-dist": "^1.49.5",
     "survey-core": "^1.1.17",
+    "webpack-svgstore-plugin": "^4.1.0",
     "wordcloud": "^1.1.0"
   },
   "devDependencies": {
@@ -71,7 +72,7 @@
     "extract-text-webpack-plugin": "^2.0.0-rc.3",
     "generate-json-webpack-plugin": "0.2.1",
     "github-api": "3.0.0",
-    "html-loader": "0.4.4",
+    "html-loader": "^0.4.4",
     "jest": "23.6.0",
     "live-server": "1.2.0",
     "node-sass": "4.9.2",

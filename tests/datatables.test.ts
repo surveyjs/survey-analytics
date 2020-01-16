@@ -51,7 +51,7 @@ test("getColumns method", () => {
   const columns = <any>dataTables.getColumns();
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"className":"sa-datatables__action-column","orderable":false,"data":null,"defaultContent":""},{"data":"car","sTitle":"What car are you driving?","visible":true}]'
+    '[{"className":"sa-datatables__action-column","orderable":false,"data":null,"defaultContent":"<button title=\\"Show minor columns\\" class=\\"sa-datatables__svg-button\\"><svg><use href=\\"#sa-svg-detail\\"></use></svg></button>"},{"data":"car","sTitle":"What car are you driving?","visible":true}]'
   );
 });
 
@@ -105,7 +105,7 @@ test("pass columns through ctor", () => {
 
   const columns = <any>dataTables.getColumns();
   expect(JSON.stringify(columns)).toBe(
-    '[{"className":"sa-datatables__action-column","orderable":false,"data":null,"defaultContent":""},{"data":"id","sTitle":"Id","visible":true}]'
+    '[{"className":"sa-datatables__action-column","orderable":false,"data":null,"defaultContent":"<button title=\\"Show minor columns\\" class=\\"sa-datatables__svg-button\\"><svg><use href=\\"#sa-svg-detail\\"></use></svg></button>"},{"data":"id","sTitle":"Id","visible":true}]'
   );
 });
 
@@ -134,7 +134,7 @@ test("createDetailMarkup method", () => {
   );
 
   const detailForm = dataTables["createDetailMarkup"]({});
-  expect(detailForm.innerHTML).toBe(
-    "<tr><td>Happened At</td><td></td><td><button>Show as Column</button></td></tr>"
+  expect(detailForm[0].innerHTML).toBe(
+    '<td colspan="2">Happened At</td><td></td><td colspan="1"><button class="sa-datatables__button sa-datatables__button--gray">Show as Column</button></td>'
   );
 });
