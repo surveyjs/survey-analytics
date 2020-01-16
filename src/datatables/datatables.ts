@@ -171,9 +171,7 @@ export class DataTables {
           detailTr.nextAll("tr.sa-datatables__detail").remove();
           detailTr.removeClass("sa-datatables__detail-row");
         } else {
-          $(self.createDetailMarkup(row.data(), datatableApiRef)).insertAfter(
-            detailTr
-          );
+          $(self.createDetailMarkup(row.data())).insertAfter(detailTr);
           detailTr.addClass("sa-datatables__detail-row");
         }
       }
@@ -306,14 +304,14 @@ export class DataTables {
     this.setMinorColumnsButtonCallback(datatableApiRef);
   }
 
-  protected createDetailMarkup(data: any, datatableApiRef: DataTables.Api) {
+  protected createDetailMarkup(data: any): HTMLElement[] {
     // var table = document.createElement("table");
     // table.cellPadding = "5";
     // table.cellSpacing = "0";
     // table.border = "0";
     // table.className = "sa-datatables__detail";
-    var rows = [];
-
+    var rows: HTMLElement[] = [];
+    var self = this;
     this.columns
       .filter(
         column =>
@@ -329,8 +327,15 @@ export class DataTables {
         var td2 = document.createElement("td");
         td2.textContent = data[column.name];
         var td3 = document.createElement("td");
-        td3.colSpan = (<any>datatableApiRef.columns().header()).length - 3;
-        this.detailButtonCreators.forEach(creator =>
+        td3.colSpan = Math.max(
+          self.columns.filter(
+            column =>
+              column.location === QuestionLocation.Column &&
+              this.isVisible(column.visibility)
+          ).length - 2,
+          1
+        );
+        self.detailButtonCreators.forEach(creator =>
           td3.appendChild(creator(column.name))
         );
         row.appendChild(td1);
