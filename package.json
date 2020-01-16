@@ -9,9 +9,9 @@
     "doc_gen": "node doc_generator/lib_docgenerator.js src/index.ts",
     "doc_update": "chmod +x ./docupdate_npm.sh && ./docupdate_npm.sh",
     "build_dev": "webpack --env.buildType dev",
-    "build_prod": "npm run build_dev && webpack --env.buildType prod"
+    "build_prod": "npm run build_dev && webpack --env.buildType prod && node dts_cleaner.js packages/survey.analytics.d.ts"
   },
-  "version": "1.1.29",
+  "version": "1.1.32",
   "name": "survey-analytics",
   "description": "SurveyJS analytics Library.",
   "main": "survey.analytics.js",
