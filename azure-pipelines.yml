@@ -48,10 +48,10 @@ steps:
   - task: CopyFiles@2
     inputs:
       contents: 'packages/**'
-      targetFolder: $(Build.ArtifactStagingDirectory)
+      targetFolder: $(Build.ArtifactStagingDirectory)/packages/survey-analytics
 
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/packages/survey-analytics'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'SurveyJSAnalyticsBuild'
       publishLocation: 'Container'
