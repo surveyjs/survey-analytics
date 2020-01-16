@@ -212,7 +212,7 @@ export class DataTables {
         language: {
           sSearch: " ",
           searchPlaceholder: "Search...",
-          sLengthMenu: "Show entries _MENU_",
+          sLengthMenu: "Show _MENU_ entries",
           paginate: {
             previous: " ",
             next: " "
