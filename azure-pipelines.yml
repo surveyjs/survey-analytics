@@ -39,8 +39,19 @@ steps:
       Contents: "**"
       TargetFolder: "$(Build.Repository.LocalPath)/node_modules/survey-core"
       OverWrite: true
-
+  
   - script: |
       npm run build_prod
       npm test
     displayName: "npm build and test"
+
+  - task: CopyFiles@2
+    inputs:
+      contents: 'packages/**'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'SurveyJSAnalyticsBuild'
+      publishLocation: 'Container'
