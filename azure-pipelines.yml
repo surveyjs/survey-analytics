@@ -47,7 +47,8 @@ steps:
 
   - task: CopyFiles@2
     inputs:
-      contents: 'packages/**'
+      
+      SourceFolder: '$(Build.Repository.LocalPath)/packages'
       targetFolder: $(Build.ArtifactStagingDirectory)/packages/survey-analytics
 
   - task: PublishBuildArtifacts@1
