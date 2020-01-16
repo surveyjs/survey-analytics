@@ -52,6 +52,6 @@ steps:
 
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/packages/survey-analytics'
       ArtifactName: 'SurveyJSAnalyticsBuild'
       publishLocation: 'Container'
