@@ -319,6 +319,11 @@ export class DataTables {
     // table.className = "sa-datatables__detail";
     var rows: HTMLElement[] = [];
     var self = this;
+    var visibleColCount = self.columns.filter(
+      column =>
+        column.location === QuestionLocation.Column &&
+        this.isVisible(column.visibility)
+    ).length;
     this.columns
       .filter(
         column =>
@@ -334,14 +339,7 @@ export class DataTables {
         var td2 = document.createElement("td");
         td2.textContent = data[column.name];
         var td3 = document.createElement("td");
-        td3.colSpan = Math.max(
-          self.columns.filter(
-            column =>
-              column.location === QuestionLocation.Column &&
-              this.isVisible(column.visibility)
-          ).length - 2,
-          1
-        );
+        td3.colSpan = Math.max(visibleColCount - 2, 1);
         self.detailButtonCreators.forEach(creator =>
           td3.appendChild(creator(column.name))
         );
@@ -378,12 +376,12 @@ export class DataTables {
       var row = document.createElement("tr");
       row.className = "sa-datatables__detail";
       var td = document.createElement("td");
-      td.colSpan = 2;
-      row.appendChild(td);
-      var td1 = document.createElement("td");
-      row.appendChild(td1);
-      var td2 = document.createElement("td");
-      row.appendChild(td2);
+      td.colSpan = visibleColCount + 1;
+      // row.appendChild(td);
+      // var td1 = document.createElement("td");
+      // row.appendChild(td1);
+      // var td2 = document.createElement("td");
+      // row.appendChild(td2);
       rows.push(row);
       this.renderDetailActions(td, data);
     }
