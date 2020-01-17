@@ -377,7 +377,7 @@ export class DataTables {
       row.className = "sa-datatables__detail";
       var td = document.createElement("td");
       td.colSpan = visibleColCount + 1;
-      // row.appendChild(td);
+      row.appendChild(td);
       // var td1 = document.createElement("td");
       // row.appendChild(td1);
       // var td2 = document.createElement("td");
