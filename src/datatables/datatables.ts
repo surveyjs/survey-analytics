@@ -378,6 +378,7 @@ export class DataTables {
       var row = document.createElement("tr");
       row.className = "sa-datatables__detail";
       var td = document.createElement("td");
+      td.colSpan = 2;
       row.appendChild(td);
       var td1 = document.createElement("td");
       row.appendChild(td1);
