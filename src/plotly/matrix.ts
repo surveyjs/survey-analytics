@@ -26,7 +26,7 @@ export class MatrixPlotly extends SelectBasePlotly {
     //var valueTitles = question.columns.map(column => column.text);
     if (this.chartType === "pie" || this.chartType === "doughnut") {
       layout.grid = {rows: 1, columns: traces.length};
-    } else if(this.chartType === "stackedbar") {
+    } else if (this.chartType === "stackedbar") {
       layout.height = undefined;
       layout.barmode = 'stack';
     } else {
@@ -35,13 +35,16 @@ export class MatrixPlotly extends SelectBasePlotly {
     question.columns.forEach((column, index) => {
       if (this.chartType === "pie" || this.chartType === "doughnut") {
         traces[index].domain = { column: index };
-      } if(this.chartType === "stackedbar") {
-        traces[index].type = "bar";
-        traces[index].name = column.text;
-        traces[index].width = 0.5 / traces.length;
       } else {
-        traces[index].name = column.text;
-        traces[index].width = 0.5 / traces.length;
+        traces[index].hoverinfo = "x+name";
+        if (this.chartType === "stackedbar") {
+          traces[index].type = "bar";
+          traces[index].name = column.text;
+          traces[index].width = 0.5 / traces.length;
+        } else {
+          traces[index].name = column.text;
+          traces[index].width = 0.5 / traces.length;
+        }
       }
     });
   }
