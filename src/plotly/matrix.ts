@@ -37,6 +37,7 @@ export class MatrixPlotly extends SelectBasePlotly {
         traces[index].domain = { column: index };
       } else {
         traces[index].hoverinfo = "x+name";
+        traces[index].marker.color = undefined;
         if (this.chartType === "stackedbar") {
           traces[index].type = "bar";
           traces[index].name = column.text;
