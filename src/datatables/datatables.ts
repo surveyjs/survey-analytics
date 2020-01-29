@@ -185,6 +185,7 @@ export class DataTables {
     );
   }
   render() {
+    var self = this;
     const tableNode = document.createElement("table");
     var columns = this.getColumns();
     var columnsData: any = columns.map((c: any) => c.data);
@@ -272,6 +273,10 @@ export class DataTables {
                 $thNode.prepend(container);
               }
             });
+        },
+        stateSave: true,
+        stateSaveCallback: (settings: DataTables.Settings, data: any) => {
+          self.stateSaveCallback(settings, data);
         }
       },
       this.options
@@ -388,6 +393,11 @@ export class DataTables {
 
     return rows;
   }
+
+  public doStateSave() {
+    this.datatableApi.state.save();
+  }
+  public stateSaveCallback(settings: DataTables.Settings, data: any) {}
 
   public renderDetailActions: (
     container: HTMLElement,
