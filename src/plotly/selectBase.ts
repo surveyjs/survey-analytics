@@ -86,16 +86,17 @@ export class SelectBasePlotly extends SelectBase {
         return l;
       }),
       text: labels,
+      hoverinfo: "x+y",
       orientation: "h",
       mode: "markers",
       width: 0.5,
-      marker: {}
+      marker: <any>{}
     };
 
     if (this.chartType === "pie" || this.chartType === "doughnut") {
-      traceConfig["marker"].colors = colors;
+      traceConfig.marker.colors = colors;
     } else if (this.chartType === "bar") {
-      traceConfig["marker"].color = colors;
+      traceConfig.marker.color = colors;
     }
 
     if (this.chartType === "doughnut") {
@@ -104,8 +105,8 @@ export class SelectBasePlotly extends SelectBase {
     }
 
     if (datasets.length === 1) {
-      traceConfig["marker"].symbol = "circle";
-      traceConfig["marker"].size = 16;
+      traceConfig.marker.symbol = "circle";
+      traceConfig.marker.size = 16;
     }
 
     datasets.forEach(dataset => {
@@ -142,6 +143,7 @@ export class SelectBasePlotly extends SelectBase {
         r: 10
       },
       colorway: colors,
+      hovermode: "closest",
       yaxis: {
         automargin: true,
         type: "category",
