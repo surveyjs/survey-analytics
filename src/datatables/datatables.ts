@@ -274,10 +274,6 @@ export class DataTables {
               }
             });
         },
-        stateSave: true,
-        stateSaveCallback: (settings: DataTables.Settings, data: any) => {
-          self.stateSaveCallback(settings, data);
-        }
       },
       this.options
     );
@@ -305,8 +301,8 @@ export class DataTables {
       "column-reorder",
       (e: any, settings: any, details: any) => {
         if (details.drop) {
-          var columns = this._columns.splice(details.from, 1);
-          this._columns.splice(details.to, 0, columns[0]);
+          var deletedColumns = this._columns.splice(details.from - 1, 1);
+          this._columns.splice(details.to - 1, 0, deletedColumns[0]);
           var headerCell = $(datatableApiRef.column(details.to).header());
           this.setMinorColumnsButtonCallback(datatableApiRef);
           this.onColumnsChanged();
