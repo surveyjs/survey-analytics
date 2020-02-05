@@ -300,13 +300,11 @@ export class DataTables {
     datatableApiRef.on(
       "column-reorder",
       (e: any, settings: any, details: any) => {
-        if (details.drop) {
-          var deletedColumns = this._columns.splice(details.from - 1, 1);
-          this._columns.splice(details.to - 1, 0, deletedColumns[0]);
-          var headerCell = $(datatableApiRef.column(details.to).header());
-          this.setMinorColumnsButtonCallback(datatableApiRef);
-          this.onColumnsChanged();
-        }
+        var deletedColumns = this._columns.splice(details.from - 1, 1);
+        this._columns.splice(details.to - 1, 0, deletedColumns[0]);
+        var headerCell = $(datatableApiRef.column(details.to).header());
+        this.setMinorColumnsButtonCallback(datatableApiRef);
+        this.onColumnsChanged();
       }
     );
     this.setMinorColumnsButtonCallback(datatableApiRef);
