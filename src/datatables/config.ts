@@ -1,6 +1,6 @@
-export enum ColumnVisibility { Visible = "Visible", Invisible = "Invisible", PublicInvisible = "PublicInvisible" }
-export enum QuestionLocation { Column = "Column", Row = "Row" }
-export enum ColumnDataType { Text = "Text", FileLink = "FileLink", Image = "Image" }
+export enum ColumnVisibility { Visible, Invisible, PublicInvisible }
+export enum QuestionLocation { Column, Row }
+export enum ColumnDataType { Text, FileLink, Image }
 
 export interface ITableColumn {
     name: string;

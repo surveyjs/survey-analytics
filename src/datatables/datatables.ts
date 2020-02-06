@@ -122,7 +122,7 @@ export class DataTables {
   }
   public set columns(columns: Array<ITableColumn>) {
     this._columns = columns;
-    this.update();
+    this.update(true);
   }
 
   public update(hard: boolean = false) {
@@ -273,7 +273,7 @@ export class DataTables {
                 $thNode.prepend(container);
               }
             });
-        },
+        }
       },
       this.options
     );
