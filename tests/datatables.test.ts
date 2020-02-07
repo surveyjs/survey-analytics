@@ -35,7 +35,7 @@ test("buildColumns method", () => {
   const columns = <any>dataTables["buildColumns"](survey);
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"name":"car","displayName":"What car are you driving?","dataType":"Text","visibility":"Visible","location":"Column"},{"name":"photo","displayName":"photo","dataType":"FileLink","visibility":"Invisible","location":"Column"}]'
+    '[{"name":"car","displayName":"What car are you driving?","dataType":0,"visibility":0,"location":0},{"name":"photo","displayName":"photo","dataType":1,"visibility":1,"location":0}]'
   );
 });
 
