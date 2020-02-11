@@ -55,6 +55,7 @@ export class DataTables {
     private isTrustedAccess = false
   ) {
     targetNode.className += "sa-datatables";
+
     this.headerButtonCreators = [
       // this.createGroupingButton,
       this.createSortButton,
@@ -62,6 +63,11 @@ export class DataTables {
       this.createMoveToDetailButton,
       this.createDragButton
     ];
+
+    if (this.isTrustedAccess) {
+      this.headerButtonCreators.splice(2, 0, this.createColumnPrivateButton);
+    }
+
     this.detailButtonCreators = [this.createShowAsColumnButton];
     if (_columns.length === 0) {
       this._columns = this.buildColumns(survey);
@@ -485,6 +491,51 @@ export class DataTables {
 
       this.onColumnsChanged();
     };
+
+    return button;
+  };
+
+  createColumnPrivateButton = (
+    datatableApi: any,
+    colIdx: number,
+    columnName: string
+  ): HTMLElement => {
+    const column = this._columns.filter(
+      column => column.name === columnName
+    )[0];
+    const button = document.createElement("button");
+    const makePrivateSvg = this.createSvgElement("makeprivate");
+    const makePublicSvg = this.createSvgElement("makepublic");
+    updateState(column.visibility);
+    button.appendChild(makePrivateSvg);
+    button.appendChild(makePublicSvg);
+    button.onclick = e => {
+      e.stopPropagation();
+
+      if (column.visibility === ColumnVisibility.PublicInvisible) {
+        column.visibility = ColumnVisibility.Visible;
+      } else {
+        column.visibility = ColumnVisibility.PublicInvisible;
+      }
+
+      updateState(column.visibility);
+    };
+
+    function updateState(visibility: ColumnVisibility) {
+      const isPrivate = visibility === ColumnVisibility.PublicInvisible;
+      if (isPrivate) {
+        button.className =
+          "sa-datatables__svg-button sa-datatables__svg-button--active";
+        button.title = localization.getString("makePublicColumn");
+        makePrivateSvg.style.display = "block";
+        makePublicSvg.style.display = "none";
+      } else {
+        button.className = "sa-datatables__svg-button";
+        button.title = localization.getString("makePrivateColumn");
+        makePrivateSvg.style.display = "none";
+        makePublicSvg.style.display = "block";
+      }
+    }
 
     return button;
   };

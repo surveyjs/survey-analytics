@@ -138,3 +138,36 @@ test("createDetailMarkup method", () => {
     '<td colspan="2">Happened At</td><td></td><td colspan="1"><button class="sa-datatables__button sa-datatables__button--gray">Show as Column</button></td>'
   );
 });
+
+test("makeprivate button existance", () => {
+  const survey = new SurveyModel(json);
+  let dataTables = new DataTables(
+    document.createElement("table"),
+    survey,
+    [],
+    null,
+    undefined,
+    true
+  );
+
+  expect(
+    dataTables.headerButtonCreators.indexOf(
+      dataTables.createColumnPrivateButton
+    )
+  ).toBe(2);
+
+  dataTables = new DataTables(
+    document.createElement("table"),
+    survey,
+    [],
+    null,
+    undefined,
+    false
+  );
+
+  expect(
+    dataTables.headerButtonCreators.indexOf(
+      dataTables.createColumnPrivateButton
+    )
+  ).toBe(-1);
+});

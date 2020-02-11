@@ -7,6 +7,8 @@ export var englishStrings = {
   selectButton: "Select Me",
   hideColumn: "Hide column",
   showColumn: "Show column",
+  makePrivateColumn: "Make column private",
+  makePublicColumn: "Make column public",
   moveToDetail: "Move to Detail",
   showAsColumn: "Show as Column",
   visualizer_text: "Texts in table",
