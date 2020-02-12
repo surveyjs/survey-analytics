@@ -674,7 +674,14 @@ export class DataTables {
         data: column.name,
         sTitle: (question && question.title) || column.displayName,
         visible: column.visibility !== ColumnVisibility.Invisible,
-        mRender: (data: object, type: string, row: any) => row[column.name]
+        mRender: (data: object, type: string, row: any) => {
+          var value = row[column.name];
+          return typeof value === "string"
+            ? $("<div>")
+                .text(value)
+                .html()
+            : JSON.stringify(value);
+        }
       };
     });
 
