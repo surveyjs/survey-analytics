@@ -1,7 +1,7 @@
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanel } from "./visualizationPanel";
-import { Question, QuestionPanelDynamicModel } from "survey-core";
+import { Question, QuestionPanelDynamicModel, IQuestion } from "survey-core";
 
 export class VisualizationPanelDynamic extends VisualizerBase {
   constructor(
@@ -19,9 +19,9 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     );
   }
 
-  getQuestions() {
+  getQuestions(): IQuestion[] {
     const paneldynamic: QuestionPanelDynamicModel = <any>this.question;
-    return paneldynamic.panels[0].questions;
+    return paneldynamic.template.questions;
   }
 
   render() {
@@ -32,7 +32,6 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     );
     visPanel.render();
   }
-
 }
 
 VisualizationManager.registerVisualizer(
