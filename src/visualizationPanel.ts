@@ -12,7 +12,7 @@ import { IVisualizerPanelElement, ElementVisibility } from "./config";
 const questionElementClassName = "sva-question";
 
 /**
- * VisualizationPanel is responsible for displaying an array of survey questions.
+ * VisualizationPanel is responsible for displaying an array of survey questions
  */
 export class VisualizationPanel {
   private _showHeader = false;
