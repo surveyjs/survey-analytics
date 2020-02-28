@@ -66,6 +66,10 @@ steps:
     git push --follow-tags origin master;
   displayName: 'push release commit to github'
 
+- script: |
+    npm run doc_gen
+  displayName: "generate docs"
+
 - task: Npm@1
   inputs:
     command: 'publish'
@@ -73,6 +77,10 @@ steps:
     publishEndpoint: 'NPM Registry'
     verbose: true
   displayName: 'npm publish survey-analytics'
+
+- script: |
+    npm run doc_update
+  displayName: "update docs"
 
 #trigger next build via the artifact file 'version.txt'
 - task: CopyFiles@2
