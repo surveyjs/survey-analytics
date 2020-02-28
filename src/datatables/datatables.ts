@@ -184,7 +184,8 @@ export class DataTables {
           detailTr.nextAll("tr.sa-datatables__detail").remove();
           detailTr.removeClass("sa-datatables__detail-row");
         } else {
-          $(self.createDetailMarkup(row.data())).insertAfter(detailTr);
+          var data = self.data[row.index()];
+          $(self.createDetailMarkup(data)).insertAfter(detailTr);
           detailTr.addClass("sa-datatables__detail-row");
         }
       }
