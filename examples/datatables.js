@@ -34,6 +34,7 @@ var survey = new Survey.SurveyModel(json);
 // };
 // xhr.send();
 
+// data normalization
 var normalizedData = data.map(function(item) {
   survey.getAllQuestions().forEach(function(q) {
     if (!item[q.name]) {
