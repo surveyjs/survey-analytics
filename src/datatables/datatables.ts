@@ -185,7 +185,7 @@ export class DataTables {
           detailTr.removeClass("sa-datatables__detail-row");
         } else {
           var data = self.data[row.index()];
-          $(self.createDetailMarkup(data)).insertAfter(detailTr);
+          $(self.createDetailMarkup(data, row)).insertAfter(detailTr);
           detailTr.addClass("sa-datatables__detail-row");
         }
       }
@@ -317,7 +317,7 @@ export class DataTables {
     this.setMinorColumnsButtonCallback(datatableApiRef);
   }
 
-  protected createDetailMarkup(data: any): HTMLElement[] {
+  protected createDetailMarkup(data: any, datatablesRow: any): HTMLElement[] {
     // var table = document.createElement("table");
     // table.cellPadding = "5";
     // table.cellSpacing = "0";
@@ -389,7 +389,7 @@ export class DataTables {
       // var td2 = document.createElement("td");
       // row.appendChild(td2);
       rows.push(row);
-      this.renderDetailActions(td, data);
+      this.renderDetailActions(td, data, datatablesRow);
     }
 
     return rows;
@@ -402,7 +402,8 @@ export class DataTables {
 
   public renderDetailActions: (
     container: HTMLElement,
-    data: any
+    data: any,
+    datatablesRow: any
   ) => HTMLElement;
 
   public headerButtonCreators: Array<
