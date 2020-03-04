@@ -23,6 +23,9 @@
   box-sizing: border-box;
   overflow: hidden;
   padding: 1em;
+}
+
+.sva-question-layouted {
   position: absolute;
 
   @media screen and (min-width: 1400px) {
@@ -95,7 +98,7 @@
     padding: 5px 5px 5px 15px;
     padding-right: initial;
     line-height: initial;
-    
+
     &::-ms-expand {
       display: none;
     }
