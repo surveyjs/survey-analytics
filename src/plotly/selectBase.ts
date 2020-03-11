@@ -154,6 +154,7 @@ export class SelectBasePlotly extends SelectBase {
         tickcolor: "transparent"
       },
       xaxis: {
+        rangemode: "nonnegative",
         automargin: true
       },
       plot_bgcolor: this.backgroundColor,
