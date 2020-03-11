@@ -23,7 +23,7 @@ export class SelectBasePlotly extends SelectBase {
     this.chartTypes = SelectBasePlotly.types;
     this.chartType = this.chartTypes[0];
   }
-  
+
   private chart: Promise<Plotly.PlotlyHTMLElement>;
   private filterText: HTMLSpanElement = undefined;
   private filter: HTMLDivElement = undefined;
@@ -70,7 +70,8 @@ export class SelectBasePlotly extends SelectBase {
     if (this.orderByAnsweres == "asc" || this.orderByAnsweres == "desc") {
       let dict = this.sortDictionary(
         this.zipArrays(labels, colors),
-        datasets[0], this.orderByAnsweres == "desc"
+        datasets[0],
+        this.orderByAnsweres == "desc"
       );
       let labelsAndColors = this.unzipArrays(dict.keys);
       labels = labelsAndColors.first;
@@ -94,7 +95,9 @@ export class SelectBasePlotly extends SelectBase {
     };
 
     if (this.chartType === "pie" || this.chartType === "doughnut") {
+      traceConfig.hoverinfo = "text+value+percent";
       traceConfig.marker.colors = colors;
+      traceConfig.textposition = "inside";
     } else if (this.chartType === "bar") {
       traceConfig.marker.color = colors;
     }
@@ -154,7 +157,8 @@ export class SelectBasePlotly extends SelectBase {
         automargin: true
       },
       plot_bgcolor: this.backgroundColor,
-      paper_bgcolor: this.backgroundColor
+      paper_bgcolor: this.backgroundColor,
+      showlegend: false
     };
 
     const config = {
