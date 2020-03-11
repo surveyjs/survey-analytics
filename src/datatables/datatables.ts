@@ -35,6 +35,8 @@ export class DataTables {
   private datatableApi: any;
   private tableData: any;
 
+  public currentPageNumber: number = 0;
+
   /**
    * The event is fired columns configuration has been changed.
    * <br/> sender the datatables adapter
@@ -136,6 +138,7 @@ export class DataTables {
       if (hard) {
         this.initTableData(this.data);
       }
+      this.currentPageNumber = this.datatableApi.page.info().page;
       this.destroy();
       this.render();
     }
@@ -273,7 +276,7 @@ export class DataTables {
                 $("input", $(filterContainer)).on("keyup change", function() {
                   let value = (<HTMLInputElement>this).value;
                   if (column.search() !== value) {
-                    column.search(value).draw();
+                    column.search(value).draw(false);
                   }
                 });
                 $thNode.prepend(filterContainer);
@@ -292,10 +295,11 @@ export class DataTables {
     const datatableApiRef = (this.datatableApi = $(tableNode).DataTable(
       options
     ));
+    datatableApiRef.page(self.currentPageNumber);
     this.datatableApi
       .rowGroup()
       .enable(false)
-      .draw();
+      .draw(false);
 
     // this.datatableApi.on("rowgroup-datasrc", (e, dt, val) => {
     //   this.datatableApi.order.fixed({ pre: [[columnsData.indexOf(val), "asc"]] }).draw();
@@ -452,7 +456,7 @@ export class DataTables {
       if (this.groupBy.length > 0) {
         datatableApi.rowGroup().dataSrc(<any>this.groupBy);
       }
-      datatableApi.draw();
+      datatableApi.draw(false);
     };
 
     return button;
