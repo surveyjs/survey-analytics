@@ -176,10 +176,11 @@ export class DataTables {
     button.appendChild(this.createSvgElement("detail"));
     return button;
   }
-  setMinorColumnsButtonCallback(datatableApiRef: DataTables.Api) {
+  setMinorColumnsButtonCallback(datatableApiRef: any) {
     var self = this;
-    $("td.sa-datatables__action-column button.sa-datatables__svg-button").on(
+    $(datatableApiRef.table().body()).on(
       "click",
+      "td.sa-datatables__action-column button.sa-datatables__svg-button",
       function() {
         const detailTr = $(this).closest("tr");
         var row = datatableApiRef.row(detailTr);
@@ -318,6 +319,7 @@ export class DataTables {
         this.onColumnsChanged();
       }
     );
+
     this.setMinorColumnsButtonCallback(datatableApiRef);
   }
 
