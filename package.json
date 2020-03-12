@@ -5,7 +5,7 @@
     "serve": "live-server --port=7777",
     "test": "jest",
     "testDev": "jest --watch",
-    "release": "standard-version --message \"Release: %s\" ",
+    "release": "standard-version --message \"Release: %s [skip ci]\" ",
     "doc_gen": "node doc_generator/lib_docgenerator.js src/index.ts",
     "doc_update": "chmod +x ./docupdate_npm.sh && ./docupdate_npm.sh",
     "build_dev": "webpack --env.buildType dev",
