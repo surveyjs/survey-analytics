@@ -7,11 +7,11 @@ resources:
   repositories:
   - repository: Analytics # The name used to reference this repository in the checkout step
     type: github
-    endpoint: surveyjs
+    endpoint: SurveyJSGithubServiceConnection
     name: surveyjs/survey-analytics
   - repository: Service # The name used to reference this repository in the checkout step
     type: github
-    endpoint: surveyjs
+    endpoint: SurveyJSGithubServiceConnection
     name: surveyjs/service
 
 trigger:
