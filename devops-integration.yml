@@ -63,15 +63,18 @@ steps:
       OverWrite: true
   
   - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
       npm run build_prod
       npm test
     displayName: "npm build and test"
 
   - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
       npm run doc_gen
     displayName: 'generate docs'
 
   - powershell: |
+      cd $(Build.SourcesDirectory)/survey-analytics
       echo $(git --version)
       git config --global user.email "kurmanov.work@gmail.com"
       git config --global user.name "dmitrykurmanov"
