@@ -3,17 +3,6 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-resources:
-  repositories:
-  - repository: Analytics # The name used to reference this repository in the checkout step
-    type: github
-    endpoint: SurveyJSGithubServiceConnection
-    name: surveyjs/survey-analytics
-  - repository: Service # The name used to reference this repository in the checkout step
-    type: github
-    endpoint: SurveyJSGithubServiceConnection
-    name: surveyjs/service
-
 trigger:
   batch: true
   branches:
@@ -27,8 +16,7 @@ pool:
   vmImage: "Ubuntu-16.04"
 
 steps:
-  - checkout: Analytics
-  - checkout: Service
+  - checkout: self
     persistCredentials: true
     clean: true
     
@@ -38,7 +26,6 @@ steps:
     displayName: "Install Node.js"
 
   - script: |
-      cd survey-analytics
       npm install
     displayName: "npm install"
 
@@ -61,13 +48,11 @@ steps:
       OverWrite: true
   
   - script: |
-      cd survey-analytics
       npm run build_prod
       npm test
     displayName: "npm build and test"
 
   - script: |
-      cd survey-analytics
       npm run doc_gen
     displayName: 'generate docs'
 
@@ -75,7 +60,6 @@ steps:
       echo $(git --version)
       git config --global user.email "kurmanov.work@gmail.com"
       git config --global user.name "dmitrykurmanov"
-      cd survey-analytics
       npm run doc_update
     displayName: 'update docs'
 
