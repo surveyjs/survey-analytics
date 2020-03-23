@@ -33,6 +33,10 @@ steps:
   - checkout: Analytics
     persistCredentials: true
     clean: true
+  
+  - script: |
+      dir $(Build.SourcesDirectory)
+    displayName: "Show DIR"
     
   - task: NodeTool@0
     inputs:
