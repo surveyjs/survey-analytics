@@ -33,11 +33,6 @@ steps:
   - checkout: Analytics
     persistCredentials: true
     clean: true
-  
-  - script: |
-      cd $(Build.SourcesDirectory)
-      dir survey-analytics
-    displayName: "Show DIR"
     
   - task: NodeTool@0
     inputs:
@@ -45,7 +40,7 @@ steps:
     displayName: "Install Node.js"
 
   - script: |
-      cd "$(Build.Repository.Analytics)"
+      cd $(Build.SourcesDirectory)/survey-analytics
       npm install
     displayName: "npm install"
 
