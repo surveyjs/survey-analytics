@@ -80,9 +80,11 @@ steps:
   - powershell: |
       cd $(Build.SourcesDirectory)/service
       $env:GIT_REDIRECT_STDERR = '2>&1'
-      echo $(git --version)
       git config --global user.email "kurmanov.work@gmail.com"
       git config --global user.name "dmitrykurmanov"
+      git checkout master
+      git pull origin master
+      git fetch --tags --force
       git add surveyjs.io/App_Data/DocsAnalytics
       git commit -m "[skip ci] Updated survey-analytics docs"
       git push origin master
