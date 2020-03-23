@@ -53,7 +53,7 @@ steps:
     inputs:
       SourceFolder: "$(System.ArtifactsDirectory)/SurveyJSLibraryBuild/packages/survey-core"
       Contents: "**"
-      TargetFolder: "$(Build.Repository.LocalPath)/node_modules/survey-core"
+      TargetFolder: "$(Build.SourcesDirectory)/survey-analytics/node_modules/survey-core"
       OverWrite: true
   
   - script: |
