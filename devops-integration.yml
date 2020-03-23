@@ -5,10 +5,6 @@
 
 resources:
   repositories:
-    - repository: Analytics # The name used to reference this repository in the checkout step
-      type: github
-      endpoint: surveyjs
-      name: surveyjs/survey-analytics
     - repository: Service # The name used to reference this repository in the checkout step
       type: github
       endpoint: surveyjs
@@ -27,13 +23,11 @@ pool:
   vmImage: "Ubuntu-16.04"
 
 steps:
+  - checkout: self
   - checkout: Service
     persistCredentials: true
     clean: true
-  - checkout: Analytics
-    persistCredentials: true
-    clean: true
-    
+
   - task: NodeTool@0
     inputs:
       versionSpec: "10.x"
@@ -71,16 +65,21 @@ steps:
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm run doc_gen
-      dir $(Build.SourcesDirectory)/survey-analytics/docs
     displayName: 'generate docs'
 
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(Build.SourcesDirectory)/survey-analytics/docs'
+      TargetFolder: '$(Build.SourcesDirectory)/service/surveyjs.io/App_Data/DocsAnalytics'
+      OverWrite: true
+    displayName: 'copy generated docs to the surveyjs/service repo'
+  
   - powershell: |
-      cd $(Build.SourcesDirectory)/survey-analytics
-      echo $(git --version)
-      git config --global user.email "kurmanov.work@gmail.com"
-      git config --global user.name "dmitrykurmanov"
-      npm run doc_update
-    displayName: 'update docs'
+      cd $(Build.SourcesDirectory)/service
+      git add surveyjs.io/App_Data/DocsAnalytics
+      git commit -m "[skip ci] Updated survey-analytics docs"
+      git push origin master
+    displayName: 'surveyjs/service push updated docs'
 
   - task: CopyFiles@2
     inputs:
