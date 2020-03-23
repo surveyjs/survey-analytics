@@ -37,8 +37,8 @@ steps:
       versionSpec: "10.x"
     displayName: "Install Node.js"
   
-  - script: |
-      powershell Get-Content build.config
+  - powershell: |
+      Get-Content build.config
     displayName: "SHOW PATH"
 
   - script: |
