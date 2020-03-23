@@ -27,6 +27,7 @@ pool:
   vmImage: "Ubuntu-16.04"
 
 steps:
+  - checkout: Service
   - checkout: Analytics
     persistCredentials: true
     clean: true
