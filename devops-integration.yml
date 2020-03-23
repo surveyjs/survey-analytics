@@ -72,7 +72,7 @@ steps:
       SourceFolder: '$(Build.SourcesDirectory)/survey-analytics/docs'
       TargetFolder: '$(Build.SourcesDirectory)/service/surveyjs.io/App_Data/DocsAnalytics'
       OverWrite: true
-    displayName: 'copy generated docs to the surveyjs/service repo'
+    displayName: 'copy generated docs to the local surveyjs/service repo'
 
   # read about the problem with git output ($env:GIT_REDIRECT_STDERR = '2>&1') :
   # https://github.com/microsoft/azure-pipelines-yaml/issues/248
@@ -88,7 +88,7 @@ steps:
       git add surveyjs.io/App_Data/DocsAnalytics
       git commit -m "[skip ci] Updated survey-analytics docs"
       git push origin master
-    displayName: 'surveyjs/service push updated docs'
+    displayName: 'git surveyjs/service push updated docs'
 
   - task: CopyFiles@2
     inputs:
