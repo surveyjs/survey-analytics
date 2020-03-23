@@ -16,7 +16,7 @@ pool:
   vmImage: "Ubuntu-16.04"
 
 steps:
-  - checkout: self
+  - checkout: git://surveyjs/service
     persistCredentials: true
     clean: true
   - task: NodeTool@0
@@ -55,10 +55,13 @@ steps:
       npm run doc_gen
     displayName: 'generate docs'
 
-  - script: |
+  - powershell: |
       echo $(git --version)
       git config --global user.email "kurmanov.work@gmail.com"
       git config --global user.name "dmitrykurmanov"
+      git checkout master
+      git pull origin master
+      git fetch --tags --force
       npm run doc_update
     displayName: 'update docs'
 
