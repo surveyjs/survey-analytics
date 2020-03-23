@@ -35,7 +35,8 @@ steps:
     clean: true
   
   - script: |
-      dir $(Build.SourcesDirectory)/survey-analytics
+      cd $(Build.SourcesDirectory)
+      dir survey-analytics
     displayName: "Show DIR"
     
   - task: NodeTool@0
