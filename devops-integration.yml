@@ -38,6 +38,7 @@ steps:
     displayName: "Install Node.js"
 
   - script: |
+      cd survey-analytics
       npm install
     displayName: "npm install"
 
@@ -60,11 +61,13 @@ steps:
       OverWrite: true
   
   - script: |
+      cd survey-analytics
       npm run build_prod
       npm test
     displayName: "npm build and test"
 
   - script: |
+      cd survey-analytics
       npm run doc_gen
     displayName: 'generate docs'
 
@@ -72,9 +75,7 @@ steps:
       echo $(git --version)
       git config --global user.email "kurmanov.work@gmail.com"
       git config --global user.name "dmitrykurmanov"
-      git checkout master
-      git pull origin master
-      git fetch --tags --force
+      cd survey-analytics
       npm run doc_update
     displayName: 'update docs'
 
