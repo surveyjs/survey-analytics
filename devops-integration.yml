@@ -9,6 +9,10 @@ resources:
       type: github
       endpoint: surveyjs
       name: surveyjs/survey-analytics
+    - repository: Service # The name used to reference this repository in the checkout step
+      type: github
+      endpoint: surveyjs
+      name: surveyjs/service
 
 trigger:
   batch: true
