@@ -56,6 +56,9 @@ steps:
     displayName: 'generate docs'
 
   - script: |
+      echo $(git --version)
+      git config --global user.email "kurmanov.work@gmail.com"
+      git config --global user.name "dmitrykurmanov"
       npm run doc_update
     displayName: 'update docs'
 
