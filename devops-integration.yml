@@ -71,6 +71,7 @@ steps:
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm run doc_gen
+      dir $(Build.SourcesDirectory)/survey-analytics
     displayName: 'generate docs'
 
   - powershell: |
