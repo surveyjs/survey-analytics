@@ -76,6 +76,9 @@ steps:
   
   - powershell: |
       cd $(Build.SourcesDirectory)/service
+      echo $(git --version)
+      git config --global user.email "kurmanov.work@gmail.com"
+      git config --global user.name "dmitrykurmanov"
       git add surveyjs.io/App_Data/DocsAnalytics
       git commit -m "[skip ci] Updated survey-analytics docs"
       git push origin master
