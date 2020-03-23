@@ -36,6 +36,10 @@ steps:
     inputs:
       versionSpec: "10.x"
     displayName: "Install Node.js"
+  
+  - script: |
+      powershell Get-Content build.config
+    displayName: "SHOW PATH"
 
   - script: |
       cd  $(Build.SourcesDirectory/Analytics)
