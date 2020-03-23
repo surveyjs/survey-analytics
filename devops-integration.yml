@@ -28,6 +28,8 @@ pool:
 
 steps:
   - checkout: Service
+    persistCredentials: true
+    clean: true
   - checkout: Analytics
     persistCredentials: true
     clean: true
