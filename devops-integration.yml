@@ -3,6 +3,13 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
+resources:
+  repositories:
+    - repository: Analytics # The name used to reference this repository in the checkout step
+      type: github
+      endpoint: surveyjs
+      name: surveyjs/survey-analytics
+
 trigger:
   batch: true
   branches:
@@ -16,7 +23,7 @@ pool:
   vmImage: "Ubuntu-16.04"
 
 steps:
-  - checkout: self
+  - checkout: Analytics
     persistCredentials: true
     clean: true
     
