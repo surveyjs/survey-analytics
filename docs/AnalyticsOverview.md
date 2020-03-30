@@ -87,6 +87,12 @@ xhr.onload = function() {
 xhr.send();
 ```
 
+Please check the following setting in your "tsconfig.json" file (this setting is need for used charting library):
+
+```JSON
+    "module": "es2015",
+```
+
 ## Examples
 
 * [NPS survey results summary](https://surveyjs.io/Examples/Library/?id=analytics-nps)
