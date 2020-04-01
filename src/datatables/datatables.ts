@@ -404,7 +404,7 @@ export class DataTables {
   public doStateSave() {
     this.datatableApi.state.save();
   }
-  public stateSaveCallback(settings: DataTables.Settings, data: any) {}
+  public stateSaveCallback(settings: any, data: any) {}
 
   public renderDetailActions: (
     container: HTMLElement,
