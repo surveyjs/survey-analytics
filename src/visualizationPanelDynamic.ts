@@ -5,7 +5,7 @@ import { Question, QuestionPanelDynamicModel, IQuestion } from "survey-core";
 
 export class VisualizationPanelDynamic extends VisualizerBase {
   constructor(
-    targetNode: HTMLElement,
+    protected targetNode: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
@@ -26,9 +26,10 @@ export class VisualizationPanelDynamic extends VisualizerBase {
 
   render() {
     var visPanel = new VisualizationPanel(
-      document.getElementById("summaryContainer"),
+      this.targetNode,
       this.getQuestions(),
-      this.data
+      this.data,
+      { allowDynamicLayout: false }
     );
     visPanel.render();
   }
