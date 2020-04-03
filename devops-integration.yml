@@ -59,8 +59,12 @@ steps:
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm run build_prod
+    displayName: "npm build"
+  
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
       npm test
-    displayName: "npm build and test"
+    displayName: "unit tests"
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
@@ -87,6 +91,7 @@ steps:
       git fetch --tags --force
       git add surveyjs.io/App_Data/DocsAnalytics
       git commit -m "[skip ci] Updated survey-analytics docs"
+      git pull origin master
       git push origin master
     displayName: 'git surveyjs/service push updated docs'
 
