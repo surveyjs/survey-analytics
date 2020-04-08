@@ -38,6 +38,7 @@
   "homepage": "https://surveyjs.io/",
   "license": "Commercial",
   "dependencies": {
+    "@types/tabulator-tables": "^4.6.0",
     "datatables.net": "^1.10.20",
     "datatables.net-buttons": "^1.6.0",
     "datatables.net-buttons-dt": "^1.6.0",
@@ -54,6 +55,7 @@
     "muuri": "^0.8.0",
     "plotly.js-dist": "^1.49.5",
     "survey-core": "^1.5.0",
+    "tabulator-tables": "^4.6.1",
     "webpack-svgstore-plugin": "^4.1.0",
     "wordcloud": "^1.1.0"
   },

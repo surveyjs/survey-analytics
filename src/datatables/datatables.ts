@@ -5,7 +5,7 @@ import {
   ColumnVisibility,
   QuestionLocation,
   ColumnDataType
-} from "./config";
+} from "../config";
 import { localization } from "../localizationManager";
 
 import "./datatables.scss";
