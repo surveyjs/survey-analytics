@@ -1,10 +1,10 @@
 import { SurveyModel, Question } from "survey-core";
-import { DataTables } from "../src/datatables/datatables";
+import { DataTables } from "../../src/tables/datatables";
 import {
   ColumnDataType,
   ColumnVisibility,
-  QuestionLocation
-} from "../src/datatables/config";
+  QuestionLocation,
+} from "../../src/tables/config";
 
 const json = {
   questions: [
@@ -14,13 +14,13 @@ const json = {
       title: "What car are you driving?",
       isRequired: true,
       colCount: 4,
-      choices: ["None", "Ford", "Vauxhall"]
+      choices: ["None", "Ford", "Vauxhall"],
     },
     {
       type: "file",
-      name: "photo"
-    }
-  ]
+      name: "photo",
+    },
+  ],
 };
 
 test("buildColumns method", () => {
@@ -91,15 +91,15 @@ test("pass columns through ctor", () => {
         displayName: "Id",
         location: QuestionLocation.Column,
         visibility: ColumnVisibility.Visible,
-        dataType: ColumnDataType.Text
+        dataType: ColumnDataType.Text,
       },
       {
         name: "happenedAt",
         displayName: "Happened At",
         location: QuestionLocation.Row,
         visibility: ColumnVisibility.Visible,
-        dataType: ColumnDataType.Text
-      }
+        dataType: ColumnDataType.Text,
+      },
     ]
   );
 
@@ -121,15 +121,15 @@ test("createDetailMarkup method", () => {
         displayName: "Id",
         location: QuestionLocation.Column,
         visibility: ColumnVisibility.Visible,
-        dataType: ColumnDataType.Text
+        dataType: ColumnDataType.Text,
       },
       {
         name: "happenedAt",
         displayName: "Happened At",
         location: QuestionLocation.Row,
         visibility: ColumnVisibility.Visible,
-        dataType: ColumnDataType.Text
-      }
+        dataType: ColumnDataType.Text,
+      },
     ]
   );
 

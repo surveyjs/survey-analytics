@@ -1,11 +1,12 @@
 import * as $ from "jquery";
+import { Table } from "./table";
 import { SurveyModel, Question, Event } from "survey-core";
 import {
   ITableColumn,
   ColumnVisibility,
   QuestionLocation,
-  ColumnDataType
-} from "../config";
+  ColumnDataType,
+} from "./config";
 import { localization } from "../localizationManager";
 
 import "./datatables.scss";
@@ -30,7 +31,7 @@ interface DataTablesOptions {
   headerCallback: any;
 }
 
-export class DataTables {
+export class DataTables extends Table {
   private svgNode: HTMLElement;
   private datatableApi: any;
   private tableData: any;
@@ -49,13 +50,14 @@ export class DataTables {
   > = new Event<(sender: DataTables, options: any) => any, any>();
 
   constructor(
-    private targetNode: HTMLElement,
-    private survey: SurveyModel,
-    private data: Array<Object>,
-    private options: DataTablesOptions,
-    private _columns: Array<ITableColumn> = [],
-    private isTrustedAccess = false
+    targetNode: HTMLElement,
+    survey: SurveyModel,
+    data: Array<Object>,
+    options: DataTablesOptions,
+    _columns: Array<ITableColumn> = [],
+    isTrustedAccess = false
   ) {
+    super(targetNode, survey, data, options, _columns, isTrustedAccess);
     targetNode.className += "sa-datatables";
 
     this.headerButtonCreators = [
@@ -63,7 +65,7 @@ export class DataTables {
       this.createSortButton,
       this.createHideButton,
       this.createMoveToDetailButton,
-      this.createDragButton
+      this.createDragButton,
     ];
 
     if (this.isTrustedAccess) {
@@ -78,10 +80,10 @@ export class DataTables {
   }
 
   private initTableData(data: Array<any>) {
-    this.tableData = (data || []).map(item => {
+    this.tableData = (data || []).map((item) => {
       var dataItem: any = {};
       this.survey.data = item;
-      this._columns.forEach(column => {
+      this._columns.forEach((column) => {
         var displayValue = item[column.name];
         const question = this.survey.getQuestionByName(column.name);
         if (question) {
@@ -98,31 +100,6 @@ export class DataTables {
 
   protected onColumnsChanged() {
     this.columnsChanged.fire(this, { survey: this.survey });
-  }
-
-  protected buildColumns(survey: SurveyModel) {
-    return this.survey.getAllQuestions().map((question: Question) => {
-      return {
-        name: question.name,
-        displayName: (question.title || "").trim() || question.name,
-        dataType:
-          question.getType() !== "file"
-            ? ColumnDataType.Text
-            : ColumnDataType.FileLink,
-        visibility:
-          question.getType() !== "file"
-            ? ColumnVisibility.Visible
-            : ColumnVisibility.Invisible,
-        location: QuestionLocation.Column
-      };
-    });
-  }
-
-  public isVisible(visibility: ColumnVisibility) {
-    return (
-      (this.isTrustedAccess && visibility !== ColumnVisibility.Invisible) ||
-      (!this.isTrustedAccess && visibility === ColumnVisibility.Visible)
-    );
   }
 
   public get columns() {
@@ -154,9 +131,7 @@ export class DataTables {
     //if(!this.targetNode) return;
     const tableNode = this.targetNode.children[0];
     if ((<any>$.fn).DataTable.isDataTable(tableNode)) {
-      $(tableNode)
-        .DataTable()
-        .destroy();
+      $(tableNode).DataTable().destroy();
     }
     this.datatableApi = undefined;
     this.targetNode.innerHTML = "";
@@ -181,7 +156,7 @@ export class DataTables {
     $(datatableApiRef.table().body()).on(
       "click",
       "td.sa-datatables__action-column button.sa-datatables__svg-button",
-      function() {
+      function () {
         const detailTr = $(this).closest("tr");
         var row = datatableApiRef.row(detailTr);
         if (detailTr.hasClass("sa-datatables__detail-row")) {
@@ -208,7 +183,7 @@ export class DataTables {
         buttons: [
           { extend: "copy", className: dtButtonClass },
           { extend: "csv", className: dtButtonClass },
-          { extend: "print", className: dtButtonClass }
+          { extend: "print", className: dtButtonClass },
         ],
         dom: "Bfplrtip",
         data: this.tableData,
@@ -219,14 +194,14 @@ export class DataTables {
         columns: columns,
         colReorder: {
           fixedColumnsLeft: 1,
-          realtime: false
+          realtime: false,
         },
         // orderFixed: [[1, "asc"]],
         rowGroup: {
           dataSrc: columnsData[0],
           endRender: (rows: any, group: any) => {
             return "Count: " + rows.data().count();
-          }
+          },
         },
         language: {
           sSearch: " ",
@@ -234,8 +209,8 @@ export class DataTables {
           sLengthMenu: "Show _MENU_ entries",
           paginate: {
             previous: " ",
-            next: " "
-          }
+            next: " ",
+          },
         },
         select: "api",
         headerCallback: (
@@ -245,17 +220,15 @@ export class DataTables {
           end: any,
           display: any
         ) => {
-          var datatableApi = $(tableNode)
-            .dataTable()
-            .api();
+          var datatableApi = $(tableNode).dataTable().api();
           var self = this;
           $(thead)
             .children("th")
-            .each(function(index: number) {
+            .each(function (index: number) {
               var $thNode = $(this);
               if (!!columnsData[index] && $thNode.has("button").length === 0) {
                 var container = self.createActionContainer();
-                self.headerButtonCreators.forEach(creator => {
+                self.headerButtonCreators.forEach((creator) => {
                   var element = creator(
                     datatableApi,
                     index,
@@ -271,10 +244,10 @@ export class DataTables {
                 filterContainer.innerHTML =
                   "<input type='text' placeholder='Search...' />";
                 var column = datatableApi.column(index);
-                $("input", $(filterContainer)).on("click", e =>
+                $("input", $(filterContainer)).on("click", (e) =>
                   e.stopPropagation()
                 );
-                $("input", $(filterContainer)).on("keyup change", function() {
+                $("input", $(filterContainer)).on("keyup change", function () {
                   let value = (<HTMLInputElement>this).value;
                   if (column.search() !== value) {
                     column.search(value).draw(false);
@@ -284,7 +257,7 @@ export class DataTables {
                 $thNode.prepend(container);
               }
             });
-        }
+        },
       },
       this.options
     );
@@ -297,10 +270,7 @@ export class DataTables {
       options
     ));
     datatableApiRef.page(self.currentPageNumber);
-    this.datatableApi
-      .rowGroup()
-      .enable(false)
-      .draw(false);
+    this.datatableApi.rowGroup().enable(false).draw(false);
 
     // this.datatableApi.on("rowgroup-datasrc", (e, dt, val) => {
     //   this.datatableApi.order.fixed({ pre: [[columnsData.indexOf(val), "asc"]] }).draw();
@@ -332,17 +302,17 @@ export class DataTables {
     var rows: HTMLElement[] = [];
     var self = this;
     var visibleColCount = self.columns.filter(
-      column =>
+      (column) =>
         column.location === QuestionLocation.Column &&
         this.isVisible(column.visibility)
     ).length;
     this.columns
       .filter(
-        column =>
+        (column) =>
           column.location === QuestionLocation.Row &&
           this.isVisible(column.visibility)
       )
-      .forEach(column => {
+      .forEach((column) => {
         var row = document.createElement("tr");
         row.className = "sa-datatables__detail";
         var td1 = document.createElement("td");
@@ -352,7 +322,7 @@ export class DataTables {
         td2.textContent = data[column.name];
         var td3 = document.createElement("td");
         td3.colSpan = Math.max(visibleColCount - 2, 1);
-        self.detailButtonCreators.forEach(creator =>
+        self.detailButtonCreators.forEach((creator) =>
           td3.appendChild(creator(column.name))
         );
         row.appendChild(td1);
@@ -425,7 +395,7 @@ export class DataTables {
   ): HTMLElement => {
     const button = document.createElement("button");
     button.innerHTML = localization.getString("selectButton");
-    button.onclick = e => {
+    button.onclick = (e) => {
       e.stopPropagation();
       (<any>datatableApi.columns()).deselect();
       (<any>datatableApi.column(colIdx)).select();
@@ -442,7 +412,7 @@ export class DataTables {
     const button = document.createElement("button");
     button.innerHTML = localization.getString("groupButton");
 
-    button.onclick = e => {
+    button.onclick = (e) => {
       e.stopPropagation();
 
       const index = this.groupBy.indexOf(columnName);
@@ -487,11 +457,12 @@ export class DataTables {
     button.title = localization.getString("hideColumn");
     button.className = "sa-datatables__svg-button";
     button.appendChild(this.createSvgElement("hide"));
-    button.onclick = e => {
+    button.onclick = (e) => {
       e.stopPropagation();
 
-      this._columns.filter(column => column.name === columnName)[0].visibility =
-        ColumnVisibility.Invisible;
+      this._columns.filter(
+        (column) => column.name === columnName
+      )[0].visibility = ColumnVisibility.Invisible;
       datatableApi.columns([colIdx]).visible(false);
 
       // TODO: Use datatables to update headers (show columns options)
@@ -509,7 +480,7 @@ export class DataTables {
     columnName: string
   ): HTMLElement => {
     const column = this._columns.filter(
-      column => column.name === columnName
+      (column) => column.name === columnName
     )[0];
     const button = document.createElement("button");
     const makePrivateSvg = this.createSvgElement("makeprivate");
@@ -517,7 +488,7 @@ export class DataTables {
     updateState(column.visibility);
     button.appendChild(makePrivateSvg);
     button.appendChild(makePublicSvg);
-    button.onclick = e => {
+    button.onclick = (e) => {
       e.stopPropagation();
 
       if (column.visibility === ColumnVisibility.PublicInvisible) {
@@ -551,12 +522,12 @@ export class DataTables {
   createAddColumnButton = (datatableApi: any): HTMLElement => {
     const selector = document.createElement("select");
     selector.className = "sa-datatables__add-column";
-    selector.onclick = e => {
+    selector.onclick = (e) => {
       e.stopPropagation();
     };
 
     var hiddenColumns = this.columns.filter(
-      column => column.visibility === ColumnVisibility.Invisible
+      (column) => column.visibility === ColumnVisibility.Invisible
     );
 
     if (hiddenColumns.length === 0) {
@@ -569,7 +540,7 @@ export class DataTables {
     option.selected = true;
     selector.appendChild(option);
 
-    hiddenColumns.forEach(column => {
+    hiddenColumns.forEach((column) => {
       var option = document.createElement("option");
       var text = column.displayName;
       if (text.length > 20) {
@@ -582,12 +553,12 @@ export class DataTables {
     });
 
     var self = this;
-    selector.onchange = function(e) {
+    selector.onchange = function (e) {
       e.stopPropagation();
       if (!$(this).val()) return;
 
       var column = self._columns.filter(
-        column => column.name === $(this).val()
+        (column) => column.name === $(this).val()
       )[0];
       column.visibility = ColumnVisibility.Visible;
       datatableApi.column(column.name + ":name").visible(true);
@@ -608,7 +579,7 @@ export class DataTables {
     const button = document.createElement("button");
     button.className = "sa-datatables__svg-button sa-datatables__drag-button";
     button.appendChild(this.createSvgElement("drag"));
-    button.onclick = e => {
+    button.onclick = (e) => {
       e.stopPropagation();
     };
     return button;
@@ -624,10 +595,10 @@ export class DataTables {
     button.className = "sa-datatables__svg-button";
     button.title = ascTitle;
     button.appendChild(this.createSvgElement("sorting"));
-    button.onclick = e => {
+    button.onclick = (e) => {
       button.title = button.title == ascTitle ? descTitle : ascTitle;
     };
-    button.ondrag = e => {
+    button.ondrag = (e) => {
       e.stopPropagation;
     };
     return button;
@@ -641,10 +612,10 @@ export class DataTables {
     button.title = localization.getString("moveToDetail");
     button.className = "sa-datatables__svg-button";
     button.appendChild(this.createSvgElement("movetodetails"));
-    button.onclick = e => {
+    button.onclick = (e) => {
       e.stopPropagation();
 
-      this._columns.filter(column => column.name === columnName)[0].location =
+      this._columns.filter((column) => column.name === columnName)[0].location =
         QuestionLocation.Row;
       this.update();
 
@@ -658,10 +629,10 @@ export class DataTables {
     const button = document.createElement("button");
     button.innerHTML = localization.getString("showAsColumn");
     button.className = "sa-datatables__button sa-datatables__button--gray";
-    button.onclick = e => {
+    button.onclick = (e) => {
       e.stopPropagation();
 
-      this._columns.filter(column => column.name === columnName)[0].location =
+      this._columns.filter((column) => column.name === columnName)[0].location =
         QuestionLocation.Column;
       this.update();
 
@@ -671,11 +642,7 @@ export class DataTables {
     return button;
   };
   getColumns(): Array<Object> {
-    const availableColumns = this.columns.filter(
-      column =>
-        column.location === QuestionLocation.Column &&
-        this.isVisible(column.visibility)
-    );
+    const availableColumns = this.getAvailableColumns();
     const columns: any = availableColumns.map((column, index) => {
       var question = this.survey.getQuestionByName(column.name);
       return {
@@ -685,11 +652,9 @@ export class DataTables {
         mRender: (data: object, type: string, row: any) => {
           var value = row[column.name];
           return typeof value === "string"
-            ? $("<div>")
-                .text(value)
-                .html()
+            ? $("<div>").text(value).html()
             : JSON.stringify(value);
-        }
+        },
       };
     });
 
@@ -698,8 +663,8 @@ export class DataTables {
         className: "sa-datatables__action-column",
         orderable: false,
         data: null,
-        defaultContent: this.createMinorColumnsButton().outerHTML
-      }
+        defaultContent: this.createMinorColumnsButton().outerHTML,
+      },
     ].concat(columns);
   }
 

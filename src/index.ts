@@ -6,9 +6,8 @@ export * from "./visualizationPanel";
 export * from "./visualizationPanelDynamic";
 export * from "./visualizationMatrixDynamic";
 
-export * from "./datatables/datatables";
-
-export * from "./tabulator/tabulator";
+export * from "./tables/datatables";
+export * from "./tables/tabulator";
 
 export * from "./plotly/index";
 export * from "./wordcloud/wordcloud";
