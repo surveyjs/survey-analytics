@@ -36,7 +36,7 @@ export class Tabulator extends Table {
   public render = () => {
     const columns = this.getColumns();
 
-    const data = this.data;
+    const data = this.tableData;
 
     this.targetNode.innerHTML = "";
 

@@ -34,7 +34,6 @@ interface DataTablesOptions {
 export class DataTables extends Table {
   private svgNode: HTMLElement;
   private datatableApi: any;
-  private tableData: any;
 
   public currentPageNumber: number = 0;
 
@@ -76,26 +75,6 @@ export class DataTables extends Table {
     if (_columns.length === 0) {
       this._columns = this.buildColumns(survey);
     }
-    this.initTableData(data);
-  }
-
-  private initTableData(data: Array<any>) {
-    this.tableData = (data || []).map((item) => {
-      var dataItem: any = {};
-      this.survey.data = item;
-      this._columns.forEach((column) => {
-        var displayValue = item[column.name];
-        const question = this.survey.getQuestionByName(column.name);
-        if (question) {
-          displayValue = question.displayValue;
-        }
-        dataItem[column.name] =
-          typeof displayValue === "string"
-            ? displayValue
-            : JSON.stringify(displayValue) || "";
-      });
-      return dataItem;
-    });
   }
 
   protected onColumnsChanged() {

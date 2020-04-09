@@ -7,6 +7,8 @@ import {
 } from "./config";
 
 export class Table {
+  protected tableData: any;
+
   constructor(
     protected targetNode: HTMLElement,
     protected survey: SurveyModel,
@@ -18,6 +20,7 @@ export class Table {
     if (_columns.length === 0) {
       this._columns = this.buildColumns(survey);
     }
+    this.initTableData(data);
   }
 
   protected buildColumns = (survey: SurveyModel) => {
@@ -56,4 +59,23 @@ export class Table {
         this.isVisible(column.visibility)
     );
   };
+
+  protected initTableData(data: Array<any>) {
+    this.tableData = (data || []).map((item) => {
+      var dataItem: any = {};
+      this.survey.data = item;
+      this._columns.forEach((column) => {
+        var displayValue = item[column.name];
+        const question = this.survey.getQuestionByName(column.name);
+        if (question) {
+          displayValue = question.displayValue;
+        }
+        dataItem[column.name] =
+          typeof displayValue === "string"
+            ? displayValue
+            : JSON.stringify(displayValue) || "";
+      });
+      return dataItem;
+    });
+  }
 }
