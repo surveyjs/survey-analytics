@@ -16,7 +16,7 @@ if (!!document) {
   var templateHolder = document.createElement("div");
   templateHolder.style.display = "none";
   templateHolder.innerHTML = svgTemplate;
-  document.head.append(templateHolder);
+  document.head.appendChild(templateHolder);
 }
 
 interface DataTablesOptions {
