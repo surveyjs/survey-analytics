@@ -89,9 +89,12 @@ export class VisualizationPanel {
     any
   >();
 
-  visibleElementsCnahged() {
+  visibleElementsCnahged(element: IVisualizerPanelElement) {
     if (!this.onVisibleElementsChanged.isEmpty) {
-      this.onVisibleElementsChanged.fire(this, {});
+      this.onVisibleElementsChanged.fire(this, {
+        elements: this._elements,
+        changed: element,
+      });
     }
     this.layout();
   }
@@ -149,7 +152,7 @@ export class VisualizationPanel {
               !!this.layoutEngine &&
                 this.layoutEngine.remove([questionElement]);
               this.panelContent.removeChild(questionElement);
-              this.visibleElementsCnahged();
+              this.visibleElementsCnahged(element);
             }, 0);
           },
           localization.getString("hideButton")
@@ -294,7 +297,7 @@ export class VisualizationPanel {
             const questionElement = this.renderVisualizer(element);
             this.panelContent.appendChild(questionElement);
             !!this.layoutEngine && this.layoutEngine.add([questionElement]);
-            this.visibleElementsCnahged();
+            this.visibleElementsCnahged(element);
           }
         );
         (addElementSelector &&
