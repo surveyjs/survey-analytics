@@ -49,12 +49,12 @@ export class VisualizationPanel {
   }
 
   protected buildElements(questions: any[]): IVisualizerPanelElement[] {
-    return (questions || []).map(question => {
+    return (questions || []).map((question) => {
       return {
         name: question.name,
         displayName: question.title,
         visibility: ElementVisibility.Visible,
-        type: undefined
+        type: undefined,
       };
     });
   }
@@ -70,28 +70,31 @@ export class VisualizationPanel {
   }
 
   protected get visibleElements() {
-    return this._elements.filter(el => this.isVisible(el.visibility));
+    return this._elements.filter((el) => this.isVisible(el.visibility));
   }
 
   protected get hiddenElements() {
-    return this._elements.filter(el => !this.isVisible(el.visibility));
+    return this._elements.filter((el) => !this.isVisible(el.visibility));
   }
 
   protected getElement(name: string) {
-    return this._elements.filter(el => el.name === name)[0];
+    return this._elements.filter((el) => el.name === name)[0];
   }
 
   /**
    * Fires when element visibility has been changed.
    */
-  public onVisibleElementsCnahged = new Event<
+  public onVisibleElementsChanged = new Event<
     (sender: VisualizationPanel, options: any) => any,
     any
   >();
 
-  visibleElementsCnahged() {
-    if (!this.onVisibleElementsCnahged.isEmpty) {
-      this.onVisibleElementsCnahged.fire(this, {});
+  visibleElementsChanged(element: IVisualizerPanelElement) {
+    if (!this.onVisibleElementsChanged.isEmpty) {
+      this.onVisibleElementsChanged.fire(this, {
+        elements: this._elements,
+        changed: element,
+      });
     }
     this.layout();
   }
@@ -113,7 +116,7 @@ export class VisualizationPanel {
    * Renders given element.
    */
   public renderVisualizer(element: IVisualizerPanelElement) {
-    var question = this.questions.filter(q => q.name === element.name)[0];
+    var question = this.questions.filter((q) => q.name === element.name)[0];
     const questionElement = document.createElement("div");
     const questionContent = document.createElement("div");
     const titleElement = document.createElement("h3");
@@ -149,7 +152,7 @@ export class VisualizationPanel {
               !!this.layoutEngine &&
                 this.layoutEngine.remove([questionElement]);
               this.panelContent.removeChild(questionElement);
-              this.visibleElementsCnahged();
+              this.visibleElementsChanged(element);
             }, 0);
           },
           localization.getString("hideButton")
@@ -161,7 +164,7 @@ export class VisualizationPanel {
       var filterInfo = {
         text: <HTMLElement>undefined,
         element: <HTMLDivElement>undefined,
-        update: function(selection: any) {
+        update: function (selection: any) {
           if (!!selection && !!selection.value) {
             this.element.style.display = "inline-block";
             this.text.innerHTML = "Filter: [" + selection.text + "]";
@@ -169,7 +172,7 @@ export class VisualizationPanel {
             this.element.style.display = "none";
             this.text.innerHTML = "";
           }
-        }
+        },
       };
 
       visualizer.registerToolbarItem(
@@ -223,7 +226,7 @@ export class VisualizationPanel {
     this.panelContent = document.createElement("div");
     this.panelContent.className = "sva-grid";
 
-    this.visibleElements.forEach(element => {
+    this.visibleElements.forEach((element) => {
       let questionElement = this.renderVisualizer(element);
       this.panelContent.appendChild(questionElement);
     });
@@ -247,7 +250,7 @@ export class VisualizationPanel {
     if (this.allowDynamicLayout) {
       layoutEngine = new Muuri(this.panelContent, {
         items: "." + questionLayoutedElementClassName,
-        dragEnabled: true
+        dragEnabled: true,
       });
       layoutEngine.on("move", moveHandler);
     }
@@ -258,7 +261,7 @@ export class VisualizationPanel {
     const resetFilterButton = ToolbarHelper.createButton(
       toolbar,
       () => {
-        this.visualizers.forEach(visualizer => {
+        this.visualizers.forEach((visualizer) => {
           if (visualizer instanceof SelectBase) {
             visualizer.setSelection(undefined);
           }
@@ -277,14 +280,14 @@ export class VisualizationPanel {
           [
             <any>{
               name: undefined,
-              displayName: localization.getString("addElement")
-            }
+              displayName: localization.getString("addElement"),
+            },
           ]
             .concat(hiddenElements)
-            .map(element => {
+            .map((element) => {
               return {
                 value: element.name,
-                text: element.displayName
+                text: element.displayName,
               };
             }),
           (option: any) => false,
@@ -294,7 +297,7 @@ export class VisualizationPanel {
             const questionElement = this.renderVisualizer(element);
             this.panelContent.appendChild(questionElement);
             !!this.layoutEngine && this.layoutEngine.add([questionElement]);
-            this.visibleElementsCnahged();
+            this.visibleElementsChanged(element);
           }
         );
         (addElementSelector &&
@@ -307,7 +310,7 @@ export class VisualizationPanel {
       }
     };
     addElementSelectorUpdater(this, {});
-    this.onVisibleElementsCnahged.add(addElementSelectorUpdater);
+    this.onVisibleElementsChanged.add(addElementSelectorUpdater);
   }
 
   /**
@@ -322,7 +325,7 @@ export class VisualizationPanel {
     }
     this.targetElement.innerHTML = "";
     this.panelContent = undefined;
-    this.visualizers.forEach(visualizer => {
+    this.visualizers.forEach((visualizer) => {
       visualizer.onUpdate = undefined;
       if (visualizer instanceof SelectBase) {
         visualizer.onDataItemSelected = undefined;
@@ -340,7 +343,7 @@ export class VisualizationPanel {
       this.destroy();
       this.render();
     } else {
-      this.visualizers.forEach(visualizer =>
+      this.visualizers.forEach((visualizer) =>
         setTimeout(() => visualizer.update(this.filteredData), 10)
       );
     }
@@ -370,9 +373,9 @@ export class VisualizationPanel {
       delete this.filterValues[questionName];
     }
     if (filterChanged) {
-      this.filteredData = this.data.filter(item => {
+      this.filteredData = this.data.filter((item) => {
         return !Object.keys(this.filterValues).some(
-          key => item[key] !== this.filterValues[key]
+          (key) => item[key] !== this.filterValues[key]
         );
       });
       this.update();
@@ -389,7 +392,7 @@ export class VisualizationPanel {
   ): VisualizerBase {
     var creators = VisualizationManager.getVisualizers(question.getType());
     var visualizers = creators.map(
-      creator => new creator(vizualizerElement, question, data)
+      (creator) => new creator(vizualizerElement, question, data)
     );
     if (visualizers.length > 1) {
       let visualizer = new AlternativeVisualizersWrapper(
