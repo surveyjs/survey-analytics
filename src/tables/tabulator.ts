@@ -54,6 +54,7 @@ export class Tabulator extends Table {
       paginationSize: 5,
       movableColumns: true,
       columns,
+      rowFormatter: this.rowFormatter,
     });
 
     this.renderTools();
@@ -117,6 +118,25 @@ export class Tabulator extends Table {
     this.renderTools();
   }
 
+  protected rowFormatter(row: any) {
+    var specialColumnElement = row.getCells()[0].getElement();
+    var hidden = document.createElement("div");
+    hidden.innerHTML = "<p>hidden info</p>";
+    hidden.style.display = "none";
+
+    specialColumnElement.onclick = function () {
+      if (hidden.style.display === "none") {
+        hidden.style.display = "block";
+      } else {
+        hidden.style.display = "none";
+      }
+
+      row.normalizeHeight(); //recalculate the row height
+    };
+
+    row.getElement().appendChild(hidden);
+  }
+
   protected getTitleFormatter = (
     cell: any,
     formatterParams: any,
@@ -164,6 +184,12 @@ export class Tabulator extends Table {
           );
         },
       };
+    });
+
+    // add special column (collapse/expand)
+    columns.unshift({
+      field: "",
+      title: "",
     });
 
     return columns;
