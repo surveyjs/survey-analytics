@@ -13,6 +13,8 @@ if (canLoadPlotly()) {
 }
 
 export class SelectBasePlotly extends SelectBase {
+  static displayModeBar: any = undefined;
+
   constructor(
     protected targetElement: HTMLElement,
     question: Question,
@@ -162,10 +164,13 @@ export class SelectBasePlotly extends SelectBase {
       showlegend: false
     };
 
-    const config = {
+    let config: any = {
       displaylogo: false,
       responsive: true
     };
+    if(SelectBasePlotly.displayModeBar !== undefined) {
+      config.displayModeBar = SelectBasePlotly.displayModeBar;
+    }
 
     this.patchConfigParameters(chartNode, traces, layout, config);
 
