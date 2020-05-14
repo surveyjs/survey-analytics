@@ -50,7 +50,7 @@ export class SelectBase extends VisualizerBase {
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
-    if (this.chartTypes.length > 0) {
+    if (this.chartTypes.length > 1) {
       const selectWrapper = ToolbarHelper.createSelector(toolbar,
         this.chartTypes.map(chartType => {
           return {
