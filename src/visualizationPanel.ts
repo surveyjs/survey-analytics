@@ -59,6 +59,17 @@ export class VisualizationPanel {
     });
   }
 
+  public getElements(): IVisualizerPanelElement[] {
+    return (this._elements || []).map(element => {
+      return {
+        name: element.name,
+        displayName: element.displayName,
+        visibility: element.visibility,
+        type: element.type,
+      };
+    });
+  }
+
   /**
    * Checks whether certain element is visible.
    */
