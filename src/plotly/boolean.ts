@@ -67,10 +67,10 @@ export class BooleanPlotly extends SelectBasePlotly {
   getLabels(): Array<string> {
     var labels = this.getValues();
     if (this.booleanQuestion.labelTrue !== undefined) {
-      labels[0] = this.booleanQuestion.labelTrue;
+      labels[0] = this.booleanQuestion.locLabelTrue.textOrHtml;
     }
     if (this.booleanQuestion.labelFalse !== undefined) {
-      labels[1] = this.booleanQuestion.labelFalse;
+      labels[1] = this.booleanQuestion.locLabelFalse.textOrHtml;
     }
     return labels;
   }
