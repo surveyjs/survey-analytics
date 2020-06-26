@@ -53,6 +53,8 @@ var normalizedData = data.map(function(item) {
   return item;
 });
 
+// SurveyAnalytics.SelectBasePlotly.displayModeBar = false;
+
 var visPanel = new SurveyAnalytics.VisualizationPanel(
   document.getElementById("summaryContainer"),
   survey.getAllQuestions(),

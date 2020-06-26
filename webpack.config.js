@@ -2,12 +2,10 @@
 
 var webpack = require("webpack");
 var path = require("path");
+var fs = require("fs");
 var dts = require("dts-bundle");
 var rimraf = require("rimraf");
-var GenerateJsonPlugin = require("generate-json-webpack-plugin");
-var fs = require("fs");
-
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 var packageJson = require("./package.json");
 
@@ -32,15 +30,8 @@ var dts_banner = [
 ].join("\n");
 
 module.exports = function(options) {
-  var packagePath = "./packages/";
-
-  var extractCSS = new ExtractTextPlugin({
-    filename:
-      packagePath +
-      (options.buildType === "prod"
-        ? "survey.analytics.min.css"
-        : "survey.analytics.css")
-  });
+  var packagePath =  __dirname + "/packages/";
+  var isProductionBuild = options.buildType === "prod";
 
   function createSVGBundle() {
     var options = {
@@ -77,18 +68,27 @@ module.exports = function(options) {
         fs.createReadStream("./README.md").pipe(
           fs.createWriteStream(packagePath + "README.md")
         );
-      }
+        fs.writeFileSync(
+          packagePath + "package.json",
+          JSON.stringify(packageJson, null, 2),
+          "utf8"
+        );
+    }
     }
   };
 
   var config = {
-    entry: {},
+    mode: isProductionBuild ? "production" : "development",
+    entry: { },
     resolve: {
       extensions: [".ts", ".js"],
       alias: {
         tslib: path.join(__dirname, "./src/utils/helpers.ts")
       }
     },
+    optimization: {
+      minimize: isProductionBuild,
+    },    
     module: {
       rules: [
         {
@@ -97,7 +97,7 @@ module.exports = function(options) {
             loader: "ts-loader",
             options: {
               compilerOptions: {
-                declaration: options.buildType === "prod",
+                declaration: isProductionBuild,
                 outDir: packagePath + "typings/"
               }
             }
@@ -105,25 +105,21 @@ module.exports = function(options) {
         },
         {
           test: /\.scss$/,
-          use: extractCSS.extract({
-            fallback: "style-loader",
-            use: [
-              {
-                loader: "css-loader",
-                options: {
-                  sourceMap: true,
-                  minimize: options.buildType === "prod",
-                  importLoaders: true
-                }
-              },
-              {
-                loader: "sass-loader",
-                options: {
-                  sourceMap: true
-                }
+          loader: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: "css-loader",
+              options: {
+                sourceMap: !isProductionBuild
               }
-            ]
-          })
+            },
+            {
+              loader: "sass-loader",
+              options: {
+                sourceMap: !isProductionBuild
+              }
+            }
+          ]
         },
         {
           test: /\.html$/,
@@ -139,11 +135,8 @@ module.exports = function(options) {
       ]
     },
     output: {
-      filename:
-        packagePath +
-        "[name]" +
-        (options.buildType === "prod" ? ".min" : "") +
-        ".js",
+      path: packagePath,
+      filename: "[name]" + (options.buildType === "prod" ? ".min" : "") + ".js",
       library: "SurveyAnalytics",
       libraryTarget: "umd",
       umdNamedDefine: true
@@ -193,28 +186,22 @@ module.exports = function(options) {
         "process.env.ENVIRONMENT": JSON.stringify(options.buildType),
         "process.env.VERSION": JSON.stringify(packageJson.version)
       }),
+      new MiniCssExtractPlugin({
+        filename: isProductionBuild ? "[name].min.css" : "[name].css"
+      }),
       new webpack.BannerPlugin({
         banner: banner
-      }),
-      extractCSS
+      })
     ],
     devtool: "inline-source-map"
   };
 
-  if (options.buildType === "prod") {
+  if (isProductionBuild) {
     config.devtool = false;
     config.plugins = config.plugins.concat([
-      new webpack.optimize.UglifyJsPlugin(),
-      new GenerateJsonPlugin(
-        packagePath + "package.json",
-        packageJson,
-        undefined,
-        2
-      )
     ]);
-  }
-
-  if (options.buildType === "dev") {
+  } else {
+    config.devtool = "inline-source-map";
     config.plugins = config.plugins.concat([
       new webpack.LoaderOptionsPlugin({ debug: true })
     ]);
