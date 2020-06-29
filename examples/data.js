@@ -4,6 +4,11 @@ var json = {
         name: "page_info",
         elements: [
           {
+            "type": "custom-question",
+            "name": "custom",
+            "title": "This is a custom question with two values - min and max",
+          },
+          {
             "type": "boolean",
             "name": "bool",
             "title": "Please answer the question",
@@ -280,6 +285,7 @@ var json = {
   
 var data = [
 {
+    custom: { min: 4, max: 10 },
     bool: true,
     organization_type: "In-house",
     developer_count: "6-10",
@@ -309,6 +315,7 @@ var data = [
     survey_cloud_platform: ""
 },
 {
+    custom: { min: 3, max: 9 },
     bool: true,
     organization_type: "other",
     developer_count: "3-5",
