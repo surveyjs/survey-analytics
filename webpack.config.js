@@ -79,7 +79,9 @@ module.exports = function(options) {
 
   var config = {
     mode: isProductionBuild ? "production" : "development",
-    entry: { },
+    entry: {
+      "survey.analytics.tabulator": './src/entries/tabulator'
+     },
     resolve: {
       extensions: [".ts", ".js"],
       alias: {
