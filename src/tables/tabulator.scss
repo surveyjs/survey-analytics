@@ -11,3 +11,386 @@ $svg-color: rgba(#9f9f9f, 0.4);
 $svg-hover-color: #9f9f9f;
 $detail-color: rgba($background-color, 0.5);
 $root-font-size: 14px;
+$main-color: #1ab394;
+$background-color: #ffffff;
+
+$text-color: #404040;
+$text-color-inverse: #ffffff;
+$text-gray: #a0a0a0;
+$backgrond-gray: #9b9b9b;
+$border-color: #d4d4d4;
+$scroll-color: #e2e2e2;
+$svg-color: rgba(#9f9f9f, 0.4);
+$svg-hover-color: #9f9f9f;
+$detail-color: rgba($background-color, 0.5);
+$root-font-size: 14px;
+
+@mixin arrow() {
+  display: inline-block;
+  background: transparent;
+  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23a0a0a0;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat, repeat;
+  background-size: 9px 100%;
+  width: 10px;
+  height: 10px;
+}
+
+@mixin dropdown() {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent;
+  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23404040;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat, repeat;
+  background-position: right 0.7em top 50%, 0 0;
+  background-size: 0.57em 100%;
+  height: 34px;
+  border-radius: 2px;
+  border: solid 1px $border-color;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.25em 1.5em 0.25em 0.87em;
+
+  &:focus {
+    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%231AB394;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E ");
+    border-color: $border-color;
+    outline: none;
+  }
+  &::-ms-expand {
+    display: none;
+  }
+}
+
+@mixin input() {
+  height: 34px;
+  border: none;
+  border-bottom: 0.06em solid $border-color;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.25em 1.5em 0.25em 0.87em !important;
+  background: transparent;
+
+  &:focus {
+    border-color: $main-color;
+    outline: none;
+  }
+}
+
+.sa-tabulator {
+  font-size: $root-font-size;
+  font-family: Segoe UI;
+
+  button {
+    cursor: pointer;
+    background-color: inherit;
+    outline: none;
+  }
+
+  select {
+    @include dropdown();
+  }
+
+  input {
+    @include input();
+  }
+
+  .dt-buttons {
+    margin-left: 20px;
+    float: left;
+  }
+  // .dt-button {
+  //   width: 79px;
+  //   margin-right: 5px;
+  //   color: $text-gray;
+  //   border: solid 2px $text-gray;
+  //   &:hover {
+  //     background-color: $backgrond-gray;
+  //     color: $text-color-inverse;
+  //   }
+  // }
+
+  .sa-tabulator__button {
+    height: 34px;
+    width: 154px;
+    font-size: $root-font-size;
+    font-weight: bold;
+    background-color: transparent;
+    box-sizing: border-box;
+    border: solid 2px;
+    border-radius: 17px;
+    padding: 0;
+    outline: none;
+  }
+  .sa-tabulator__button--small {
+    width: 99px;
+  }
+  .sa-tabulator__button--gray {
+    border-color: $text-gray;
+    color: $text-gray;
+    &:hover {
+      background-color: $backgrond-gray;
+      color: $text-color-inverse;
+    }
+  }
+
+  .tabulator-header-filter input {
+    background: transparent;
+    background-image: url("data:image/svg+xml;charset=utf8,%3C?xml version='1.0' encoding='utf-8'?%3E%3C!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' style='enable-background:new 0 0 16 16;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0{fill:%239F9E9E;} %3C/style%3E%3Cpath class='st0' d='M13.56,11.44L11.3,9.18C11.74,8.38,12,7.47,12,6.5C12,3.47,9.53,1,6.5,1S1,3.47,1,6.5C1,9.53,3.47,12,6.5,12 c0.97,0,1.88-0.26,2.68-0.7l2.26,2.26c0.29,0.29,0.66,0.43,1.04,0.44c0.39,0.01,0.78-0.14,1.08-0.44c0.3-0.3,0.44-0.69,0.44-1.08 C13.99,12.1,13.85,11.72,13.56,11.44z M4,6.5C4,5.12,5.12,4,6.5,4S9,5.12,9,6.5S7.88,9,6.5,9S4,7.88,4,6.5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat, repeat;
+    background-position: left 0.7em top 50%, 0 0;
+    background-size: 1em 100%;
+    padding-left: 35px !important;
+    border: solid 1px $border-color;
+    pointer-events: all;
+  }
+
+  .dataTables_wrapper {
+    background-color: $background-color;
+    padding-top: 30px;
+    padding-bottom: 50px;
+  }
+
+  .dataTables_length {
+    float: right;
+    margin-right: 50px;
+    font-size: 16px;
+    label {
+      font-weight: bold;
+    }
+    select {
+      margin: 0 5px;
+    }
+  }
+
+  .dataTables_paginate {
+    float: right;
+    margin-right: 20px;
+    padding-top: 10px;
+    &:last-child {
+      margin-top: 15px;
+    }
+
+    .ellipsis {
+      color: $text-gray;
+      margin-right: 15px;
+    }
+  }
+
+  .paginate_button {
+    color: $text-gray;
+    margin-right: 15px;
+    cursor: pointer;
+    outline: none;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .paginate_button.previous {
+    @include arrow();
+    transform: rotate(90deg);
+    margin-right: 20px;
+  }
+
+  .paginate_button.next {
+    @include arrow();
+    transform: rotate(270deg);
+    margin-left: 20px;
+  }
+
+  .paginate_button.current {
+    font-weight: bold;
+    border-bottom: 1px solid $text-gray;
+  }
+
+  .dataTables_info {
+    color: $text-gray;
+    float: left;
+    margin-left: 20px;
+    margin-top: 15px;
+  }
+
+  table {
+    border-spacing: 0;
+    border-bottom: 1px solid #ddd;
+    overflow: auto;
+  }
+  .sa-tabulator__detail-row + .sa-tabulator__detail td {
+    border-top: none;
+  }
+  //redefinition of tabulator styles
+  .tabulator {
+    border: 1px solid #ddd;
+    background-color: $background-color;
+  }
+  .tabulator-row .tabulator-cell {
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+  }
+  .tabulator .tabulator-header .tabulator-col {
+    padding: 13px 20px;
+    border-right: 1px solid #ddd;
+  }
+  .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
+    padding: 0;
+  }
+
+  .tabulator .tabulator-header {
+    border-bottom: none;
+  }
+
+  //done
+  .tabulator-col-resize-handle {
+    pointer-events: all;
+  }
+
+  .sa-tabulator__show-column {
+    background: transparent;
+    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' style='enable-background:new 0 0 16 16;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:rgba(159, 159, 159, 0.5);%7D .st1%7Bfill:rgba(159, 159, 159, 0.5);%7D%0A%3C/style%3E%3Cg%3E%3Cpath class='st1' d='M8,2.03C3.63,2.03,0,8,0,8s3.63,6.03,8,6.03s8-6,8-6S12.37,2.03,8,2.03z M8,12c-2.58,0-5.13-2.81-6-4 c1.07-1.47,3.61-4,6-4c2.58,0,5.13,2.81,6,4C12.93,9.47,10.39,12,8,12z'/%3E%3Ccircle class='st1' cx='8' cy='8' r='3'/%3E%3C/g%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23404040;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E%0A");
+    background-repeat: no-repeat, no-repeat;
+    background-position: left 0.7em top 50%, right 0.7em top 50%;
+    background-size: 1em 100%, 0.57em 100%;
+    padding-left: 35px;
+    border: solid 1px $border-color;
+    pointer-events: all;
+
+    &:focus {
+      background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' style='enable-background:new 0 0 16 16;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:rgba(159, 159, 159, 0.5);%7D .st1%7Bfill:rgba(159, 159, 159, 0.5);%7D%0A%3C/style%3E%3Cg%3E%3Cpath class='st1' d='M8,2.03C3.63,2.03,0,8,0,8s3.63,6.03,8,6.03s8-6,8-6S12.37,2.03,8,2.03z M8,12c-2.58,0-5.13-2.81-6-4 c1.07-1.47,3.61-4,6-4c2.58,0,5.13,2.81,6,4C12.93,9.47,10.39,12,8,12z'/%3E%3Ccircle class='st1' cx='8' cy='8' r='3'/%3E%3C/g%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%231AB394;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E ") !important;
+    }
+  }
+  .sa-tabulator__table .sa-tabulator__detail {
+    border-bottom: none;
+    background-color: $detail-color;
+    td:first-child {
+      font-weight: bold;
+      padding-left: 60px;
+    }
+  }
+
+  .sa-tabulator__detail-row {
+    background-color: $detail-color;
+  }
+  table.dataTable tbody .sa-tabulator__detail-row > td {
+    border-bottom: 1px solid $border-color;
+  }
+}
+.sa-tabulator__svg-button {
+  width: 15px;
+  height: 15px;
+  padding: 0;
+  border: none;
+  use {
+    fill: $svg-color;
+  }
+  &:hover {
+    use {
+      fill: $svg-hover-color;
+    }
+  }
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+.sa-tabulator__action-container {
+  .sa-tabulator__svg-button {
+    float: right;
+    margin: 0 0 13px 13px;
+    pointer-events: all;
+  }
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  .sa-tabulator__drag-button {
+    float: left;
+    cursor: move;
+    use {
+      fill: $main-color;
+    }
+    &:hover use {
+      fill: $main-color;
+    }
+  }
+}
+.sa-tabulator__table {
+  width: 100%;
+  background: $text-color-inverse;
+}
+.dataTables_scrollHead table {
+  border-bottom: none;
+}
+.sa-tabulator__table th {
+  border: 1px solid $border-color;
+  border-left: none;
+  border-bottom: none;
+  &:first-child {
+    border-right: none;
+    border-left: 1px solid $border-color;
+  }
+  padding: 13px 20px;
+  position: relative;
+}
+.sa-tabulator__table {
+  th {
+    vertical-align: top;
+    pointer-events: none;
+  }
+}
+.sa-tabulator__filter-container {
+  margin-bottom: 20px;
+  input {
+    box-sizing: border-box;
+  }
+}
+.tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover {
+  background-color: white;
+  pointer-events: none;
+}
+.sa-tabulator .tabulator .tabulator-header,
+.sa-tabulator .tabulator .tabulator-header .tabulator-col {
+  background-color: white;
+}
+.sa-tabulator
+  .tabulator
+  .tabulator-header
+  .tabulator-col
+  .tabulator-header-filter {
+  pointer-events: all;
+}
+.sa-tabulator
+  .tabulator
+  .tabulator-header
+  .tabulator-col
+  .tabulator-col-content
+  .tabulator-arrow {
+  display: none;
+}
+.sa-tabulator .tabulator-row.tabulator-selectable:hover {
+  cursor: default;
+  background-color: $background-color;
+}
+.sa-tabulator .tabulator-row.tabulator-row-even {
+  background-color: $background-color;
+}
+.sa-tabulator
+  .tabulator
+  .tabulator-header
+  .tabulator-col
+  .tabulator-col-content {
+  border-top: none;
+}
+.sa-tabulator
+  .tabulator
+  .tabulator-header
+  .tabulator-col.tabulator-sortable
+  .tabulator-col-title {
+  padding-right: 0;
+}
