@@ -55,7 +55,7 @@ export class ActionsHelper {
   }
   public static createSvgButton(path: string): HTMLButtonElement {
     const btn = document.createElement("button");
-    btn.className = "sa-datatables__svg-button";
+    btn.className = "sa-tabulator__svg-button";
     btn.appendChild(ActionsHelper.createSvgElement(path));
     return btn;
   }
