@@ -55,10 +55,16 @@ var normalizedData = data.map(function(item) {
 
 // SurveyAnalytics.SelectBasePlotly.displayModeBar = false;
 
+var options = {
+  // allowDynamicLayout: false,
+  // allowHideQuestions: false
+}
+
 var visPanel = new SurveyAnalytics.VisualizationPanel(
   document.getElementById("summaryContainer"),
   survey.getAllQuestions(),
-  normalizedData
+  normalizedData,
+  options
 );
 visPanel.showHeader = true;
 visPanel.render();

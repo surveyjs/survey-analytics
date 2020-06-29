@@ -14,6 +14,13 @@ const questionLayoutedElementClassName = "sva-question-layouted";
 
 /**
  * VisualizationPanel is responsible for displaying an array of survey questions
+ * targetElement - HTML element to render the panel
+ * questions - an array of survey questions to visualize
+ * data - an array of answers in format of survey result
+ * options:
+ * allowDynamicLayout - set it to false to disable items drag/drop reordering and dynamic layouting
+ * allowHideQuestions - set it to false to deny user to hide/show individual questions
+ * elements - list of visual element descriptions
  */
 export class VisualizationPanel {
   private _showHeader = false;
@@ -40,6 +47,13 @@ export class VisualizationPanel {
     return (
       this.options.allowDynamicLayout === undefined ||
       this.options.allowDynamicLayout === true
+    );
+  }
+
+  public get allowHideQuestions() {
+    return (
+      this.options.allowHideQuestions === undefined ||
+      this.options.allowHideQuestions === true
     );
   }
 
@@ -151,25 +165,27 @@ export class VisualizationPanel {
       this.filteredData
     );
 
-    visualizer.registerToolbarItem(
-      "removeQuestion",
-      (toolbar: HTMLDivElement) => {
-        return ToolbarHelper.createButton(
-          toolbar,
-          () => {
-            setTimeout(() => {
-              element.visibility = ElementVisibility.Invisible;
-              this.destroyVisualizer(visualizer);
-              !!this.layoutEngine &&
-                this.layoutEngine.remove([questionElement]);
-              this.panelContent.removeChild(questionElement);
-              this.visibleElementsChanged(element);
-            }, 0);
-          },
-          localization.getString("hideButton")
-        );
-      }
-    );
+    if(this.allowHideQuestions) {
+      visualizer.registerToolbarItem(
+        "removeQuestion",
+        (toolbar: HTMLDivElement) => {
+          return ToolbarHelper.createButton(
+            toolbar,
+            () => {
+              setTimeout(() => {
+                element.visibility = ElementVisibility.Invisible;
+                this.destroyVisualizer(visualizer);
+                !!this.layoutEngine &&
+                  this.layoutEngine.remove([questionElement]);
+                this.panelContent.removeChild(questionElement);
+                this.visibleElementsChanged(element);
+              }, 0);
+            },
+            localization.getString("hideButton")
+          );
+        }
+      );
+    }
 
     if (visualizer instanceof SelectBase) {
       var filterInfo = {
@@ -282,46 +298,48 @@ export class VisualizationPanel {
     );
     toolbar.appendChild(resetFilterButton);
 
-    let addElementSelector: HTMLElement = undefined;
-    const addElementSelectorUpdater = (panel: VisualizationPanel, _: any) => {
-      const hiddenElements = this.hiddenElements;
-      if (hiddenElements.length > 0) {
-        const selectWrapper = ToolbarHelper.createSelector(
-          toolbar,
-          [
-            <any>{
-              name: undefined,
-              displayName: localization.getString("addElement"),
-            },
-          ]
-            .concat(hiddenElements)
-            .map((element) => {
-              return {
-                value: element.name,
-                text: element.displayName,
-              };
-            }),
-          (option: any) => false,
-          (e: any) => {
-            var element = this.getElement(e.target.value);
-            element.visibility = ElementVisibility.Visible;
-            const questionElement = this.renderVisualizer(element);
-            this.panelContent.appendChild(questionElement);
-            !!this.layoutEngine && this.layoutEngine.add([questionElement]);
-            this.visibleElementsChanged(element);
-          }
-        );
-        (addElementSelector &&
-          toolbar.replaceChild(selectWrapper, addElementSelector)) ||
-          toolbar.appendChild(selectWrapper);
-        addElementSelector = selectWrapper;
-      } else {
-        addElementSelector && toolbar.removeChild(addElementSelector);
-        addElementSelector = undefined;
-      }
-    };
-    addElementSelectorUpdater(this, {});
-    this.onVisibleElementsChanged.add(addElementSelectorUpdater);
+    if(this.allowHideQuestions) {
+      let addElementSelector: HTMLElement = undefined;
+      const addElementSelectorUpdater = (panel: VisualizationPanel, _: any) => {
+        const hiddenElements = this.hiddenElements;
+        if (hiddenElements.length > 0) {
+          const selectWrapper = ToolbarHelper.createSelector(
+            toolbar,
+            [
+              <any>{
+                name: undefined,
+                displayName: localization.getString("addElement"),
+              },
+            ]
+              .concat(hiddenElements)
+              .map((element) => {
+                return {
+                  value: element.name,
+                  text: element.displayName,
+                };
+              }),
+            (option: any) => false,
+            (e: any) => {
+              var element = this.getElement(e.target.value);
+              element.visibility = ElementVisibility.Visible;
+              const questionElement = this.renderVisualizer(element);
+              this.panelContent.appendChild(questionElement);
+              !!this.layoutEngine && this.layoutEngine.add([questionElement]);
+              this.visibleElementsChanged(element);
+            }
+          );
+          (addElementSelector &&
+            toolbar.replaceChild(selectWrapper, addElementSelector)) ||
+            toolbar.appendChild(selectWrapper);
+          addElementSelector = selectWrapper;
+        } else {
+          addElementSelector && toolbar.removeChild(addElementSelector);
+          addElementSelector = undefined;
+        }
+      };
+      addElementSelectorUpdater(this, {});
+      this.onVisibleElementsChanged.add(addElementSelectorUpdater);
+    }
   }
 
   /**
