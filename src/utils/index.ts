@@ -53,12 +53,21 @@ export class ActionsHelper {
     svgElem.appendChild(useElem);
     return svgElem;
   }
+
   public static createSvgButton(path: string): HTMLButtonElement {
     const btn = document.createElement("button");
     btn.className = "sa-tabulator__svg-button";
     btn.appendChild(ActionsHelper.createSvgElement(path));
     return btn;
   }
+
+  public static createBtn(caption: string): HTMLButtonElement {
+    const btn = document.createElement("button");
+    btn.className = "sa-tabulator__btn sa-tabulator__btn--small sa-tabulator__btn--gray";
+    btn.innerHTML = caption;
+    return btn;
+  }
+
   public static customFilter(data: any, filterParams: any) {
     var match = false;
     for (var key in data) {

@@ -16,6 +16,24 @@ if (!!document) {
   document.head.appendChild(templateHolder);
 }
 
+export var DownloadOptions: { [key: string]: {} } = {
+  pdf: {
+    orientation: "portrait", //set page orientation to portrait
+    autoTable: {
+      //advanced table styling
+      styles: {
+        fillColor: [100, 255, 255],
+      },
+      columnStyles: {
+        id: { fillColor: 255 },
+      },
+      margin: { top: 60 },
+    },
+  },
+  csv: { delimiter: "," },
+  xlsx: { sheetName: "results" },
+};
+
 export class Tabulator extends Table {
   constructor(
     targetNode: HTMLElement,
@@ -92,7 +110,17 @@ export class Tabulator extends Table {
     const toolsContainer = this.toolsContainer;
     const showColumnDropdown = this.createShowColumnDropdown();
     const filterInput = this.createFilterInput();
+
     toolsContainer.innerHTML = "";
+
+    if (!!(<any>window).XLSX) {
+      toolsContainer.appendChild(this.getDownloadBtn("xlsx", "Excel"));
+    }
+    if (!!(<any>window).jsPDF) {
+      toolsContainer.appendChild(this.getDownloadBtn("pdf", "PDF"));
+    }
+    toolsContainer.appendChild(this.getDownloadBtn("csv", "CSV"));
+
     toolsContainer.appendChild(filterInput);
     if (!!showColumnDropdown) toolsContainer.appendChild(showColumnDropdown);
   };
@@ -141,7 +169,7 @@ export class Tabulator extends Table {
   createFilterInput = (): HTMLElement => {
     const input = document.createElement("input");
     input.classList.add("sa-tabulator__global-filter");
-    input.placeholder = "Search..."
+    input.placeholder = "Search...";
     input.onchange = (event: any) => {
       this.tabulatorTables.setFilter(ActionsHelper.customFilter, {
         value: event.target.value,
@@ -162,6 +190,7 @@ export class Tabulator extends Table {
   toggleDetails = (row: any): void => {
     row.getCells()[0].getElement().appendChild(this.getDetailsBtn(row));
   };
+
   getDetailsBtn = (row: any) => {
     const btn = ActionsHelper.createSvgButton("detail");
     btn.title = localization.getString("showMinorColumns");
@@ -261,6 +290,19 @@ export class Tabulator extends Table {
     return button;
   }
 
+  getDownloadBtn(type: string, caption: string): HTMLButtonElement {
+    const btn = ActionsHelper.createBtn(caption);
+    var self = this;
+    btn.onclick = function (ev) {
+      self.tabulatorTables.download(
+        type,
+        `results.${type}`,
+        DownloadOptions[type]
+      );
+    };
+    return btn;
+  }
+
   protected getColumns = () => {
     const availableColumns = this.getAvailableColumns();
     const columns: any = availableColumns.map((column, index) => {
@@ -285,6 +327,7 @@ export class Tabulator extends Table {
     columns.unshift({
       field: "",
       title: "",
+      download: false,
     });
 
     return columns;

@@ -87,9 +87,18 @@ $root-font-size: 14px;
     display: block;
   }
 }
+
 .sa-tabulator__tools-container {
   float: left;
+  .sa-tabulator__btn {
+    margin-left: 10px;
+  }
+
+  .sa-tabulator__global-filter {
+    margin-left: 20px;
+  }
 }
+
 .sa-tabulator__pagination-container {
   float: right;
 }
@@ -126,7 +135,7 @@ $root-font-size: 14px;
   //   }
   // }
 
-  .sa-tabulator__button {
+  .sa-tabulator__btn {
     height: 34px;
     width: 154px;
     font-size: $root-font-size;
@@ -138,10 +147,10 @@ $root-font-size: 14px;
     padding: 0;
     outline: none;
   }
-  .sa-tabulator__button--small {
+  .sa-tabulator__btn--small {
     width: 99px;
   }
-  .sa-tabulator__button--gray {
+  .sa-tabulator__btn--gray {
     border-color: $text-gray;
     color: $text-gray;
     &:hover {
