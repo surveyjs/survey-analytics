@@ -1,5 +1,5 @@
 import { Table } from "./table";
-import { SurveyModel, HtmlConditionItem, IQuestion } from "survey-core";
+import { SurveyModel } from "survey-core";
 import { ColumnVisibility, QuestionLocation } from "./config";
 import { localization } from "../localizationManager";
 
@@ -59,7 +59,7 @@ export class Tabulator extends Table {
     targetNode: HTMLElement,
     survey: SurveyModel,
     data: Array<Object>,
-    private options: IOptions,
+    options: IOptions,
     _columns: Array<any> = [],
     isTrustedAccess = false
   ) {
@@ -319,7 +319,7 @@ export class Tabulator extends Table {
       self.tabulatorTables.download(
         type,
         `results.${type}`,
-        this.options.downloadOptions[type]
+        (<any>this.options.downloadOptions)[type]
       );
     };
     return btn;
@@ -362,8 +362,8 @@ export class Tabulator extends Table {
   protected getColumns = () => {
     const availableColumns = this.getAvailableColumns();
     var minColumnWidth =
-      this.COLUMN_MIN_WIDTH > this.options.minColumnWidth
-        ? this.options.minColumnWidth
+      this.COLUMN_MIN_WIDTH > this.options.columnMinWidth
+        ? this.options.columnMinWidth
         : this.COLUMN_MIN_WIDTH;
     const columns: any = availableColumns.map((column, index) => {
       var question = this.survey.getQuestionByName(column.name);
