@@ -1,9 +1,10 @@
 import { Table } from "./table";
-import { SurveyModel } from "survey-core";
+import { SurveyModel, HtmlConditionItem } from "survey-core";
 import { ColumnVisibility, QuestionLocation } from "./config";
 import { localization } from "../localizationManager";
 
 import "./tabulator.scss";
+import { ActionsHelper } from "../utils";
 
 const TabulatorTables = require("tabulator-tables");
 
@@ -40,42 +41,70 @@ export class Tabulator extends Table {
     const columns = this.getColumns();
     const data = this.tableData;
 
-    this.toolsContainer = document.createElement("div");
+    var header = this.createHeader();
+    var paginationElement = this.createPaginationElement();
+
+    this.toolsContainer = this.createToolsContainer();
     this.tableContainer = document.createElement("div");
 
     this.targetNode.innerHTML = "";
-    this.targetNode.appendChild(this.toolsContainer);
+
+    this.targetNode.appendChild(header);
+    header.appendChild(this.toolsContainer);
+    header.appendChild(paginationElement);
+
     this.targetNode.appendChild(this.tableContainer);
 
     this.tabulatorTables = new TabulatorTables(this.tableContainer, {
       data,
-      layout: "fitColumns",
+      layout: "fitData",
       pagination: "local",
       paginationSize: 5,
       movableColumns: true,
+      maxHeight: "100%",
       columns,
-      rowFormatter: this.rowFormatter,
+      rowFormatter: this.toggleDetails,
+      paginationElement: paginationElement,
     });
 
     this.renderTools();
   };
 
-  renderTools = () => {
-    const toolsContainer = this.toolsContainer;
-    const showColumnDropdown = this.getShowColumnDropdown();
-
-    toolsContainer.innerHTML = "";
-
-    toolsContainer.appendChild(showColumnDropdown);
+  createToolsContainer = (): HTMLElement => {
+    var el = document.createElement("div");
+    el.classList.add("sa-tabulator__tools-container");
+    return el;
   };
 
-  getShowColumnDropdown = (): HTMLElement => {
+  createHeader = (): HTMLElement => {
+    var el = document.createElement("div");
+    el.classList.add("sa-tabulator__header");
+    return el;
+  };
+
+  createPaginationElement = (): HTMLElement => {
+    var el = document.createElement("div");
+    el.classList.add("sa-tabulator__pagination-container");
+    return el;
+  };
+
+  renderTools = () => {
+    const toolsContainer = this.toolsContainer;
+    const showColumnDropdown = this.createShowColumnDropdown();
+    const filterInput = this.createFilterInput();
+    toolsContainer.innerHTML = "";
+    toolsContainer.appendChild(filterInput);
+    if (!!showColumnDropdown) toolsContainer.appendChild(showColumnDropdown);
+  };
+
+  createShowColumnDropdown = (): HTMLElement => {
     const dropdown = document.createElement("select");
+    dropdown.classList.add("sa-tabulator__show-column");
 
     var hiddenColumns = this.columns.filter(
       (column) => column.visibility === ColumnVisibility.Invisible
     );
-
+    if (hiddenColumns.length == 0) return null;
     var option = document.createElement("option");
     option.text = localization.getString("showColumn");
     option.disabled = true;
@@ -109,6 +138,18 @@ export class Tabulator extends Table {
     return dropdown;
   };
 
+  createFilterInput = (): HTMLElement => {
+    const input = document.createElement("input");
+    input.classList.add("sa-tabulator__global-filter");
+    input.placeholder = "Search..."
+    input.onchange = (event: any) => {
+      this.tabulatorTables.setFilter(ActionsHelper.customFilter, {
+        value: event.target.value,
+      });
+    };
+    return input;
+  };
+
   public destroy = () => {
     this.tabulatorTables.destroy();
     this.targetNode.innerHTML = "";
@@ -118,13 +159,18 @@ export class Tabulator extends Table {
     this.renderTools();
   }
 
-  protected rowFormatter(row: any) {
-    var specialColumnElement = row.getCells()[0].getElement();
+  toggleDetails = (row: any): void => {
+    row.getCells()[0].getElement().appendChild(this.getDetailsBtn(row));
+  };
+  getDetailsBtn = (row: any) => {
+    const btn = ActionsHelper.createSvgButton("detail");
+    btn.title = localization.getString("showMinorColumns");
+    var self = this;
     var hidden = document.createElement("div");
     hidden.innerHTML = "<p>hidden info</p>";
     hidden.style.display = "none";
-
-    specialColumnElement.onclick = function () {
+    row.getElement().appendChild(hidden);
+    btn.onclick = function () {
       if (hidden.style.display === "none") {
         hidden.style.display = "block";
       } else {
@@ -133,9 +179,8 @@ export class Tabulator extends Table {
 
       row.normalizeHeight(); //recalculate the row height
     };
-
-    row.getElement().appendChild(hidden);
-  }
+    return btn;
+  };
 
   protected getTitleFormatter = (
     cell: any,
@@ -143,28 +188,78 @@ export class Tabulator extends Table {
     onRendered: any,
     columnName: any
   ) => {
-    //build dropdown
-    var hideColumnBtn = document.createElement("button");
-    hideColumnBtn.style.display = "block";
-    hideColumnBtn.innerHTML = "<span> hide </span>";
-    hideColumnBtn.onclick = () => {
+    var container = document.createElement("div");
+    var title = this.getColumnTitle(cell.getValue());
+    var actions = this.getHeaderActions(columnName);
+    container.appendChild(actions);
+    container.appendChild(title);
+    return container;
+  };
+
+  getColumnTitle = (titleStr: string): HTMLElement => {
+    var title = document.createElement("span");
+    title.innerHTML = titleStr;
+    return title;
+  };
+
+  //actions for columns
+  getHeaderActions = (columnName: string): HTMLDivElement => {
+    var container = document.createElement("div");
+    container.classList.add("sa-tabulator__action-container");
+    container.appendChild(this.getDragBtn());
+    container.appendChild(this.getSortBtn());
+    container.appendChild(this.getMoveToDetailsBtn(columnName));
+    container.appendChild(this.getHideBtn(columnName));
+    return container;
+  };
+
+  getDragBtn(): HTMLButtonElement {
+    const btn = document.createElement("button");
+    btn.className = "sa-tabulator__svg-button sa-tabulator__drag-button";
+    btn.appendChild(ActionsHelper.createSvgElement("drag"));
+    btn.onclick = (e) => {
+      e.stopPropagation();
+    };
+    return btn;
+  }
+
+  getSortBtn(): HTMLButtonElement {
+    const descTitle = localization.getString("descOrder");
+    const ascTitle = localization.getString("ascOrder");
+    var btn = ActionsHelper.createSvgButton("sorting");
+    btn.onclick = (e) => {
+      btn.title = btn.title == ascTitle ? descTitle : ascTitle;
+    };
+    btn.ondrag = (e) => {
+      e.stopPropagation();
+    };
+    return btn;
+  }
+
+  getHideBtn(columnName: string): HTMLButtonElement {
+    var btn = ActionsHelper.createSvgButton("hide");
+    btn.onclick = () => {
       this._columns.filter(
         (column) => column.name === columnName
       )[0].visibility = ColumnVisibility.Invisible;
       this.tabulatorTables.toggleColumn(columnName);
       this.update();
     };
+    return btn;
+  }
 
-    //set header title
-    var title = document.createElement("div");
-    title.style.height = "50px";
-    title.innerHTML = cell.getValue();
-
-    //add menu to title
-    title.appendChild(hideColumnBtn);
-
-    return title;
-  };
+  getMoveToDetailsBtn(columnName: string): HTMLButtonElement {
+    const button = ActionsHelper.createSvgButton("movetodetails");
+    button.title = localization.getString("moveToDetail");
+    button.onclick = (e) => {
+      e.stopPropagation();
+      this._columns.filter((column) => column.name === columnName)[0].location =
+        QuestionLocation.Row;
+      this.tabulatorTables.toggleColumn(columnName);
+      this.update();
+    };
+    return button;
+  }
 
   protected getColumns = () => {
     const availableColumns = this.getAvailableColumns();
