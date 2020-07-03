@@ -1,5 +1,5 @@
 import { Table } from "./table";
-import { SurveyModel, HtmlConditionItem } from "survey-core";
+import { SurveyModel, HtmlConditionItem, IQuestion } from "survey-core";
 import { ColumnVisibility, QuestionLocation } from "./config";
 import { localization } from "../localizationManager";
 
@@ -16,7 +16,20 @@ if (!!document) {
   document.head.appendChild(templateHolder);
 }
 
-export var DownloadOptions: { [key: string]: {} } = {
+interface IDownloadOptions {
+  pdf?: {};
+  csv?: {};
+  xlsx?: {};
+}
+
+interface IOptions {
+  columnWidth: number;
+  columnMinWidth: number;
+  paginationButtonCount: number;
+  downloadOptions: IDownloadOptions;
+}
+
+var defaultDownloadOptions: IDownloadOptions = {
   pdf: {
     orientation: "portrait", //set page orientation to portrait
     autoTable: {
@@ -34,23 +47,31 @@ export var DownloadOptions: { [key: string]: {} } = {
   xlsx: { sheetName: "results" },
 };
 
+export var defaultOptions: IOptions = {
+  columnWidth: 208,
+  columnMinWidth: 155,
+  downloadOptions: defaultDownloadOptions,
+  paginationButtonCount: 3,
+};
+
 export class Tabulator extends Table {
   constructor(
     targetNode: HTMLElement,
     survey: SurveyModel,
     data: Array<Object>,
-    options: any,
+    private options: IOptions,
     _columns: Array<any> = [],
     isTrustedAccess = false
   ) {
     super(targetNode, survey, data, options, _columns, isTrustedAccess);
     const self = this;
+    if (!this.options) this.options = defaultOptions;
     targetNode.className += "sa-tabulator";
     if (_columns.length === 0) {
       self._columns = self.buildColumns(survey);
     }
   }
-
+  private readonly COLUMN_MIN_WIDTH = 155;
   private tabulatorTables: any = null;
   private toolsContainer: HTMLElement = null;
   private tableContainer: HTMLElement = null;
@@ -82,6 +103,7 @@ export class Tabulator extends Table {
       maxHeight: "100%",
       columns,
       rowFormatter: this.toggleDetails,
+      paginationButtonCount: this.options.paginationButtonCount,
       paginationElement: paginationElement,
     });
 
@@ -293,11 +315,11 @@ export class Tabulator extends Table {
   getDownloadBtn(type: string, caption: string): HTMLButtonElement {
     const btn = ActionsHelper.createBtn(caption);
     var self = this;
-    btn.onclick = function (ev) {
+    btn.onclick = (ev) => {
       self.tabulatorTables.download(
         type,
         `results.${type}`,
-        DownloadOptions[type]
+        this.options.downloadOptions[type]
       );
     };
     return btn;
@@ -310,7 +332,11 @@ export class Tabulator extends Table {
     showSpan.innerHTML = "Show";
     const entriesSpan = document.createElement("span");
     entriesSpan.innerHTML = "entries";
+    entriesSpan.className =
+      "sa-tabulator__entries-label sa-tabulator__entries-label--left";
     selectorContainer.appendChild(showSpan);
+    showSpan.className =
+      "sa-tabulator__entries-label sa-tabulator__entries-label--right";
     selectorContainer.appendChild(this.getEntriesDropdown());
     selectorContainer.appendChild(entriesSpan);
     return selectorContainer;
@@ -335,11 +361,17 @@ export class Tabulator extends Table {
 
   protected getColumns = () => {
     const availableColumns = this.getAvailableColumns();
+    var minColumnWidth =
+      this.COLUMN_MIN_WIDTH > this.options.minColumnWidth
+        ? this.options.minColumnWidth
+        : this.COLUMN_MIN_WIDTH;
     const columns: any = availableColumns.map((column, index) => {
       var question = this.survey.getQuestionByName(column.name);
       return {
         field: column.name,
         title: (question && question.title) || column.displayName,
+        minWidth: minColumnWidth,
+        width: this.options.columnWidth,
         visible: column.visibility !== ColumnVisibility.Invisible,
         headerFilter: true,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
@@ -358,6 +390,7 @@ export class Tabulator extends Table {
       field: "",
       title: "",
       download: false,
+      resizable: false,
     });
 
     return columns;
