@@ -41,11 +41,18 @@ export class Tabulator extends Table {
     const columns = this.getColumns();
     const data = this.tableData;
 
-    this.toolsContainer = document.createElement("div");
+    var header = this.createHeader();
+    var paginationElement = this.createPaginationElement();
+
+    this.toolsContainer = this.createToolsContainer();
     this.tableContainer = document.createElement("div");
 
     this.targetNode.innerHTML = "";
-    this.targetNode.appendChild(this.toolsContainer);
+
+    this.targetNode.appendChild(header);
+    header.appendChild(this.toolsContainer);
+    header.appendChild(paginationElement);
+
     this.targetNode.appendChild(this.tableContainer);
 
     this.tabulatorTables = new TabulatorTables(this.tableContainer, {
@@ -54,22 +61,43 @@ export class Tabulator extends Table {
       pagination: "local",
       paginationSize: 5,
       movableColumns: true,
+      maxHeight: "100%",
       columns,
-      height: "100%",
       rowFormatter: this.toggleDetails,
+      paginationElement: paginationElement,
     });
 
     this.renderTools();
   };
 
+  createToolsContainer = (): HTMLElement => {
+    var el = document.createElement("div");
+    el.classList.add("sa-tabulator__tools-container");
+    return el;
+  };
+
+  createHeader = (): HTMLElement => {
+    var el = document.createElement("div");
+    el.classList.add("sa-tabulator__header");
+    return el;
+  };
+
+  createPaginationElement = (): HTMLElement => {
+    var el = document.createElement("div");
+    el.classList.add("sa-tabulator__pagination-container");
+    return el;
+  };
+
   renderTools = () => {
     const toolsContainer = this.toolsContainer;
-    const showColumnDropdown = this.getShowColumnDropdown();
+    const showColumnDropdown = this.createShowColumnDropdown();
+    const filterInput = this.createFilterInput();
     toolsContainer.innerHTML = "";
+    toolsContainer.appendChild(filterInput);
     if (!!showColumnDropdown) toolsContainer.appendChild(showColumnDropdown);
   };
 
-  getShowColumnDropdown = (): HTMLElement => {
+  createShowColumnDropdown = (): HTMLElement => {
     const dropdown = document.createElement("select");
     dropdown.classList.add("sa-tabulator__show-column");
 
@@ -110,6 +138,18 @@ export class Tabulator extends Table {
     return dropdown;
   };
 
+  createFilterInput = (): HTMLElement => {
+    const input = document.createElement("input");
+    input.classList.add("sa-tabulator__global-filter");
+    input.placeholder = "Search..."
+    input.onchange = (event: any) => {
+      this.tabulatorTables.setFilter(ActionsHelper.customFilter, {
+        value: event.target.value,
+      });
+    };
+    return input;
+  };
+
   public destroy = () => {
     this.tabulatorTables.destroy();
     this.targetNode.innerHTML = "";
@@ -123,14 +163,14 @@ export class Tabulator extends Table {
     row.getCells()[0].getElement().appendChild(this.getDetailsBtn(row));
   };
   getDetailsBtn = (row: any) => {
-    const button = ActionsHelper.createSvgButton("detail");
-    button.title = localization.getString("showMinorColumns");
+    const btn = ActionsHelper.createSvgButton("detail");
+    btn.title = localization.getString("showMinorColumns");
     var self = this;
     var hidden = document.createElement("div");
     hidden.innerHTML = "<p>hidden info</p>";
     hidden.style.display = "none";
     row.getElement().appendChild(hidden);
-    button.onclick = function () {
+    btn.onclick = function () {
       if (hidden.style.display === "none") {
         hidden.style.display = "block";
       } else {
@@ -139,7 +179,7 @@ export class Tabulator extends Table {
 
       row.normalizeHeight(); //recalculate the row height
     };
-    return button;
+    return btn;
   };
 
   protected getTitleFormatter = (
@@ -150,7 +190,7 @@ export class Tabulator extends Table {
   ) => {
     var container = document.createElement("div");
     var title = this.getColumnTitle(cell.getValue());
-    var actions = this.getActions(columnName);
+    var actions = this.getHeaderActions(columnName);
     container.appendChild(actions);
     container.appendChild(title);
     return container;
@@ -161,8 +201,9 @@ export class Tabulator extends Table {
     title.innerHTML = titleStr;
     return title;
   };
+
   //actions for columns
-  getActions = (columnName: string): HTMLDivElement => {
+  getHeaderActions = (columnName: string): HTMLDivElement => {
     var container = document.createElement("div");
     container.classList.add("sa-tabulator__action-container");
     container.appendChild(this.getDragBtn());
@@ -190,7 +231,7 @@ export class Tabulator extends Table {
       btn.title = btn.title == ascTitle ? descTitle : ascTitle;
     };
     btn.ondrag = (e) => {
-      e.stopPropagation;
+      e.stopPropagation();
     };
     return btn;
   }

@@ -59,4 +59,13 @@ export class ActionsHelper {
     btn.appendChild(ActionsHelper.createSvgElement(path));
     return btn;
   }
+  public static customFilter(data: any, filterParams: any) {
+    var match = false;
+    for (var key in data) {
+      if (data[key].includes(filterParams.value)) {
+        match = true;
+      }
+    }
+    return match;
+  }
 }
