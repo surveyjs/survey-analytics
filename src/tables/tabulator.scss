@@ -101,7 +101,14 @@ $root-font-size: 14px;
 
 .sa-tabulator__pagination-container {
   float: right;
+  width: 241px;
 }
+
+.sa-tabulator__entries {
+  margin-right: 30px;
+  float: right;
+}
+
 .sa-tabulator {
   font-size: $root-font-size;
   font-family: Segoe UI;

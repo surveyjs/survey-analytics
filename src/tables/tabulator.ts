@@ -70,7 +70,7 @@ export class Tabulator extends Table {
     this.targetNode.appendChild(header);
     header.appendChild(this.toolsContainer);
     header.appendChild(paginationElement);
-
+    header.appendChild(this.getEntriesContainer());
     this.targetNode.appendChild(this.tableContainer);
 
     this.tabulatorTables = new TabulatorTables(this.tableContainer, {
@@ -301,6 +301,36 @@ export class Tabulator extends Table {
       );
     };
     return btn;
+  }
+
+  getEntriesContainer(): HTMLElement {
+    const selectorContainer = document.createElement("div");
+    selectorContainer.className = "sa-tabulator__entries";
+    const showSpan = document.createElement("span");
+    showSpan.innerHTML = "Show";
+    const entriesSpan = document.createElement("span");
+    entriesSpan.innerHTML = "entries";
+    selectorContainer.appendChild(showSpan);
+    selectorContainer.appendChild(this.getEntriesDropdown());
+    selectorContainer.appendChild(entriesSpan);
+    return selectorContainer;
+  }
+
+  getEntriesDropdown(): HTMLElement {
+    const el = document.createElement("select");
+    var optionsValues = ["1", "5", "10", "25", "50", "75", "100"];
+    optionsValues.forEach(function (val) {
+      var option = document.createElement("option");
+      option.innerHTML = val;
+      el.appendChild(option);
+    });
+    el.value = "5";
+
+    el.onchange = () => {
+      this.tabulatorTables.setPageSize(el.value);
+    };
+
+    return el;
   }
 
   protected getColumns = () => {
