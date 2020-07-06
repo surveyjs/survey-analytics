@@ -31,11 +31,12 @@ interface IOptions {
 
 var defaultDownloadOptions: IDownloadOptions = {
   pdf: {
+    isVisible: true,
     orientation: "portrait", //set page orientation to portrait
     autoTable: {
       //advanced table styling
       styles: {
-        fillColor: [100, 255, 255],
+        fillColor: [26, 179, 148],
       },
       columnStyles: {
         id: { fillColor: 255 },
@@ -43,8 +44,8 @@ var defaultDownloadOptions: IDownloadOptions = {
       margin: { top: 60 },
     },
   },
-  csv: { delimiter: "," },
-  xlsx: { sheetName: "results" },
+  csv: { isVisible: true, delimiter: "," },
+  xlsx: { isVisible: true, sheetName: "results" },
 };
 
 export var defaultOptions: IOptions = {
@@ -135,10 +136,10 @@ export class Tabulator extends Table {
 
     toolsContainer.innerHTML = "";
 
-    if (!!(<any>window).XLSX) {
+    if (this.options.downloadOptions.xlsx.isVisible) {
       toolsContainer.appendChild(this.getDownloadBtn("xlsx", "Excel"));
     }
-    if (!!(<any>window).jsPDF) {
+    if (this.options.downloadOptions.pdf.isVisible) {
       toolsContainer.appendChild(this.getDownloadBtn("pdf", "PDF"));
     }
     toolsContainer.appendChild(this.getDownloadBtn("csv", "CSV"));
