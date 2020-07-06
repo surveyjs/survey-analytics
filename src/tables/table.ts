@@ -48,7 +48,7 @@ export class Table {
     );
   };
 
-  protected get columns() {
+  public get columns() {
     return [].concat(this._columns);
   }
 
