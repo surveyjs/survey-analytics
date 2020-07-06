@@ -77,6 +77,10 @@ export class Tabulator extends Table {
   private tableContainer: HTMLElement = null;
   private tableTools: TableTools;
 
+  public getTabulatorTables(): any {
+    return this.tabulatorTables;
+  }
+
   public render = () => {
     const columns = this.getColumns();
     const data = this.tableData;
@@ -103,15 +107,12 @@ export class Tabulator extends Table {
       paginationElement: paginationElement,
     });
 
-    this.tableTools = new TableTools(
-      header,
-      this.tabulatorTables,
-      this,
-      this.options
-    );
-    this.tableTools.render();
+    const toolsContainer = this.createToolsContainer();
+    header.appendChild(toolsContainer);
     header.appendChild(paginationElement);
     header.appendChild(this.getEntriesContainer());
+    this.tableTools = new TableTools(toolsContainer, this, this.options);
+    this.tableTools.render();
   };
 
   createToolsContainer = (): HTMLElement => {
@@ -187,12 +188,10 @@ export class Tabulator extends Table {
 
   //actions for columns
   getHeaderActions = (columnName: string): HTMLDivElement => {
-    var container = document.createElement("div");
+    const container = document.createElement("div");
     container.classList.add("sa-tabulator__action-container");
-    container.appendChild(this.getDragBtn());
-    container.appendChild(this.getSortBtn());
-    container.appendChild(this.getMoveToDetailsBtn(columnName));
-    container.appendChild(this.getHideBtn(columnName));
+    const columnActions = new ColumnTools(container, this, columnName);
+    columnActions.render();
     return container;
   };
 
@@ -319,40 +318,28 @@ export class Tabulator extends Table {
 class TableTools {
   constructor(
     private targetNode: HTMLElement,
-    private tabulatorTables: any,
     private tabulator: Tabulator,
     private options: IOptions
   ) {}
   private showColumnDropdown: HTMLElement;
-  private toolsContainer: HTMLElement;
 
   render() {
-    this.toolsContainer = this.createToolsContainer();
     this.showColumnDropdown = this.createShowColumnDropdown();
     const filterInput = this.createFilterInput();
 
-    this.toolsContainer.innerHTML = "";
+    this.targetNode.innerHTML = "";
 
     if (this.options.downloadOptions.xlsx.isVisible) {
-      this.toolsContainer.appendChild(
-        this.createDownloadButton("xlsx", "Excel")
-      );
+      this.targetNode.appendChild(this.createDownloadButton("xlsx", "Excel"));
     }
     if (this.options.downloadOptions.pdf.isVisible) {
-      this.toolsContainer.appendChild(this.createDownloadButton("pdf", "PDF"));
+      this.targetNode.appendChild(this.createDownloadButton("pdf", "PDF"));
     }
-    this.toolsContainer.appendChild(this.createDownloadButton("csv", "CSV"));
+    this.targetNode.appendChild(this.createDownloadButton("csv", "CSV"));
 
-    this.toolsContainer.appendChild(filterInput);
+    this.targetNode.appendChild(filterInput);
     if (!!this.showColumnDropdown)
-      this.toolsContainer.appendChild(this.showColumnDropdown);
-    this.targetNode.appendChild(this.toolsContainer);
-  }
-
-  protected createToolsContainer(): HTMLElement {
-    var el = document.createElement("div");
-    el.classList.add("sa-tabulator__tools-container");
-    return el;
+      this.targetNode.appendChild(this.showColumnDropdown);
   }
 
   protected createFilterInput(): HTMLElement {
@@ -360,9 +347,11 @@ class TableTools {
     input.classList.add("sa-tabulator__global-filter");
     input.placeholder = "Search...";
     input.onchange = (event: any) => {
-      this.tabulatorTables.setFilter(ActionsHelper.customFilter, {
-        value: event.target.value,
-      });
+      this.tabulator
+        .getTabulatorTables()
+        .setFilter(ActionsHelper.customFilter, {
+          value: event.target.value,
+        });
     };
     return input;
   }
@@ -403,7 +392,7 @@ class TableTools {
         (column) => column.name === val
       )[0];
       column.visibility = ColumnVisibility.Visible;
-      self.tabulatorTables.toggleColumn(column.name);
+      self.tabulator.getTabulatorTables().toggleColumn(column.name);
       self.update();
     };
 
@@ -414,7 +403,7 @@ class TableTools {
     if (!!this.showColumnDropdown) this.showColumnDropdown.remove();
     this.showColumnDropdown = this.createShowColumnDropdown();
     if (!!this.showColumnDropdown)
-      this.toolsContainer.appendChild(this.showColumnDropdown);
+      this.targetNode.appendChild(this.showColumnDropdown);
   }
 
   protected createDownloadButton(
@@ -424,12 +413,77 @@ class TableTools {
     const btn = ActionsHelper.createBtn(caption);
     var self = this;
     btn.onclick = (ev) => {
-      self.tabulatorTables.download(
-        type,
-        `results.${type}`,
-        (<any>this.options.downloadOptions)[type]
-      );
+      self.tabulator
+        .getTabulatorTables()
+        .download(
+          type,
+          `results.${type}`,
+          (<any>this.options.downloadOptions)[type]
+        );
     };
     return btn;
+  }
+}
+
+class ColumnTools {
+  constructor(
+    private targetNode: HTMLElement,
+    private tabulator: Tabulator,
+    private columnName: string
+  ) {}
+
+  public render() {
+    this.targetNode.appendChild(this.createDragBtn());
+    this.targetNode.appendChild(this.createSortBtn());
+    this.targetNode.appendChild(this.createMoveToDetailsBtn());
+    this.targetNode.appendChild(this.createHideBtn());
+  }
+
+  protected createDragBtn(): HTMLButtonElement {
+    const btn = document.createElement("button");
+    btn.className = "sa-tabulator__svg-button sa-tabulator__drag-button";
+    btn.appendChild(ActionsHelper.createSvgElement("drag"));
+    btn.onclick = (e) => {
+      e.stopPropagation();
+    };
+    return btn;
+  }
+
+  protected createSortBtn(): HTMLButtonElement {
+    const descTitle = localization.getString("descOrder");
+    const ascTitle = localization.getString("ascOrder");
+    var btn = ActionsHelper.createSvgButton("sorting");
+    btn.onclick = (e) => {
+      btn.title = btn.title == ascTitle ? descTitle : ascTitle;
+    };
+    btn.ondrag = (e) => {
+      e.stopPropagation();
+    };
+    return btn;
+  }
+
+  protected createHideBtn(): HTMLButtonElement {
+    var btn = ActionsHelper.createSvgButton("hide");
+    btn.onclick = () => {
+      this.tabulator.columns.filter(
+        (column) => column.name === this.columnName
+      )[0].visibility = ColumnVisibility.Invisible;
+      this.tabulator.getTabulatorTables().toggleColumn(this.columnName);
+      this.tabulator.update();
+    };
+    return btn;
+  }
+
+  protected createMoveToDetailsBtn(): HTMLButtonElement {
+    const button = ActionsHelper.createSvgButton("movetodetails");
+    button.title = localization.getString("moveToDetail");
+    button.onclick = (e) => {
+      e.stopPropagation();
+      this.tabulator.columns.filter(
+        (column) => column.name === this.columnName
+      )[0].location = QuestionLocation.Row;
+      this.tabulator.getTabulatorTables().toggleColumn(this.columnName);
+    };
+    return button;
   }
 }
