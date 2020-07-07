@@ -4,7 +4,7 @@ $background-color: #ffffff;
 $text-color: #404040;
 $text-color-inverse: #ffffff;
 $text-gray: #a0a0a0;
-$backgrond-gray: #9b9b9b;
+$background-gray: #9b9b9b;
 $border-color: #d4d4d4;
 $scroll-color: #e2e2e2;
 $svg-color: rgba(#9f9f9f, 0.4);
@@ -17,12 +17,11 @@ $background-gray: #f7f7f7;
 $text-color: #404040;
 $text-color-inverse: #ffffff;
 $text-gray: #a0a0a0;
-$backgrond-gray: #9b9b9b;
 $border-color: #d4d4d4;
 $scroll-color: #e2e2e2;
 $svg-color: rgba(#9f9f9f, 0.4);
 $svg-hover-color: #9f9f9f;
-$detail-color: rgba($background-color, 0.5);
+$detail-color: $background-gray;
 $root-font-size: 14px;
 
 @mixin arrow() {
@@ -193,7 +192,7 @@ $root-font-size: 14px;
     border-color: $text-gray;
     color: $text-gray;
     &:hover {
-      background-color: $backgrond-gray;
+      background-color: $background-gray;
       color: $text-color-inverse;
     }
   }
@@ -257,28 +256,22 @@ $root-font-size: 14px;
     border-bottom: 1px solid $text-gray;
   }
 
-  table {
-    border-spacing: 0;
-    border-bottom: 1px solid #ddd;
-    overflow: auto;
-  }
-  .sa-tabulator__detail-row + .sa-tabulator__detail td {
-    border-top: none;
-  }
-  //redefinition of tabulator styles
   .tabulator {
     border: 1px solid #ddd;
     background-color: $background-color;
   }
+
   .tabulator-row .tabulator-cell {
     padding: 20px;
     border-top: 1px solid #ddd;
     border-right: 1px solid #ddd;
   }
+
   .tabulator .tabulator-header .tabulator-col {
     padding: 13px 20px;
     border-right: 1px solid #ddd;
   }
+
   .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
     padding: 0;
   }
@@ -308,6 +301,10 @@ $root-font-size: 14px;
     }
   }
 
+  .sa-tabulator__detail-row.sa-tabulator__detail-row.sa-tabulator__detail-row.sa-tabulator__detail-row {
+    background-color: $detail-color;
+  }
+
   .sa-tabulator__detail-table {
     width: 100%;
     border-collapse: collapse;
@@ -333,19 +330,6 @@ $root-font-size: 14px;
     td:nth-child(2) {
       width: 208px;
     }
-  }
-
-  .sa-tabulator__table .sa-tabulator__detail {
-    border-bottom: none;
-    background-color: $detail-color;
-    td:first-child {
-      font-weight: bold;
-      padding-left: 60px;
-    }
-  }
-
-  .sa-tabulator__detail-row {
-    background-color: $detail-color;
   }
 }
 .sa-tabulator__svg-button {

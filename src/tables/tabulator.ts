@@ -23,7 +23,6 @@ interface IDownloadOptions {
 }
 
 interface IOptions {
-  columnWidth: number;
   columnMinWidth: number;
   paginationButtonCount: number;
   downloadOptions: IDownloadOptions;
@@ -49,8 +48,7 @@ var defaultDownloadOptions: IDownloadOptions = {
 };
 
 export var defaultOptions: IOptions = {
-  columnWidth: 208,
-  columnMinWidth: 155,
+  columnMinWidth: 208,
   downloadOptions: defaultDownloadOptions,
   paginationButtonCount: 3,
 };
@@ -118,7 +116,7 @@ export class Tabulator extends Table {
 
     this.tabulatorTables = new TabulatorTables(this.tableContainer, {
       data,
-      layout: "fitData",
+      layout: "fitColumns",
       pagination: "local",
       paginationSize: 5,
       movableColumns: true,
@@ -135,6 +133,13 @@ export class Tabulator extends Table {
     header.appendChild(this.getEntriesContainer());
     this.tableTools = new TableTools(toolsContainer, this, this.options);
     this.tableTools.render();
+
+    this.onColumnsLocationChanged.add(() => {
+      this.update();
+    });
+    this.onColumnsVisibilityChanged.add(() => {
+      this.update();
+    });
   };
 
   createToolsContainer = (): HTMLElement => {
@@ -294,15 +299,15 @@ export class Tabulator extends Table {
     const availableColumns = this.getAvailableColumns();
     var minColumnWidth =
       this.COLUMN_MIN_WIDTH > this.options.columnMinWidth
-        ? this.options.columnMinWidth
-        : this.COLUMN_MIN_WIDTH;
+        ? this.COLUMN_MIN_WIDTH
+        : this.options.columnMinWidth;
     const columns: any = availableColumns.map((column, index) => {
       var question = this.survey.getQuestionByName(column.name);
       return {
         field: column.name,
         title: (question && question.title) || column.displayName,
         minWidth: minColumnWidth,
-        width: this.options.columnWidth,
+        widthShrink: 1,
         visible: column.visibility !== ColumnVisibility.Invisible,
         headerFilter: true,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
@@ -315,17 +320,21 @@ export class Tabulator extends Table {
         },
       };
     });
-
     // add special column (collapse/expand)
     columns.unshift({
       field: "",
       title: "",
       download: false,
       resizable: false,
+      width: 60,
     });
 
     return columns;
   };
+
+  public update() {
+    this.tabulatorTables.redraw(true);
+  }
 }
 
 class TableTools {
@@ -353,6 +362,10 @@ class TableTools {
     this.targetNode.appendChild(filterInput);
     if (!!this.showColumnDropdown)
       this.targetNode.appendChild(this.showColumnDropdown);
+
+    this.tabulator.onColumnsVisibilityChanged.add(() => {
+      this.update();
+    });
   }
 
   protected createFilterInput(): HTMLElement {
@@ -552,13 +565,11 @@ class RowTools {
 
     btn.onclick = function () {
       if (self.isDetailsExpanded) {
-        detailsTable.style.display = "none";
-        self.isDetailsExpanded = false;
-        self.row.normalizeHeight();
+        self.closeDetails();
         return;
       }
-
       self.isDetailsExpanded = true;
+      self.row.getElement().classList.add("sa-tabulator__detail-row");
       detailsTable.style.display = "table";
       detailsTable.className = "sa-tabulator__detail-table";
       detailsTable.innerHTML = "";
@@ -599,6 +610,7 @@ class RowTools {
   protected closeDetails() {
     this.detailsTable.style.display = "none";
     this.isDetailsExpanded = false;
+    this.row.getElement().classList.remove("sa-tabulator__detail-row");
     this.row.normalizeHeight();
   }
 }
