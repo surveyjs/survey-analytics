@@ -93,10 +93,6 @@ export class Tabulator extends Table {
     any
   > = new Event<(sender: Tabulator, options: any) => any, any>();
 
-  public getTabulatorTables(): any {
-    return this.tabulatorTables;
-  }
-
   public getData() {
     return this.data;
   }
@@ -332,6 +328,41 @@ export class Tabulator extends Table {
     return columns;
   };
 
+  public setColumnLocation(columnName: string, location: QuestionLocation) {
+    this.columns.filter(
+      (column) => column.name === columnName
+    )[0].location = location;
+    if (location == QuestionLocation.Column)
+      this.tabulatorTables.showColumn(columnName);
+    else this.tabulatorTables.hideColumn(columnName);
+    this.onColumnsLocationChanged.fire(this, null);
+    this.update();
+  }
+
+  public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
+    var column = this.columns.filter((column) => column.name === columnName)[0];
+    column.visibility = visibility;
+    if (visibility == ColumnVisibility.Invisible)
+      this.tabulatorTables.hideColumn(column.name);
+    else this.tabulatorTables.showColumn(column.name);
+    this.onColumnsVisibilityChanged.fire(this, null);
+    this.update();
+  }
+
+  public applyFilter(value: string): void {
+    this.tabulatorTables.setFilter(ActionsHelper.customFilter, {
+      value: value,
+    });
+  }
+
+  public download(type: string): void {
+    this.tabulatorTables.download(
+      type,
+      `results.${type}`,
+      (<any>this.options.downloadOptions)[type]
+    );
+  }
+
   public update() {
     this.tabulatorTables.redraw();
   }
@@ -373,11 +404,7 @@ class TableTools {
     input.classList.add("sa-tabulator__global-filter");
     input.placeholder = "Search...";
     input.onchange = (event: any) => {
-      this.tabulator
-        .getTabulatorTables()
-        .setFilter(ActionsHelper.customFilter, {
-          value: event.target.value,
-        });
+      this.tabulator.applyFilter(event.target.value);
     };
     return input;
   }
@@ -408,18 +435,11 @@ class TableTools {
       dropdown.appendChild(option);
     });
 
-    var self = this;
-    dropdown.onchange = function (e: any) {
+    dropdown.onchange = (e: any) => {
       const val = e.target.value;
       e.stopPropagation();
       if (!val) return;
-
-      var column = self.tabulator.columns.filter(
-        (column) => column.name === val
-      )[0];
-      column.visibility = ColumnVisibility.Visible;
-      self.tabulator.getTabulatorTables().toggleColumn(column.name);
-      self.update();
+      this.tabulator.setColumnVisibility(val, ColumnVisibility.Visible);
     };
 
     return dropdown;
@@ -437,15 +457,8 @@ class TableTools {
     caption: string
   ): HTMLButtonElement {
     const btn = ActionsHelper.createBtn(caption);
-    var self = this;
     btn.onclick = (ev) => {
-      self.tabulator
-        .getTabulatorTables()
-        .download(
-          type,
-          `results.${type}`,
-          (<any>this.options.downloadOptions)[type]
-        );
+      this.tabulator.download(type);
     };
     return btn;
   }
@@ -493,11 +506,10 @@ class ColumnTools {
     var btn = ActionsHelper.createSvgButton("hide");
     btn.title = localization.getString("hideColumn");
     btn.onclick = () => {
-      this.tabulator.columns.filter(
-        (column) => column.name === this.columnName
-      )[0].visibility = ColumnVisibility.Invisible;
-      this.tabulator.getTabulatorTables().toggleColumn(this.columnName);
-      this.tabulator.onColumnsVisibilityChanged.fire(this.tabulator, null);
+      this.tabulator.setColumnVisibility(
+        this.columnName,
+        ColumnVisibility.Invisible
+      );
     };
     return btn;
   }
@@ -507,11 +519,7 @@ class ColumnTools {
     button.title = localization.getString("moveToDetail");
     button.onclick = (e) => {
       e.stopPropagation();
-      this.tabulator.columns.filter(
-        (column) => column.name === this.columnName
-      )[0].location = QuestionLocation.Row;
-      this.tabulator.getTabulatorTables().toggleColumn(this.columnName);
-      this.tabulator.onColumnsLocationChanged.fire(this.tabulator, null);
+      this.tabulator.setColumnLocation(this.columnName, QuestionLocation.Row);
     };
     return button;
   }
@@ -535,17 +543,13 @@ class RowTools {
     });
   }
 
-  protected createShowAsColumnButton = (columnName?: string): HTMLElement => {
+  protected createShowAsColumnButton = (columnName: string): HTMLElement => {
     const button = document.createElement("button");
     button.innerHTML = localization.getString("showAsColumn");
     button.className = "sa-tabulator__btn sa-tabulator__btn--gray";
     button.onclick = (e) => {
       e.stopPropagation();
-      this.tabulator.columns.filter(
-        (column) => column.name === columnName
-      )[0].location = QuestionLocation.Column;
-      this.tabulator.getTabulatorTables().toggleColumn(columnName);
-      this.tabulator.onColumnsLocationChanged.fire(this.tabulator, null);
+      this.tabulator.setColumnLocation(columnName, QuestionLocation.Column);
     };
 
     return button;
