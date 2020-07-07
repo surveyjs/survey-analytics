@@ -75,6 +75,6 @@ test("getColumns method", () => {
   const columns = <any>tabulator["getColumns"]();
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"field":"","title":"","download":false,"resizable":false},{"field":"car","title":"What car are you driving?","minWidth":155,"width":208,"visible":true,"headerFilter":true}]'
+    '[{"field":"","title":"","download":false,"resizable":false,"width":60},{"field":"car","title":"What car are you driving?","minWidth":208,"widthShrink":1,"visible":true,"headerFilter":true}]'
   );
 });
