@@ -209,38 +209,6 @@ $root-font-size: 14px;
     pointer-events: all;
   }
 
-  .dataTables_wrapper {
-    background-color: $background-color;
-    padding-top: 30px;
-    padding-bottom: 50px;
-  }
-
-  .dataTables_length {
-    float: right;
-    margin-right: 50px;
-    font-size: 16px;
-    label {
-      font-weight: bold;
-    }
-    select {
-      margin: 0 5px;
-    }
-  }
-
-  .dataTables_paginate {
-    float: right;
-    margin-right: 20px;
-    padding-top: 10px;
-    &:last-child {
-      margin-top: 15px;
-    }
-
-    .ellipsis {
-      color: $text-gray;
-      margin-right: 15px;
-    }
-  }
-
   .tabulator-page {
     margin-right: 15px;
     padding: 1px;
@@ -287,13 +255,6 @@ $root-font-size: 14px;
   .tabulator-page.active {
     font-weight: bold;
     border-bottom: 1px solid $text-gray;
-  }
-
-  .dataTables_info {
-    color: $text-gray;
-    float: left;
-    margin-left: 20px;
-    margin-top: 15px;
   }
 
   table {
@@ -386,9 +347,6 @@ $root-font-size: 14px;
   .sa-tabulator__detail-row {
     background-color: $detail-color;
   }
-  table.dataTable tbody .sa-tabulator__detail-row > td {
-    border-bottom: 1px solid $border-color;
-  }
 }
 .sa-tabulator__svg-button {
   width: 15px;
@@ -434,9 +392,7 @@ $root-font-size: 14px;
   width: 100%;
   background: $text-color-inverse;
 }
-.dataTables_scrollHead table {
-  border-bottom: none;
-}
+
 .sa-tabulator__table th {
   border: 1px solid $border-color;
   border-left: none;
