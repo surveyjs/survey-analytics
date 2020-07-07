@@ -346,6 +346,34 @@ $root-font-size: 14px;
         url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%231AB394;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E ") !important;
     }
   }
+
+  .sa-tabulator__detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-right: 1px solid $border-color;
+    border-bottom: none;
+  }
+
+  .sa-tabulator__detail {
+    border-top: 1px solid $border-color;
+    td {
+      box-sizing: border-box;
+      padding: 20px;
+      border-left: 1px solid $border-color;
+      white-space: initial;
+    }
+
+    td:first-child {
+      width: 268px;
+      border-left: none;
+      font-weight: bold;
+    }
+
+    td:nth-child(2) {
+      width: 208px;
+    }
+  }
+
   .sa-tabulator__table .sa-tabulator__detail {
     border-bottom: none;
     background-color: $detail-color;
@@ -481,7 +509,7 @@ $root-font-size: 14px;
 
 .sa-tabulator .tabulator-tableHolder::-webkit-scrollbar {
   height: 10px;
-  width: 6px;
+  width: 10px;
   background-color: $scroll-color;
 }
 

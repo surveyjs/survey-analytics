@@ -79,3 +79,36 @@ export class Table {
     });
   }
 }
+
+export class Event<T extends Function, Options> {
+  protected callbacks: Array<T>;
+  public get isEmpty(): boolean {
+    return this.callbacks == null || this.callbacks.length == 0;
+  }
+  public fire(sender: any, options: Options) {
+    if (this.callbacks == null) return;
+    for (var i = 0; i < this.callbacks.length; i++) {
+      var callResult = this.callbacks[i](sender, options);
+    }
+  }
+  public clear() {
+    this.callbacks = [];
+  }
+  public add(func: T) {
+    if (this.hasFunc(func)) return;
+    if (this.callbacks == null) {
+      this.callbacks = new Array<T>();
+    }
+    this.callbacks.push(func);
+  }
+  public remove(func: T) {
+    if (this.hasFunc(func)) {
+      var index = this.callbacks.indexOf(func, 0);
+      this.callbacks.splice(index, 1);
+    }
+  }
+  public hasFunc(func: T): boolean {
+    if (this.callbacks == null) return false;
+    return this.callbacks.indexOf(func, 0) > -1;
+  }
+}
