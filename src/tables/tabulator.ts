@@ -479,6 +479,7 @@ class ColumnTools {
     const descTitle = localization.getString("descOrder");
     const ascTitle = localization.getString("ascOrder");
     var btn = ActionsHelper.createSvgButton("sorting");
+    btn.title = ascTitle;
     btn.onclick = (e) => {
       btn.title = btn.title == ascTitle ? descTitle : ascTitle;
     };
@@ -490,6 +491,7 @@ class ColumnTools {
 
   protected createHideBtn(): HTMLButtonElement {
     var btn = ActionsHelper.createSvgButton("hide");
+    btn.title = localization.getString("hideColumn");
     btn.onclick = () => {
       this.tabulator.columns.filter(
         (column) => column.name === this.columnName
