@@ -333,7 +333,7 @@ export class Tabulator extends Table {
   };
 
   public update() {
-    this.tabulatorTables.redraw(true);
+    this.tabulatorTables.redraw();
   }
 }
 
