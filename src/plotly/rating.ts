@@ -6,7 +6,9 @@ import { localization } from "../localizationManager";
 import { ToolbarHelper } from "../utils/index";
 
 export class GaugePlotly extends VisualizerBase {
-  private _result: any;
+  private _resultAverage: any;
+  private _resultMin: any;
+  private _resultMax: any;
   private chart: Promise<Plotly.PlotlyHTMLElement>;
 
   public static stepsCount = 5;
@@ -38,7 +40,7 @@ export class GaugePlotly extends VisualizerBase {
 
   update(data: Array<{ [index: string]: any }>) {
     if (data !== undefined) {
-      this._result = undefined;
+      this._resultAverage = undefined;
     }
     super.update(data);
     this.destroy();
@@ -57,10 +59,10 @@ export class GaugePlotly extends VisualizerBase {
     if (this.chartTypes.length > 1) {
       const selectWrapper = ToolbarHelper.createSelector(
         toolbar,
-        this.chartTypes.map(chartType => {
+        this.chartTypes.map((chartType) => {
           return {
             value: chartType,
-            text: localization.getString("chartType_" + chartType)
+            text: localization.getString("chartType_" + chartType),
           };
         }),
         (option: any) => this.chartType === option.value,
@@ -73,7 +75,7 @@ export class GaugePlotly extends VisualizerBase {
 
   destroy() {
     Plotly.purge(this.chartNode);
-    this._result = undefined;
+    this._resultAverage = undefined;
   }
 
   generateText(maxValue: number, minValue: number, stepsCount: number) {
@@ -85,7 +87,7 @@ export class GaugePlotly extends VisualizerBase {
         "high",
         "medium",
         "low",
-        "very low (" + minValue + ")"
+        "very low (" + minValue + ")",
       ];
     } else {
       texts.push(maxValue);
@@ -139,10 +141,17 @@ export class GaugePlotly extends VisualizerBase {
 
   private createChart() {
     const question = this.question;
+    let maxValue;
+    let minValue;
 
-    const rateValues = question.visibleRateValues;
-    let maxValue = rateValues[rateValues.length - 1].value;
-    let minValue = rateValues[0].value;
+    if (question.getType() === "text") {
+      maxValue = this.resultMax;
+      minValue = this.resultMin;
+    } else {
+      const rateValues = question.visibleRateValues;
+      maxValue = rateValues[rateValues.length - 1].value;
+      minValue = rateValues[0].value;
+    }
 
     const colors = this.generateColors(
       maxValue,
@@ -166,12 +175,12 @@ export class GaugePlotly extends VisualizerBase {
           axis: { range: [minValue, maxValue] },
           shape: this.chartType,
           bgcolor: "white",
-          bar: { color: colors[0] }
+          bar: { color: colors[0] },
         },
         value: level,
         text: question.name,
-        domain: { x: [0, 1], y: [0, 1] }
-      }
+        domain: { x: [0, 1], y: [0, 1] },
+      },
     ];
 
     var height = 400;
@@ -184,12 +193,12 @@ export class GaugePlotly extends VisualizerBase {
       width: 600,
       height: height,
       plot_bgcolor: this.backgroundColor,
-      paper_bgcolor: this.backgroundColor
+      paper_bgcolor: this.backgroundColor,
     };
 
     const config = {
       displayModeBar: false,
-      staticPlot: true
+      staticPlot: true,
     };
 
     this.chart = Plotly.newPlot(this.chartNode, data, layout, config);
@@ -201,24 +210,53 @@ export class GaugePlotly extends VisualizerBase {
   }
 
   get result() {
-    if (this._result === undefined) {
+    if (this._resultAverage === undefined) {
       const questionValues: Array<any> = [];
 
-      this.data.forEach(rowData => {
+      this.data.forEach((rowData) => {
         const questionValue: any = +rowData[this.question.name];
         if (!!questionValue) {
           questionValues.push(questionValue);
         }
       });
 
-      this._result =
+      this._resultAverage =
         (questionValues &&
           questionValues.reduce((a, b) => a + b, 0) / questionValues.length) ||
         0;
-      this._result = Math.ceil(this._result * 100) / 100;
+      this._resultAverage = Math.ceil(this._resultAverage * 100) / 100;
     }
-    return this._result;
+    return this._resultAverage;
+  }
+
+  get resultMax() {
+    if (this._resultMax === undefined) {
+      this._resultMax = 0;
+
+      this.data.forEach((rowData) => {
+        const questionValue: any = +rowData[this.question.name];
+        if (!!questionValue && this._resultMax < questionValue) {
+          this._resultMax = questionValue;
+        }
+      });
+    }
+    return this._resultMax;
+  }
+
+  get resultMin() {
+    if (this._resultMin === undefined) {
+      this._resultMin = 0;
+
+      this.data.forEach((rowData) => {
+        const questionValue: any = +rowData[this.question.name];
+        if (!!questionValue && this._resultMin > questionValue) {
+          this._resultMin = questionValue;
+        }
+      });
+    }
+    return this._resultMin;
   }
 }
 
+VisualizationManager.registerVisualizer("number", GaugePlotly);
 VisualizationManager.registerVisualizer("rating", GaugePlotly);
