@@ -21,7 +21,7 @@ export class VisualizationManager {
     }
     vizualizers.push(constructor);
   }
-  static getVisualizers(typeName: string) {
+  static getVisualizersByType(typeName: string) {
     let vizualizers = VisualizationManager.vizualizers[typeName];
     if (!vizualizers) {
       return [VisualizerBase];
