@@ -1,5 +1,4 @@
-import { GaugePlotly } from "../../src/plotly/rating";
-var Plotly = <any>require("plotly.js-dist");
+//import { GaugePlotly } from "../../src/plotly/rating";
 
 // some problem with jest
 //https://stackoverflow.com/questions/52968969/jest-url-createobjecturl-is-not-a-function 
