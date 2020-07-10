@@ -1,6 +1,6 @@
 import { VisualizationManager } from "../src/visualizationManager";
 import { Text } from "../src/text";
-import { WordCloud } from "../src/wordcloud/WordCloud";
+import { WordCloud } from "../src/wordcloud/wordcloud";
 
 test("register and get", () => {
   expect(VisualizationManager.vizualizers).toMatchObject({});
