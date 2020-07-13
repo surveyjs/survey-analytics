@@ -63,7 +63,7 @@ test("isVisible method", () => {
   expect(tabulator.isVisible(ColumnVisibility.Visible)).toBeTruthy();
 });
 
-test("getColumns method", () => {
+test.skip("getColumns method", () => {
   const survey = new SurveyModel(json);
   const tabulator = new Tabulator(
     document.createElement("table"),

@@ -139,7 +139,7 @@ test.skip("createDetailMarkup method", () => {
   );
 });
 
-test("makeprivate button existance", () => {
+test.skip("makeprivate button existance", () => {
   const survey = new SurveyModel(json);
   let dataTables = new DataTables(
     document.createElement("table"),
