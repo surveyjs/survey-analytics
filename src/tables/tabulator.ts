@@ -1,11 +1,12 @@
 import { Table } from "./table";
 import { SurveyModel } from "survey-core";
 import { ColumnVisibility, QuestionLocation } from "./config";
-import { localization } from "../localizationManager";
 
 import "./tabulator.scss";
 import { ActionsHelper } from "../utils";
 import { TableRow } from "./tools/RowTools";
+import { ColumnTools } from "./tools/columntools";
+import { TableTools } from "./tools/tabletools";
 
 const TabulatorTables = require("tabulator-tables");
 
@@ -185,7 +186,7 @@ export class Tabulator extends Table {
 
   getHeaderActions = (columnName: string): HTMLDivElement => {
     const container = document.createElement("div");
-    container.classList.add("sa-tabulator__action-container");
+    container.classList.add("sa-table__action-container");
     const columnActions = new ColumnTools(container, this, columnName);
     columnActions.render();
     return container;
@@ -239,7 +240,8 @@ export class Tabulator extends Table {
         minWidth: minColumnWidth,
         widthShrink: 1,
         visible: column.visibility !== ColumnVisibility.Invisible,
-        headerFilter: true,
+        headerFilter: false,
+        headerSort: false,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(
             cell,
@@ -276,6 +278,14 @@ export class Tabulator extends Table {
     else this.tabulatorTables.showColumn(columnName);
   }
 
+  public sortByColumn(columnName: string, direction: string) {
+    this.tabulatorTables.setSort(columnName, direction);
+  }
+
+  public applyColumnFilter(columnName: string, value: string) {
+    this.tabulatorTables.setHeaderFilterValue(columnName, value);
+  }
+
   public applyFilter(value: string): void {
     this.tabulatorTables.setFilter(ActionsHelper.customFilter, {
       value: value,
@@ -292,162 +302,5 @@ export class Tabulator extends Table {
 
   public update() {
     this.tabulatorTables.redraw();
-  }
-}
-
-class TableTools {
-  constructor(
-    private targetNode: HTMLElement,
-    private tabulator: Tabulator,
-    private options: IOptions
-  ) {}
-  private showColumnDropdown: HTMLElement;
-
-  render() {
-    this.showColumnDropdown = this.createShowColumnDropdown();
-    const filterInput = this.createFilterInput();
-
-    this.targetNode.innerHTML = "";
-
-    if (this.options.downloadOptions.xlsx.isVisible) {
-      this.targetNode.appendChild(this.createDownloadButton("xlsx", "Excel"));
-    }
-    if (this.options.downloadOptions.pdf.isVisible) {
-      this.targetNode.appendChild(this.createDownloadButton("pdf", "PDF"));
-    }
-    this.targetNode.appendChild(this.createDownloadButton("csv", "CSV"));
-
-    this.targetNode.appendChild(filterInput);
-    if (!!this.showColumnDropdown)
-      this.targetNode.appendChild(this.showColumnDropdown);
-
-    this.tabulator.onColumnsVisibilityChanged.add(() => {
-      this.update();
-    });
-  }
-
-  protected createFilterInput(): HTMLElement {
-    const input = document.createElement("input");
-    input.classList.add("sa-tabulator__global-filter");
-    input.placeholder = "Search...";
-    input.onchange = (event: any) => {
-      this.tabulator.applyFilter(event.target.value);
-    };
-    return input;
-  }
-
-  protected createShowColumnDropdown = (): HTMLElement => {
-    const dropdown = document.createElement("select");
-    dropdown.classList.add("sa-tabulator__show-column");
-
-    var hiddenColumns = this.tabulator.columns.filter(
-      (column) => column.visibility === ColumnVisibility.Invisible
-    );
-    if (hiddenColumns.length == 0) return null;
-    var option = document.createElement("option");
-    option.text = localization.getString("showColumn");
-    option.disabled = true;
-    option.selected = true;
-    dropdown.appendChild(option);
-
-    hiddenColumns.forEach((column) => {
-      var option = document.createElement("option");
-      var text = column.displayName;
-      if (text.length > 20) {
-        text = text.substring(0, 20) + "...";
-      }
-      option.text = text;
-      option.title = column.displayName;
-      option.value = column.name;
-      dropdown.appendChild(option);
-    });
-
-    dropdown.onchange = (e: any) => {
-      const val = e.target.value;
-      e.stopPropagation();
-      if (!val) return;
-      this.tabulator.setColumnVisibility(val, ColumnVisibility.Visible);
-    };
-
-    return dropdown;
-  };
-
-  public update() {
-    if (!!this.showColumnDropdown) this.showColumnDropdown.remove();
-    this.showColumnDropdown = this.createShowColumnDropdown();
-    if (!!this.showColumnDropdown)
-      this.targetNode.appendChild(this.showColumnDropdown);
-  }
-
-  protected createDownloadButton(
-    type: string,
-    caption: string
-  ): HTMLButtonElement {
-    const btn = ActionsHelper.createBtn(caption);
-    btn.onclick = (ev) => {
-      this.tabulator.download(type);
-    };
-    return btn;
-  }
-}
-
-class ColumnTools {
-  constructor(
-    private targetNode: HTMLElement,
-    private tabulator: Tabulator,
-    private columnName: string
-  ) {}
-
-  public render() {
-    this.targetNode.appendChild(this.createDragBtn());
-    this.targetNode.appendChild(this.createSortBtn());
-    this.targetNode.appendChild(this.createMoveToDetailsBtn());
-    this.targetNode.appendChild(this.createHideBtn());
-  }
-
-  protected createDragBtn(): HTMLButtonElement {
-    const btn = document.createElement("button");
-    btn.className = "sa-tabulator__svg-button sa-tabulator__drag-button";
-    btn.appendChild(ActionsHelper.createSvgElement("drag"));
-    btn.onclick = (e) => {
-      e.stopPropagation();
-    };
-    return btn;
-  }
-
-  protected createSortBtn(): HTMLButtonElement {
-    const descTitle = localization.getString("descOrder");
-    const ascTitle = localization.getString("ascOrder");
-    var btn = ActionsHelper.createSvgButton("sorting");
-    btn.title = ascTitle;
-    btn.onclick = (e) => {
-      btn.title = btn.title == ascTitle ? descTitle : ascTitle;
-    };
-    btn.ondrag = (e) => {
-      e.stopPropagation();
-    };
-    return btn;
-  }
-
-  protected createHideBtn(): HTMLButtonElement {
-    var btn = ActionsHelper.createSvgButton("hide");
-    btn.title = localization.getString("hideColumn");
-    btn.onclick = () => {
-      this.tabulator.setColumnVisibility(
-        this.columnName,
-        ColumnVisibility.Invisible
-      );
-    };
-    return btn;
-  }
-
-  protected createMoveToDetailsBtn(): HTMLButtonElement {
-    const button = ActionsHelper.createSvgButton("movetodetails");
-    button.title = localization.getString("moveToDetail");
-    button.onclick = (e) => {
-      e.stopPropagation();
-      this.tabulator.setColumnLocation(this.columnName, QuestionLocation.Row);
-    };
-    return button;
   }
 }

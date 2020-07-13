@@ -7,7 +7,7 @@ import {
 } from "./config";
 import { Details } from "./tools/RowTools";
 
-export class Table {
+export abstract class Table {
   protected tableData: any;
 
   constructor(
@@ -39,6 +39,9 @@ export class Table {
   public getData() {
     return this.data;
   }
+
+  public abstract applyColumnFilter(columnName: string, value: string): void;
+  public abstract sortByColumn(columnName: string, direction: string): void;
 
   protected buildColumns = (survey: SurveyModel) => {
     return this.survey.getAllQuestions().map((question: Question) => {

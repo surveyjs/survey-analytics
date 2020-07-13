@@ -11,6 +11,7 @@ import { localization } from "../localizationManager";
 
 import "./datatables.scss";
 import { TableRow } from "./tools/RowTools";
+import { ColumnTools } from "./tools/columntools";
 
 if (!!document) {
   var svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");
@@ -33,7 +34,6 @@ interface DataTablesOptions {
 }
 
 export class DataTables extends Table {
-  private svgNode: HTMLElement;
   private datatableApi: any;
 
   public currentPageNumber: number = 0;
@@ -59,14 +59,6 @@ export class DataTables extends Table {
   ) {
     super(targetNode, survey, data, options, _columns, isTrustedAccess);
     targetNode.className += "sa-datatables";
-
-    this.headerButtonCreators = [
-      // this.createGroupingButton,
-      this.createSortButton,
-      this.createHideButton,
-      this.createMoveToDetailButton,
-      this.createDragButton,
-    ];
 
     if (this.isTrustedAccess) {
       this.headerButtonCreators.splice(2, 0, this.createColumnPrivateButton);
@@ -117,11 +109,34 @@ export class DataTables extends Table {
     this.targetNode.innerHTML = "";
   }
 
+  public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
+    super.setColumnVisibility(columnName, visibility);
+    this.datatableApi.column(columnName + ":name").visible(false);
+  }
+
+  public setColumnLocation(columnName: string, location: QuestionLocation) {
+    super.setColumnLocation(columnName, location);
+    var column = this.datatableApi.column(columnName + ":name");
+    if (location == QuestionLocation.Row) column.visible(false);
+    else column.visible(true);
+  }
+
   createActionContainer() {
     var container = document.createElement("div");
-    container.className = "sa-datatables__action-container";
-
+    container.className = "sa-table__action-container";
     return container;
+  }
+
+  public applyColumnFilter(columnName: string, value: string): void {
+    var column = this.datatableApi.column(columnName + ":name");
+    if (column.search() !== value) {
+      column.search(value).draw(false);
+    }
+  }
+
+  public sortByColumn(columnName: string, direction: string): void {
+    var column = this.datatableApi.column(columnName + ":name");
+    column.order(direction).draw();
   }
 
   render() {
@@ -170,6 +185,7 @@ export class DataTables extends Table {
           tableRow.render();
         },
         dom: "Bfplrtip",
+        // ordering: false,
         data: this.tableData,
         pageLength: 5,
         lengthMenu: [1, 5, 10, 25, 50, 75, 100],
@@ -210,36 +226,17 @@ export class DataTables extends Table {
             .children("th")
             .each(function (index: number) {
               var $thNode = $(this);
+              $thNode.unbind("click.DT");
               if (!!columnsData[index] && $thNode.has("button").length === 0) {
                 var container = self.createActionContainer();
-                self.headerButtonCreators.forEach((creator) => {
-                  var element = creator(
-                    datatableApi,
-                    index,
-                    columnsData[index]
-                  );
-                  if (!!element) {
-                    container.appendChild(element);
-                  }
-                });
-
-                var filterContainer = document.createElement("div");
-                filterContainer.className = "sa-datatables__filter-container";
-                filterContainer.innerHTML =
-                  "<input type='text' placeholder='Search...' />";
-                var column = datatableApi.column(index);
-                $("input", $(filterContainer)).on("click", (e) =>
-                  e.stopPropagation()
+                var columnTools = new ColumnTools(
+                  container,
+                  self,
+                  columnsData[index]
                 );
-                $("input", $(filterContainer)).on("keyup change", function () {
-                  let value = (<HTMLInputElement>this).value;
-                  if (column.search() !== value) {
-                    column.search(value).draw(false);
-                  }
-                });
-                $thNode.prepend(filterContainer);
-                $thNode.prepend(container);
+                columnTools.render();
               }
+              $thNode.prepend(container);
             });
         },
       },
@@ -549,6 +546,7 @@ export class DataTables extends Table {
     const columns: any = availableColumns.map((column, index) => {
       var question = this.survey.getQuestionByName(column.name);
       return {
+        name: column.name,
         data: column.name,
         sTitle: (question && question.title) || column.displayName,
         visible: column.visibility !== ColumnVisibility.Invisible,

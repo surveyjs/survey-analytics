@@ -56,14 +56,14 @@ export class ActionsHelper {
 
   public static createSvgButton(path: string): HTMLButtonElement {
     const btn = document.createElement("button");
-    btn.className = "sa-tabulator__svg-button";
+    btn.className = "sa-table__svg-button";
     btn.appendChild(ActionsHelper.createSvgElement(path));
     return btn;
   }
 
   public static createBtn(caption: string): HTMLButtonElement {
     const btn = document.createElement("button");
-    btn.className = "sa-tabulator__btn sa-tabulator__btn--small sa-tabulator__btn--gray";
+    btn.className = "sa-table__btn sa-table__btn--small sa-table__btn--gray";
     btn.innerHTML = caption;
     return btn;
   }
