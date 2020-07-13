@@ -5,6 +5,7 @@ import {
   QuestionLocation,
   ColumnDataType,
 } from "./config";
+import { Details } from "./tools/RowTools";
 
 export class Table {
   protected tableData: any;
@@ -21,6 +22,22 @@ export class Table {
       this._columns = this.buildColumns(survey);
     }
     this.initTableData(data);
+  }
+
+  protected rowDetails: { [rowName: string]: Details };
+
+  public onColumnsVisibilityChanged: Event<
+    (sender: Tabulator, options: any) => any,
+    any
+  > = new Event<(sender: Tabulator, options: any) => any, any>();
+
+  public onColumnsLocationChanged: Event<
+    (sender: Tabulator, options: any) => any,
+    any
+  > = new Event<(sender: Tabulator, options: any) => any, any>();
+
+  public getData() {
+    return this.data;
   }
 
   protected buildColumns = (survey: SurveyModel) => {
@@ -77,6 +94,28 @@ export class Table {
       });
       return dataItem;
     });
+  }
+
+  public setColumnLocation(columnName: string, location: QuestionLocation) {
+    this.columns.filter(
+      (column) => column.name === columnName
+    )[0].location = location;
+    if (location == QuestionLocation.Column)
+      this.onColumnsLocationChanged.fire(this, null);
+  }
+
+  public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
+    var column = this.columns.filter((column) => column.name === columnName)[0];
+    column.visibility = visibility;
+    this.onColumnsVisibilityChanged.fire(this, null);
+  }
+
+  public openDetails(rowName: string) {
+    this.rowDetails[rowName].open();
+  }
+
+  public closeDeatails(rowName: string) {
+    this.rowDetails[rowName].close();
   }
 }
 

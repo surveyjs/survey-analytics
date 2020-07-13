@@ -317,7 +317,8 @@ $root-font-size: 14px;
     td {
       box-sizing: border-box;
       padding: 20px;
-      border-left: 1px solid $border-color;
+      // border-left: 1px solid $border-color;
+      border-left: none;
       white-space: initial;
     }
 

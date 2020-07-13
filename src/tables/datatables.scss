@@ -31,6 +31,8 @@ $root-font-size: 14px;
 //   }
 // }
 
+@import "./table.scss";
+
 @mixin arrow() {
   display: inline-block;
   background: transparent;
@@ -309,9 +311,6 @@ $root-font-size: 14px;
     width: 15px;
     height: 15px;
   }
-}
-
-.sa-datatables__svg-button--active {
 }
 
 .sa-datatables__action-container {

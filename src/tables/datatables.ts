@@ -10,6 +10,7 @@ import {
 import { localization } from "../localizationManager";
 
 import "./datatables.scss";
+import { TableRow } from "./tools/RowTools";
 
 if (!!document) {
   var svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");
@@ -122,33 +123,7 @@ export class DataTables extends Table {
 
     return container;
   }
-  createMinorColumnsButton() {
-    const button = document.createElement("button");
-    button.title = localization.getString("showMinorColumns");
 
-    button.className = "sa-datatables__svg-button";
-    button.appendChild(this.createSvgElement("detail"));
-    return button;
-  }
-  setMinorColumnsButtonCallback(datatableApiRef: any) {
-    var self = this;
-    $(datatableApiRef.table().body()).on(
-      "click",
-      "td.sa-datatables__action-column button.sa-datatables__svg-button",
-      function () {
-        const detailTr = $(this).closest("tr");
-        var row = datatableApiRef.row(detailTr);
-        if (detailTr.hasClass("sa-datatables__detail-row")) {
-          detailTr.nextAll("tr.sa-datatables__detail").remove();
-          detailTr.removeClass("sa-datatables__detail-row");
-        } else {
-          var data = self.data[row.index()];
-          $(self.createDetailMarkup(data, row)).insertAfter(detailTr);
-          detailTr.addClass("sa-datatables__detail-row");
-        }
-      }
-    );
-  }
   render() {
     var self = this;
     const tableNode = document.createElement("table");
@@ -164,6 +139,36 @@ export class DataTables extends Table {
           { extend: "csv", className: dtButtonClass },
           { extend: "print", className: dtButtonClass },
         ],
+        createdRow: (
+          rowElement: any,
+          rowData: any,
+          dataIndex: any,
+          cells: any
+        ) => {
+          var detailsTr = document.createElement("tr");
+          var detailsTd = document.createElement("td");
+          detailsTr.appendChild(detailsTd);
+          var tableRow = new TableRow(
+            this,
+            rowElement,
+            rowData,
+            cells[0],
+            detailsTd,
+            null
+          );
+          tableRow.onToggleDetails.add((sender: TableRow, options: any) => {
+            if (options.isExpanded) {
+              detailsTd.colSpan = rowElement.childElementCount;
+              rowElement.parentNode.insertBefore(
+                detailsTr,
+                rowElement.nextSibling
+              );
+            } else {
+              detailsTr.remove();
+            }
+          });
+          tableRow.render();
+        },
         dom: "Bfplrtip",
         data: this.tableData,
         pageLength: 5,
@@ -264,90 +269,9 @@ export class DataTables extends Table {
         var deletedColumns = this._columns.splice(details.from - 1, 1);
         this._columns.splice(details.to - 1, 0, deletedColumns[0]);
         var headerCell = $(datatableApiRef.column(details.to).header());
-        this.setMinorColumnsButtonCallback(datatableApiRef);
         this.onColumnsChanged();
       }
     );
-
-    this.setMinorColumnsButtonCallback(datatableApiRef);
-  }
-
-  protected createDetailMarkup(data: any, datatablesRow: any): HTMLElement[] {
-    // var table = document.createElement("table");
-    // table.cellPadding = "5";
-    // table.cellSpacing = "0";
-    // table.border = "0";
-    // table.className = "sa-datatables__detail";
-    var rows: HTMLElement[] = [];
-    var self = this;
-    var visibleColCount = self.columns.filter(
-      (column) =>
-        column.location === QuestionLocation.Column &&
-        this.isVisible(column.visibility)
-    ).length;
-    this.columns
-      .filter(
-        (column) =>
-          column.location === QuestionLocation.Row &&
-          this.isVisible(column.visibility)
-      )
-      .forEach((column) => {
-        var row = document.createElement("tr");
-        row.className = "sa-datatables__detail";
-        var td1 = document.createElement("td");
-        td1.textContent = column.displayName;
-        td1.colSpan = 2;
-        var td2 = document.createElement("td");
-        td2.textContent = data[column.name];
-        var td3 = document.createElement("td");
-        td3.colSpan = Math.max(visibleColCount - 2, 1);
-        self.detailButtonCreators.forEach((creator) =>
-          td3.appendChild(creator(column.name))
-        );
-        row.appendChild(td1);
-        row.appendChild(td2);
-        row.appendChild(td3);
-        rows.push(row);
-      });
-
-    // if (!!this.datatableApi && this.datatableApi.responsive.hasHidden()) {
-    //   var columnsVisibility = this.datatableApi.columns().responsiveHidden();
-    //   var columns = this.datatableApi.settings().init().columns;
-    //   for (var index = 0; index < columnsVisibility.length; index++) {
-    //     if (!columnsVisibility[index]) {
-    //       var column = columns[index];
-    //       var row = document.createElement("tr");
-    //       row.className = "sa-datatables__detail";
-
-    //       var td1 = document.createElement("td");
-    //       td1.textContent = column.sTitle;
-    //       var td2 = document.createElement("td");
-    //       td2.textContent = data[column.mData];
-    //       var td3 = document.createElement("td");
-    //       //this.detailButtonCreators.forEach(creator => td3.appendChild(creator(column.mData)));
-    //       row.appendChild(td1);
-    //       row.appendChild(td2);
-    //       row.appendChild(td3);
-    //       rows.push(row);
-    //     }
-    //   }
-    // }
-
-    if (!!this.renderDetailActions) {
-      var row = document.createElement("tr");
-      row.className = "sa-datatables__detail";
-      var td = document.createElement("td");
-      td.colSpan = visibleColCount + 1;
-      row.appendChild(td);
-      // var td1 = document.createElement("td");
-      // row.appendChild(td1);
-      // var td2 = document.createElement("td");
-      // row.appendChild(td2);
-      rows.push(row);
-      this.renderDetailActions(td, data, datatablesRow);
-    }
-
-    return rows;
   }
 
   public doStateSave() {
@@ -639,10 +563,9 @@ export class DataTables extends Table {
 
     return [
       {
-        className: "sa-datatables__action-column",
         orderable: false,
         data: null,
-        defaultContent: this.createMinorColumnsButton().outerHTML,
+        defaultContent: "",
       },
     ].concat(columns);
   }
