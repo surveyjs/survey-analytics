@@ -11,6 +11,7 @@ $svg-color: rgba(#9f9f9f, 0.4);
 $svg-hover-color: #9f9f9f;
 $detail-color: rgba($background-color, 0.5);
 $root-font-size: 14px;
+$background-gray: #f7f7f7;
 
 // @mixin button() {
 //   background: none;
@@ -250,12 +251,11 @@ $root-font-size: 14px;
     border-top: none;
   }
 
-  table.dataTable tbody th:first-child,
-  table.dataTable tbody td:first-child {
+  table.dataTable > tbody > tr > th:first-child,
+  table.dataTable > tbody > tr > td:first-child {
     border-left: 1px solid #ddd;
   }
-
-  table.dataTable tbody td {
+  table.dataTable > tbody > tr > td {
     padding: 20px;
     border-top: 1px solid #ddd;
     border-right: 1px solid #ddd;

@@ -24,6 +24,8 @@ $svg-hover-color: #9f9f9f;
 $detail-color: $background-gray;
 $root-font-size: 14px;
 
+@import "./table.scss";
+
 @mixin arrow() {
   display: inline-block;
   background: transparent;
