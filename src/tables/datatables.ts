@@ -1,4 +1,3 @@
-import * as $ from "jquery";
 import { Table } from "./table";
 import { SurveyModel, Question, Event } from "survey-core";
 import {
@@ -18,6 +17,8 @@ if (!!document) {
   templateHolder.innerHTML = svgTemplate;
   document.head.appendChild(templateHolder);
 }
+
+var jQuery = (<any>window)["jQuery"];
 
 interface DataTablesOptions {
   buttons: boolean | string[] | any[] | any;
@@ -47,6 +48,10 @@ export class DataTables extends Table {
     (sender: DataTables, options: any) => any,
     any
   > = new Event<(sender: DataTables, options: any) => any, any>();
+
+  public static initJQuery($: any) {
+    jQuery = $;
+  }
 
   constructor(
     targetNode: HTMLElement,
@@ -109,8 +114,8 @@ export class DataTables extends Table {
   destroy() {
     //if(!this.targetNode) return;
     const tableNode = this.targetNode.children[0];
-    if ((<any>$.fn).DataTable.isDataTable(tableNode)) {
-      $(tableNode).DataTable().destroy();
+    if (jQuery.fn.DataTable.isDataTable(tableNode)) {
+      jQuery(tableNode).DataTable().destroy();
     }
     this.datatableApi = undefined;
     this.targetNode.innerHTML = "";
@@ -132,18 +137,18 @@ export class DataTables extends Table {
   }
   setMinorColumnsButtonCallback(datatableApiRef: any) {
     var self = this;
-    $(datatableApiRef.table().body()).on(
+    jQuery(datatableApiRef.table().body()).on(
       "click",
       "td.sa-datatables__action-column button.sa-datatables__svg-button",
       function () {
-        const detailTr = $(this).closest("tr");
+        const detailTr = jQuery(this).closest("tr");
         var row = datatableApiRef.row(detailTr);
         if (detailTr.hasClass("sa-datatables__detail-row")) {
           detailTr.nextAll("tr.sa-datatables__detail").remove();
           detailTr.removeClass("sa-datatables__detail-row");
         } else {
           var data = self.data[row.index()];
-          $(self.createDetailMarkup(data, row)).insertAfter(detailTr);
+          jQuery(self.createDetailMarkup(data, row)).insertAfter(detailTr);
           detailTr.addClass("sa-datatables__detail-row");
         }
       }
@@ -156,7 +161,7 @@ export class DataTables extends Table {
     var columnsData: any = columns.map((c: any) => c.data);
     const dtButtonClass =
       "sa-datatables__button sa-datatables__button--small sa-datatables__button--gray";
-    const options = $.extend(
+    const options = jQuery.extend(
       true,
       {
         buttons: [
@@ -199,12 +204,12 @@ export class DataTables extends Table {
           end: any,
           display: any
         ) => {
-          var datatableApi = $(tableNode).dataTable().api();
+          var datatableApi = jQuery(tableNode).dataTable().api();
           var self = this;
-          $(thead)
+          jQuery(thead)
             .children("th")
             .each(function (index: number) {
-              var $thNode = $(this);
+              var $thNode = jQuery(this);
               if (!!columnsData[index] && $thNode.has("button").length === 0) {
                 var container = self.createActionContainer();
                 self.headerButtonCreators.forEach((creator) => {
@@ -223,10 +228,10 @@ export class DataTables extends Table {
                 filterContainer.innerHTML =
                   "<input type='text' placeholder='Search...' />";
                 var column = datatableApi.column(index);
-                $("input", $(filterContainer)).on("click", (e) =>
+                jQuery("input", jQuery(filterContainer)).on("click", (e: any) =>
                   e.stopPropagation()
                 );
-                $("input", $(filterContainer)).on("keyup change", function () {
+                jQuery("input", jQuery(filterContainer)).on("keyup change", function () {
                   let value = (<HTMLInputElement>this).value;
                   if (column.search() !== value) {
                     column.search(value).draw(false);
@@ -245,7 +250,7 @@ export class DataTables extends Table {
     tableNode.width = "100%";
     tableNode.className = "sa-datatables__table display responsive dataTable";
 
-    const datatableApiRef = (this.datatableApi = $(tableNode).DataTable(
+    const datatableApiRef = (this.datatableApi = jQuery(tableNode).DataTable(
       options
     ));
     datatableApiRef.page(self.currentPageNumber);
@@ -254,16 +259,16 @@ export class DataTables extends Table {
     // this.datatableApi.on("rowgroup-datasrc", (e, dt, val) => {
     //   this.datatableApi.order.fixed({ pre: [[columnsData.indexOf(val), "asc"]] }).draw();
     // });
-    var target = $(this.targetNode).find(".dataTables_filter");
+    var target = jQuery(this.targetNode).find(".dataTables_filter");
     var button = this.createAddColumnButton(this.datatableApi);
-    $(button).insertAfter(target[0]);
+    jQuery(button).insertAfter(target[0]);
 
     datatableApiRef.on(
       "column-reorder",
       (e: any, settings: any, details: any) => {
         var deletedColumns = this._columns.splice(details.from - 1, 1);
         this._columns.splice(details.to - 1, 0, deletedColumns[0]);
-        var headerCell = $(datatableApiRef.column(details.to).header());
+        var headerCell = jQuery(datatableApiRef.column(details.to).header());
         this.setMinorColumnsButtonCallback(datatableApiRef);
         this.onColumnsChanged();
       }
@@ -534,10 +539,10 @@ export class DataTables extends Table {
     var self = this;
     selector.onchange = function (e) {
       e.stopPropagation();
-      if (!$(this).val()) return;
+      if (!jQuery(this).val()) return;
 
       var column = self._columns.filter(
-        (column) => column.name === $(this).val()
+        (column) => column.name === jQuery(this).val()
       )[0];
       column.visibility = ColumnVisibility.Visible;
       datatableApi.column(column.name + ":name").visible(true);
@@ -631,7 +636,7 @@ export class DataTables extends Table {
         mRender: (data: object, type: string, row: any) => {
           var value = row[column.name];
           return typeof value === "string"
-            ? $("<div>").text(value).html()
+            ? jQuery("<div>").text(value).html()
             : JSON.stringify(value);
         },
       };
