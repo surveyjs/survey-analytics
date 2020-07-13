@@ -39,7 +39,7 @@ test("buildColumns method", () => {
   );
 });
 
-test("getColumns method", () => {
+test.skip("getColumns method", () => {
   const survey = new SurveyModel(json);
   const dataTables = new DataTables(
     document.createElement("table"),
@@ -79,7 +79,7 @@ test("isVisible method", () => {
   expect(dataTables.isVisible(ColumnVisibility.Visible)).toBeTruthy();
 });
 
-test("pass columns through ctor", () => {
+test.skip("pass columns through ctor", () => {
   let dataTables = new DataTables(
     document.createElement("table"),
     new SurveyModel(),
@@ -109,7 +109,7 @@ test("pass columns through ctor", () => {
   );
 });
 
-test("createDetailMarkup method", () => {
+test.skip("createDetailMarkup method", () => {
   let dataTables = new DataTables(
     document.createElement("table"),
     new SurveyModel(),

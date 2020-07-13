@@ -1,5 +1,5 @@
 import { Table, Event } from "../table";
-import { localization } from "../..";
+import { localization } from "../../localizationManager";
 import { QuestionLocation } from "../config";
 import { ActionsHelper } from "../../utils";
 
