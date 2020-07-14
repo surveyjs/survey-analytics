@@ -5,7 +5,7 @@ import {
   QuestionLocation,
   ColumnDataType,
 } from "./config";
-import { Details } from "./tools/RowTools";
+import { Details } from "./tools/rowtools";
 
 export abstract class Table {
   protected tableData: any;
@@ -21,6 +21,7 @@ export abstract class Table {
     if (_columns.length === 0) {
       this._columns = this.buildColumns(survey);
     }
+    this.targetNode.className += " sa-table";
     this.initTableData(data);
   }
 
@@ -40,8 +41,10 @@ export abstract class Table {
     return this.data;
   }
 
+  public abstract applyFilter(value: string): void;
   public abstract applyColumnFilter(columnName: string, value: string): void;
   public abstract sortByColumn(columnName: string, direction: string): void;
+  public abstract setPageSize(value: number): void;
 
   protected buildColumns = (survey: SurveyModel) => {
     return this.survey.getAllQuestions().map((question: Question) => {
@@ -103,22 +106,13 @@ export abstract class Table {
     this.columns.filter(
       (column) => column.name === columnName
     )[0].location = location;
-    if (location == QuestionLocation.Column)
-      this.onColumnsLocationChanged.fire(this, null);
+    this.onColumnsLocationChanged.fire(this, null);
   }
 
   public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
     var column = this.columns.filter((column) => column.name === columnName)[0];
     column.visibility = visibility;
     this.onColumnsVisibilityChanged.fire(this, null);
-  }
-
-  public openDetails(rowName: string) {
-    this.rowDetails[rowName].open();
-  }
-
-  public closeDeatails(rowName: string) {
-    this.rowDetails[rowName].close();
   }
 }
 

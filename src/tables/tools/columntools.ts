@@ -7,11 +7,14 @@ export class ColumnTools {
   constructor(
     private targetNode: HTMLElement,
     private table: Table,
-    private columnName: string
+    private columnName: string,
+    private isTrustedAccess: boolean
   ) {}
 
   public render() {
     this.targetNode.appendChild(this.createDragBtn());
+    if (this.isTrustedAccess)
+    this.targetNode.appendChild(this.createColumnPrivateButton());
     this.targetNode.appendChild(this.createSortBtn());
     this.targetNode.appendChild(this.createMoveToDetailsBtn());
     this.targetNode.appendChild(this.createHideBtn());
@@ -83,13 +86,9 @@ export class ColumnTools {
     return el;
   }
 
-  protected createColumnPrivateButton = (
-    datatableApi: any,
-    colIdx: number,
-    columnName: string
-  ): HTMLElement => {
+  protected createColumnPrivateButton(): HTMLElement {
     const column = this.table.columns.filter(
-      (column) => column.name === columnName
+      (column) => column.name === this.columnName
     )[0];
     const button = document.createElement("button");
     const makePrivateSvg = ActionsHelper.createSvgElement("makeprivate");
@@ -126,5 +125,5 @@ export class ColumnTools {
     }
 
     return button;
-  };
+  }
 }

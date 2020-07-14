@@ -1,10 +1,10 @@
 import { Table } from "./table";
-import { SurveyModel } from "survey-core";
+import { SurveyModel, HtmlConditionItem } from "survey-core";
 import { ColumnVisibility, QuestionLocation } from "./config";
 
 import "./tabulator.scss";
 import { ActionsHelper } from "../utils";
-import { TableRow } from "./tools/RowTools";
+import { TableRow } from "./tools/rowtools";
 import { ColumnTools } from "./tools/columntools";
 import { TableTools } from "./tools/tabletools";
 
@@ -67,7 +67,7 @@ export class Tabulator extends Table {
     super(targetNode, survey, data, options, _columns, isTrustedAccess);
     const self = this;
     if (!this.options) this.options = defaultOptions;
-    targetNode.className += "sa-tabulator";
+    targetNode.className += " sa-tabulator";
     if (_columns.length === 0) {
       self._columns = self.buildColumns(survey);
     }
@@ -112,10 +112,10 @@ export class Tabulator extends Table {
     });
 
     const toolsContainer = this.createToolsContainer();
+    header.appendChild(this.createDownloadsBar());
     header.appendChild(toolsContainer);
     header.appendChild(paginationElement);
-    header.appendChild(this.getEntriesContainer());
-    this.tableTools = new TableTools(toolsContainer, this, this.options);
+    this.tableTools = new TableTools(toolsContainer, this);
     this.tableTools.render();
 
     this.onColumnsLocationChanged.add(() => {
@@ -124,6 +124,30 @@ export class Tabulator extends Table {
     this.onColumnsVisibilityChanged.add(() => {
       this.update();
     });
+  };
+
+  private createDownloadsBar = (): HTMLElement => {
+    var container = document.createElement("div");
+    container.className = "sa-tabulator__downloads-bar";
+    if (this.options.downloadOptions.xlsx.isVisible) {
+      container.appendChild(createDownloadButton("xlsx", "Excel"));
+    }
+    if (this.options.downloadOptions.pdf.isVisible) {
+      container.appendChild(createDownloadButton("pdf", "PDF"));
+    }
+    container.appendChild(createDownloadButton("csv", "CSV"));
+
+    function createDownloadButton(
+      type: string,
+      caption: string
+    ): HTMLButtonElement {
+      const btn = ActionsHelper.createBtn(caption);
+      btn.onclick = (ev) => {
+        // this.table.download(type);
+      };
+      return btn;
+    }
+    return container;
   };
 
   createToolsContainer = (): HTMLElement => {
@@ -187,44 +211,15 @@ export class Tabulator extends Table {
   getHeaderActions = (columnName: string): HTMLDivElement => {
     const container = document.createElement("div");
     container.classList.add("sa-table__action-container");
-    const columnActions = new ColumnTools(container, this, columnName);
+    const columnActions = new ColumnTools(
+      container,
+      this,
+      columnName,
+      this.isTrustedAccess
+    );
     columnActions.render();
     return container;
   };
-
-  getEntriesContainer(): HTMLElement {
-    const selectorContainer = document.createElement("div");
-    selectorContainer.className = "sa-tabulator__entries";
-    const showSpan = document.createElement("span");
-    showSpan.innerHTML = "Show";
-    const entriesSpan = document.createElement("span");
-    entriesSpan.innerHTML = "entries";
-    entriesSpan.className =
-      "sa-tabulator__entries-label sa-tabulator__entries-label--left";
-    selectorContainer.appendChild(showSpan);
-    showSpan.className =
-      "sa-tabulator__entries-label sa-tabulator__entries-label--right";
-    selectorContainer.appendChild(this.getEntriesDropdown());
-    selectorContainer.appendChild(entriesSpan);
-    return selectorContainer;
-  }
-
-  getEntriesDropdown(): HTMLElement {
-    const el = document.createElement("select");
-    var optionsValues = ["1", "5", "10", "25", "50", "75", "100"];
-    optionsValues.forEach(function (val) {
-      var option = document.createElement("option");
-      option.innerHTML = val;
-      el.appendChild(option);
-    });
-    el.value = "5";
-
-    el.onchange = () => {
-      this.tabulatorTables.setPageSize(el.value);
-    };
-
-    return el;
-  }
 
   protected getColumns = () => {
     const availableColumns = this.getAvailableColumns();
@@ -290,6 +285,10 @@ export class Tabulator extends Table {
     this.tabulatorTables.setFilter(ActionsHelper.customFilter, {
       value: value,
     });
+  }
+
+  public setPageSize(value: number): void {
+    this.tabulatorTables.setPageSize(value);
   }
 
   public download(type: string): void {

@@ -18,6 +18,9 @@ export class TableRow {
   ) {
     this.details = new Details(table, this, detailsContainer, null);
     this.tools = new RowTools(toolsContainer, table, this);
+    table.onColumnsLocationChanged.add(() => {
+      this.closeDetails();
+    });
   }
   private details: Details;
   private tools: RowTools;
