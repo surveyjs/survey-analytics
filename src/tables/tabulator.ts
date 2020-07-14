@@ -50,7 +50,7 @@ var defaultDownloadOptions: IDownloadOptions = {
 };
 
 export var defaultOptions: IOptions = {
-  columnMinWidth: 208,
+  columnMinWidth: 248,
   downloadOptions: defaultDownloadOptions,
   paginationButtonCount: 3,
 };
@@ -117,13 +117,6 @@ export class Tabulator extends Table {
     header.appendChild(paginationElement);
     this.tableTools = new TableTools(toolsContainer, this);
     this.tableTools.render();
-
-    this.onColumnsLocationChanged.add(() => {
-      this.update();
-    });
-    this.onColumnsVisibilityChanged.add(() => {
-      this.update();
-    });
   };
 
   private createDownloadsBar = (): HTMLElement => {
@@ -142,8 +135,8 @@ export class Tabulator extends Table {
       caption: string
     ): HTMLButtonElement {
       const btn = ActionsHelper.createBtn(caption);
-      btn.onclick = (ev) => {
-        // this.table.download(type);
+      btn.onclick = () => {
+        this.table.download(type);
       };
       return btn;
     }
@@ -184,6 +177,7 @@ export class Tabulator extends Table {
     );
     tableRow.onToggleDetails.add(() => {
       row.normalizeHeight();
+      this.update();
     });
     tableRow.render();
   };
@@ -264,6 +258,7 @@ export class Tabulator extends Table {
     if (visibility == ColumnVisibility.Invisible)
       this.tabulatorTables.hideColumn(columnName);
     else this.tabulatorTables.showColumn(columnName);
+    this.update();
   }
 
   public setColumnLocation(columnName: string, location: QuestionLocation) {
@@ -271,6 +266,7 @@ export class Tabulator extends Table {
     if (location == QuestionLocation.Row)
       this.tabulatorTables.hideColumn(columnName);
     else this.tabulatorTables.showColumn(columnName);
+    this.update();
   }
 
   public sortByColumn(columnName: string, direction: string) {

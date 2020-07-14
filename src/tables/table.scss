@@ -30,6 +30,7 @@
     width: 208px;
   }
 }
+
 .sa-table__btn {
   height: 34px;
   width: 154px;
@@ -46,6 +47,7 @@
 .sa-table__btn--small {
   width: 99px;
 }
+
 .sa-table__btn--gray {
   border-color: $text-gray;
   color: $text-gray;
@@ -54,6 +56,7 @@
     color: $text-color-inverse;
   }
 }
+
 .sa-table__btn--green {
   border-color: $main-color;
   color: $main-color;
@@ -61,8 +64,6 @@
     background-color: $main-color;
     color: $text-color-inverse;
   }
-}
-.sa-table__btn--red {
 }
 
 .sa-table__svg-button {

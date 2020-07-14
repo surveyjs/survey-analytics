@@ -146,56 +146,6 @@ $root-font-size: 14px;
     @include input();
   }
 
-  .dt-buttons {
-    margin-left: 20px;
-    float: left;
-  }
-  // .dt-button {
-  //   width: 79px;
-  //   margin-right: 5px;
-  //   color: $text-gray;
-  //   border: solid 2px $text-gray;
-  //   &:hover {
-  //     background-color: $backgrond-gray;
-  //     color: $text-color-inverse;
-  //   }
-  // }
-
-  .sa-tabulator__btn {
-    height: 34px;
-    width: 154px;
-    font-size: $root-font-size;
-    font-weight: bold;
-    background-color: transparent;
-    box-sizing: border-box;
-    border: solid 2px;
-    border-radius: 17px;
-    padding: 0;
-    outline: none;
-  }
-  .sa-tabulator__btn--small {
-    width: 99px;
-  }
-  .sa-tabulator__btn--gray {
-    border-color: $text-gray;
-    color: $text-gray;
-    &:hover {
-      background-color: $background-gray;
-      color: $text-color-inverse;
-    }
-  }
-  .sa-tabulator__global-filter,
-  .tabulator-header-filter input {
-    background: transparent;
-    background-image: url("data:image/svg+xml;charset=utf8,%3C?xml version='1.0' encoding='utf-8'?%3E%3C!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' style='enable-background:new 0 0 16 16;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0{fill:%239F9E9E;} %3C/style%3E%3Cpath class='st0' d='M13.56,11.44L11.3,9.18C11.74,8.38,12,7.47,12,6.5C12,3.47,9.53,1,6.5,1S1,3.47,1,6.5C1,9.53,3.47,12,6.5,12 c0.97,0,1.88-0.26,2.68-0.7l2.26,2.26c0.29,0.29,0.66,0.43,1.04,0.44c0.39,0.01,0.78-0.14,1.08-0.44c0.3-0.3,0.44-0.69,0.44-1.08 C13.99,12.1,13.85,11.72,13.56,11.44z M4,6.5C4,5.12,5.12,4,6.5,4S9,5.12,9,6.5S7.88,9,6.5,9S4,7.88,4,6.5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat, repeat;
-    background-position: left 0.7em top 50%, 0 0;
-    background-size: 1em 100%;
-    padding-left: 35px !important;
-    border: solid 1px $border-color;
-    pointer-events: all;
-  }
-
   .tabulator-page {
     margin-right: 15px;
     padding: 1px;
@@ -275,75 +225,8 @@ $root-font-size: 14px;
   .sa-tabulator__detail-row.sa-tabulator__detail-row.sa-tabulator__detail-row.sa-tabulator__detail-row {
     background-color: $detail-color;
   }
-
-  .sa-tabulator__detail-table {
-    width: 100%;
-    border-collapse: collapse;
-    border-right: 1px solid $border-color;
-    border-bottom: none;
-  }
-
-  .sa-tabulator__detail {
-    border-top: 1px solid $border-color;
-    td {
-      box-sizing: border-box;
-      padding: 20px;
-      // border-left: 1px solid $border-color;
-      border-left: none;
-      white-space: initial;
-    }
-
-    td:first-child {
-      width: 267px;
-      border-left: none;
-      font-weight: bold;
-    }
-
-    td:nth-child(2) {
-      width: 208px;
-    }
-  }
 }
-.sa-tabulator__svg-button {
-  width: 15px;
-  height: 15px;
-  padding: 0;
-  border: none;
-  use {
-    fill: $svg-color;
-  }
-  &:hover {
-    use {
-      fill: $svg-hover-color;
-    }
-  }
-  svg {
-    width: 15px;
-    height: 15px;
-  }
-}
-.sa-tabulator__action-container {
-  .sa-tabulator__svg-button {
-    float: right;
-    margin: 0 0 13px 13px;
-    pointer-events: all;
-  }
-  &:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-  .sa-tabulator__drag-button {
-    float: left;
-    cursor: move;
-    use {
-      fill: $main-color;
-    }
-    &:hover use {
-      fill: $main-color;
-    }
-  }
-}
+
 .sa-tabulator__table {
   width: 100%;
   background: $text-color-inverse;
@@ -360,6 +243,7 @@ $root-font-size: 14px;
   padding: 13px 20px;
   position: relative;
 }
+
 .sa-tabulator__table {
   th {
     vertical-align: top;
