@@ -107,7 +107,9 @@ export class DataTables extends Table {
 
   public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
     super.setColumnVisibility(columnName, visibility);
-    this.datatableApi.column(columnName + ":name").visible(false);
+    if (visibility == ColumnVisibility.Visible)
+      this.datatableApi.column(columnName + ":name").visible(true);
+    else this.datatableApi.column(columnName + ":name").visible(false);
   }
 
   public setColumnLocation(columnName: string, location: QuestionLocation) {
