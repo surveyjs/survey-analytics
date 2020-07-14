@@ -168,9 +168,8 @@ export class VisualizationPanel {
     if (this.allowHideQuestions) {
       visualizer.registerToolbarItem(
         "removeQuestion",
-        (toolbar: HTMLDivElement) => {
+        () => {
           return ToolbarHelper.createButton(
-            toolbar,
             () => {
               setTimeout(() => {
                 element.visibility = ElementVisibility.Invisible;
@@ -204,7 +203,7 @@ export class VisualizationPanel {
 
       visualizer.registerToolbarItem(
         "questionFilterInfo",
-        (toolbar: HTMLDivElement) => {
+        () => {
           filterInfo.element = document.createElement("div");
           filterInfo.element.className = "sva-question__filter";
 
@@ -219,7 +218,6 @@ export class VisualizationPanel {
             visualizer.setSelection(undefined);
           };
           filterInfo.element.appendChild(filterClear);
-          toolbar.appendChild(filterInfo.element);
 
           filterInfo.update(visualizer.selection);
 
@@ -286,7 +284,6 @@ export class VisualizationPanel {
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
     const resetFilterButton = ToolbarHelper.createButton(
-      toolbar,
       () => {
         this.visualizers.forEach((visualizer) => {
           if (visualizer instanceof SelectBase) {
@@ -304,7 +301,6 @@ export class VisualizationPanel {
         const hiddenElements = this.hiddenElements;
         if (hiddenElements.length > 0) {
           const selectWrapper = ToolbarHelper.createSelector(
-            toolbar,
             [
               <any>{
                 name: undefined,

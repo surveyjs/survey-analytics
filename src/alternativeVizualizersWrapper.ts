@@ -47,7 +47,7 @@ export class AlternativeVisualizersWrapper extends VisualizerBase {
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
-    const selectWrapper = ToolbarHelper.createSelector(toolbar,
+    const selectWrapper = ToolbarHelper.createSelector(
       this.visualizers.map(visualizer => {
         return {
           value: visualizer.name,

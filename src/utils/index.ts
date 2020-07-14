@@ -1,5 +1,5 @@
 export class ToolbarHelper {
-    public static createSelector(toolbar: HTMLDivElement, options: Array<{value: string, text: string}>, isSelected: (option: {value: string, text: string}) => boolean, hander: (e: any) => void) {
+    public static createSelector(options: Array<{value: string, text: string}>, isSelected: (option: {value: string, text: string}) => boolean, hander: (e: any) => void) {
         const selectWrapper = document.createElement("div");
         selectWrapper.className = "sva-question__select-wrapper";
         const select = document.createElement("select");
@@ -15,12 +15,11 @@ export class ToolbarHelper {
         selectWrapper.appendChild(select);
         return selectWrapper;
     }
-    public static createButton(toolbar: HTMLDivElement, hander: (e: any) => void, text = "", cssClass = "") {
+    public static createButton(hander: (e: any) => void, text = "", cssClass = "") {
         const button = document.createElement("span");
         button.className = "sva-toolbar__button " + cssClass;
         button.innerText = text;
         button.onclick = hander;
-        toolbar.appendChild(button);
         return button;
     }
 }
