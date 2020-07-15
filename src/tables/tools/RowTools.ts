@@ -24,7 +24,8 @@ export class TableRow {
   }
   private details: Details;
   private tools: RowTools;
-
+  private detailedRowClass = "sa-table__detail-row";
+  private isDetailsExpanded = false;
   public onToggleDetails: Event<
     (sender: TableRow, options: any) => any,
     any
@@ -33,22 +34,37 @@ export class TableRow {
   public getData(): any {
     return this.rowData;
   }
-  public render() {
-    this.tools.render();
-  }
 
   public getElement(): HTMLElement {
     return this.rowElement;
   }
 
+  public getIsDetailsExpanded() {
+    return false;
+  }
+
+  public render() {
+    this.tools.render();
+  }
+
   public openDetails() {
     this.details.open();
+    this.rowElement.className += " " + this.detailedRowClass;
     this.onToggleDetails.fire(this, { isExpanded: true });
+    this.isDetailsExpanded = true;
   }
 
   public closeDetails() {
     this.details.close();
+    this.rowElement.classList.remove(this.detailedRowClass);
     this.onToggleDetails.fire(this, { isExpanded: false });
+    this.isDetailsExpanded = false;
+  }
+
+  public toggleDetails() {
+    if (this.isDetailsExpanded) {
+      this.closeDetails();
+    } else this.openDetails();
   }
 }
 
@@ -67,19 +83,8 @@ export class RowTools {
     const btn = ActionsHelper.createSvgButton("detail");
     btn.title = localization.getString("showMinorColumns");
 
-    var isDetailsExpanded = false;
-
     btn.onclick = () => {
-      if (isDetailsExpanded) {
-        isDetailsExpanded = false;
-        this.row.closeDetails();
-        this.row.getElement().classList.remove("sa-table__detail-row");
-        return;
-      } else {
-        isDetailsExpanded = true;
-        this.row.openDetails();
-        this.row.getElement().classList.add("sa-table__detail-row");
-      }
+      this.row.toggleDetails();
     };
     return btn;
   };
