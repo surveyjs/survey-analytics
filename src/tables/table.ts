@@ -1,10 +1,5 @@
 import { SurveyModel, Question } from "survey-core";
-import {
-  ITableColumn,
-  ColumnVisibility,
-  QuestionLocation,
-  ColumnDataType,
-} from "./config";
+import { ColumnVisibility, QuestionLocation, ColumnDataType } from "./config";
 import { Details } from "./tools/rowtools";
 
 export abstract class Table {

@@ -1,12 +1,6 @@
 import { Table } from "./table";
-import { SurveyModel, Question, Event } from "survey-core";
-import {
-  ITableColumn,
-  ColumnVisibility,
-  QuestionLocation,
-  ColumnDataType,
-} from "./config";
-import { localization } from "../localizationManager";
+import { SurveyModel, Event } from "survey-core";
+import { ITableColumn, ColumnVisibility, QuestionLocation } from "./config";
 
 import "./datatables.scss";
 import { TableRow } from "./tools/rowtools";

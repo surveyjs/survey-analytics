@@ -1,5 +1,5 @@
 import { Table } from "./table";
-import { SurveyModel, HtmlConditionItem } from "survey-core";
+import { SurveyModel } from "survey-core";
 import { ColumnVisibility, QuestionLocation } from "./config";
 
 import "./tabulator.scss";

@@ -1,6 +1,6 @@
 import { localization } from "../../localizationManager";
 import { Table } from "../table";
-import { ColumnVisibility, QuestionLocation } from "../config";
+import { ColumnVisibility } from "../config";
 
 export class TableTools {
   constructor(private targetNode: HTMLElement, private table: Table) {}
