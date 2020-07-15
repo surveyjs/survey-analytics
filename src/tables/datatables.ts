@@ -266,7 +266,7 @@ export class DataTables extends Table {
       }
     );
   }
-
+  
   public doStateSave() {
     this.datatableApi.state.save();
   }

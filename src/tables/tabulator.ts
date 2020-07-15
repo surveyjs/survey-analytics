@@ -271,11 +271,21 @@ export class Tabulator extends Table {
   }
 
   public applyColumnFilter(columnName: string, value: string) {
-    this.tabulatorTables.setHeaderFilterValue(columnName, value);
+    this.tabulatorTables.setFilter(columnName, "like", value);
   }
 
   public applyFilter(value: string): void {
-    this.tabulatorTables.setFilter(ActionsHelper.customFilter, {
+    var customFilter = (data: any, filterParams: any) => {
+      for (var key in data) {
+        if (
+          data[key].toLowerCase().includes(filterParams.value.toLowerCase())
+        ) {
+          return true;
+        }
+      }
+      return false;
+    };
+    this.tabulatorTables.setFilter(customFilter, {
       value: value,
     });
   }

@@ -64,14 +64,4 @@ export class ActionsHelper {
     btn.innerHTML = caption;
     return btn;
   }
-
-  public static customFilter(data: any, filterParams: any) {
-    var match = false;
-    for (var key in data) {
-      if (data[key].includes(filterParams.value)) {
-        match = true;
-      }
-    }
-    return match;
-  }
 }
