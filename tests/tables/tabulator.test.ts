@@ -63,7 +63,7 @@ test("isVisible method", () => {
   expect(tabulator.isVisible(ColumnVisibility.Visible)).toBeTruthy();
 });
 
-test.skip("getColumns method", () => {
+test("getColumns method", () => {
   const survey = new SurveyModel(json);
   const tabulator = new Tabulator(
     document.createElement("table"),
@@ -75,6 +75,6 @@ test.skip("getColumns method", () => {
   const columns = <any>tabulator["getColumns"]();
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"field":"","title":"","download":false,"resizable":false,"width":60},{"field":"car","title":"What car are you driving?","minWidth":208,"widthShrink":1,"visible":true,"headerFilter":true}]'
+    '[{"field":"","title":"","download":false,"resizable":false,"width":60},{"field":"car","title":"What car are you driving?","minWidth":248,"widthShrink":1,"visible":true,"headerSort":false}]'
   );
 });

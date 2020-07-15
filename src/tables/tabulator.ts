@@ -226,7 +226,7 @@ export class Tabulator extends Table {
         minWidth: minColumnWidth,
         widthShrink: 1,
         visible: column.visibility !== ColumnVisibility.Invisible,
-        headerFilter: false,
+        // headerFilter: false,
         headerSort: false,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(

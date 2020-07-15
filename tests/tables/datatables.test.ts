@@ -39,7 +39,7 @@ test("buildColumns method", () => {
   );
 });
 
-test.skip("getColumns method", () => {
+test("getColumns method", () => {
   const survey = new SurveyModel(json);
   const dataTables = new DataTables(
     document.createElement("table"),
@@ -51,7 +51,7 @@ test.skip("getColumns method", () => {
   const columns = <any>dataTables.getColumns();
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"className":"sa-datatables__action-column","orderable":false,"data":null,"defaultContent":"<button title=\\"Show minor columns\\" class=\\"sa-datatables__svg-button\\"><svg><use href=\\"#sa-svg-detail\\"></use></svg></button>"},{"data":"car","sTitle":"What car are you driving?","visible":true}]'
+    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"car","data":"car","sTitle":"What car are you driving?","visible":true}]'
   );
 });
 
@@ -79,7 +79,7 @@ test("isVisible method", () => {
   expect(dataTables.isVisible(ColumnVisibility.Visible)).toBeTruthy();
 });
 
-test.skip("pass columns through ctor", () => {
+test("pass columns through ctor", () => {
   let dataTables = new DataTables(
     document.createElement("table"),
     new SurveyModel(),
@@ -105,7 +105,7 @@ test.skip("pass columns through ctor", () => {
 
   const columns = <any>dataTables.getColumns();
   expect(JSON.stringify(columns)).toBe(
-    '[{"className":"sa-datatables__action-column","orderable":false,"data":null,"defaultContent":"<button title=\\"Show minor columns\\" class=\\"sa-datatables__svg-button\\"><svg><use href=\\"#sa-svg-detail\\"></use></svg></button>"},{"data":"id","sTitle":"Id","visible":true}]'
+    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"id","data":"id","sTitle":"Id","visible":true}]'
   );
 });
 
