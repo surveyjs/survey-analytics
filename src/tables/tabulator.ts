@@ -1,5 +1,5 @@
 import { Table } from "./table";
-import { SurveyModel } from "survey-core";
+import { SurveyModel, HtmlConditionItem } from "survey-core";
 import { ColumnVisibility, QuestionLocation } from "./config";
 
 import "./tabulator.scss";
@@ -119,7 +119,15 @@ export class Tabulator extends Table {
     this.tableTools.render();
   };
 
-  private createDownloadsBar = (): HTMLElement => {
+  private createDownloadsBar(): HTMLElement {
+    var createDownloadButton = (type: string, caption: string): HTMLElement => {
+      const btn = ActionsHelper.createBtn(caption);
+      btn.onclick = () => {
+        this.tabulatorTables.download(type);
+      };
+      return btn;
+    };
+
     var container = document.createElement("div");
     container.className = "sa-tabulator__downloads-bar";
     if (this.options.downloadOptions.xlsx.isVisible) {
@@ -129,19 +137,8 @@ export class Tabulator extends Table {
       container.appendChild(createDownloadButton("pdf", "PDF"));
     }
     container.appendChild(createDownloadButton("csv", "CSV"));
-
-    function createDownloadButton(
-      type: string,
-      caption: string
-    ): HTMLButtonElement {
-      const btn = ActionsHelper.createBtn(caption);
-      btn.onclick = () => {
-        this.table.download(type);
-      };
-      return btn;
-    }
     return container;
-  };
+  }
 
   createToolsContainer = (): HTMLElement => {
     var el = document.createElement("div");
