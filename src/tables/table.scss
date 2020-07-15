@@ -2,7 +2,7 @@
   background-color: $detail-color;
 }
 
-.sa-table__detail-table {
+.sa-table__detail-table.sa-table__detail-table {
   width: 100%;
   border-collapse: collapse;
   border-right: 1px solid $border-color;
@@ -156,4 +156,12 @@
 
 .sa-table__entries-label--left {
   margin-left: 5px;
+}
+
+.sa-table__detail-row.sa-table__detail-row.sa-table__detail-row.sa-table__detail-row.sa-table__detail-row {
+  background-color: $detail-color;
+}
+
+.sa-table__detail-table {
+  background-color: $background-gray;
 }

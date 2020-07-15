@@ -168,6 +168,7 @@ export class DataTables extends Table {
         ) => {
           var detailsTr = document.createElement("tr");
           var detailsTd = document.createElement("td");
+          detailsTd.className = "sa-datatables__details-container";
           detailsTr.appendChild(detailsTd);
           var tableRow = new TableRow(
             this,

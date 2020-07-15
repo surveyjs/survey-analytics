@@ -78,7 +78,7 @@ export class RowTools {
       } else {
         isDetailsExpanded = true;
         this.row.openDetails();
-        this.row.getElement().classList.remove("sa-table__detail-row");
+        this.row.getElement().classList.add("sa-table__detail-row");
       }
     };
     return btn;
