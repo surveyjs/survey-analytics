@@ -13,11 +13,11 @@ export class ColumnTools {
 
   public render() {
     this.targetNode.appendChild(this.createDragBtn());
-    if (this.isTrustedAccess)
-    this.targetNode.appendChild(this.createColumnPrivateButton());
     this.targetNode.appendChild(this.createSortBtn());
-    this.targetNode.appendChild(this.createMoveToDetailsBtn());
     this.targetNode.appendChild(this.createHideBtn());
+    if (this.isTrustedAccess)
+      this.targetNode.appendChild(this.createColumnPrivateButton());
+    this.targetNode.appendChild(this.createMoveToDetailsBtn());
     this.targetNode.appendChild(this.createFilterInput());
   }
 
@@ -35,7 +35,7 @@ export class ColumnTools {
     const descTitle = localization.getString("descOrder");
     const ascTitle = localization.getString("ascOrder");
     var btn = ActionsHelper.createSvgButton("sorting");
-    btn.title = ascTitle;
+    btn.title = "";
     var direction = "asc";
     btn.onclick = (e) => {
       if (direction == "asc") {
@@ -87,37 +87,33 @@ export class ColumnTools {
   }
 
   protected createColumnPrivateButton(): HTMLElement {
-    const column = this.table.columns.filter(
-      (column) => column.name === this.columnName
-    )[0];
     const button = document.createElement("button");
     const makePrivateSvg = ActionsHelper.createSvgElement("makeprivate");
     const makePublicSvg = ActionsHelper.createSvgElement("makepublic");
-    updateState(column.visibility);
+    var currentVisibility = this.table.getColumnVisibility(this.columnName);
+    updateState(currentVisibility);
     button.appendChild(makePrivateSvg);
     button.appendChild(makePublicSvg);
     button.onclick = (e) => {
       e.stopPropagation();
-
-      if (column.visibility === ColumnVisibility.PublicInvisible) {
-        column.visibility = ColumnVisibility.Visible;
+      if (currentVisibility === ColumnVisibility.PublicInvisible) {
+        currentVisibility = ColumnVisibility.Visible;
       } else {
-        column.visibility = ColumnVisibility.PublicInvisible;
+        currentVisibility = ColumnVisibility.PublicInvisible;
       }
-
-      updateState(column.visibility);
+      this.table.setColumnVisibility(this.columnName, currentVisibility);
+      updateState(currentVisibility);
     };
 
     function updateState(visibility: ColumnVisibility) {
       const isPrivate = visibility === ColumnVisibility.PublicInvisible;
       if (isPrivate) {
-        button.className =
-          "sa-datatables__svg-button sa-datatables__svg-button--active";
+        button.className = "sa-table__svg-button sa-table__svg-button--active";
         button.title = localization.getString("makePublicColumn");
         makePrivateSvg.style.display = "block";
         makePublicSvg.style.display = "none";
       } else {
-        button.className = "sa-datatables__svg-button";
+        button.className = "sa-table__svg-button";
         button.title = localization.getString("makePrivateColumn");
         makePrivateSvg.style.display = "none";
         makePublicSvg.style.display = "block";

@@ -106,16 +106,15 @@ export class DataTables extends Table {
 
   public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
     super.setColumnVisibility(columnName, visibility);
-    if (visibility == ColumnVisibility.Visible)
-      this.datatableApi.column(columnName + ":name").visible(true);
-    else this.datatableApi.column(columnName + ":name").visible(false);
+    var isInvisible = visibility == ColumnVisibility.Invisible;
+    this.datatableApi.column(columnName + ":name").visible(!isInvisible);
   }
 
   public setColumnLocation(columnName: string, location: QuestionLocation) {
     super.setColumnLocation(columnName, location);
     var column = this.datatableApi.column(columnName + ":name");
-    if (location == QuestionLocation.Row) column.visible(false);
-    else column.visible(true);
+    var isColumnLocation = location == QuestionLocation.Column;
+    column.visible(isColumnLocation);
   }
 
   createActionContainer() {
@@ -232,7 +231,7 @@ export class DataTables extends Table {
                   container,
                   self,
                   columnsData[index],
-                  this.isTrustedAccess
+                  self.isTrustedAccess
                 );
                 columnTools.render();
               }

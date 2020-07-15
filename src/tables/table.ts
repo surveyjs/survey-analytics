@@ -109,6 +109,11 @@ export abstract class Table {
     column.visibility = visibility;
     this.onColumnsVisibilityChanged.fire(this, null);
   }
+
+  public getColumnVisibility(columnName: string): ColumnVisibility {
+    var column = this.columns.filter((column) => column.name === columnName)[0];
+    return column.visibility;
+  }
 }
 
 export class Event<T extends Function, Options> {
