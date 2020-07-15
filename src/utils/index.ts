@@ -15,11 +15,18 @@ export class ToolbarHelper {
         selectWrapper.appendChild(select);
         return selectWrapper;
     }
-    public static createButton(hander: (e: any) => void, text = "", cssClass = "") {
+    public static createButton(handler: (e: any) => void, text = "", cssClass = "") {
         const button = document.createElement("span");
         button.className = "sva-toolbar__button " + cssClass;
         button.innerText = text;
-        button.onclick = hander;
+        button.onclick = handler;
         return button;
     }
+}
+
+export var options = {
+    runningInBrowser: typeof window.URL.createObjectURL === "function"
+}
+export function allowDomRendering() {
+    return options.runningInBrowser;
 }

@@ -10,7 +10,10 @@ declare type VisualizerConstructor = new (
 
 export class VisualizationManager {
   static vizualizers: { [index: string]: Array<VisualizerConstructor> } = {};
-  static registerVisualizer(
+  /**
+   * Register visualizer (constructor) for question type.
+   */
+  public static registerVisualizer(
     typeName: string,
     constructor: VisualizerConstructor
   ) {
@@ -21,7 +24,10 @@ export class VisualizationManager {
     }
     vizualizers.push(constructor);
   }
-  static getVisualizersByType(typeName: string) {
+  /**
+   * Get visualizers (constructors) for question type.
+   */
+  public static getVisualizersByType(typeName: string) {
     let vizualizers = VisualizationManager.vizualizers[typeName];
     if (!vizualizers) {
       return [VisualizerBase];

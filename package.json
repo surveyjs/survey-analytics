@@ -83,7 +83,7 @@
     "replace-in-file": "^6.1.0",
     "rimraf": "2.5.4",
     "sass-loader": "^8.0.2",
-    "standard-version": "^8.0.0",
+    "standard-version": "^8.0.2",
     "style-loader": "^1.2.1",
     "surveyjs-doc-generator": "git+https://github.com/surveyjs/surveyjs-doc-generator.git",
     "ts-jest": "^26.1.1",

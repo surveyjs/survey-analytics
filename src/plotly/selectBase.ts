@@ -2,13 +2,10 @@ import { Question } from "survey-core";
 import { ItemValue } from "survey-core";
 import { VisualizationManager } from "../visualizationManager";
 import { SelectBase } from "../selectBase";
+import { allowDomRendering } from '../utils';
 
-export function canLoadPlotly() {
-  return !!window.URL.createObjectURL;
-}
-
-var Plotly: any;
-if (canLoadPlotly()) {
+var Plotly: any = null;
+if (allowDomRendering()) {
   Plotly = <any>require("plotly.js-dist");
 }
 

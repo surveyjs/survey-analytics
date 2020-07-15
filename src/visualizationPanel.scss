@@ -60,6 +60,7 @@
 }
 
 .sva-toolbar__button {
+  font-family: SegoeUI, Arial, sans-serif;
   font-size: 14px;
   padding: 8px;
   vertical-align: middle;
@@ -76,6 +77,10 @@
   &:last-child {
     margin-right: 0;
   }
+}
+
+.sva-toolbar__button--right {
+  float: right;
 }
 
 // custom select
