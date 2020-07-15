@@ -32,7 +32,7 @@ export class ToolbarHelper {
   }
 }
 
-export class ActionsHelper {
+export class DocumentHelper {
   public static createSvgElement(path: string): SVGSVGElement {
     const svgElem = document.createElementNS(
       "http://www.w3.org/2000/svg",
@@ -54,7 +54,7 @@ export class ActionsHelper {
   public static createSvgButton(path: string): HTMLButtonElement {
     const btn = document.createElement("button");
     btn.className = "sa-table__svg-button";
-    btn.appendChild(ActionsHelper.createSvgElement(path));
+    btn.appendChild(DocumentHelper.createSvgElement(path));
     return btn;
   }
 
@@ -63,5 +63,17 @@ export class ActionsHelper {
     btn.className = "sa-table__btn sa-table__btn--small sa-table__btn--gray";
     btn.innerHTML = caption;
     return btn;
+  }
+
+  public static createInput(
+    className: string,
+    placeholder = "",
+    defaultValue = ""
+  ): HTMLInputElement {
+    var el = document.createElement("input");
+    el.className = className;
+    el.placeholder = placeholder;
+    el.defaultValue = defaultValue;
+    return el;
   }
 }

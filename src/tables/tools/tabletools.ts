@@ -1,6 +1,7 @@
 import { localization } from "../../localizationManager";
 import { Table } from "../table";
 import { ColumnVisibility } from "../config";
+import { DocumentHelper } from "../../utils";
 
 export class TableTools {
   constructor(private targetNode: HTMLElement, private table: Table) {}
@@ -24,9 +25,7 @@ export class TableTools {
   }
 
   protected createFilterInput(): HTMLElement {
-    const input = document.createElement("input");
-    input.classList.add("sa-table__global-filter");
-    input.placeholder = "Search...";
+    const input = DocumentHelper.createInput("sa-table__filter", "Search...");
     input.onchange = (event: any) => {
       this.table.applyFilter(event.target.value);
     };

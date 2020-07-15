@@ -1,4 +1,4 @@
-import { ActionsHelper } from "../../utils";
+import { DocumentHelper } from "../../utils";
 import { localization } from "../../localizationManager";
 import { ColumnVisibility, QuestionLocation } from "../config";
 import { Table } from "../table";
@@ -24,7 +24,7 @@ export class ColumnTools {
   protected createDragBtn(): HTMLButtonElement {
     const btn = document.createElement("button");
     btn.className = "sa-table__svg-button sa-table__drag-button";
-    btn.appendChild(ActionsHelper.createSvgElement("drag"));
+    btn.appendChild(DocumentHelper.createSvgElement("drag"));
     btn.onclick = (e) => {
       e.stopPropagation();
     };
@@ -34,7 +34,7 @@ export class ColumnTools {
   protected createSortBtn(): HTMLButtonElement {
     const descTitle = localization.getString("descOrder");
     const ascTitle = localization.getString("ascOrder");
-    var btn = ActionsHelper.createSvgButton("sorting");
+    var btn = DocumentHelper.createSvgButton("sorting");
     btn.title = "";
     var direction = "asc";
     btn.onclick = (e) => {
@@ -54,7 +54,7 @@ export class ColumnTools {
   }
 
   protected createHideBtn(): HTMLButtonElement {
-    var btn = ActionsHelper.createSvgButton("hide");
+    var btn = DocumentHelper.createSvgButton("hide");
     btn.title = localization.getString("hideColumn");
     btn.onclick = () => {
       this.table.setColumnVisibility(
@@ -66,7 +66,7 @@ export class ColumnTools {
   }
 
   protected createMoveToDetailsBtn(): HTMLButtonElement {
-    const button = ActionsHelper.createSvgButton("movetodetails");
+    const button = DocumentHelper.createSvgButton("movetodetails");
     button.title = localization.getString("moveToDetail");
     button.onclick = (e) => {
       e.stopPropagation();
@@ -76,9 +76,7 @@ export class ColumnTools {
   }
 
   protected createFilterInput(): HTMLInputElement {
-    var el = document.createElement("input");
-    el.className = "sa-table__filter";
-    el.placeholder = "Search...";
+    var el = DocumentHelper.createInput("sa-table__filter", "Search...");
     el.onclick = (e) => e.stopPropagation();
     el.onchange = (e) => {
       this.table.applyColumnFilter(this.columnName, el.value);
@@ -88,8 +86,8 @@ export class ColumnTools {
 
   protected createColumnPrivateButton(): HTMLElement {
     const button = document.createElement("button");
-    const makePrivateSvg = ActionsHelper.createSvgElement("makeprivate");
-    const makePublicSvg = ActionsHelper.createSvgElement("makepublic");
+    const makePrivateSvg = DocumentHelper.createSvgElement("makeprivate");
+    const makePublicSvg = DocumentHelper.createSvgElement("makepublic");
     var currentVisibility = this.table.getColumnVisibility(this.columnName);
     updateState(currentVisibility);
     button.appendChild(makePrivateSvg);

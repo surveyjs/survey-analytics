@@ -3,7 +3,7 @@ import { SurveyModel, HtmlConditionItem } from "survey-core";
 import { ColumnVisibility, QuestionLocation } from "./config";
 
 import "./tabulator.scss";
-import { ActionsHelper } from "../utils";
+import { DocumentHelper } from "../utils";
 import { TableRow } from "./tools/rowtools";
 import { ColumnTools } from "./tools/columntools";
 import { TableTools } from "./tools/tabletools";
@@ -121,7 +121,7 @@ export class Tabulator extends Table {
 
   private createDownloadsBar(): HTMLElement {
     var createDownloadButton = (type: string, caption: string): HTMLElement => {
-      const btn = ActionsHelper.createBtn(caption);
+      const btn = DocumentHelper.createBtn(caption);
       btn.onclick = () => {
         this.tabulatorTables.download(type);
       };

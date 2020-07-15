@@ -1,7 +1,7 @@
 import { Table, Event } from "../table";
 import { localization } from "../../localizationManager";
 import { QuestionLocation } from "../config";
-import { ActionsHelper } from "../../utils";
+import { DocumentHelper } from "../../utils";
 
 export class TableRow {
   constructor(
@@ -80,7 +80,7 @@ export class RowTools {
   }
 
   protected createDetailsBtn = () => {
-    const btn = ActionsHelper.createSvgButton("detail");
+    const btn = DocumentHelper.createSvgButton("detail");
     btn.title = localization.getString("showMinorColumns");
 
     btn.onclick = () => {
