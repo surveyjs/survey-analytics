@@ -25,7 +25,10 @@ export class TableTools {
   }
 
   protected createFilterInput(): HTMLElement {
-    const input = DocumentHelper.createInput("sa-table__filter", "Search...");
+    const input = DocumentHelper.createInput(
+      "sa-table__global-filter",
+      "Search..."
+    );
     input.onchange = (event: any) => {
       this.table.applyFilter(event.target.value);
     };
