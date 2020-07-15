@@ -4,7 +4,7 @@ import "./visualizerBase.scss";
 
 export class VisualizerBase {
 
-  public toolbarItemCreators: { [name: string]: (toolbar: HTMLDivElement) => HTMLElement } = {};
+  public toolbarItemCreators: { [name: string]: () => HTMLElement } = {};
 
   constructor(
     protected targetElement: HTMLElement,
@@ -13,7 +13,7 @@ export class VisualizerBase {
     protected options?: Object
   ) {}
 
-  public registerToolbarItem(name: string, creator: (toolbar: HTMLDivElement) => HTMLElement) {
+  public registerToolbarItem(name: string, creator: () => HTMLElement) {
     this.toolbarItemCreators[name] = creator;
   }
 
@@ -27,41 +27,55 @@ export class VisualizerBase {
 
   onUpdate: () => void;
 
+  invokeOnUpdate() {
+    this.onUpdate && this.onUpdate();
+  }
+
   destroy() {
     this.targetElement.innerHTML = "";
   }
 
-  protected renderContent(container: HTMLDivElement) {
-    container.innerHTML = "This question type is not visualized yet";
-  }
-
-  render(targetElement?: HTMLElement) {
-    this.targetElement = targetElement || this.targetElement;
-
-    const toolbarNodeContainer = document.createElement("div");
-    const contentContainer = document.createElement("div");
-    contentContainer.className = "sa-visualizer__content";
-
-    this.createToolbar(toolbarNodeContainer);
-    this.renderContent(contentContainer);
-
-    this.targetElement.appendChild(toolbarNodeContainer);
-    this.targetElement.appendChild(contentContainer);
-  }
-
-  protected createToolbarItems(toolbar: HTMLDivElement) {
-    Object.keys(this.toolbarItemCreators || {}).forEach(toolbarItemName => this.toolbarItemCreators[toolbarItemName](toolbar));
-  }
-
-  protected createToolbar(container: HTMLDivElement) {
+  protected renderToolbar(container: HTMLDivElement) {
     const toolbar = document.createElement("div");
     toolbar.className = "sva-toolbar";
     this.createToolbarItems(toolbar);
     container.appendChild(toolbar);
   }
 
-  invokeOnUpdate() {
-    this.onUpdate && this.onUpdate();
+  protected renderContent(container: HTMLDivElement) {
+    container.innerHTML = "This question type is not visualized yet";
+  }
+
+  protected renderFooter(container: HTMLDivElement) {
+    container.innerHTML = "";
+  }
+
+  render(targetElement?: HTMLElement) {
+    this.targetElement = targetElement || this.targetElement;
+
+    const toolbar = document.createElement("div");
+    toolbar.className = "sa-visualizer__toolbar";
+    const content = document.createElement("div");
+    content.className = "sa-visualizer__content";
+    const footer = document.createElement("div");
+    footer.className = "sa-visualizer__footer";
+
+    this.renderToolbar(toolbar);
+    this.renderContent(content);
+    this.renderFooter(footer);
+
+    this.targetElement.appendChild(toolbar);
+    this.targetElement.appendChild(content);
+    this.targetElement.appendChild(footer);
+  }
+
+  protected createToolbarItems(toolbar: HTMLDivElement) {
+    Object.keys(this.toolbarItemCreators || {}).forEach(toolbarItemName => {
+      let toolbarItem = this.toolbarItemCreators[toolbarItemName]();
+      if(!!toolbarItem) {
+        toolbar.appendChild(toolbarItem);
+      }
+    });
   }
 
   getRandomColor() {

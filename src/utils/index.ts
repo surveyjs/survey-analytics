@@ -1,6 +1,5 @@
 export class ToolbarHelper {
   public static createSelector(
-    toolbar: HTMLDivElement,
     options: Array<{ value: string; text: string }>,
     isSelected: (option: { value: string; text: string }) => boolean,
     hander: (e: any) => void
@@ -21,7 +20,6 @@ export class ToolbarHelper {
     return selectWrapper;
   }
   public static createButton(
-    toolbar: HTMLDivElement,
     hander: (e: any) => void,
     text = "",
     cssClass = ""
@@ -30,7 +28,6 @@ export class ToolbarHelper {
     button.className = "sva-toolbar__button " + cssClass;
     button.innerText = text;
     button.onclick = hander;
-    toolbar.appendChild(button);
     return button;
   }
 }

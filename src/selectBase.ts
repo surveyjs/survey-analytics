@@ -13,6 +13,27 @@ export class SelectBase extends VisualizerBase {
     options?: Object
   ) {
     super(targetElement, question, data, options);
+    this.registerToolbarItem(
+      "changeChartType",
+      () => {
+        if (this.chartTypes.length > 1) {
+          return ToolbarHelper.createSelector(
+            this.chartTypes.map(chartType => {
+              return {
+                value: chartType,
+                text: localization.getString("chartType_" + chartType)
+              };
+            }),
+            (option: any) => this.chartType === option.value,
+            (e: any) => {
+              this.setChartType(e.target.value);
+              this.onChartTypeChanged();
+            }
+          );
+        }
+        return null;
+      }
+    );
   }
 
   protected chartTypes: string[];
@@ -47,26 +68,6 @@ export class SelectBase extends VisualizerBase {
   protected renderContent(container: HTMLDivElement) {
     this.createChart();
     container.appendChild(this.chartNode);
-  }
-
-  protected createToolbarItems(toolbar: HTMLDivElement) {
-    if (this.chartTypes.length > 1) {
-      const selectWrapper = ToolbarHelper.createSelector(toolbar,
-        this.chartTypes.map(chartType => {
-          return {
-            value: chartType,
-            text: localization.getString("chartType_" + chartType)
-          };
-        }),
-        (option: any) => this.chartType === option.value,
-        (e: any) => {
-          this.setChartType(e.target.value);
-          this.onChartTypeChanged();
-        }
-      );
-      toolbar.appendChild(selectWrapper);
-    }
-    super.createToolbarItems(toolbar);
   }
 
   valuesSource(): any[] {

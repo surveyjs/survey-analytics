@@ -18,7 +18,6 @@ export class SelectBaseSortablePlotly extends SelectBasePlotly {
   protected createToolbarItems(toolbar: HTMLDivElement) {
     if (this.chartTypes.length > 0) {
       this.choicesOrder = ToolbarHelper.createSelector(
-        <HTMLDivElement>toolbar,
         [
           { text: localization.getString("defaultOrder"), value: "default" },
           { text: localization.getString("ascOrder"), value: "asc" },

@@ -1,4 +1,3 @@
-import * as $ from "jquery";
 import { Table } from "./table";
 import { SurveyModel, Question, Event } from "survey-core";
 import {
@@ -21,6 +20,8 @@ if (!!document) {
   templateHolder.innerHTML = svgTemplate;
   document.head.appendChild(templateHolder);
 }
+
+var jQuery = (<any>window)["jQuery"];
 
 interface DataTablesOptions {
   buttons: boolean | string[] | any[] | any;
@@ -49,6 +50,10 @@ export class DataTables extends Table {
     (sender: DataTables, options: any) => any,
     any
   > = new Event<(sender: DataTables, options: any) => any, any>();
+
+  public static initJQuery($: any) {
+    jQuery = $;
+  }
 
   constructor(
     targetNode: HTMLElement,
@@ -98,8 +103,8 @@ export class DataTables extends Table {
   destroy() {
     //if(!this.targetNode) return;
     const tableNode = this.targetNode.children[0];
-    if ((<any>$.fn).DataTable.isDataTable(tableNode)) {
-      $(tableNode).DataTable().destroy();
+    if (jQuery.fn.DataTable.isDataTable(tableNode)) {
+      jQuery(tableNode).DataTable().destroy();
     }
     this.datatableApi = undefined;
     this.targetNode.innerHTML = "";
@@ -152,7 +157,7 @@ export class DataTables extends Table {
     var columnsData: any = columns.map((c: any) => c.data);
     const dtButtonClass =
       "sa-table__btn sa-table__btn--small sa-table__btn--gray";
-    const options = $.extend(
+    const options = jQuery.extend(
       true,
       {
         buttons: [
@@ -220,12 +225,12 @@ export class DataTables extends Table {
           end: any,
           display: any
         ) => {
-          var datatableApi = $(tableNode).dataTable().api();
+          var datatableApi = jQuery(tableNode).dataTable().api();
           var self = this;
-          $(thead)
+          jQuery(thead)
             .children("th")
             .each(function (index: number) {
-              var $thNode = $(this);
+              var $thNode = jQuery(this);
               $thNode.unbind("click.DT");
               if (!!columnsData[index] && $thNode.has("button").length === 0) {
                 var container = self.createActionContainer();
@@ -248,10 +253,10 @@ export class DataTables extends Table {
     tableNode.width = "100%";
     tableNode.className = "sa-datatables__table display responsive dataTable";
 
-    const datatableApiRef = (this.datatableApi = $(tableNode).DataTable(
+    const datatableApiRef = (this.datatableApi = jQuery(tableNode).DataTable(
       options
     ));
-    var toolsContainer = $("div.sa-datatables__tools")[0];
+    var toolsContainer = jQuery("div.sa-datatables__tools")[0];
 
     var tools = new TableTools(toolsContainer, this);
     tools.render();
@@ -294,7 +299,7 @@ export class DataTables extends Table {
         mRender: (_data: object, _type: string, row: any) => {
           var value = row[column.name];
           return typeof value === "string"
-            ? $("<div>").text(value).html()
+            ? jQuery("<div>").text(value).html()
             : JSON.stringify(value);
         },
       };

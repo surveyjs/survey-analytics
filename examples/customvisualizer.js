@@ -14,8 +14,8 @@ function CustomVisualizer(targetElement, question, data) {
   var getData = function() {
     var result = [Number.MAX_VALUE, Number.MIN_VALUE];
 
-    this.data.forEach(function(row) {
-      const rowValue = row[self.question.name];
+    self.data.forEach(function(row) {
+      var rowValue = row[self.question.name];
       if (!!rowValue) {
         if(rowValue.min < result[0]) {
           result[0] = rowValue.min;
@@ -96,8 +96,8 @@ function CustomMinVisualizer(targetElement, question, data) {
     var getData = function() {
       var result = Number.MAX_VALUE;
   
-      this.data.forEach(function(row) {
-        const rowValue = row[self.question.name];
+      self.data.forEach(function(row) {
+        var rowValue = row[self.question.name];
         if (!!rowValue) {
           if(rowValue.min < result) {
             result = rowValue.min;

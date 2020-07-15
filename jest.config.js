@@ -13,5 +13,6 @@ module.exports = {
     "\\.(css|scss|html)$": "<rootDir>/tests/empty-module.js"
   },
   testRegex: "(/tests/.*|(\\.|/)(test|spec))\\.(ts|tsx)?$",
-  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"]
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  setupFiles: ['<rootDir>/jest.config.js', 'jest-canvas-mock'], //see https://github.com/hustcc/jest-canvas-mock/issues/2
 };

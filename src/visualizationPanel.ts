@@ -74,7 +74,7 @@ export class VisualizationPanel {
   }
 
   public getElements(): IVisualizerPanelElement[] {
-    return (this._elements || []).map(element => {
+    return (this._elements || []).map((element) => {
       return {
         name: element.name,
         displayName: element.displayName,
@@ -165,12 +165,11 @@ export class VisualizationPanel {
       this.filteredData
     );
 
-    if(this.allowHideQuestions) {
+    if (this.allowHideQuestions) {
       visualizer.registerToolbarItem(
         "removeQuestion",
-        (toolbar: HTMLDivElement) => {
+        () => {
           return ToolbarHelper.createButton(
-            toolbar,
             () => {
               setTimeout(() => {
                 element.visibility = ElementVisibility.Invisible;
@@ -204,7 +203,7 @@ export class VisualizationPanel {
 
       visualizer.registerToolbarItem(
         "questionFilterInfo",
-        (toolbar: HTMLDivElement) => {
+        () => {
           filterInfo.element = document.createElement("div");
           filterInfo.element.className = "sva-question__filter";
 
@@ -219,7 +218,6 @@ export class VisualizationPanel {
             visualizer.setSelection(undefined);
           };
           filterInfo.element.appendChild(filterClear);
-          toolbar.appendChild(filterInfo.element);
 
           filterInfo.update(visualizer.selection);
 
@@ -286,7 +284,6 @@ export class VisualizationPanel {
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
     const resetFilterButton = ToolbarHelper.createButton(
-      toolbar,
       () => {
         this.visualizers.forEach((visualizer) => {
           if (visualizer instanceof SelectBase) {
@@ -298,13 +295,12 @@ export class VisualizationPanel {
     );
     toolbar.appendChild(resetFilterButton);
 
-    if(this.allowHideQuestions) {
+    if (this.allowHideQuestions) {
       let addElementSelector: HTMLElement = undefined;
       const addElementSelectorUpdater = (panel: VisualizationPanel, _: any) => {
         const hiddenElements = this.hiddenElements;
         if (hiddenElements.length > 0) {
           const selectWrapper = ToolbarHelper.createSelector(
-            toolbar,
             [
               <any>{
                 name: undefined,
@@ -419,7 +415,15 @@ export class VisualizationPanel {
     question: Question,
     data: Array<{ [index: string]: any }>
   ): VisualizerBase {
-    var creators = VisualizationManager.getVisualizers(question.getType());
+    let type;
+
+    if (question.getType() === "text" && question.inputType) {
+      type = question.inputType;
+    } else {
+      type = question.getType();
+    }
+
+    var creators = VisualizationManager.getVisualizersByType(type);
     var visualizers = creators.map(
       (creator) => new creator(vizualizerElement, question, data)
     );
