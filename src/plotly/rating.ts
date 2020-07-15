@@ -1,9 +1,14 @@
 import { Question } from "survey-core";
-var Plotly = <any>require("plotly.js-dist");
 import { VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
 import { localization } from "../localizationManager";
-import { ToolbarHelper } from "../utils/index";
+import { ToolbarHelper, allowDomRendering } from "../utils/index";
+
+var Plotly: any = null;
+if (allowDomRendering()) {
+  Plotly = <any>require("plotly.js-dist");
+}
+
 
 export class GaugePlotly extends VisualizerBase {
   private _resultAverage: any;

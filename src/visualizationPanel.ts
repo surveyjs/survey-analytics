@@ -1,13 +1,12 @@
-import { VisualizationManager } from "./visualizationManager";
+import { Event } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
-import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
-import { Question, QuestionPanelDynamicModel, Event } from "survey-core";
-const Muuri = require("muuri");
-import "./visualizationPanel.scss";
 import { SelectBase } from "./selectBase";
 import { ToolbarHelper } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, ElementVisibility } from "./config";
+import { VisualizerFactory } from './visualizerFactory';
+const Muuri = require("muuri");
+import "./visualizationPanel.scss";
 
 const questionElementClassName = "sva-question";
 const questionLayoutedElementClassName = "sva-question-layouted";
@@ -152,14 +151,14 @@ export class VisualizationPanel {
     questionElement.className = this.allowDynamicLayout
       ? questionElementClassName + " " + questionLayoutedElementClassName
       : questionElementClassName;
-    questionContent.className = questionElementClassName + "__content";
     titleElement.className = questionElementClassName + "__title";
+    questionContent.className = questionElementClassName + "__content";
 
     questionContent.appendChild(titleElement);
     questionContent.appendChild(vizualizerElement);
     questionElement.appendChild(questionContent);
 
-    const visualizer = this.createVizualizer(
+    const visualizer = VisualizerFactory.createVizualizer(
       vizualizerElement,
       question,
       this.filteredData
@@ -211,12 +210,9 @@ export class VisualizationPanel {
           filterInfo.text.className = "sva-question__filter-text";
           filterInfo.element.appendChild(filterInfo.text);
 
-          const filterClear = document.createElement("span");
-          filterClear.className = "sva-toolbar__button";
-          filterClear.innerHTML = localization.getString("clearButton");
-          filterClear.onclick = () => {
+          const filterClear = ToolbarHelper.createButton(() => {
             visualizer.setSelection(undefined);
-          };
+          }, localization.getString("clearButton"));
           filterInfo.element.appendChild(filterClear);
 
           filterInfo.update(visualizer.selection);
@@ -405,38 +401,6 @@ export class VisualizationPanel {
       });
       this.update();
     }
-  }
-
-  /**
-   * Creates visuzlizer by question.
-   */
-  public createVizualizer(
-    vizualizerElement: HTMLElement,
-    question: Question,
-    data: Array<{ [index: string]: any }>
-  ): VisualizerBase {
-    let type;
-
-    if (question.getType() === "text" && question.inputType) {
-      type = question.inputType;
-    } else {
-      type = question.getType();
-    }
-
-    var creators = VisualizationManager.getVisualizersByType(type);
-    var visualizers = creators.map(
-      (creator) => new creator(vizualizerElement, question, data)
-    );
-    if (visualizers.length > 1) {
-      let visualizer = new AlternativeVisualizersWrapper(
-        visualizers,
-        vizualizerElement,
-        question,
-        data
-      );
-      return visualizer;
-    }
-    return visualizers[0];
   }
 
   get showHeader() {
