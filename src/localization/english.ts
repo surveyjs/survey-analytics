@@ -21,13 +21,15 @@ export var englishStrings = {
   chartType_gauge: "Gauge",
   chartType_bullet: "Bullet",
   hideButton: "Hide",
+  showButton: "Show",
   resetFilter: "Reset Filter",
   clearButton: "Clear",
   addElement: "Choose question to show...",
   defaultOrder: "Default", 
   ascOrder: "Ascending",
   descOrder: "Descending",
-  showMinorColumns: "Show minor columns"
+  showMinorColumns: "Show minor columns",
+  otherCommentTitle: "Other items and comments"
 };
 
 //Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.

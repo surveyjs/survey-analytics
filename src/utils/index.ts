@@ -20,14 +20,14 @@ export class ToolbarHelper {
     return selectWrapper;
   }
   public static createButton(
-    hander: (e: any) => void,
+    handler: (e: any) => void,
     text = "",
     cssClass = ""
   ) {
     const button = document.createElement("span");
     button.className = "sva-toolbar__button " + cssClass;
     button.innerText = text;
-    button.onclick = hander;
+    button.onclick = handler;
     return button;
   }
 }
@@ -76,4 +76,11 @@ export class DocumentHelper {
     el.defaultValue = defaultValue;
     return el;
   }
+}
+
+export var options = {
+  runningInBrowser: typeof window.URL.createObjectURL === "function",
+};
+export function allowDomRendering() {
+  return options.runningInBrowser;
 }
