@@ -3,7 +3,7 @@ import { SurveyModel, Event } from "survey-core";
 import { ITableColumn, ColumnVisibility, QuestionLocation } from "./config";
 
 import "./datatables.scss";
-import { TableRow } from "./tools/rowtools";
+import { TableRow, DatatablesRow } from "./tools/rowtools";
 import { ColumnTools } from "./tools/columntools";
 import { TableTools } from "./tools/tabletools";
 
@@ -158,37 +158,6 @@ export class DataTables extends Table {
           { extend: "csv", className: dtButtonClass },
           { extend: "print", className: dtButtonClass },
         ],
-        createdRow: (
-          rowElement: any,
-          rowData: any,
-          dataIndex: any,
-          cells: any
-        ) => {
-          var detailsTr = document.createElement("tr");
-          var detailsTd = document.createElement("td");
-          detailsTd.className = "sa-datatables__details-container";
-          detailsTr.appendChild(detailsTd);
-          var tableRow = new TableRow(
-            this,
-            rowElement,
-            rowData,
-            cells[0],
-            detailsTd,
-            null
-          );
-          tableRow.onToggleDetails.add((sender: TableRow, options: any) => {
-            if (options.isExpanded) {
-              detailsTd.colSpan = rowElement.childElementCount;
-              rowElement.parentNode.insertBefore(
-                detailsTr,
-                rowElement.nextSibling
-              );
-            } else {
-              detailsTr.remove();
-            }
-          });
-          tableRow.render();
-        },
         dom: 'B<"sa-datatables__tools">prtip',
         // ordering: false,
         data: this.tableData,
@@ -265,8 +234,39 @@ export class DataTables extends Table {
         this.onColumnsChanged();
       }
     );
+    datatableApiRef
+      .rows()
+      .eq(0)
+      .each((index: number) => {
+        var row = datatableApiRef.row(index);
+        var detailsTr = document.createElement("tr");
+        var detailsTd = document.createElement("td");
+        detailsTd.className = "sa-datatables__details-container";
+        detailsTr.appendChild(detailsTd);
+        var tableRow = new DatatablesRow(
+          this,
+          row.cell(row.index(), 0).node(),
+          detailsTd,
+          row,
+          null
+        );
+        tableRow.onToggleDetails.add((sender: TableRow, options: any) => {
+          if (options.isExpanded) {
+            var rowElement = row.node();
+            detailsTd.colSpan = rowElement.childElementCount;
+            rowElement.parentNode.insertBefore(
+              detailsTr,
+              rowElement.nextSibling
+            );
+          } else {
+            detailsTr.remove();
+          }
+        });
+        tableRow.render();
+      });
+    datatableApiRef.draw(false);
   }
-  
+
   public doStateSave() {
     this.datatableApi.state.save();
   }

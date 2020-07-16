@@ -4,7 +4,7 @@ import { ColumnVisibility, QuestionLocation } from "./config";
 
 import "./tabulator.scss";
 import { DocumentHelper } from "../utils";
-import { TableRow } from "./tools/rowtools";
+import { TabulatorRow } from "./tools/rowtools";
 import { ColumnTools } from "./tools/columntools";
 import { TableTools } from "./tools/tabletools";
 
@@ -164,12 +164,11 @@ export class Tabulator extends Table {
   };
 
   rowFormatter = (row: any): void => {
-    var tableRow = new TableRow(
+    var tableRow = new TabulatorRow(
       this,
-      row.getElement(),
-      row.getData(),
       row.getCells()[0].getElement(),
       row.getElement(),
+      row,
       this.renderDetailActions
     );
     tableRow.onToggleDetails.add(() => {

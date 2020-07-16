@@ -36,6 +36,7 @@ export abstract class Table {
     return this.data;
   }
 
+  public abstract render(): void;
   public abstract applyFilter(value: string): void;
   public abstract applyColumnFilter(columnName: string, value: string): void;
   public abstract sortByColumn(columnName: string, direction: string): void;

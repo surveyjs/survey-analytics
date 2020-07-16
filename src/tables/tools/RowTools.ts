@@ -3,13 +3,11 @@ import { localization } from "../../localizationManager";
 import { QuestionLocation } from "../config";
 import { DocumentHelper } from "../../utils";
 
-export class TableRow {
+export abstract class TableRow {
   constructor(
-    table: Table,
-    private rowElement: HTMLElement,
-    private rowData: any,
-    toolsContainer: HTMLElement,
-    detailsContainer: HTMLElement,
+    protected table: Table,
+    protected toolsContainer: HTMLElement,
+    protected detailsContainer: HTMLElement,
     public renderDetailActions: (
       container: HTMLElement,
       data: any,
@@ -31,13 +29,8 @@ export class TableRow {
     any
   > = new Event<(sender: TableRow, options: any) => any, any>();
 
-  public getData(): any {
-    return this.rowData;
-  }
-
-  public getElement(): HTMLElement {
-    return this.rowElement;
-  }
+  public abstract getElement(): HTMLElement;
+  public abstract getData(): any;
 
   public getIsDetailsExpanded() {
     return false;
@@ -49,14 +42,14 @@ export class TableRow {
 
   public openDetails() {
     this.details.open();
-    this.rowElement.className += " " + this.detailedRowClass;
+    this.getElement().className += " " + this.detailedRowClass;
     this.onToggleDetails.fire(this, { isExpanded: true });
     this.isDetailsExpanded = true;
   }
 
   public closeDetails() {
     this.details.close();
-    this.rowElement.classList.remove(this.detailedRowClass);
+    this.getElement().classList.remove(this.detailedRowClass);
     this.onToggleDetails.fire(this, { isExpanded: false });
     this.isDetailsExpanded = false;
   }
@@ -68,26 +61,97 @@ export class TableRow {
   }
 }
 
+export class TabulatorRow extends TableRow {
+  constructor(
+    protected table: Table,
+    protected toolsContainer: HTMLElement,
+    protected detailsContainer: HTMLElement,
+    protected row: any,
+    public renderDetailActions: (
+      container: HTMLElement,
+      data: any,
+      datatablesRow: any
+    ) => HTMLElement
+  ) {
+    super(table, toolsContainer, detailsContainer, renderDetailActions);
+  }
+
+  public getElement(): HTMLElement {
+    return this.row.getElement();
+  }
+
+  public getData(): HTMLElement {
+    return this.row.getData();
+  }
+}
+
+export class DatatablesRow extends TableRow {
+  constructor(
+    protected table: Table,
+    protected toolsContainer: HTMLElement,
+    protected detailsContainer: HTMLElement,
+    protected row: any,
+    public renderDetailActions: (
+      container: HTMLElement,
+      data: any,
+      datatablesRow: any
+    ) => HTMLElement
+  ) {
+    super(table, toolsContainer, detailsContainer, renderDetailActions);
+  }
+
+  public getElement(): HTMLElement {
+    return this.row.node();
+  }
+
+  public getData(): HTMLElement {
+    return this.row.data();
+  }
+}
+
+interface IAction {
+  actionName: string;
+  actionCreator: (row: TableRow, table: Table) => HTMLElement;
+}
+
 export class RowTools {
   constructor(
     private targetNode: HTMLElement,
     private table: Table,
     private row: TableRow
-  ) {}
-
+  ) {
+    this.actions = { detail: this.createDetailsBtn };
+  }
+  private actions: {
+    [actionName: string]: (row: TableRow, table: Table) => HTMLElement;
+  };
   public render() {
-    this.targetNode.appendChild(this.createDetailsBtn());
+    for (var actionName in this.actions) {
+      if (this.actions.hasOwnProperty(actionName)) {
+        this.targetNode.appendChild(
+          this.actions[actionName](this.row, this.table)
+        );
+      }
+    }
   }
 
-  protected createDetailsBtn = () => {
+  protected createDetailsBtn = (row: TableRow) => {
     const btn = DocumentHelper.createSvgButton("detail");
     btn.title = localization.getString("showMinorColumns");
 
     btn.onclick = () => {
-      this.row.toggleDetails();
+      row.toggleDetails();
     };
     return btn;
   };
+
+  public addAction(action: IAction) {
+    this.actions[action.actionName] = action.actionCreator;
+  }
+
+  public removeActions(actionName: string) {
+    delete this.actions.actionName;
+  }
 }
 
 export class Details {
