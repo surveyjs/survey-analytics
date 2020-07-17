@@ -42,8 +42,11 @@ surveyAnalyticsDataTables.onRowCreated.add(function (table, opt) {
   row.setIsSelected = function (val) {
     row.isSelected = val;
   };
-  row.remove = function () {
+  row.remove = function (needUpdate) {
     row.innerRow.remove();
+    if (needUpdate) {
+      row.innerRow.draw();
+    }
   };
   var rowTools = opt.row.tools;
   rowTools.actions.push(function (row, table) {
@@ -70,7 +73,7 @@ surveyAnalyticsDataTables.renderDetailActions = (container, data, row) => {
   button2.innerHTML = "Delete Result";
   button2.onclick = (e) => {
     e.stopPropagation();
-    row.remove();
+    row.remove(true);
 
     // self.deleteSurveyResult(data.InstanceId, datatablesRow);
   };
