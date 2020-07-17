@@ -4,27 +4,23 @@ import { ColumnVisibility } from "../config";
 import { DocumentHelper } from "../../utils";
 
 export class TableTools {
-  constructor(private targetNode: HTMLElement, private table: Table) {}
-  private showColumnDropdown: HTMLElement;
+  constructor(private targetNode: HTMLElement, private table: Table) {
+    this.actions = [
+      this.createFilterInput,
+      this.createShowColumnDropdown,
+      this.createEntriesSelector,
+    ];
+  }
 
-  render() {
-    this.showColumnDropdown = this.createShowColumnDropdown();
-    const filterInput = this.createFilterInput();
+  public actions: ((table: Table) => HTMLElement)[];
 
-    this.targetNode.innerHTML = "";
-
-    this.targetNode.appendChild(filterInput);
-    if (!!this.showColumnDropdown)
-      this.targetNode.appendChild(this.showColumnDropdown);
-
-    this.targetNode.appendChild(this.getEntriesContainer());
-
-    this.table.onColumnsVisibilityChanged.add(() => {
-      this.update();
+  public render() {
+    this.actions.forEach((action) => {
+      this.targetNode.appendChild(action(this.table));
     });
   }
 
-  protected createFilterInput(): HTMLElement {
+  protected createFilterInput(table: Table): HTMLElement {
     const input = DocumentHelper.createInput(
       "sa-table__global-filter",
       "Search..."
@@ -35,43 +31,71 @@ export class TableTools {
     return input;
   }
 
-  protected createShowColumnDropdown = (): HTMLElement => {
+  protected createShowColumnDropdown = (table: Table): HTMLElement => {
     const dropdown = document.createElement("select");
     dropdown.classList.add("sa-table__show-column");
-
-    var hiddenColumns = this.table.columns.filter(
-      (column: any) => column.visibility === ColumnVisibility.Invisible
-    );
-    if (hiddenColumns.length == 0) return null;
     var option = document.createElement("option");
     option.text = localization.getString("showColumn");
     option.disabled = true;
     option.selected = true;
     dropdown.appendChild(option);
 
-    hiddenColumns.forEach((column: any) => {
-      var option = document.createElement("option");
-      var text = column.displayName;
-      if (text.length > 20) {
-        text = text.substring(0, 20) + "...";
+    function update() {
+      var hiddenColumns = table.columns.filter(
+        (column: any) => column.visibility === ColumnVisibility.Invisible
+      );
+      if (hiddenColumns.length == 0) {
+        dropdown.style.display = "none";
+        return;
       }
-      option.text = text;
-      option.title = column.displayName;
-      option.value = column.name;
-      dropdown.appendChild(option);
-    });
+      dropdown.style.display = "initial";
+
+      hiddenColumns.forEach((column: any) => {
+        var option = document.createElement("option");
+        var text = column.displayName;
+        if (text.length > 20) {
+          text = text.substring(0, 20) + "...";
+        }
+        option.text = text;
+        option.title = column.displayName;
+        option.value = column.name;
+        dropdown.appendChild(option);
+      });
+    }
 
     dropdown.onchange = (e: any) => {
       const val = e.target.value;
       e.stopPropagation();
       if (!val) return;
-      this.table.setColumnVisibility(val, ColumnVisibility.Visible);
+      table.setColumnVisibility(val, ColumnVisibility.Visible);
     };
+
+    update();
+
+    table.onColumnsVisibilityChanged.add(function () {
+      update();
+    });
 
     return dropdown;
   };
 
-  getEntriesContainer(): HTMLElement {
+  createEntriesSelector(table: Table): HTMLElement {
+    function getEntriesDropdown(table: Table): HTMLElement {
+      const el = document.createElement("select");
+      var optionsValues = ["1", "5", "10", "25", "50", "75", "100"];
+      optionsValues.forEach(function (val) {
+        var option = document.createElement("option");
+        option.innerHTML = val;
+        el.appendChild(option);
+      });
+      el.value = "5";
+
+      el.onchange = () => {
+        table.setPageSize(Number(el.value));
+      };
+
+      return el;
+    }
     const selectorContainer = document.createElement("div");
     selectorContainer.className = "sa-table__entries";
     const showSpan = document.createElement("span");
@@ -83,32 +107,8 @@ export class TableTools {
     selectorContainer.appendChild(showSpan);
     showSpan.className =
       "sa-table__entries-label sa-table__entries-label--right";
-    selectorContainer.appendChild(this.getEntriesDropdown());
+    selectorContainer.appendChild(getEntriesDropdown(table));
     selectorContainer.appendChild(entriesSpan);
     return selectorContainer;
-  }
-
-  getEntriesDropdown(): HTMLElement {
-    const el = document.createElement("select");
-    var optionsValues = ["1", "5", "10", "25", "50", "75", "100"];
-    optionsValues.forEach(function (val) {
-      var option = document.createElement("option");
-      option.innerHTML = val;
-      el.appendChild(option);
-    });
-    el.value = "5";
-
-    el.onchange = () => {
-      this.table.setPageSize(Number(el.value));
-    };
-
-    return el;
-  }
-
-  public update() {
-    if (!!this.showColumnDropdown) this.showColumnDropdown.remove();
-    this.showColumnDropdown = this.createShowColumnDropdown();
-    if (!!this.showColumnDropdown)
-      this.targetNode.appendChild(this.showColumnDropdown);
   }
 }

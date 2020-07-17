@@ -263,6 +263,7 @@ export class DataTables extends Table {
           }
         });
         tableRow.render();
+        this._rows.push(tableRow);
       });
     datatableApiRef.draw(false);
   }

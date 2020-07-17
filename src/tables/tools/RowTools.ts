@@ -109,32 +109,22 @@ export class DatatablesRow extends TableRow {
   }
 }
 
-interface IAction {
-  actionName: string;
-  actionCreator: (row: TableRow, table: Table) => HTMLElement;
-}
-
 export class RowTools {
   constructor(
     private targetNode: HTMLElement,
     private table: Table,
     private row: TableRow
   ) {
-    this.actions = { detail: this.createDetailsBtn };
-  }
-  private actions: {
-    [actionName: string]: (row: TableRow, table: Table) => HTMLElement;
-  };
-  public render() {
-    for (var actionName in this.actions) {
-      if (this.actions.hasOwnProperty(actionName)) {
-        this.targetNode.appendChild(
-          this.actions[actionName](this.row, this.table)
-        );
-      }
-    }
+    this.actions = [this.createDetailsBtn];
   }
 
+  public actions: ((row: TableRow, table: Table) => HTMLElement)[];
+
+  public render() {
+    this.actions.forEach((action) => {
+      this.targetNode.appendChild(action(this.row, this.table));
+    });
+  }
   protected createDetailsBtn = (row: TableRow) => {
     const btn = DocumentHelper.createSvgButton("detail");
     btn.title = localization.getString("showMinorColumns");
@@ -144,14 +134,6 @@ export class RowTools {
     };
     return btn;
   };
-
-  public addAction(action: IAction) {
-    this.actions[action.actionName] = action.actionCreator;
-  }
-
-  public removeActions(actionName: string) {
-    delete this.actions.actionName;
-  }
 }
 
 export class Details {

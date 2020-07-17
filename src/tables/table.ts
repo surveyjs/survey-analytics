@@ -1,6 +1,6 @@
 import { SurveyModel, Question } from "survey-core";
 import { ColumnVisibility, QuestionLocation, ColumnDataType } from "./config";
-import { Details } from "./tools/rowtools";
+import { Details, TableRow } from "./tools/rowtools";
 
 export abstract class Table {
   protected tableData: any;
@@ -19,6 +19,7 @@ export abstract class Table {
     this.targetNode.className += " sa-table";
     this.initTableData(data);
   }
+  protected _rows: TableRow[] = [];
 
   protected rowDetails: { [rowName: string]: Details };
 
@@ -32,6 +33,11 @@ export abstract class Table {
     any
   > = new Event<(sender: Tabulator, options: any) => any, any>();
 
+  public onRowCreated: Event<
+    (sender: Tabulator, options: any) => any,
+    any
+  > = new Event<(sender: Tabulator, options: any) => any, any>();
+
   public getData() {
     return this.data;
   }
@@ -41,6 +47,10 @@ export abstract class Table {
   public abstract applyColumnFilter(columnName: string, value: string): void;
   public abstract sortByColumn(columnName: string, direction: string): void;
   public abstract setPageSize(value: number): void;
+
+  protected getRows(): TableRow[] {
+    return [].concat(this._rows);
+  }
 
   protected buildColumns = (survey: SurveyModel) => {
     return this.survey.getAllQuestions().map((question: Question) => {

@@ -175,7 +175,10 @@ export class Tabulator extends Table {
       row.normalizeHeight();
       this.update();
     });
+    this.onRowCreated.fire(this, { row: tableRow });
     tableRow.render();
+
+    this._rows.push();
   };
 
   protected getTitleFormatter = (
