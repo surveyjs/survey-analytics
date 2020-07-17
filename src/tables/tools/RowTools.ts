@@ -180,6 +180,7 @@ export class Details {
       var row = document.createElement("tr");
       row.className = "sa-table__detail";
       var td = document.createElement("td");
+      td.colSpan = 3;
       row.appendChild(td);
       rows.push(row);
       this.renderActions(td, this.table.getData(), this.row);
