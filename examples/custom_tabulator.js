@@ -39,7 +39,7 @@ surveyAnalyticsTabulator.onRowCreated.add(function (table, opt) {
     row.isSelected = val;
   };
   row.remove = function () {
-    row.row.delete();
+    row.innerRow.delete();
   };
   var rowTools = opt.row.tools;
   rowTools.actions.push(function (row, table) {
@@ -50,7 +50,28 @@ surveyAnalyticsTabulator.onRowCreated.add(function (table, opt) {
     };
     return checkbox;
   });
-  row.row.getCells()[0].getColumn().setWidth("100");
+  row.innerRow.getCells()[0].getColumn().setWidth("100");
 });
+
+surveyAnalyticsTabulator.renderDetailActions = (container, data, row) => {
+  const button1 = document.createElement("button");
+  button1.innerHTML = "Show in Survey";
+  button1.className = "rounded-button";
+  button1.onclick = (e) => {
+    e.stopPropagation();
+    self.showSurveyResult(data);
+  };
+  container.appendChild(button1);
+  const button2 = document.createElement("button");
+  button2.className = "rounded-button rounded-button--danger";
+  button2.innerHTML = "Delete Result";
+  button2.onclick = (e) => {
+    e.stopPropagation();
+    row.remove();
+
+    // self.deleteSurveyResult(data.InstanceId, datatablesRow);
+  };
+  container.appendChild(button2);
+};
 
 surveyAnalyticsTabulator.render();

@@ -273,12 +273,6 @@ export class DataTables extends Table {
   }
   public stateSaveCallback(settings: any, data: any) {}
 
-  public renderDetailActions: (
-    container: HTMLElement,
-    data: any,
-    datatablesRow: any
-  ) => HTMLElement;
-
   public detailButtonCreators: Array<(columnName?: string) => HTMLElement> = [];
 
   getColumns(): Array<Object> {

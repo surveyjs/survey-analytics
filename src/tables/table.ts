@@ -48,6 +48,12 @@ export abstract class Table {
     any
   > = new Event<(sender: Tabulator, options: any) => any, any>();
 
+  public renderDetailActions: (
+    container: HTMLElement,
+    data: any,
+    row: TableRow
+  ) => HTMLElement;
+
   public getData() {
     return this.data;
   }

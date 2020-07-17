@@ -72,12 +72,7 @@ export class Tabulator extends Table {
       self._columns = self.buildColumns(survey);
     }
   }
-  public renderDetailActions: (
-    container: HTMLElement,
-    data: any,
-    row: any
-  ) => HTMLElement;
-
+  
   public detailButtonCreators: Array<(columnName?: string) => HTMLElement> = [];
 
   private readonly COLUMN_MIN_WIDTH = 155;

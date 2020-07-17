@@ -11,10 +11,15 @@ export abstract class TableRow {
     public renderDetailActions: (
       container: HTMLElement,
       data: any,
-      datatablesRow: any
+      tableRow: TableRow
     ) => HTMLElement
   ) {
-    this.details = new Details(table, this, detailsContainer, null);
+    this.details = new Details(
+      table,
+      this,
+      detailsContainer,
+      renderDetailActions
+    );
     this.tools = new RowTools(toolsContainer, table, this);
     table.onColumnsLocationChanged.add(() => {
       this.closeDetails();
@@ -66,7 +71,7 @@ export class TabulatorRow extends TableRow {
     protected table: Table,
     protected toolsContainer: HTMLElement,
     protected detailsContainer: HTMLElement,
-    protected row: any,
+    protected innerRow: any,
     public renderDetailActions: (
       container: HTMLElement,
       data: any,
@@ -76,11 +81,11 @@ export class TabulatorRow extends TableRow {
     super(table, toolsContainer, detailsContainer, renderDetailActions);
   }
   public getElement(): HTMLElement {
-    return this.row.getElement();
+    return this.innerRow.getElement();
   }
 
   public getData(): HTMLElement {
-    return this.row.getData();
+    return this.innerRow.getData();
   }
 }
 
@@ -177,7 +182,7 @@ export class Details {
       var td = document.createElement("td");
       row.appendChild(td);
       rows.push(row);
-      this.renderActions(td, this.table.getData(), row);
+      this.renderActions(td, this.table.getData(), this.row);
     }
     rows.forEach((row) => {
       this.detailsTable.appendChild(row);
