@@ -1,4 +1,5 @@
-import { Table, Event } from "../table";
+import { Table } from "../table";
+import { Event } from "survey-core";
 import { localization } from "../../localizationManager";
 import { QuestionLocation } from "../config";
 import { DocumentHelper } from "../../utils";
