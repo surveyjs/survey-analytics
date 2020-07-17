@@ -94,7 +94,7 @@ export class DatatablesRow extends TableRow {
     protected table: Table,
     protected toolsContainer: HTMLElement,
     protected detailsContainer: HTMLElement,
-    protected row: any,
+    protected innerRow: any,
     public renderDetailActions: (
       container: HTMLElement,
       data: any,
@@ -105,11 +105,11 @@ export class DatatablesRow extends TableRow {
   }
 
   public getElement(): HTMLElement {
-    return this.row.node();
+    return this.innerRow.node();
   }
 
   public getData(): HTMLElement {
-    return this.row.data();
+    return this.innerRow.data();
   }
 }
 
