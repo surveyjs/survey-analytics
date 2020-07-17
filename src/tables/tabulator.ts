@@ -179,7 +179,7 @@ export class Tabulator extends Table {
     this.onRowCreated.fire(this, { row: tableRow });
     tableRow.render();
 
-    this._rows.push();
+    this._rows.push(tableRow);
   };
 
   protected getTitleFormatter = (
