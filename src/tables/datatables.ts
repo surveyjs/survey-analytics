@@ -248,7 +248,7 @@ export class DataTables extends Table {
           row.cell(row.index(), 0).node(),
           detailsTd,
           row,
-          null
+          this.renderDetailActions
         );
         tableRow.onToggleDetails.add((sender: TableRow, options: any) => {
           if (options.isExpanded) {
