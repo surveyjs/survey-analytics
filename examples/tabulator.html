@@ -34,25 +34,6 @@
   <body>
     <div id="tabulatorContainer"></div>
     <script src="./data.js"></script>
-    <script>
-      var survey = new Survey.SurveyModel(json);
-
-      var normalizedData = data.map(function (item) {
-        survey.getAllQuestions().forEach(function (q) {
-          if (!item[q.name]) {
-            item[q.name] = "";
-          }
-        });
-        return item;
-      });
-
-      var surveyAnalyticsTabulator = new SurveyAnalytics.Tabulator(
-        document.getElementById("tabulatorContainer"),
-        survey,
-        normalizedData
-      );
-
-      surveyAnalyticsTabulator.render();
-    </script>
+    <script src="./custom_tabulator.js"></script>
   </body>
 </html>
