@@ -38,6 +38,16 @@ export abstract class Table {
     any
   > = new Event<(sender: Tabulator, options: any) => any, any>();
 
+  public onTableToolsCreated: Event<
+    (sender: Tabulator, options: any) => any,
+    any
+  > = new Event<(sender: Tabulator, options: any) => any, any>();
+
+  public onColumnToolsCreated: Event<
+    (sender: Tabulator, options: any) => any,
+    any
+  > = new Event<(sender: Tabulator, options: any) => any, any>();
+
   public getData() {
     return this.data;
   }

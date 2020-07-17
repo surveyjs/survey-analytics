@@ -116,6 +116,7 @@ export class Tabulator extends Table {
     header.appendChild(toolsContainer);
     header.appendChild(paginationElement);
     this.tableTools = new TableTools(toolsContainer, this);
+    this.onTableToolsCreated.fire(this, { tools: this.tableTools });
     this.tableTools.render();
   };
 
@@ -204,13 +205,14 @@ export class Tabulator extends Table {
   getHeaderActions = (columnName: string): HTMLDivElement => {
     const container = document.createElement("div");
     container.classList.add("sa-table__action-container");
-    const columnActions = new ColumnTools(
+    const columnTools = new ColumnTools(
       container,
       this,
       columnName,
       this.isTrustedAccess
     );
-    columnActions.render();
+    this.onColumnToolsCreated.fire(this, { tools: columnTools });
+    columnTools.render();
     return container;
   };
 
