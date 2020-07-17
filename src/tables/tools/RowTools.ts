@@ -95,7 +95,7 @@ export class DatatablesRow extends TableRow {
     protected table: Table,
     protected toolsContainer: HTMLElement,
     protected detailsContainer: HTMLElement,
-    protected innerRow: any,
+    private _innerRow: any,
     public renderDetailActions: (
       container: HTMLElement,
       data: any,
@@ -103,14 +103,23 @@ export class DatatablesRow extends TableRow {
     ) => HTMLElement
   ) {
     super(table, toolsContainer, detailsContainer, renderDetailActions);
+    this.rowElement = _innerRow.node();
+    this.rowData = _innerRow.data();
+    this._innerRow = this._innerRow.row(this.rowElement);
+  }
+  private rowElement: HTMLElement;
+  private rowData: any;
+
+  public get innerRow() {
+    return this._innerRow.row(this.rowElement);
   }
 
   public getElement(): HTMLElement {
-    return this.innerRow.node();
+    return this.rowElement;
   }
 
   public getData(): HTMLElement {
-    return this.innerRow.data();
+    return this.rowData;
   }
 }
 

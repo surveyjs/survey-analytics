@@ -202,6 +202,7 @@ export class DataTables extends Table {
                   columnsData[index],
                   self.isTrustedAccess
                 );
+                self.onColumnToolsCreated.fire(this, { tools: columnTools });
                 columnTools.render();
               }
               $thNode.prepend(container);
@@ -221,6 +222,7 @@ export class DataTables extends Table {
     var toolsContainer = jQuery("div.sa-datatables__tools")[0];
 
     var tools = new TableTools(toolsContainer, this);
+    this.onTableToolsCreated.fire(this, { tools: tools });
     tools.render();
 
     datatableApiRef.page(self.currentPageNumber);
@@ -243,16 +245,17 @@ export class DataTables extends Table {
         var detailsTd = document.createElement("td");
         detailsTd.className = "sa-datatables__details-container";
         detailsTr.appendChild(detailsTd);
+        var rowElement = row.node();
+        var firstCell = row.cell(row.index(), 0).node();
         var tableRow = new DatatablesRow(
           this,
-          row.cell(row.index(), 0).node(),
+          firstCell,
           detailsTd,
           row,
           this.renderDetailActions
         );
         tableRow.onToggleDetails.add((sender: TableRow, options: any) => {
           if (options.isExpanded) {
-            var rowElement = row.node();
             detailsTd.colSpan = rowElement.childElementCount;
             rowElement.parentNode.insertBefore(
               detailsTr,
@@ -262,8 +265,9 @@ export class DataTables extends Table {
             detailsTr.remove();
           }
         });
-        tableRow.render();
+        this.onRowCreated.fire(this, { row: tableRow });
         this._rows.push(tableRow);
+        tableRow.render();
       });
     datatableApiRef.draw(false);
   }
