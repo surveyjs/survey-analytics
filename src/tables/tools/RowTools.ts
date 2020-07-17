@@ -20,8 +20,8 @@ export abstract class TableRow {
       this.closeDetails();
     });
   }
-  private details: Details;
-  private tools: RowTools;
+  public details: Details;
+  public tools: RowTools;
   private detailedRowClass = "sa-table__detail-row";
   private isDetailsExpanded = false;
   public onToggleDetails: Event<
@@ -75,7 +75,6 @@ export class TabulatorRow extends TableRow {
   ) {
     super(table, toolsContainer, detailsContainer, renderDetailActions);
   }
-
   public getElement(): HTMLElement {
     return this.row.getElement();
   }
