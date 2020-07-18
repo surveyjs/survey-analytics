@@ -9,7 +9,6 @@ if (allowDomRendering()) {
   Plotly = <any>require("plotly.js-dist");
 }
 
-
 export class GaugePlotly extends VisualizerBase {
   private _resultAverage: any;
   private _resultMin: any;
@@ -28,7 +27,6 @@ export class GaugePlotly extends VisualizerBase {
   public static types = ["gauge", "bullet"];
   protected chartTypes: Array<string>;
   chartType: String;
-  chartNode = <HTMLElement>document.createElement("div");
 
   public static showAsPercentage = false;
 
@@ -47,8 +45,8 @@ export class GaugePlotly extends VisualizerBase {
       this._resultAverage = undefined;
     }
     super.update(data);
-    this.destroy();
-    this.createChart();
+    this.destroyContent(this.contentContainer);
+    this.renderContent(this.contentContainer);
     this.invokeOnUpdate();
   }
 
@@ -77,8 +75,9 @@ export class GaugePlotly extends VisualizerBase {
   }
 
   destroy() {
-    Plotly.purge(this.chartNode);
+    this.destroyContent(this.contentContainer);
     this._resultAverage = undefined;
+    super.destroy();
   }
 
   generateText(maxValue: number, minValue: number, stepsCount: number) {
@@ -142,7 +141,7 @@ export class GaugePlotly extends VisualizerBase {
     return (value / maxValue) * 100;
   }
 
-  private createChart() {
+  private createChart(chartNode: HTMLElement) {
     const question = this.question;
     let maxValue;
     let minValue;
@@ -204,12 +203,18 @@ export class GaugePlotly extends VisualizerBase {
       staticPlot: true,
     };
 
-    this.chart = Plotly.newPlot(this.chartNode, data, layout, config);
+    return Plotly.newPlot(chartNode, data, layout, config);
   }
 
-  protected renderContent(container: HTMLDivElement) {
-    this.createChart();
-    container.appendChild(this.chartNode);
+  protected destroyContent(container: HTMLElement) {
+    Plotly.purge(container.children[0]);
+    super.destroyContent(container);
+  }
+
+  protected renderContent(container: HTMLElement) {
+    const chartNode: HTMLElement = <HTMLElement>document.createElement("div");
+    container.appendChild(chartNode);
+    this.chart = this.createChart(chartNode);
   }
 
   get result() {

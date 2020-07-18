@@ -4,6 +4,8 @@ import { VisualizationManager } from "../visualizationManager";
 import { SelectBasePlotly } from "./selectBase";
 
 export class BooleanPlotly extends SelectBasePlotly {
+  public static types = ["pie", "bar", "doughnut"];
+
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
@@ -43,8 +45,6 @@ export class BooleanPlotly extends SelectBasePlotly {
       });
     }
   }
-
-  public static types = ["pie", "bar", "doughnut"];
 
   protected getSelectedItemByText(itemText: string) {
     const labels = this.getLabels();

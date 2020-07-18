@@ -44,7 +44,7 @@ export class Text extends VisualizerBase {
     return { columnsCount, data: result };
   }
 
-  protected renderContent(container: HTMLDivElement) {
+  protected renderContent(container: HTMLElement) {
     const { columnsCount, data}  = this.getData();
     const emptyTextNode = <HTMLElement>document.createElement("p");
     emptyTextNode.innerHTML = "There are no results yet";

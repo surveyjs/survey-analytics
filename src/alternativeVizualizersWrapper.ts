@@ -53,7 +53,7 @@ export class AlternativeVisualizersWrapper extends VisualizerBase {
     super.destroy();
   }
 
-  protected renderContent(container: HTMLDivElement) {
+  protected renderContent(container: HTMLElement) {
     this.visualizerContainer = container;
     this.visualizer.render(this.visualizerContainer);
   }

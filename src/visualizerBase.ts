@@ -3,9 +3,12 @@ import { Question } from "survey-core";
 import "./visualizerBase.scss";
 
 export class VisualizerBase {
-  protected destroyRenderResult: () => void;
+  protected renderResult: HTMLElement = undefined;
+  protected toolbarContainer: HTMLElement = undefined;
+  protected contentContainer: HTMLElement = undefined;
+  protected footerContainer: HTMLElement = undefined;
 
-  public toolbarItemCreators: { [name: string]: () => HTMLElement } = {};
+  protected toolbarItemCreators: { [name: string]: () => HTMLElement } = {};
 
   constructor(
     public question: Question,
@@ -32,41 +35,13 @@ export class VisualizerBase {
   }
 
   destroy() {
-    this.destroyRenderResult && this.destroyRenderResult();
-  }
-
-  protected renderToolbar(container: HTMLDivElement) {
-    const toolbar = document.createElement("div");
-    toolbar.className = "sva-toolbar";
-    this.createToolbarItems(toolbar);
-    container.appendChild(toolbar);
-  }
-
-  protected renderContent(container: HTMLDivElement) {
-    container.innerHTML = "This question type is not visualized yet";
-  }
-
-  protected renderFooter(container: HTMLDivElement) {
-    container.innerHTML = "";
-  }
-
-  render(targetElement: HTMLElement) {
-    this.destroyRenderResult = () => targetElement.innerHTML = "";
-
-    const toolbar = document.createElement("div");
-    toolbar.className = "sa-visualizer__toolbar";
-    const content = document.createElement("div");
-    content.className = "sa-visualizer__content";
-    const footer = document.createElement("div");
-    footer.className = "sa-visualizer__footer";
-
-    this.renderToolbar(toolbar);
-    this.renderContent(content);
-    this.renderFooter(footer);
-
-    targetElement.appendChild(toolbar);
-    targetElement.appendChild(content);
-    targetElement.appendChild(footer);
+    if(!!this.renderResult) {
+      this.renderResult.innerHTML = "";
+      this.renderResult = undefined;
+      this.toolbarContainer = undefined;
+      this.contentContainer = undefined;
+      this.footerContainer = undefined;
+    }
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
@@ -76,6 +51,48 @@ export class VisualizerBase {
         toolbar.appendChild(toolbarItem);
       }
     });
+  }
+
+  protected renderToolbar(container: HTMLElement) {
+    const toolbar = document.createElement("div");
+    toolbar.className = "sva-toolbar";
+    this.createToolbarItems(toolbar);
+    container.appendChild(toolbar);
+  }
+
+  protected destroyContent(container: HTMLElement) {
+    container.innerHTML = "";
+  }
+
+  protected renderContent(container: HTMLElement) {
+    container.innerHTML = "This question type is not visualized yet";
+  }
+
+  protected destroyFooter(container: HTMLElement) {
+    container.innerHTML = "";
+  }
+
+  protected renderFooter(container: HTMLElement) {
+    container.innerHTML = "";
+  }
+
+  render(targetElement: HTMLElement) {
+    this.renderResult = targetElement;
+
+    this.toolbarContainer = document.createElement("div");
+    this.toolbarContainer.className = "sa-visualizer__toolbar";
+    this.contentContainer = document.createElement("div");
+    this.contentContainer.className = "sa-visualizer__content";
+    this.footerContainer = document.createElement("div");
+    this.footerContainer.className = "sa-visualizer__footer";
+
+    this.renderToolbar(this.toolbarContainer);
+    this.renderContent(this.contentContainer);
+    this.renderFooter(this.footerContainer);
+
+    targetElement.appendChild(this.toolbarContainer);
+    targetElement.appendChild(this.contentContainer);
+    targetElement.appendChild(this.footerContainer);
   }
 
   getRandomColor() {

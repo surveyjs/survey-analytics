@@ -41,20 +41,26 @@ export class SelectBase extends VisualizerBase {
 
   protected chartTypes: string[];
   protected chartType: string;
-  protected chartNode: HTMLElement = <HTMLElement>document.createElement("div");
+
   protected onChartTypeChanged() {}
+
   protected setChartType(chartType: string) {
     if (
       this.chartTypes.indexOf(chartType) !== -1 &&
       this.chartType !== chartType
     ) {
       this.chartType = chartType;
-      this.createChart();
+      this.destroyContent(this.contentContainer);
+      this.renderContent(this.contentContainer);
       this.invokeOnUpdate();
     }
   }
 
-  createChart() {}
+  protected getSelectedItemByText(itemText: string) {
+    return this.question.choices.filter(
+      (choice: ItemValue) => choice.text === itemText
+    )[0];
+  }
 
   setSelection(item: ItemValue) {
     this.selectedItem = item;
@@ -68,12 +74,16 @@ export class SelectBase extends VisualizerBase {
   }
   onDataItemSelected: (selectedValue: any, selectedText: string) => void;
 
-  protected renderContent(container: HTMLDivElement) {
-    this.createChart();
-    container.appendChild(this.chartNode);
+  update(data: Array<{ [index: string]: any }>) {
+    super.update(data);
+    this.destroyContent(this.contentContainer);
+    this.renderContent(this.contentContainer);
+    this.destroyFooter(this.footerContainer);
+    this.renderFooter(this.footerContainer);
+    this.invokeOnUpdate();
   }
 
-  protected renderFooter(container: HTMLDivElement) {
+  protected renderFooter(container: HTMLElement) {
     container.innerHTML = "";
     if(this.question.hasComment || this.question.hasOther) {
       const footerTitleElement = document.createElement("h4");
@@ -155,4 +165,11 @@ export class SelectBase extends VisualizerBase {
     });
     return [statistics];
   }
+
+  destroy() {
+    this.destroyContent(this.contentContainer);
+    this.destroyFooter(this.footerContainer);
+    super.destroy();
+  }
+
 }

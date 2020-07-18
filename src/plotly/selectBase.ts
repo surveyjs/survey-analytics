@@ -9,7 +9,9 @@ if (allowDomRendering()) {
 }
 
 export class SelectBasePlotly extends SelectBase {
-  static displayModeBar: any = undefined;
+  private chart: Promise<Plotly.PlotlyHTMLElement>;
+  public static types = ["bar", "pie", "doughnut", "scatter"];
+  public static displayModeBar: any = undefined;
 
   constructor(
     question: Question,
@@ -21,30 +23,15 @@ export class SelectBasePlotly extends SelectBase {
     this.chartType = this.chartTypes[0];
   }
 
-  private chart: Promise<Plotly.PlotlyHTMLElement>;
-  private filterText: HTMLSpanElement = undefined;
-  private filter: HTMLDivElement = undefined;
-  public static types = ["bar", "pie", "doughnut", "scatter"];
-
-  update(data: Array<{ [index: string]: any }>) {
-    super.update(data);
-    this.destroy();
-    this.chart = this.getPlotlyChart(this.chartNode, this.chartType);
-    this.invokeOnUpdate();
+  protected destroyContent(container: HTMLElement) {
+    Plotly.purge(container.children[0]);
+    super.destroyContent(container);
   }
 
-  destroy() {
-    Plotly.purge(this.chartNode);
-  }
-
-  createChart() {
-    this.chart = this.getPlotlyChart(this.chartNode, this.chartType);
-  }
-
-  protected getSelectedItemByText(itemText: string) {
-    return this.question.choices.filter(
-      (choice: ItemValue) => choice.text === itemText
-    )[0];
+  protected renderContent(container: HTMLElement) {
+    const chartNode: HTMLElement = <HTMLElement>document.createElement("div");
+    container.appendChild(chartNode);
+    this.chart = this.createChart(chartNode, this.chartType);
   }
 
   protected patchConfigParameters(
@@ -54,7 +41,7 @@ export class SelectBasePlotly extends SelectBase {
     config: object
   ) {}
 
-  private getPlotlyChart(
+  private createChart(
     chartNode: HTMLElement,
     chartType: string
   ): Promise<Plotly.PlotlyHTMLElement> {
