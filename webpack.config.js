@@ -79,7 +79,9 @@ module.exports = function(options) {
 
   var config = {
     mode: isProductionBuild ? "production" : "development",
-    entry: { },
+    entry: {
+      "survey.analytics": path.resolve(__dirname, "./src/index")
+    },
     resolve: {
       extensions: [".ts", ".js"],
       alias: {
@@ -154,18 +156,6 @@ module.exports = function(options) {
         commonjs: "survey-core",
         amd: "survey-core"
       },
-      "chart.js": {
-        root: "Chart",
-        commonjs2: "chart.js",
-        commonjs: "chart.js",
-        amd: "chart.js"
-      },
-      c3: {
-        root: "c3",
-        commonjs2: "c3",
-        commonjs: "c3",
-        amd: "c3"
-      },
       wordcloud: {
         root: "WordCloud",
         commonjs2: "wordcloud",
@@ -206,8 +196,6 @@ module.exports = function(options) {
       new webpack.LoaderOptionsPlugin({ debug: true })
     ]);
   }
-
-  config.entry["survey.analytics"] = path.resolve(__dirname, "./src/index");
 
   return config;
 };
