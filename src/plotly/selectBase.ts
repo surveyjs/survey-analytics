@@ -13,12 +13,11 @@ export class SelectBasePlotly extends SelectBase {
   static displayModeBar: any = undefined;
 
   constructor(
-    protected targetElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetElement, question, data, options);
+    super(question, data, options);
     this.chartTypes = SelectBasePlotly.types;
     this.chartType = this.chartTypes[0];
   }

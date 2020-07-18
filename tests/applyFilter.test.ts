@@ -16,7 +16,7 @@ test("applyFilter method", () => {
       q1: "sister"
     }
   ];
-  const panel = new VisualizationPanel(undefined, [], data);
+  const panel = new VisualizationPanel([], data);
   expect(panel["filteredData"]).toEqual(data);
   panel.applyFilter("q1", "sister");
   expect(panel["filteredData"]).toEqual([

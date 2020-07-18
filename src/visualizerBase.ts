@@ -3,11 +3,11 @@ import { Question } from "survey-core";
 import "./visualizerBase.scss";
 
 export class VisualizerBase {
+  protected destroyRenderResult: () => void;
 
   public toolbarItemCreators: { [name: string]: () => HTMLElement } = {};
 
   constructor(
-    protected targetElement: HTMLElement,
     public question: Question,
     protected data: Array<{ [index: string]: any }>,
     protected options?: Object
@@ -32,7 +32,7 @@ export class VisualizerBase {
   }
 
   destroy() {
-    this.targetElement.innerHTML = "";
+    this.destroyRenderResult && this.destroyRenderResult();
   }
 
   protected renderToolbar(container: HTMLDivElement) {
@@ -50,8 +50,8 @@ export class VisualizerBase {
     container.innerHTML = "";
   }
 
-  render(targetElement?: HTMLElement) {
-    this.targetElement = targetElement || this.targetElement;
+  render(targetElement: HTMLElement) {
+    this.destroyRenderResult = () => targetElement.innerHTML = "";
 
     const toolbar = document.createElement("div");
     toolbar.className = "sa-visualizer__toolbar";
@@ -64,9 +64,9 @@ export class VisualizerBase {
     this.renderContent(content);
     this.renderFooter(footer);
 
-    this.targetElement.appendChild(toolbar);
-    this.targetElement.appendChild(content);
-    this.targetElement.appendChild(footer);
+    targetElement.appendChild(toolbar);
+    targetElement.appendChild(content);
+    targetElement.appendChild(footer);
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {

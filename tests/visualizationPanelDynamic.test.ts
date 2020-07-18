@@ -25,7 +25,6 @@ test("check paneldynamic visualization getQuestions() when panels count is 0", (
   const survey = new SurveyModel(json);
   const question = survey.getAllQuestions()[0];
   const viz = new VisualizationPanelDynamic(
-    document.createElement("div"),
     <any>question,
     data,
     {}

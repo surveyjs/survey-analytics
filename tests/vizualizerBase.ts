@@ -1,7 +1,7 @@
 import { VisualizerBase } from "../src/visualizerBase";
 
 test("custom colors", () => {
-  expect(new VisualizerBase(null, null, null).getColors(1)).toEqual([
+  expect(new VisualizerBase(null, null).getColors(1)).toEqual([
     "#86e1fb",
     "#3999fb",
     "#ff6771",
@@ -16,7 +16,7 @@ test("custom colors", () => {
 
   VisualizerBase.customColors = ["red", "green", "blue"];
 
-  expect(new VisualizerBase(null, null, null).getColors(2)).toEqual([
+  expect(new VisualizerBase(null, null).getColors(2)).toEqual([
     "red",
     "green",
     "blue",

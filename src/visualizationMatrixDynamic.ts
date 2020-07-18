@@ -4,12 +4,11 @@ import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
 
 export class VisualizationMatrixDynamic extends VisualizationPanelDynamic {
   constructor(
-    targetElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetElement, question, data, options);
+    super(question, data, options);
   }
 
   getQuestions() {

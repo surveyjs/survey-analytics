@@ -10,9 +10,8 @@ var normalizedData = data.map(function(item) {
 });
 
 var visPanel = new SurveyAnalytics.VisualizationPanel(
-  document.getElementById("summaryContainer"),
   survey.getAllQuestions(),
   normalizedData
 );
 visPanel.showHeader = true;
-visPanel.render();
+visPanel.render(document.getElementById("summaryContainer"));

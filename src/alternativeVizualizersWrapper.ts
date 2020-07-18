@@ -6,12 +6,11 @@ import { ToolbarHelper } from "./utils/index";
 export class AlternativeVisualizersWrapper extends VisualizerBase {
   constructor(
     private visualizers: Array<VisualizerBase>,
-    targetElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetElement, question, data, options);
+    super(question, data, options);
     if(!visualizers || visualizers.length < 2) {
       throw new Error("VisualizerArrayWrapper works with visualizers collection only.");
     }

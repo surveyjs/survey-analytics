@@ -21,7 +21,7 @@ beforeEach(() => {
       q1: "sister"
     }
   ];
-  selectBase = new SelectBase(null, question, data, {});
+  selectBase = new SelectBase(question, data, {});
 });
 
 test("valuesSource method", () => {

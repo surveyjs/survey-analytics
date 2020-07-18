@@ -2,7 +2,6 @@ import { Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 
 declare type VisualizerConstructor = new (
-  targetElement: HTMLElement,
   question: Question,
   data: Array<{ [index: string]: any }>,
   options?: Object

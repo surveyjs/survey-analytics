@@ -24,21 +24,19 @@ test("allowDynamicLayout option", () => {
   ];
   const survey = new SurveyModel(json);
   let viz = new VisualizationPanel(
-    document.createElement("div"),
     survey.getAllQuestions(),
     data,
     {}
   );
   expect(viz.allowDynamicLayout).toBeTruthy();
   viz = new VisualizationPanel(
-    document.createElement("div"),
     survey.getAllQuestions(),
     data,
     { allowDynamicLayout: false }
   );
   expect(viz.allowDynamicLayout).toBeFalsy();
 
-  viz.render();
+  viz.render(document.createElement("div"));
   expect(viz.layoutEngine).toBe(undefined);
 });
 
@@ -65,24 +63,22 @@ test("allowHideQuestions option", () => {
   ];
   const survey = new SurveyModel(json);
   let viz = new VisualizationPanel(
-    document.createElement("div"),
     survey.getAllQuestions(),
     data,
     { allowDynamicLayout: false }
   );
   expect(viz.allowHideQuestions).toBeTruthy();
-  viz.render();
+  viz.render(document.createElement("div"));
   var innerViz = viz["visualizers"][0]
   expect(innerViz.toolbarItemCreators["removeQuestion"]).toBeDefined();
 
   viz = new VisualizationPanel(
-    document.createElement("div"),
     survey.getAllQuestions(),
     data,
     { allowDynamicLayout: false, allowHideQuestions: false }
   );
   expect(viz.allowHideQuestions).toBeFalsy();
-  viz.render();
+  viz.render(document.createElement("div"));
   innerViz = viz["visualizers"][0]
   expect(innerViz.toolbarItemCreators["removeQuestion"]).toBeUndefined();
 });

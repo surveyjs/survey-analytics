@@ -4,12 +4,11 @@ import { SelectBasePlotly } from "./selectBase";
 
 export class MatrixPlotly extends SelectBasePlotly {
   constructor(
-    targetNode: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetNode, question, data, options);
+    super(question, data, options);
     this.chartTypes = MatrixPlotly.types;
     this.chartType = this.chartTypes[0];
   }

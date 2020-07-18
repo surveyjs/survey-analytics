@@ -5,12 +5,11 @@ import { SelectBasePlotly } from "./selectBase";
 
 export class BooleanPlotly extends SelectBasePlotly {
   constructor(
-    protected targetElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetElement, question, data, options);
+    super(question, data, options);
     this.chartTypes = BooleanPlotly.types;
     this.chartType = this.chartTypes[0];
   }

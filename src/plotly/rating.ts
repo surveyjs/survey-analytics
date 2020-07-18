@@ -33,12 +33,11 @@ export class GaugePlotly extends VisualizerBase {
   public static showAsPercentage = false;
 
   constructor(
-    protected targetElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetElement, question, data, options);
+    super(question, data, options);
     this.chartTypes = GaugePlotly.types;
     this.chartType = this.chartTypes[0];
   }

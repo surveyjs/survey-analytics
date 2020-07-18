@@ -11,12 +11,11 @@ export class SelectBase extends VisualizerBase {
   public static otherCommentCollapsed = true;
 
   constructor(
-    protected targetElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetElement, question, data, options);
+    super(question, data, options);
     this.registerToolbarItem(
       "changeChartType",
       () => {
@@ -94,6 +93,7 @@ export class SelectBase extends VisualizerBase {
           footerContentElement.style.display = "none";
           visibilityButton.innerText = localization.getString(SelectBase.otherCommentCollapsed ? "showButton" : "hideButton");
         }
+        this.invokeOnUpdate();
       }, localization.getString("showButton")/*, "sva-toolbar__button--right"*/);
       container.appendChild(visibilityButton);
 
@@ -102,11 +102,10 @@ export class SelectBase extends VisualizerBase {
       const question = new QuestionCommentModel(this.question.name + settings.commentPrefix);
       question.title = this.question.title;
       const visualizer = VisualizerFactory.createVizualizer(
-        footerContentElement,
         question,
         this.data
       );
-      visualizer.render();
+      visualizer.render(footerContentElement);
     }
   }
 

@@ -6,12 +6,11 @@ import { textHelper } from "./stopwords/index";
 
 export class WordCloud extends VisualizerBase {
   constructor(
-    targetElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetElement, question, data, options);
+    super(question, data, options);
   }
 
   public get name() {
