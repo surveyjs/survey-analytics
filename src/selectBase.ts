@@ -6,6 +6,7 @@ import { VisualizerFactory } from './visualizerFactory';
 
 export class SelectBase extends VisualizerBase {
   private selectedItem: ItemValue = undefined;
+  private choicesOrder: HTMLDivElement = undefined;
   protected orderByAnsweres: string = "default";
   // public static otherCommentQuestionType = "comment"; // TODO: make it configureable - allow choose what kind of question/visualizer will be used for comments/others
   public static otherCommentCollapsed = true;
@@ -37,12 +38,47 @@ export class SelectBase extends VisualizerBase {
         return null;
       }
     );
+    this.registerToolbarItem(
+      "changeChoicesOrder",
+      () => {
+        if (this.chartTypes.indexOf("bar") !== -1) {
+          this.choicesOrder = ToolbarHelper.createSelector(
+            [
+              { text: localization.getString("defaultOrder"), value: "default" },
+              { text: localization.getString("ascOrder"), value: "asc" },
+              { text: localization.getString("descOrder"), value: "desc" }
+            ],
+            option => false,
+            e => {
+              this.setLabelsOrder(e.target.value);
+              this.update(this.data);
+            }
+          );
+          this.updateOrderSelector();
+        }
+        return this.choicesOrder;
+      }
+    );
   }
 
   protected chartTypes: string[];
   protected chartType: string;
 
-  protected onChartTypeChanged() {}
+  private updateOrderSelector() {
+    if(!!this.choicesOrder) {
+      if (this.chartType == "bar") {
+        this.choicesOrder.style.display = "inline-block";
+      } else {
+        this.choicesOrder.style.display = "none";
+        this.choicesOrder.getElementsByTagName("select")[0].value = "default";
+      }
+    }
+  }
+
+  protected onChartTypeChanged() {
+    this.setLabelsOrder("default");
+    this.updateOrderSelector();
+  }
 
   protected setChartType(chartType: string) {
     if (

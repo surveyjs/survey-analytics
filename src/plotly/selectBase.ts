@@ -1,6 +1,7 @@
 import { Question } from "survey-core";
 import { ItemValue } from "survey-core";
 import { SelectBase } from "../selectBase";
+import { VisualizationManager } from '../visualizationManager';
 import { allowDomRendering, DataHelper } from '../utils';
 
 var Plotly: any = null;
@@ -180,3 +181,8 @@ export class SelectBasePlotly extends SelectBase {
     return plot;
   }
 }
+
+VisualizationManager.registerVisualizer("checkbox", SelectBasePlotly);
+VisualizationManager.registerVisualizer("radiogroup", SelectBasePlotly);
+VisualizationManager.registerVisualizer("dropdown", SelectBasePlotly);
+VisualizationManager.registerVisualizer("imagepicker", SelectBasePlotly);
