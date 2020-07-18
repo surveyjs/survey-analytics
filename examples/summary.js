@@ -62,6 +62,7 @@ var options = {
 
 var visPanel = new SurveyAnalytics.VisualizationPanel(
   document.getElementById("summaryContainer"),
+  // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   survey.getAllQuestions(),
   normalizedData,
   options
