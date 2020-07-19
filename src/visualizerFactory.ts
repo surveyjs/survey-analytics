@@ -10,7 +10,6 @@ declare type VisualizerConstructor = new (
 ) => any;
 
 export class VisualizerFactory {
-  static vizualizers: { [index: string]: Array<VisualizerConstructor> } = {};
   /**
    * Create visualizer by question.
    */
