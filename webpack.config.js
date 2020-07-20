@@ -87,11 +87,10 @@ module.exports = function (options) {
         __dirname,
         "./src/entries/tabulator"
       ),
-      "survey.analytics.visualization": path.resolve(
+      "survey.analytics.summary": path.resolve(
         __dirname,
-        "./src/entries/visualization"
+        "./src/entries/summary"
       ),
-      "survey.analytics": path.resolve(__dirname, "./src/index"),
     },
     resolve: {
       extensions: [".ts", ".js"],

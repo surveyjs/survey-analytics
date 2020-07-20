@@ -4,4 +4,4 @@ export * from "../localizationManager";
 import "../localization/farsi";
 import "../localization/french";
 
-export { DataTables } from "../tables/datatables";
+export * from "../tables/datatables";
