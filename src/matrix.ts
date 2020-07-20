@@ -11,41 +11,6 @@ export class Matrix extends SelectBase {
     super(question, data, options);
   }
 
-  protected patchConfigParameters(
-    chartNode: HTMLDivElement,
-    traces: Array<any>,
-    layout: any,
-    config: any
-  ) {
-    const question: QuestionMatrixModel = <any>this.question;
-    //var valueTitles = question.columns.map(column => column.text);
-    layout.showlegend = true;
-    if (this.chartType === "pie" || this.chartType === "doughnut") {
-      layout.grid = { rows: 1, columns: traces.length };
-    } else if (this.chartType === "stackedbar") {
-      layout.height = undefined;
-      layout.barmode = "stack";
-    } else {
-      layout.height = undefined;
-    }
-    question.columns.forEach((column, index) => {
-      if (this.chartType === "pie" || this.chartType === "doughnut") {
-        traces[index].domain = { column: index };
-      } else {
-        traces[index].hoverinfo = "x+name";
-        traces[index].marker.color = undefined;
-        if (this.chartType === "stackedbar") {
-          traces[index].type = "bar";
-          traces[index].name = column.text;
-          traces[index].width = 0.5 / traces.length;
-        } else {
-          traces[index].name = column.text;
-          traces[index].width = 0.5 / traces.length;
-        }
-      }
-    });
-  }
-
   valuesSource(): any[] {
     const question: QuestionMatrixModel = <any>this.question;
     return question.columns;
