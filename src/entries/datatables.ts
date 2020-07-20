@@ -4,4 +4,4 @@ export * from "../localizationManager";
 import "../localization/farsi";
 import "../localization/french";
 
-export { Tabulator } from "../tables/tabulator";
+export { DataTables } from "../tables/datatables";
