@@ -178,6 +178,12 @@ module.exports = function (options) {
         commonjs: "plotly.js-dist",
         amd: "plotly.js-dist",
       },
+      "tabulator-tables": {
+        root: "Tabulator",
+        commonjs2: "tabulator-tables",
+        commonjs: "tabulator-tables",
+        amd: "tabulator-tables",
+      },
     },
     plugins: [
       new webpack.WatchIgnorePlugin([/svgbundle\.html/]),
