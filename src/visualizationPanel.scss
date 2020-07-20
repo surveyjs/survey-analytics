@@ -1,14 +1,14 @@
 @import "globals";
 
-.sva-panel__header {
+.sa-panel__header {
   padding: 0 20px;
 }
 
-.sva-grid {
+.sa-grid {
   position: relative;
 }
 
-.sva-grid__grid-sizer {
+.sa-grid__grid-sizer {
   width: 100%;
   box-sizing: border-box;
   @media screen and (min-width: 1400px) {
@@ -16,7 +16,7 @@
   }
 }
 
-.sva-question {
+.sa-question {
   display: inline-block;
   width: 100%;
   vertical-align: top;
@@ -25,7 +25,7 @@
   padding: 1em;
 }
 
-.sva-question-layouted {
+.sa-question-layouted {
   position: absolute;
 
   @media screen and (min-width: 1400px) {
@@ -33,12 +33,12 @@
   }
 }
 
-.sva-question__content {
+.sa-question__content {
   background-color: $background-color;
   padding: 1em;
 }
 
-.sva-question__title {
+.sa-question__title {
   margin-left: 30px;
   font-family: Raleway;
   font-size: 18px;
@@ -50,7 +50,7 @@
   cursor: move;
 }
 
-.sva-toolbar {
+.sa-toolbar {
   font-family: SegoeUI, Arial, sans-serif;
   font-size: 14px;
   color: $text-color;
@@ -59,7 +59,7 @@
   margin-left: 10px;
 }
 
-.sva-toolbar__button {
+.sa-toolbar__button {
   font-family: SegoeUI, Arial, sans-serif;
   font-size: 14px;
   padding: 8px;
@@ -79,17 +79,17 @@
   }
 }
 
-.sva-toolbar__button--right {
+.sa-toolbar__button--right {
   float: right;
 }
 
 // custom select
-.sva-question__select-wrapper {
+.sa-question__select-wrapper {
   position: relative;
   display: inline-block;
   width: 200px;
 
-  .sva-question__select {
+  .sa-question__select {
     width: 100%;
     display: block;
     position: relative;
@@ -135,12 +135,12 @@
 }
 // EO custom select
 
-.sva-question__filter {
+.sa-question__filter {
   display: inline-block;
   padding: 0 1em;
 }
 
-.sva-question__filter-text {
+.sa-question__filter-text {
   vertical-align: middle;
   margin-top: 1px;
 }

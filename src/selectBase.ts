@@ -7,7 +7,7 @@ import { VisualizerFactory } from './visualizerFactory';
 export class SelectBase extends VisualizerBase {
   private selectedItem: ItemValue = undefined;
   private choicesOrder: HTMLDivElement = undefined;
-  protected orderByAnsweres: string = "default";
+  public orderByAnsweres: string = "default";
   // public static otherCommentQuestionType = "comment"; // TODO: make it configureable - allow choose what kind of question/visualizer will be used for comments/others
   public static otherCommentCollapsed = true;
 
@@ -62,7 +62,7 @@ export class SelectBase extends VisualizerBase {
   }
 
   protected chartTypes: string[];
-  protected chartType: string;
+  public chartType: string;
 
   private updateOrderSelector() {
     if(!!this.choicesOrder) {
@@ -92,7 +92,7 @@ export class SelectBase extends VisualizerBase {
     }
   }
 
-  protected getSelectedItemByText(itemText: string) {
+  public getSelectedItemByText(itemText: string) {
     return this.question.choices.filter(
       (choice: ItemValue) => choice.text === itemText
     )[0];
@@ -140,7 +140,7 @@ export class SelectBase extends VisualizerBase {
           visibilityButton.innerText = localization.getString(SelectBase.otherCommentCollapsed ? "showButton" : "hideButton");
         }
         this.invokeOnUpdate();
-      }, localization.getString("showButton")/*, "sva-toolbar__button--right"*/);
+      }, localization.getString("showButton")/*, "sa-toolbar__button--right"*/);
       container.appendChild(visibilityButton);
 
       container.appendChild(footerContentElement);

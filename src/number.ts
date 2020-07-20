@@ -127,10 +127,6 @@ export class Number extends VisualizerBase {
     return colors;
   }
 
-  protected toPercentage(value: number, maxValue: number) {
-    return (value / maxValue) * 100;
-  }
-
   get result() {
     if (this._resultAverage === undefined) {
       const questionValues: Array<any> = [];
