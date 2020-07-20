@@ -55,7 +55,7 @@ export class VisualizerBase {
 
   protected renderToolbar(container: HTMLElement) {
     const toolbar = document.createElement("div");
-    toolbar.className = "sva-toolbar";
+    toolbar.className = "sa-toolbar";
     this.createToolbarItems(toolbar);
     container.appendChild(toolbar);
   }

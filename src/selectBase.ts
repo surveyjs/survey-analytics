@@ -140,7 +140,7 @@ export class SelectBase extends VisualizerBase {
           visibilityButton.innerText = localization.getString(SelectBase.otherCommentCollapsed ? "showButton" : "hideButton");
         }
         this.invokeOnUpdate();
-      }, localization.getString("showButton")/*, "sva-toolbar__button--right"*/);
+      }, localization.getString("showButton")/*, "sa-toolbar__button--right"*/);
       container.appendChild(visibilityButton);
 
       container.appendChild(footerContentElement);

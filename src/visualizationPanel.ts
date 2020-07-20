@@ -8,8 +8,8 @@ import { VisualizerFactory } from './visualizerFactory';
 const Muuri = require("muuri");
 import "./visualizationPanel.scss";
 
-const questionElementClassName = "sva-question";
-const questionLayoutedElementClassName = "sva-question-layouted";
+const questionElementClassName = "sa-question";
+const questionLayoutedElementClassName = "sa-question-layouted";
 
 /**
  * VisualizationPanel is responsible for displaying an array of survey questions
@@ -202,10 +202,10 @@ export class VisualizationPanel {
         "questionFilterInfo",
         () => {
           filterInfo.element = document.createElement("div");
-          filterInfo.element.className = "sva-question__filter";
+          filterInfo.element.className = "sa-question__filter";
 
           filterInfo.text = document.createElement("span");
-          filterInfo.text.className = "sva-question__filter-text";
+          filterInfo.text.className = "sa-question__filter-text";
           filterInfo.element.appendChild(filterInfo.text);
 
           const filterClear = ToolbarHelper.createButton(() => {
@@ -245,7 +245,7 @@ export class VisualizationPanel {
     this.getLayoutEngine = () => layoutEngine;
 
     this.panelContent = document.createElement("div");
-    this.panelContent.className = "sva-grid";
+    this.panelContent.className = "sa-grid";
 
     this.visibleElements.forEach((element) => {
       let questionElement = this.renderVisualizer(element);
@@ -254,9 +254,9 @@ export class VisualizationPanel {
 
     if (this.showHeader) {
       const panelHeader = document.createElement("div");
-      panelHeader.className = "sva-panel__header";
+      panelHeader.className = "sa-panel__header";
       const toolobar = document.createElement("div");
-      toolobar.className = "sva-toolbar";
+      toolobar.className = "sa-toolbar";
       this.createToolbarItems(toolobar);
       panelHeader.appendChild(toolobar);
       targetElement.appendChild(panelHeader);

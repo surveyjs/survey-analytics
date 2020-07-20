@@ -60,7 +60,7 @@ function CustomVisualizer(question, data) {
       renderContent(contentContainer);
   
       var toolbar = document.createElement("div");
-      toolbar.className = "sva-toolbar";
+      toolbar.className = "sa-toolbar";
       toolbarNodeContainer.appendChild(toolbar);
       SurveyAnalytics.VisualizerBase.prototype.createToolbarItems.apply(self, [toolbar]);
 
@@ -130,7 +130,7 @@ function CustomMinVisualizer(question, data) {
         renderContent(contentContainer);
     
         var toolbar = document.createElement("div");
-        toolbar.className = "sva-toolbar";
+        toolbar.className = "sa-toolbar";
         toolbarNodeContainer.appendChild(toolbar);
         SurveyAnalytics.VisualizerBase.prototype.createToolbarItems.apply(self, [toolbar]);
   
