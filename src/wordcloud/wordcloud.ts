@@ -4,20 +4,70 @@ import { VisualizationManager } from "../visualizationManager";
 import { textHelper } from "./stopwords/index";
 import WordCloudLib from "wordcloud";
 
+export class WordCloudAdapter {
+  private _wordcloud: any;
+
+  constructor(private model: WordCloud) {
+  }
+
+  public get wordcloud() {
+    return this._wordcloud;
+  }
+
+  public create(node: HTMLElement) {
+    const data = this.model.getData();
+    const colors = this.model.getColors();
+    const canvasNode = <HTMLCanvasElement>document.createElement("canvas");
+    const emptyTextNode = <HTMLElement>document.createElement("p");
+    emptyTextNode.innerHTML = "There are no results yet";
+
+    if (data.length === 0) {
+      node.appendChild(emptyTextNode);
+      return;
+    }
+
+    node.appendChild(canvasNode);
+
+    const config = {
+      list: data,
+      weightFactor: 20,
+      fontFamily: "Segoe UI Bold, sans-serif",
+      color: (word: string, weight: number) => {
+        return this.model.getRandomColor();
+      },
+      rotateRatio: 0.5,
+      rotationSteps: 2,
+      backgroundColor: this.model.backgroundColor,
+      click: function(item: any) {
+        console.log(item[0] + ": " + item[1]);
+      }
+    };
+
+    this._wordcloud = WordCloudLib(canvasNode, config);
+    return this._wordcloud;
+  }
+
+  public destroy(node: HTMLElement) {
+    this._wordcloud = undefined;
+  }
+
+}
+
 export class WordCloud extends VisualizerBase {
+  private _wordcloudAdapter: WordCloudAdapter;
+
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
     super(question, data, options);
+    this._wordcloudAdapter = new WordCloudAdapter(this);
   }
 
   public get name() {
     return "wordcloud";
   }
-
-  private cloud: any;
 
   getData() {
     let result: { [key: string]: number } = {};
@@ -66,43 +116,18 @@ export class WordCloud extends VisualizerBase {
     });
   }
 
+  protected destroyContent(container: HTMLElement) {
+    this._wordcloudAdapter.destroy(container);
+    super.destroyContent(container);
+  }
+
   protected renderContent(container: HTMLElement) {
-    const data = this.getData();
-    const colors = this.getColors();
-    const canvasNode = <HTMLCanvasElement>document.createElement("canvas");
-    const emptyTextNode = <HTMLElement>document.createElement("p");
-    emptyTextNode.innerHTML = "There are no results yet";
-
-    if (data.length === 0) {
-      container.appendChild(emptyTextNode);
-      return;
-    }
-
-    container.appendChild(canvasNode);
-
-    const config = {
-      list: data,
-      weightFactor: 20,
-      fontFamily: "Segoe UI Bold, sans-serif",
-      color: (word: string, weight: number) => {
-        return this.getRandomColor();
-      },
-      rotateRatio: 0.5,
-      rotationSteps: 2,
-      backgroundColor: this.backgroundColor,
-      click: function(item: any) {
-        console.log(item[0] + ": " + item[1]);
-      }
-    };
-
-    this.cloud = WordCloudLib(canvasNode, config);
+    this._wordcloudAdapter.create(container);
   }
 
   destroy() {
+    this._wordcloudAdapter.destroy(this.contentContainer);
     super.destroy();
-    if (!!this.cloud) {
-      this.cloud = undefined;
-    }
   }
 }
 

@@ -4,13 +4,56 @@ import { VisualizationManager } from "./visualizationManager";
 
 import "./text.scss";
 
+export class TextTableAdapter {
+  constructor(private model: Text) {
+  }
+
+  public create(container: HTMLElement) {
+    const { columnsCount, data}  = this.model.getData();
+    const emptyTextNode = <HTMLElement>document.createElement("p");
+    emptyTextNode.innerHTML = "There are no results yet";
+
+    if (data.length === 0) {
+        container.appendChild(emptyTextNode);
+      return;
+    }
+
+    const tableNode = <HTMLTableElement>document.createElement("table");
+    tableNode.className = "sa-text-table";
+    tableNode.style.backgroundColor = this.model.backgroundColor;
+    container.appendChild(tableNode);
+
+    data.forEach(rowData => {
+        var row = document.createElement("tr");
+        for(var i = 0; i < columnsCount; i++) {
+            var td = document.createElement("td");
+            td.className = "sa-text-table__cell";
+            td.textContent = rowData[i];
+            row.appendChild(td);
+        }
+        tableNode.appendChild(row);
+    });
+
+    container.className = "sa-text-table__container";
+    container.appendChild(tableNode);
+  }
+
+  public destroy(node: HTMLElement) {
+    node.innerHTML = "";
+  }
+
+}
+
 export class Text extends VisualizerBase {
+  private _textTableAdapter: TextTableAdapter;
+
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
     super(question, data, options);
+    this._textTableAdapter = new TextTableAdapter(this);
   }
 
   public get name() {
@@ -44,39 +87,20 @@ export class Text extends VisualizerBase {
     return { columnsCount, data: result };
   }
 
+  protected destroyContent(container: HTMLElement) {
+    this._textTableAdapter.destroy(container);
+    super.destroyContent(container);
+  }
+
   protected renderContent(container: HTMLElement) {
-    const { columnsCount, data}  = this.getData();
-    const emptyTextNode = <HTMLElement>document.createElement("p");
-    emptyTextNode.innerHTML = "There are no results yet";
-
-    if (data.length === 0) {
-        container.appendChild(emptyTextNode);
-      return;
-    }
-
-    const tableNode = <HTMLTableElement>document.createElement("table");
-    tableNode.className = "sa-text-table";
-    tableNode.style.backgroundColor = this.backgroundColor;
-    container.appendChild(tableNode);
-
-    data.forEach(rowData => {
-        var row = document.createElement("tr");
-        for(var i = 0; i < columnsCount; i++) {
-            var td = document.createElement("td");
-            td.className = "sa-text-table__cell";
-            td.textContent = rowData[i];
-            row.appendChild(td);
-        }
-        tableNode.appendChild(row);
-    });
-
-    container.className = "sa-text-table__container";
-    container.appendChild(tableNode);
+    this._textTableAdapter.create(container);
   }
 
   destroy() {
+    this._textTableAdapter.destroy(this.contentContainer);
     super.destroy();
   }
+
 }
 
 VisualizationManager.registerVisualizer("text", Text);
