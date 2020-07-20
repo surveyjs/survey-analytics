@@ -6,15 +6,29 @@ import { ToolbarHelper } from "./utils/index";
 export class AlternativeVisualizersWrapper extends VisualizerBase {
   constructor(
     private visualizers: Array<VisualizerBase>,
-    targetElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetElement, question, data, options);
+    super(question, data, options);
     if(!visualizers || visualizers.length < 2) {
       throw new Error("VisualizerArrayWrapper works with visualizers collection only.");
     }
+    this.registerToolbarItem(
+      "changeVisualizer",
+      () => 
+        ToolbarHelper.createSelector(
+          this.visualizers.map(visualizer => {
+            return {
+              value: visualizer.name,
+              text: localization.getString("visualizer_" + visualizer.name)
+            };
+          }),
+          (option: any) => this.visualizer.name === option.value,
+          (e: any) => this.setVisualizer(e.target.value)
+        )
+    );
+
     this.visualizer = visualizers[0];
   }
 
@@ -34,30 +48,13 @@ export class AlternativeVisualizersWrapper extends VisualizerBase {
     this.visualizer.update(data);
   }
 
-  onUpdate: () => void;
-
   destroy() {
     this.visualizer.destroy();
     super.destroy();
   }
 
-  protected renderContent(container: HTMLDivElement) {
+  protected renderContent(container: HTMLElement) {
     this.visualizerContainer = container;
     this.visualizer.render(this.visualizerContainer);
-  }
-
-  protected createToolbarItems(toolbar: HTMLDivElement) {
-    const selectWrapper = ToolbarHelper.createSelector(
-      this.visualizers.map(visualizer => {
-        return {
-          value: visualizer.name,
-          text: localization.getString("visualizer_" + visualizer.name)
-        };
-      }),
-      (option: any) => this.visualizer.name === option.value,
-      (e: any) => this.setVisualizer(e.target.value)
-    );
-    toolbar.appendChild(selectWrapper);
-    super.createToolbarItems(toolbar);
   }
 }

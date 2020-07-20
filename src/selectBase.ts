@@ -6,17 +6,17 @@ import { VisualizerFactory } from './visualizerFactory';
 
 export class SelectBase extends VisualizerBase {
   private selectedItem: ItemValue = undefined;
+  private choicesOrder: HTMLDivElement = undefined;
   protected orderByAnsweres: string = "default";
   // public static otherCommentQuestionType = "comment"; // TODO: make it configureable - allow choose what kind of question/visualizer will be used for comments/others
   public static otherCommentCollapsed = true;
 
   constructor(
-    protected targetElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetElement, question, data, options);
+    super(question, data, options);
     this.registerToolbarItem(
       "changeChartType",
       () => {
@@ -38,24 +38,65 @@ export class SelectBase extends VisualizerBase {
         return null;
       }
     );
+    this.registerToolbarItem(
+      "changeChoicesOrder",
+      () => {
+        if (this.chartTypes.indexOf("bar") !== -1) {
+          this.choicesOrder = ToolbarHelper.createSelector(
+            [
+              { text: localization.getString("defaultOrder"), value: "default" },
+              { text: localization.getString("ascOrder"), value: "asc" },
+              { text: localization.getString("descOrder"), value: "desc" }
+            ],
+            option => false,
+            e => {
+              this.setLabelsOrder(e.target.value);
+              this.update(this.data);
+            }
+          );
+          this.updateOrderSelector();
+        }
+        return this.choicesOrder;
+      }
+    );
   }
 
   protected chartTypes: string[];
   protected chartType: string;
-  protected chartNode: HTMLElement = <HTMLElement>document.createElement("div");
-  protected onChartTypeChanged() {}
+
+  private updateOrderSelector() {
+    if(!!this.choicesOrder) {
+      if (this.chartType == "bar") {
+        this.choicesOrder.style.display = "inline-block";
+      } else {
+        this.choicesOrder.style.display = "none";
+        this.choicesOrder.getElementsByTagName("select")[0].value = "default";
+      }
+    }
+  }
+
+  protected onChartTypeChanged() {
+    this.setLabelsOrder("default");
+    this.updateOrderSelector();
+  }
+
   protected setChartType(chartType: string) {
     if (
       this.chartTypes.indexOf(chartType) !== -1 &&
       this.chartType !== chartType
     ) {
       this.chartType = chartType;
-      this.createChart();
+      this.destroyContent(this.contentContainer);
+      this.renderContent(this.contentContainer);
       this.invokeOnUpdate();
     }
   }
 
-  createChart() {}
+  protected getSelectedItemByText(itemText: string) {
+    return this.question.choices.filter(
+      (choice: ItemValue) => choice.text === itemText
+    )[0];
+  }
 
   setSelection(item: ItemValue) {
     this.selectedItem = item;
@@ -69,12 +110,16 @@ export class SelectBase extends VisualizerBase {
   }
   onDataItemSelected: (selectedValue: any, selectedText: string) => void;
 
-  protected renderContent(container: HTMLDivElement) {
-    this.createChart();
-    container.appendChild(this.chartNode);
+  update(data: Array<{ [index: string]: any }>) {
+    super.update(data);
+    this.destroyContent(this.contentContainer);
+    this.renderContent(this.contentContainer);
+    this.destroyFooter(this.footerContainer);
+    this.renderFooter(this.footerContainer);
+    this.invokeOnUpdate();
   }
 
-  protected renderFooter(container: HTMLDivElement) {
+  protected renderFooter(container: HTMLElement) {
     container.innerHTML = "";
     if(this.question.hasComment || this.question.hasOther) {
       const footerTitleElement = document.createElement("h4");
@@ -94,6 +139,7 @@ export class SelectBase extends VisualizerBase {
           footerContentElement.style.display = "none";
           visibilityButton.innerText = localization.getString(SelectBase.otherCommentCollapsed ? "showButton" : "hideButton");
         }
+        this.invokeOnUpdate();
       }, localization.getString("showButton")/*, "sva-toolbar__button--right"*/);
       container.appendChild(visibilityButton);
 
@@ -102,11 +148,10 @@ export class SelectBase extends VisualizerBase {
       const question = new QuestionCommentModel(this.question.name + settings.commentPrefix);
       question.title = this.question.title;
       const visualizer = VisualizerFactory.createVizualizer(
-        footerContentElement,
         question,
         this.data
       );
-      visualizer.render();
+      visualizer.render(footerContentElement);
     }
   }
 
@@ -157,36 +202,10 @@ export class SelectBase extends VisualizerBase {
     return [statistics];
   }
 
-  zipArrays(first: any[], second: any[]): any[][] {
-    let zipArray: any[] = [];
-    for (let i = 0; i < Math.min(first.length, second.length); i++) {
-      zipArray[i] = [first[i], second[i]];
-    }
-    return zipArray;
-  }
-  unzipArrays(zipArray: any[][]): { first: any[]; second: any[] } {
-    let twoArrays: any = { first: [], second: [] };
-    zipArray.forEach((value, i) => {
-      twoArrays.first[i] = value[0];
-      twoArrays.second[i] = value[1];
-    });
-    return twoArrays;
+  destroy() {
+    this.destroyContent(this.contentContainer);
+    this.destroyFooter(this.footerContainer);
+    super.destroy();
   }
 
-  sortDictionary(
-    keys: any[],
-    values: any[],
-    desc: boolean
-  ): { keys: any[]; values: any[] } {
-    let dictionary = this.zipArrays(keys, values);
-    let comparator = (a: any[], b: any[], asc: boolean = true) => {
-      let result = a[1] < b[1] ? 1 : a[1] == b[1] ? 0 : -1;
-      return asc ? result : result * -1;
-    };
-    dictionary.sort((a: any[], b: any[]) => {
-      return desc ? comparator(a, b, false) : comparator(a, b);
-    });
-    let keysAndValues = this.unzipArrays(dictionary);
-    return { keys: keysAndValues.first, values: keysAndValues.second };
-  }
 }

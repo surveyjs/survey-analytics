@@ -6,12 +6,11 @@ import "./text.scss";
 
 export class Text extends VisualizerBase {
   constructor(
-    targetElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetElement, question, data, options);
+    super(question, data, options);
   }
 
   public get name() {
@@ -45,7 +44,7 @@ export class Text extends VisualizerBase {
     return { columnsCount, data: result };
   }
 
-  protected renderContent(container: HTMLDivElement) {
+  protected renderContent(container: HTMLElement) {
     const { columnsCount, data}  = this.getData();
     const emptyTextNode = <HTMLElement>document.createElement("p");
     emptyTextNode.innerHTML = "There are no results yet";
@@ -77,7 +76,6 @@ export class Text extends VisualizerBase {
 
   destroy() {
     super.destroy();
-    this.targetElement.className = "";
   }
 }
 

@@ -13,7 +13,6 @@ const questionLayoutedElementClassName = "sva-question-layouted";
 
 /**
  * VisualizationPanel is responsible for displaying an array of survey questions
- * targetElement - HTML element to render the panel
  * questions - an array of survey questions to visualize
  * data - an array of answers in format of survey result
  * options:
@@ -27,9 +26,9 @@ export class VisualizationPanel {
   protected filteredData: Array<{ [index: string]: any }>;
   protected filterValues: { [index: string]: any } = {};
   protected visualizers: Array<VisualizerBase> = [];
+  protected renderResult: HTMLElement = undefined;
 
   constructor(
-    protected targetElement: HTMLElement,
     protected questions: Array<any>,
     protected data: Array<{ [index: string]: any }>,
     protected options: { [index: string]: any } = {},
@@ -159,7 +158,6 @@ export class VisualizationPanel {
     questionElement.appendChild(questionContent);
 
     const visualizer = VisualizerFactory.createVizualizer(
-      vizualizerElement,
       question,
       this.filteredData
     );
@@ -230,7 +228,7 @@ export class VisualizationPanel {
       };
     }
 
-    visualizer.render();
+    visualizer.render(vizualizerElement);
     visualizer.onUpdate = () => this.layout();
     this.visualizers.push(visualizer);
 
@@ -239,8 +237,10 @@ export class VisualizationPanel {
 
   /**
    * Renders all questions into given HTML container element.
+   * targetElement - HTML element to render the panel
    */
-  public render() {
+  public render(targetElement: HTMLElement) {
+    this.renderResult = targetElement;
     let layoutEngine: any = undefined;
     this.getLayoutEngine = () => layoutEngine;
 
@@ -259,9 +259,9 @@ export class VisualizationPanel {
       toolobar.className = "sva-toolbar";
       this.createToolbarItems(toolobar);
       panelHeader.appendChild(toolobar);
-      this.targetElement.appendChild(panelHeader);
+      targetElement.appendChild(panelHeader);
     }
-    this.targetElement.appendChild(this.panelContent);
+    targetElement.appendChild(this.panelContent);
 
     var moveHandler = (data: any) => {
       var elements = this._elements.splice(data.fromIndex, 1);
@@ -344,7 +344,10 @@ export class VisualizationPanel {
       layoutEngine.destroy();
       this.getLayoutEngine = undefined;
     }
-    this.targetElement.innerHTML = "";
+    if(!!this.renderResult) {
+      this.renderResult.innerHTML = "";
+      this.renderResult = undefined;
+    }
     this.panelContent = undefined;
     this.visualizers.forEach((visualizer) => {
       visualizer.onUpdate = undefined;
@@ -360,9 +363,9 @@ export class VisualizationPanel {
    * Updates visualizer and all inner content.
    */
   public update(hard: boolean = false) {
-    if (hard && this.visualizers.length > 0) {
+    if (hard && this.visualizers.length > 0 && !!this.renderResult) {
       this.destroy();
-      this.render();
+      this.render(this.renderResult);
     } else {
       this.visualizers.forEach((visualizer) =>
         setTimeout(() => visualizer.update(this.filteredData), 10)

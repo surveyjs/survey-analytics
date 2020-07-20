@@ -4,19 +4,16 @@ import { VisualizationManager } from './visualizationManager';
 import { AlternativeVisualizersWrapper } from './alternativeVizualizersWrapper';
 
 declare type VisualizerConstructor = new (
-  targetElement: HTMLElement,
   question: Question,
   data: Array<{ [index: string]: any }>,
   options?: Object
 ) => any;
 
 export class VisualizerFactory {
-  static vizualizers: { [index: string]: Array<VisualizerConstructor> } = {};
   /**
    * Create visualizer by question.
    */
   public static createVizualizer(
-    vizualizerElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>
   ): VisualizerBase {
@@ -30,12 +27,11 @@ export class VisualizerFactory {
 
     var creators = VisualizationManager.getVisualizersByType(type);
     var visualizers = creators.map(
-      (creator) => new creator(vizualizerElement, question, data)
+      (creator) => new creator(question, data)
     );
     if (visualizers.length > 1) {
       let visualizer = new AlternativeVisualizersWrapper(
         visualizers,
-        vizualizerElement,
         question,
         data
       );

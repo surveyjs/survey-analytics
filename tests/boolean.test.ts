@@ -22,7 +22,7 @@ beforeEach(() => {
       q1: true
     }
   ];
-  boolean = new BooleanPlotly(null, question, data, {});
+  boolean = new BooleanPlotly(question, data, {});
 });
 
 test("getValues method", () => {
@@ -67,6 +67,6 @@ test("getData localized", () => {
     });
     return item;
   });
-  boolean = new BooleanPlotly(null, survey.getQuestionByName("bool"), normalizedData, {});
+  boolean = new BooleanPlotly(survey.getQuestionByName("bool"), normalizedData, {});
   expect(boolean.getData()).toEqual([[1, 1]]);
 });

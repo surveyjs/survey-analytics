@@ -38,7 +38,6 @@
   "homepage": "https://surveyjs.io/",
   "license": "Commercial",
   "dependencies": {
-    "@types/tabulator-tables": "^4.6.0",
     "datatables.net": "^1.10.20",
     "datatables.net-buttons": "^1.6.0",
     "datatables.net-buttons-dt": "^1.6.0",
@@ -56,7 +55,6 @@
     "plotly.js-dist": "^1.49.5",
     "survey-core": "^1.5.0",
     "tabulator-tables": "^4.6.1",
-    "webpack-svgstore-plugin": "^4.1.0",
     "wordcloud": "^1.1.0"
   },
   "devDependencies": {
@@ -66,6 +64,7 @@
     "@types/lodash": "4.14.121",
     "@types/node": "7.0.4",
     "@types/plotly.js": "^1.44.11",
+    "@types/tabulator-tables": "^4.6.0",
     "@types/wordcloud": "^1.1.1",
     "ajv": "4.11.2",
     "css-loader": "^3.6.0",
@@ -93,7 +92,8 @@
     "val-loader": "0.5.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "webpack-svgstore-plugin": "^4.1.0"
   },
   "husky": {
     "hooks": {

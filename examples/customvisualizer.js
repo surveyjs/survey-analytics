@@ -4,9 +4,8 @@
 Survey.Serializer.addClass("custom-question", [], null, "text");
 
 // Custom visualizer finds min and max values across all the answers on this question and shows them
-function CustomVisualizer(targetElement, question, data) {
+function CustomVisualizer(question, data) {
   var self = this;
-  self.targetElement = targetElement;
   self.question = question;
   self.data = data;
   self.toolbarItemCreators = {};
@@ -86,9 +85,8 @@ SurveyAnalytics.VisualizationManager.registerVisualizer("custom-question", Custo
 SurveyAnalytics.localization.locales["en"]["visualizer_minMaxVisualizer"] = "Min/Max Values";
 
 // Custom visualizer finds min value across all the answers on this question and shows it
-function CustomMinVisualizer(targetElement, question, data) {
+function CustomMinVisualizer(question, data) {
     var self = this;
-    self.targetElement = targetElement;
     self.question = question;
     self.data = data;
     self.toolbarItemCreators = {};

@@ -5,12 +5,11 @@ import { Question, QuestionPanelDynamicModel, IQuestion } from "survey-core";
 
 export class VisualizationPanelDynamic extends VisualizerBase {
   constructor(
-    protected targetNode: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetNode, question, data, options);
+    super(question, data, options);
     this.data = [];
     data.forEach(
       dataItem =>
@@ -24,14 +23,13 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     return paneldynamic.template.questions;
   }
 
-  render() {
+  render(targetElement: HTMLElement) {
     var visPanel = new VisualizationPanel(
-      this.targetNode,
       this.getQuestions(),
       this.data,
       { allowDynamicLayout: false }
     );
-    visPanel.render();
+    visPanel.render(targetElement);
   }
 }
 

@@ -3,18 +3,17 @@ import { VisualizationManager } from "../visualizationManager";
 import { SelectBasePlotly } from "./selectBase";
 
 export class MatrixPlotly extends SelectBasePlotly {
+  public static types = ["bar", "stackedbar", "pie", "doughnut"];
+
   constructor(
-    targetNode: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetNode, question, data, options);
+    super(question, data, options);
     this.chartTypes = MatrixPlotly.types;
     this.chartType = this.chartTypes[0];
   }
-
-  public static types = ["bar", "stackedbar", "pie", "doughnut"];
 
   protected patchConfigParameters(
     chartNode: HTMLDivElement,

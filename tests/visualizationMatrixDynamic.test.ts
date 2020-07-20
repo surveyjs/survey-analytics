@@ -191,7 +191,6 @@ test("getColumns method", () => {
   ];
 
   const viz = new VisualizationMatrixDynamic(
-    document.createElement("div"),
     <any>question,
     data,
     {}

@@ -1,17 +1,16 @@
 import { Question } from "survey-core";
-import WordCloudLib from "wordcloud";
 import { VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
 import { textHelper } from "./stopwords/index";
+import WordCloudLib from "wordcloud";
 
 export class WordCloud extends VisualizerBase {
   constructor(
-    targetElement: HTMLElement,
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(targetElement, question, data, options);
+    super(question, data, options);
   }
 
   public get name() {
@@ -67,7 +66,7 @@ export class WordCloud extends VisualizerBase {
     });
   }
 
-  protected renderContent(container: HTMLDivElement) {
+  protected renderContent(container: HTMLElement) {
     const data = this.getData();
     const colors = this.getColors();
     const canvasNode = <HTMLCanvasElement>document.createElement("canvas");
