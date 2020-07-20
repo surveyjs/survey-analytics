@@ -65,4 +65,8 @@ export class DataHelper {
         let keysAndValues = this.unzipArrays(dictionary);
         return { keys: keysAndValues.first, values: keysAndValues.second };
     }
+
+    public static toPercentage(value: number, maxValue: number) {
+        return (value / maxValue) * 100;
+    }
 }

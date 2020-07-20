@@ -9,30 +9,11 @@ if (allowDomRendering()) {
   Plotly = <any>require("plotly.js-dist");
 }
 
-export class SelectBasePlotly extends SelectBase {
-  private chart: Promise<Plotly.PlotlyHTMLElement>;
-  public static types = ["bar", "pie", "doughnut", "scatter"];
-  public static displayModeBar: any = undefined;
+export class PlotlyChartAdapter {
+  private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
 
-  constructor(
-    question: Question,
-    data: Array<{ [index: string]: any }>,
-    options?: Object
-  ) {
-    super(question, data, options);
-    this.chartTypes = SelectBasePlotly.types;
-    this.chartType = this.chartTypes[0];
-  }
+  constructor(protected model: SelectBase) {
 
-  protected destroyContent(container: HTMLElement) {
-    Plotly.purge(container.children[0]);
-    super.destroyContent(container);
-  }
-
-  protected renderContent(container: HTMLElement) {
-    const chartNode: HTMLElement = <HTMLElement>document.createElement("div");
-    container.appendChild(chartNode);
-    this.chart = this.createChart(chartNode, this.chartType);
   }
 
   protected patchConfigParameters(
@@ -42,21 +23,22 @@ export class SelectBasePlotly extends SelectBase {
     config: object
   ) {}
 
-  private createChart(
-    chartNode: HTMLElement,
-    chartType: string
-  ): Promise<Plotly.PlotlyHTMLElement> {
-    const question = this.question;
-    let datasets = this.getData();
-    let labels = this.getLabels();
-    let colors = this.getColors();
+
+  public get chart() {
+    return this._chart;
+  }
+
+  public create(chartNode: HTMLElement) {
+    let datasets = this.model.getData();
+    let labels = this.model.getLabels();
+    let colors = this.model.getColors();
     const traces: any = [];
 
-    if (this.orderByAnsweres == "asc" || this.orderByAnsweres == "desc") {
+    if (this.model.orderByAnsweres == "asc" || this.model.orderByAnsweres == "desc") {
       let dict = DataHelper.sortDictionary(
         DataHelper.zipArrays(labels, colors),
         datasets[0],
-        this.orderByAnsweres == "desc"
+        this.model.orderByAnsweres == "desc"
       );
       let labelsAndColors = DataHelper.unzipArrays(dict.keys);
       labels = labelsAndColors.first;
@@ -64,7 +46,7 @@ export class SelectBasePlotly extends SelectBase {
       datasets[0] = dict.values;
     }
     const traceConfig: any = {
-      type: chartType,
+      type: this.model.chartType,
       y: labels.map(l => {
         if (l.length > 30) {
           return l.substring(0, 27) + "...";
@@ -79,15 +61,15 @@ export class SelectBasePlotly extends SelectBase {
       marker: <any>{}
     };
 
-    if (this.chartType === "pie" || this.chartType === "doughnut") {
+    if (this.model.chartType === "pie" || this.model.chartType === "doughnut") {
       traceConfig.hoverinfo = "text+value+percent";
       traceConfig.marker.colors = colors;
       traceConfig.textposition = "inside";
-    } else if (this.chartType === "bar") {
+    } else if (this.model.chartType === "bar") {
       traceConfig.marker.color = colors;
     }
 
-    if (this.chartType === "doughnut") {
+    if (this.model.chartType === "doughnut") {
       traceConfig.type = "pie";
       traceConfig.hole = 0.4;
     }
@@ -98,7 +80,7 @@ export class SelectBasePlotly extends SelectBase {
     }
 
     datasets.forEach(dataset => {
-      if (this.chartType === "pie" || this.chartType === "doughnut") {
+      if (this.model.chartType === "pie" || this.model.chartType === "doughnut") {
         traces.push(
           Object.assign({}, traceConfig, {
             values: dataset,
@@ -111,7 +93,7 @@ export class SelectBasePlotly extends SelectBase {
     });
 
     const height =
-      chartType === "pie" || this.chartType === "doughnut"
+      this.model.chartType === "pie" || this.model.chartType === "doughnut"
         ? labels.length < 10
           ? labels.length * 50 + 100
           : 550
@@ -142,8 +124,8 @@ export class SelectBasePlotly extends SelectBase {
         rangemode: "nonnegative",
         automargin: true
       },
-      plot_bgcolor: this.backgroundColor,
-      paper_bgcolor: this.backgroundColor,
+      plot_bgcolor: this.model.backgroundColor,
+      paper_bgcolor: this.model.backgroundColor,
       showlegend: false
     };
 
@@ -160,10 +142,10 @@ export class SelectBasePlotly extends SelectBase {
     const plot = Plotly.newPlot(chartNode, traces, layout, config);
 
     (<any>chartNode)["on"]("plotly_click", (data: any) => {
-      if (data.points.length > 0 && this.onDataItemSelected) {
+      if (data.points.length > 0 && this.model.onDataItemSelected) {
         const itemText = data.points[0].text;
-        const item: ItemValue = this.getSelectedItemByText(itemText);
-        this.setSelection(item);
+        const item: ItemValue = this.model.getSelectedItemByText(itemText);
+        this.model.setSelection(item);
       }
     });
 
@@ -178,8 +160,43 @@ export class SelectBasePlotly extends SelectBase {
       dragLayer && (dragLayer.style.cursor = "");
     });
 
+    this._chart = plot;
     return plot;
   }
+
+  public destroy(node: HTMLElement) {
+    Plotly.purge(node);
+    this._chart = undefined;
+  }
+}
+
+export class SelectBasePlotly extends SelectBase {
+  private _chartAdapter: PlotlyChartAdapter;
+  public static types = ["bar", "pie", "doughnut", "scatter"];
+  public static displayModeBar: any = undefined;
+
+  constructor(
+    question: Question,
+    data: Array<{ [index: string]: any }>,
+    options?: Object
+  ) {
+    super(question, data, options);
+    this.chartTypes = SelectBasePlotly.types;
+    this.chartType = this.chartTypes[0];
+    this._chartAdapter = new PlotlyChartAdapter(this);
+  }
+
+  protected destroyContent(container: HTMLElement) {
+    this._chartAdapter.destroy(<HTMLElement>container.children[0]);
+    super.destroyContent(container);
+  }
+
+  protected renderContent(container: HTMLElement) {
+    const chartNode: HTMLElement = <HTMLElement>document.createElement("div");
+    container.appendChild(chartNode);
+    this._chartAdapter.create(chartNode);
+  }
+
 }
 
 VisualizationManager.registerVisualizer("checkbox", SelectBasePlotly);
