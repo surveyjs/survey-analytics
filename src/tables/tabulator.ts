@@ -1,5 +1,5 @@
 import { Table } from "./table";
-import { SurveyModel, HtmlConditionItem } from "survey-core";
+import { SurveyModel } from "survey-core";
 import { ColumnVisibility, QuestionLocation } from "./config";
 
 import "./tabulator.scss";
@@ -79,7 +79,7 @@ export class Tabulator extends Table {
   private tableContainer: HTMLElement = null;
   private tableTools: TableTools;
 
-  public render = (targetNode: HTMLEmbedElement) => {
+  public render = (targetNode: HTMLElement) => {
     targetNode.className += " sa-table sa-tabulator";
     targetNode.innerHTML = "";
 
@@ -105,6 +105,7 @@ export class Tabulator extends Table {
       rowFormatter: this.rowFormatter,
       paginationButtonCount: this.options.paginationButtonCount,
       paginationElement: paginationElement,
+      columnMoved: this.columnMovedCallback,
     });
 
     const toolsContainer = this.createToolsContainer();
@@ -160,6 +161,15 @@ export class Tabulator extends Table {
     this.tabulatorTables.destroy();
     this.renderResult.innerHTML = "";
     this.renderResult = undefined;
+  };
+
+  columnMovedCallback = (column: any, columns: any[]) => {
+    var from = this._columns.indexOf(
+      this._columns.filter((col) => col.name == column.getField())[0]
+    );
+    var to = columns.indexOf(column) - 1;
+    var deletedColumns = this._columns.splice(from, 1);
+    this._columns.splice(to, 0, deletedColumns[0]);
   };
 
   rowFormatter = (row: any): void => {

@@ -139,4 +139,9 @@ export abstract class Table {
     var column = this.columns.filter((column) => column.name === columnName)[0];
     return column.visibility;
   }
+
+  public doStateSave() {
+    this.stateSaveCallback({ columns: this.columns }, this.data);
+  }
+  public stateSaveCallback(settings: any, data: any) {}
 }

@@ -52,3 +52,33 @@ test("getColumns method", () => {
     '[{"field":"","title":"","download":false,"resizable":false,"width":60},{"field":"car","title":"What car are you driving?","minWidth":248,"widthShrink":1,"visible":true,"headerSort":false}]'
   );
 });
+
+test("move column callback", () => {
+  var json = {
+    questions: [
+      {
+        name: "q1",
+        type: "text",
+      },
+      {
+        name: "q2",
+        type: "text",
+      },
+      {
+        name: "q3",
+        type: "text",
+      },
+      {
+        name: "q4",
+        type: "text",
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const tabulator = new Tabulator(survey, [], null);
+  tabulator.render(document.createElement("table"));
+  (<any>tabulator).tabulatorTables.moveColumn("q1", "q3", true);
+  var trueOrder = ["q2", "q3", "q1", "q4"];
+  var order = tabulator.columns.map((column) => column.name);
+  expect(order).toEqual(trueOrder);
+});
