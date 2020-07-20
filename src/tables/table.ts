@@ -6,7 +6,6 @@ export abstract class Table {
   protected tableData: any;
 
   constructor(
-    protected targetNode: HTMLElement,
     protected survey: SurveyModel,
     protected data: Array<Object>,
     protected options: any,
@@ -16,7 +15,6 @@ export abstract class Table {
     if (_columns.length === 0) {
       this._columns = this.buildColumns(survey);
     }
-    this.targetNode.className += " sa-table";
     this.initTableData(data);
   }
   protected _rows: TableRow[] = [];
@@ -58,7 +56,7 @@ export abstract class Table {
     return this.data;
   }
 
-  public abstract render(): void;
+  public abstract render(targetNode: HTMLElement): void;
   public abstract applyFilter(value: string): void;
   public abstract applyColumnFilter(columnName: string, value: string): void;
   public abstract sortByColumn(columnName: string, direction: string): void;

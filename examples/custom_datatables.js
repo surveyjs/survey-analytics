@@ -13,7 +13,6 @@ var normalizedData = data.map(function (item) {
 });
 
 var surveyAnalyticsDataTables = new SurveyAnalytics.DataTables(
-  document.getElementById("dataTablesContainer"),
   survey,
   normalizedData
 );
@@ -80,4 +79,6 @@ surveyAnalyticsDataTables.renderDetailActions = (container, data, row) => {
   container.appendChild(button2);
 };
 
-surveyAnalyticsDataTables.render();
+surveyAnalyticsDataTables.render(
+  document.getElementById("dataTablesContainer")
+);

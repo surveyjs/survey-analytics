@@ -10,7 +10,6 @@ var normalizedData = data.map(function (item) {
 });
 
 var surveyAnalyticsTabulator = new SurveyAnalytics.Tabulator(
-  document.getElementById("tabulatorContainer"),
   survey,
   normalizedData
 );
@@ -74,4 +73,4 @@ surveyAnalyticsTabulator.renderDetailActions = (container, data, row) => {
   container.appendChild(button2);
 };
 
-surveyAnalyticsTabulator.render();
+surveyAnalyticsTabulator.render(document.getElementById("tabulatorContainer"));

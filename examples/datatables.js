@@ -35,8 +35,8 @@ var survey = new Survey.SurveyModel(json);
 // xhr.send();
 
 // data normalization
-var normalizedData = data.map(function(item) {
-  survey.getAllQuestions().forEach(function(q) {
+var normalizedData = data.map(function (item) {
+  survey.getAllQuestions().forEach(function (q) {
     if (!item[q.name]) {
       item[q.name] = "";
     }
@@ -45,9 +45,10 @@ var normalizedData = data.map(function(item) {
 });
 
 var surveyAnalyticsDataTables = new SurveyAnalytics.DataTables(
-  document.getElementById("dataTablesContainer"),
   survey,
   normalizedData
 );
 
-surveyAnalyticsDataTables.render();
+surveyAnalyticsDataTables.render(
+  document.getElementById("dataTablesContainer")
+);

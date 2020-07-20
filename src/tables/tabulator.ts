@@ -57,30 +57,32 @@ export var defaultOptions: IOptions = {
 
 export class Tabulator extends Table {
   constructor(
-    targetNode: HTMLElement,
     survey: SurveyModel,
     data: Array<Object>,
     options: IOptions,
     _columns: Array<any> = [],
     isTrustedAccess = false
   ) {
-    super(targetNode, survey, data, options, _columns, isTrustedAccess);
+    super(survey, data, options, _columns, isTrustedAccess);
     const self = this;
     if (!this.options) this.options = defaultOptions;
-    targetNode.className += " sa-tabulator";
     if (_columns.length === 0) {
       self._columns = self.buildColumns(survey);
     }
   }
-  
+
   public detailButtonCreators: Array<(columnName?: string) => HTMLElement> = [];
 
+  private renderResult: HTMLElement;
   private readonly COLUMN_MIN_WIDTH = 155;
   private tabulatorTables: any = null;
   private tableContainer: HTMLElement = null;
   private tableTools: TableTools;
 
-  public render = () => {
+  public render = (targetNode: HTMLEmbedElement) => {
+    targetNode.className += " sa-table sa-tabulator";
+    targetNode.innerHTML = "";
+
     const columns = this.getColumns();
     const data = this.tableData;
 
@@ -89,9 +91,8 @@ export class Tabulator extends Table {
 
     this.tableContainer = document.createElement("div");
 
-    this.targetNode.innerHTML = "";
-    this.targetNode.appendChild(header);
-    this.targetNode.appendChild(this.tableContainer);
+    targetNode.appendChild(header);
+    targetNode.appendChild(this.tableContainer);
 
     this.tabulatorTables = new TabulatorTables(this.tableContainer, {
       data,
@@ -113,6 +114,7 @@ export class Tabulator extends Table {
     this.tableTools = new TableTools(toolsContainer, this);
     this.onTableToolsCreated.fire(this, { tools: this.tableTools });
     this.tableTools.render();
+    this.renderResult = targetNode;
   };
 
   private createDownloadsBar(): HTMLElement {
@@ -156,7 +158,8 @@ export class Tabulator extends Table {
 
   public destroy = () => {
     this.tabulatorTables.destroy();
-    this.targetNode.innerHTML = "";
+    this.renderResult.innerHTML = "";
+    this.renderResult = undefined;
   };
 
   rowFormatter = (row: any): void => {

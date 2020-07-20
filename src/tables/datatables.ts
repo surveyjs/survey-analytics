@@ -50,20 +50,20 @@ export class DataTables extends Table {
   }
 
   constructor(
-    targetNode: HTMLElement,
     survey: SurveyModel,
     data: Array<Object>,
     options: DataTablesOptions,
     _columns: Array<ITableColumn> = [],
     isTrustedAccess = false
   ) {
-    super(targetNode, survey, data, options, _columns, isTrustedAccess);
-    targetNode.className += " sa-datatables";
+    super(survey, data, options, _columns, isTrustedAccess);
 
     if (_columns.length === 0) {
       this._columns = this.buildColumns(survey);
     }
   }
+
+  private renderResult: HTMLElement;
 
   protected onColumnsChanged() {
     this.columnsChanged.fire(this, { survey: this.survey });
@@ -84,24 +84,25 @@ export class DataTables extends Table {
       }
       this.currentPageNumber = this.datatableApi.page.info().page;
       this.destroy();
-      this.render();
+      this.render(this.renderResult);
     }
   }
 
   public get isRendered() {
-    return this.targetNode.children.length > 0;
+    return !!this.renderResult;
   }
 
   groupBy: Array<string> = [];
 
   destroy() {
     //if(!this.targetNode) return;
-    const tableNode = this.targetNode.children[0];
+    const tableNode = this.renderResult.children[0];
     if (jQuery.fn.DataTable.isDataTable(tableNode)) {
       jQuery(tableNode).DataTable().destroy();
     }
     this.datatableApi = undefined;
-    this.targetNode.innerHTML = "";
+    this.renderResult.innerHTML = "";
+    this.renderResult = undefined;
   }
 
   public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
@@ -143,8 +144,11 @@ export class DataTables extends Table {
     this.datatableApi.page.len(value);
   }
 
-  render() {
+  render(targetNode: HTMLElement) {
     var self = this;
+    targetNode.className += " sa-table sa-datatables";
+    targetNode.innerHTML = "";
+
     const tableNode = document.createElement("table");
     var columns = this.getColumns();
     var columnsData: any = columns.map((c: any) => c.data);
@@ -212,7 +216,7 @@ export class DataTables extends Table {
       this.options
     );
 
-    this.targetNode.appendChild(tableNode);
+    targetNode.appendChild(tableNode);
     tableNode.width = "100%";
     tableNode.className = "sa-datatables__table display responsive dataTable";
 
@@ -270,6 +274,7 @@ export class DataTables extends Table {
         tableRow.render();
       });
     datatableApiRef.draw(false);
+    this.renderResult = targetNode;
   }
 
   public doStateSave() {

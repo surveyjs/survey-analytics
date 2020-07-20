@@ -1,4 +1,4 @@
-import { SurveyModel, Question } from "survey-core";
+import { SurveyModel } from "survey-core";
 import { DataTables } from "../../src/tables/datatables";
 import {
   ColumnDataType,
@@ -25,12 +25,7 @@ const json = {
 
 test("buildColumns method", () => {
   const survey = new SurveyModel(json);
-  const dataTables = new DataTables(
-    document.createElement("table"),
-    survey,
-    [],
-    null
-  );
+  const dataTables = new DataTables(survey, [], null);
 
   const columns = <any>dataTables["buildColumns"](survey);
 
@@ -41,12 +36,7 @@ test("buildColumns method", () => {
 
 test("getColumns method", () => {
   const survey = new SurveyModel(json);
-  const dataTables = new DataTables(
-    document.createElement("table"),
-    survey,
-    [],
-    null
-  );
+  const dataTables = new DataTables(survey, [], null);
 
   const columns = <any>dataTables.getColumns();
 
@@ -56,52 +46,34 @@ test("getColumns method", () => {
 });
 
 test("isVisible method", () => {
-  let dataTables = new DataTables(
-    document.createElement("table"),
-    new SurveyModel(),
-    [],
-    null
-  );
+  let dataTables = new DataTables(new SurveyModel(), [], null);
   expect(dataTables.isVisible(ColumnVisibility.Invisible)).toBeFalsy();
   expect(dataTables.isVisible(ColumnVisibility.PublicInvisible)).toBeFalsy();
   expect(dataTables.isVisible(ColumnVisibility.Visible)).toBeTruthy();
 
-  dataTables = new DataTables(
-    document.createElement("table"),
-    new SurveyModel(),
-    [],
-    null,
-    [],
-    true
-  );
+  dataTables = new DataTables(new SurveyModel(), [], null, [], true);
   expect(dataTables.isVisible(ColumnVisibility.Invisible)).toBeFalsy();
   expect(dataTables.isVisible(ColumnVisibility.PublicInvisible)).toBeTruthy();
   expect(dataTables.isVisible(ColumnVisibility.Visible)).toBeTruthy();
 });
 
 test("pass columns through ctor", () => {
-  let dataTables = new DataTables(
-    document.createElement("table"),
-    new SurveyModel(),
-    [],
-    null,
-    [
-      {
-        name: "id",
-        displayName: "Id",
-        location: QuestionLocation.Column,
-        visibility: ColumnVisibility.Visible,
-        dataType: ColumnDataType.Text,
-      },
-      {
-        name: "happenedAt",
-        displayName: "Happened At",
-        location: QuestionLocation.Row,
-        visibility: ColumnVisibility.Visible,
-        dataType: ColumnDataType.Text,
-      },
-    ]
-  );
+  let dataTables = new DataTables(new SurveyModel(), [], null, [
+    {
+      name: "id",
+      displayName: "Id",
+      location: QuestionLocation.Column,
+      visibility: ColumnVisibility.Visible,
+      dataType: ColumnDataType.Text,
+    },
+    {
+      name: "happenedAt",
+      displayName: "Happened At",
+      location: QuestionLocation.Row,
+      visibility: ColumnVisibility.Visible,
+      dataType: ColumnDataType.Text,
+    },
+  ]);
 
   const columns = <any>dataTables.getColumns();
   expect(JSON.stringify(columns)).toBe(
@@ -110,28 +82,22 @@ test("pass columns through ctor", () => {
 });
 
 test.skip("createDetailMarkup method", () => {
-  let dataTables = new DataTables(
-    document.createElement("table"),
-    new SurveyModel(),
-    [],
-    null,
-    [
-      {
-        name: "id",
-        displayName: "Id",
-        location: QuestionLocation.Column,
-        visibility: ColumnVisibility.Visible,
-        dataType: ColumnDataType.Text,
-      },
-      {
-        name: "happenedAt",
-        displayName: "Happened At",
-        location: QuestionLocation.Row,
-        visibility: ColumnVisibility.Visible,
-        dataType: ColumnDataType.Text,
-      },
-    ]
-  );
+  let dataTables = new DataTables(new SurveyModel(), [], null, [
+    {
+      name: "id",
+      displayName: "Id",
+      location: QuestionLocation.Column,
+      visibility: ColumnVisibility.Visible,
+      dataType: ColumnDataType.Text,
+    },
+    {
+      name: "happenedAt",
+      displayName: "Happened At",
+      location: QuestionLocation.Row,
+      visibility: ColumnVisibility.Visible,
+      dataType: ColumnDataType.Text,
+    },
+  ]);
 
   const detailForm = dataTables["createDetailMarkup"]({});
   expect(detailForm[0].innerHTML).toBe(
@@ -141,14 +107,7 @@ test.skip("createDetailMarkup method", () => {
 
 test.skip("makeprivate button existance", () => {
   const survey = new SurveyModel(json);
-  let dataTables = new DataTables(
-    document.createElement("table"),
-    survey,
-    [],
-    null,
-    undefined,
-    true
-  );
+  let dataTables = new DataTables(survey, [], null, undefined, true);
 
   expect(
     dataTables.headerButtonCreators.indexOf(
@@ -156,14 +115,7 @@ test.skip("makeprivate button existance", () => {
     )
   ).toBe(2);
 
-  dataTables = new DataTables(
-    document.createElement("table"),
-    survey,
-    [],
-    null,
-    undefined,
-    false
-  );
+  dataTables = new DataTables(survey, [], null, undefined, false);
 
   expect(
     dataTables.headerButtonCreators.indexOf(
