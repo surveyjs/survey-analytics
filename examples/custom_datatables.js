@@ -25,7 +25,7 @@ surveyAnalyticsDataTables.onTableToolsCreated.add(function (table, opt) {
     btn.innerHTML = "Remove rows";
     btn.style.marginLeft = "20px";
     btn.onclick = function () {
-      table.getRows().forEach(function (row) {
+      table.getCreatedRows().forEach(function (row) {
         if (row.isSelected) {
           row.remove();
         }
@@ -58,7 +58,7 @@ surveyAnalyticsDataTables.onRowCreated.add(function (table, opt) {
   });
 });
 
-surveyAnalyticsDataTables.renderDetailActions = (container, data, row) => {
+surveyAnalyticsDataTables.renderDetailActions = (container, row) => {
   const button1 = document.createElement("button");
   button1.innerHTML = "Show in Survey";
   button1.className = "rounded-button";

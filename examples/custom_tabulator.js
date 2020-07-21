@@ -14,6 +14,11 @@ var surveyAnalyticsTabulator = new SurveyAnalytics.Tabulator(
   normalizedData
 );
 
+surveyAnalyticsTabulator.removeRow = function (row) {
+  var i = surveyAnalyticsTabulator._rows.indexOf(row);
+  surveyAnalyticsTabulator._rows.splice(i, 1);
+};
+
 surveyAnalyticsTabulator.onTableToolsCreated.add(function (table, opt) {
   var tools = opt.tools;
   tools.actions.push(function (table) {
@@ -22,7 +27,7 @@ surveyAnalyticsTabulator.onTableToolsCreated.add(function (table, opt) {
     btn.innerHTML = "Remove rows";
     btn.style.marginLeft = "20px";
     btn.onclick = function () {
-      table.getRows().forEach(function (row) {
+      table.getCreatedRows().forEach(function (row) {
         if (row.isSelected) {
           row.remove();
         }
@@ -38,6 +43,7 @@ surveyAnalyticsTabulator.onRowCreated.add(function (table, opt) {
     row.isSelected = val;
   };
   row.remove = function () {
+    this.table.removeRow(row);
     row.innerRow.delete();
   };
   var rowTools = opt.row.tools;
@@ -52,13 +58,13 @@ surveyAnalyticsTabulator.onRowCreated.add(function (table, opt) {
   row.innerRow.getCells()[0].getColumn().setWidth("100");
 });
 
-surveyAnalyticsTabulator.renderDetailActions = (container, data, row) => {
+surveyAnalyticsTabulator.renderDetailActions = (container, row) => {
   const button1 = document.createElement("button");
   button1.innerHTML = "Show in Survey";
   button1.className = "rounded-button";
   button1.onclick = (e) => {
     e.stopPropagation();
-    self.showSurveyResult(data);
+    self.showSurveyResult(row.getData());
   };
   container.appendChild(button1);
   const button2 = document.createElement("button");

@@ -75,8 +75,7 @@ export class TabulatorRow extends TableRow {
     protected innerRow: any,
     public renderDetailActions: (
       container: HTMLElement,
-      data: any,
-      datatablesRow: any
+      tableRow: any
     ) => HTMLElement
   ) {
     super(table, toolsContainer, detailsContainer, renderDetailActions);
@@ -98,8 +97,7 @@ export class DatatablesRow extends TableRow {
     private _innerRow: any,
     public renderDetailActions: (
       container: HTMLElement,
-      data: any,
-      datatablesRow: any
+      tableRow: any
     ) => HTMLElement
   ) {
     super(table, toolsContainer, detailsContainer, renderDetailActions);
@@ -154,7 +152,7 @@ export class Details {
   constructor(
     private table: Table,
     private row: TableRow,
-    private detailsContainer: HTMLElement,
+    private targetNode: HTMLElement,
     private renderActions: any
   ) {
     var detailsTable = document.createElement("table");
@@ -164,8 +162,11 @@ export class Details {
       this.close();
     });
   }
-
   private detailsTable: HTMLElement;
+
+  public setContainer(targetNode: HTMLElement) {
+    this.targetNode = targetNode;
+  }
 
   public open(): void {
     this.detailsTable.innerHTML = "";
@@ -193,12 +194,12 @@ export class Details {
       td.colSpan = 3;
       row.appendChild(td);
       rows.push(row);
-      this.renderActions(td, this.table.getData(), this.row);
+      this.renderActions(td, this.row);
     }
     rows.forEach((row) => {
       this.detailsTable.appendChild(row);
     });
-    this.detailsContainer.appendChild(this.detailsTable);
+    this.targetNode.appendChild(this.detailsTable);
   }
 
   protected createShowAsColumnButton = (columnName: string): HTMLElement => {
