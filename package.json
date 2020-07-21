@@ -14,7 +14,7 @@
   "version": "1.7.20",
   "name": "survey-analytics",
   "description": "SurveyJS analytics Library.",
-  "main": "survey.analytics.js",
+  "main": "survey.analytics.summary.js",
   "files": [
     "survey.analytics.d.ts",
     "survey.analytics.js",

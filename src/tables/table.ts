@@ -1,16 +1,11 @@
-import { SurveyModel, Question } from "survey-core";
-import {
-  ITableColumn,
-  ColumnVisibility,
-  QuestionLocation,
-  ColumnDataType,
-} from "./config";
+import { SurveyModel, Question, Event } from "survey-core";
+import { ColumnVisibility, QuestionLocation, ColumnDataType } from "./config";
+import { Details, TableRow } from "./tools/rowtools";
 
-export class Table {
+export abstract class Table {
   protected tableData: any;
 
   constructor(
-    protected targetNode: HTMLElement,
     protected survey: SurveyModel,
     protected data: Array<Object>,
     protected options: any,
@@ -21,6 +16,53 @@ export class Table {
       this._columns = this.buildColumns(survey);
     }
     this.initTableData(data);
+  }
+  protected _rows: TableRow[] = [];
+
+  protected rowDetails: { [rowName: string]: Details };
+
+  public onColumnsVisibilityChanged: Event<
+    (sender: Table, options: any) => any,
+    any
+  > = new Event<(sender: Table, options: any) => any, any>();
+
+  public onColumnsLocationChanged: Event<
+    (sender: Table, options: any) => any,
+    any
+  > = new Event<(sender: Table, options: any) => any, any>();
+
+  public onRowCreated: Event<
+    (sender: Table, options: any) => any,
+    any
+  > = new Event<(sender: Table, options: any) => any, any>();
+
+  public onTableToolsCreated: Event<
+    (sender: Table, options: any) => any,
+    any
+  > = new Event<(sender: Table, options: any) => any, any>();
+
+  public onColumnToolsCreated: Event<
+    (sender: Table, options: any) => any,
+    any
+  > = new Event<(sender: Table, options: any) => any, any>();
+
+  public renderDetailActions: (
+    container: HTMLElement,
+    row: TableRow
+  ) => HTMLElement;
+
+  public getData() {
+    return this.data;
+  }
+
+  public abstract render(targetNode: HTMLElement): void;
+  public abstract applyFilter(value: string): void;
+  public abstract applyColumnFilter(columnName: string, value: string): void;
+  public abstract sortByColumn(columnName: string, direction: string): void;
+  public abstract setPageSize(value: number): void;
+
+  protected getCreatedRows(): TableRow[] {
+    return [].concat(this._rows);
   }
 
   protected buildColumns = (survey: SurveyModel) => {
@@ -48,7 +90,7 @@ export class Table {
     );
   };
 
-  protected get columns() {
+  public get columns() {
     return [].concat(this._columns);
   }
 
@@ -78,4 +120,27 @@ export class Table {
       return dataItem;
     });
   }
+
+  public setColumnLocation(columnName: string, location: QuestionLocation) {
+    this.columns.filter(
+      (column) => column.name === columnName
+    )[0].location = location;
+    this.onColumnsLocationChanged.fire(this, null);
+  }
+
+  public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
+    var column = this.columns.filter((column) => column.name === columnName)[0];
+    column.visibility = visibility;
+    this.onColumnsVisibilityChanged.fire(this, null);
+  }
+
+  public getColumnVisibility(columnName: string): ColumnVisibility {
+    var column = this.columns.filter((column) => column.name === columnName)[0];
+    return column.visibility;
+  }
+
+  public doStateSave() {
+    this.stateSaveCallback({ columns: this.columns }, this.data);
+  }
+  public stateSaveCallback(settings: any, data: any) {}
 }
