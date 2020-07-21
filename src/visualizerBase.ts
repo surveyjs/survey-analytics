@@ -3,20 +3,21 @@ import { Question } from "survey-core";
 import "./visualizerBase.scss";
 
 export class VisualizerBase {
+  private _showHeader = true;
   protected renderResult: HTMLElement = undefined;
   protected toolbarContainer: HTMLElement = undefined;
   protected contentContainer: HTMLElement = undefined;
   protected footerContainer: HTMLElement = undefined;
 
-  protected toolbarItemCreators: { [name: string]: () => HTMLElement } = {};
+  protected toolbarItemCreators: { [name: string]: (toolbar?: HTMLDivElement) => HTMLElement } = {};
 
   constructor(
     public question: Question,
     protected data: Array<{ [index: string]: any }>,
-    protected options?: Object
+    protected options: { [index: string]: any } = {}
   ) {}
 
-  public registerToolbarItem(name: string, creator: () => HTMLElement) {
+  public registerToolbarItem(name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement) {
     this.toolbarItemCreators[name] = creator;
   }
 
@@ -36,28 +37,37 @@ export class VisualizerBase {
 
   destroy() {
     if(!!this.renderResult) {
+      this.destroyToolbar(this.toolbarContainer);
+      this.toolbarContainer = undefined;
+      this.destroyContent(this.contentContainer);
+      this.contentContainer = undefined;
+      this.destroyFooter(this.footerContainer);
+      this.footerContainer = undefined;
       this.renderResult.innerHTML = "";
       this.renderResult = undefined;
-      this.toolbarContainer = undefined;
-      this.contentContainer = undefined;
-      this.footerContainer = undefined;
     }
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
     Object.keys(this.toolbarItemCreators || {}).forEach(toolbarItemName => {
-      let toolbarItem = this.toolbarItemCreators[toolbarItemName]();
+      let toolbarItem = this.toolbarItemCreators[toolbarItemName](toolbar);
       if(!!toolbarItem) {
         toolbar.appendChild(toolbarItem);
       }
     });
   }
 
+  protected destroyToolbar(container: HTMLElement) {
+    container.innerHTML = "";
+  }
+
   protected renderToolbar(container: HTMLElement) {
-    const toolbar = document.createElement("div");
-    toolbar.className = "sa-toolbar";
-    this.createToolbarItems(toolbar);
-    container.appendChild(toolbar);
+    if(this.showHeader) {
+      const toolbar = document.createElement("div");
+      toolbar.className = "sa-toolbar";
+      this.createToolbarItems(toolbar);
+      container.appendChild(toolbar);
+    }
   }
 
   protected destroyContent(container: HTMLElement) {
@@ -81,18 +91,18 @@ export class VisualizerBase {
 
     this.toolbarContainer = document.createElement("div");
     this.toolbarContainer.className = "sa-visualizer__toolbar";
+    targetElement.appendChild(this.toolbarContainer);
+    this.renderToolbar(this.toolbarContainer);
+
     this.contentContainer = document.createElement("div");
     this.contentContainer.className = "sa-visualizer__content";
+    targetElement.appendChild(this.contentContainer);
+    this.renderContent(this.contentContainer);
+
     this.footerContainer = document.createElement("div");
     this.footerContainer.className = "sa-visualizer__footer";
-
-    this.renderToolbar(this.toolbarContainer);
-    this.renderContent(this.contentContainer);
-    this.renderFooter(this.footerContainer);
-
-    targetElement.appendChild(this.toolbarContainer);
-    targetElement.appendChild(this.contentContainer);
     targetElement.appendChild(this.footerContainer);
+    this.renderFooter(this.footerContainer);
   }
 
   getRandomColor() {
@@ -130,5 +140,18 @@ export class VisualizerBase {
     }
 
     return manyColors;
+  }
+
+  get showHeader() {
+    return this._showHeader;
+  }
+  set showHeader(newValue: boolean) {
+    if (newValue != this._showHeader) {
+      this._showHeader = newValue;
+      if(!!this.toolbarContainer) {
+        this.destroyToolbar(this.toolbarContainer);
+        this.renderToolbar(this.toolbarContainer);
+      }
+    }
   }
 }

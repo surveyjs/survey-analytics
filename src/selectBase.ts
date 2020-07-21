@@ -202,10 +202,4 @@ export class SelectBase extends VisualizerBase {
     return [statistics];
   }
 
-  destroy() {
-    this.destroyContent(this.contentContainer);
-    this.destroyFooter(this.footerContainer);
-    super.destroy();
-  }
-
 }
