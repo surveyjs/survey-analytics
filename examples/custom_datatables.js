@@ -64,7 +64,7 @@ surveyAnalyticsDataTables.renderDetailActions = (container, row) => {
   button1.className = "rounded-button";
   button1.onclick = (e) => {
     e.stopPropagation();
-    self.showSurveyResult(data);
+    // self.showSurveyResult(row.getData());
   };
   container.appendChild(button1);
   const button2 = document.createElement("button");
@@ -73,8 +73,7 @@ surveyAnalyticsDataTables.renderDetailActions = (container, row) => {
   button2.onclick = (e) => {
     e.stopPropagation();
     row.remove(true);
-
-    // self.deleteSurveyResult(data.InstanceId, datatablesRow);
+    // self.deleteSurveyResult(row.getData(), datatablesRow);
   };
   container.appendChild(button2);
 };
