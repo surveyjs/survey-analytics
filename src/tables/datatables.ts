@@ -141,7 +141,7 @@ export class DataTables extends Table {
   }
 
   public setPageSize(value: number): void {
-    this.datatableApi.page.len(value);
+    this.datatableApi.page.len(value).draw(false);
   }
 
   render(targetNode: HTMLElement) {

@@ -34,11 +34,6 @@ export class TableTools {
   protected createShowColumnDropdown = (table: Table): HTMLElement => {
     const dropdown = document.createElement("select");
     dropdown.classList.add("sa-table__show-column");
-    var option = document.createElement("option");
-    option.text = localization.getString("showColumn");
-    option.disabled = true;
-    option.selected = true;
-    dropdown.appendChild(option);
 
     function update() {
       var hiddenColumns = table.columns.filter(
@@ -49,7 +44,13 @@ export class TableTools {
         return;
       }
       dropdown.style.display = "initial";
-
+      dropdown.innerHTML = "";
+      var option = document.createElement("option");
+      option.text = localization.getString("showColumn");
+      option.disabled = true;
+      option.selected = true;
+      dropdown.appendChild(option);
+      
       hiddenColumns.forEach((column: any) => {
         var option = document.createElement("option");
         var text = column.displayName;
