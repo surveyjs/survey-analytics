@@ -1,10 +1,6 @@
-import { SurveyModel, Question } from "survey-core";
+import { SurveyModel } from "survey-core";
 import { Tabulator } from "../../src/tables/tabulator";
-import {
-  ColumnDataType,
-  ColumnVisibility,
-  QuestionLocation,
-} from "../../src/tables/config";
+import { ColumnVisibility } from "../../src/tables/config";
 
 const json = {
   questions: [
@@ -25,12 +21,7 @@ const json = {
 
 test("buildColumns method", () => {
   const survey = new SurveyModel(json);
-  const tabulator = new Tabulator(
-    document.createElement("table"),
-    survey,
-    [],
-    null
-  );
+  const tabulator = new Tabulator(survey, [], null);
 
   const columns = <any>tabulator["buildColumns"](survey);
 
@@ -40,24 +31,12 @@ test("buildColumns method", () => {
 });
 
 test("isVisible method", () => {
-  let tabulator = new Tabulator(
-    document.createElement("table"),
-    new SurveyModel(),
-    [],
-    null
-  );
+  let tabulator = new Tabulator(new SurveyModel(), [], null);
   expect(tabulator.isVisible(ColumnVisibility.Invisible)).toBeFalsy();
   expect(tabulator.isVisible(ColumnVisibility.PublicInvisible)).toBeFalsy();
   expect(tabulator.isVisible(ColumnVisibility.Visible)).toBeTruthy();
 
-  tabulator = new Tabulator(
-    document.createElement("table"),
-    new SurveyModel(),
-    [],
-    null,
-    [],
-    true
-  );
+  tabulator = new Tabulator(new SurveyModel(), [], null, [], true);
   expect(tabulator.isVisible(ColumnVisibility.Invisible)).toBeFalsy();
   expect(tabulator.isVisible(ColumnVisibility.PublicInvisible)).toBeTruthy();
   expect(tabulator.isVisible(ColumnVisibility.Visible)).toBeTruthy();
@@ -65,16 +44,41 @@ test("isVisible method", () => {
 
 test("getColumns method", () => {
   const survey = new SurveyModel(json);
-  const tabulator = new Tabulator(
-    document.createElement("table"),
-    survey,
-    [],
-    null
-  );
+  const tabulator = new Tabulator(survey, [], null);
 
   const columns = <any>tabulator["getColumns"]();
 
   expect(JSON.stringify(columns)).toBe(
-    '[{\"field\":\"\",\"title\":\"\"},{\"field\":\"car\",\"title\":\"What car are you driving?\",\"visible\":true,\"headerFilter\":true}]'
+    '[{"field":"","title":"","download":false,"resizable":false,"width":60},{"field":"car","title":"What car are you driving?","minWidth":248,"widthShrink":1,"visible":true,"headerSort":false}]'
   );
+});
+
+test("move column callback", () => {
+  var json = {
+    questions: [
+      {
+        name: "q1",
+        type: "text",
+      },
+      {
+        name: "q2",
+        type: "text",
+      },
+      {
+        name: "q3",
+        type: "text",
+      },
+      {
+        name: "q4",
+        type: "text",
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const tabulator = new Tabulator(survey, [], null);
+  tabulator.render(document.createElement("table"));
+  (<any>tabulator).tabulatorTables.moveColumn("q1", "q3", true);
+  var trueOrder = ["q2", "q3", "q1", "q4"];
+  var order = tabulator.columns.map((column) => column.name);
+  expect(order).toEqual(trueOrder);
 });

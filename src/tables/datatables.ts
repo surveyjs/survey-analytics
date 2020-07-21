@@ -1,14 +1,11 @@
 import { Table } from "./table";
-import { SurveyModel, Question, Event } from "survey-core";
-import {
-  ITableColumn,
-  ColumnVisibility,
-  QuestionLocation,
-  ColumnDataType,
-} from "./config";
-import { localization } from "../localizationManager";
+import { SurveyModel, Event } from "survey-core";
+import { ITableColumn, ColumnVisibility, QuestionLocation } from "./config";
 
 import "./datatables.scss";
+import { TableRow, DatatablesRow } from "./tools/rowtools";
+import { ColumnTools } from "./tools/columntools";
+import { TableTools } from "./tools/tabletools";
 
 if (!!document) {
   var svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");
@@ -33,7 +30,6 @@ interface DataTablesOptions {
 }
 
 export class DataTables extends Table {
-  private svgNode: HTMLElement;
   private datatableApi: any;
 
   public currentPageNumber: number = 0;
@@ -54,33 +50,20 @@ export class DataTables extends Table {
   }
 
   constructor(
-    targetNode: HTMLElement,
     survey: SurveyModel,
     data: Array<Object>,
     options: DataTablesOptions,
     _columns: Array<ITableColumn> = [],
     isTrustedAccess = false
   ) {
-    super(targetNode, survey, data, options, _columns, isTrustedAccess);
-    targetNode.className += "sa-datatables";
+    super(survey, data, options, _columns, isTrustedAccess);
 
-    this.headerButtonCreators = [
-      // this.createGroupingButton,
-      this.createSortButton,
-      this.createHideButton,
-      this.createMoveToDetailButton,
-      this.createDragButton,
-    ];
-
-    if (this.isTrustedAccess) {
-      this.headerButtonCreators.splice(2, 0, this.createColumnPrivateButton);
-    }
-
-    this.detailButtonCreators = [this.createShowAsColumnButton];
     if (_columns.length === 0) {
       this._columns = this.buildColumns(survey);
     }
   }
+
+  private renderResult: HTMLElement;
 
   protected onColumnsChanged() {
     this.columnsChanged.fire(this, { survey: this.survey });
@@ -101,66 +84,76 @@ export class DataTables extends Table {
       }
       this.currentPageNumber = this.datatableApi.page.info().page;
       this.destroy();
-      this.render();
+      this.render(this.renderResult);
     }
   }
 
   public get isRendered() {
-    return this.targetNode.children.length > 0;
+    return !!this.renderResult;
   }
 
   groupBy: Array<string> = [];
 
   destroy() {
     //if(!this.targetNode) return;
-    const tableNode = this.targetNode.children[0];
+    const tableNode = this.renderResult.children[0];
     if (jQuery.fn.DataTable.isDataTable(tableNode)) {
       jQuery(tableNode).DataTable().destroy();
     }
     this.datatableApi = undefined;
-    this.targetNode.innerHTML = "";
+    this.renderResult.innerHTML = "";
+    this.renderResult = undefined;
+  }
+
+  public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
+    super.setColumnVisibility(columnName, visibility);
+    var isInvisible = visibility == ColumnVisibility.Invisible;
+    this.datatableApi.column(columnName + ":name").visible(!isInvisible);
+  }
+
+  public setColumnLocation(columnName: string, location: QuestionLocation) {
+    super.setColumnLocation(columnName, location);
+    var column = this.datatableApi.column(columnName + ":name");
+    var isColumnLocation = location == QuestionLocation.Column;
+    column.visible(isColumnLocation);
   }
 
   createActionContainer() {
     var container = document.createElement("div");
-    container.className = "sa-datatables__action-container";
-
+    container.className = "sa-table__action-container";
     return container;
   }
-  createMinorColumnsButton() {
-    const button = document.createElement("button");
-    button.title = localization.getString("showMinorColumns");
 
-    button.className = "sa-datatables__svg-button";
-    button.appendChild(this.createSvgElement("detail"));
-    return button;
+  public applyFilter(value: string) {
+    this.datatableApi.search(value).draw(false);
   }
-  setMinorColumnsButtonCallback(datatableApiRef: any) {
-    var self = this;
-    jQuery(datatableApiRef.table().body()).on(
-      "click",
-      "td.sa-datatables__action-column button.sa-datatables__svg-button",
-      function () {
-        const detailTr = jQuery(this).closest("tr");
-        var row = datatableApiRef.row(detailTr);
-        if (detailTr.hasClass("sa-datatables__detail-row")) {
-          detailTr.nextAll("tr.sa-datatables__detail").remove();
-          detailTr.removeClass("sa-datatables__detail-row");
-        } else {
-          var data = self.data[row.index()];
-          jQuery(self.createDetailMarkup(data, row)).insertAfter(detailTr);
-          detailTr.addClass("sa-datatables__detail-row");
-        }
-      }
-    );
+
+  public applyColumnFilter(columnName: string, value: string): void {
+    var column = this.datatableApi.column(columnName + ":name");
+    if (column.search() !== value) {
+      column.search(value).draw(false);
+    }
   }
-  render() {
+
+  public sortByColumn(columnName: string, direction: string): void {
+    var column = this.datatableApi.column(columnName + ":name");
+    column.order(direction).draw(false);
+  }
+
+  public setPageSize(value: number): void {
+    this.datatableApi.page.len(value);
+  }
+
+  render(targetNode: HTMLElement) {
     var self = this;
+    targetNode.className += " sa-table sa-datatables";
+    targetNode.innerHTML = "";
+
     const tableNode = document.createElement("table");
     var columns = this.getColumns();
     var columnsData: any = columns.map((c: any) => c.data);
     const dtButtonClass =
-      "sa-datatables__button sa-datatables__button--small sa-datatables__button--gray";
+      "sa-table__btn sa-table__btn--small sa-table__btn--gray";
     const options = jQuery.extend(
       true,
       {
@@ -169,10 +162,10 @@ export class DataTables extends Table {
           { extend: "csv", className: dtButtonClass },
           { extend: "print", className: dtButtonClass },
         ],
-        dom: "Bfplrtip",
+        dom: 'B<"sa-datatables__tools">prtip',
+        // ordering: false,
         data: this.tableData,
         pageLength: 5,
-        lengthMenu: [1, 5, 10, 25, 50, 75, 100],
         responsive: false,
         scrollX: true,
         columns: columns,
@@ -180,13 +173,7 @@ export class DataTables extends Table {
           fixedColumnsLeft: 1,
           realtime: false,
         },
-        // orderFixed: [[1, "asc"]],
-        rowGroup: {
-          dataSrc: columnsData[0],
-          endRender: (rows: any, group: any) => {
-            return "Count: " + rows.data().count();
-          },
-        },
+        //orderFixed: [[1, "asc"]],
         language: {
           sSearch: " ",
           searchPlaceholder: "Search...",
@@ -210,149 +197,84 @@ export class DataTables extends Table {
             .children("th")
             .each(function (index: number) {
               var $thNode = jQuery(this);
+              $thNode.unbind("click.DT");
               if (!!columnsData[index] && $thNode.has("button").length === 0) {
                 var container = self.createActionContainer();
-                self.headerButtonCreators.forEach((creator) => {
-                  var element = creator(
-                    datatableApi,
-                    index,
-                    columnsData[index]
-                  );
-                  if (!!element) {
-                    container.appendChild(element);
-                  }
-                });
-
-                var filterContainer = document.createElement("div");
-                filterContainer.className = "sa-datatables__filter-container";
-                filterContainer.innerHTML =
-                  "<input type='text' placeholder='Search...' />";
-                var column = datatableApi.column(index);
-                jQuery("input", jQuery(filterContainer)).on("click", (e: any) =>
-                  e.stopPropagation()
+                var columnTools = new ColumnTools(
+                  container,
+                  self,
+                  columnsData[index],
+                  self.isTrustedAccess
                 );
-                jQuery("input", jQuery(filterContainer)).on("keyup change", function () {
-                  let value = (<HTMLInputElement>this).value;
-                  if (column.search() !== value) {
-                    column.search(value).draw(false);
-                  }
-                });
-                $thNode.prepend(filterContainer);
-                $thNode.prepend(container);
+                self.onColumnToolsCreated.fire(this, { tools: columnTools });
+                columnTools.render();
               }
+              $thNode.prepend(container);
             });
         },
       },
       this.options
     );
 
-    this.targetNode.appendChild(tableNode);
+    targetNode.appendChild(tableNode);
     tableNode.width = "100%";
     tableNode.className = "sa-datatables__table display responsive dataTable";
 
     const datatableApiRef = (this.datatableApi = jQuery(tableNode).DataTable(
       options
     ));
+    var toolsContainer = jQuery("div.sa-datatables__tools")[0];
+
+    var tools = new TableTools(toolsContainer, this);
+    this.onTableToolsCreated.fire(this, { tools: tools });
+    tools.render();
+
     datatableApiRef.page(self.currentPageNumber);
     this.datatableApi.rowGroup().enable(false).draw(false);
-
-    // this.datatableApi.on("rowgroup-datasrc", (e, dt, val) => {
-    //   this.datatableApi.order.fixed({ pre: [[columnsData.indexOf(val), "asc"]] }).draw();
-    // });
-    var target = jQuery(this.targetNode).find(".dataTables_filter");
-    var button = this.createAddColumnButton(this.datatableApi);
-    jQuery(button).insertAfter(target[0]);
 
     datatableApiRef.on(
       "column-reorder",
       (e: any, settings: any, details: any) => {
         var deletedColumns = this._columns.splice(details.from - 1, 1);
         this._columns.splice(details.to - 1, 0, deletedColumns[0]);
-        var headerCell = jQuery(datatableApiRef.column(details.to).header());
-        this.setMinorColumnsButtonCallback(datatableApiRef);
         this.onColumnsChanged();
       }
     );
-
-    this.setMinorColumnsButtonCallback(datatableApiRef);
-  }
-
-  protected createDetailMarkup(data: any, datatablesRow: any): HTMLElement[] {
-    // var table = document.createElement("table");
-    // table.cellPadding = "5";
-    // table.cellSpacing = "0";
-    // table.border = "0";
-    // table.className = "sa-datatables__detail";
-    var rows: HTMLElement[] = [];
-    var self = this;
-    var visibleColCount = self.columns.filter(
-      (column) =>
-        column.location === QuestionLocation.Column &&
-        this.isVisible(column.visibility)
-    ).length;
-    this.columns
-      .filter(
-        (column) =>
-          column.location === QuestionLocation.Row &&
-          this.isVisible(column.visibility)
-      )
-      .forEach((column) => {
-        var row = document.createElement("tr");
-        row.className = "sa-datatables__detail";
-        var td1 = document.createElement("td");
-        td1.textContent = column.displayName;
-        td1.colSpan = 2;
-        var td2 = document.createElement("td");
-        td2.textContent = data[column.name];
-        var td3 = document.createElement("td");
-        td3.colSpan = Math.max(visibleColCount - 2, 1);
-        self.detailButtonCreators.forEach((creator) =>
-          td3.appendChild(creator(column.name))
+    datatableApiRef
+      .rows()
+      .eq(0)
+      .each((index: number) => {
+        var row = datatableApiRef.row(index);
+        var detailsTr = document.createElement("tr");
+        var detailsTd = document.createElement("td");
+        detailsTd.className = "sa-datatables__details-container";
+        detailsTr.appendChild(detailsTd);
+        var rowElement = row.node();
+        var firstCell = row.cell(row.index(), 0).node();
+        var tableRow = new DatatablesRow(
+          this,
+          firstCell,
+          detailsTd,
+          row,
+          this.renderDetailActions
         );
-        row.appendChild(td1);
-        row.appendChild(td2);
-        row.appendChild(td3);
-        rows.push(row);
+        tableRow.onToggleDetails.add((sender: TableRow, options: any) => {
+          if (options.isExpanded) {
+            detailsTd.colSpan = rowElement.childElementCount;
+            rowElement.parentNode.insertBefore(
+              detailsTr,
+              rowElement.nextSibling
+            );
+          } else {
+            detailsTr.remove();
+          }
+        });
+        this.onRowCreated.fire(this, { row: tableRow });
+        this._rows.push(tableRow);
+        tableRow.render();
       });
-
-    // if (!!this.datatableApi && this.datatableApi.responsive.hasHidden()) {
-    //   var columnsVisibility = this.datatableApi.columns().responsiveHidden();
-    //   var columns = this.datatableApi.settings().init().columns;
-    //   for (var index = 0; index < columnsVisibility.length; index++) {
-    //     if (!columnsVisibility[index]) {
-    //       var column = columns[index];
-    //       var row = document.createElement("tr");
-    //       row.className = "sa-datatables__detail";
-
-    //       var td1 = document.createElement("td");
-    //       td1.textContent = column.sTitle;
-    //       var td2 = document.createElement("td");
-    //       td2.textContent = data[column.mData];
-    //       var td3 = document.createElement("td");
-    //       //this.detailButtonCreators.forEach(creator => td3.appendChild(creator(column.mData)));
-    //       row.appendChild(td1);
-    //       row.appendChild(td2);
-    //       row.appendChild(td3);
-    //       rows.push(row);
-    //     }
-    //   }
-    // }
-
-    if (!!this.renderDetailActions) {
-      var row = document.createElement("tr");
-      row.className = "sa-datatables__detail";
-      var td = document.createElement("td");
-      td.colSpan = visibleColCount + 1;
-      row.appendChild(td);
-      // var td1 = document.createElement("td");
-      // row.appendChild(td1);
-      // var td2 = document.createElement("td");
-      // row.appendChild(td2);
-      rows.push(row);
-      this.renderDetailActions(td, data, datatablesRow);
-    }
-
-    return rows;
+    datatableApiRef.draw(false);
+    this.renderResult = targetNode;
   }
 
   public doStateSave() {
@@ -360,280 +282,18 @@ export class DataTables extends Table {
   }
   public stateSaveCallback(settings: any, data: any) {}
 
-  public renderDetailActions: (
-    container: HTMLElement,
-    data: any,
-    datatablesRow: any
-  ) => HTMLElement;
-
-  public headerButtonCreators: Array<
-    (datatableApi: any, colIdx: number, columnName: string) => HTMLElement
-  > = [];
-
   public detailButtonCreators: Array<(columnName?: string) => HTMLElement> = [];
 
-  createSelectButton = (
-    datatableApi: any,
-    colIdx: number,
-    columnName: string
-  ): HTMLElement => {
-    const button = document.createElement("button");
-    button.innerHTML = localization.getString("selectButton");
-    button.onclick = (e) => {
-      e.stopPropagation();
-      (<any>datatableApi.columns()).deselect();
-      (<any>datatableApi.column(colIdx)).select();
-      !!this.onColumnSelected && this.onColumnSelected(columnName);
-    };
-    return button;
-  };
-
-  createGroupingButton = (
-    datatableApi: any,
-    colIdx: number,
-    columnName: string
-  ): HTMLElement => {
-    const button = document.createElement("button");
-    button.innerHTML = localization.getString("groupButton");
-
-    button.onclick = (e) => {
-      e.stopPropagation();
-
-      const index = this.groupBy.indexOf(columnName);
-      if (index === -1) {
-        this.groupBy.push(columnName);
-        button.innerHTML = localization.getString("ungroupButton");
-      } else {
-        button.innerHTML = localization.getString("groupButton");
-        this.groupBy.splice(index, 1);
-      }
-
-      datatableApi.rowGroup().enable(this.groupBy.length > 0);
-      if (this.groupBy.length > 0) {
-        datatableApi.rowGroup().dataSrc(<any>this.groupBy);
-      }
-      datatableApi.draw(false);
-    };
-
-    return button;
-  };
-  createSvgElement = (path: string): SVGElement => {
-    var svgElem = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    const useElem = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "use"
-    );
-    useElem.setAttributeNS(
-      "http://www.w3.org/1999/xlink",
-      "href",
-      "#sa-svg-" + path
-    );
-    svgElem.appendChild(useElem);
-    return svgElem;
-  };
-
-  createHideButton = (
-    datatableApi: any,
-    colIdx: number,
-    columnName: string
-  ): HTMLElement => {
-    const button = document.createElement("button");
-    button.title = localization.getString("hideColumn");
-    button.className = "sa-datatables__svg-button";
-    button.appendChild(this.createSvgElement("hide"));
-    button.onclick = (e) => {
-      e.stopPropagation();
-
-      this._columns.filter(
-        (column) => column.name === columnName
-      )[0].visibility = ColumnVisibility.Invisible;
-      datatableApi.columns([colIdx]).visible(false);
-
-      // TODO: Use datatables to update headers (show columns options)
-      this.update();
-
-      this.onColumnsChanged();
-    };
-
-    return button;
-  };
-
-  createColumnPrivateButton = (
-    datatableApi: any,
-    colIdx: number,
-    columnName: string
-  ): HTMLElement => {
-    const column = this._columns.filter(
-      (column) => column.name === columnName
-    )[0];
-    const button = document.createElement("button");
-    const makePrivateSvg = this.createSvgElement("makeprivate");
-    const makePublicSvg = this.createSvgElement("makepublic");
-    updateState(column.visibility);
-    button.appendChild(makePrivateSvg);
-    button.appendChild(makePublicSvg);
-    button.onclick = (e) => {
-      e.stopPropagation();
-
-      if (column.visibility === ColumnVisibility.PublicInvisible) {
-        column.visibility = ColumnVisibility.Visible;
-      } else {
-        column.visibility = ColumnVisibility.PublicInvisible;
-      }
-
-      updateState(column.visibility);
-    };
-
-    function updateState(visibility: ColumnVisibility) {
-      const isPrivate = visibility === ColumnVisibility.PublicInvisible;
-      if (isPrivate) {
-        button.className =
-          "sa-datatables__svg-button sa-datatables__svg-button--active";
-        button.title = localization.getString("makePublicColumn");
-        makePrivateSvg.style.display = "block";
-        makePublicSvg.style.display = "none";
-      } else {
-        button.className = "sa-datatables__svg-button";
-        button.title = localization.getString("makePrivateColumn");
-        makePrivateSvg.style.display = "none";
-        makePublicSvg.style.display = "block";
-      }
-    }
-
-    return button;
-  };
-
-  createAddColumnButton = (datatableApi: any): HTMLElement => {
-    const selector = document.createElement("select");
-    selector.className = "sa-datatables__add-column";
-    selector.onclick = (e) => {
-      e.stopPropagation();
-    };
-
-    var hiddenColumns = this.columns.filter(
-      (column) => column.visibility === ColumnVisibility.Invisible
-    );
-
-    if (hiddenColumns.length === 0) {
-      return;
-    }
-
-    var option = document.createElement("option");
-    option.text = localization.getString("showColumn");
-    option.disabled = true;
-    option.selected = true;
-    selector.appendChild(option);
-
-    hiddenColumns.forEach((column) => {
-      var option = document.createElement("option");
-      var text = column.displayName;
-      if (text.length > 20) {
-        text = text.substring(0, 20) + "...";
-      }
-      option.text = text;
-      option.title = column.displayName;
-      option.value = column.name;
-      selector.appendChild(option);
-    });
-
-    var self = this;
-    selector.onchange = function (e) {
-      e.stopPropagation();
-      if (!jQuery(this).val()) return;
-
-      var column = self._columns.filter(
-        (column) => column.name === jQuery(this).val()
-      )[0];
-      column.visibility = ColumnVisibility.Visible;
-      datatableApi.column(column.name + ":name").visible(true);
-
-      // TODO: Use datatables to update headers (show columns options)
-      self.update();
-
-      self.onColumnsChanged();
-    };
-
-    return selector;
-  };
-  createDragButton = (
-    datatableApi: any,
-    colIdx: any,
-    columnName: string
-  ): HTMLElement => {
-    const button = document.createElement("button");
-    button.className = "sa-datatables__svg-button sa-datatables__drag-button";
-    button.appendChild(this.createSvgElement("drag"));
-    button.onclick = (e) => {
-      e.stopPropagation();
-    };
-    return button;
-  };
-  createSortButton = (
-    datatableApi: any,
-    colIdx: any,
-    columnName: string
-  ): HTMLElement => {
-    const button = document.createElement("button");
-    const descTitle = localization.getString("descOrder");
-    const ascTitle = localization.getString("ascOrder");
-    button.className = "sa-datatables__svg-button";
-    button.title = ascTitle;
-    button.appendChild(this.createSvgElement("sorting"));
-    button.onclick = (e) => {
-      button.title = button.title == ascTitle ? descTitle : ascTitle;
-    };
-    button.ondrag = (e) => {
-      e.stopPropagation;
-    };
-    return button;
-  };
-  createMoveToDetailButton = (
-    datatableApi: any,
-    colIdx: number,
-    columnName: string
-  ): HTMLElement => {
-    const button = document.createElement("button");
-    button.title = localization.getString("moveToDetail");
-    button.className = "sa-datatables__svg-button";
-    button.appendChild(this.createSvgElement("movetodetails"));
-    button.onclick = (e) => {
-      e.stopPropagation();
-
-      this._columns.filter((column) => column.name === columnName)[0].location =
-        QuestionLocation.Row;
-      this.update();
-
-      this.onColumnsChanged();
-    };
-
-    return button;
-  };
-
-  createShowAsColumnButton = (columnName?: string): HTMLElement => {
-    const button = document.createElement("button");
-    button.innerHTML = localization.getString("showAsColumn");
-    button.className = "sa-datatables__button sa-datatables__button--gray";
-    button.onclick = (e) => {
-      e.stopPropagation();
-
-      this._columns.filter((column) => column.name === columnName)[0].location =
-        QuestionLocation.Column;
-      this.update();
-
-      this.onColumnsChanged();
-    };
-
-    return button;
-  };
   getColumns(): Array<Object> {
     const availableColumns = this.getAvailableColumns();
     const columns: any = availableColumns.map((column, index) => {
       var question = this.survey.getQuestionByName(column.name);
       return {
+        name: column.name,
         data: column.name,
         sTitle: (question && question.title) || column.displayName,
         visible: column.visibility !== ColumnVisibility.Invisible,
-        mRender: (data: object, type: string, row: any) => {
+        mRender: (_data: object, _type: string, row: any) => {
           var value = row[column.name];
           return typeof value === "string"
             ? jQuery("<div>").text(value).html()
@@ -644,10 +304,9 @@ export class DataTables extends Table {
 
     return [
       {
-        className: "sa-datatables__action-column",
         orderable: false,
         data: null,
-        defaultContent: this.createMinorColumnsButton().outerHTML,
+        defaultContent: "",
       },
     ].concat(columns);
   }

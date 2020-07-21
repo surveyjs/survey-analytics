@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Datatables Example</title>
+    <title>Tabulator Example</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <link
@@ -12,37 +12,28 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="../packages/survey.analytics.css"
+      href="../packages/survey.analytics.tabulator.css"
     />
-
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.0.10/jspdf.plugin.autotable.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"
+    ></script>
     <script src="../node_modules/tabulator-tables/dist/js/tabulator.js"></script>
     <script src="../node_modules/survey-core/survey.core.js"></script>
-    <script src="../packages/survey.analytics.js"></script>
+    <script src="../packages/survey.analytics.tabulator.js"></script>
   </head>
 
   <body>
-    <div id="tabulatorContainer" style="width: 300px; height: 300px;"></div>
+    <div id="tabulatorContainer"></div>
     <script src="./data.js"></script>
-
-    <script>
-      var survey = new Survey.SurveyModel(json);
-
-      var normalizedData = data.map(function (item) {
-        survey.getAllQuestions().forEach(function (q) {
-          if (!item[q.name]) {
-            item[q.name] = "";
-          }
-        });
-        return item;
-      });
-
-      var surveyAnalyticsTabulator = new SurveyAnalytics.Tabulator(
-        document.getElementById("tabulatorContainer"),
-        survey,
-        normalizedData
-      );
-
-      surveyAnalyticsTabulator.render();
-    </script>
+    <script src="./custom_tabulator.js"></script>
   </body>
 </html>

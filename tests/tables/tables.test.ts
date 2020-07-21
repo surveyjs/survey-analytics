@@ -25,12 +25,7 @@ const json = {
 
 test("buildColumns method", () => {
   const survey = new SurveyModel(json);
-  const tables = new Table(
-    document.createElement("table"),
-    survey,
-    [],
-    null
-  );
+  const tables = new Table(survey, [], null);
 
   const columns = <any>tables["buildColumns"](survey);
 
@@ -40,24 +35,12 @@ test("buildColumns method", () => {
 });
 
 test("isVisible method", () => {
-  let tables = new Table(
-    document.createElement("table"),
-    new SurveyModel(),
-    [],
-    null
-  );
+  let tables = new Table(new SurveyModel(), [], null);
   expect(tables.isVisible(ColumnVisibility.Invisible)).toBeFalsy();
   expect(tables.isVisible(ColumnVisibility.PublicInvisible)).toBeFalsy();
   expect(tables.isVisible(ColumnVisibility.Visible)).toBeTruthy();
 
-  tables = new Table(
-    document.createElement("table"),
-    new SurveyModel(),
-    [],
-    null,
-    [],
-    true
-  );
+  tables = new Table(new SurveyModel(), [], null, [], true);
   expect(tables.isVisible(ColumnVisibility.Invisible)).toBeFalsy();
   expect(tables.isVisible(ColumnVisibility.PublicInvisible)).toBeTruthy();
   expect(tables.isVisible(ColumnVisibility.Visible)).toBeTruthy();
