@@ -294,6 +294,7 @@ export class DataTables extends Table {
         data: column.name,
         sTitle: (question && question.title) || column.displayName,
         visible: column.visibility !== ColumnVisibility.Invisible,
+        orderable: false,
         mRender: (_data: object, _type: string, row: any) => {
           var value = row[column.name];
           return typeof value === "string"

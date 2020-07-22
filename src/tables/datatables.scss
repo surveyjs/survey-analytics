@@ -155,7 +155,7 @@ $background-gray: #f7f7f7;
   .sa-datatables__detail-row + .sa-datatables__detail td {
     border-top: none;
   }
-  table.dataTable > tbody > tr > th,
+  table.dataTable > thead > tr > th,
   table.dataTable > tbody > tr > td {
     min-width: 208px;
   }
