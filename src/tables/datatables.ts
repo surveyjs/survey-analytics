@@ -83,8 +83,9 @@ export class DataTables extends Table {
         this.initTableData(this.data);
       }
       this.currentPageNumber = this.datatableApi.page.info().page;
+      var targetNode = this.renderResult;
       this.destroy();
-      this.render(this.renderResult);
+      this.render(targetNode);
     }
   }
 
