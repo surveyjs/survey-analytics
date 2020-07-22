@@ -79,7 +79,18 @@ module.exports = function (options) {
   var config = {
     mode: isProductionBuild ? "production" : "development",
     entry: {
-      "survey.analytics": path.resolve(__dirname, "./src/index"),
+      "survey.analytics.datatables": path.resolve(
+        __dirname,
+        "./src/entries/datatables"
+      ),
+      "survey.analytics.tabulator": path.resolve(
+        __dirname,
+        "./src/entries/tabulator"
+      ),
+      "survey.analytics.summary": path.resolve(
+        __dirname,
+        "./src/entries/summary"
+      ),
     },
     resolve: {
       extensions: [".ts", ".js"],
