@@ -1,7 +1,7 @@
 import { SurveyModel, Question } from "survey-core";
 import { VisualizationMatrixDynamic } from "../src/visualizationMatrixDynamic";
 
-test("getColumns method", () => {
+test("getQuestions", () => {
   var json = {
     questions: [
       {
@@ -196,5 +196,10 @@ test("getColumns method", () => {
     {}
   );
 
+  let questions = viz.getQuestions();
+  expect(questions.length).toBe(15);
+  expect(questions[0].name).toBe("subject");
+
+  // TODO: ask Dmitry what is it
   expect(viz["data"]).toEqual(data[0].teachersRate);
 });
