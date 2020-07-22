@@ -9,6 +9,43 @@ var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 var packageJson = require("./package.json");
 
+function PascalCaseNamePlugin(options) {
+}
+
+PascalCaseNamePlugin.prototype.apply = function(compiler) {
+  const REGEXP_NAME = /\[pc-name\]/gi,
+      REGEXP_ID = /\[id\]/gi;
+
+  compiler.hooks.compilation.tap("PascalCaseNamePlugin", compilation => {
+       const mainTemplate = compilation.mainTemplate;
+
+      mainTemplate.hooks.assetPath.tap(
+          "PascalCaseNamePlugin",
+          (path, data) => {
+
+              const chunk = data.chunk;
+              const chunkName = chunk && (chunk.name || chunk.id);
+
+              if (typeof path === "function") {
+                  path = path(data);
+              }
+
+              return path.replace(REGEXP_NAME, (match, ...args) => {
+                  var components = chunkName.split(".");
+                  components = components.map(function(componentName) {
+                    if(componentName === "summary") {
+                      return "";
+                    }
+                    return componentName[0].toUpperCase() +  
+                    componentName.slice(1);
+                  });
+                  return components.join("");
+              });
+           }
+      );
+  })
+}
+
 var svgStoreUtils = require(path.resolve(
   __dirname,
   "./node_modules/webpack-svgstore-plugin/src/helpers/utils.js"
@@ -87,7 +124,7 @@ module.exports = function (options) {
         __dirname,
         "./src/entries/tabulator"
       ),
-      "survey.analytics.summary": path.resolve(
+      "survey.analytics": path.resolve(
         __dirname,
         "./src/entries/summary"
       ),
@@ -149,7 +186,7 @@ module.exports = function (options) {
     output: {
       path: packagePath,
       filename: "[name]" + (options.buildType === "prod" ? ".min" : "") + ".js",
-      library: "SurveyAnalytics",
+      library: "[pc-name]",
       libraryTarget: "umd",
       umdNamedDefine: true,
     },
@@ -186,6 +223,7 @@ module.exports = function (options) {
       },
     },
     plugins: [
+      new PascalCaseNamePlugin(),
       new webpack.WatchIgnorePlugin([/svgbundle\.html/]),
       new webpack.ProgressPlugin(percentage_handler),
       new webpack.DefinePlugin({

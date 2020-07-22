@@ -9,7 +9,7 @@ var normalizedData = data.map(function (item) {
   return item;
 });
 
-var surveyAnalyticsTabulator = new SurveyAnalytics.Tabulator(
+var surveyAnalyticsTabulator = new SurveyAnalyticsTabulator.Tabulator(
   survey,
   normalizedData
 );

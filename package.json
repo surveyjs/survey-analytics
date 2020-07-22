@@ -14,7 +14,7 @@
   "version": "1.7.22",
   "name": "survey-analytics",
   "description": "SurveyJS analytics Library.",
-  "main": "survey.analytics.summary.js",
+  "main": "survey.analytics.js",
   "files": [
     "survey.analytics.d.ts",
     "survey.analytics.datatables.js",
@@ -25,10 +25,10 @@
     "survey.analytics.tabulator.min.js",
     "survey.analytics.tabulator.css",
     "survey.analytics.tabulator.min.css",
-    "survey.analytics.summary.js",
-    "survey.analytics.summary.min.js",
-    "survey.analytics.summary.css",
-    "survey.analytics.summary.min.css"
+    "survey.analytics.js",
+    "survey.analytics.min.js",
+    "survey.analytics.css",
+    "survey.analytics.min.css"
   ],
   "typings": "survey.analytics.d.ts",
   "private": false,

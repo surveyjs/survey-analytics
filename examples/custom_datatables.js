@@ -12,7 +12,7 @@ var normalizedData = data.map(function (item) {
   return item;
 });
 
-var surveyAnalyticsDataTables = new SurveyAnalytics.DataTables(
+var surveyAnalyticsDataTables = new SurveyAnalyticsDatatables.DataTables(
   survey,
   normalizedData
 );
