@@ -204,10 +204,8 @@ export class DataTables extends Table {
                 var columnTools = new ColumnTools(
                   container,
                   self,
-                  columnsData[index],
-                  self.isTrustedAccess
+                  columnsData[index]
                 );
-                self.onColumnToolsCreated.fire(this, { tools: columnTools });
                 columnTools.render();
               }
               $thNode.prepend(container);

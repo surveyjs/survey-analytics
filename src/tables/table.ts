@@ -41,10 +41,6 @@ export abstract class Table {
     any
   > = new Event<(sender: Table, options: any) => any, any>();
 
-  public onColumnToolsCreated: Event<
-    (sender: Table, options: any) => any,
-    any
-  > = new Event<(sender: Table, options: any) => any, any>();
 
   public renderDetailActions: (
     container: HTMLElement,
@@ -142,5 +138,6 @@ export abstract class Table {
   public doStateSave() {
     this.stateSaveCallback({ columns: this.columns }, this.data);
   }
+
   public stateSaveCallback(settings: any, data: any) {}
 }

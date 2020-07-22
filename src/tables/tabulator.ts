@@ -213,13 +213,7 @@ export class Tabulator extends Table {
   getHeaderActions = (columnName: string): HTMLDivElement => {
     const container = document.createElement("div");
     container.classList.add("sa-table__action-container");
-    const columnTools = new ColumnTools(
-      container,
-      this,
-      columnName,
-      this.isTrustedAccess
-    );
-    this.onColumnToolsCreated.fire(this, { tools: columnTools });
+    const columnTools = new ColumnTools(container, this, columnName);
     columnTools.render();
     return container;
   };
