@@ -1,6 +1,6 @@
 import { VisualizationPanel } from "../src/visualizationPanel";
 
-test("applyFilter method", () => {
+test("setFilter method", () => {
   var data = [
     {
       q2: "father",
@@ -18,13 +18,13 @@ test("applyFilter method", () => {
   ];
   const panel = new VisualizationPanel([], data);
   expect(panel["filteredData"]).toEqual(data);
-  panel.applyFilter("q1", "sister");
+  panel.setFilter("q1", "sister");
   expect(panel["filteredData"]).toEqual([
     {
       q1: "sister"
     }
   ]);
-  panel.applyFilter("q1", "mother");
+  panel.setFilter("q1", "mother");
   expect(panel["filteredData"]).toEqual([
     {
       q2: "father",
@@ -34,14 +34,14 @@ test("applyFilter method", () => {
       q1: "mother"
     }
   ]);
-  panel.applyFilter("q2", "father", false);
+  panel.setFilter("q2", "father");
   expect(panel["filteredData"]).toEqual([
     {
       q2: "father",
       q1: "mother"
     }
   ]);
-  panel.applyFilter("q2", undefined, false);
+  panel.setFilter("q2", undefined);
   expect(panel["filteredData"]).toEqual([
     {
       q2: "father",

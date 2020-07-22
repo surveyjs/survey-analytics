@@ -1,6 +1,10 @@
 @import "globals";
 
+.sa-visualizer__toolbar {
+}
+
 .sa-visualizer__content {
+  font-family: SegoeUI, Arial, sans-serif;
   display: inline-block;
   overflow: hidden;
   width: 100%;
@@ -18,7 +22,6 @@
   line-height: 34px;
   vertical-align: middle;
   margin: 0;
-  margin-left: 10px;
 }
 
 .sa-visualizer__footer-content {

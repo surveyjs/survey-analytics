@@ -1,7 +1,7 @@
 @import "globals";
 
 .sa-panel__header {
-  padding: 0 20px;
+  margin: 0 1em;
 }
 
 .sa-grid {
@@ -35,7 +35,7 @@
 
 .sa-question__content {
   background-color: $background-color;
-  padding: 1em;
+  padding: 20px;
 }
 
 .sa-question__title {
@@ -46,7 +46,6 @@
   color: $text-color;
   margin: 0;
   margin-bottom: 1em;
-  margin-left: 20px;
   cursor: move;
 }
 
@@ -56,7 +55,9 @@
   color: $text-color;
   line-height: 34px;
   margin-bottom: 25px;
-  margin-left: 10px;
+  &>*:not(:first-child) {
+    margin-left: 10px;
+  }
 }
 
 .sa-toolbar__button {
