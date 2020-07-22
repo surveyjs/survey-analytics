@@ -1,5 +1,5 @@
-import { VisualizationManager } from "./visualizationManager";
 import { Question, QuestionMatrixDropdownModel } from "survey-core";
+import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
 
 export class VisualizationMatrixDynamic extends VisualizationPanelDynamic {
@@ -23,10 +23,5 @@ export class VisualizationMatrixDynamic extends VisualizationPanelDynamic {
 
 VisualizationManager.registerVisualizer(
   "matrixdynamic",
-  VisualizationMatrixDynamic
-);
-
-VisualizationManager.registerVisualizer(
-  "matrixdropdown",
   VisualizationMatrixDynamic
 );

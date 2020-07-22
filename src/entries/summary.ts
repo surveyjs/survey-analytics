@@ -9,6 +9,7 @@ export * from "../visualizationManager";
 export * from "../visualizationPanel";
 export * from "../visualizationPanelDynamic";
 export * from "../visualizationMatrixDynamic";
+export * from "../visualizationMatrixDropdown";
 
 export * from "../plotly/index";
 export * from "../wordcloud/wordcloud";

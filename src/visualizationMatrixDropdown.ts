@@ -1,9 +1,9 @@
+import { Question, QuestionMatrixDropdownModel, MatrixDropdownColumn } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanel } from "./visualizationPanel";
-import { Question, QuestionPanelDynamicModel, IQuestion } from "survey-core";
 
-export class VisualizationPanelDynamic extends VisualizerBase {
+export class VisualizationMatrixDropdown extends VisualizerBase {
   private _panelVisualizer: VisualizationPanel = undefined;
 
   constructor(
@@ -23,16 +23,19 @@ export class VisualizationPanelDynamic extends VisualizerBase {
   update(data: Array<{ [index: string]: any }>) {
     this.data = [];
     data.forEach(dataItem => {
-      if(!!dataItem[this.question.name]) {
-        this.data = this.data.concat(dataItem[this.question.name]);
-      }
+        let rawDataItem = dataItem[this.question.name];
+        if(!!rawDataItem) {
+          Object.keys(rawDataItem).forEach(key => {
+            this.data.push(rawDataItem[key]);
+          });
+        }
     });
     this._panelVisualizer.update(this.data);
   }
 
-  getQuestions(): IQuestion[] {
-    const paneldynamic: QuestionPanelDynamicModel = <any>this.question;
-    return paneldynamic.template.questions;
+  getQuestions() {
+    const matrixdropdown: QuestionMatrixDropdownModel = <any>this.question;
+    return matrixdropdown.columns.map((column: MatrixDropdownColumn) => column.templateQuestion)
   }
 
   destroyContent(container: HTMLElement) {
@@ -45,6 +48,6 @@ export class VisualizationPanelDynamic extends VisualizerBase {
 }
 
 VisualizationManager.registerVisualizer(
-  "paneldynamic",
-  VisualizationPanelDynamic
+  "matrixdropdown",
+  VisualizationMatrixDropdown
 );
