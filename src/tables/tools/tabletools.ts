@@ -26,7 +26,7 @@ export class TableTools {
       "Search..."
     );
     input.onchange = (event: any) => {
-      this.table.applyFilter(event.target.value);
+      table.applyFilter(event.target.value);
     };
     return input;
   }
@@ -50,7 +50,7 @@ export class TableTools {
       option.disabled = true;
       option.selected = true;
       dropdown.appendChild(option);
-      
+
       hiddenColumns.forEach((column: any) => {
         var option = document.createElement("option");
         var text = column.displayName;
