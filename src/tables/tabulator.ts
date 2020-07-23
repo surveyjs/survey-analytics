@@ -86,10 +86,12 @@ export class Tabulator extends Table {
     const columns = this.getColumns();
     const data = this.tableData;
 
-    var header = this.createHeader();
-    var paginationElement = this.createPaginationElement();
-
-    this.tableContainer = document.createElement("div");
+    var header = DocumentHelper.createElement("div", "sa-tabulator__header");
+    var paginationElement = DocumentHelper.createElement(
+      "div",
+      "sa-tabulator__pagination-container"
+    );
+    this.tableContainer = DocumentHelper.createElement("div", "");
 
     targetNode.appendChild(header);
     targetNode.appendChild(this.tableContainer);
@@ -108,7 +110,10 @@ export class Tabulator extends Table {
       columnMoved: this.columnMovedCallback,
     });
 
-    const toolsContainer = this.createToolsContainer();
+    const toolsContainer = DocumentHelper.createElement(
+      "div",
+      "sa-tabulator__tools-container"
+    );
     header.appendChild(this.createDownloadsBar());
     header.appendChild(toolsContainer);
     header.appendChild(paginationElement);
@@ -127,8 +132,10 @@ export class Tabulator extends Table {
       return btn;
     };
 
-    var container = document.createElement("div");
-    container.className = "sa-tabulator__downloads-bar";
+    var container = DocumentHelper.createElement(
+      "div",
+      "sa-tabulator__downloads-bar"
+    );
     if (this.options.downloadOptions.xlsx.isVisible) {
       container.appendChild(createDownloadButton("xlsx", "Excel"));
     }
@@ -138,24 +145,6 @@ export class Tabulator extends Table {
     container.appendChild(createDownloadButton("csv", "CSV"));
     return container;
   }
-
-  createToolsContainer = (): HTMLElement => {
-    var el = document.createElement("div");
-    el.classList.add("sa-tabulator__tools-container");
-    return el;
-  };
-
-  createHeader = (): HTMLElement => {
-    var el = document.createElement("div");
-    el.classList.add("sa-tabulator__header");
-    return el;
-  };
-
-  createPaginationElement = (): HTMLElement => {
-    var el = document.createElement("div");
-    el.classList.add("sa-tabulator__pagination-container");
-    return el;
-  };
 
   public destroy = () => {
     this.tabulatorTables.destroy();
@@ -196,23 +185,21 @@ export class Tabulator extends Table {
     onRendered: any,
     columnName: any
   ) => {
-    var container = document.createElement("div");
-    var title = this.getColumnTitle(cell.getValue());
+    var container = DocumentHelper.createElement("div", "");
+    var title = DocumentHelper.createElement("span", "", {
+      innerHTML: cell.getValue(),
+    });
     var actions = this.getHeaderActions(columnName);
     container.appendChild(actions);
     container.appendChild(title);
     return container;
   };
 
-  getColumnTitle = (titleStr: string): HTMLElement => {
-    var title = document.createElement("span");
-    title.innerHTML = titleStr;
-    return title;
-  };
-
-  getHeaderActions = (columnName: string): HTMLDivElement => {
-    const container = document.createElement("div");
-    container.classList.add("sa-table__action-container");
+  getHeaderActions = (columnName: string): HTMLElement => {
+    const container = DocumentHelper.createElement(
+      "div",
+      "sa-table__action-container"
+    );
     const columnTools = new ColumnTools(container, this, columnName);
     columnTools.render();
     return container;

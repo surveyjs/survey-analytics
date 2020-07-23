@@ -40,8 +40,10 @@ export class ColumnTools {
 }
 
 ColumnTools.registerTool("drag", function (table: Table, columnName: string) {
-  const btn = document.createElement("button");
-  btn.className = "sa-table__svg-button sa-table__drag-button";
+  const btn = DocumentHelper.createElement(
+    "button",
+    "sa-table__svg-button sa-table__drag-button"
+  );
   btn.appendChild(DocumentHelper.createSvgElement("drag"));
   btn.onclick = (e) => {
     e.stopPropagation();
@@ -100,7 +102,7 @@ ColumnTools.registerTool("filter", function (table, columnName) {
 });
 
 ColumnTools.registerTool("makepublic", function (table, columnName) {
-  const button = document.createElement("button");
+  const button = DocumentHelper.createElement("button", "");
   const makePrivateSvg = DocumentHelper.createSvgElement("makeprivate");
   const makePublicSvg = DocumentHelper.createSvgElement("makepublic");
   var currentVisibility = table.getColumnVisibility(columnName);

@@ -6,6 +6,7 @@ import "./datatables.scss";
 import { TableRow, DatatablesRow } from "./tools/rowtools";
 import { ColumnTools } from "./tools/columntools";
 import { TableTools } from "./tools/tabletools";
+import { DocumentHelper } from "../utils";
 
 if (!!document) {
   var svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");
@@ -119,12 +120,6 @@ export class DataTables extends Table {
     column.visible(isColumnLocation);
   }
 
-  createActionContainer() {
-    var container = document.createElement("div");
-    container.className = "sa-table__action-container";
-    return container;
-  }
-
   public applyFilter(value: string) {
     this.datatableApi.search(value).draw(false);
   }
@@ -150,7 +145,9 @@ export class DataTables extends Table {
     targetNode.className += " sa-table sa-datatables";
     targetNode.innerHTML = "";
 
-    const tableNode = document.createElement("table");
+    const tableNode = <HTMLTableElement>(
+      DocumentHelper.createElement("table", "")
+    );
     var columns = this.getColumns();
     var columnsData: any = columns.map((c: any) => c.data);
     const dtButtonClass =
@@ -200,7 +197,10 @@ export class DataTables extends Table {
               var $thNode = jQuery(this);
               $thNode.unbind("click.DT");
               if (!!columnsData[index] && $thNode.has("button").length === 0) {
-                var container = self.createActionContainer();
+                var container = DocumentHelper.createElement(
+                  "div",
+                  "sa-table__action-container"
+                );
                 var columnTools = new ColumnTools(
                   container,
                   self,
@@ -244,9 +244,10 @@ export class DataTables extends Table {
       .eq(0)
       .each((index: number) => {
         var row = datatableApiRef.row(index);
-        var detailsTr = document.createElement("tr");
-        var detailsTd = document.createElement("td");
-        detailsTd.className = "sa-datatables__details-container";
+        var detailsTr = DocumentHelper.createElement("tr", "");
+        var detailsTd = <HTMLTableDataCellElement>(
+          DocumentHelper.createElement("td", "sa-datatables__details-container")
+        );
         detailsTr.appendChild(detailsTd);
         var rowElement = row.node();
         var firstCell = row.cell(row.index(), 0).node();

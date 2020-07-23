@@ -94,11 +94,12 @@ TableTools.registerTool("showcolumn", function (table: Table): HTMLElement {
 
 TableTools.registerTool("showentries", function (table: Table): HTMLElement {
   function getEntriesDropdown(table: Table): HTMLElement {
-    const el = document.createElement("select");
+    const el = <HTMLSelectElement>DocumentHelper.createElement("select", "");
     var optionsValues = ["1", "5", "10", "25", "50", "75", "100"];
     optionsValues.forEach(function (val) {
-      var option = document.createElement("option");
-      option.innerHTML = val;
+      var option = DocumentHelper.createElement("option", "", {
+        innerHTML: val,
+      });
       el.appendChild(option);
     });
     el.value = "5";
@@ -109,16 +110,26 @@ TableTools.registerTool("showentries", function (table: Table): HTMLElement {
 
     return el;
   }
-  const selectorContainer = document.createElement("div");
-  selectorContainer.className = "sa-table__entries";
-  const showSpan = document.createElement("span");
-  showSpan.innerHTML = "Show";
-  const entriesSpan = document.createElement("span");
-  entriesSpan.innerHTML = "entries";
-  entriesSpan.className =
-    "sa-table__entries-label sa-table__entries-label--left";
+  const selectorContainer = DocumentHelper.createElement(
+    "div",
+    "sa-table__entries"
+  );
+  const showSpan = DocumentHelper.createElement(
+    "span",
+    "sa-table__entries-label sa-table__entries-label--right",
+    {
+      innerHTML: "Show",
+    }
+  );
+  const entriesSpan = DocumentHelper.createElement(
+    "span",
+    "sa-table__entries-label sa-table__entries-label--left",
+    {
+      innerHTML: "entries",
+    }
+  );
+
   selectorContainer.appendChild(showSpan);
-  showSpan.className = "sa-table__entries-label sa-table__entries-label--right";
   selectorContainer.appendChild(getEntriesDropdown(table));
   selectorContainer.appendChild(entriesSpan);
   return selectorContainer;

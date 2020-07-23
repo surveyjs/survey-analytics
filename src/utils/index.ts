@@ -33,6 +33,21 @@ export class ToolbarHelper {
 }
 
 export class DocumentHelper {
+  public static createElement(
+    tagName: string,
+    className: string,
+    attrs?: any
+  ): HTMLElement {
+    var el = document.createElement(tagName);
+    el.className = className;
+    if (!!attrs) {
+      Object.keys(attrs).forEach(function (key) {
+        (<any>el)[key] = attrs[key];
+      });
+    }
+    return el;
+  }
+
   public static createSvgElement(path: string): SVGSVGElement {
     const svgElem = document.createElementNS(
       "http://www.w3.org/2000/svg",

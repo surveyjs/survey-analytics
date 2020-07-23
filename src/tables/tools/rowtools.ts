@@ -155,8 +155,10 @@ export class Details {
     private targetNode: HTMLElement,
     private renderActions: any
   ) {
-    var detailsTable = document.createElement("table");
-    detailsTable.className = "sa-table__detail-table";
+    var detailsTable = DocumentHelper.createElement(
+      "table",
+      "sa-table__detail-table"
+    );
     this.detailsTable = detailsTable;
     this.table.onColumnsLocationChanged.add(() => {
       this.close();
@@ -174,13 +176,13 @@ export class Details {
     this.table.columns
       .filter((column) => column.location === QuestionLocation.Row && column)
       .forEach((column) => {
-        var row = document.createElement("tr");
-        row.className = "sa-table__detail";
-        var td1 = document.createElement("td");
-        td1.textContent = column.displayName;
-        var td2 = document.createElement("td");
+        var row = DocumentHelper.createElement("tr", "sa-table__detail");
+        var td1 = DocumentHelper.createElement("td", "", {
+          innerHTML: column.displayName,
+        });
+        var td2 = DocumentHelper.createElement("td", "");
         td2.textContent = this.row.getData()[column.name];
-        var td3 = document.createElement("td");
+        var td3 = DocumentHelper.createElement("td", "");
         td3.appendChild(this.createShowAsColumnButton(column.name));
         row.appendChild(td1);
         row.appendChild(td2);
@@ -188,10 +190,8 @@ export class Details {
         rows.push(row);
       });
     if (!!this.renderActions) {
-      var row = document.createElement("tr");
-      row.className = "sa-table__detail";
-      var td = document.createElement("td");
-      td.colSpan = 3;
+      var row = DocumentHelper.createElement("tr", "sa-table__detail");
+      var td = DocumentHelper.createElement("td", "", { colSpan: 1 });
       row.appendChild(td);
       rows.push(row);
       this.renderActions(td, this.row);
@@ -203,9 +203,11 @@ export class Details {
   }
 
   protected createShowAsColumnButton = (columnName: string): HTMLElement => {
-    const button = document.createElement("button");
-    button.innerHTML = localization.getString("showAsColumn");
-    button.className = "sa-table__btn sa-table__btn--gray";
+    const button = DocumentHelper.createElement(
+      "button",
+      "sa-table__btn sa-table__btn--gray",
+      { innerHTML: localization.getString("showAsColumn") }
+    );
     button.onclick = (e) => {
       e.stopPropagation();
       this.table.setColumnLocation(columnName, QuestionLocation.Column);
