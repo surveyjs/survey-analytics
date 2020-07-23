@@ -88,3 +88,7 @@ After release:
 
 - Introduce (or use 3rd party) data processing engine for survey analytics
 - Support high load scenario - process at least billion records
+
+## Limitations
+
+- SurveyJS Analytics doesn't support objects as values (e.g. of dropdown, radiogroup and other select question items)
