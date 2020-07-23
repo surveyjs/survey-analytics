@@ -3,10 +3,10 @@ import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { ToolbarHelper } from "./utils/index";
 
-export class Number extends VisualizerBase {
-  private _resultAverage: any;
-  private _resultMin: any;
-  private _resultMax: any;
+export class NumberModel extends VisualizerBase {
+  private _resultAverage: number;
+  private _resultMin: number;
+  private _resultMax: number;
 
   public static stepsCount = 5;
   public static generateTextsCallback: (
@@ -28,6 +28,10 @@ export class Number extends VisualizerBase {
     options?: Object
   ) {
     super(question, data, options);
+  }
+
+  public get name() {
+    return "number";
   }
 
   update(data: Array<{ [index: string]: any }>) {
@@ -89,8 +93,8 @@ export class Number extends VisualizerBase {
       texts.push(minValue);
     }
 
-    if (!!Number.generateTextsCallback) {
-      return Number.generateTextsCallback(
+    if (!!NumberModel.generateTextsCallback) {
+      return NumberModel.generateTextsCallback(
         this.question,
         maxValue,
         minValue,
@@ -127,51 +131,28 @@ export class Number extends VisualizerBase {
     return colors;
   }
 
-  get result() {
-    if (this._resultAverage === undefined) {
+  getData() {
+    if (this._resultAverage === undefined || this._resultMin === undefined || this._resultMax === undefined) {
       const questionValues: Array<any> = [];
+      this._resultMin = Number.MAX_VALUE;
+      this._resultMax = -Number.MAX_VALUE;
 
       this.data.forEach((rowData) => {
-        const questionValue: any = +rowData[this.question.name];
-        if (!!questionValue) {
+        const questionValue: number = +rowData[this.question.name];
+        if (questionValue !== undefined) {
           questionValues.push(questionValue);
+          if(this._resultMin > questionValue) {
+            this._resultMin = questionValue;
+          }
+          if(this._resultMax < questionValue) {
+            this._resultMax = questionValue;
+          }
         }
       });
 
-      this._resultAverage =
-        (questionValues &&
-          questionValues.reduce((a, b) => a + b, 0) / questionValues.length) ||
-        0;
+      this._resultAverage = questionValues.reduce((a, b) => a + b, 0) / questionValues.length;
       this._resultAverage = Math.ceil(this._resultAverage * 100) / 100;
     }
-    return this._resultAverage;
-  }
-
-  get resultMax() {
-    if (this._resultMax === undefined) {
-      this._resultMax = 0;
-
-      this.data.forEach((rowData) => {
-        const questionValue: any = +rowData[this.question.name];
-        if (!!questionValue && this._resultMax < questionValue) {
-          this._resultMax = questionValue;
-        }
-      });
-    }
-    return this._resultMax;
-  }
-
-  get resultMin() {
-    if (this._resultMin === undefined) {
-      this._resultMin = 0;
-
-      this.data.forEach((rowData) => {
-        const questionValue: any = +rowData[this.question.name];
-        if (!!questionValue && this._resultMin > questionValue) {
-          this._resultMin = questionValue;
-        }
-      });
-    }
-    return this._resultMin;
+    return [this._resultAverage, this._resultMin, this._resultMax];
   }
 }

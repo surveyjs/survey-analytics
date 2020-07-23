@@ -20,6 +20,10 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     this.update(data);
   }
 
+  public get name() {
+    return "matrixDropdown";
+  }
+
   update(data: Array<{ [index: string]: any }>) {
     this.data = [];
     data.forEach(dataItem => {

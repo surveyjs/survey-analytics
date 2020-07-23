@@ -102,6 +102,10 @@ export class VisualizationPanel extends VisualizerBase {
     );
   }
 
+  public get name() {
+    return "panel";
+  }
+
   public get allowDynamicLayout() {
     return (
       this.options.allowDynamicLayout === undefined ||

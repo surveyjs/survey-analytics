@@ -3,6 +3,7 @@ import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { ToolbarHelper } from "./utils/index";
 import { VisualizerFactory } from './visualizerFactory';
+import { DataProvider } from './dataProvider';
 
 export class SelectBase extends VisualizerBase {
   private selectedItem: ItemValue = undefined;
@@ -63,6 +64,10 @@ export class SelectBase extends VisualizerBase {
 
   protected chartTypes: string[];
   public chartType: string;
+
+  public get name() {
+    return "selectBase";
+  }
 
   private updateOrderSelector() {
     if(!!this.choicesOrder) {
@@ -179,27 +184,8 @@ export class SelectBase extends VisualizerBase {
   }
 
   getData(): any[] {
-    const values = this.getValues();
-    const statistics = values.map(v => 0);
-    this.data.forEach(row => {
-      const rowValue: any = row[this.question.name];
-      if (!!rowValue) {
-        if (Array.isArray(rowValue)) {
-          values.forEach((val: any, index: number) => {
-            if (rowValue.indexOf(val) !== -1) {
-              statistics[index]++;
-            }
-          });
-        } else {
-          values.forEach((val: any, index: number) => {
-            if (rowValue == val) {
-              statistics[index]++;
-            }
-          });
-        }
-      }
-    });
-    return [statistics];
+    const dataProvider = new DataProvider(this.data);
+    return dataProvider.getData(this);
   }
 
 }

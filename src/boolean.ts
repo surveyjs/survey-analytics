@@ -1,6 +1,7 @@
 import { Question, QuestionBooleanModel } from "survey-core";
 import { ItemValue } from "survey-core";
 import { SelectBase } from "./selectBase";
+import { DataProvider } from './dataProvider';
 
 export class BooleanModel extends SelectBase {
   protected chartTypes: string[];
@@ -12,6 +13,10 @@ export class BooleanModel extends SelectBase {
     options?: Object
   ) {
     super(question, data, options);
+  }
+
+  public get name() {
+    return "boolean";
   }
 
   public get booleanQuestion() {
@@ -50,18 +55,7 @@ export class BooleanModel extends SelectBase {
   }
 
   getData(): any[] {
-    const values = this.getValues();
-    var trueCount = 0;
-    var falseCount = 0;
-    this.data.forEach(row => {
-      const rowValue: any = row[this.question.name];
-      if (rowValue === values[0]) {
-        trueCount++;
-      }
-      if (rowValue === values[1]) {
-        falseCount++;
-      }
-    });
-    return [[trueCount, falseCount]];
+    const dataProvider = new DataProvider(this.data);
+    return dataProvider.getData(this);
   }
 }

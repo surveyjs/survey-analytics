@@ -11,12 +11,16 @@ export class Matrix extends SelectBase {
     super(question, data, options);
   }
 
+  public get name() {
+    return "matrix";
+  }
+
   valuesSource(): any[] {
     const question: QuestionMatrixModel = <any>this.question;
     return question.columns;
   }
 
-  getLabels(): any[] {
+  getLabels(): Array<string> {
     const question: QuestionMatrixModel = <any>this.question;
     return question.rows.map((row: any) =>
       ItemValue.getTextOrHtmlByValue(question.rows, row.value)

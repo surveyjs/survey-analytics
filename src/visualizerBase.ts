@@ -1,8 +1,9 @@
 import { Question } from "survey-core";
 
 import "./visualizerBase.scss";
+import { IDataInfo } from './dataProvider';
 
-export class VisualizerBase {
+export class VisualizerBase implements IDataInfo {
   private _showHeader = true;
   protected renderResult: HTMLElement = undefined;
   protected toolbarContainer: HTMLElement = undefined;
@@ -16,6 +17,18 @@ export class VisualizerBase {
     protected data: Array<{ [index: string]: any }>,
     protected options: { [index: string]: any } = {}
   ) {}
+
+  get dataName(): string {
+    return this.question.name;
+  }
+  
+  getValues(): Array<any> {
+    throw new Error("Method not implemented.");
+  }
+  
+  getLabels(): Array<string> {
+    return this.getValues();
+  }
 
   public registerToolbarItem(name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement) {
     this.toolbarItemCreators[name] = creator;

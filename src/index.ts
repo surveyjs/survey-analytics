@@ -4,6 +4,8 @@ export * from "./localizationManager";
 import "./localization/farsi";
 import "./localization/french";
 
+export * from "./dataProvider";
+
 export * from "./visualizerBase";
 export * from "./visualizationManager";
 export * from "./visualizationPanel";

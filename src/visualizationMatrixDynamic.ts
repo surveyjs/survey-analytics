@@ -11,6 +11,10 @@ export class VisualizationMatrixDynamic extends VisualizationPanelDynamic {
     super(question, data, options);
   }
 
+  public get name() {
+    return "matrixDynamic";
+  }
+
   getQuestions() {
     const matrixdynamic: QuestionMatrixDropdownModel = <any>this.question;
     const visibleRows = matrixdynamic.visibleRows;
