@@ -5,7 +5,7 @@ import { ITableColumn, ColumnVisibility, QuestionLocation } from "./config";
 import "./datatables.scss";
 import { TableRow, DatatablesRow } from "./tools/rowtools";
 import { ColumnTools } from "./tools/columntools";
-import { TableTools } from "./tools/tabletools";
+import { HeaderTools } from "./tools/headertools";
 import { DocumentHelper } from "../utils";
 
 if (!!document) {
@@ -224,7 +224,7 @@ export class DataTables extends Table {
     ));
     var toolsContainer = jQuery("div.sa-datatables__tools")[0];
 
-    var tools = new TableTools(toolsContainer, this);
+    var tools = new HeaderTools(toolsContainer, this);
     this.onTableToolsCreated.fire(this, { tools: tools });
     tools.render();
 

@@ -6,7 +6,7 @@ import "./tabulator.scss";
 import { DocumentHelper } from "../utils";
 import { TabulatorRow } from "./tools/rowtools";
 import { ColumnTools } from "./tools/columntools";
-import { TableTools } from "./tools/tabletools";
+import { HeaderTools } from "./tools/headertools";
 
 const TabulatorTables = require("tabulator-tables");
 
@@ -77,7 +77,7 @@ export class Tabulator extends Table {
   private readonly COLUMN_MIN_WIDTH = 155;
   private tabulatorTables: any = null;
   private tableContainer: HTMLElement = null;
-  private tableTools: TableTools;
+  private tableTools: HeaderTools;
 
   public render = (targetNode: HTMLElement) => {
     targetNode.className += " sa-table sa-tabulator";
@@ -117,7 +117,7 @@ export class Tabulator extends Table {
     header.appendChild(this.createDownloadsBar());
     header.appendChild(toolsContainer);
     header.appendChild(paginationElement);
-    this.tableTools = new TableTools(toolsContainer, this);
+    this.tableTools = new HeaderTools(toolsContainer, this);
     this.onTableToolsCreated.fire(this, { tools: this.tableTools });
     this.tableTools.render();
     this.renderResult = targetNode;

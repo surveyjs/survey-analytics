@@ -2,44 +2,31 @@ import { Table } from "../table";
 import { DocumentHelper } from "../../utils";
 import { localization } from "../..";
 import { ColumnVisibility, QuestionLocation } from "../config";
+import { TableTools } from "./tabletools";
 
-export class ColumnTools {
+export class ColumnTools extends TableTools {
   constructor(
-    private targetNode: HTMLElement,
-    private table: Table,
-    private columnName: string,
-    private actions: string[] = [
+    protected targetNode: HTMLElement,
+    protected table: Table,
+    columnName: string,
+    protected actions: string[] = [
       "drag",
       "sort",
       "hide",
       "movetodetails",
       "filter",
     ]
-  ) {}
-  public render() {
-    if (!this.actions) return;
-    this.actions.forEach((actionName) => {
-      var actionCreator = ColumnTools.actions[actionName];
-      if (!!actionCreator) {
-        this.targetNode.appendChild(
-          ColumnTools.actions[actionName](this.table, this.columnName)
-        );
-      }
-    });
-  }
-  public static actions: {
-    [actionName: string]: (table: Table, columnName: string) => HTMLElement;
-  } = {};
-
-  public static registerTool(
-    actionName: string,
-    actionCreator: (table: Table, columnName: string) => HTMLElement
   ) {
-    this.actions[actionName] = actionCreator;
+    super(targetNode, table, actions);
+    this.options.columnName = columnName;
   }
+  protected location = "column";
 }
 
-ColumnTools.registerTool("drag", function (table: Table, columnName: string) {
+ColumnTools.registerTool("column", "drag", function (
+  table: Table,
+  options: any
+) {
   const btn = DocumentHelper.createElement(
     "button",
     "sa-table__svg-button sa-table__drag-button"
@@ -51,7 +38,10 @@ ColumnTools.registerTool("drag", function (table: Table, columnName: string) {
   return btn;
 });
 
-ColumnTools.registerTool("sort", function (table: Table, columnName: string) {
+ColumnTools.registerTool("column", "sort", function (
+  table: Table,
+  options: any
+) {
   const descTitle = localization.getString("descOrder");
   const ascTitle = localization.getString("ascOrder");
   var btn = DocumentHelper.createSvgButton("sorting");
@@ -65,7 +55,7 @@ ColumnTools.registerTool("sort", function (table: Table, columnName: string) {
       btn.title = ascTitle;
       direction = "asc";
     }
-    table.sortByColumn(columnName, direction);
+    table.sortByColumn(options.columnName, direction);
   };
   btn.ondrag = (e) => {
     e.stopPropagation();
@@ -73,39 +63,51 @@ ColumnTools.registerTool("sort", function (table: Table, columnName: string) {
   return btn;
 });
 
-ColumnTools.registerTool("hide", function (table, columnName) {
+ColumnTools.registerTool("column", "hide", function (
+  table: Table,
+  options: any
+) {
   var btn = DocumentHelper.createSvgButton("hide");
   btn.title = localization.getString("hideColumn");
   btn.onclick = () => {
-    table.setColumnVisibility(columnName, ColumnVisibility.Invisible);
+    table.setColumnVisibility(options.columnName, ColumnVisibility.Invisible);
   };
   return btn;
 });
 
-ColumnTools.registerTool("movetodetails", function (table, columnName) {
+ColumnTools.registerTool("column", "movetodetails", function (
+  table: Table,
+  options: any
+) {
   const button = DocumentHelper.createSvgButton("movetodetails");
   button.title = localization.getString("moveToDetail");
   button.onclick = (e) => {
     e.stopPropagation();
-    table.setColumnLocation(columnName, QuestionLocation.Row);
+    table.setColumnLocation(options.columnName, QuestionLocation.Row);
   };
   return button;
 });
 
-ColumnTools.registerTool("filter", function (table, columnName) {
+ColumnTools.registerTool("column", "filter", function (
+  table: Table,
+  options: any
+) {
   var el = DocumentHelper.createInput("sa-table__filter", "Search...");
   el.onclick = (e) => e.stopPropagation();
   el.onchange = (e) => {
-    table.applyColumnFilter(columnName, el.value);
+    table.applyColumnFilter(options.columnName, el.value);
   };
   return el;
 });
 
-ColumnTools.registerTool("makepublic", function (table, columnName) {
+ColumnTools.registerTool("column", "makepublic", function (
+  table: Table,
+  options: any
+) {
   const button = DocumentHelper.createElement("button", "");
   const makePrivateSvg = DocumentHelper.createSvgElement("makeprivate");
   const makePublicSvg = DocumentHelper.createSvgElement("makepublic");
-  var currentVisibility = table.getColumnVisibility(columnName);
+  var currentVisibility = table.getColumnVisibility(options.columnName);
   updateState(currentVisibility);
   button.appendChild(makePrivateSvg);
   button.appendChild(makePublicSvg);
@@ -116,7 +118,7 @@ ColumnTools.registerTool("makepublic", function (table, columnName) {
     } else {
       currentVisibility = ColumnVisibility.PublicInvisible;
     }
-    table.setColumnVisibility(columnName, currentVisibility);
+    table.setColumnVisibility(options.columnName, currentVisibility);
     updateState(currentVisibility);
   };
 
