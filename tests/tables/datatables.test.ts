@@ -41,7 +41,7 @@ test("getColumns method", () => {
   const columns = <any>dataTables.getColumns();
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"car","data":"car","sTitle":"What car are you driving?","visible":true,"orderable":false}]'
+    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"car","data":"car","sTitle":"What car are you driving?","visible":true,"orderable":false},{"name":"photo","data":"photo","sTitle":"photo","visible":false,"orderable":false}]'
   );
 });
 
@@ -77,7 +77,7 @@ test("pass columns through ctor", () => {
 
   const columns = <any>dataTables.getColumns();
   expect(JSON.stringify(columns)).toBe(
-    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"id","data":"id","sTitle":"Id","visible":true,"orderable":false}]'
+    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"id","data":"id","sTitle":"Id","visible":true,"orderable":false},{"name":"happenedAt","data":"happenedAt","sTitle":"Happened At","visible":false,"orderable":false}]'
   );
 });
 
