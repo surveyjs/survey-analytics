@@ -4,7 +4,7 @@ export class TableTools {
   constructor(
     protected targetNode: HTMLElement,
     protected table: Table,
-    protected actions: string[] = []
+    protected actions: string[]
   ) {}
   protected location: string;
   protected options: any = {};

@@ -117,8 +117,11 @@ export class Tabulator extends Table {
     header.appendChild(this.createDownloadsBar());
     header.appendChild(toolsContainer);
     header.appendChild(paginationElement);
-    this.tableTools = new HeaderTools(toolsContainer, this);
-    this.onTableToolsCreated.fire(this, { tools: this.tableTools });
+    this.tableTools = new HeaderTools(
+      toolsContainer,
+      this,
+      this.toolsOptions["header"]
+    );
     this.tableTools.render();
     this.renderResult = targetNode;
   };
@@ -167,7 +170,8 @@ export class Tabulator extends Table {
       row.getCells()[0].getElement(),
       row.getElement(),
       row,
-      this.renderDetailActions
+      this.toolsOptions["row"],
+      this.toolsOptions["details"]
     );
     tableRow.onToggleDetails.add(() => {
       row.normalizeHeight();
@@ -200,7 +204,12 @@ export class Tabulator extends Table {
       "div",
       "sa-table__action-container"
     );
-    const columnTools = new ColumnTools(container, this, columnName);
+    const columnTools = new ColumnTools(
+      container,
+      this,
+      columnName,
+      this.toolsOptions["column"]
+    );
     columnTools.render();
     return container;
   };

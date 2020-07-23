@@ -9,13 +9,7 @@ export class ColumnTools extends TableTools {
     protected targetNode: HTMLElement,
     protected table: Table,
     columnName: string,
-    protected actions: string[] = [
-      "drag",
-      "sort",
-      "hide",
-      "movetodetails",
-      "filter",
-    ]
+    protected actions: string[] = []
   ) {
     super(targetNode, table, actions);
     this.options.columnName = columnName;

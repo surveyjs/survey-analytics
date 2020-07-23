@@ -8,7 +8,7 @@ export class HeaderTools extends TableTools {
   constructor(
     protected targetNode: HTMLElement,
     protected table: Table,
-    protected actions: string[] = ["filter", "showcolumn", "showentries"]
+    protected actions: string[] = []
   ) {
     super(targetNode, table, actions);
   }

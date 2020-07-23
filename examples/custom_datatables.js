@@ -12,14 +12,10 @@ var normalizedData = data.map(function (item) {
   return item;
 });
 
-var surveyAnalyticsDataTables = new SurveyAnalyticsDatatables.DataTables(
-  survey,
-  normalizedData
-);
-
-surveyAnalyticsDataTables.onTableToolsCreated.add(function (table, opt) {
-  var tools = opt.tools;
-  tools.actions.push(function (table) {
+SurveyAnalyticsDatatables.TableTools.registerTool(
+  "header",
+  "removerows",
+  function (table) {
     var btn = document.createElement("button");
     btn.className = "sa-table__btn sa-table__btn--green";
     btn.innerHTML = "Remove rows";
@@ -33,10 +29,13 @@ surveyAnalyticsDataTables.onTableToolsCreated.add(function (table, opt) {
       table.datatableApi.draw();
     };
     return btn;
-  });
-});
+  }
+);
 
-surveyAnalyticsDataTables.onRowCreated.add(function (table, opt) {
+SurveyAnalyticsDatatables.TableTools.registerTool("row", "select", function (
+  table,
+  opt
+) {
   var row = opt.row;
   row.setIsSelected = function (val) {
     row.isSelected = val;
@@ -47,36 +46,48 @@ surveyAnalyticsDataTables.onRowCreated.add(function (table, opt) {
       row.innerRow.draw();
     }
   };
-  var rowTools = opt.row.tools;
-  rowTools.actions.push(function (row, table) {
-    var checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.onchange = function (ev) {
-      row.setIsSelected(checkbox.value == "on");
-    };
-    return checkbox;
-  });
+  var checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.onchange = function (ev) {
+    row.setIsSelected(checkbox.value == "on");
+  };
+  return checkbox;
 });
 
-surveyAnalyticsDataTables.renderDetailActions = (container, row) => {
-  const button1 = document.createElement("button");
-  button1.innerHTML = "Show in Survey";
-  button1.className = "rounded-button";
-  button1.onclick = (e) => {
-    e.stopPropagation();
-    // self.showSurveyResult(row.getData());
-  };
-  container.appendChild(button1);
-  const button2 = document.createElement("button");
-  button2.className = "rounded-button rounded-button--danger";
-  button2.innerHTML = "Delete Result";
-  button2.onclick = (e) => {
-    e.stopPropagation();
-    row.remove(true);
-    // self.deleteSurveyResult(row.getData(), datatablesRow);
-  };
-  container.appendChild(button2);
-};
+SurveyAnalyticsDatatables.TableTools.registerTool(
+  "showinsurvey",
+  "details",
+  (table, row) => {
+    const button1 = document.createElement("button");
+    button1.innerHTML = "Show in Survey";
+    button1.className = "rounded-button";
+    button1.onclick = (e) => {
+      e.stopPropagation();
+    };
+    return button;
+  }
+);
+
+SurveyAnalyticsDatatables.TableTools.registerTool(
+  "delete",
+  "details",
+  (table, row) => {
+    const button2 = document.createElement("button");
+    button2.className = "rounded-button rounded-button--danger";
+    button2.innerHTML = "Delete Result";
+    button2.onclick = (e) => {
+      e.stopPropagation();
+      row.remove(true);
+    };
+  }
+);
+
+var surveyAnalyticsDataTables = new SurveyAnalyticsDatatables.DataTables(
+  survey,
+  normalizedData
+);
+surveyAnalyticsDataTables.toolsOptions.row.push("select");
+surveyAnalyticsDataTables.toolsOptions.header.push("removerows");
 
 surveyAnalyticsDataTables.render(
   document.getElementById("dataTablesContainer")

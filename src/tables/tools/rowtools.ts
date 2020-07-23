@@ -3,25 +3,18 @@ import { Event } from "survey-core";
 import { localization } from "../../localizationManager";
 import { QuestionLocation } from "../config";
 import { DocumentHelper } from "../../utils";
+import { TableTools } from "./tabletools";
 
 export abstract class TableRow {
   constructor(
     protected table: Table,
     protected toolsContainer: HTMLElement,
     protected detailsContainer: HTMLElement,
-    public renderDetailActions: (
-      container: HTMLElement,
-      data: any,
-      tableRow: TableRow
-    ) => HTMLElement
+    protected rowTools?: string[],
+    protected detailsActions?: string[]
   ) {
-    this.details = new Details(
-      table,
-      this,
-      detailsContainer,
-      renderDetailActions
-    );
-    this.tools = new RowTools(toolsContainer, table, this);
+    this.details = new Details(table, this, detailsContainer, detailsActions);
+    this.tools = new RowTools(toolsContainer, table, this, rowTools);
     table.onColumnsLocationChanged.add(() => {
       this.closeDetails();
     });
@@ -73,12 +66,10 @@ export class TabulatorRow extends TableRow {
     protected toolsContainer: HTMLElement,
     protected detailsContainer: HTMLElement,
     protected innerRow: any,
-    public renderDetailActions: (
-      container: HTMLElement,
-      tableRow: any
-    ) => HTMLElement
+    protected rowTools?: string[],
+    protected detailsActions?: string[]
   ) {
-    super(table, toolsContainer, detailsContainer, renderDetailActions);
+    super(table, toolsContainer, detailsContainer, rowTools, detailsActions);
   }
   public getElement(): HTMLElement {
     return this.innerRow.getElement();
@@ -95,12 +86,10 @@ export class DatatablesRow extends TableRow {
     protected toolsContainer: HTMLElement,
     protected detailsContainer: HTMLElement,
     private _innerRow: any,
-    public renderDetailActions: (
-      container: HTMLElement,
-      tableRow: any
-    ) => HTMLElement
+    protected rowTools?: string[],
+    protected detailsActions?: string[]
   ) {
-    super(table, toolsContainer, detailsContainer, renderDetailActions);
+    super(table, toolsContainer, detailsContainer, rowTools, detailsActions);
     this.rowElement = _innerRow.node();
     this.rowData = _innerRow.data();
     this._innerRow = this._innerRow.row(this.rowElement);
@@ -121,40 +110,27 @@ export class DatatablesRow extends TableRow {
   }
 }
 
-export class RowTools {
+export class RowTools extends TableTools {
   constructor(
-    private targetNode: HTMLElement,
-    private table: Table,
-    private row: TableRow
+    protected targetNode: HTMLElement,
+    protected table: Table,
+    protected row: TableRow,
+    protected actions: string[] = []
   ) {
-    this.actions = [this.createDetailsBtn];
+    super(targetNode, table, actions);
+    this.options.row = row;
   }
-
-  public actions: ((row: TableRow, table: Table) => HTMLElement)[];
-
-  public render() {
-    this.actions.forEach((action) => {
-      this.targetNode.appendChild(action(this.row, this.table));
-    });
-  }
-  protected createDetailsBtn = (row: TableRow) => {
-    const btn = DocumentHelper.createSvgButton("detail");
-    btn.title = localization.getString("showMinorColumns");
-
-    btn.onclick = () => {
-      row.toggleDetails();
-    };
-    return btn;
-  };
+  protected location = "row";
 }
 
-export class Details {
+export class Details extends TableTools {
   constructor(
-    private table: Table,
+    protected table: Table,
     private row: TableRow,
-    private targetNode: HTMLElement,
-    private renderActions: any
+    protected targetNode: HTMLElement,
+    protected actions: string[] = []
   ) {
+    super(targetNode, table, actions);
     var detailsTable = DocumentHelper.createElement(
       "table",
       "sa-table__detail-table"
@@ -163,8 +139,10 @@ export class Details {
     this.table.onColumnsLocationChanged.add(() => {
       this.close();
     });
+    this.options.row = this.row;
   }
   private detailsTable: HTMLElement;
+  protected location = "details";
 
   public setContainer(targetNode: HTMLElement) {
     this.targetNode = targetNode;
@@ -189,12 +167,12 @@ export class Details {
         row.appendChild(td3);
         rows.push(row);
       });
-    if (!!this.renderActions) {
+    if (this.actions.length != 0) {
       var row = DocumentHelper.createElement("tr", "sa-table__detail");
       var td = DocumentHelper.createElement("td", "", { colSpan: 1 });
       row.appendChild(td);
       rows.push(row);
-      this.renderActions(td, this.row);
+      this.render();
     }
     rows.forEach((row) => {
       this.detailsTable.appendChild(row);
@@ -220,3 +198,13 @@ export class Details {
     this.detailsTable.remove();
   }
 }
+
+TableTools.registerTool("row", "details", (_table: Table, options: any) => {
+  const btn = DocumentHelper.createSvgButton("detail");
+  btn.title = localization.getString("showMinorColumns");
+
+  btn.onclick = () => {
+    options.row.toggleDetails();
+  };
+  return btn;
+});

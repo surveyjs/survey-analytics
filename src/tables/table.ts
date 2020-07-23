@@ -2,6 +2,15 @@ import { SurveyModel, Question, Event } from "survey-core";
 import { ColumnVisibility, QuestionLocation, ColumnDataType } from "./config";
 import { Details, TableRow } from "./tools/rowtools";
 
+export interface IToolsOptions {
+  [location: string]: string[];
+}
+var defaultTools = {
+  header: ["filter", "showcolumn", "showentries"],
+  column: ["drag", "sort", "hide", "movetodetails", "filter"],
+  row: ["details"],
+};
+
 export abstract class Table {
   protected tableData: any;
 
@@ -10,13 +19,16 @@ export abstract class Table {
     protected data: Array<Object>,
     protected options: any,
     protected _columns: Array<any> = [],
-    protected isTrustedAccess = false
+    public isTrustedAccess: boolean
   ) {
     if (_columns.length === 0) {
       this._columns = this.buildColumns(survey);
     }
     this.initTableData(data);
+    this.toolsOptions = defaultTools;
   }
+  public toolsOptions: IToolsOptions = {};
+
   protected _rows: TableRow[] = [];
 
   protected rowDetails: { [rowName: string]: Details };
@@ -40,7 +52,6 @@ export abstract class Table {
     (sender: Table, options: any) => any,
     any
   > = new Event<(sender: Table, options: any) => any, any>();
-
 
   public renderDetailActions: (
     container: HTMLElement,
