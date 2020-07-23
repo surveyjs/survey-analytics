@@ -90,6 +90,15 @@ export abstract class Table {
     });
   };
 
+  public isColumnVisible(column: any) {
+    return (
+      column.location == QuestionLocation.Column &&
+      ((this.isTrustedAccess &&
+        column.visibility !== ColumnVisibility.Invisible) ||
+        (!this.isTrustedAccess &&
+          column.visibility === ColumnVisibility.Visible))
+    );
+  }
   public isVisible = (visibility: ColumnVisibility) => {
     return (
       (this.isTrustedAccess && visibility !== ColumnVisibility.Invisible) ||

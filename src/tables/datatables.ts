@@ -192,10 +192,11 @@ export class DataTables extends Table {
         ) => {
           var datatableApi = jQuery(tableNode).dataTable().api();
           var self = this;
-          jQuery(thead)
-            .children("th")
-            .each(function (index: number) {
-              var $thNode = jQuery(this);
+          datatableApi
+            .columns()
+            .eq(0)
+            .each((index: number) => {
+              var $thNode = jQuery(datatableApi.columns(index).header());
               $thNode.unbind("click.DT");
               if (!!columnsData[index] && $thNode.has("button").length === 0) {
                 var container = DocumentHelper.createElement(
@@ -291,15 +292,16 @@ export class DataTables extends Table {
 
   public detailButtonCreators: Array<(columnName?: string) => HTMLElement> = [];
 
+  updateHeaders() {}
+
   getColumns(): Array<Object> {
-    const availableColumns = this.getAvailableColumns();
-    const columns: any = availableColumns.map((column, index) => {
+    const columns: any = this.columns.map((column, index) => {
       var question = this.survey.getQuestionByName(column.name);
       return {
         name: column.name,
         data: column.name,
         sTitle: (question && question.title) || column.displayName,
-        visible: column.visibility !== ColumnVisibility.Invisible,
+        visible: this.isColumnVisible(column),
         orderable: false,
         mRender: (_data: object, _type: string, row: any) => {
           var value = row[column.name];
