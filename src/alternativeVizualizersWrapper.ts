@@ -45,7 +45,9 @@ export class AlternativeVisualizersWrapper extends VisualizerBase {
   }
 
   update(data: Array<{ [index: string]: any }>) {
-    this.visualizer.update(data);
+    this.visualizers.forEach(v => v.update(data));
+    this.visualizerContainer.innerHTML = "";
+    this.visualizer.render(this.visualizerContainer);
   }
 
   destroy() {
