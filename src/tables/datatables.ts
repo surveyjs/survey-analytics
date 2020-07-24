@@ -98,7 +98,7 @@ export class DataTables extends Table {
   groupBy: Array<string> = [];
 
   destroy() {
-    //if(!this.targetNode) return;
+    if (!this.renderResult) return;
     const tableNode = this.renderResult.children[0];
     if (jQuery.fn.DataTable.isDataTable(tableNode)) {
       jQuery(tableNode).DataTable().destroy();
