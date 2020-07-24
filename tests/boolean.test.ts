@@ -56,17 +56,9 @@ test("getData localized", () => {
     ]
   });
   survey.locale = "fr";
-  var firstResult = { "bool":true, "organization_type":"Hobbyist" };
-  var secondResult = { "bool":false, "organization_type":"In-house" };
+  var firstResult = { "bool": true, "organization_type": "Hobbyist" };
+  var secondResult = { "bool": false, "organization_type": "In-house" };
   var test = [firstResult, secondResult];
-  var normalizedData = test.map(function (item) {
-    survey.getAllQuestions().forEach(function (q) {
-        if (item[q.name] === undefined) {
-          item[q.name] = "";
-        }
-    });
-    return item;
-  });
-  boolean = new BooleanModel(survey.getQuestionByName("bool"), normalizedData, {});
+  boolean = new BooleanModel(survey.getQuestionByName("bool"), test);
   expect(boolean.getData()).toEqual([[1, 1]]);
 });
