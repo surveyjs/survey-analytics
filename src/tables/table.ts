@@ -93,10 +93,7 @@ export abstract class Table {
   public isColumnVisible(column: any) {
     return (
       column.location == QuestionLocation.Column &&
-      ((this.isTrustedAccess &&
-        column.visibility !== ColumnVisibility.Invisible) ||
-        (!this.isTrustedAccess &&
-          column.visibility === ColumnVisibility.Visible))
+      this.isVisible(column.visibility)
     );
   }
   public isVisible = (visibility: ColumnVisibility) => {
