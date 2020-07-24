@@ -4,6 +4,7 @@ import { localization } from "../../localizationManager";
 import { QuestionLocation } from "../config";
 import { DocumentHelper } from "../../utils";
 import { TableTools } from "./tabletools";
+import { DataTables } from "../datatables";
 
 export abstract class TableRow {
   constructor(
@@ -93,6 +94,9 @@ export class DatatablesRow extends TableRow {
     this.rowElement = _innerRow.node();
     this.rowData = _innerRow.data();
     this._innerRow = this._innerRow.row(this.rowElement);
+    (<DataTables>table).columnsChanged.add(() => {
+      this.render();
+    });
   }
   private rowElement: HTMLElement;
   private rowData: any;

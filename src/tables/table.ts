@@ -68,7 +68,7 @@ export abstract class Table {
   public abstract sortByColumn(columnName: string, direction: string): void;
   public abstract setPageSize(value: number): void;
 
-  protected getCreatedRows(): TableRow[] {
+  public getCreatedRows(): TableRow[] {
     return [].concat(this._rows);
   }
 

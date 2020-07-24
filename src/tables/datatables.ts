@@ -32,7 +32,7 @@ interface DataTablesOptions {
 }
 
 export class DataTables extends Table {
-  private datatableApi: any;
+  public datatableApi: any;
 
   public currentPageNumber: number = 0;
 
@@ -291,8 +291,6 @@ export class DataTables extends Table {
   public stateSaveCallback(settings: any, data: any) {}
 
   public detailButtonCreators: Array<(columnName?: string) => HTMLElement> = [];
-
-  updateHeaders() {}
 
   getColumns(): Array<Object> {
     const columns: any = this.columns.map((column, index) => {
