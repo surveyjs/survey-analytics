@@ -3,6 +3,7 @@ export * from "./localizationManager";
 //localization
 import "./localization/farsi";
 import "./localization/french";
+import "./localization/russian";
 
 export * from "./dataProvider";
 

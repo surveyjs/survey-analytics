@@ -33,6 +33,11 @@ export class VisualizationPanel extends VisualizerBase {
     private isTrustedAccess = false
   ) {
     super(null, data, options);
+
+    if (this.options.survey) {
+      localization.currentLocale = this.options.survey.locale;
+    }
+
     this.filteredData = data;
     if (_elements.length === 0) {
       this._elements = this.buildElements(questions);
@@ -94,6 +99,34 @@ export class VisualizationPanel extends VisualizerBase {
       }
       return undefined;
     });
+    if (this.locales.length > 1) {
+      this.registerToolbarItem("changeLocale", () => {
+        return ToolbarHelper.createSelector(
+          [localization.getString("changeLocale")]
+            .concat(this.locales)
+            .map((element) => {
+              return {
+                value: element,
+                text: element,
+              };
+            }),
+          (option: any) => false,
+          (e: any) => {
+            var survey = this.options.survey;
+            var newLocale = e.target.value;
+            survey.locale = newLocale;
+            localization.currentLocale = newLocale;
+
+            this._elements = this.buildElements(survey.getAllQuestions());
+            // this.refresh();
+
+            var renderResult = this.renderResult;
+            this.destroy();
+            this.render(renderResult);
+          }
+        );
+      });
+    }
   }
 
   public get name() {
@@ -157,6 +190,11 @@ export class VisualizationPanel extends VisualizerBase {
 
   protected get hiddenElements() {
     return this._elements.filter((el) => !this.isVisible(el.visibility));
+  }
+
+  protected get locales() {
+    if (this.options.survey) return this.options.survey.getUsedLocales();
+    return [];
   }
 
   protected getElement(name: string) {

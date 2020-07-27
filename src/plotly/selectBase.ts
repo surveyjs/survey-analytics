@@ -3,6 +3,7 @@ import { ItemValue } from "survey-core";
 import { SelectBase } from "../selectBase";
 import { VisualizationManager } from "../visualizationManager";
 import { allowDomRendering, DataHelper } from "../utils";
+import { localization } from "../localizationManager";
 
 var Plotly: any = null;
 if (allowDomRendering()) {
@@ -32,7 +33,6 @@ export class PlotlyChartAdapter {
     let labels = this.model.getLabels();
     let colors = this.model.getColors();
     const traces: any = [];
-
     const hasSeries = datasets.length > 1 && seriesNames.length > 1;
 
     if (
@@ -139,6 +139,7 @@ export class PlotlyChartAdapter {
     let config: any = {
       displaylogo: false,
       responsive: true,
+      locale: localization.currentLocale,
     };
     if (SelectBasePlotly.displayModeBar !== undefined) {
       config.displayModeBar = SelectBasePlotly.displayModeBar;
