@@ -10,12 +10,10 @@ export abstract class TableRow {
   constructor(
     protected table: Table,
     protected toolsContainer: HTMLElement,
-    protected detailsContainer: HTMLElement,
-    protected rowTools?: string[],
-    protected detailsActions?: string[]
+    protected detailsContainer: HTMLElement
   ) {
-    this.details = new Details(table, this, detailsContainer, detailsActions);
-    this.tools = new RowTools(toolsContainer, table, this, rowTools);
+    this.details = new Details(table, this, detailsContainer);
+    this.tools = new RowTools(toolsContainer, table, this);
     table.onColumnsLocationChanged.add(() => {
       this.closeDetails();
     });
@@ -66,11 +64,9 @@ export class TabulatorRow extends TableRow {
     protected table: Table,
     protected toolsContainer: HTMLElement,
     protected detailsContainer: HTMLElement,
-    protected innerRow: any,
-    protected rowTools?: string[],
-    protected detailsActions?: string[]
+    protected innerRow: any
   ) {
-    super(table, toolsContainer, detailsContainer, rowTools, detailsActions);
+    super(table, toolsContainer, detailsContainer);
   }
   public getElement(): HTMLElement {
     return this.innerRow.getElement();
@@ -86,11 +82,9 @@ export class DatatablesRow extends TableRow {
     protected table: Table,
     protected toolsContainer: HTMLElement,
     protected detailsContainer: HTMLElement,
-    private _innerRow: any,
-    protected rowTools?: string[],
-    protected detailsActions?: string[]
+    private _innerRow: any
   ) {
-    super(table, toolsContainer, detailsContainer, rowTools, detailsActions);
+    super(table, toolsContainer, detailsContainer);
     this.rowElement = _innerRow.node();
     this.rowData = _innerRow.data();
     this._innerRow = this._innerRow.row(this.rowElement);
@@ -118,10 +112,9 @@ export class RowTools extends TableTools {
   constructor(
     protected targetNode: HTMLElement,
     protected table: Table,
-    protected row: TableRow,
-    protected actions: string[] = []
+    protected row: TableRow
   ) {
-    super(targetNode, table, actions);
+    super(targetNode, table);
     this.options.row = row;
   }
   protected location = "row";
@@ -131,8 +124,7 @@ export class Details {
   constructor(
     protected table: Table,
     private row: TableRow,
-    protected targetNode: HTMLElement,
-    protected actions: string[] = []
+    protected targetNode: HTMLElement
   ) {
     var detailsTable = DocumentHelper.createElement(
       "table",
@@ -165,14 +157,15 @@ export class Details {
         row.appendChild(td3);
         rows.push(row);
       });
-    if (this.actions.length != 0) {
-      var row = DocumentHelper.createElement("tr", "sa-table__detail");
-      var td = DocumentHelper.createElement("td", "", { colSpan: 1 });
-      var tools = new DetailsTools(td, this.table, this.row, this.actions);
-      tools.render();
+    var row = DocumentHelper.createElement("tr", "sa-table__detail");
+    var td = DocumentHelper.createElement("td", "", { colSpan: 1 });
+    var tools = new DetailsTools(td, this.table, this.row);
+    tools.render();
+    if (td.children.length != 0) {
       row.appendChild(td);
       rows.push(row);
     }
+
     rows.forEach((row) => {
       this.detailsTable.appendChild(row);
     });
@@ -202,21 +195,25 @@ export class DetailsTools extends TableTools {
   constructor(
     protected targetNode: HTMLElement,
     protected table: Table,
-    protected row: TableRow,
-    protected actions: string[] = []
+    protected row: TableRow
   ) {
-    super(targetNode, table, actions);
+    super(targetNode, table);
     this.options.row = row;
   }
   protected location = "details";
 }
 
-TableTools.registerTool("row", "details", (_table: Table, options: any) => {
-  const btn = DocumentHelper.createSvgButton("detail");
-  btn.title = localization.getString("showMinorColumns");
+TableTools.registerTool({
+  location: "row",
+  name: "details",
+  visibleIndex: 0,
+  render: (_table: Table, options: any) => {
+    const btn = DocumentHelper.createSvgButton("detail");
+    btn.title = localization.getString("showMinorColumns");
 
-  btn.onclick = () => {
-    options.row.toggleDetails();
-  };
-  return btn;
+    btn.onclick = () => {
+      options.row.toggleDetails();
+    };
+    return btn;
+  },
 });

@@ -75,7 +75,7 @@ export class Tabulator extends Table {
 
   private renderResult: HTMLElement;
   private readonly COLUMN_MIN_WIDTH = 155;
-  private tabulatorTables: any = null;
+  public tabulatorTables: any = null;
   private tableContainer: HTMLElement = null;
   private tableTools: HeaderTools;
 
@@ -117,11 +117,7 @@ export class Tabulator extends Table {
     header.appendChild(this.createDownloadsBar());
     header.appendChild(toolsContainer);
     header.appendChild(paginationElement);
-    this.tableTools = new HeaderTools(
-      toolsContainer,
-      this,
-      this.toolsOptions["header"]
-    );
+    this.tableTools = new HeaderTools(toolsContainer, this);
     this.tableTools.render();
     this.renderResult = targetNode;
   };
@@ -169,9 +165,7 @@ export class Tabulator extends Table {
       this,
       row.getCells()[0].getElement(),
       row.getElement(),
-      row,
-      this.toolsOptions["row"],
-      this.toolsOptions["details"]
+      row
     );
     tableRow.onToggleDetails.add(() => {
       row.normalizeHeight();
@@ -204,12 +198,7 @@ export class Tabulator extends Table {
       "div",
       "sa-table__action-container"
     );
-    const columnTools = new ColumnTools(
-      container,
-      this,
-      columnName,
-      this.toolsOptions["column"]
-    );
+    const columnTools = new ColumnTools(container, this, columnName);
     columnTools.render();
     return container;
   };
@@ -228,7 +217,6 @@ export class Tabulator extends Table {
         minWidth: minColumnWidth,
         widthShrink: 1,
         visible: column.visibility !== ColumnVisibility.Invisible,
-        // headerFilter: false,
         headerSort: false,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(

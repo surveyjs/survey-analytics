@@ -7,7 +7,6 @@ import { TableRow, DatatablesRow } from "./tools/rowtools";
 import { ColumnTools } from "./tools/columntools";
 import { HeaderTools } from "./tools/headertools";
 import { DocumentHelper } from "../utils";
-export { TableTools } from "./tools/tabletools";
 
 if (!!document) {
   var svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");
@@ -206,8 +205,7 @@ export class DataTables extends Table {
                 var columnTools = new ColumnTools(
                   container,
                   self,
-                  columnsData[index],
-                  self.toolsOptions["column"]
+                  columnsData[index]
                 );
                 columnTools.render();
               }
@@ -227,11 +225,7 @@ export class DataTables extends Table {
     ));
     var toolsContainer = jQuery("div.sa-datatables__tools")[0];
 
-    var tools = new HeaderTools(
-      toolsContainer,
-      this,
-      this.toolsOptions["header"]
-    );
+    var tools = new HeaderTools(toolsContainer, this);
     this.onTableToolsCreated.fire(this, { tools: tools });
     tools.render();
 
@@ -258,14 +252,7 @@ export class DataTables extends Table {
         detailsTr.appendChild(detailsTd);
         var rowElement = row.node();
         var firstCell = row.cell(row.index(), 0).node();
-        var tableRow = new DatatablesRow(
-          this,
-          firstCell,
-          detailsTd,
-          row,
-          this.toolsOptions["row"],
-          this.toolsOptions["details"]
-        );
+        var tableRow = new DatatablesRow(this, firstCell, detailsTd, row);
         tableRow.onToggleDetails.add((sender: TableRow, options: any) => {
           if (options.isExpanded) {
             detailsTd.colSpan = rowElement.childElementCount;

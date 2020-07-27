@@ -25,9 +25,7 @@ export abstract class Table {
       this._columns = this.buildColumns(survey);
     }
     this.initTableData(data);
-    this.toolsOptions = defaultTools;
   }
-  public toolsOptions: IToolsOptions = {};
 
   protected _rows: TableRow[] = [];
 
