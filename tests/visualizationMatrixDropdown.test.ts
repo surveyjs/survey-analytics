@@ -77,8 +77,10 @@ test("series marker is added to data", () => {
 
 test("series options for inner panel visualizer", () => {
   const innerPanelVisualizer = visualizer["_panelVisualizer"];
-  expect(innerPanelVisualizer.getSeriesNames()).toEqual(json.questions[0].rows);
-  expect(innerPanelVisualizer.getSeriesTitles()).toEqual(
+  expect(innerPanelVisualizer.getSeriesValues()).toEqual(
+    json.questions[0].rows
+  );
+  expect(innerPanelVisualizer.getSeriesLabels()).toEqual(
     json.questions[0].rows
   );
 });

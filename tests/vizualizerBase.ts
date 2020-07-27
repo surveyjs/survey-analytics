@@ -27,15 +27,17 @@ test("custom colors", () => {
 });
 
 test("series options", () => {
-  const seriesNames = ["1", "2"];
-  const seriesTitles = ["One", "Two"];
-  let visualizer = new VisualizerBase(null, null, { seriesNames: seriesNames });
-  expect(visualizer.getSeriesNames()).toEqual(seriesNames);
-  expect(visualizer.getSeriesTitles()).toEqual(seriesNames);
-  visualizer = new VisualizerBase(null, null, {
-    seriesNames: seriesNames,
-    seriesTitles: seriesTitles,
+  const seriesValues = ["1", "2"];
+  const seriesLabels = ["One", "Two"];
+  let visualizer = new VisualizerBase(null, null, {
+    seriesValues: seriesValues,
   });
-  expect(visualizer.getSeriesNames()).toEqual(seriesNames);
-  expect(visualizer.getSeriesTitles()).toEqual(seriesTitles);
+  expect(visualizer.getSeriesValues()).toEqual(seriesValues);
+  expect(visualizer.getSeriesLabels()).toEqual(seriesValues);
+  visualizer = new VisualizerBase(null, null, {
+    seriesValues: seriesValues,
+    seriesLabels: seriesLabels,
+  });
+  expect(visualizer.getSeriesValues()).toEqual(seriesValues);
+  expect(visualizer.getSeriesLabels()).toEqual(seriesLabels);
 });

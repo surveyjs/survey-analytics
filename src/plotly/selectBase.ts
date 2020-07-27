@@ -28,12 +28,12 @@ export class PlotlyChartAdapter {
 
   public create(chartNode: HTMLElement) {
     let datasets = this.model.getData();
-    let seriesNames = this.model.getSeriesNames();
-    let seriesLabels = this.model.getSeriesTitles();
+    let seriesValues = this.model.getSeriesValues();
+    let seriesLabels = this.model.getSeriesLabels();
     let labels = this.model.getLabels();
     let colors = this.model.getColors();
     const traces: any = [];
-    const hasSeries = datasets.length > 1 && seriesNames.length > 1;
+    const hasSeries = datasets.length > 1 && seriesValues.length > 1;
 
     if (
       this.model.orderByAnsweres == "asc" ||
@@ -241,13 +241,13 @@ export class SelectBasePlotly extends SelectBase {
 
   getData(): any[] {
     const statistics = super.getData();
-    const series = this.getSeriesNames();
+    const series = this.getSeriesValues();
     const values = this.getValues();
     if (series.length > 1) {
       const preparedData: Array<Array<number>> = [];
       values.forEach((val, valueIndex) => {
         const seriesData = series.map(
-          (seriesName, seriesIndex) => statistics[seriesIndex][valueIndex]
+          (seriesValue, seriesIndex) => statistics[seriesIndex][valueIndex]
         );
         preparedData.push(seriesData);
       });

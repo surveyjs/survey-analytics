@@ -2,8 +2,8 @@ export interface IDataInfo {
   dataName: string;
   getValues(): Array<any>;
   getLabels(): Array<string>;
-  getSeriesNames(): Array<string>;
-  getSeriesTitles(): Array<string>;
+  getSeriesValues(): Array<string>;
+  getSeriesLabels(): Array<string>;
 }
 
 export class DataProvider {
@@ -28,7 +28,7 @@ export class DataProvider {
       valuesIndex[val] = index;
     });
 
-    const series = dataInfo.getSeriesNames();
+    const series = dataInfo.getSeriesValues();
     const seriesIndex: { [index: string]: number } = {};
     series.forEach((val: any, index: number) => {
       seriesIndex[val] = index;

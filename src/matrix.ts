@@ -14,12 +14,12 @@ export class Matrix extends SelectBase {
     return "matrix";
   }
 
-  getSeriesNames(): Array<string> {
+  getSeriesValues(): Array<string> {
     const question: QuestionMatrixModel = <any>this.question;
     return question.rows.map((row: ItemValue) => "" + row.value);
   }
 
-  getSeriesTitles(): Array<string> {
+  getSeriesLabels(): Array<string> {
     const question: QuestionMatrixModel = <any>this.question;
     return question.rows.map((row: ItemValue) =>
       ItemValue.getTextOrHtmlByValue(question.rows, row.value)
@@ -33,7 +33,7 @@ export class Matrix extends SelectBase {
 
   getData(): any[] {
     const statistics = super.getData();
-    const series = this.getSeriesNames();
+    const series = this.getSeriesValues();
     const values = this.getValues();
     if (series.length > 1) {
       const preparedData: Array<Array<number>> = [];

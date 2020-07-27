@@ -19,8 +19,8 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     super(question, data, options);
     this._panelVisualizer = new VisualizationPanel(this.getQuestions(), [], {
       allowDynamicLayout: false,
-      seriesNames: question.rows.map((row: ItemValue) => row.value),
-      seriesTitles: question.rows.map((row: ItemValue) => row.text),
+      seriesValues: question.rows.map((row: ItemValue) => row.value),
+      seriesLabels: question.rows.map((row: ItemValue) => row.text),
     });
     this.update(data);
   }

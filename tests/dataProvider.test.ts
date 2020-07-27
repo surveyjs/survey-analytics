@@ -33,8 +33,8 @@ test("getData for boolean question values - mock", () => {
       dataName: "q1",
       getValues: () => [true, false],
       getLabels: () => ["true", "false"],
-      getSeriesNames: () => [],
-      getSeriesTitles: () => [],
+      getSeriesValues: () => [],
+      getSeriesLabels: () => [],
     })
   ).toEqual([[3, 1]]);
 });
@@ -61,8 +61,8 @@ test("getData for select base question values", () => {
       dataName: "q1",
       getValues: () => choices,
       getLabels: () => choices,
-      getSeriesNames: () => [],
-      getSeriesTitles: () => [],
+      getSeriesValues: () => [],
+      getSeriesLabels: () => [],
     })
   ).toEqual([[2, 1, 0, 1, 0, 0]]);
 });
@@ -99,8 +99,8 @@ test("getData for matrix question values", () => {
         "Neither Fair Nor Poor",
         "Poor",
       ],
-      getSeriesNames: () => ["Lizol", "Harpic"],
-      getSeriesTitles: () => ["Lizol", "Harpic"],
+      getSeriesValues: () => ["Lizol", "Harpic"],
+      getSeriesLabels: () => ["Lizol", "Harpic"],
     })
   ).toEqual([
     [1, 2, 0, 0, 0, 0],
@@ -123,8 +123,8 @@ test("getData for matrix dropdown question values - pre-processed data", () => {
       dataName: "Column 1",
       getValues: () => ["High Quality", "Natural", "Trustworthy"],
       getLabels: () => ["High Quality", "Natural", "Trustworthy"],
-      getSeriesNames: () => ["Lizol", "Harpic"],
-      getSeriesTitles: () => ["Lizol", "Harpic"],
+      getSeriesValues: () => ["Lizol", "Harpic"],
+      getSeriesLabels: () => ["Lizol", "Harpic"],
     })
   ).toEqual([
     [0, 2, 1],
@@ -135,8 +135,8 @@ test("getData for matrix dropdown question values - pre-processed data", () => {
       dataName: "Column 2",
       getValues: () => [1, 2, 3, 4, 5],
       getLabels: () => ["1", "2", "3", "4", "5"],
-      getSeriesNames: () => ["Lizol", "Harpic"],
-      getSeriesTitles: () => ["Lizol", "Harpic"],
+      getSeriesValues: () => ["Lizol", "Harpic"],
+      getSeriesLabels: () => ["Lizol", "Harpic"],
     })
   ).toEqual([
     [1, 0, 2, 0, 0],

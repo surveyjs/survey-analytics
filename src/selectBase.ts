@@ -44,7 +44,7 @@ export class SelectBase extends VisualizerBase {
     });
     this.registerToolbarItem("changeLabelsOrder", () => {
       if (
-        this.getSeriesNames().length === 0 &&
+        this.getSeriesValues().length === 0 &&
         this.chartTypes.indexOf("bar") !== -1
       ) {
         this.choicesOrder = ToolbarHelper.createSelector(

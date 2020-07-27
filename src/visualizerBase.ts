@@ -24,12 +24,12 @@ export class VisualizerBase implements IDataInfo {
     return this.question.name;
   }
 
-  getSeriesNames(): Array<string> {
-    return this.options.seriesNames || [];
+  getSeriesValues(): Array<string> {
+    return this.options.seriesValues || [];
   }
 
-  getSeriesTitles(): Array<string> {
-    return this.options.seriesTitles || this.getSeriesNames();
+  getSeriesLabels(): Array<string> {
+    return this.options.seriesLabels || this.getSeriesValues();
   }
 
   getValues(): Array<any> {

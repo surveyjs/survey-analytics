@@ -48,12 +48,12 @@ test("getLabels method", () => {
   expect(matrix.getLabels()).toEqual(matrixJson.columns);
 });
 
-test("getSeriesNames method", () => {
-  expect(matrix.getSeriesNames()).toEqual(matrixJson.rows);
+test("getSeriesValues method", () => {
+  expect(matrix.getSeriesValues()).toEqual(matrixJson.rows);
 });
 
-test("getSeriesTitles method", () => {
-  expect(matrix.getSeriesTitles()).toEqual(matrixJson.rows);
+test("getSeriesLabels method", () => {
+  expect(matrix.getSeriesLabels()).toEqual(matrixJson.rows);
 });
 
 test("getData method", () => {
