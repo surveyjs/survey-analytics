@@ -1,15 +1,6 @@
 import { SurveyModel, Question, Event } from "survey-core";
 import { ColumnVisibility, QuestionLocation, ColumnDataType } from "./config";
-import { Details, TableRow } from "./tools/rowtools";
-
-export interface IToolsOptions {
-  [location: string]: string[];
-}
-var defaultTools = {
-  header: ["filter", "showcolumn", "showentries"],
-  column: ["drag", "sort", "hide", "movetodetails", "filter"],
-  row: ["details"],
-};
+import { Details, TableRow } from "./extensions/rowextensions";
 
 export abstract class Table {
   protected tableData: any;

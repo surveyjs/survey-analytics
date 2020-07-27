@@ -2,16 +2,16 @@ import { localization } from "../../localizationManager";
 import { Table } from "../table";
 import { ColumnVisibility } from "../config";
 import { DocumentHelper } from "../../utils";
-import { TableTools } from "./tabletools";
+import { TableExtensions } from "./tableextensions";
 
-export class HeaderTools extends TableTools {
+export class HeaderExtensions extends TableExtensions {
   constructor(protected targetNode: HTMLElement, protected table: Table) {
     super(targetNode, table);
   }
   protected location = "header";
 }
 
-TableTools.registerTool({
+TableExtensions.registerExtension({
   location: "header",
   name: "filter",
   visibleIndex: 0,
@@ -27,7 +27,7 @@ TableTools.registerTool({
   },
 });
 
-TableTools.registerTool({
+TableExtensions.registerExtension({
   location: "header",
   name: "showcolumn",
   visibleIndex: 1,
@@ -81,7 +81,7 @@ TableTools.registerTool({
   },
 });
 
-TableTools.registerTool({
+TableExtensions.registerExtension({
   location: "header",
   name: "showentries",
   visibleIndex: 2,

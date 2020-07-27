@@ -3,9 +3,9 @@ import { SurveyModel, Event } from "survey-core";
 import { ITableColumn, ColumnVisibility, QuestionLocation } from "./config";
 
 import "./datatables.scss";
-import { TableRow, DatatablesRow } from "./tools/rowtools";
-import { ColumnTools } from "./tools/columntools";
-import { HeaderTools } from "./tools/headertools";
+import { TableRow, DatatablesRow } from "./extensions/rowextensions";
+import { ColumnExtensions } from "./extensions/columnextensions";
+import { HeaderExtensions } from "./extensions/headerextensions";
 import { DocumentHelper } from "../utils";
 
 if (!!document) {
@@ -160,7 +160,7 @@ export class DataTables extends Table {
           { extend: "csv", className: dtButtonClass },
           { extend: "print", className: dtButtonClass },
         ],
-        dom: 'B<"sa-datatables__tools">prtip',
+        dom: 'B<"sa-datatables__extensions">prtip',
         // ordering: false,
         data: this.tableData,
         pageLength: 5,
@@ -202,12 +202,12 @@ export class DataTables extends Table {
                   "div",
                   "sa-table__action-container"
                 );
-                var columnTools = new ColumnTools(
+                var columnExtensions = new ColumnExtensions(
                   container,
                   self,
                   columnsData[index]
                 );
-                columnTools.render();
+                columnExtensions.render();
               }
               $thNode.prepend(container);
             });
@@ -223,11 +223,11 @@ export class DataTables extends Table {
     const datatableApiRef = (this.datatableApi = jQuery(tableNode).DataTable(
       options
     ));
-    var toolsContainer = jQuery("div.sa-datatables__tools")[0];
+    var extensionsContainer = jQuery("div.sa-datatables__extensions")[0];
 
-    var tools = new HeaderTools(toolsContainer, this);
-    this.onTableToolsCreated.fire(this, { tools: tools });
-    tools.render();
+    var extensions = new HeaderExtensions(extensionsContainer, this);
+    // this.onTableToolsCreated.fire(this, { extensions: extensions });
+    extensions.render();
 
     datatableApiRef.page(self.currentPageNumber);
     this.datatableApi.rowGroup().enable(false).draw(false);

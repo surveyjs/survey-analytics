@@ -3,23 +3,23 @@ import { Event } from "survey-core";
 import { localization } from "../../localizationManager";
 import { QuestionLocation } from "../config";
 import { DocumentHelper } from "../../utils";
-import { TableTools } from "./tabletools";
+import { TableExtensions } from "./tableextensions";
 import { DataTables } from "../datatables";
 
 export abstract class TableRow {
   constructor(
     protected table: Table,
-    protected toolsContainer: HTMLElement,
+    protected extensionsContainer: HTMLElement,
     protected detailsContainer: HTMLElement
   ) {
     this.details = new Details(table, this, detailsContainer);
-    this.tools = new RowTools(toolsContainer, table, this);
+    this.extensions = new RowExtensions(extensionsContainer, table, this);
     table.onColumnsLocationChanged.add(() => {
       this.closeDetails();
     });
   }
   public details: Details;
-  public tools: RowTools;
+  public extensions: RowExtensions;
   private detailedRowClass = "sa-table__detail-row";
   private isDetailsExpanded = false;
   public onToggleDetails: Event<
@@ -35,7 +35,7 @@ export abstract class TableRow {
   }
 
   public render() {
-    this.tools.render();
+    this.extensions.render();
   }
 
   public openDetails() {
@@ -62,11 +62,11 @@ export abstract class TableRow {
 export class TabulatorRow extends TableRow {
   constructor(
     protected table: Table,
-    protected toolsContainer: HTMLElement,
+    protected extensionsContainer: HTMLElement,
     protected detailsContainer: HTMLElement,
     protected innerRow: any
   ) {
-    super(table, toolsContainer, detailsContainer);
+    super(table, extensionsContainer, detailsContainer);
   }
   public getElement(): HTMLElement {
     return this.innerRow.getElement();
@@ -80,11 +80,11 @@ export class TabulatorRow extends TableRow {
 export class DatatablesRow extends TableRow {
   constructor(
     protected table: Table,
-    protected toolsContainer: HTMLElement,
+    protected extensionsContainer: HTMLElement,
     protected detailsContainer: HTMLElement,
     private _innerRow: any
   ) {
-    super(table, toolsContainer, detailsContainer);
+    super(table, extensionsContainer, detailsContainer);
     this.rowElement = _innerRow.node();
     this.rowData = _innerRow.data();
     this._innerRow = this._innerRow.row(this.rowElement);
@@ -108,7 +108,7 @@ export class DatatablesRow extends TableRow {
   }
 }
 
-export class RowTools extends TableTools {
+export class RowExtensions extends TableExtensions {
   constructor(
     protected targetNode: HTMLElement,
     protected table: Table,
@@ -159,8 +159,8 @@ export class Details {
       });
     var row = DocumentHelper.createElement("tr", "sa-table__detail");
     var td = DocumentHelper.createElement("td", "", { colSpan: 1 });
-    var tools = new DetailsTools(td, this.table, this.row);
-    tools.render();
+    var extensions = new DetailsExtensions(td, this.table, this.row);
+    extensions.render();
     if (td.children.length != 0) {
       row.appendChild(td);
       rows.push(row);
@@ -191,7 +191,7 @@ export class Details {
   }
 }
 
-export class DetailsTools extends TableTools {
+export class DetailsExtensions extends TableExtensions {
   constructor(
     protected targetNode: HTMLElement,
     protected table: Table,
@@ -203,7 +203,7 @@ export class DetailsTools extends TableTools {
   protected location = "details";
 }
 
-TableTools.registerTool({
+TableExtensions.registerExtension({
   location: "row",
   name: "details",
   visibleIndex: 0,

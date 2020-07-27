@@ -2,9 +2,9 @@ import { Table } from "../table";
 import { DocumentHelper } from "../../utils";
 import { localization } from "../..";
 import { ColumnVisibility, QuestionLocation } from "../config";
-import { TableTools } from "./tabletools";
+import { TableExtensions } from "./tableextensions";
 
-export class ColumnTools extends TableTools {
+export class ColumnExtensions extends TableExtensions {
   constructor(
     protected targetNode: HTMLElement,
     protected table: Table,
@@ -16,7 +16,7 @@ export class ColumnTools extends TableTools {
   protected location = "column";
 }
 
-ColumnTools.registerTool({
+ColumnExtensions.registerExtension({
   location: "column",
   name: "drag",
   visibleIndex: 0,
@@ -33,7 +33,7 @@ ColumnTools.registerTool({
   },
 });
 
-ColumnTools.registerTool({
+ColumnExtensions.registerExtension({
   location: "column",
   name: "sort",
   visibleIndex: 1,
@@ -60,7 +60,7 @@ ColumnTools.registerTool({
   },
 });
 
-ColumnTools.registerTool({
+ColumnExtensions.registerExtension({
   location: "column",
   name: "hide",
   visibleIndex: 2,
@@ -74,7 +74,7 @@ ColumnTools.registerTool({
   },
 });
 
-ColumnTools.registerTool({
+ColumnExtensions.registerExtension({
   location: "column",
   name: "movetodetails",
   visibleIndex: 3,
@@ -89,7 +89,7 @@ ColumnTools.registerTool({
   },
 });
 
-ColumnTools.registerTool({
+ColumnExtensions.registerExtension({
   location: "column",
   name: "filter",
   visibleIndex: 4,
@@ -103,7 +103,7 @@ ColumnTools.registerTool({
   },
 });
 
-ColumnTools.registerTool({
+ColumnExtensions.registerExtension({
   location: "column",
   name: "makepublic",
   visibleIndex: -1,

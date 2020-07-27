@@ -4,9 +4,9 @@ import { ColumnVisibility, QuestionLocation } from "./config";
 
 import "./tabulator.scss";
 import { DocumentHelper } from "../utils";
-import { TabulatorRow } from "./tools/rowtools";
-import { ColumnTools } from "./tools/columntools";
-import { HeaderTools } from "./tools/headertools";
+import { TabulatorRow } from "./extensions/rowextensions";
+import { ColumnExtensions } from "./extensions/columnextensions";
+import { HeaderExtensions } from "./extensions/headerextensions";
 
 const TabulatorTables = require("tabulator-tables");
 
@@ -77,7 +77,7 @@ export class Tabulator extends Table {
   private readonly COLUMN_MIN_WIDTH = 155;
   public tabulatorTables: any = null;
   private tableContainer: HTMLElement = null;
-  private tableTools: HeaderTools;
+  private tableExtensions: HeaderExtensions;
 
   public render = (targetNode: HTMLElement) => {
     targetNode.className += " sa-table sa-tabulator";
@@ -110,15 +110,15 @@ export class Tabulator extends Table {
       columnMoved: this.columnMovedCallback,
     });
 
-    const toolsContainer = DocumentHelper.createElement(
+    const extensionsContainer = DocumentHelper.createElement(
       "div",
-      "sa-tabulator__tools-container"
+      "sa-tabulator__extensions-container"
     );
     header.appendChild(this.createDownloadsBar());
-    header.appendChild(toolsContainer);
+    header.appendChild(extensionsContainer);
     header.appendChild(paginationElement);
-    this.tableTools = new HeaderTools(toolsContainer, this);
-    this.tableTools.render();
+    this.tableExtensions = new HeaderExtensions(extensionsContainer, this);
+    this.tableExtensions.render();
     this.renderResult = targetNode;
   };
 
@@ -198,8 +198,8 @@ export class Tabulator extends Table {
       "div",
       "sa-table__action-container"
     );
-    const columnTools = new ColumnTools(container, this, columnName);
-    columnTools.render();
+    const columnExtensions = new ColumnExtensions(container, this, columnName);
+    columnExtensions.render();
     return container;
   };
 

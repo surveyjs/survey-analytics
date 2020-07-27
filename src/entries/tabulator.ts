@@ -5,5 +5,5 @@ import "../localization/farsi";
 import "../localization/french";
 
 export * from "../tables/tabulator";
-export { TableTools } from "../tables/tools/tabletools";
+export { TableExtensions } from "../tables/extensions/tableextensions";
 export { DocumentHelper } from "../utils/index";
