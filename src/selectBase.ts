@@ -160,7 +160,7 @@ export class SelectBase extends VisualizerBase {
     }
   }
 
-  valuesSource(): any[] {
+  valuesSource(): Array<ItemValue> {
     const question = <QuestionSelectBase>this.question;
     return question["activeChoices"];
   }

@@ -15,14 +15,19 @@ export class Matrix extends SelectBase {
     return "matrix";
   }
 
-  valuesSource(): any[] {
+  getSeriesNames(): Array<string> {
+    const question: QuestionMatrixModel = <any>this.question;
+    return question.rows.map((row: ItemValue) => "" + row.value);
+  }
+
+  valuesSource(): Array<ItemValue> {
     const question: QuestionMatrixModel = <any>this.question;
     return question.columns;
   }
 
   getLabels(): Array<string> {
     const question: QuestionMatrixModel = <any>this.question;
-    return question.rows.map((row: any) =>
+    return question.rows.map((row: ItemValue) =>
       ItemValue.getTextOrHtmlByValue(question.rows, row.value)
     );
   }

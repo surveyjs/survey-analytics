@@ -22,6 +22,14 @@ export class VisualizerBase implements IDataInfo {
     return this.question.name;
   }
   
+  getSeriesNames(): Array<string> {
+    return [];
+  }
+
+  getSeriesTitles(): Array<string> {
+    return this.getSeriesNames();
+  }
+
   getValues(): Array<any> {
     throw new Error("Method not implemented.");
   }

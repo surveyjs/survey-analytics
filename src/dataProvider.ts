@@ -2,8 +2,8 @@ export interface IDataInfo {
     dataName: string;
     getValues(): Array<any>;
     getLabels(): Array<string>;
-    // getSeriesNames(): Array<string>;
-    // getSeriesTitles(): Array<string>;
+    getSeriesNames(): Array<string>;
+    getSeriesTitles(): Array<string>;
 }
 
 export class DataProvider {
