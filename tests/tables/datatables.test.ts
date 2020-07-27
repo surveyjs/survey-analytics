@@ -82,7 +82,7 @@ test("pass columns through ctor", () => {
 });
 
 test.skip("createDetailMarkup method", () => {
-  let dataTables = new DataTables(new SurveyModel(), [], null, [
+  let dataTables = new DataTables(new SurveyModel(), [{}], null, [
     {
       name: "id",
       displayName: "Id",

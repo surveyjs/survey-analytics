@@ -127,14 +127,13 @@ export class RowTools extends TableTools {
   protected location = "row";
 }
 
-export class Details extends TableTools {
+export class Details {
   constructor(
     protected table: Table,
     private row: TableRow,
     protected targetNode: HTMLElement,
     protected actions: string[] = []
   ) {
-    super(targetNode, table, actions);
     var detailsTable = DocumentHelper.createElement(
       "table",
       "sa-table__detail-table"
@@ -143,14 +142,9 @@ export class Details extends TableTools {
     this.table.onColumnsLocationChanged.add(() => {
       this.close();
     });
-    this.options.row = this.row;
   }
   private detailsTable: HTMLElement;
   protected location = "details";
-
-  public setContainer(targetNode: HTMLElement) {
-    this.targetNode = targetNode;
-  }
 
   public open(): void {
     this.detailsTable.innerHTML = "";
@@ -174,9 +168,10 @@ export class Details extends TableTools {
     if (this.actions.length != 0) {
       var row = DocumentHelper.createElement("tr", "sa-table__detail");
       var td = DocumentHelper.createElement("td", "", { colSpan: 1 });
+      var tools = new DetailsTools(td, this.table, this.row, this.actions);
+      tools.render();
       row.appendChild(td);
       rows.push(row);
-      this.render();
     }
     rows.forEach((row) => {
       this.detailsTable.appendChild(row);
@@ -201,6 +196,19 @@ export class Details extends TableTools {
   public close() {
     this.detailsTable.remove();
   }
+}
+
+export class DetailsTools extends TableTools {
+  constructor(
+    protected targetNode: HTMLElement,
+    protected table: Table,
+    protected row: TableRow,
+    protected actions: string[] = []
+  ) {
+    super(targetNode, table, actions);
+    this.options.row = row;
+  }
+  protected location = "details";
 }
 
 TableTools.registerTool("row", "details", (_table: Table, options: any) => {
