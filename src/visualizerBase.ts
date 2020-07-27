@@ -1,7 +1,7 @@
 import { Question } from "survey-core";
 
 import "./visualizerBase.scss";
-import { IDataInfo } from './dataProvider';
+import { IDataInfo } from "./dataProvider";
 
 export class VisualizerBase implements IDataInfo {
   private _showHeader = true;
@@ -10,7 +10,9 @@ export class VisualizerBase implements IDataInfo {
   protected contentContainer: HTMLElement = undefined;
   protected footerContainer: HTMLElement = undefined;
 
-  protected toolbarItemCreators: { [name: string]: (toolbar?: HTMLDivElement) => HTMLElement } = {};
+  protected toolbarItemCreators: {
+    [name: string]: (toolbar?: HTMLDivElement) => HTMLElement;
+  } = {};
 
   constructor(
     public question: Question,
@@ -21,24 +23,27 @@ export class VisualizerBase implements IDataInfo {
   get dataName(): string {
     return this.question.name;
   }
-  
+
   getSeriesNames(): Array<string> {
-    return [];
+    return this.options.seriesNames || [];
   }
 
   getSeriesTitles(): Array<string> {
-    return this.getSeriesNames();
+    return this.options.seriesTitles || this.getSeriesNames();
   }
 
   getValues(): Array<any> {
     throw new Error("Method not implemented.");
   }
-  
+
   getLabels(): Array<string> {
     return this.getValues();
   }
 
-  public registerToolbarItem(name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement) {
+  public registerToolbarItem(
+    name: string,
+    creator: (toolbar?: HTMLDivElement) => HTMLElement
+  ) {
     this.toolbarItemCreators[name] = creator;
   }
 
@@ -57,7 +62,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   destroy() {
-    if(!!this.renderResult) {
+    if (!!this.renderResult) {
       this.destroyToolbar(this.toolbarContainer);
       this.toolbarContainer = undefined;
       this.destroyContent(this.contentContainer);
@@ -70,9 +75,9 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
-    Object.keys(this.toolbarItemCreators || {}).forEach(toolbarItemName => {
+    Object.keys(this.toolbarItemCreators || {}).forEach((toolbarItemName) => {
       let toolbarItem = this.toolbarItemCreators[toolbarItemName](toolbar);
-      if(!!toolbarItem) {
+      if (!!toolbarItem) {
         toolbar.appendChild(toolbarItem);
       }
     });
@@ -83,7 +88,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected renderToolbar(container: HTMLElement) {
-    if(this.showHeader) {
+    if (this.showHeader) {
       const toolbar = document.createElement("div");
       toolbar.className = "sa-toolbar";
       this.createToolbarItems(toolbar);
@@ -144,7 +149,7 @@ export class VisualizerBase implements IDataInfo {
     "#7d8da5",
     "#4ec46c",
     "#cf37a6",
-    "#4e6198"
+    "#4e6198",
   ];
 
   getColors(count = 10) {
@@ -169,7 +174,7 @@ export class VisualizerBase implements IDataInfo {
   set showHeader(newValue: boolean) {
     if (newValue != this._showHeader) {
       this._showHeader = newValue;
-      if(!!this.toolbarContainer) {
+      if (!!this.toolbarContainer) {
         this.destroyToolbar(this.toolbarContainer);
         this.renderToolbar(this.toolbarContainer);
       }
