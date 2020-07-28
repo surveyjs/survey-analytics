@@ -1,7 +1,7 @@
 import { Question, QuestionCommentModel, settings } from "survey-core";
 import { IDataInfo } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
-import { ToolbarHelper } from "./utils";
+import { DocumentHelper } from "./utils";
 import { localization } from "./localizationManager";
 
 import "./visualizerBase.scss";
@@ -125,8 +125,9 @@ export class VisualizerBase implements IDataInfo {
 
   protected renderToolbar(container: HTMLElement) {
     if (this.showHeader) {
-      const toolbar = document.createElement("div");
-      toolbar.className = "sa-toolbar";
+      const toolbar = <HTMLDivElement>(
+        DocumentHelper.createElement("div", "sa-toolbar")
+      );
       this.createToolbarItems(toolbar);
       container.appendChild(toolbar);
     }
@@ -147,20 +148,22 @@ export class VisualizerBase implements IDataInfo {
   protected renderFooter(container: HTMLElement) {
     container.innerHTML = "";
     if (this.hasFooter) {
-      const footerTitleElement = document.createElement("h4");
-      footerTitleElement.className = "sa-visualizer__footer-title";
-      footerTitleElement.innerText = localization.getString(
-        "otherCommentTitle"
+      const footerTitleElement = DocumentHelper.createElement(
+        "h4",
+        "sa-visualizer__footer-title",
+        { innerText: localization.getString("otherCommentTitle") }
       );
       container.appendChild(footerTitleElement);
 
-      const footerContentElement = document.createElement("div");
-      footerContentElement.className = "sa-visualizer__footer-content";
+      const footerContentElement = DocumentHelper.createElement(
+        "div",
+        "sa-visualizer__footer-content"
+      );
       footerContentElement.style.display = VisualizerBase.otherCommentCollapsed
         ? "none"
         : "block";
 
-      const visibilityButton = ToolbarHelper.createButton(() => {
+      const visibilityButton = DocumentHelper.createButton(() => {
         if (footerContentElement.style.display === "none") {
           footerContentElement.style.display = "block";
           visibilityButton.innerText = localization.getString("hideButton");
@@ -183,18 +186,24 @@ export class VisualizerBase implements IDataInfo {
   render(targetElement: HTMLElement) {
     this.renderResult = targetElement;
 
-    this.toolbarContainer = document.createElement("div");
-    this.toolbarContainer.className = "sa-visualizer__toolbar";
+    this.toolbarContainer = DocumentHelper.createElement(
+      "div",
+      "sa-visualizer__toolbar"
+    );
     targetElement.appendChild(this.toolbarContainer);
     this.renderToolbar(this.toolbarContainer);
 
-    this.contentContainer = document.createElement("div");
-    this.contentContainer.className = "sa-visualizer__content";
+    this.contentContainer = DocumentHelper.createElement(
+      "div",
+      "sa-visualizer__content"
+    );
     targetElement.appendChild(this.contentContainer);
     this.renderContent(this.contentContainer);
 
-    this.footerContainer = document.createElement("div");
-    this.footerContainer.className = "sa-visualizer__footer";
+    this.footerContainer = DocumentHelper.createElement(
+      "div",
+      "sa-visualizer__footer"
+    );
     targetElement.appendChild(this.footerContainer);
     this.renderFooter(this.footerContainer);
   }

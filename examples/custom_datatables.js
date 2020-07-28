@@ -17,14 +17,17 @@ SurveyAnalyticsDatatables.TableExtensions.registerExtension({
   name: "showinsurvey",
   visibleIndex: 0,
   render: (table, opt) => {
-    const btn = document.createElement("button");
-    btn.innerHTML = "Show in Survey";
-    btn.className = "rounded-button";
-    btn.onclick = (e) => {
-      e.stopPropagation();
-
-      return btn;
-    };
+    const btn = SurveyAnalyticsDatatables.DocumentHelper.createElement(
+      "button",
+      "rounded-button",
+      {
+        innerHTML: "Show in Survey",
+        onclick: (e) => {
+          e.stopPropagation();
+        },
+      }
+    );
+    return btn;
   },
 });
 
@@ -33,13 +36,17 @@ SurveyAnalyticsDatatables.TableExtensions.registerExtension({
   name: "delete",
   visibleIndex: 1,
   render: (table, opt) => {
-    const btn = document.createElement("button");
-    btn.className = "rounded-button rounded-button--danger";
-    btn.innerHTML = "Delete Result";
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      opt.row.remove();
-    };
+    const btn = SurveyAnalyticsDatatables.DocumentHelper.createElement(
+      "button",
+      "rounded-button rounded-button--danger",
+      {
+        innerHTML: "Delete Result",
+        onclick: (e) => {
+          e.stopPropagation();
+          opt.row.remove();
+        },
+      }
+    );
     return btn;
   },
 });

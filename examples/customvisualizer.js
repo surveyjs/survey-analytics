@@ -30,19 +30,15 @@ function CustomVisualizer(question, data) {
 
   var renderContent = function(contentContainer) {
     var data2render = getData();
-    var minEl = document.createElement("div");
-    var minTextEl = document.createElement("span");
-    minTextEl.innerText = "Min: ";
-    var minValEl = document.createElement("span");
-    minValEl.innerText = data2render[0];
+    var minEl = SurveyAnalytics.DocumentHelper.createElement("div", "");
+    var minTextEl = SurveyAnalytics.DocumentHelper.createElement("span", "", {innerText: "Min: "});
+    var minValEl = SurveyAnalytics.DocumentHelper.createElement("span", "", {innerText: data2render[0]});
     minEl.appendChild(minTextEl);
     minEl.appendChild(minValEl);
     contentContainer.appendChild(minEl);
-    var maxEl = document.createElement("div");
-    var maxTextEl = document.createElement("span");
-    maxTextEl.innerText = "Max: ";
-    var maxValEl = document.createElement("span");
-    maxValEl.innerText = data2render[1];
+    var maxEl = SurveyAnalytics.DocumentHelper.createElement("div", "");
+    var maxTextEl = SurveyAnalytics.DocumentHelper.createElement("span", "", {innerText: "Max: "});
+    var maxValEl = SurveyAnalytics.DocumentHelper.createElement("span", "", {innerText: data2render[1]});
     maxEl.appendChild(maxTextEl);
     maxEl.appendChild(maxValEl);
     contentContainer.appendChild(maxEl);
@@ -53,14 +49,12 @@ function CustomVisualizer(question, data) {
     render: function(targetElement) {
       self.targetElement = targetElement || self.targetElement;
   
-      var toolbarNodeContainer = document.createElement("div");
-      var contentContainer = document.createElement("div");
-      contentContainer.className = "sa-visualizer__content";
+      var toolbarNodeContainer = SurveyAnalytics.DocumentHelper.createElement("div", "");
+      var contentContainer =  SurveyAnalytics.DocumentHelper.createElement("div", "sa-visualizer__content");
   
       renderContent(contentContainer);
   
-      var toolbar = document.createElement("div");
-      toolbar.className = "sa-toolbar";
+      var toolbar = SurveyAnalytics.DocumentHelper.createElement("div", "sa-toolbar");
       toolbarNodeContainer.appendChild(toolbar);
       SurveyAnalytics.VisualizerBase.prototype.createToolbarItems.apply(self, [toolbar]);
 
@@ -108,11 +102,9 @@ function CustomMinVisualizer(question, data) {
   
     var renderContent = function(contentContainer) {
       var data2render = getData();
-      var minEl = document.createElement("div");
-      var minTextEl = document.createElement("span");
-      minTextEl.innerText = "Min: ";
-      var minValEl = document.createElement("span");
-      minValEl.innerText = data2render;
+      var minEl = SurveyAnalytics.DocumentHelper.createElement("div", "");
+      var minTextEl = SurveyAnalytics.DocumentHelper.createElement("span", "", {innerText: "Min: "});
+      var minValEl = SurveyAnalytics.DocumentHelper.createElement("span", "", {innerText: data2render});
       minEl.appendChild(minTextEl);
       minEl.appendChild(minValEl);
       contentContainer.appendChild(minEl);
@@ -123,14 +115,12 @@ function CustomMinVisualizer(question, data) {
       render: function(targetElement) {
         self.targetElement = targetElement || self.targetElement;
     
-        var toolbarNodeContainer = document.createElement("div");
-        var contentContainer = document.createElement("div");
-        contentContainer.className = "sa-visualizer__content";
+        var toolbarNodeContainer = SurveyAnalytics.DocumentHelper.createElement("div", "");
+        var contentContainer = SurveyAnalytics.DocumentHelper.createElement("div", "sa-visualizer__content");
     
         renderContent(contentContainer);
     
-        var toolbar = document.createElement("div");
-        toolbar.className = "sa-toolbar";
+        var toolbar = SurveyAnalytics.DocumentHelper.createElement("div", "sa-toolbar");
         toolbarNodeContainer.appendChild(toolbar);
         SurveyAnalytics.VisualizerBase.prototype.createToolbarItems.apply(self, [toolbar]);
   

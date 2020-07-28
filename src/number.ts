@@ -1,7 +1,7 @@
 import { Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
-import { ToolbarHelper } from "./utils/index";
+import { DocumentHelper } from "./utils/index";
 
 export class NumberModel extends VisualizerBase {
   private _resultAverage: number;
@@ -51,7 +51,7 @@ export class NumberModel extends VisualizerBase {
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
     if (this.chartTypes.length > 1) {
-      const selectWrapper = ToolbarHelper.createSelector(
+      const selectWrapper = DocumentHelper.createSelector(
         this.chartTypes.map((chartType) => {
           return {
             value: chartType,

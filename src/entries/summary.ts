@@ -19,3 +19,4 @@ export * from "../plotly/index";
 export * from "../wordcloud/wordcloud";
 export * from "../wordcloud/stopwords/index";
 export * from "../text";
+export { DocumentHelper } from "../utils/index";

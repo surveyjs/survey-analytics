@@ -1,7 +1,8 @@
 import { Question, QuestionBooleanModel } from "survey-core";
 import { VisualizationManager } from "../visualizationManager";
 import { BooleanModel } from "../boolean";
-import { PlotlyChartAdapter } from './selectBase';
+import { PlotlyChartAdapter } from "./selectBase";
+import { DocumentHelper } from "../utils";
 
 export class PlotlyBoolChartAdapter extends PlotlyChartAdapter {
   constructor(model: BooleanPlotly) {
@@ -17,7 +18,7 @@ export class PlotlyBoolChartAdapter extends PlotlyChartAdapter {
     const colors = this.model.getColors();
     const boolColors = [
       BooleanPlotly.trueColor || colors[0],
-      BooleanPlotly.falseColor || colors[1]
+      BooleanPlotly.falseColor || colors[1],
     ];
 
     if (this.model.chartType === "pie" || this.model.chartType === "doughnut") {
@@ -28,9 +29,8 @@ export class PlotlyBoolChartAdapter extends PlotlyChartAdapter {
       traces.forEach((trace: any) => {
         trace.marker.color = boolColors;
       });
-    }    
+    }
   }
-
 }
 
 export class BooleanPlotly extends BooleanModel {
@@ -54,11 +54,12 @@ export class BooleanPlotly extends BooleanModel {
   }
 
   protected renderContent(container: HTMLElement) {
-    const chartNode: HTMLElement = <HTMLElement>document.createElement("div");
+    const chartNode: HTMLElement = <HTMLElement>(
+      DocumentHelper.createElement("div", "")
+    );
     container.appendChild(chartNode);
     this._chartAdapter.create(chartNode);
   }
-
 }
 
 VisualizationManager.registerVisualizer("boolean", BooleanPlotly);

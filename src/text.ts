@@ -3,35 +3,38 @@ import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 
 import "./text.scss";
+import { DocumentHelper } from "./utils";
 
 export class TextTableAdapter {
-  constructor(private model: Text) {
-  }
+  constructor(private model: Text) {}
 
   public create(container: HTMLElement) {
-    const { columnsCount, data}  = this.model.getData();
-    const emptyTextNode = <HTMLElement>document.createElement("p");
-    emptyTextNode.innerHTML = "There are no results yet";
+    const { columnsCount, data } = this.model.getData();
+    const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
+      innerHTML: "There are no results yet",
+    });
 
     if (data.length === 0) {
-        container.appendChild(emptyTextNode);
+      container.appendChild(emptyTextNode);
       return;
     }
 
-    const tableNode = <HTMLTableElement>document.createElement("table");
-    tableNode.className = "sa-text-table";
+    const tableNode = <HTMLTableElement>(
+      DocumentHelper.createElement("table", "sa-text-table")
+    );
+
     tableNode.style.backgroundColor = this.model.backgroundColor;
     container.appendChild(tableNode);
 
-    data.forEach(rowData => {
-        var row = document.createElement("tr");
-        for(var i = 0; i < columnsCount; i++) {
-            var td = document.createElement("td");
-            td.className = "sa-text-table__cell";
-            td.textContent = rowData[i];
-            row.appendChild(td);
-        }
-        tableNode.appendChild(row);
+    data.forEach((rowData) => {
+      var row = DocumentHelper.createElement("tr", "");
+      for (var i = 0; i < columnsCount; i++) {
+        var td = DocumentHelper.createElement("td", "sa-text-table__cell", {
+          textContent: rowData[i],
+        });
+        row.appendChild(td);
+      }
+      tableNode.appendChild(row);
     });
 
     container.className = "sa-text-table__container";
@@ -41,7 +44,6 @@ export class TextTableAdapter {
   public destroy(node: HTMLElement) {
     node.innerHTML = "";
   }
-
 }
 
 export class Text extends VisualizerBase {
@@ -64,7 +66,7 @@ export class Text extends VisualizerBase {
     let result: Array<Array<string>> = [];
     let columnsCount = 0;
 
-    this.data.forEach(row => {
+    this.data.forEach((row) => {
       const rowValue: any = row[this.question.name];
       const dataStrings: Array<string> = [];
       if (!!rowValue) {
@@ -72,14 +74,16 @@ export class Text extends VisualizerBase {
           dataStrings.concat(rowValue);
         } else {
           if (typeof rowValue === "object") {
-            Object.keys(rowValue).forEach(key => dataStrings.push(rowValue[key]));
+            Object.keys(rowValue).forEach((key) =>
+              dataStrings.push(rowValue[key])
+            );
           } else {
             dataStrings.push(rowValue);
           }
         }
         result.push(dataStrings);
-        if(dataStrings.length > columnsCount) {
-            columnsCount = dataStrings.length;
+        if (dataStrings.length > columnsCount) {
+          columnsCount = dataStrings.length;
         }
       }
     });
@@ -100,7 +104,6 @@ export class Text extends VisualizerBase {
     this._textTableAdapter.destroy(this.contentContainer);
     super.destroy();
   }
-
 }
 
 VisualizationManager.registerVisualizer("text", Text);

@@ -32,8 +32,10 @@ TableExtensions.registerExtension({
   name: "showcolumn",
   visibleIndex: 1,
   render: function (table: Table): HTMLElement {
-    const dropdown = document.createElement("select");
-    dropdown.className = "sa-table__show-column sa-table__header-extension";
+    const dropdown = DocumentHelper.createElement(
+      "select",
+      "sa-table__show-column sa-table__header-extension"
+    );
 
     function update() {
       var hiddenColumns = table.columns.filter(
@@ -45,21 +47,23 @@ TableExtensions.registerExtension({
       }
       dropdown.style.display = "initial";
       dropdown.innerHTML = "";
-      var option = document.createElement("option");
-      option.text = localization.getString("showColumn");
-      option.disabled = true;
-      option.selected = true;
+      var option = DocumentHelper.createElement("option", "", {
+        text: localization.getString("showColumn"),
+        disabled: true,
+        selected: true,
+      });
       dropdown.appendChild(option);
 
       hiddenColumns.forEach((column: any) => {
-        var option = document.createElement("option");
         var text = column.displayName;
         if (text.length > 20) {
           text = text.substring(0, 20) + "...";
         }
-        option.text = text;
-        option.title = column.displayName;
-        option.value = column.name;
+        var option = DocumentHelper.createElement("option", "", {
+          text: text,
+          title: column.displayName,
+          value: column.name,
+        });
         dropdown.appendChild(option);
       });
     }

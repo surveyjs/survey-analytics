@@ -2,7 +2,7 @@ import { Question } from "survey-core";
 import { ItemValue } from "survey-core";
 import { SelectBase } from "../selectBase";
 import { VisualizationManager } from "../visualizationManager";
-import { allowDomRendering, DataHelper } from "../utils";
+import { allowDomRendering, DataHelper, DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
 
 var Plotly: any = null;
@@ -234,7 +234,7 @@ export class SelectBasePlotly extends SelectBase {
   }
 
   protected renderContent(container: HTMLElement) {
-    const chartNode: HTMLElement = <HTMLElement>document.createElement("div");
+    const chartNode: HTMLElement = DocumentHelper.createElement("div", "");
     container.appendChild(chartNode);
     this._chartAdapter.create(chartNode);
   }

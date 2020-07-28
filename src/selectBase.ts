@@ -1,7 +1,7 @@
 import { Question, QuestionSelectBase, ItemValue } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
-import { ToolbarHelper } from "./utils/index";
+import { DocumentHelper } from "./utils/index";
 import { VisualizerFactory } from "./visualizerFactory";
 import { DataProvider } from "./dataProvider";
 
@@ -18,7 +18,7 @@ export class SelectBase extends VisualizerBase {
     super(question, data, options);
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
-        return ToolbarHelper.createSelector(
+        return DocumentHelper.createSelector(
           this.chartTypes.map((chartType) => {
             return {
               value: chartType,
@@ -39,7 +39,7 @@ export class SelectBase extends VisualizerBase {
         this.getSeriesValues().length === 0 &&
         this.chartTypes.indexOf("bar") !== -1
       ) {
-        this.choicesOrder = ToolbarHelper.createSelector(
+        this.choicesOrder = DocumentHelper.createSelector(
           [
             { text: localization.getString("defaultOrder"), value: "default" },
             { text: localization.getString("ascOrder"), value: "asc" },

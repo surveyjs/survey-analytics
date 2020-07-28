@@ -3,12 +3,12 @@ import { VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
 import { textHelper } from "./stopwords/index";
 import WordCloudLib from "wordcloud";
+import { DocumentHelper } from "../utils";
 
 export class WordCloudAdapter {
   private _wordcloud: any;
 
-  constructor(private model: WordCloud) {
-  }
+  constructor(private model: WordCloud) {}
 
   public get wordcloud() {
     return this._wordcloud;
@@ -17,9 +17,14 @@ export class WordCloudAdapter {
   public create(node: HTMLElement) {
     const data = this.model.getData();
     const colors = this.model.getColors();
-    const canvasNode = <HTMLCanvasElement>document.createElement("canvas");
-    const emptyTextNode = <HTMLElement>document.createElement("p");
-    emptyTextNode.innerHTML = "There are no results yet";
+    const canvasNode = <HTMLCanvasElement>(
+      DocumentHelper.createElement("canvas", "")
+    );
+    const emptyTextNode = <HTMLElement>(
+      DocumentHelper.createElement("p", "", {
+        innerHTML: "There are no results yet",
+      })
+    );
 
     if (data.length === 0) {
       node.appendChild(emptyTextNode);
@@ -38,9 +43,9 @@ export class WordCloudAdapter {
       rotateRatio: 0.5,
       rotationSteps: 2,
       backgroundColor: this.model.backgroundColor,
-      click: function(item: any) {
+      click: function (item: any) {
         console.log(item[0] + ": " + item[1]);
-      }
+      },
     };
 
     this._wordcloud = WordCloudLib(canvasNode, config);
@@ -50,7 +55,6 @@ export class WordCloudAdapter {
   public destroy(node: HTMLElement) {
     this._wordcloud = undefined;
   }
-
 }
 
 export class WordCloud extends VisualizerBase {
@@ -83,7 +87,7 @@ export class WordCloud extends VisualizerBase {
     let processString = (row: string) => {
       row = "" + row;
       if (!!row) {
-        row.split(" ").forEach(word => {
+        row.split(" ").forEach((word) => {
           word = stopTheWord(word.toLowerCase() || "");
           if (!!word) {
             if (!result[word]) {
@@ -96,14 +100,16 @@ export class WordCloud extends VisualizerBase {
       }
     };
 
-    this.data.forEach(row => {
+    this.data.forEach((row) => {
       const rowValue: any = row[this.question.name];
       if (!!rowValue) {
         if (Array.isArray(rowValue)) {
           rowValue.forEach(processString);
         } else {
           if (typeof rowValue === "object") {
-            Object.keys(rowValue).forEach(key => processString(rowValue[key]));
+            Object.keys(rowValue).forEach((key) =>
+              processString(rowValue[key])
+            );
           } else {
             processString(rowValue);
           }
@@ -111,7 +117,7 @@ export class WordCloud extends VisualizerBase {
       }
     });
 
-    return Object.keys(result).map(key => {
+    return Object.keys(result).map((key) => {
       return [key, result[key]];
     });
   }
