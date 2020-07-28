@@ -55,7 +55,7 @@ export class BooleanPlotly extends BooleanModel {
 
   protected renderContent(container: HTMLElement) {
     const chartNode: HTMLElement = <HTMLElement>(
-      DocumentHelper.createElement("div", "")
+      DocumentHelper.createElement("div")
     );
     container.appendChild(chartNode);
     this._chartAdapter.create(chartNode);

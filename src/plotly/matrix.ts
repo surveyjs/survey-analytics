@@ -25,7 +25,7 @@ export class MatrixPlotly extends Matrix {
   }
 
   protected renderContent(container: HTMLElement) {
-    const chartNode: HTMLElement = DocumentHelper.createElement("div", "");
+    const chartNode: HTMLElement = DocumentHelper.createElement("div");
     container.appendChild(chartNode);
     this._chartAdapter.create(chartNode);
   }

@@ -314,10 +314,10 @@ export class VisualizationPanel extends VisualizerBase {
   protected renderPanelElement(element: IVisualizerPanelRenderedElement) {
     const visualizer = this.getVisualizer(element.name);
 
-    const questionElement = DocumentHelper.createElement("div", "");
-    const questionContent = DocumentHelper.createElement("div", "");
-    const titleElement = DocumentHelper.createElement("h3", "");
-    const vizualizerElement = DocumentHelper.createElement("div", "");
+    const questionElement = DocumentHelper.createElement("div");
+    const questionContent = DocumentHelper.createElement("div");
+    const titleElement = DocumentHelper.createElement("h3");
+    const vizualizerElement = DocumentHelper.createElement("div");
 
     titleElement.innerText = element.displayName;
 

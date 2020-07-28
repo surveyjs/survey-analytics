@@ -91,7 +91,7 @@ export class Tabulator extends Table {
       "div",
       "sa-tabulator__pagination-container"
     );
-    this.tableContainer = DocumentHelper.createElement("div", "");
+    this.tableContainer = DocumentHelper.createElement("div");
 
     targetNode.appendChild(header);
     targetNode.appendChild(this.tableContainer);
@@ -189,7 +189,7 @@ export class Tabulator extends Table {
     onRendered: any,
     columnName: any
   ) => {
-    var container = DocumentHelper.createElement("div", "");
+    var container = DocumentHelper.createElement("div");
     var title = DocumentHelper.createElement("span", "", {
       innerHTML: cell.getValue(),
     });

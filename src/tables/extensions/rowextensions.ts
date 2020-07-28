@@ -172,9 +172,9 @@ export class Details {
         var td1 = DocumentHelper.createElement("td", "", {
           innerHTML: column.displayName,
         });
-        var td2 = DocumentHelper.createElement("td", "");
+        var td2 = DocumentHelper.createElement("td");
         td2.textContent = this.row.getData()[column.name];
-        var td3 = DocumentHelper.createElement("td", "");
+        var td3 = DocumentHelper.createElement("td");
         td3.appendChild(this.createShowAsColumnButton(column.name));
         row.appendChild(td1);
         row.appendChild(td2);

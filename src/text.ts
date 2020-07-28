@@ -27,7 +27,7 @@ export class TextTableAdapter {
     container.appendChild(tableNode);
 
     data.forEach((rowData) => {
-      var row = DocumentHelper.createElement("tr", "");
+      var row = DocumentHelper.createElement("tr");
       for (var i = 0; i < columnsCount; i++) {
         var td = DocumentHelper.createElement("td", "sa-text-table__cell", {
           textContent: rowData[i],

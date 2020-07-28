@@ -35,7 +35,7 @@ export class DocumentHelper {
 
   public static createElement(
     tagName: string,
-    className: string,
+    className: string = "",
     attrs?: any
   ): HTMLElement {
     var el = document.createElement(tagName);

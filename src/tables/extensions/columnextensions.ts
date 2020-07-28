@@ -108,7 +108,7 @@ ColumnExtensions.registerExtension({
   name: "makepublic",
   visibleIndex: -1,
   render: function (table: Table, options: any) {
-    const button = DocumentHelper.createElement("button", "");
+    const button = DocumentHelper.createElement("button");
     const makePrivateSvg = DocumentHelper.createSvgElement("makeprivate");
     const makePublicSvg = DocumentHelper.createSvgElement("makepublic");
     var currentVisibility = table.getColumnVisibility(options.columnName);

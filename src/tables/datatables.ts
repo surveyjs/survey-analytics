@@ -245,7 +245,7 @@ export class DataTables extends Table {
       .eq(0)
       .each((index: number) => {
         var row = datatableApiRef.row(index);
-        var detailsTr = DocumentHelper.createElement("tr", "");
+        var detailsTr = DocumentHelper.createElement("tr");
         var detailsTd = <HTMLTableDataCellElement>(
           DocumentHelper.createElement("td", "sa-datatables__details-container")
         );
