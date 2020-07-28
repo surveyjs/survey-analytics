@@ -17,7 +17,7 @@ TableExtensions.registerExtension({
   visibleIndex: 0,
   render: function (table: Table): HTMLElement {
     const input = DocumentHelper.createInput(
-      "sa-table__global-filter",
+      "sa-table__global-filter sa-table__header-extension",
       "Search..."
     );
     input.onchange = (event: any) => {
@@ -33,7 +33,7 @@ TableExtensions.registerExtension({
   visibleIndex: 1,
   render: function (table: Table): HTMLElement {
     const dropdown = document.createElement("select");
-    dropdown.classList.add("sa-table__show-column");
+    dropdown.className = "sa-table__show-column sa-table__header-extension";
 
     function update() {
       var hiddenColumns = table.columns.filter(
@@ -134,10 +134,11 @@ TableExtensions.registerExtension({
   name: "removerows",
   visibleIndex: -1,
   render: function (table) {
-    var btn = document.createElement("button");
-    btn.className = "sa-table__btn sa-table__btn--green";
-    btn.innerHTML = "Remove rows";
-    btn.style.marginLeft = "20px";
+    var btn = DocumentHelper.createElement(
+      "button",
+      "sa-table__btn sa-table__btn--green sa-table__header-extension ",
+      { innerHTML: "Remove rows" }
+    );
     btn.onclick = function () {
       table.getCreatedRows().forEach(function (row) {
         if (row.getIsSelected()) {

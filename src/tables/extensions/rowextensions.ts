@@ -234,7 +234,7 @@ TableExtensions.registerExtension({
   render: (_table: Table, options: any) => {
     const btn = DocumentHelper.createSvgButton("detail");
     btn.title = localization.getString("showMinorColumns");
-
+    btn.className += " sa-table__row-extension";
     btn.onclick = () => {
       options.row.toggleDetails();
     };
@@ -248,11 +248,14 @@ TableExtensions.registerExtension({
   visibleIndex: -1,
   render: function (table, opt) {
     var row = opt.row;
-    var checkbox = DocumentHelper.createElement("input", "", {
-      type: "checkbox",
-    });
-    checkbox.style.height = "auto";
-    checkbox.style.marginLeft = "10px";
+    var checkbox = <HTMLInputElement>DocumentHelper.createElement(
+      "input",
+      "sa-table__row-extension",
+      {
+        type: "checkbox",
+      }
+    );
+    checkbox.checked = row.getIsSelected();
     checkbox.onchange = function (ev) {
       row.toggleSelect();
     };

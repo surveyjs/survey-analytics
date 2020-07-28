@@ -14,49 +14,11 @@ var surveyAnalyticsTabulator = new SurveyAnalyticsTabulator.Tabulator(
   normalizedData
 );
 
-SurveyAnalyticsTabulator.TableTools.registerTool(
-  "header",
-  "removerows",
-  function (table) {
-    var btn = document.createElement("button");
-    btn.className = "sa-table__btn sa-table__btn--green";
-    btn.innerHTML = "Remove rows";
-    btn.style.marginRight = "20px";
-    btn.onclick = function () {
-      table.tabulatorTables.getSelectedRows().forEach(function (row) {
-        if (row.isSelected) {
-          row.delete();
-        }
-      });
-    };
-    return btn;
-  }
-);
-
-SurveyAnalyticsTabulator.TableTools.registerTool("row", "select", function (
-  table,
-  opt
-) {
-  var row = opt.row;
-  var checkbox = SurveyAnalyticsTabulator.DocumentHelper.createElement(
-    "input",
-    "",
-    {
-      type: "checkbox",
-    }
-  );
-  checkbox.style.height = "auto";
-  checkbox.style.marginLeft = "10px";
-  checkbox.onchange = function (ev) {
-    row.innerRow.toggleSelect();
-  };
-  return checkbox;
-});
-
-SurveyAnalyticsTabulator.TableTools.registerTool(
-  "details",
-  "showinsurvey",
-  (table, opt) => {
+SurveyAnalyticsTabulator.TableExtensions.registerExtension({
+  location: "details",
+  name: "showinsurvey",
+  visibleIndex: 0,
+  render: (table, opt) => {
     const btn = document.createElement("button");
     btn.innerHTML = "Show in Survey";
     btn.className = "rounded-button";
@@ -64,33 +26,54 @@ SurveyAnalyticsTabulator.TableTools.registerTool(
       e.stopPropagation();
     };
     return btn;
-  }
-);
+  },
+});
 
-SurveyAnalyticsTabulator.TableTools.registerTool(
-  "details",
-  "delete",
-  (table, opt) => {
+SurveyAnalyticsTabulator.TableExtensions.registerExtension({
+  location: "details",
+  name: "delete",
+  visibleIndex: 1,
+  render: (table, opt) => {
     const btn = document.createElement("button");
     btn.className = "rounded-button rounded-button--danger";
     btn.innerHTML = "Delete Result";
     btn.onclick = (e) => {
       e.stopPropagation();
-      opt.row.innerRow.delete();
+      opt.row.remove();
     };
     return btn;
-  }
-);
+  },
+});
+
+SurveyAnalyticsTabulator.TableExtensions.findExtension(
+  "row",
+  "details"
+).visibleIndex = 1;
 
 var surveyAnalyticsDataTables = new SurveyAnalyticsTabulator.Tabulator(
   survey,
   normalizedData
 );
-surveyAnalyticsDataTables.toolsOptions.row.push("select");
-surveyAnalyticsDataTables.toolsOptions.header = ["removerows"].concat(
-  surveyAnalyticsDataTables.toolsOptions.header
-);
-surveyAnalyticsTabulator.toolsOptions.details = ["showinsurvey", "delete"];
+
+SurveyAnalyticsTabulator.TableExtensions.findExtension(
+  "row",
+  "details"
+).visibleIndex = 1;
+
+SurveyAnalyticsTabulator.TableExtensions.findExtension(
+  "row",
+  "select"
+).visibleIndex = 0;
+
+SurveyAnalyticsTabulator.TableExtensions.findExtension(
+  "header",
+  "removerows"
+).visibleIndex = 0;
+
+SurveyAnalyticsTabulator.TableExtensions.findExtension(
+  "header",
+  "filter"
+).visibleIndex = 1;
 
 surveyAnalyticsTabulator.render(document.getElementById("tabulatorContainer"));
 surveyAnalyticsTabulator.tabulatorTables.getColumns()[0].setWidth("100");

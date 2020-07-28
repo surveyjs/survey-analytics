@@ -112,7 +112,7 @@ export class Tabulator extends Table {
 
     const extensionsContainer = DocumentHelper.createElement(
       "div",
-      "sa-tabulator__extensions-container"
+      "sa-table__header-extensions"
     );
     header.appendChild(this.createDownloadsBar());
     header.appendChild(extensionsContainer);

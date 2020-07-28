@@ -160,7 +160,7 @@ export class DataTables extends Table {
           { extend: "csv", className: dtButtonClass },
           { extend: "print", className: dtButtonClass },
         ],
-        dom: 'B<"sa-datatables__extensions">prtip',
+        dom: 'B<"sa-table__header-extensions">prtip',
         // ordering: false,
         data: this.tableData,
         pageLength: 5,
@@ -223,7 +223,7 @@ export class DataTables extends Table {
     const datatableApiRef = (this.datatableApi = jQuery(tableNode).DataTable(
       options
     ));
-    var extensionsContainer = jQuery("div.sa-datatables__extensions")[0];
+    var extensionsContainer = jQuery("div.sa-table__header-extensions")[0];
 
     var extensions = new HeaderExtensions(extensionsContainer, this);
     // this.onTableToolsCreated.fire(this, { extensions: extensions });

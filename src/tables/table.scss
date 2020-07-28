@@ -165,3 +165,22 @@
 .sa-table__detail-table {
   background-color: $background-gray;
 }
+
+.sa-table input.sa-table__row-extension {
+  height: auto;
+}
+
+.sa-table__row-extension + .sa-table__row-extension {
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.sa-table__header-extensions {
+  float: left;
+  margin-left: 10px;
+  width: calc(100% - 540px);
+}
+
+.sa-table__header-extension + .sa-table__header-extension {
+  margin-left: 10px;
+}
