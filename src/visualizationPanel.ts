@@ -116,10 +116,6 @@ export class VisualizationPanel extends VisualizerBase {
             var newLocale = e.target.value;
             survey.locale = newLocale;
             localization.currentLocale = newLocale;
-
-            this._elements = this.buildElements(survey.getAllQuestions());
-            // this.refresh();
-
             var renderResult = this.renderResult;
             this.destroy();
             this.render(renderResult);
