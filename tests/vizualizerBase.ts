@@ -1,4 +1,5 @@
 import { VisualizerBase } from "../src/visualizerBase";
+import { QuestionDropdownModel } from "survey-core";
 
 test("custom colors", () => {
   expect(new VisualizerBase(null, null).getColors(1)).toEqual([
@@ -40,4 +41,19 @@ test("series options", () => {
   });
   expect(visualizer.getSeriesValues()).toEqual(seriesValues);
   expect(visualizer.getSeriesLabels()).toEqual(seriesLabels);
+});
+
+test("footer visualizer data, updateData", () => {
+  var question = new QuestionDropdownModel("q1");
+  question.hasOther = true;
+
+  let visualizer = new VisualizerBase(question, []);
+  expect(visualizer.hasFooter).toBeTruthy();
+  expect(visualizer["data"]).toEqual([]);
+  expect(visualizer.footerVisualizer["data"]).toEqual([]);
+
+  const newData = [{ q1: 255 }];
+  visualizer.updateData(newData);
+  expect(visualizer["data"]).toEqual(newData);
+  expect(visualizer["_footerVisualizer"]["data"]).toEqual(newData);
 });

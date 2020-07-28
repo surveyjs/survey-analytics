@@ -84,6 +84,9 @@ export class VisualizerBase implements IDataInfo {
 
   updateData(data: Array<{ [index: string]: any }>) {
     this.data = data;
+    if (this.hasFooter) {
+      this.footerVisualizer.updateData(data);
+    }
   }
 
   onUpdate: () => void;
