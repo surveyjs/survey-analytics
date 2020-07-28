@@ -170,6 +170,7 @@ export class VisualizerBase implements IDataInfo {
             VisualizerBase.otherCommentCollapsed ? "showButton" : "hideButton"
           );
         }
+        this.footerVisualizer.invokeOnUpdate();
       }, localization.getString("showButton") /*, "sa-toolbar__button--right"*/);
       container.appendChild(visibilityButton);
 
@@ -202,10 +203,6 @@ export class VisualizerBase implements IDataInfo {
    * Redraws visualizer and all inner content.
    */
   public refresh() {
-    if (!!this.toolbarContainer) {
-      this.destroyToolbar(this.toolbarContainer);
-      this.renderToolbar(this.toolbarContainer);
-    }
     if (!!this.contentContainer) {
       this.destroyContent(this.contentContainer);
       this.renderContent(this.contentContainer);

@@ -195,6 +195,7 @@ export class VisualizationPanel extends VisualizerBase {
             var newLocale = e.target.value;
             survey.locale = newLocale;
             localization.currentLocale = newLocale;
+            this.updateElements(this.questions);
             this.refresh();
           }
         );
@@ -223,6 +224,15 @@ export class VisualizationPanel extends VisualizerBase {
   private getLayoutEngine: () => any;
   public get layoutEngine() {
     return !!this.getLayoutEngine && this.getLayoutEngine();
+  }
+
+  protected updateElements(questions: any[]) {
+    (questions || []).forEach((question) => {
+      const element = this.getElement(question.name);
+      if (!!element) {
+        element.displayName = question.title;
+      }
+    });
   }
 
   protected buildElements(questions: any[]): IVisualizerPanelElement[] {
@@ -379,6 +389,17 @@ export class VisualizationPanel extends VisualizerBase {
   update(data: Array<{ [index: string]: any }>) {
     super.update(data);
     this.applyFilter();
+  }
+
+  /**
+   * Redraws visualizer and all inner content.
+   */
+  public refresh() {
+    if (!!this.toolbarContainer) {
+      this.destroyToolbar(this.toolbarContainer);
+      this.renderToolbar(this.toolbarContainer);
+    }
+    super.refresh();
   }
 
   /**
