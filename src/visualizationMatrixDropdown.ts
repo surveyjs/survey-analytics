@@ -22,14 +22,14 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
       seriesValues: question.rows.map((row: ItemValue) => row.value),
       seriesLabels: question.rows.map((row: ItemValue) => row.text),
     });
-    this.update(data);
+    this.updateData(data);
   }
 
   public get name() {
     return "matrixDropdown";
   }
 
-  update(data: Array<{ [index: string]: any }>) {
+  updateData(data: Array<{ [index: string]: any }>) {
     this.data = [];
     data.forEach((dataItem) => {
       let rawDataItem = dataItem[this.question.name];
@@ -41,7 +41,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
         });
       }
     });
-    this._panelVisualizer.update(this.data);
+    this._panelVisualizer.updateData(this.data);
   }
 
   getQuestions() {

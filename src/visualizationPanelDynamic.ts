@@ -12,26 +12,24 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     options?: Object
   ) {
     super(question, data, options);
-    this._panelVisualizer = new VisualizationPanel(
-      this.getQuestions(),
-      [],
-      { allowDynamicLayout: false }
-    );
-    this.update(data);
+    this._panelVisualizer = new VisualizationPanel(this.getQuestions(), [], {
+      allowDynamicLayout: false,
+    });
+    this.updateData(data);
   }
 
   public get name() {
     return "panelDynamic";
   }
 
-  update(data: Array<{ [index: string]: any }>) {
+  updateData(data: Array<{ [index: string]: any }>) {
     this.data = [];
-    data.forEach(dataItem => {
-      if(!!dataItem[this.question.name]) {
+    data.forEach((dataItem) => {
+      if (!!dataItem[this.question.name]) {
         this.data = this.data.concat(dataItem[this.question.name]);
       }
     });
-    this._panelVisualizer.update(this.data);
+    this._panelVisualizer.updateData(this.data);
   }
 
   getQuestions(): IQuestion[] {

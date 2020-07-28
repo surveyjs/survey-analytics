@@ -34,18 +34,18 @@ export class NumberModel extends VisualizerBase {
     return "number";
   }
 
-  update(data: Array<{ [index: string]: any }>) {
+  updateData(data: Array<{ [index: string]: any }>) {
     this._resultAverage = undefined;
     this._resultMin = undefined;
     this._resultMax = undefined;
-    super.update(data);
+    super.updateData(data);
     this.refresh();
   }
 
   private toolbarChangeHandler = (e: any) => {
     if (this.chartType !== e.target.value) {
       this.chartType = e.target.value;
-      this.update(this.data);
+      this.updateData(this.data);
     }
   };
 

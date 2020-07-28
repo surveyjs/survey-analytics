@@ -48,10 +48,10 @@ export class AlternativeVisualizersWrapper extends VisualizerBase {
     this.refresh();
   }
 
-  update(data: Array<{ [index: string]: any }>) {
-    super.update(data);
+  updateData(data: Array<{ [index: string]: any }>) {
+    super.updateData(data);
     this.visualizers.forEach((visualizer) => {
-      visualizer.update(data);
+      visualizer.updateData(data);
     });
     this.refresh();
   }
