@@ -11,6 +11,11 @@ import "./visualizationPanel.scss";
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
 
+export interface IVisualizerPanelRenderedElement
+  extends IVisualizerPanelElement {
+  renderedElement?: HTMLElement;
+}
+
 /**
  * VisualizationPanel is responsible for displaying an array of survey questions
  * questions - an array of survey questions to visualize
@@ -29,20 +34,94 @@ export class VisualizationPanel extends VisualizerBase {
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
     options: { [index: string]: any } = {},
-    private _elements: Array<IVisualizerPanelElement> = [],
+    private _elements: Array<IVisualizerPanelRenderedElement> = [],
     private isTrustedAccess = false
   ) {
     super(null, data, options);
 
+    this.showHeader = false;
     if (this.options.survey) {
       localization.currentLocale = this.options.survey.locale;
     }
-
     this.filteredData = data;
     if (_elements.length === 0) {
       this._elements = this.buildElements(questions);
     }
-    this.showHeader = false;
+
+    questions.forEach((question) => {
+      const element = this.getElement(question.name);
+      if (!element) return;
+
+      const visualizer = VisualizerFactory.createVizualizer(
+        question,
+        this.filteredData,
+        this.options
+      );
+
+      if (this.allowHideQuestions) {
+        visualizer.registerToolbarItem("removeQuestion", () => {
+          return ToolbarHelper.createButton(() => {
+            setTimeout(() => {
+              element.visibility = ElementVisibility.Invisible;
+              if (!!element.renderedElement) {
+                if (!!this.layoutEngine) {
+                  this.layoutEngine.remove([element.renderedElement]);
+                }
+                this.contentContainer.removeChild(element.renderedElement);
+                element.renderedElement = undefined;
+              }
+              this.visibleElementsChanged(element);
+            }, 0);
+          }, localization.getString("hideButton"));
+        });
+      }
+
+      if (visualizer instanceof SelectBase) {
+        var filterInfo = {
+          text: <HTMLElement>undefined,
+          element: <HTMLDivElement>undefined,
+          update: function (selection: any) {
+            if (!!selection && !!selection.value) {
+              this.element.style.display = "inline-block";
+              this.text.innerHTML = "Filter: [" + selection.text + "]";
+            } else {
+              this.element.style.display = "none";
+              this.text.innerHTML = "";
+            }
+          },
+        };
+
+        visualizer.registerToolbarItem("questionFilterInfo", () => {
+          filterInfo.element = document.createElement("div");
+          filterInfo.element.className = "sa-question__filter";
+
+          filterInfo.text = document.createElement("span");
+          filterInfo.text.className = "sa-question__filter-text";
+          filterInfo.element.appendChild(filterInfo.text);
+
+          const filterClear = ToolbarHelper.createButton(() => {
+            visualizer.setSelection(undefined);
+          }, localization.getString("clearButton"));
+          filterInfo.element.appendChild(filterClear);
+
+          filterInfo.update(visualizer.selection);
+
+          return filterInfo.element;
+        });
+
+        visualizer.onDataItemSelected = (
+          selectedValue: any,
+          selectedText: string
+        ) => {
+          filterInfo.update({ value: selectedValue, text: selectedText });
+          this.setFilter(question.name, selectedValue);
+        };
+      }
+
+      visualizer.onUpdate = () => this.layout();
+      this.visualizers.push(visualizer);
+    });
+
     this.registerToolbarItem("resetFilter", () => {
       return ToolbarHelper.createButton(() => {
         this.visualizers.forEach((visualizer) => {
@@ -79,7 +158,7 @@ export class VisualizationPanel extends VisualizerBase {
               (e: any) => {
                 var element = this.getElement(e.target.value);
                 element.visibility = ElementVisibility.Visible;
-                const questionElement = this.renderVisualizer(element);
+                const questionElement = this.renderPanelElement(element);
                 this.contentContainer.appendChild(questionElement);
                 !!this.layoutEngine && this.layoutEngine.add([questionElement]);
                 this.visibleElementsChanged(element);
@@ -116,9 +195,7 @@ export class VisualizationPanel extends VisualizerBase {
             var newLocale = e.target.value;
             survey.locale = newLocale;
             localization.currentLocale = newLocale;
-            var renderResult = this.renderResult;
-            this.destroy();
-            this.render(renderResult);
+            this.refresh(true);
           }
         );
       });
@@ -197,6 +274,10 @@ export class VisualizationPanel extends VisualizerBase {
     return this._elements.filter((el) => el.name === name)[0];
   }
 
+  getVisualizer(dataName: string) {
+    return this.visualizers.filter((v) => v.dataName === dataName)[0];
+  }
+
   /**
    * Fires when element visibility has been changed.
    */
@@ -216,23 +297,11 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
-   * Destroys given visualizer.
+   * Renders given panel element.
    */
-  public destroyVisualizer(visualizer: VisualizerBase) {
-    if (visualizer instanceof SelectBase) {
-      visualizer.setSelection(undefined);
-      visualizer.onDataItemSelected = undefined;
-    }
-    visualizer.onUpdate = undefined;
-    visualizer.destroy();
-    this.visualizers.splice(this.visualizers.indexOf(visualizer), 1);
-  }
+  protected renderPanelElement(element: IVisualizerPanelRenderedElement) {
+    const visualizer = this.getVisualizer(element.name);
 
-  /**
-   * Renders given element.
-   */
-  public renderVisualizer(element: IVisualizerPanelElement) {
-    var question = this.questions.filter((q) => q.name === element.name)[0];
     const questionElement = document.createElement("div");
     const questionContent = document.createElement("div");
     const titleElement = document.createElement("h3");
@@ -250,72 +319,9 @@ export class VisualizationPanel extends VisualizerBase {
     questionContent.appendChild(vizualizerElement);
     questionElement.appendChild(questionContent);
 
-    const visualizer = VisualizerFactory.createVizualizer(
-      question,
-      this.filteredData,
-      this.options
-    );
-
-    if (this.allowHideQuestions) {
-      visualizer.registerToolbarItem("removeQuestion", () => {
-        return ToolbarHelper.createButton(() => {
-          setTimeout(() => {
-            element.visibility = ElementVisibility.Invisible;
-            this.destroyVisualizer(visualizer);
-            !!this.layoutEngine && this.layoutEngine.remove([questionElement]);
-            this.contentContainer.removeChild(questionElement);
-            this.visibleElementsChanged(element);
-          }, 0);
-        }, localization.getString("hideButton"));
-      });
-    }
-
-    if (visualizer instanceof SelectBase) {
-      var filterInfo = {
-        text: <HTMLElement>undefined,
-        element: <HTMLDivElement>undefined,
-        update: function (selection: any) {
-          if (!!selection && !!selection.value) {
-            this.element.style.display = "inline-block";
-            this.text.innerHTML = "Filter: [" + selection.text + "]";
-          } else {
-            this.element.style.display = "none";
-            this.text.innerHTML = "";
-          }
-        },
-      };
-
-      visualizer.registerToolbarItem("questionFilterInfo", () => {
-        filterInfo.element = document.createElement("div");
-        filterInfo.element.className = "sa-question__filter";
-
-        filterInfo.text = document.createElement("span");
-        filterInfo.text.className = "sa-question__filter-text";
-        filterInfo.element.appendChild(filterInfo.text);
-
-        const filterClear = ToolbarHelper.createButton(() => {
-          visualizer.setSelection(undefined);
-        }, localization.getString("clearButton"));
-        filterInfo.element.appendChild(filterClear);
-
-        filterInfo.update(visualizer.selection);
-
-        return filterInfo.element;
-      });
-
-      visualizer.onDataItemSelected = (
-        selectedValue: any,
-        selectedText: string
-      ) => {
-        filterInfo.update({ value: selectedValue, text: selectedText });
-        this.setFilter(question.name, selectedValue);
-      };
-    }
-
     visualizer.render(vizualizerElement);
-    visualizer.onUpdate = () => this.layout();
-    this.visualizers.push(visualizer);
 
+    element.renderedElement = questionElement;
     return questionElement;
   }
 
@@ -335,7 +341,7 @@ export class VisualizationPanel extends VisualizerBase {
     container.className += " sa-panel__content sa-grid";
 
     this.visibleElements.forEach((element) => {
-      let questionElement = this.renderVisualizer(element);
+      let questionElement = this.renderPanelElement(element);
       container.appendChild(questionElement);
     });
 
@@ -364,14 +370,6 @@ export class VisualizationPanel extends VisualizerBase {
       layoutEngine.destroy();
       this.getLayoutEngine = undefined;
     }
-    this.visualizers.forEach((visualizer) => {
-      visualizer.onUpdate = undefined;
-      if (visualizer instanceof SelectBase) {
-        visualizer.onDataItemSelected = undefined;
-      }
-      visualizer.destroy();
-    });
-    this.visualizers = [];
     super.destroyContent(container);
   }
 
@@ -384,11 +382,13 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
-   * Updates visualizer and all inner content.
+   * Redraws visualizer and all inner content.
    */
   public refresh(hard: boolean = false) {
     if (hard && this.visualizers.length > 0 && !!this.contentContainer) {
+      this.destroyToolbar(this.toolbarContainer);
       this.destroyContent(this.contentContainer);
+      this.renderToolbar(this.toolbarContainer);
       this.renderContent(this.contentContainer);
     } else {
       this.visualizers.forEach((visualizer) =>
@@ -435,5 +435,17 @@ export class VisualizationPanel extends VisualizerBase {
       );
     });
     this.refresh();
+  }
+
+  destroy() {
+    super.destroy();
+    this.visualizers.forEach((visualizer) => {
+      visualizer.onUpdate = undefined;
+      if (visualizer instanceof SelectBase) {
+        visualizer.onDataItemSelected = undefined;
+      }
+      visualizer.destroy();
+    });
+    this.visualizers = [];
   }
 }
