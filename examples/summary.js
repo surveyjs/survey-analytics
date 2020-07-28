@@ -15,15 +15,6 @@ var survey = new Survey.SurveyModel(json);
 // xhr.onload = function() {
 //   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
-//   var normalizedData = result.Data.map(function(item) {
-//     survey.getAllQuestions().forEach(function(q) {
-//       if (!item[q.name]) {
-//         item[q.name] = "";
-//       }
-//     });
-//     return item;
-//   });
-
 //   // SurveyAnalytics.SelectBasePlotly.types = ["pie", "scatter"];
 //   // SurveyAnalytics.VisualizerBase.customColors = [
 //   //   "F85A40",
@@ -37,7 +28,7 @@ var survey = new Survey.SurveyModel(json);
 //   var visPanel = new SurveyAnalytics.VisualizationPanel(
 //     document.getElementById("summaryContainer"),
 //     survey.getAllQuestions(),
-//     normalizedData
+//     data
 //   );
 //   visPanel.showHeader = true;
 //   visPanel.render();
