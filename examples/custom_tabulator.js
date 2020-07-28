@@ -1,17 +1,8 @@
 var survey = new Survey.SurveyModel(json);
 
-var normalizedData = data.map(function (item) {
-  survey.getAllQuestions().forEach(function (q) {
-    if (!item[q.name]) {
-      item[q.name] = "";
-    }
-  });
-  return item;
-});
-
 var surveyAnalyticsTabulator = new SurveyAnalyticsTabulator.Tabulator(
   survey,
-  normalizedData
+  data
 );
 
 surveyAnalyticsTabulator.removeRow = function (row) {

@@ -44,26 +44,17 @@ var survey = new Survey.SurveyModel(json);
 // };
 // xhr.send();
 
-var normalizedData = data.map(function(item) {
-  survey.getAllQuestions().forEach(function(q) {
-    if (item[q.name] === undefined) {
-      item[q.name] = "";
-    }
-  });
-  return item;
-});
-
 // SurveyAnalytics.SelectBasePlotly.displayModeBar = false;
 
 var options = {
   // allowDynamicLayout: false,
   // allowHideQuestions: false
-}
+};
 
 var visPanel = new SurveyAnalytics.VisualizationPanel(
   // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   survey.getAllQuestions(),
-  normalizedData,
+  data,
   options
 );
 visPanel.showHeader = true;

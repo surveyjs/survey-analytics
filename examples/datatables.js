@@ -34,20 +34,7 @@ var survey = new Survey.SurveyModel(json);
 // };
 // xhr.send();
 
-// data normalization
-var normalizedData = data.map(function (item) {
-  survey.getAllQuestions().forEach(function (q) {
-    if (!item[q.name]) {
-      item[q.name] = "";
-    }
-  });
-  return item;
-});
-
-var surveyAnalyticsDataTables = new SurveyAnalytics.DataTables(
-  survey,
-  normalizedData
-);
+var surveyAnalyticsDataTables = new SurveyAnalytics.DataTables(survey, data);
 
 surveyAnalyticsDataTables.render(
   document.getElementById("dataTablesContainer")

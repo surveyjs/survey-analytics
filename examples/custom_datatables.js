@@ -3,18 +3,9 @@ var accessKey = "";
 
 var survey = new Survey.SurveyModel(json);
 
-var normalizedData = data.map(function (item) {
-  survey.getAllQuestions().forEach(function (q) {
-    if (!item[q.name]) {
-      item[q.name] = "";
-    }
-  });
-  return item;
-});
-
 var surveyAnalyticsDataTables = new SurveyAnalyticsDatatables.DataTables(
   survey,
-  normalizedData
+  data
 );
 
 surveyAnalyticsDataTables.onTableToolsCreated.add(function (table, opt) {
