@@ -1,10 +1,4 @@
-import {
-  Question,
-  QuestionSelectBase,
-  ItemValue,
-  QuestionCommentModel,
-  settings,
-} from "survey-core";
+import { Question, QuestionSelectBase, ItemValue } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { ToolbarHelper } from "./utils/index";
@@ -15,8 +9,6 @@ export class SelectBase extends VisualizerBase {
   private selectedItem: ItemValue = undefined;
   private choicesOrder: HTMLDivElement = undefined;
   public orderByAnsweres: string = "default";
-  // public static otherCommentQuestionType = "comment"; // TODO: make it configureable - allow choose what kind of question/visualizer will be used for comments/others
-  public static otherCommentCollapsed = true;
 
   constructor(
     question: Question,
@@ -128,51 +120,6 @@ export class SelectBase extends VisualizerBase {
     this.destroyFooter(this.footerContainer);
     this.renderFooter(this.footerContainer);
     this.invokeOnUpdate();
-  }
-
-  protected renderFooter(container: HTMLElement) {
-    container.innerHTML = "";
-    if (this.question.hasComment || this.question.hasOther) {
-      const footerTitleElement = document.createElement("h4");
-      footerTitleElement.className = "sa-visualizer__footer-title";
-      footerTitleElement.innerText = localization.getString(
-        "otherCommentTitle"
-      );
-      container.appendChild(footerTitleElement);
-
-      const footerContentElement = document.createElement("div");
-      footerContentElement.className = "sa-visualizer__footer-content";
-      footerContentElement.style.display = SelectBase.otherCommentCollapsed
-        ? "none"
-        : "block";
-
-      const visibilityButton = ToolbarHelper.createButton(() => {
-        if (footerContentElement.style.display === "none") {
-          footerContentElement.style.display = "block";
-          visibilityButton.innerText = localization.getString("hideButton");
-        } else {
-          footerContentElement.style.display = "none";
-          visibilityButton.innerText = localization.getString(
-            SelectBase.otherCommentCollapsed ? "showButton" : "hideButton"
-          );
-        }
-        this.invokeOnUpdate();
-      }, localization.getString("showButton") /*, "sa-toolbar__button--right"*/);
-      container.appendChild(visibilityButton);
-
-      container.appendChild(footerContentElement);
-
-      const question = new QuestionCommentModel(
-        this.question.name + settings.commentPrefix
-      );
-      question.title = this.question.title;
-      const visualizer = VisualizerFactory.createVizualizer(
-        question,
-        this.data,
-        this.options
-      );
-      visualizer.render(footerContentElement);
-    }
   }
 
   valuesSource(): Array<ItemValue> {

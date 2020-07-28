@@ -8,6 +8,7 @@ declare type VisualizerConstructor = new (
 ) => any;
 
 export class VisualizationManager {
+  static alternativesVisualizer: any = undefined;
   static vizualizers: { [index: string]: Array<VisualizerConstructor> } = {};
   /**
    * Register visualizer (constructor) for question type.
@@ -32,5 +33,17 @@ export class VisualizationManager {
       return [VisualizerBase];
     }
     return vizualizers;
+  }
+  /**
+   * Get visualizers (constructors) for question type.
+   */
+  public static getAlternativesVisualizer() {
+    return VisualizationManager.alternativesVisualizer || VisualizerBase;
+  }
+  /**
+   * Register visualizer (constructor) for question type.
+   */
+  public static registerAlternativesVisualizer(constructor: any) {
+    VisualizationManager.alternativesVisualizer = constructor;
   }
 }

@@ -13,6 +13,7 @@ export * from "./visualizationPanel";
 export * from "./visualizationPanelDynamic";
 export * from "./visualizationMatrixDynamic";
 export * from "./visualizationMatrixDropdown";
+export * from "./alternativeVizualizersWrapper";
 
 export * from "./tables/datatables";
 export * from "./tables/tabulator";
