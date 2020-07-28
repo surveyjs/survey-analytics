@@ -26,12 +26,11 @@ var survey = new Survey.SurveyModel(json);
 //   // ];
 
 //   var visPanel = new SurveyAnalytics.VisualizationPanel(
-//     document.getElementById("summaryContainer"),
 //     survey.getAllQuestions(),
 //     data
 //   );
 //   visPanel.showHeader = true;
-//   visPanel.render();
+//   visPanel.render(document.getElementById("summaryContainer"));
 // };
 // xhr.send();
 

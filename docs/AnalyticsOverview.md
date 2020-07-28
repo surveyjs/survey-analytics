@@ -64,16 +64,15 @@ xhr.open(
     accessKey
 );
 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-xhr.onload = function() {
+xhr.onload = function () {
   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
   var visPanel = new SurveyAnalytics.VisualizationPanel(
-    document.getElementById("summaryContainer"),
     survey.getAllQuestions(),
     data
   );
   visPanel.showHeader = true;
-  visPanel.render();
+  visPanel.render(document.getElementById("summaryContainer"));
 };
 xhr.send();
 ```
