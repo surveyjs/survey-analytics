@@ -124,10 +124,16 @@ export class Tabulator extends Table {
 
   private createDownloadsBar(): HTMLElement {
     var createDownloadButton = (type: string, caption: string): HTMLElement => {
-      const btn = DocumentHelper.createBtn(caption);
-      btn.onclick = () => {
-        this.tabulatorTables.download(type);
-      };
+      const btn = DocumentHelper.createElement(
+        "button",
+        "sa-table__btn sa-table__btn--small sa-table__btn--gray",
+        {
+          innerHTML: caption,
+          onclick: () => {
+            this.tabulatorTables.download(type);
+          },
+        }
+      );
       return btn;
     };
 

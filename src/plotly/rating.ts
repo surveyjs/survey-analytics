@@ -1,7 +1,7 @@
 import { Question } from "survey-core";
 import { NumberModel } from "../number";
 import { VisualizationManager } from "../visualizationManager";
-import { allowDomRendering, DataHelper } from "../utils/index";
+import { allowDomRendering, DataHelper, DocumentHelper } from "../utils/index";
 import { localization } from "../localizationManager";
 
 var Plotly: any = null;
@@ -106,7 +106,7 @@ export class GaugePlotly extends NumberModel {
   }
 
   protected renderContent(container: HTMLElement) {
-    const chartNode: HTMLElement = <HTMLElement>document.createElement("div");
+    const chartNode: HTMLElement = DocumentHelper.createElement("div", "");
     container.appendChild(chartNode);
     this._chartAdapter.create(chartNode);
   }

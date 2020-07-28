@@ -1,7 +1,7 @@
 import { Event } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { SelectBase } from "./selectBase";
-import { ToolbarHelper } from "./utils/index";
+import { DocumentHelper } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, ElementVisibility } from "./config";
 import { VisualizerFactory } from "./visualizerFactory";
@@ -60,7 +60,7 @@ export class VisualizationPanel extends VisualizerBase {
 
       if (this.allowHideQuestions) {
         visualizer.registerToolbarItem("removeQuestion", () => {
-          return ToolbarHelper.createButton(() => {
+          return DocumentHelper.createButton(() => {
             setTimeout(() => {
               element.visibility = ElementVisibility.Invisible;
               if (!!element.renderedElement) {
@@ -92,14 +92,16 @@ export class VisualizationPanel extends VisualizerBase {
         };
 
         visualizer.registerToolbarItem("questionFilterInfo", () => {
-          filterInfo.element = document.createElement("div");
-          filterInfo.element.className = "sa-question__filter";
-
-          filterInfo.text = document.createElement("span");
-          filterInfo.text.className = "sa-question__filter-text";
+          filterInfo.element = <HTMLDivElement>(
+            DocumentHelper.createElement("div", "sa-question__filter")
+          );
+          filterInfo.text = DocumentHelper.createElement(
+            "span",
+            "sa-question__filter-text"
+          );
           filterInfo.element.appendChild(filterInfo.text);
 
-          const filterClear = ToolbarHelper.createButton(() => {
+          const filterClear = DocumentHelper.createButton(() => {
             visualizer.setSelection(undefined);
           }, localization.getString("clearButton"));
           filterInfo.element.appendChild(filterClear);
@@ -123,7 +125,7 @@ export class VisualizationPanel extends VisualizerBase {
     });
 
     this.registerToolbarItem("resetFilter", () => {
-      return ToolbarHelper.createButton(() => {
+      return DocumentHelper.createButton(() => {
         this.visualizers.forEach((visualizer) => {
           if (visualizer instanceof SelectBase) {
             visualizer.setSelection(undefined);
@@ -140,7 +142,7 @@ export class VisualizationPanel extends VisualizerBase {
         ) => {
           const hiddenElements = this.hiddenElements;
           if (hiddenElements.length > 0) {
-            const selectWrapper = ToolbarHelper.createSelector(
+            const selectWrapper = DocumentHelper.createSelector(
               [
                 <any>{
                   name: undefined,
@@ -180,7 +182,7 @@ export class VisualizationPanel extends VisualizerBase {
     });
     if (this.locales.length > 1) {
       this.registerToolbarItem("changeLocale", () => {
-        return ToolbarHelper.createSelector(
+        return DocumentHelper.createSelector(
           [localization.getString("changeLocale")]
             .concat(this.locales)
             .map((element) => {
@@ -312,10 +314,10 @@ export class VisualizationPanel extends VisualizerBase {
   protected renderPanelElement(element: IVisualizerPanelRenderedElement) {
     const visualizer = this.getVisualizer(element.name);
 
-    const questionElement = document.createElement("div");
-    const questionContent = document.createElement("div");
-    const titleElement = document.createElement("h3");
-    const vizualizerElement = document.createElement("div");
+    const questionElement = DocumentHelper.createElement("div", "");
+    const questionContent = DocumentHelper.createElement("div", "");
+    const titleElement = DocumentHelper.createElement("h3", "");
+    const vizualizerElement = DocumentHelper.createElement("div", "");
 
     titleElement.innerText = element.displayName;
 

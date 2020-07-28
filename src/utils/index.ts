@@ -1,38 +1,38 @@
-export class ToolbarHelper {
+export class DocumentHelper {
   public static createSelector(
     options: Array<{ value: string; text: string }>,
     isSelected: (option: { value: string; text: string }) => boolean,
-    hander: (e: any) => void
+    handler: (e: any) => void
   ) {
     const selectWrapper = document.createElement("div");
     selectWrapper.className = "sa-question__select-wrapper";
     const select = document.createElement("select");
     select.className = "sa-question__select";
     options.forEach((option) => {
-      let optionElement = document.createElement("option");
-      optionElement.value = option.value;
-      optionElement.text = option.text;
-      optionElement.selected = isSelected(option);
+      let optionElement = DocumentHelper.createElement("option", "", {
+        value: option.value,
+        text: option.text,
+        selected: isSelected(option),
+      });
       select.appendChild(optionElement);
     });
-    select.onchange = hander;
+    select.onchange = handler;
     selectWrapper.appendChild(select);
     return selectWrapper;
   }
+
   public static createButton(
     handler: (e: any) => void,
     text = "",
-    cssClass = ""
+    className = "sa-toolbar__button"
   ) {
-    const button = document.createElement("span");
-    button.className = "sa-toolbar__button " + cssClass;
-    button.innerText = text;
-    button.onclick = handler;
+    const button = DocumentHelper.createElement("span", className, {
+      innerText: text,
+      onclick: handler,
+    });
     return button;
   }
-}
 
-export class DocumentHelper {
   public static createElement(
     tagName: string,
     className: string,
@@ -67,16 +67,10 @@ export class DocumentHelper {
   }
 
   public static createSvgButton(path: string): HTMLButtonElement {
-    const btn = document.createElement("button");
-    btn.className = "sa-table__svg-button";
+    const btn = <HTMLButtonElement>(
+      DocumentHelper.createElement("button", "sa-table__svg-button")
+    );
     btn.appendChild(DocumentHelper.createSvgElement(path));
-    return btn;
-  }
-
-  public static createBtn(caption: string): HTMLButtonElement {
-    const btn = document.createElement("button");
-    btn.className = "sa-table__btn sa-table__btn--small sa-table__btn--gray";
-    btn.innerHTML = caption;
     return btn;
   }
 
@@ -85,10 +79,14 @@ export class DocumentHelper {
     placeholder = "",
     defaultValue = ""
   ): HTMLInputElement {
-    var el = document.createElement("input");
-    el.className = className;
-    el.placeholder = placeholder;
-    el.defaultValue = defaultValue;
+    var el = <HTMLInputElement>DocumentHelper.createElement(
+      "input",
+      className,
+      {
+        placeholder: placeholder,
+        defaultValue: defaultValue,
+      }
+    );
     return el;
   }
 }

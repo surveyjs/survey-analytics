@@ -2,6 +2,7 @@ import { ItemValue, QuestionMatrixModel, Question } from "survey-core";
 import { VisualizationManager } from "../visualizationManager";
 import { Matrix } from "../matrix";
 import { PlotlyChartAdapter } from "./selectBase";
+import { DocumentHelper } from "../utils";
 
 export class MatrixPlotly extends Matrix {
   private _chartAdapter: PlotlyChartAdapter;
@@ -24,7 +25,7 @@ export class MatrixPlotly extends Matrix {
   }
 
   protected renderContent(container: HTMLElement) {
-    const chartNode: HTMLElement = <HTMLElement>document.createElement("div");
+    const chartNode: HTMLElement = DocumentHelper.createElement("div", "");
     container.appendChild(chartNode);
     this._chartAdapter.create(chartNode);
   }

@@ -1,7 +1,7 @@
 import { Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
-import { ToolbarHelper } from "./utils/index";
+import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 
 export class AlternativeVisualizersWrapper extends VisualizerBase {
@@ -22,7 +22,7 @@ export class AlternativeVisualizersWrapper extends VisualizerBase {
     });
 
     this.registerToolbarItem("changeVisualizer", () =>
-      ToolbarHelper.createSelector(
+      DocumentHelper.createSelector(
         this.visualizers.map((visualizer) => {
           return {
             value: visualizer.name,
