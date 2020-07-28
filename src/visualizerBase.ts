@@ -31,7 +31,9 @@ export class VisualizerBase implements IDataInfo {
   }
 
   get hasFooter() {
-    return this.question.hasComment || this.question.hasOther;
+    return (
+      !!this.question && (this.question.hasComment || this.question.hasOther)
+    );
   }
 
   get footerVisualizer() {
