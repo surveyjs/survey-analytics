@@ -20,7 +20,7 @@ const json = {
 };
 const survey = new SurveyModel(json);
 const tabulator = new Tabulator(survey, [], null);
-TableExtensions.actions["row"].splice(0, 1);
+TableExtensions.actions["row"] = [];
 
 test("registerExtension method", () => {
   var extension = {

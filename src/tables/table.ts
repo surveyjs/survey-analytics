@@ -146,4 +146,9 @@ export abstract class Table {
   }
 
   public stateSaveCallback(settings: any, data: any) {}
+
+  public removeRow(row: TableRow): void {
+    var index = this._rows.indexOf(row);
+    this._rows.splice(index, 1);
+  }
 }

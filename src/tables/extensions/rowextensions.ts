@@ -29,6 +29,7 @@ export abstract class TableRow {
 
   public abstract getElement(): HTMLElement;
   public abstract getData(): any;
+  protected isSelected: boolean;
 
   public getIsDetailsExpanded() {
     return false;
@@ -57,6 +58,18 @@ export abstract class TableRow {
       this.closeDetails();
     } else this.openDetails();
   }
+
+  public getIsSelected(): boolean {
+    return this.isSelected;
+  }
+
+  public toggleSelect(): void {
+    this.isSelected = !this.isSelected;
+  }
+
+  public remove(): void {
+    this.table.removeRow(this);
+  }
 }
 
 export class TabulatorRow extends TableRow {
@@ -68,12 +81,18 @@ export class TabulatorRow extends TableRow {
   ) {
     super(table, extensionsContainer, detailsContainer);
   }
+
   public getElement(): HTMLElement {
     return this.innerRow.getElement();
   }
 
   public getData(): HTMLElement {
     return this.innerRow.getData();
+  }
+
+  public remove() {
+    this.innerRow.delete();
+    super.remove();
   }
 }
 
@@ -105,6 +124,11 @@ export class DatatablesRow extends TableRow {
 
   public getData(): HTMLElement {
     return this.rowData;
+  }
+
+  public remove(): void {
+    this.innerRow.remove().draw();
+    super.remove();
   }
 }
 
@@ -215,5 +239,23 @@ TableExtensions.registerExtension({
       options.row.toggleDetails();
     };
     return btn;
+  },
+});
+
+TableExtensions.registerExtension({
+  location: "row",
+  name: "select",
+  visibleIndex: -1,
+  render: function (table, opt) {
+    var row = opt.row;
+    var checkbox = DocumentHelper.createElement("input", "", {
+      type: "checkbox",
+    });
+    checkbox.style.height = "auto";
+    checkbox.style.marginLeft = "10px";
+    checkbox.onchange = function (ev) {
+      row.toggleSelect();
+    };
+    return checkbox;
   },
 });

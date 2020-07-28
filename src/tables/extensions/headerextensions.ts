@@ -128,3 +128,23 @@ TableExtensions.registerExtension({
     return selectorContainer;
   },
 });
+
+TableExtensions.registerExtension({
+  location: "header",
+  name: "removerows",
+  visibleIndex: -1,
+  render: function (table) {
+    var btn = document.createElement("button");
+    btn.className = "sa-table__btn sa-table__btn--green";
+    btn.innerHTML = "Remove rows";
+    btn.style.marginLeft = "20px";
+    btn.onclick = function () {
+      table.getCreatedRows().forEach(function (row) {
+        if (row.getIsSelected()) {
+          row.remove();
+        }
+      });
+    };
+    return btn;
+  },
+});
