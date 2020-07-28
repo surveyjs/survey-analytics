@@ -46,7 +46,6 @@ export class AlternativeVisualizersWrapper extends VisualizerBase {
     }
     this.visualizer = this.visualizers.filter((v) => v.name === name)[0];
     this.refresh();
-    this.invokeOnUpdate();
   }
 
   update(data: Array<{ [index: string]: any }>) {
@@ -55,12 +54,6 @@ export class AlternativeVisualizersWrapper extends VisualizerBase {
       visualizer.update(data);
     });
     this.refresh();
-    this.invokeOnUpdate();
-  }
-
-  refresh(hard: boolean = false) {
-    this.destroyContent(this.contentContainer);
-    this.renderContent(this.contentContainer);
   }
 
   protected renderContent(container: HTMLElement) {

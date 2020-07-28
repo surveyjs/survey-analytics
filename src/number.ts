@@ -35,13 +35,11 @@ export class NumberModel extends VisualizerBase {
   }
 
   update(data: Array<{ [index: string]: any }>) {
-    if (data !== undefined) {
-      this._resultAverage = undefined;
-    }
+    this._resultAverage = undefined;
+    this._resultMin = undefined;
+    this._resultMax = undefined;
     super.update(data);
-    this.destroyContent(this.contentContainer);
-    this.renderContent(this.contentContainer);
-    this.invokeOnUpdate();
+    this.refresh();
   }
 
   private toolbarChangeHandler = (e: any) => {
@@ -132,7 +130,11 @@ export class NumberModel extends VisualizerBase {
   }
 
   getData() {
-    if (this._resultAverage === undefined || this._resultMin === undefined || this._resultMax === undefined) {
+    if (
+      this._resultAverage === undefined ||
+      this._resultMin === undefined ||
+      this._resultMax === undefined
+    ) {
       const questionValues: Array<any> = [];
       this._resultMin = Number.MAX_VALUE;
       this._resultMax = -Number.MAX_VALUE;
@@ -141,16 +143,17 @@ export class NumberModel extends VisualizerBase {
         const questionValue: number = +rowData[this.question.name];
         if (questionValue !== undefined) {
           questionValues.push(questionValue);
-          if(this._resultMin > questionValue) {
+          if (this._resultMin > questionValue) {
             this._resultMin = questionValue;
           }
-          if(this._resultMax < questionValue) {
+          if (this._resultMax < questionValue) {
             this._resultMax = questionValue;
           }
         }
       });
 
-      this._resultAverage = questionValues.reduce((a, b) => a + b, 0) / questionValues.length;
+      this._resultAverage =
+        questionValues.reduce((a, b) => a + b, 0) / questionValues.length;
       this._resultAverage = Math.ceil(this._resultAverage * 100) / 100;
     }
     return [this._resultAverage, this._resultMin, this._resultMax];

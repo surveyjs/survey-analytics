@@ -195,7 +195,7 @@ export class VisualizationPanel extends VisualizerBase {
             var newLocale = e.target.value;
             survey.locale = newLocale;
             localization.currentLocale = newLocale;
-            this.refresh(true);
+            this.refresh();
           }
         );
       });
@@ -382,22 +382,6 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
-   * Redraws visualizer and all inner content.
-   */
-  public refresh(hard: boolean = false) {
-    if (hard && this.visualizers.length > 0 && !!this.contentContainer) {
-      this.destroyToolbar(this.toolbarContainer);
-      this.destroyContent(this.contentContainer);
-      this.renderToolbar(this.toolbarContainer);
-      this.renderContent(this.contentContainer);
-    } else {
-      this.visualizers.forEach((visualizer) =>
-        setTimeout(() => visualizer.update(this.filteredData), 10)
-      );
-    }
-  }
-
-  /**
    * Updates layout of visualizer inner content.
    */
   public layout() {
@@ -434,7 +418,9 @@ export class VisualizationPanel extends VisualizerBase {
         (key) => item[key] !== this.filterValues[key]
       );
     });
-    this.refresh();
+    this.visualizers.forEach((visualizer) =>
+      visualizer.update(this.filteredData)
+    );
   }
 
   destroy() {

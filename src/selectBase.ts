@@ -115,11 +115,7 @@ export class SelectBase extends VisualizerBase {
 
   update(data: Array<{ [index: string]: any }>) {
     super.update(data);
-    this.destroyContent(this.contentContainer);
-    this.renderContent(this.contentContainer);
-    this.destroyFooter(this.footerContainer);
-    this.renderFooter(this.footerContainer);
-    this.invokeOnUpdate();
+    this.refresh();
   }
 
   valuesSource(): Array<ItemValue> {

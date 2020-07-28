@@ -170,7 +170,6 @@ export class VisualizerBase implements IDataInfo {
             VisualizerBase.otherCommentCollapsed ? "showButton" : "hideButton"
           );
         }
-        this.invokeOnUpdate();
       }, localization.getString("showButton") /*, "sa-toolbar__button--right"*/);
       container.appendChild(visibilityButton);
 
@@ -197,6 +196,25 @@ export class VisualizerBase implements IDataInfo {
     this.footerContainer.className = "sa-visualizer__footer";
     targetElement.appendChild(this.footerContainer);
     this.renderFooter(this.footerContainer);
+  }
+
+  /**
+   * Redraws visualizer and all inner content.
+   */
+  public refresh() {
+    if (!!this.toolbarContainer) {
+      this.destroyToolbar(this.toolbarContainer);
+      this.renderToolbar(this.toolbarContainer);
+    }
+    if (!!this.contentContainer) {
+      this.destroyContent(this.contentContainer);
+      this.renderContent(this.contentContainer);
+    }
+    if (!!this.footerContainer) {
+      this.destroyFooter(this.footerContainer);
+      this.renderFooter(this.footerContainer);
+    }
+    this.invokeOnUpdate();
   }
 
   getRandomColor() {
