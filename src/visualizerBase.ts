@@ -82,7 +82,7 @@ export class VisualizerBase implements IDataInfo {
     return "visualizer";
   }
 
-  update(data: Array<{ [index: string]: any }>) {
+  updateData(data: Array<{ [index: string]: any }>) {
     this.data = data;
   }
 

@@ -75,10 +75,10 @@ export class DataTables extends Table {
   }
   public set columns(columns: Array<ITableColumn>) {
     this._columns = columns;
-    this.update(true);
+    this.refresh(true);
   }
 
-  public update(hard: boolean = false) {
+  public refresh(hard: boolean = false) {
     if (this.isRendered) {
       if (hard) {
         this.initTableData(this.data);

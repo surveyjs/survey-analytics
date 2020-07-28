@@ -175,7 +175,7 @@ export class Tabulator extends Table {
     );
     tableRow.onToggleDetails.add(() => {
       row.normalizeHeight();
-      this.update();
+      this.refresh();
     });
     this.onRowCreated.fire(this, { row: tableRow });
     tableRow.render();
@@ -251,7 +251,7 @@ export class Tabulator extends Table {
     if (visibility == ColumnVisibility.Invisible)
       this.tabulatorTables.hideColumn(columnName);
     else this.tabulatorTables.showColumn(columnName);
-    this.update();
+    this.refresh();
   }
 
   public setColumnLocation(columnName: string, location: QuestionLocation) {
@@ -259,7 +259,7 @@ export class Tabulator extends Table {
     if (location == QuestionLocation.Row)
       this.tabulatorTables.hideColumn(columnName);
     else this.tabulatorTables.showColumn(columnName);
-    this.update();
+    this.refresh();
   }
 
   public sortByColumn(columnName: string, direction: string) {
@@ -298,7 +298,7 @@ export class Tabulator extends Table {
     );
   }
 
-  public update() {
+  public refresh() {
     this.tabulatorTables.redraw();
   }
 }

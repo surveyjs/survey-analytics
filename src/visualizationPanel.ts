@@ -386,10 +386,10 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
-   * Updates visualizer and all inner content.
+   * Updates visualizer data.
    */
-  update(data: Array<{ [index: string]: any }>) {
-    super.update(data);
+  updateData(data: Array<{ [index: string]: any }>) {
+    super.updateData(data);
     this.applyFilter();
   }
 
@@ -442,7 +442,7 @@ export class VisualizationPanel extends VisualizerBase {
       );
     });
     this.visualizers.forEach((visualizer) =>
-      visualizer.update(this.filteredData)
+      visualizer.updateData(this.filteredData)
     );
   }
 

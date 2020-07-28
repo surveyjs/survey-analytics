@@ -48,7 +48,7 @@ export class SelectBase extends VisualizerBase {
           (option) => false,
           (e) => {
             this.setLabelsOrder(e.target.value);
-            this.update(this.data);
+            this.updateData(this.data);
           }
         );
         this.updateOrderSelector();
@@ -113,8 +113,8 @@ export class SelectBase extends VisualizerBase {
   }
   onDataItemSelected: (selectedValue: any, selectedText: string) => void;
 
-  update(data: Array<{ [index: string]: any }>) {
-    super.update(data);
+  updateData(data: Array<{ [index: string]: any }>) {
+    super.updateData(data);
     this.refresh();
   }
 
