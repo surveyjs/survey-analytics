@@ -22,8 +22,9 @@ SurveyAnalyticsDatatables.TableExtensions.registerExtension({
     btn.className = "rounded-button";
     btn.onclick = (e) => {
       e.stopPropagation();
+
+      return btn;
     };
-    return btn;
   },
 });
 

@@ -15,15 +15,6 @@ var survey = new Survey.SurveyModel(json);
 // xhr.onload = function() {
 //   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
-//   var normalizedData = result.Data.map(function(item) {
-//     survey.getAllQuestions().forEach(function(q) {
-//       if (!item[q.name]) {
-//         item[q.name] = "";
-//       }
-//     });
-//     return item;
-//   });
-
 //   // SurveyAnalytics.SelectBasePlotly.types = ["pie", "scatter"];
 //   // SurveyAnalytics.VisualizerBase.customColors = [
 //   //   "F85A40",
@@ -35,35 +26,25 @@ var survey = new Survey.SurveyModel(json);
 //   // ];
 
 //   var visPanel = new SurveyAnalytics.VisualizationPanel(
-//     document.getElementById("summaryContainer"),
 //     survey.getAllQuestions(),
-//     normalizedData
+//     data
 //   );
 //   visPanel.showHeader = true;
-//   visPanel.render();
+//   visPanel.render(document.getElementById("summaryContainer"));
 // };
 // xhr.send();
-
-var normalizedData = data.map(function(item) {
-  survey.getAllQuestions().forEach(function(q) {
-    if (item[q.name] === undefined) {
-      item[q.name] = "";
-    }
-  });
-  return item;
-});
 
 // SurveyAnalytics.SelectBasePlotly.displayModeBar = false;
 
 var options = {
   // allowDynamicLayout: false,
   // allowHideQuestions: false
-}
+};
 
 var visPanel = new SurveyAnalytics.VisualizationPanel(
   // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   survey.getAllQuestions(),
-  normalizedData,
+  data,
   options
 );
 visPanel.showHeader = true;

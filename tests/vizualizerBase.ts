@@ -11,7 +11,7 @@ test("custom colors", () => {
     "#7d8da5",
     "#4ec46c",
     "#cf37a6",
-    "#4e6198"
+    "#4e6198",
   ]);
 
   VisualizerBase.customColors = ["red", "green", "blue"];
@@ -22,6 +22,22 @@ test("custom colors", () => {
     "blue",
     "red",
     "green",
-    "blue"
+    "blue",
   ]);
+});
+
+test("series options", () => {
+  const seriesValues = ["1", "2"];
+  const seriesLabels = ["One", "Two"];
+  let visualizer = new VisualizerBase(null, null, {
+    seriesValues: seriesValues,
+  });
+  expect(visualizer.getSeriesValues()).toEqual(seriesValues);
+  expect(visualizer.getSeriesLabels()).toEqual(seriesValues);
+  visualizer = new VisualizerBase(null, null, {
+    seriesValues: seriesValues,
+    seriesLabels: seriesLabels,
+  });
+  expect(visualizer.getSeriesValues()).toEqual(seriesValues);
+  expect(visualizer.getSeriesLabels()).toEqual(seriesLabels);
 });

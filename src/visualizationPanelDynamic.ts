@@ -20,6 +20,10 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     this.update(data);
   }
 
+  public get name() {
+    return "panelDynamic";
+  }
+
   update(data: Array<{ [index: string]: any }>) {
     this.data = [];
     data.forEach(dataItem => {

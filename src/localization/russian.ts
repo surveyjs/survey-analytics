@@ -1,7 +1,6 @@
-//Uncomment this line on creating a translation file
-//import { localization } from "../localizationManager";
+import { localization } from "../localizationManager";
 
-export var englishStrings = {
+export var russianStrings = {
   groupButton: "Group By Me",
   ungroupButton: "Ungroup By Me",
   selectButton: "Select Me",
@@ -20,10 +19,10 @@ export var englishStrings = {
   chartType_scatter: "Scatter",
   chartType_gauge: "Gauge",
   chartType_bullet: "Bullet",
-  hideButton: "Hide",
-  showButton: "Show",
-  resetFilter: "Reset Filter",
-  changeLocale: "Change Locale",
+  hideButton: "Скрыть",
+  showButton: "Показать",
+  resetFilter: "Очистить фильтр",
+  changeLocale: "Сменить язык",
   clearButton: "Clear",
   addElement: "Choose question to show...",
   defaultOrder: "Default",
@@ -33,6 +32,5 @@ export var englishStrings = {
   otherCommentTitle: "Other items and comments",
 };
 
-//Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.
-//localization.locales["en"] = englishStrings;
-//localization.localeNames["en"] = "English";
+localization.locales["ru"] = russianStrings;
+localization.localeNames["ru"] = "Russian";

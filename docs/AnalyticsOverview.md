@@ -64,25 +64,15 @@ xhr.open(
     accessKey
 );
 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-xhr.onload = function() {
+xhr.onload = function () {
   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
-  var normalizedData = result.Data.map(function(item) {
-    survey.getAllQuestions().forEach(function(q) {
-      if (item[q.name] === undefined) {
-        item[q.name] = "";
-      }
-    });
-    return item;
-  });
-
   var visPanel = new SurveyAnalytics.VisualizationPanel(
-    document.getElementById("summaryContainer"),
     survey.getAllQuestions(),
-    normalizedData
+    data
   );
   visPanel.showHeader = true;
-  visPanel.render();
+  visPanel.render(document.getElementById("summaryContainer"));
 };
 xhr.send();
 ```

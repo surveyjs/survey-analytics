@@ -1,8 +1,9 @@
 import { Question } from "survey-core";
 import { ItemValue } from "survey-core";
 import { SelectBase } from "../selectBase";
-import { VisualizationManager } from '../visualizationManager';
-import { allowDomRendering, DataHelper } from '../utils';
+import { VisualizationManager } from "../visualizationManager";
+import { allowDomRendering, DataHelper } from "../utils";
+import { localization } from "../localizationManager";
 
 var Plotly: any = null;
 if (allowDomRendering()) {
@@ -12,9 +13,7 @@ if (allowDomRendering()) {
 export class PlotlyChartAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
 
-  constructor(protected model: SelectBase) {
-
-  }
+  constructor(protected model: SelectBase) {}
 
   protected patchConfigParameters(
     chartNode: object,
@@ -23,18 +22,23 @@ export class PlotlyChartAdapter {
     config: object
   ) {}
 
-
   public get chart() {
     return this._chart;
   }
 
   public create(chartNode: HTMLElement) {
     let datasets = this.model.getData();
+    let seriesValues = this.model.getSeriesValues();
+    let seriesLabels = this.model.getSeriesLabels();
     let labels = this.model.getLabels();
     let colors = this.model.getColors();
     const traces: any = [];
+    const hasSeries = datasets.length > 1 && seriesValues.length > 1;
 
-    if (this.model.orderByAnsweres == "asc" || this.model.orderByAnsweres == "desc") {
+    if (
+      this.model.orderByAnsweres == "asc" ||
+      this.model.orderByAnsweres == "desc"
+    ) {
       let dict = DataHelper.sortDictionary(
         DataHelper.zipArrays(labels, colors),
         datasets[0],
@@ -47,18 +51,18 @@ export class PlotlyChartAdapter {
     }
     const traceConfig: any = {
       type: this.model.chartType,
-      y: labels.map(l => {
+      y: (hasSeries ? seriesLabels : labels).map((l) => {
         if (l.length > 30) {
           return l.substring(0, 27) + "...";
         }
         return l;
       }),
-      text: labels,
+      text: hasSeries ? seriesLabels : labels,
       hoverinfo: "x+y",
       orientation: "h",
       mode: "markers",
       width: 0.5,
-      marker: <any>{}
+      marker: <any>{},
     };
 
     if (this.model.chartType === "pie" || this.model.chartType === "doughnut") {
@@ -74,17 +78,20 @@ export class PlotlyChartAdapter {
       traceConfig.hole = 0.4;
     }
 
-    if (datasets.length === 1) {
+    if (!hasSeries) {
       traceConfig.marker.symbol = "circle";
       traceConfig.marker.size = 16;
     }
 
-    datasets.forEach(dataset => {
-      if (this.model.chartType === "pie" || this.model.chartType === "doughnut") {
+    datasets.forEach((dataset) => {
+      if (
+        this.model.chartType === "pie" ||
+        this.model.chartType === "doughnut"
+      ) {
         traces.push(
           Object.assign({}, traceConfig, {
             values: dataset,
-            labels: labels
+            labels: hasSeries ? seriesLabels : labels,
           })
         );
       } else {
@@ -104,13 +111,13 @@ export class PlotlyChartAdapter {
         family: "Segoe UI, sans-serif",
         size: 14,
         weight: "normal",
-        color: "#404040"
+        color: "#404040",
       },
       height: height,
       margin: {
         t: 0,
         b: 0,
-        r: 10
+        r: 10,
       },
       colorway: colors,
       hovermode: "closest",
@@ -118,23 +125,58 @@ export class PlotlyChartAdapter {
         automargin: true,
         type: "category",
         ticklen: 5,
-        tickcolor: "transparent"
+        tickcolor: "transparent",
       },
       xaxis: {
         rangemode: "nonnegative",
-        automargin: true
+        automargin: true,
       },
       plot_bgcolor: this.model.backgroundColor,
       paper_bgcolor: this.model.backgroundColor,
-      showlegend: false
+      showlegend: false,
     };
 
     let config: any = {
       displaylogo: false,
-      responsive: true
+      responsive: true,
+      locale: localization.currentLocale,
     };
-    if(SelectBasePlotly.displayModeBar !== undefined) {
+    if (SelectBasePlotly.displayModeBar !== undefined) {
       config.displayModeBar = SelectBasePlotly.displayModeBar;
+    }
+
+    if (hasSeries) {
+      layout.showlegend = true;
+      if (
+        this.model.chartType === "pie" ||
+        this.model.chartType === "doughnut"
+      ) {
+        layout.grid = { rows: 1, columns: traces.length };
+      } else if (this.model.chartType === "stackedbar") {
+        layout.height = undefined;
+        layout.barmode = "stack";
+      } else {
+        layout.height = undefined;
+      }
+      labels.forEach((label, index) => {
+        if (
+          this.model.chartType === "pie" ||
+          this.model.chartType === "doughnut"
+        ) {
+          traces[index].domain = { column: index };
+        } else {
+          traces[index].hoverinfo = "x+name";
+          traces[index].marker.color = undefined;
+          if (this.model.chartType === "stackedbar") {
+            traces[index].type = "bar";
+            traces[index].name = label;
+            traces[index].width = 0.5 / traces.length;
+          } else {
+            traces[index].name = label;
+            traces[index].width = 0.5 / traces.length;
+          }
+        }
+      });
     }
 
     this.patchConfigParameters(chartNode, traces, layout, config);
@@ -197,6 +239,22 @@ export class SelectBasePlotly extends SelectBase {
     this._chartAdapter.create(chartNode);
   }
 
+  getData(): any[] {
+    const statistics = super.getData();
+    const series = this.getSeriesValues();
+    const values = this.getValues();
+    if (series.length > 1) {
+      const preparedData: Array<Array<number>> = [];
+      values.forEach((val, valueIndex) => {
+        const seriesData = series.map(
+          (seriesValue, seriesIndex) => statistics[seriesIndex][valueIndex]
+        );
+        preparedData.push(seriesData);
+      });
+      return preparedData;
+    }
+    return statistics;
+  }
 }
 
 VisualizationManager.registerVisualizer("checkbox", SelectBasePlotly);

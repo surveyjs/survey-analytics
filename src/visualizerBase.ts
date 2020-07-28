@@ -1,15 +1,24 @@
-import { Question } from "survey-core";
+import { Question, QuestionCommentModel, settings } from "survey-core";
+import { IDataInfo } from "./dataProvider";
+import { VisualizerFactory } from "./visualizerFactory";
+import { ToolbarHelper } from "./utils";
+import { localization } from "./localizationManager";
 
 import "./visualizerBase.scss";
 
-export class VisualizerBase {
+export class VisualizerBase implements IDataInfo {
   private _showHeader = true;
+  private _footerVisualizer: VisualizerBase = undefined;
   protected renderResult: HTMLElement = undefined;
   protected toolbarContainer: HTMLElement = undefined;
   protected contentContainer: HTMLElement = undefined;
   protected footerContainer: HTMLElement = undefined;
+  // public static otherCommentQuestionType = "comment"; // TODO: make it configureable - allow choose what kind of question/visualizer will be used for comments/others
+  public static otherCommentCollapsed = true;
 
-  protected toolbarItemCreators: { [name: string]: (toolbar?: HTMLDivElement) => HTMLElement } = {};
+  protected toolbarItemCreators: {
+    [name: string]: (toolbar?: HTMLDivElement) => HTMLElement;
+  } = {};
 
   constructor(
     public question: Question,
@@ -17,7 +26,55 @@ export class VisualizerBase {
     protected options: { [index: string]: any } = {}
   ) {}
 
-  public registerToolbarItem(name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement) {
+  get dataName(): string {
+    return this.question.name;
+  }
+
+  get hasFooter() {
+    return (
+      !!this.question && (this.question.hasComment || this.question.hasOther)
+    );
+  }
+
+  get footerVisualizer() {
+    if (!this.hasFooter) {
+      return undefined;
+    }
+    if (!this._footerVisualizer) {
+      const question = new QuestionCommentModel(
+        this.question.name + (settings || {}).commentPrefix
+      );
+      question.title = this.question.title;
+      this._footerVisualizer = VisualizerFactory.createVizualizer(
+        question,
+        this.data,
+        this.options
+      );
+      this._footerVisualizer.onUpdate = () => this.invokeOnUpdate();
+    }
+    return this._footerVisualizer;
+  }
+
+  getSeriesValues(): Array<string> {
+    return this.options.seriesValues || [];
+  }
+
+  getSeriesLabels(): Array<string> {
+    return this.options.seriesLabels || this.getSeriesValues();
+  }
+
+  getValues(): Array<any> {
+    throw new Error("Method not implemented.");
+  }
+
+  getLabels(): Array<string> {
+    return this.getValues();
+  }
+
+  public registerToolbarItem(
+    name: string,
+    creator: (toolbar?: HTMLDivElement) => HTMLElement
+  ) {
     this.toolbarItemCreators[name] = creator;
   }
 
@@ -36,7 +93,7 @@ export class VisualizerBase {
   }
 
   destroy() {
-    if(!!this.renderResult) {
+    if (!!this.renderResult) {
       this.destroyToolbar(this.toolbarContainer);
       this.toolbarContainer = undefined;
       this.destroyContent(this.contentContainer);
@@ -46,12 +103,17 @@ export class VisualizerBase {
       this.renderResult.innerHTML = "";
       this.renderResult = undefined;
     }
+    if (!!this._footerVisualizer) {
+      this._footerVisualizer.destroy();
+      this._footerVisualizer.onUpdate = undefined;
+      this._footerVisualizer = undefined;
+    }
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
-    Object.keys(this.toolbarItemCreators || {}).forEach(toolbarItemName => {
+    Object.keys(this.toolbarItemCreators || {}).forEach((toolbarItemName) => {
       let toolbarItem = this.toolbarItemCreators[toolbarItemName](toolbar);
-      if(!!toolbarItem) {
+      if (!!toolbarItem) {
         toolbar.appendChild(toolbarItem);
       }
     });
@@ -62,7 +124,7 @@ export class VisualizerBase {
   }
 
   protected renderToolbar(container: HTMLElement) {
-    if(this.showHeader) {
+    if (this.showHeader) {
       const toolbar = document.createElement("div");
       toolbar.className = "sa-toolbar";
       this.createToolbarItems(toolbar);
@@ -84,6 +146,38 @@ export class VisualizerBase {
 
   protected renderFooter(container: HTMLElement) {
     container.innerHTML = "";
+    if (this.hasFooter) {
+      const footerTitleElement = document.createElement("h4");
+      footerTitleElement.className = "sa-visualizer__footer-title";
+      footerTitleElement.innerText = localization.getString(
+        "otherCommentTitle"
+      );
+      container.appendChild(footerTitleElement);
+
+      const footerContentElement = document.createElement("div");
+      footerContentElement.className = "sa-visualizer__footer-content";
+      footerContentElement.style.display = VisualizerBase.otherCommentCollapsed
+        ? "none"
+        : "block";
+
+      const visibilityButton = ToolbarHelper.createButton(() => {
+        if (footerContentElement.style.display === "none") {
+          footerContentElement.style.display = "block";
+          visibilityButton.innerText = localization.getString("hideButton");
+        } else {
+          footerContentElement.style.display = "none";
+          visibilityButton.innerText = localization.getString(
+            VisualizerBase.otherCommentCollapsed ? "showButton" : "hideButton"
+          );
+        }
+        this.footerVisualizer.invokeOnUpdate();
+      }, localization.getString("showButton") /*, "sa-toolbar__button--right"*/);
+      container.appendChild(visibilityButton);
+
+      container.appendChild(footerContentElement);
+
+      this.footerVisualizer.render(footerContentElement);
+    }
   }
 
   render(targetElement: HTMLElement) {
@@ -105,6 +199,21 @@ export class VisualizerBase {
     this.renderFooter(this.footerContainer);
   }
 
+  /**
+   * Redraws visualizer and all inner content.
+   */
+  public refresh() {
+    if (!!this.contentContainer) {
+      this.destroyContent(this.contentContainer);
+      this.renderContent(this.contentContainer);
+    }
+    if (!!this.footerContainer) {
+      this.destroyFooter(this.footerContainer);
+      this.renderFooter(this.footerContainer);
+    }
+    this.invokeOnUpdate();
+  }
+
   getRandomColor() {
     const colors = this.getColors();
     return colors[Math.floor(Math.random() * colors.length)];
@@ -123,7 +232,7 @@ export class VisualizerBase {
     "#7d8da5",
     "#4ec46c",
     "#cf37a6",
-    "#4e6198"
+    "#4e6198",
   ];
 
   getColors(count = 10) {
@@ -148,7 +257,7 @@ export class VisualizerBase {
   set showHeader(newValue: boolean) {
     if (newValue != this._showHeader) {
       this._showHeader = newValue;
-      if(!!this.toolbarContainer) {
+      if (!!this.toolbarContainer) {
         this.destroyToolbar(this.toolbarContainer);
         this.renderToolbar(this.toolbarContainer);
       }

@@ -1,7 +1,8 @@
 import { Question } from "survey-core";
-import { Number } from "../number";
+import { NumberModel } from "../number";
 import { VisualizationManager } from "../visualizationManager";
 import { allowDomRendering, DataHelper } from "../utils/index";
+import { localization } from "../localizationManager";
 
 var Plotly: any = null;
 if (allowDomRendering()) {
@@ -11,9 +12,7 @@ if (allowDomRendering()) {
 export class PlotlyGaugeAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
 
-  constructor(private model: GaugePlotly) {
-
-  }
+  constructor(private model: GaugePlotly) {}
 
   public get chart() {
     return this._chart;
@@ -21,13 +20,9 @@ export class PlotlyGaugeAdapter {
 
   public create(chartNode: HTMLElement) {
     const question = this.model.question;
-    let maxValue;
-    let minValue;
+    let [level, minValue, maxValue] = this.model.getData();
 
-    if (question.getType() === "text") {
-      maxValue = this.model.resultMax;
-      minValue = this.model.resultMin;
-    } else {
+    if (question.getType() === "rating") {
       const rateValues = question.visibleRateValues;
       maxValue = rateValues[rateValues.length - 1].value;
       minValue = rateValues[0].value;
@@ -38,8 +33,6 @@ export class PlotlyGaugeAdapter {
       minValue,
       GaugePlotly.stepsCount
     );
-
-    var level = this.model.result;
 
     if (GaugePlotly.showAsPercentage) {
       level = DataHelper.toPercentage(level, maxValue);
@@ -79,6 +72,7 @@ export class PlotlyGaugeAdapter {
     const config = {
       displayModeBar: false,
       staticPlot: true,
+      locale: localization.currentLocale,
     };
 
     return Plotly.newPlot(chartNode, data, layout, config);
@@ -90,7 +84,7 @@ export class PlotlyGaugeAdapter {
   }
 }
 
-export class GaugePlotly extends Number {
+export class GaugePlotly extends NumberModel {
   private _chartAdapter: PlotlyGaugeAdapter;
 
   public static types = ["gauge", "bullet"];

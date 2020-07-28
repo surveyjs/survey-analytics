@@ -4,12 +4,17 @@ import { SelectBase } from "./selectBase";
 import { ToolbarHelper } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, ElementVisibility } from "./config";
-import { VisualizerFactory } from './visualizerFactory';
+import { VisualizerFactory } from "./visualizerFactory";
 const Muuri = require("muuri");
 import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
+
+export interface IVisualizerPanelRenderedElement
+  extends IVisualizerPanelElement {
+  renderedElement?: HTMLElement;
+}
 
 /**
  * VisualizationPanel is responsible for displaying an array of survey questions
@@ -29,77 +34,177 @@ export class VisualizationPanel extends VisualizerBase {
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
     options: { [index: string]: any } = {},
-    private _elements: Array<IVisualizerPanelElement> = [],
+    private _elements: Array<IVisualizerPanelRenderedElement> = [],
     private isTrustedAccess = false
   ) {
     super(null, data, options);
+
+    this.showHeader = false;
+    if (this.options.survey) {
+      localization.currentLocale = this.options.survey.locale;
+    }
     this.filteredData = data;
     if (_elements.length === 0) {
       this._elements = this.buildElements(questions);
     }
-    this.showHeader = false;
-    this.registerToolbarItem(
-      "resetFilter",
-      () => {
-        return ToolbarHelper.createButton(
-          () => {
-            this.visualizers.forEach((visualizer) => {
-              if (visualizer instanceof SelectBase) {
-                visualizer.setSelection(undefined);
-              }
-            });
-          },
-          localization.getString("resetFilter")
-        );
-      }
-    );
-    this.registerToolbarItem(
-      "addElement",
-      (toolbar: HTMLDivElement) => {
-        if (this.allowHideQuestions) {
-          let addElementSelector: HTMLElement = undefined;
-          const addElementSelectorUpdater = (panel: VisualizationPanel, _: any) => {
-            const hiddenElements = this.hiddenElements;
-            if (hiddenElements.length > 0) {
-              const selectWrapper = ToolbarHelper.createSelector(
-                [
-                  <any>{
-                    name: undefined,
-                    displayName: localization.getString("addElement"),
-                  },
-                ]
-                  .concat(hiddenElements)
-                  .map((element) => {
-                    return {
-                      value: element.name,
-                      text: element.displayName,
-                    };
-                  }),
-                (option: any) => false,
-                (e: any) => {
-                  var element = this.getElement(e.target.value);
-                  element.visibility = ElementVisibility.Visible;
-                  const questionElement = this.renderVisualizer(element);
-                  this.contentContainer.appendChild(questionElement);
-                  !!this.layoutEngine && this.layoutEngine.add([questionElement]);
-                  this.visibleElementsChanged(element);
+
+    questions.forEach((question) => {
+      const element = this.getElement(question.name);
+      if (!element) return;
+
+      const visualizer = VisualizerFactory.createVizualizer(
+        question,
+        this.filteredData,
+        this.options
+      );
+
+      if (this.allowHideQuestions) {
+        visualizer.registerToolbarItem("removeQuestion", () => {
+          return ToolbarHelper.createButton(() => {
+            setTimeout(() => {
+              element.visibility = ElementVisibility.Invisible;
+              if (!!element.renderedElement) {
+                if (!!this.layoutEngine) {
+                  this.layoutEngine.remove([element.renderedElement]);
                 }
-              );
-              (addElementSelector &&
-                toolbar.replaceChild(selectWrapper, addElementSelector)) ||
-                toolbar.appendChild(selectWrapper);
-              addElementSelector = selectWrapper;
-            } else {
-              addElementSelector && toolbar.removeChild(addElementSelector);
-              addElementSelector = undefined;
-            }
-          };
-          addElementSelectorUpdater(this, {});
-          this.onVisibleElementsChanged.add(addElementSelectorUpdater);
-        }
-        return undefined;
+                this.contentContainer.removeChild(element.renderedElement);
+                element.renderedElement = undefined;
+              }
+              this.visibleElementsChanged(element);
+            }, 0);
+          }, localization.getString("hideButton"));
+        });
       }
-    );
+
+      if (visualizer instanceof SelectBase) {
+        var filterInfo = {
+          text: <HTMLElement>undefined,
+          element: <HTMLDivElement>undefined,
+          update: function (selection: any) {
+            if (!!selection && !!selection.value) {
+              this.element.style.display = "inline-block";
+              this.text.innerHTML = "Filter: [" + selection.text + "]";
+            } else {
+              this.element.style.display = "none";
+              this.text.innerHTML = "";
+            }
+          },
+        };
+
+        visualizer.registerToolbarItem("questionFilterInfo", () => {
+          filterInfo.element = document.createElement("div");
+          filterInfo.element.className = "sa-question__filter";
+
+          filterInfo.text = document.createElement("span");
+          filterInfo.text.className = "sa-question__filter-text";
+          filterInfo.element.appendChild(filterInfo.text);
+
+          const filterClear = ToolbarHelper.createButton(() => {
+            visualizer.setSelection(undefined);
+          }, localization.getString("clearButton"));
+          filterInfo.element.appendChild(filterClear);
+
+          filterInfo.update(visualizer.selection);
+
+          return filterInfo.element;
+        });
+
+        visualizer.onDataItemSelected = (
+          selectedValue: any,
+          selectedText: string
+        ) => {
+          filterInfo.update({ value: selectedValue, text: selectedText });
+          this.setFilter(question.name, selectedValue);
+        };
+      }
+
+      visualizer.onUpdate = () => this.layout();
+      this.visualizers.push(visualizer);
+    });
+
+    this.registerToolbarItem("resetFilter", () => {
+      return ToolbarHelper.createButton(() => {
+        this.visualizers.forEach((visualizer) => {
+          if (visualizer instanceof SelectBase) {
+            visualizer.setSelection(undefined);
+          }
+        });
+      }, localization.getString("resetFilter"));
+    });
+    this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
+      if (this.allowHideQuestions) {
+        let addElementSelector: HTMLElement = undefined;
+        const addElementSelectorUpdater = (
+          panel: VisualizationPanel,
+          _: any
+        ) => {
+          const hiddenElements = this.hiddenElements;
+          if (hiddenElements.length > 0) {
+            const selectWrapper = ToolbarHelper.createSelector(
+              [
+                <any>{
+                  name: undefined,
+                  displayName: localization.getString("addElement"),
+                },
+              ]
+                .concat(hiddenElements)
+                .map((element) => {
+                  return {
+                    value: element.name,
+                    text: element.displayName,
+                  };
+                }),
+              (option: any) => false,
+              (e: any) => {
+                var element = this.getElement(e.target.value);
+                element.visibility = ElementVisibility.Visible;
+                const questionElement = this.renderPanelElement(element);
+                this.contentContainer.appendChild(questionElement);
+                !!this.layoutEngine && this.layoutEngine.add([questionElement]);
+                this.visibleElementsChanged(element);
+              }
+            );
+            (addElementSelector &&
+              toolbar.replaceChild(selectWrapper, addElementSelector)) ||
+              toolbar.appendChild(selectWrapper);
+            addElementSelector = selectWrapper;
+          } else {
+            addElementSelector && toolbar.removeChild(addElementSelector);
+            addElementSelector = undefined;
+          }
+        };
+        addElementSelectorUpdater(this, {});
+        this.onVisibleElementsChanged.add(addElementSelectorUpdater);
+      }
+      return undefined;
+    });
+    if (this.locales.length > 1) {
+      this.registerToolbarItem("changeLocale", () => {
+        return ToolbarHelper.createSelector(
+          [localization.getString("changeLocale")]
+            .concat(this.locales)
+            .map((element) => {
+              return {
+                value: element,
+                text: element,
+              };
+            }),
+          (option: any) => false,
+          (e: any) => {
+            var survey = this.options.survey;
+            var newLocale = e.target.value;
+            survey.locale = newLocale;
+            localization.currentLocale = newLocale;
+            this.updateElements(this.questions);
+            this.refresh();
+          }
+        );
+      });
+    }
+  }
+
+  public get name() {
+    return "panel";
   }
 
   public get allowDynamicLayout() {
@@ -119,6 +224,15 @@ export class VisualizationPanel extends VisualizerBase {
   private getLayoutEngine: () => any;
   public get layoutEngine() {
     return !!this.getLayoutEngine && this.getLayoutEngine();
+  }
+
+  protected updateElements(questions: any[]) {
+    (questions || []).forEach((question) => {
+      const element = this.getElement(question.name);
+      if (!!element) {
+        element.displayName = question.title;
+      }
+    });
   }
 
   protected buildElements(questions: any[]): IVisualizerPanelElement[] {
@@ -161,8 +275,17 @@ export class VisualizationPanel extends VisualizerBase {
     return this._elements.filter((el) => !this.isVisible(el.visibility));
   }
 
+  protected get locales() {
+    if (this.options.survey) return this.options.survey.getUsedLocales();
+    return [];
+  }
+
   protected getElement(name: string) {
     return this._elements.filter((el) => el.name === name)[0];
+  }
+
+  getVisualizer(dataName: string) {
+    return this.visualizers.filter((v) => v.dataName === dataName)[0];
   }
 
   /**
@@ -184,23 +307,11 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
-   * Destroys given visualizer.
+   * Renders given panel element.
    */
-  public destroyVisualizer(visualizer: VisualizerBase) {
-    if (visualizer instanceof SelectBase) {
-      visualizer.setSelection(undefined);
-      visualizer.onDataItemSelected = undefined;
-    }
-    visualizer.onUpdate = undefined;
-    visualizer.destroy();
-    this.visualizers.splice(this.visualizers.indexOf(visualizer), 1);
-  }
+  protected renderPanelElement(element: IVisualizerPanelRenderedElement) {
+    const visualizer = this.getVisualizer(element.name);
 
-  /**
-   * Renders given element.
-   */
-  public renderVisualizer(element: IVisualizerPanelElement) {
-    var question = this.questions.filter((q) => q.name === element.name)[0];
     const questionElement = document.createElement("div");
     const questionContent = document.createElement("div");
     const titleElement = document.createElement("h3");
@@ -218,81 +329,9 @@ export class VisualizationPanel extends VisualizerBase {
     questionContent.appendChild(vizualizerElement);
     questionElement.appendChild(questionContent);
 
-    const visualizer = VisualizerFactory.createVizualizer(
-      question,
-      this.filteredData
-    );
-
-    if (this.allowHideQuestions) {
-      visualizer.registerToolbarItem(
-        "removeQuestion",
-        () => {
-          return ToolbarHelper.createButton(
-            () => {
-              setTimeout(() => {
-                element.visibility = ElementVisibility.Invisible;
-                this.destroyVisualizer(visualizer);
-                !!this.layoutEngine &&
-                  this.layoutEngine.remove([questionElement]);
-                this.contentContainer.removeChild(questionElement);
-                this.visibleElementsChanged(element);
-              }, 0);
-            },
-            localization.getString("hideButton")
-          );
-        }
-      );
-    }
-
-    if (visualizer instanceof SelectBase) {
-      var filterInfo = {
-        text: <HTMLElement>undefined,
-        element: <HTMLDivElement>undefined,
-        update: function (selection: any) {
-          if (!!selection && !!selection.value) {
-            this.element.style.display = "inline-block";
-            this.text.innerHTML = "Filter: [" + selection.text + "]";
-          } else {
-            this.element.style.display = "none";
-            this.text.innerHTML = "";
-          }
-        },
-      };
-
-      visualizer.registerToolbarItem(
-        "questionFilterInfo",
-        () => {
-          filterInfo.element = document.createElement("div");
-          filterInfo.element.className = "sa-question__filter";
-
-          filterInfo.text = document.createElement("span");
-          filterInfo.text.className = "sa-question__filter-text";
-          filterInfo.element.appendChild(filterInfo.text);
-
-          const filterClear = ToolbarHelper.createButton(() => {
-            visualizer.setSelection(undefined);
-          }, localization.getString("clearButton"));
-          filterInfo.element.appendChild(filterClear);
-
-          filterInfo.update(visualizer.selection);
-
-          return filterInfo.element;
-        }
-      );
-
-      visualizer.onDataItemSelected = (
-        selectedValue: any,
-        selectedText: string
-      ) => {
-        filterInfo.update({ value: selectedValue, text: selectedText });
-        this.setFilter(question.name, selectedValue);
-      };
-    }
-
     visualizer.render(vizualizerElement);
-    visualizer.onUpdate = () => this.layout();
-    this.visualizers.push(visualizer);
 
+    element.renderedElement = questionElement;
     return questionElement;
   }
 
@@ -312,7 +351,7 @@ export class VisualizationPanel extends VisualizerBase {
     container.className += " sa-panel__content sa-grid";
 
     this.visibleElements.forEach((element) => {
-      let questionElement = this.renderVisualizer(element);
+      let questionElement = this.renderPanelElement(element);
       container.appendChild(questionElement);
     });
 
@@ -341,14 +380,6 @@ export class VisualizationPanel extends VisualizerBase {
       layoutEngine.destroy();
       this.getLayoutEngine = undefined;
     }
-    this.visualizers.forEach((visualizer) => {
-      visualizer.onUpdate = undefined;
-      if (visualizer instanceof SelectBase) {
-        visualizer.onDataItemSelected = undefined;
-      }
-      visualizer.destroy();
-    });
-    this.visualizers = [];
     super.destroyContent(container);
   }
 
@@ -360,19 +391,15 @@ export class VisualizationPanel extends VisualizerBase {
     this.applyFilter();
   }
 
-
   /**
-   * Updates visualizer and all inner content.
+   * Redraws visualizer and all inner content.
    */
-  public refresh(hard: boolean = false) {
-    if (hard && this.visualizers.length > 0 && !!this.contentContainer) {
-      this.destroyContent(this.contentContainer);
-      this.renderContent(this.contentContainer);
-    } else {
-      this.visualizers.forEach((visualizer) =>
-        setTimeout(() => visualizer.update(this.filteredData), 10)
-      );
+  public refresh() {
+    if (!!this.toolbarContainer) {
+      this.destroyToolbar(this.toolbarContainer);
+      this.renderToolbar(this.toolbarContainer);
     }
+    super.refresh();
   }
 
   /**
@@ -412,6 +439,20 @@ export class VisualizationPanel extends VisualizerBase {
         (key) => item[key] !== this.filterValues[key]
       );
     });
-    this.refresh();
+    this.visualizers.forEach((visualizer) =>
+      visualizer.update(this.filteredData)
+    );
+  }
+
+  destroy() {
+    super.destroy();
+    this.visualizers.forEach((visualizer) => {
+      visualizer.onUpdate = undefined;
+      if (visualizer instanceof SelectBase) {
+        visualizer.onDataItemSelected = undefined;
+      }
+      visualizer.destroy();
+    });
+    this.visualizers = [];
   }
 }

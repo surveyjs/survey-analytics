@@ -2,7 +2,6 @@ import { ItemValue, QuestionMatrixModel, Question } from "survey-core";
 import { SelectBase } from "./selectBase";
 
 export class Matrix extends SelectBase {
-
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
@@ -11,36 +10,41 @@ export class Matrix extends SelectBase {
     super(question, data, options);
   }
 
-  valuesSource(): any[] {
-    const question: QuestionMatrixModel = <any>this.question;
-    return question.columns;
+  public get name() {
+    return "matrix";
   }
 
-  getLabels(): any[] {
+  getSeriesValues(): Array<string> {
     const question: QuestionMatrixModel = <any>this.question;
-    return question.rows.map((row: any) =>
+    return question.rows.map((row: ItemValue) => "" + row.value);
+  }
+
+  getSeriesLabels(): Array<string> {
+    const question: QuestionMatrixModel = <any>this.question;
+    return question.rows.map((row: ItemValue) =>
       ItemValue.getTextOrHtmlByValue(question.rows, row.value)
     );
   }
 
-  getData(): any[] {
+  valuesSource(): Array<ItemValue> {
     const question: QuestionMatrixModel = <any>this.question;
-    const datasets: Array<any> = this.valuesSource().map(choice => {
-      return question.rows.map((v: any) => 0);
-    });
+    return question.columns;
+  }
 
-    this.data.forEach(rowData => {
-      const questionValue: any = rowData[this.question.name];
-      if (!!questionValue) {
-        question.rows.forEach((row: any, index: number) => {
-          this.getValues().forEach((val: any, dsIndex: number) => {
-            if (questionValue[row.value] == val) {
-              datasets[dsIndex][index]++;
-            }
-          });
-        });
-      }
-    });
-    return datasets;
+  getData(): any[] {
+    const statistics = super.getData();
+    const series = this.getSeriesValues();
+    const values = this.getValues();
+    if (series.length > 1) {
+      const preparedData: Array<Array<number>> = [];
+      values.forEach((val, valueIndex) => {
+        const seriesData = series.map(
+          (seriesName, seriesIndex) => statistics[seriesIndex][valueIndex]
+        );
+        preparedData.push(seriesData);
+      });
+      return preparedData;
+    }
+    return statistics;
   }
 }
