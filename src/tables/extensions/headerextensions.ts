@@ -176,7 +176,7 @@ TableExtensions.registerExtension({
       el.appendChild(option);
     });
     el.onchange = () => {
-      table.setLocale(el.value);
+      table.locale = el.value;
     };
     return el;
   },
