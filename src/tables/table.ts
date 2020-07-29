@@ -64,7 +64,10 @@ export abstract class Table {
   public abstract applyFilter(value: string): void;
   public abstract applyColumnFilter(columnName: string, value: string): void;
   public abstract sortByColumn(columnName: string, direction: string): void;
-  public abstract getPageNumber(): number;
+
+  public getPageNumber(): number {
+    return this.currentPageNumber;
+  }
 
   public setPageNumber(value: number) {
     this.currentPageNumber = value;
