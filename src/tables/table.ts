@@ -1,5 +1,10 @@
 import { SurveyModel, Question, Event } from "survey-core";
-import { ColumnVisibility, QuestionLocation, ColumnDataType } from "./config";
+import {
+  ColumnVisibility,
+  QuestionLocation,
+  ColumnDataType,
+  ITableState,
+} from "./config";
 import { Details, TableRow } from "./extensions/rowextensions";
 import { localization } from "../localizationManager";
 
@@ -144,12 +149,14 @@ export abstract class Table {
       (column) => column.name === columnName
     )[0].location = location;
     this.onColumnsLocationChanged.fire(this, null);
+    this.onStateChanged.fire(this, this.state);
   }
 
   public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
     var column = this.columns.filter((column) => column.name === columnName)[0];
     column.visibility = visibility;
     this.onColumnsVisibilityChanged.fire(this, null);
+    this.onStateChanged.fire(this, this.state);
   }
 
   public getColumnVisibility(columnName: string): ColumnVisibility {
@@ -168,10 +175,22 @@ export abstract class Table {
     this._rows.splice(index, 1);
   }
 
-  public setLocale(newLocale: string) {
+  /**
+   * Returns current locale of the table.
+   * If locales more than one, the language selection dropdown will be added in the toolbar
+   */
+  public get locale() {
+    return localization.currentLocale;
+  }
+
+  /**
+   * Sets locale for table.
+   */
+  public set locale(newLocale: string) {
     this.survey.locale = newLocale;
     localization.currentLocale = newLocale;
     this.refresh(true);
+    this.onStateChanged.fire(this, this.state);
   }
 
   public getLocales(): Array<string> {
@@ -200,4 +219,26 @@ export abstract class Table {
   public get isRendered() {
     return !!this.renderResult;
   }
+
+  /**
+   * Vizualization panel state getter.
+   */
+  public get state(): ITableState {
+    return { locale: localization.currentLocale, elements: this._columns };
+  }
+  /**
+   * Vizualization panel state setter.
+   */
+  public set state(newState: ITableState) {
+    localization.currentLocale = newState.locale;
+    this._columns = newState.elements;
+    this.onStateChanged.fire(this, this.state);
+  }
+  /**
+   * Fires when vizualization panel state changed.
+   */
+  public onStateChanged = new Event<
+    (sender: Table, options: any) => any,
+    any
+  >();
 }

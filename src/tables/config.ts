@@ -20,3 +20,8 @@ export interface ITableColumn {
   visibility: ColumnVisibility;
   location: QuestionLocation;
 }
+
+export interface ITableState {
+  locale: string;
+  elements: ITableColumn[];
+}

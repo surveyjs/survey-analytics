@@ -10,3 +10,8 @@ export interface IVisualizerPanelElement {
   visibility: ElementVisibility;
   type?: string;
 }
+
+export interface IState {
+  locale: string;
+  elements: IVisualizerPanelElement[];
+}

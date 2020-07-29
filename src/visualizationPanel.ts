@@ -3,7 +3,7 @@ import { VisualizerBase } from "./visualizerBase";
 import { SelectBase } from "./selectBase";
 import { DocumentHelper } from "./utils/index";
 import { localization } from "./localizationManager";
-import { IVisualizerPanelElement, ElementVisibility } from "./config";
+import { IVisualizerPanelElement, ElementVisibility, IState } from "./config";
 import { VisualizerFactory } from "./visualizerFactory";
 const Muuri = require("muuri");
 import "./visualizationPanel.scss";
@@ -206,6 +206,10 @@ export class VisualizationPanel extends VisualizerBase {
         );
       });
     }
+
+    this.onVisibleElementsChanged.add(() => {
+      this.onStateChanged.fire(this, this.state);
+    });
   }
 
   /**
@@ -232,6 +236,7 @@ export class VisualizationPanel extends VisualizerBase {
     }
     localization.currentLocale = newLocale;
     this.refresh();
+    this.onStateChanged.fire(this, this.state);
   }
 
   /**
@@ -508,4 +513,26 @@ export class VisualizationPanel extends VisualizerBase {
     });
     this.visualizers = [];
   }
+
+  /**
+   * Vizualization panel state getter.
+   */
+  public get state(): IState {
+    return { locale: localization.currentLocale, elements: this._elements };
+  }
+  /**
+   * Vizualization panel state setter.
+   */
+  public set state(newState: IState) {
+    localization.currentLocale = newState.locale;
+    this._elements = newState.elements;
+    this.onStateChanged.fire(this, this.state);
+  }
+  /**
+   * Fires when vizualization panel state changed.
+   */
+  public onStateChanged = new Event<
+    (sender: VisualizationPanel, options: any) => any,
+    any
+  >();
 }
