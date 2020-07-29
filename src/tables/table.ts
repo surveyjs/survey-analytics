@@ -25,7 +25,7 @@ export abstract class Table {
     localization.currentLocale = this.survey.locale;
   }
   protected renderResult: HTMLElement;
-  protected currentPageSize: number;
+  protected currentPageSize: number = 5;
   protected currentPageNumber: number;
   protected _rows: TableRow[] = [];
 
@@ -64,7 +64,22 @@ export abstract class Table {
   public abstract applyFilter(value: string): void;
   public abstract applyColumnFilter(columnName: string, value: string): void;
   public abstract sortByColumn(columnName: string, direction: string): void;
-  public abstract setPageSize(value: number): void;
+
+  public getPageNumber(): number {
+    return this.currentPageNumber;
+  }
+
+  public setPageNumber(value: number) {
+    this.currentPageNumber = value;
+  }
+
+  public getPageSize(): number {
+    return this.currentPageSize;
+  }
+
+  public setPageSize(value: number): void {
+    this.currentPageSize = value;
+  }
 
   public getCreatedRows(): TableRow[] {
     return [].concat(this._rows);
@@ -186,6 +201,7 @@ export abstract class Table {
   }
 
   public refresh(hard: boolean = false) {
+    this.currentPageNumber = this.getPageNumber();
     if (this.isRendered) {
       if (hard) {
         this.initTableData(this.data);
@@ -194,6 +210,8 @@ export abstract class Table {
       this.destroy();
       this.render(targetNode);
     }
+    this.setPageSize(this.currentPageSize);
+    this.setPageNumber(this.currentPageNumber);
   }
 
   public destroy() {

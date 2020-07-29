@@ -100,7 +100,7 @@ TableExtensions.registerExtension({
         });
         el.appendChild(option);
       });
-      el.value = "5";
+      el.value = String(table.getPageSize());
 
       el.onchange = () => {
         table.setPageSize(Number(el.value));
