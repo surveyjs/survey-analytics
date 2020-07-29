@@ -11,33 +11,27 @@ test("allowDynamicLayout option", () => {
         templateElements: [
           {
             type: "text",
-            name: "question2"
-          }
-        ]
-      }
-    ]
+            name: "question2",
+          },
+        ],
+      },
+    ],
   };
   const data = [
     {
-      question1: [{ question2: "testValue" }]
-    }
+      question1: [{ question2: "testValue" }],
+    },
   ];
   const survey = new SurveyModel(json);
-  let viz = new VisualizationPanel(
-    survey.getAllQuestions(),
-    data,
-    {}
-  );
-  expect(viz.allowDynamicLayout).toBeTruthy();
-  viz = new VisualizationPanel(
-    survey.getAllQuestions(),
-    data,
-    { allowDynamicLayout: false }
-  );
-  expect(viz.allowDynamicLayout).toBeFalsy();
+  let vis = new VisualizationPanel(survey.getAllQuestions(), data, {});
+  expect(vis.allowDynamicLayout).toBeTruthy();
+  vis = new VisualizationPanel(survey.getAllQuestions(), data, {
+    allowDynamicLayout: false,
+  });
+  expect(vis.allowDynamicLayout).toBeFalsy();
 
-  viz.render(document.createElement("div"));
-  expect(viz.layoutEngine).toBe(undefined);
+  vis.render(document.createElement("div"));
+  expect(vis.layoutEngine).toBe(undefined);
 });
 
 test("allowHideQuestions option", () => {
@@ -50,35 +44,86 @@ test("allowHideQuestions option", () => {
         templateElements: [
           {
             type: "text",
-            name: "question2"
-          }
-        ]
-      }
-    ]
+            name: "question2",
+          },
+        ],
+      },
+    ],
   };
   const data = [
     {
-      question1: [{ question2: "testValue" }]
-    }
+      question1: [{ question2: "testValue" }],
+    },
   ];
   const survey = new SurveyModel(json);
-  let viz = new VisualizationPanel(
-    survey.getAllQuestions(),
-    data,
-    { allowDynamicLayout: false }
-  );
-  expect(viz.allowHideQuestions).toBeTruthy();
-  viz.render(document.createElement("div"));
-  var innerViz = viz["visualizers"][0]
-  expect(innerViz.toolbarItemCreators["removeQuestion"]).toBeDefined();
+  let vis = new VisualizationPanel(survey.getAllQuestions(), data, {
+    allowDynamicLayout: false,
+  });
+  expect(vis.allowHideQuestions).toBeTruthy();
+  vis.render(document.createElement("div"));
+  var innerVis = vis["visualizers"][0];
+  expect(innerVis["toolbarItemCreators"]["removeQuestion"]).toBeDefined();
 
-  viz = new VisualizationPanel(
+  vis = new VisualizationPanel(survey.getAllQuestions(), data, {
+    allowDynamicLayout: false,
+    allowHideQuestions: false,
+  });
+  expect(vis.allowHideQuestions).toBeFalsy();
+  vis.render(document.createElement("div"));
+  innerVis = vis["visualizers"][0];
+  expect(innerVis["toolbarItemCreators"]["removeQuestion"]).toBeUndefined();
+});
+
+test("change language", () => {
+  var json = {
+    locale: "ru",
+    questions: [
+      {
+        type: "dropdown",
+        name: "satisfaction",
+        title: {
+          default: "How satisfied are you with the Product?",
+          ru: "Насколько Вас устраивает наш продукт?",
+        },
+        choices: [
+          {
+            value: 0,
+            text: {
+              default: "Not Satisfied",
+              ru: "Coвсем не устраивает",
+            },
+          },
+          {
+            value: 1,
+            text: {
+              default: "Satisfied",
+              ru: "Устраивает",
+            },
+          },
+          {
+            value: 2,
+            text: {
+              default: "Completely satisfied",
+              ru: "Полностью устраивает",
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visualizationPanel = new VisualizationPanel(
     survey.getAllQuestions(),
-    data,
-    { allowDynamicLayout: false, allowHideQuestions: false }
+    [],
+    { survey: survey }
   );
-  expect(viz.allowHideQuestions).toBeFalsy();
-  viz.render(document.createElement("div"));
-  innerViz = viz["visualizers"][0]
-  expect(innerViz.toolbarItemCreators["removeQuestion"]).toBeUndefined();
+  var element = visualizationPanel.getElement("satisfaction");
+  expect(visualizationPanel.locale).toEqual("ru");
+  expect(element.displayName).toEqual("Насколько Вас устраивает наш продукт?");
+
+  visualizationPanel.locale = "en";
+  expect(visualizationPanel.locale).toEqual("");
+  expect(element.displayName).toEqual(
+    "How satisfied are you with the Product?"
+  );
 });

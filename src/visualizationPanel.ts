@@ -193,16 +193,30 @@ export class VisualizationPanel extends VisualizerBase {
             }),
           (option: any) => false,
           (e: any) => {
-            var survey = this.options.survey;
             var newLocale = e.target.value;
-            survey.locale = newLocale;
-            localization.currentLocale = newLocale;
-            this.updateElements(this.questions);
-            this.refresh();
+            this.locale = newLocale;
           }
         );
       });
     }
+  }
+
+  public get locale() {
+    var survey = this.options.survey;
+    if (!!survey) {
+      return survey.locale;
+    }
+    return localization.currentLocale;
+  }
+
+  public set locale(newLocale: string) {
+    var survey = this.options.survey;
+    if (!!survey) {
+      survey.locale = newLocale;
+      this.updateElements(this.questions);
+    }
+    localization.currentLocale = newLocale;
+    this.refresh();
   }
 
   public get name() {
@@ -282,7 +296,7 @@ export class VisualizationPanel extends VisualizerBase {
     return [];
   }
 
-  protected getElement(name: string) {
+  public getElement(name: string) {
     return this._elements.filter((el) => el.name === name)[0];
   }
 
