@@ -160,12 +160,13 @@ TableExtensions.registerExtension({
   name: "changelocale",
   visibleIndex: 1,
   render: function (table) {
+    var locales = table.getLocales();
+    if (locales.length < 2) return null;
     const el = <HTMLSelectElement>(
       DocumentHelper.createElement("select", "sa-table__header-extension", {})
     );
-
     var optionsValues = [localization.getString("changeLocale")].concat(
-      table.getLocales()
+      locales
     );
     optionsValues.forEach(function (val) {
       var option = DocumentHelper.createElement("option", "", {

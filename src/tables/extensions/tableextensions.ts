@@ -11,32 +11,37 @@ export class TableExtensions {
   constructor(protected targetNode: HTMLElement, protected table: Table) {}
   protected location: string;
   protected options: any = {};
-  public static actions: {
+  private static extensions: {
     [location: string]: Array<ITableExtension>;
   } = {};
 
   public render() {
-    var actions = TableExtensions.actions[this.location];
-    if (!!actions) {
-      actions = this.sortExtensions(actions);
-      actions.forEach((extension) => {
-        this.targetNode.appendChild(extension.render(this.table, this.options));
+    var extensions = TableExtensions.extensions[this.location];
+    if (!!extensions) {
+      extensions = this.sortExtensions(extensions);
+      extensions.forEach((extension) => {
+        if (!!extension.render) {
+          var action = extension.render(this.table, this.options);
+          if (!!action) {
+            this.targetNode.appendChild(action);
+          }
+        }
       });
     }
   }
 
   public static registerExtension(extension: ITableExtension) {
-    if (!this.actions[extension.location])
-      this.actions[extension.location] = [];
-    this.actions[extension.location].push(extension);
+    if (!this.extensions[extension.location])
+      this.extensions[extension.location] = [];
+    this.extensions[extension.location].push(extension);
   }
 
   public static findExtension(
     location: string,
     actionName: string
   ): ITableExtension {
-    if (!this.actions[location]) return null;
-    var extension = this.actions[location].filter(function (
+    if (!this.extensions[location]) return null;
+    var extension = this.extensions[location].filter(function (
       extension: ITableExtension
     ) {
       return extension.name == actionName;

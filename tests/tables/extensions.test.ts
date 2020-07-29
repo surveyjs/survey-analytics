@@ -1,6 +1,7 @@
 import { SurveyModel } from "survey-core";
 import { Tabulator } from "../../src/tables/tabulator";
 import { TableExtensions } from "../../src/tables/extensions/tableextensions";
+import { HeaderExtensions } from "../../src/tables/extensions/headerextensions";
 
 const json = {
   questions: [
@@ -20,7 +21,7 @@ const json = {
 };
 const survey = new SurveyModel(json);
 const tabulator = new Tabulator(survey, [], null);
-TableExtensions.actions["row"] = [];
+(<any>TableExtensions).extensions["row"] = [];
 
 test("registerExtension method", () => {
   var extension = {
@@ -30,8 +31,8 @@ test("registerExtension method", () => {
     render: null,
   };
   TableExtensions.registerExtension(extension);
-  expect(TableExtensions.actions["row"][0]).toEqual(extension);
-  TableExtensions.actions["row"].splice(0, 1);
+  expect((<any>TableExtensions).extensions["row"][0]).toEqual(extension);
+  (<any>TableExtensions).extensions["row"].splice(0, 1);
 });
 
 test("check extensions order with same index", () => {
@@ -53,12 +54,12 @@ test("check extensions order with same index", () => {
   );
   expect(
     (<any>tableExtensions)
-      .sortExtensions(TableExtensions.actions["row"])
+      .sortExtensions((<any>TableExtensions).extensions["row"])
       .map((extension) => {
         return extension.name;
       })
   ).toEqual(["prev", "next"]);
-  TableExtensions.actions["row"].splice(0, 2);
+  (<any>TableExtensions).extensions["row"].splice(0, 2);
 });
 
 test("check extensions order index -1", () => {
@@ -81,12 +82,12 @@ test("check extensions order index -1", () => {
   );
   expect(
     (<any>tableExtensions)
-      .sortExtensions(TableExtensions.actions["row"])
+      .sortExtensions((<any>TableExtensions).extensions["row"])
       .map((extension) => {
         return extension.name;
       })
   ).toEqual(["visible"]);
-  TableExtensions.actions["row"].splice(0, 2);
+  (<any>TableExtensions).extensions["row"].splice(0, 2);
 });
 
 test("check findExtension method", () => {
@@ -98,4 +99,47 @@ test("check findExtension method", () => {
   };
   TableExtensions.registerExtension(extension);
   expect(TableExtensions.findExtension("row", "test")).toEqual(extension);
+  (<any>TableExtensions).extensions["row"].splice(0, 1);
+});
+
+test("check rendering extension with null render", () => {
+  var extension = {
+    name: "test",
+    location: "header",
+    visibleIndex: 0,
+    render: null,
+  };
+  TableExtensions.registerExtension(extension);
+  var tableExtensions = new HeaderExtensions(
+    document.createElement("extensionsContainer"),
+    tabulator
+  );
+  expect(() => {
+    tableExtensions.render();
+  }).not.toThrow(Error);
+  (<any>TableExtensions).extensions["header"].splice(0, 1);
+});
+
+test("check rendering extension with render's null return value", () => {
+  var extension = {
+    name: "test",
+    location: "header",
+    visibleIndex: 0,
+    render: () => {
+      return null;
+    },
+  };
+  TableExtensions.registerExtension(extension);
+  var tableExtensions = new HeaderExtensions(
+    document.createElement("extensionsContainer"),
+    tabulator
+  );
+  expect(() => {
+    try {
+      tableExtensions.render();
+    } catch {
+      throw new Error("tried to append null child");
+    }
+  }).not.toThrow(Error);
+  (<any>TableExtensions).extensions["header"].splice(0, 1);
 });
