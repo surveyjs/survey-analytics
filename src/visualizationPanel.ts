@@ -201,6 +201,11 @@ export class VisualizationPanel extends VisualizerBase {
     }
   }
 
+  /**
+   * Returns current locale of the visualization panel.
+   * If locales more than one, the language selection dropdown will be added in the toolbar
+   * In order to use survey locales the survey instance object should be passed as 'survey' option for visualizer
+   */
   public get locale() {
     var survey = this.options.survey;
     if (!!survey) {
@@ -209,6 +214,9 @@ export class VisualizationPanel extends VisualizerBase {
     return localization.currentLocale;
   }
 
+  /**
+   * Sets locale for visualization panel.
+   */
   public set locale(newLocale: string) {
     var survey = this.options.survey;
     if (!!survey) {
@@ -219,10 +227,16 @@ export class VisualizationPanel extends VisualizerBase {
     this.refresh();
   }
 
+  /**
+   * Returns name of the visualizer - 'panel' for the VisualizationPanel.
+   */
   public get name() {
     return "panel";
   }
 
+  /**
+   * Returns whether the VisualizationPanel allows dynamic layouting - rearrange items via drap/drop.
+   */
   public get allowDynamicLayout() {
     return (
       this.options.allowDynamicLayout === undefined ||
@@ -230,6 +244,9 @@ export class VisualizationPanel extends VisualizerBase {
     );
   }
 
+  /**
+   * Returns whether the VisualizationPanel allows to hide/show individual inner visualizers.
+   */
   public get allowHideQuestions() {
     return (
       this.options.allowHideQuestions === undefined ||
@@ -238,6 +255,9 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   private getLayoutEngine: () => any;
+  /**
+   * Returns the layout engine instance if any.
+   */
   public get layoutEngine() {
     return !!this.getLayoutEngine && this.getLayoutEngine();
   }
@@ -262,6 +282,10 @@ export class VisualizationPanel extends VisualizerBase {
     });
   }
 
+  /**
+   * Returns panel elements descriptions array.
+   * Inner visualizers are rendered in the order of this array and with titles from the displayName property
+   */
   public getElements(): IVisualizerPanelElement[] {
     return (this._elements || []).map((element) => {
       return {
@@ -296,10 +320,16 @@ export class VisualizationPanel extends VisualizerBase {
     return [];
   }
 
+  /**
+   * Returns panel element description by the question name.
+   */
   public getElement(name: string) {
     return this._elements.filter((el) => el.name === name)[0];
   }
 
+  /**
+   * Returns panel element visualizer by the question name.
+   */
   getVisualizer(dataName: string) {
     return this.visualizers.filter((v) => v.dataName === dataName)[0];
   }
