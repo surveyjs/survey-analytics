@@ -18,11 +18,18 @@ export interface IVisualizerPanelRenderedElement
 
 /**
  * VisualizationPanel is responsible for displaying an array of survey questions
+ *
+ * constructor parameters:
  * questions - an array of survey questions to visualize
  * data - an array of answers in format of survey result
+ *
  * options:
  * allowDynamicLayout - set it to false to disable items drag/drop reordering and dynamic layouting
  * allowHideQuestions - set it to false to deny user to hide/show individual questions
+ * seriesValues - an array of series values in data to group data by series
+ * seriesLabels - labels for series to display, if not passed the seriesValues are used as labels
+ * survey - pass survey instance to use localses from the survey JSON
+ *
  * elements - list of visual element descriptions
  */
 export class VisualizationPanel extends VisualizerBase {
