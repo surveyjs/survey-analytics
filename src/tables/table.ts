@@ -1,6 +1,7 @@
 import { SurveyModel, Question, Event } from "survey-core";
 import { ColumnVisibility, QuestionLocation, ColumnDataType } from "./config";
 import { Details, TableRow } from "./extensions/rowextensions";
+import { localization } from "../localizationManager";
 
 export abstract class Table {
   protected tableData: any;
@@ -16,8 +17,11 @@ export abstract class Table {
       this._columns = this.buildColumns(survey);
     }
     this.initTableData(data);
+    localization.currentLocale = this.survey.locale;
   }
-
+  protected renderResult: HTMLElement;
+  protected currentPageSize: number;
+  protected currentPageNumber: number;
   protected _rows: TableRow[] = [];
 
   protected rowDetails: { [rowName: string]: Details };
@@ -150,5 +154,35 @@ export abstract class Table {
   public removeRow(row: TableRow): void {
     var index = this._rows.indexOf(row);
     this._rows.splice(index, 1);
+  }
+
+  public setLocale(newLocale: string) {
+    this.survey.locale = newLocale;
+    localization.currentLocale = newLocale;
+    this.refresh(true);
+  }
+
+  public getLocales(): Array<string> {
+    return [].concat(this.survey.getUsedLocales());
+  }
+
+  public refresh(hard: boolean = false) {
+    if (this.isRendered) {
+      if (hard) {
+        this.initTableData(this.data);
+      }
+      var targetNode = this.renderResult;
+      this.destroy();
+      this.render(targetNode);
+    }
+  }
+
+  public destroy() {
+    this.renderResult.innerHTML = "";
+    this.renderResult = undefined;
+  }
+
+  public get isRendered() {
+    return !!this.renderResult;
   }
 }

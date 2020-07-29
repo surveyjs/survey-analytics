@@ -64,8 +64,6 @@ export class DataTables extends Table {
     }
   }
 
-  private renderResult: HTMLElement;
-
   protected onColumnsChanged() {
     this.columnsChanged.fire(this, { survey: this.survey });
   }
@@ -90,10 +88,6 @@ export class DataTables extends Table {
     }
   }
 
-  public get isRendered() {
-    return !!this.renderResult;
-  }
-
   groupBy: Array<string> = [];
 
   destroy() {
@@ -103,8 +97,7 @@ export class DataTables extends Table {
       jQuery(tableNode).DataTable().destroy();
     }
     this.datatableApi = undefined;
-    this.renderResult.innerHTML = "";
-    this.renderResult = undefined;
+    super.destroy();
   }
 
   public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {

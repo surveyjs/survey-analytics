@@ -30,7 +30,7 @@ TableExtensions.registerExtension({
 TableExtensions.registerExtension({
   location: "header",
   name: "showcolumn",
-  visibleIndex: 1,
+  visibleIndex: 2,
   render: function (table: Table): HTMLElement {
     const dropdown = DocumentHelper.createElement(
       "select",
@@ -88,14 +88,15 @@ TableExtensions.registerExtension({
 TableExtensions.registerExtension({
   location: "header",
   name: "showentries",
-  visibleIndex: 2,
+  visibleIndex: 3,
   render: function (table: Table): HTMLElement {
     function getEntriesDropdown(table: Table): HTMLElement {
       const el = <HTMLSelectElement>DocumentHelper.createElement("select");
       var optionsValues = ["1", "5", "10", "25", "50", "75", "100"];
       optionsValues.forEach(function (val) {
         var option = DocumentHelper.createElement("option", "", {
-          innerHTML: val,
+          value: val,
+          text: val,
         });
         el.appendChild(option);
       });
@@ -151,5 +152,31 @@ TableExtensions.registerExtension({
       });
     };
     return btn;
+  },
+});
+
+TableExtensions.registerExtension({
+  location: "header",
+  name: "changelocale",
+  visibleIndex: 1,
+  render: function (table) {
+    const el = <HTMLSelectElement>(
+      DocumentHelper.createElement("select", "sa-table__header-extension", {})
+    );
+
+    var optionsValues = [localization.getString("changeLocale")].concat(
+      table.getLocales()
+    );
+    optionsValues.forEach(function (val) {
+      var option = DocumentHelper.createElement("option", "", {
+        value: val,
+        text: val,
+      });
+      el.appendChild(option);
+    });
+    el.onchange = () => {
+      table.setLocale(el.value);
+    };
+    return el;
   },
 });
