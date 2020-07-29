@@ -1,5 +1,6 @@
 import { SurveyModel } from "survey-core";
 import { VisualizationPanel } from "../src/visualizationPanel";
+import { IState } from "../src/config";
 
 test("allowDynamicLayout option", () => {
   const json = {
@@ -126,4 +127,67 @@ test("change language", () => {
   expect(element.displayName).toEqual(
     "How satisfied are you with the Product?"
   );
+});
+
+test("getState, setState, onStateChanged", () => {
+  const json = {
+    elements: [
+      {
+        name: "question1",
+        type: "paneldynamic",
+        isRequired: true,
+        templateElements: [
+          {
+            type: "text",
+            name: "question2",
+          },
+        ],
+      },
+    ],
+  };
+  const data = [
+    {
+      question1: [{ question2: "testValue" }],
+    },
+  ];
+  const survey = new SurveyModel(json);
+  let vizPanel = new VisualizationPanel(survey.getAllQuestions(), data, {});
+
+  let initialState: IState = {
+    locale: "",
+    elements: [
+      {
+        displayName: "question1",
+        name: "question1",
+        type: undefined,
+        visibility: 0,
+      },
+    ],
+  };
+  let newState: IState = {
+    locale: "fr",
+    elements: [
+      {
+        displayName: "question2",
+        name: "question2",
+        type: "bar",
+        visibility: 1,
+      },
+    ],
+  };
+  let count = 0;
+
+  vizPanel.onStateChanged.add(() => {
+    count++;
+  });
+
+  expect(vizPanel.state).toEqual(initialState);
+
+  vizPanel.state = newState;
+  expect(vizPanel.state).toEqual(newState);
+  expect(count).toBe(1);
+
+  vizPanel.locale = "ru";
+  expect(count).toBe(2);
+  expect(vizPanel.state.locale).toEqual("ru");
 });

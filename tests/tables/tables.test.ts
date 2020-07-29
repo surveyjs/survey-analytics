@@ -4,6 +4,7 @@ import {
   ColumnDataType,
   ColumnVisibility,
   QuestionLocation,
+  ITableState,
 } from "../../src/tables/config";
 
 const json = {
@@ -23,9 +24,17 @@ const json = {
   ],
 };
 
+class TableTest extends Table {
+  applyColumnFilter() {}
+  applyFilter() {}
+  render() {}
+  setPageSize() {}
+  sortByColumn() {}
+}
+
 test("buildColumns method", () => {
   const survey = new SurveyModel(json);
-  const tables = new Table(survey, [], null);
+  const tables = new TableTest(survey, [], null, [], false);
 
   const columns = <any>tables["buildColumns"](survey);
 
@@ -35,13 +44,41 @@ test("buildColumns method", () => {
 });
 
 test("isVisible method", () => {
-  let tables = new Table(new SurveyModel(), [], null);
+  let tables = new TableTest(new SurveyModel(), [], null, [], false);
   expect(tables.isVisible(ColumnVisibility.Invisible)).toBeFalsy();
   expect(tables.isVisible(ColumnVisibility.PublicInvisible)).toBeFalsy();
   expect(tables.isVisible(ColumnVisibility.Visible)).toBeTruthy();
 
-  tables = new Table(new SurveyModel(), [], null, [], true);
+  tables = new TableTest(new SurveyModel(), [], null, [], true);
   expect(tables.isVisible(ColumnVisibility.Invisible)).toBeFalsy();
   expect(tables.isVisible(ColumnVisibility.PublicInvisible)).toBeTruthy();
   expect(tables.isVisible(ColumnVisibility.Visible)).toBeTruthy();
+});
+
+test("getState, setState, onStateChanged", () => {
+  let tables = new TableTest(new SurveyModel(), [], null, [], false);
+
+  let initialState: ITableState = {
+    locale: "",
+    elements: [],
+  };
+  let newState: ITableState = {
+    locale: "fr",
+    elements: [],
+  };
+  let count = 0;
+
+  tables.onStateChanged.add(() => {
+    count++;
+  });
+
+  expect(tables.state).toEqual(initialState);
+
+  tables.state = newState;
+  expect(tables.state).toEqual(newState);
+  expect(count).toBe(1);
+
+  tables.locale = "ru";
+  expect(count).toBe(2);
+  expect(tables.state.locale).toEqual("ru");
 });
