@@ -38,7 +38,8 @@ var survey = new Survey.SurveyModel(json);
 
 var options = {
   // allowDynamicLayout: false,
-  // allowHideQuestions: false
+  // allowHideQuestions: false,
+  // useValuesAsLabels: false
 };
 
 var visPanel = new SurveyAnalytics.VisualizationPanel(

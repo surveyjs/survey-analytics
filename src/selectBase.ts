@@ -108,9 +108,11 @@ export class SelectBase extends VisualizerBase {
   get selection() {
     return this.selectedItem;
   }
+
   setLabelsOrder(value: string) {
     this.orderByAnsweres = value;
   }
+
   onDataItemSelected: (selectedValue: any, selectedText: string) => void;
 
   updateData(data: Array<{ [index: string]: any }>) {
@@ -134,6 +136,9 @@ export class SelectBase extends VisualizerBase {
   }
 
   getLabels(): Array<string> {
+    if (this.options.useValuesAsLabels) {
+      return this.getValues();
+    }
     const labels: Array<string> = this.valuesSource().map((choice) =>
       ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value)
     );
