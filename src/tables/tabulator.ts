@@ -284,7 +284,17 @@ export class Tabulator extends Table {
     });
   }
 
+  public getPageNumber(): number {
+    return this.tabulatorTables.getPage();
+  }
+
+  public setPageNumber(value: number): void {
+    this.tabulatorTables.setPage(value);
+    super.setPageNumber(value);
+  }
+
   public setPageSize(value: number): void {
+    super.setPageSize(value);
     this.tabulatorTables.setPageSize(value);
   }
 

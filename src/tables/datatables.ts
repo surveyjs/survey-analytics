@@ -76,18 +76,6 @@ export class DataTables extends Table {
     this.refresh(true);
   }
 
-  public refresh(hard: boolean = false) {
-    if (this.isRendered) {
-      if (hard) {
-        this.initTableData(this.data);
-      }
-      this.currentPageNumber = this.datatableApi.page.info().page;
-      var targetNode = this.renderResult;
-      this.destroy();
-      this.render(targetNode);
-    }
-  }
-
   groupBy: Array<string> = [];
 
   destroy() {
@@ -130,7 +118,17 @@ export class DataTables extends Table {
   }
 
   public setPageSize(value: number): void {
+    super.setPageSize(value);
     this.datatableApi.page.len(value).draw(false);
+  }
+
+  public setPageNumber(value: number): void {
+    super.setPageNumber(value);
+    this.datatableApi.page(value).draw(false);
+  }
+
+  public getPageNumber(): number {
+    return this.datatableApi.page();
   }
 
   render(targetNode: HTMLElement) {
