@@ -4,6 +4,7 @@ import {
   QuestionLocation,
   ColumnDataType,
   ITableState,
+  ITableColumn,
 } from "./config";
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
@@ -24,6 +25,11 @@ export abstract class Table {
     }
     this.initTableData(data);
     localization.currentLocale = this.survey.locale;
+
+    if (_columns.length === 0) {
+      this._columns = this.buildColumns(survey);
+    }
+
     this.extensions = new TableExtensions(this);
   }
   protected renderResult: HTMLElement;
@@ -114,6 +120,11 @@ export abstract class Table {
 
   public get columns() {
     return [].concat(this._columns);
+  }
+
+  public set columns(columns: Array<ITableColumn>) {
+    this._columns = columns;
+    this.refresh(true);
   }
 
   protected getAvailableColumns = () => {

@@ -64,9 +64,6 @@ export class Tabulator extends Table {
     super(survey, data, options, _columns, isTrustedAccess);
     const self = this;
     if (!this.options) this.options = defaultOptions;
-    if (_columns.length === 0) {
-      self._columns = self.buildColumns(survey);
-    }
   }
 
   private readonly COLUMN_MIN_WIDTH = 155;
@@ -200,19 +197,18 @@ export class Tabulator extends Table {
   };
 
   protected getColumns = () => {
-    const availableColumns = this.getAvailableColumns();
     var minColumnWidth =
       this.COLUMN_MIN_WIDTH > this.options.columnMinWidth
         ? this.COLUMN_MIN_WIDTH
         : this.options.columnMinWidth;
-    const columns: any = availableColumns.map((column, index) => {
+    const columns: any = this.columns.map((column, index) => {
       var question = this.survey.getQuestionByName(column.name);
       return {
         field: column.name,
         title: (question && question.title) || column.displayName,
         minWidth: minColumnWidth,
         widthShrink: 1,
-        visible: column.visibility !== ColumnVisibility.Invisible,
+        visible: this.isColumnVisible(column),
         headerSort: false,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(
@@ -277,6 +273,7 @@ export class Tabulator extends Table {
   }
 
   public getPageNumber(): number {
+    if (!this.tabulatorTables) return 1;
     return this.tabulatorTables.getPage();
   }
 

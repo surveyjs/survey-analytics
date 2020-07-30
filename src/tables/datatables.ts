@@ -55,25 +55,11 @@ export class DataTables extends Table {
     isTrustedAccess = false
   ) {
     super(survey, data, options, _columns, isTrustedAccess);
-
-    if (_columns.length === 0) {
-      this._columns = this.buildColumns(survey);
-    }
   }
 
   protected onColumnsChanged() {
     this.columnsChanged.fire(this, { survey: this.survey });
   }
-
-  public get columns() {
-    return [].concat(this._columns);
-  }
-  public set columns(columns: Array<ITableColumn>) {
-    this._columns = columns;
-    this.refresh(true);
-  }
-
-  groupBy: Array<string> = [];
 
   destroy() {
     if (!this.renderResult) return;
