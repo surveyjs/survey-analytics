@@ -151,7 +151,7 @@ test("getState, setState, onStateChanged", () => {
     },
   ];
   const survey = new SurveyModel(json);
-  let vizPanel = new VisualizationPanel(survey.getAllQuestions(), data, {});
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
 
   let initialState: IState = {
     locale: "",
@@ -177,17 +177,17 @@ test("getState, setState, onStateChanged", () => {
   };
   let count = 0;
 
-  vizPanel.onStateChanged.add(() => {
+  visPanel.onStateChanged.add(() => {
     count++;
   });
 
-  expect(vizPanel.state).toEqual(initialState);
+  expect(visPanel.state).toEqual(initialState);
 
-  vizPanel.state = newState;
-  expect(vizPanel.state).toEqual(newState);
+  visPanel.state = newState;
+  expect(visPanel.state).toEqual(newState);
+  expect(count).toBe(0);
+
+  visPanel.locale = "ru";
   expect(count).toBe(1);
-
-  vizPanel.locale = "ru";
-  expect(count).toBe(2);
-  expect(vizPanel.state.locale).toEqual("ru");
+  expect(visPanel.state.locale).toEqual("ru");
 });
