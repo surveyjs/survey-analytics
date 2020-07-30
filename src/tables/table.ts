@@ -127,14 +127,6 @@ export abstract class Table {
     this.refresh(true);
   }
 
-  protected getAvailableColumns = () => {
-    return this.columns.filter(
-      (column) =>
-        column.location === QuestionLocation.Column &&
-        this.isVisible(column.visibility)
-    );
-  };
-
   protected initTableData(data: Array<any>) {
     this.tableData = (data || []).map((item) => {
       var dataItem: any = {};
