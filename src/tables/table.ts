@@ -125,6 +125,7 @@ export abstract class Table {
   public set columns(columns: Array<ITableColumn>) {
     this._columns = columns;
     this.refresh(true);
+    this.onStateChanged.fire(this, this.state);
   }
 
   protected initTableData(data: Array<any>) {
