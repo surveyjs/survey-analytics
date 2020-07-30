@@ -191,3 +191,26 @@ test("getState, setState, onStateChanged", () => {
   expect(count).toBe(1);
   expect(visPanel.state.locale).toEqual("ru");
 });
+
+test("onVisibleElementsChanged and onStateChanged raised on move element", () => {
+  const originalElements = [{ name: "el1" }, { name: "el2" }, { name: "el3" }];
+  const resultElements = [{ name: "el2" }, { name: "el3" }, { name: "el1" }];
+  let visPanel = new VisualizationPanel([], [], {}, <any>originalElements);
+  let onVisibleElementsChangedСllCount = 0;
+  visPanel.onVisibleElementsChanged.add((_, options) => {
+    onVisibleElementsChangedСllCount++;
+    expect(options.changed.name).toEqual("el1");
+    expect(options.reason).toEqual("MOVED");
+  });
+  let onStateChangedCallCount = 0;
+  visPanel.onStateChanged.add((_, options) => {
+    onStateChangedCallCount++;
+  });
+  expect(onStateChangedCallCount).toEqual(0);
+  expect(onVisibleElementsChangedСllCount).toEqual(0);
+
+  visPanel["moveElement"](0, 2);
+  expect(onStateChangedCallCount).toEqual(1);
+  expect(onVisibleElementsChangedСllCount).toEqual(1);
+  expect(visPanel.getElements()).toEqual(resultElements);
+});

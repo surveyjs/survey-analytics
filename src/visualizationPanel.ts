@@ -176,10 +176,10 @@ export class VisualizationPanel extends VisualizerBase {
           htmlElement: <HTMLDivElement>undefined,
           update: function (selection: any) {
             if (!!selection && !!selection.value) {
-              this.element.style.display = "inline-block";
+              this.htmlElement.style.display = "inline-block";
               this.text.innerHTML = "Filter: [" + selection.text + "]";
             } else {
-              this.element.style.display = "none";
+              this.htmlElement.style.display = "none";
               this.text.innerHTML = "";
             }
           },
@@ -369,7 +369,7 @@ export class VisualizationPanel extends VisualizerBase {
    * options:
    * elements - panel elements array
    * changed - changed element
-   * reason - reason (string) why event fired: "ADDED" or "REMOVED"
+   * reason - reason (string) why event fired: "ADDED", "MOVED" or "REMOVED"
    */
   public onVisibleElementsChanged = new Event<
     (sender: VisualizationPanel, options: any) => any,
@@ -450,19 +450,22 @@ export class VisualizationPanel extends VisualizerBase {
       container.appendChild(questionElement);
     });
 
-    var moveHandler = (data: any) => {
-      var elements = this._elements.splice(data.fromIndex, 1);
-      this._elements.splice(data.toIndex, 0, elements[0]);
-    };
-
     if (this.allowDynamicLayout) {
       layoutEngine = new Muuri(container, {
         items: "." + questionLayoutedElementClassName,
         dragEnabled: true,
       });
-      layoutEngine.on("move", moveHandler);
+      layoutEngine.on("move", (data: any) =>
+        this.moveElement(data.fromIndex, data.toIndex)
+      );
     }
     !!window && window.dispatchEvent(new UIEvent("resize"));
+  }
+
+  protected moveElement(fromIndex: number, toIndex: number) {
+    var elements = this._elements.splice(fromIndex, 1);
+    this._elements.splice(toIndex, 0, elements[0]);
+    this.visibleElementsChanged(elements[0], "MOVED");
   }
 
   /**
