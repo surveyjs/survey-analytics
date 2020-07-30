@@ -1,6 +1,5 @@
 import { SurveyModel } from "survey-core";
-import { Table } from "../../src/tables/table";
-import { TableRow } from "../../src/tables/extensions/rowextensions";
+import { Table, TableRow } from "../../src/tables/table";
 
 const json = {
   questions: [

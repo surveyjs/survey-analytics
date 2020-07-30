@@ -1,7 +1,6 @@
 import { SurveyModel } from "survey-core";
 import { Tabulator } from "../../src/tables/tabulator";
 import { TableExtensions } from "../../src/tables/extensions/tableextensions";
-import { HeaderExtensions } from "../../src/tables/extensions/headerextensions";
 
 const json = {
   questions: [
@@ -48,10 +47,7 @@ test("check extensions order with same index", () => {
     visibleIndex: 0,
     render: null,
   });
-  var tableExtensions = new TableExtensions(
-    document.createElement("extensionsContainer"),
-    tabulator
-  );
+  var tableExtensions = new TableExtensions(tabulator);
   expect(
     (<any>tableExtensions)
       .sortExtensions((<any>TableExtensions).extensions["row"])
@@ -76,10 +72,7 @@ test("check extensions order index -1", () => {
     visibleIndex: -1,
     render: null,
   });
-  var tableExtensions = new TableExtensions(
-    document.createElement("extensionsContainer"),
-    tabulator
-  );
+  var tableExtensions = new TableExtensions(tabulator);
   expect(
     (<any>tableExtensions)
       .sortExtensions((<any>TableExtensions).extensions["row"])
@@ -110,12 +103,12 @@ test("check rendering extension with null render", () => {
     render: null,
   };
   TableExtensions.registerExtension(extension);
-  var tableExtensions = new HeaderExtensions(
-    document.createElement("extensionsContainer"),
-    tabulator
-  );
+  var tableExtensions = new TableExtensions(tabulator);
   expect(() => {
-    tableExtensions.render();
+    tableExtensions.render(
+      document.createElement("extensionsContainer"),
+      "header"
+    );
   }).not.toThrow(Error);
   (<any>TableExtensions).extensions["header"].splice(0, 1);
 });
@@ -130,13 +123,13 @@ test("check rendering extension with render's null return value", () => {
     },
   };
   TableExtensions.registerExtension(extension);
-  var tableExtensions = new HeaderExtensions(
-    document.createElement("extensionsContainer"),
-    tabulator
-  );
+  var tableExtensions = new TableExtensions(tabulator);
   expect(() => {
     try {
-      tableExtensions.render();
+      tableExtensions.render(
+        document.createElement("extensionsContainer"),
+        "header"
+      );
     } catch {
       throw new Error("tried to append null child");
     }

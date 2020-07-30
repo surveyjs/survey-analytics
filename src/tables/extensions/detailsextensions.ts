@@ -3,7 +3,7 @@ import { Table } from "../table";
 import { DocumentHelper } from "../../utils";
 import { QuestionLocation } from "../config";
 import { TableExtensions } from "./tableextensions";
-import { localization } from "../..";
+import { localization } from "../../localizationManager";
 
 export class Details {
   constructor(
