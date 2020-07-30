@@ -543,7 +543,10 @@ export class VisualizationPanel extends VisualizerBase {
    * Gets vizualization panel state.
    */
   public get state(): IState {
-    return { locale: this.locale, elements: this._elements };
+    return {
+      locale: this.locale,
+      elements: [].concat(this._elements),
+    };
   }
   /**
    * Sets vizualization panel state.
