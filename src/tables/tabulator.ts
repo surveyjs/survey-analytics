@@ -99,6 +99,8 @@ export class Tabulator extends Table {
       paginationButtonCount: this.options.paginationButtonCount,
       paginationElement: paginationElement,
       columnMoved: this.columnMovedCallback,
+      tooltipsHeader: true,
+      tooltips: (cell: any) => cell.getValue(),
     });
 
     const extensionsContainer = DocumentHelper.createElement(

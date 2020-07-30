@@ -211,10 +211,6 @@ $root-font-size: 14px;
   .tabulator .tabulator-header {
     border-bottom: none;
   }
-
-  .tabulator-col-resize-handle {
-    pointer-events: all;
-  }
 }
 
 .sa-tabulator__table {
@@ -237,18 +233,16 @@ $root-font-size: 14px;
 .sa-tabulator__table {
   th {
     vertical-align: top;
-    pointer-events: none;
   }
 }
+
 .sa-tabulator__filter-container {
   margin-bottom: 20px;
   input {
     box-sizing: border-box;
   }
 }
-.tabulator .tabulator-header .tabulator-col {
-  pointer-events: none;
-}
+
 .tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover {
   background-color: white;
 }
@@ -256,13 +250,7 @@ $root-font-size: 14px;
 .sa-tabulator .tabulator .tabulator-header .tabulator-col {
   background-color: white;
 }
-.sa-tabulator
-  .tabulator
-  .tabulator-header
-  .tabulator-col
-  .tabulator-header-filter {
-  pointer-events: all;
-}
+
 .sa-tabulator
   .tabulator
   .tabulator-header
