@@ -207,17 +207,17 @@ export abstract class Table {
   }
 
   public refresh(hard: boolean = false) {
-    this.currentPageNumber = this.getPageNumber();
     if (this.isRendered) {
+      this.currentPageNumber = this.getPageNumber();
       if (hard) {
         this.initTableData(this.data);
       }
       var targetNode = this.renderResult;
       this.destroy();
       this.render(targetNode);
+      this.setPageSize(this.currentPageSize);
+      this.setPageNumber(this.currentPageNumber);
     }
-    this.setPageSize(this.currentPageSize);
-    this.setPageNumber(this.currentPageNumber);
   }
 
   public destroy() {
