@@ -1,3 +1,13 @@
+import { Event } from "survey-core";
+
+/**
+ * Describes data info:
+ * dataName - question name, used as a key to obtain question data
+ * getValues - function returning an array of all possible values
+ * getLabels - function returning an array of human-friendly descriptions for values
+ * getSeriesValues - function returning an array of all possible series values
+ * getSeriesLabels - function returning an array of human-friendly descriptions for series values
+ */
 export interface IDataInfo {
   dataName: string;
   getValues(): Array<any>;
@@ -9,16 +19,60 @@ export interface IDataInfo {
 export class DataProvider {
   public static seriesMarkerKey = "__sa_series_name";
 
+  private _filteredData: Array<{ [index: string]: any }>;
+  private _statisticsCache: { [index: string]: Array<Array<number>> };
+  protected filterValues: { [index: string]: any } = {};
+
   constructor(private _data: Array<any> = []) {}
 
-  get data() {
-    return [].concat(this._data);
-  }
-  set data(data: Array<any>) {
-    this._data = [].concat(data);
+  public reset() {
+    if (
+      this._statisticsCache !== undefined ||
+      this._filteredData !== undefined
+    ) {
+      this._statisticsCache = undefined;
+      this._filteredData = undefined;
+      this.raiseDataChanged();
+    }
   }
 
-  getData(dataInfo: IDataInfo) {
+  public get data() {
+    return [].concat(this._data);
+  }
+  public set data(data: Array<any>) {
+    this._data = [].concat(data);
+    this.reset();
+  }
+
+  protected get filteredData() {
+    if (this._filteredData === undefined) {
+      this._filteredData = this.data.filter((item) => {
+        return !Object.keys(this.filterValues).some(
+          (key) => item[key] !== this.filterValues[key]
+        );
+      });
+    }
+    return this._filteredData;
+  }
+
+  /**
+   * Sets filter by question name and value.
+   */
+  public setFilter(questionName: string, selectedValue: any) {
+    var filterChanged = true;
+    if (selectedValue !== undefined) {
+      filterChanged = this.filterValues[questionName] !== selectedValue;
+      this.filterValues[questionName] = selectedValue;
+    } else {
+      filterChanged = this.filterValues[questionName] !== undefined;
+      delete this.filterValues[questionName];
+    }
+    if (filterChanged) {
+      this.reset();
+    }
+  }
+
+  protected getDataCore(dataInfo: IDataInfo) {
     const dataName = dataInfo.dataName;
     const statistics: Array<Array<number>> = [];
 
@@ -39,7 +93,7 @@ export class DataProvider {
       statistics.push(new Array<number>(values.length).fill(0));
     }
 
-    this.data.forEach((row) => {
+    this.filteredData.forEach((row) => {
       const rowValue: any = row[dataName];
       if (rowValue !== undefined) {
         const rowValues = Array.isArray(rowValue) ? rowValue : [rowValue];
@@ -69,6 +123,39 @@ export class DataProvider {
         }
       }
     });
+
+    this._statisticsCache[dataName] = statistics;
     return statistics;
+  }
+
+  /**
+   * Returns calculated statisctics for the IDataInfo object.
+   */
+  getData(dataInfo: IDataInfo) {
+    const dataName = dataInfo.dataName;
+    if (
+      this._statisticsCache === undefined ||
+      this._statisticsCache[dataName] === undefined
+    ) {
+      if (this._statisticsCache === undefined) {
+        this._statisticsCache = {};
+      }
+      this._statisticsCache[dataName] = this.getDataCore(dataInfo);
+    }
+    return [].concat(this._statisticsCache[dataName]);
+  }
+
+  /**
+   * Fires when data has been changed.
+   */
+  public onDataChanged = new Event<
+    (sender: DataProvider, options: any) => any,
+    any
+  >();
+
+  protected raiseDataChanged() {
+    if (!this.onDataChanged.isEmpty) {
+      this.onDataChanged.fire(this, {});
+    }
   }
 }

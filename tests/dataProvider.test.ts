@@ -4,9 +4,62 @@ import { VisualizationMatrixDropdown } from "../src/visualizationMatrixDropdown"
 import { VisualizationManager } from "../src/visualizationManager";
 import { SelectBase } from "../src/selectBase";
 
-test("ctor", () => {
+const testData = [
+  {
+    q1: 0,
+    q2: "item1",
+    q3: ["item1", "item3"],
+    q4: { innerq1: "item1", innerq2: "item1" },
+  },
+  {
+    q1: 0,
+    q2: "item2",
+    q3: ["item1", "item3"],
+    q4: { innerq1: "item1", innerq2: "item1" },
+  },
+  {
+    q1: 1,
+    q2: "item1",
+    q3: ["item1", "item3"],
+    q4: { innerq1: "item1", innerq2: "item1" },
+  },
+  {
+    q1: 1,
+    q2: "item2",
+    q3: ["item1", "item3"],
+    q4: { innerq1: "item1", innerq2: "item1" },
+  },
+];
+
+const q1testDataInfo = {
+  dataName: "q1",
+  getValues: () => [0, 1, 2, 3],
+  getLabels: () => ["a0", "a1", "a2", "a3"],
+  getSeriesValues: () => [],
+  getSeriesLabels: () => [],
+};
+
+test("ctor/setFilter/reset/onDataChanged", () => {
   const dataProvider = new DataProvider();
+  let callCount = 0;
+  dataProvider.onDataChanged.add(() => callCount++);
+  expect(callCount).toEqual(0);
   expect(dataProvider.data).toEqual([]);
+
+  dataProvider.data = testData;
+  expect(callCount).toEqual(0);
+  expect(dataProvider.data).toEqual(testData);
+
+  expect(dataProvider.getData(q1testDataInfo)).toEqual([[2, 2, 0, 0]]);
+  expect(callCount).toEqual(0);
+
+  dataProvider.setFilter("q2", "item1");
+  expect(callCount).toEqual(1);
+  expect(dataProvider.getData(q1testDataInfo)).toEqual([[1, 1, 0, 0]]);
+  expect(callCount).toEqual(1);
+
+  dataProvider.reset();
+  expect(callCount).toEqual(2);
 });
 
 test("getData for boolean question values - mock", () => {
