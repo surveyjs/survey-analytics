@@ -53,15 +53,15 @@ SurveyAnalyticsTabulator.TableExtensions.registerExtension({
   },
 });
 
-SurveyAnalyticsTabulator.TableExtensions.findExtension(
-  "row",
-  "details"
-).visibleIndex = 1;
-
 var surveyAnalyticsDataTables = new SurveyAnalyticsTabulator.Tabulator(
   survey,
   normalizedData
 );
+
+SurveyAnalyticsTabulator.TableExtensions.findExtension(
+  "row",
+  "details"
+).visibleIndex = 1;
 
 SurveyAnalyticsTabulator.TableExtensions.findExtension(
   "row",
@@ -83,5 +83,6 @@ SurveyAnalyticsTabulator.TableExtensions.findExtension(
   "filter"
 ).visibleIndex = 1;
 
+surveyAnalyticsTabulator.options.actionsColumnWidth = 100;
+
 surveyAnalyticsTabulator.render(document.getElementById("tabulatorContainer"));
-surveyAnalyticsTabulator.tabulatorTables.getColumns()[0].setWidth("100");
