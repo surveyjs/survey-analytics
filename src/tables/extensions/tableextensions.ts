@@ -8,22 +8,20 @@ interface ITableExtension {
 }
 
 export class TableExtensions {
-  constructor(protected targetNode: HTMLElement, protected table: Table) {}
-  protected location: string;
-  protected options: any = {};
+  constructor(private table: Table) {}
   private static extensions: {
     [location: string]: Array<ITableExtension>;
   } = {};
 
-  public render() {
-    var extensions = TableExtensions.extensions[this.location];
+  public render(targetNode: HTMLElement, location: string, options?: any) {
+    var extensions = TableExtensions.extensions[location];
     if (!!extensions) {
       extensions = this.sortExtensions(extensions);
       extensions.forEach((extension) => {
         if (!!extension.render) {
-          var action = extension.render(this.table, this.options);
+          var action = extension.render(this.table, options);
           if (!!action) {
-            this.targetNode.appendChild(action);
+            targetNode.appendChild(action);
           }
         }
       });

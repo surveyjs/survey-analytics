@@ -4,19 +4,7 @@ import { localization } from "../..";
 import { ColumnVisibility, QuestionLocation } from "../config";
 import { TableExtensions } from "./tableextensions";
 
-export class ColumnExtensions extends TableExtensions {
-  constructor(
-    protected targetNode: HTMLElement,
-    protected table: Table,
-    columnName: string
-  ) {
-    super(targetNode, table);
-    this.options.columnName = columnName;
-  }
-  protected location = "column";
-}
-
-ColumnExtensions.registerExtension({
+TableExtensions.registerExtension({
   location: "column",
   name: "drag",
   visibleIndex: 0,
@@ -33,7 +21,7 @@ ColumnExtensions.registerExtension({
   },
 });
 
-ColumnExtensions.registerExtension({
+TableExtensions.registerExtension({
   location: "column",
   name: "sort",
   visibleIndex: 1,
@@ -43,7 +31,7 @@ ColumnExtensions.registerExtension({
     var btn = DocumentHelper.createSvgButton("sorting");
     btn.title = "";
     var direction = "asc";
-    btn.onclick = (e) => {
+    btn.onclick = () => {
       if (direction == "asc") {
         btn.title = descTitle;
         direction = "desc";
@@ -60,7 +48,7 @@ ColumnExtensions.registerExtension({
   },
 });
 
-ColumnExtensions.registerExtension({
+TableExtensions.registerExtension({
   location: "column",
   name: "hide",
   visibleIndex: 2,
@@ -74,7 +62,7 @@ ColumnExtensions.registerExtension({
   },
 });
 
-ColumnExtensions.registerExtension({
+TableExtensions.registerExtension({
   location: "column",
   name: "movetodetails",
   visibleIndex: 3,
@@ -89,7 +77,7 @@ ColumnExtensions.registerExtension({
   },
 });
 
-ColumnExtensions.registerExtension({
+TableExtensions.registerExtension({
   location: "column",
   name: "filter",
   visibleIndex: 4,
@@ -103,7 +91,7 @@ ColumnExtensions.registerExtension({
   },
 });
 
-ColumnExtensions.registerExtension({
+TableExtensions.registerExtension({
   location: "column",
   name: "makepublic",
   visibleIndex: -1,

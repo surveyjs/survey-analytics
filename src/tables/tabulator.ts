@@ -1,13 +1,9 @@
-import { Table } from "./table";
+import { Table, TableRow } from "./table";
 import { SurveyModel } from "survey-core";
 import { ColumnVisibility, QuestionLocation } from "./config";
 
 import "./tabulator.scss";
 import { DocumentHelper } from "../utils";
-import { TabulatorRow } from "./extensions/rowextensions";
-import { ColumnExtensions } from "./extensions/columnextensions";
-import { HeaderExtensions } from "./extensions/headerextensions";
-
 const TabulatorTables = require("tabulator-tables");
 
 if (!!document) {
@@ -76,7 +72,6 @@ export class Tabulator extends Table {
   private readonly COLUMN_MIN_WIDTH = 155;
   public tabulatorTables: any = null;
   private tableContainer: HTMLElement = null;
-  private tableExtensions: HeaderExtensions;
 
   public render = (targetNode: HTMLElement) => {
     targetNode.className += " sa-table sa-tabulator";
@@ -116,8 +111,7 @@ export class Tabulator extends Table {
     header.appendChild(this.createDownloadsBar());
     header.appendChild(extensionsContainer);
     header.appendChild(paginationElement);
-    this.tableExtensions = new HeaderExtensions(extensionsContainer, this);
-    this.tableExtensions.render();
+    this.extensions.render(extensionsContainer, "header");
     this.renderResult = targetNode;
   };
 
@@ -175,7 +169,6 @@ export class Tabulator extends Table {
       row.normalizeHeight();
       this.layout();
     });
-    this.onRowCreated.fire(this, { row: tableRow });
     tableRow.render();
 
     this._rows.push(tableRow);
@@ -202,8 +195,7 @@ export class Tabulator extends Table {
       "div",
       "sa-table__action-container"
     );
-    const columnExtensions = new ColumnExtensions(container, this, columnName);
-    columnExtensions.render();
+    this.extensions.render(container, "column", { columnName: columnName });
     return container;
   };
 
@@ -308,5 +300,33 @@ export class Tabulator extends Table {
 
   public layout() {
     this.tabulatorTables.redraw();
+  }
+}
+
+export class TabulatorRow extends TableRow {
+  constructor(
+    protected table: Table,
+    protected extensionsContainer: HTMLElement,
+    protected detailsContainer: HTMLElement,
+    protected innerRow: any
+  ) {
+    super(table, extensionsContainer, detailsContainer);
+  }
+
+  public getElement(): HTMLElement {
+    return this.innerRow.getElement();
+  }
+
+  public getData(): HTMLElement {
+    return this.innerRow.getData();
+  }
+
+  public getDataPosition(): number {
+    return this.innerRow.getPosition();
+  }
+
+  public remove() {
+    this.innerRow.delete();
+    super.remove();
   }
 }

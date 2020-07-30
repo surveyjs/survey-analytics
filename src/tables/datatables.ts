@@ -1,12 +1,9 @@
-import { Table } from "./table";
+import { Table, TableRow } from "./table";
 import { SurveyModel, Event } from "survey-core";
 import { ITableColumn, ColumnVisibility, QuestionLocation } from "./config";
+import { DocumentHelper } from "../utils";
 
 import "./datatables.scss";
-import { TableRow, DatatablesRow } from "./extensions/rowextensions";
-import { ColumnExtensions } from "./extensions/columnextensions";
-import { HeaderExtensions } from "./extensions/headerextensions";
-import { DocumentHelper } from "../utils";
 
 if (!!document) {
   var svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");
@@ -193,12 +190,7 @@ export class DataTables extends Table {
                   "div",
                   "sa-table__action-container"
                 );
-                var columnExtensions = new ColumnExtensions(
-                  container,
-                  self,
-                  columnsData[index]
-                );
-                columnExtensions.render();
+                self.extensions.render(container, "column", columnsData[index]);
               }
               $thNode.prepend(container);
             });
@@ -216,9 +208,8 @@ export class DataTables extends Table {
     ));
     var extensionsContainer = jQuery("div.sa-table__header-extensions")[0];
 
-    var extensions = new HeaderExtensions(extensionsContainer, this);
     // this.onTableToolsCreated.fire(this, { extensions: extensions });
-    extensions.render();
+    this.extensions.render(extensionsContainer, "header");
 
     datatableApiRef.page(self.currentPageNumber);
     this.datatableApi.rowGroup().enable(false).draw(false);
@@ -255,7 +246,6 @@ export class DataTables extends Table {
             detailsTr.remove();
           }
         });
-        this.onRowCreated.fire(this, { row: tableRow });
         this._rows.push(tableRow);
         tableRow.render();
       });
@@ -271,7 +261,7 @@ export class DataTables extends Table {
   public detailButtonCreators: Array<(columnName?: string) => HTMLElement> = [];
 
   getColumns(): Array<Object> {
-    const columns: any = this.columns.map((column, index) => {
+    const columns: any = this.columns.map((column) => {
       var question = this.survey.getQuestionByName(column.name);
       return {
         name: column.name,
@@ -297,9 +287,47 @@ export class DataTables extends Table {
     ].concat(columns);
   }
 
-  public onColumnSelected: (dataName: string) => void;
-
   public layout() {
     !!this.datatableApi && this.datatableApi.columns.adjust();
+  }
+}
+
+export class DatatablesRow extends TableRow {
+  constructor(
+    protected table: Table,
+    protected extensionsContainer: HTMLElement,
+    protected detailsContainer: HTMLElement,
+    private _innerRow: any
+  ) {
+    super(table, extensionsContainer, detailsContainer);
+    this.rowElement = _innerRow.node();
+    this.rowData = _innerRow.data();
+    this._innerRow = this._innerRow.row(this.rowElement);
+    (<DataTables>table).columnsChanged.add(() => {
+      this.render();
+    });
+  }
+  private rowElement: HTMLElement;
+  private rowData: any;
+
+  public get innerRow() {
+    return this._innerRow.row(this.rowElement);
+  }
+
+  public getElement(): HTMLElement {
+    return this.rowElement;
+  }
+
+  public getData(): HTMLElement {
+    return this.rowData;
+  }
+
+  public getDataPosition(): number {
+    return this.innerRow.index();
+  }
+
+  public remove(): void {
+    this.innerRow.remove().draw();
+    super.remove();
   }
 }

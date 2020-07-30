@@ -4,13 +4,6 @@ import { ColumnVisibility } from "../config";
 import { DocumentHelper } from "../../utils";
 import { TableExtensions } from "./tableextensions";
 
-export class HeaderExtensions extends TableExtensions {
-  constructor(protected targetNode: HTMLElement, protected table: Table) {
-    super(targetNode, table);
-  }
-  protected location = "header";
-}
-
 TableExtensions.registerExtension({
   location: "header",
   name: "filter",
@@ -176,7 +169,7 @@ TableExtensions.registerExtension({
       el.appendChild(option);
     });
     el.onchange = () => {
-      table.setLocale(el.value);
+      table.locale = el.value;
     };
     return el;
   },

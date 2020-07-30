@@ -5,12 +5,13 @@ import {
   ColumnDataType,
   ITableState,
 } from "./config";
-import { Details, TableRow } from "./extensions/rowextensions";
+import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
+import { TableExtensions } from "./extensions/tableextensions";
 
 export abstract class Table {
   protected tableData: any;
-
+  protected extensions: TableExtensions;
   constructor(
     protected survey: SurveyModel,
     protected data: Array<Object>,
@@ -23,13 +24,12 @@ export abstract class Table {
     }
     this.initTableData(data);
     localization.currentLocale = this.survey.locale;
+    this.extensions = new TableExtensions(this);
   }
   protected renderResult: HTMLElement;
   protected currentPageSize: number = 5;
   protected currentPageNumber: number;
   protected _rows: TableRow[] = [];
-
-  protected rowDetails: { [rowName: string]: Details };
 
   public onColumnsVisibilityChanged: Event<
     (sender: Table, options: any) => any,
@@ -41,12 +41,7 @@ export abstract class Table {
     any
   > = new Event<(sender: Table, options: any) => any, any>();
 
-  public onRowCreated: Event<
-    (sender: Table, options: any) => any,
-    any
-  > = new Event<(sender: Table, options: any) => any, any>();
-
-  public onTableToolsCreated: Event<
+  public onRowRemoved: Event<
     (sender: Table, options: any) => any,
     any
   > = new Event<(sender: Table, options: any) => any, any>();
@@ -109,6 +104,7 @@ export abstract class Table {
       this.isVisible(column.visibility)
     );
   }
+
   public isVisible = (visibility: ColumnVisibility) => {
     return (
       (this.isTrustedAccess && visibility !== ColumnVisibility.Invisible) ||
@@ -151,14 +147,20 @@ export abstract class Table {
     this.columns.filter(
       (column) => column.name === columnName
     )[0].location = location;
-    this.onColumnsLocationChanged.fire(this, null);
+    this.onColumnsLocationChanged.fire(this, {
+      columnName: columnName,
+      location: location,
+    });
     this.onStateChanged.fire(this, this.state);
   }
 
   public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
     var column = this.columns.filter((column) => column.name === columnName)[0];
     column.visibility = visibility;
-    this.onColumnsVisibilityChanged.fire(this, null);
+    this.onColumnsVisibilityChanged.fire(this, {
+      columnName: columnName,
+      columnVisibility: visibility,
+    });
     this.onStateChanged.fire(this, this.state);
   }
 
@@ -176,6 +178,7 @@ export abstract class Table {
   public removeRow(row: TableRow): void {
     var index = this._rows.indexOf(row);
     this._rows.splice(index, 1);
+    this.onRowRemoved.fire(this, { row: row });
   }
 
   /**
@@ -244,4 +247,68 @@ export abstract class Table {
     (sender: Table, options: any) => any,
     any
   >();
+}
+
+export abstract class TableRow {
+  constructor(
+    protected table: Table,
+    protected extensionsContainer: HTMLElement,
+    protected detailsContainer: HTMLElement
+  ) {
+    this.details = new Details(table, this, detailsContainer);
+    this.extensions = new TableExtensions(table);
+    table.onColumnsLocationChanged.add(() => {
+      this.closeDetails();
+    });
+  }
+  public details: Details;
+  public extensions: TableExtensions;
+  private detailedRowClass = "sa-table__detail-row";
+  private isDetailsExpanded = false;
+  public onToggleDetails: Event<
+    (sender: TableRow, options: any) => any,
+    any
+  > = new Event<(sender: TableRow, options: any) => any, any>();
+
+  public abstract getElement(): HTMLElement;
+  public abstract getData(): any;
+  public abstract getDataPosition(): number;
+
+  protected isSelected: boolean;
+
+  public render() {
+    this.extensions.render(this.extensionsContainer, "row", { row: this });
+  }
+
+  public openDetails() {
+    this.details.open();
+    this.getElement().className += " " + this.detailedRowClass;
+    this.onToggleDetails.fire(this, { isExpanded: true });
+    this.isDetailsExpanded = true;
+  }
+
+  public closeDetails() {
+    this.details.close();
+    this.getElement().classList.remove(this.detailedRowClass);
+    this.onToggleDetails.fire(this, { isExpanded: false });
+    this.isDetailsExpanded = false;
+  }
+
+  public toggleDetails() {
+    if (this.isDetailsExpanded) {
+      this.closeDetails();
+    } else this.openDetails();
+  }
+
+  public getIsSelected(): boolean {
+    return this.isSelected;
+  }
+
+  public toggleSelect(): void {
+    this.isSelected = !this.isSelected;
+  }
+
+  public remove(): void {
+    this.table.removeRow(this);
+  }
 }
