@@ -22,6 +22,7 @@ interface IDownloadOptions {
 
 interface IOptions {
   columnMinWidth: number;
+  actionsColumnWidth: number;
   paginationButtonCount: number;
   downloadOptions: IDownloadOptions;
 }
@@ -49,6 +50,7 @@ export var defaultOptions: IOptions = {
   columnMinWidth: 248,
   downloadOptions: defaultDownloadOptions,
   paginationButtonCount: 3,
+  actionsColumnWidth: 60,
 };
 
 export class Tabulator extends Table {
@@ -66,8 +68,6 @@ export class Tabulator extends Table {
       self._columns = self.buildColumns(survey);
     }
   }
-
-  public detailButtonCreators: Array<(columnName?: string) => HTMLElement> = [];
 
   private readonly COLUMN_MIN_WIDTH = 155;
   public tabulatorTables: any = null;
@@ -230,7 +230,7 @@ export class Tabulator extends Table {
       title: "",
       download: false,
       resizable: false,
-      width: 60,
+      width: this.options.actionsColumnWidth,
     });
 
     return columns;
