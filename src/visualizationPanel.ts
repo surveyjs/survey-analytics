@@ -518,7 +518,10 @@ export class VisualizationPanel extends VisualizerBase {
    * Vizualization panel state getter.
    */
   public get state(): IState {
-    return { locale: localization.currentLocale, elements: this._elements };
+    return {
+      locale: localization.currentLocale,
+      elements: [].concat(this._elements),
+    };
   }
   /**
    * Vizualization panel state setter.
@@ -526,6 +529,7 @@ export class VisualizationPanel extends VisualizerBase {
   public set state(newState: IState) {
     localization.currentLocale = newState.locale;
     this._elements = newState.elements;
+    this.refresh();
     this.onStateChanged.fire(this, this.state);
   }
   /**

@@ -55,6 +55,15 @@ test("isVisible method", () => {
   expect(tables.isVisible(ColumnVisibility.Visible)).toBeTruthy();
 });
 
+test("buildColumns method", () => {
+  const survey = new SurveyModel(json);
+  const tables = new TableTest(survey, [], null, [], false);
+
+  expect(tables.locale).toBe("");
+  tables.locale = "ru";
+  expect(tables.locale).toBe("ru");
+});
+
 test("getState, setState, onStateChanged", () => {
   let tables = new TableTest(new SurveyModel(), [], null, [], false);
 

@@ -230,7 +230,10 @@ export abstract class Table {
    * Vizualization panel state getter.
    */
   public get state(): ITableState {
-    return { locale: localization.currentLocale, elements: this._columns };
+    return {
+      locale: localization.currentLocale,
+      elements: [].concat(this._columns),
+    };
   }
   /**
    * Vizualization panel state setter.
