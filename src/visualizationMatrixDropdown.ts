@@ -59,7 +59,8 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
   }
 
   destroyContent(container: HTMLElement) {
-    this._panelVisualizer.destroy();
+    this._panelVisualizer.clear();
+    super.destroyContent(this.contentContainer);
   }
 
   renderContent(container: HTMLElement) {
