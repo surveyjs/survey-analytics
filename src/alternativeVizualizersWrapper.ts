@@ -53,7 +53,6 @@ export class AlternativeVisualizersWrapper extends VisualizerBase {
     this.visualizers.forEach((visualizer) => {
       visualizer.updateData(data);
     });
-    this.refresh();
   }
 
   protected renderContent(container: HTMLElement) {

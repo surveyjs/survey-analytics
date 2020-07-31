@@ -214,3 +214,56 @@ test("onVisibleElementsChanged and onStateChanged raised on move element", () =>
   expect(onVisibleElementsChangedСllCount).toEqual(1);
   expect(visPanel.getElements()).toEqual(resultElements);
 });
+
+test("setFilter method", () => {
+  var data = [
+    {
+      q2: "father",
+      q1: "mother",
+    },
+    {
+      q2: "father",
+    },
+    {
+      q1: "mother",
+    },
+    {
+      q1: "sister",
+    },
+  ];
+  const panel = new VisualizationPanel([], data);
+  expect(panel["data"]).toEqual(data);
+  panel.setFilter("q1", "sister");
+  expect(panel["data"]).toEqual([
+    {
+      q1: "sister",
+    },
+  ]);
+  panel.setFilter("q1", "mother");
+  expect(panel["data"]).toEqual([
+    {
+      q2: "father",
+      q1: "mother",
+    },
+    {
+      q1: "mother",
+    },
+  ]);
+  panel.setFilter("q2", "father");
+  expect(panel["data"]).toEqual([
+    {
+      q2: "father",
+      q1: "mother",
+    },
+  ]);
+  panel.setFilter("q2", undefined);
+  expect(panel["data"]).toEqual([
+    {
+      q2: "father",
+      q1: "mother",
+    },
+    {
+      q1: "mother",
+    },
+  ]);
+});

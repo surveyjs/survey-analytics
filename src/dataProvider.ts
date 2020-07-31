@@ -37,20 +37,25 @@ export class DataProvider {
   }
 
   public get data() {
-    return [].concat(this._data);
+    return this._data;
   }
   public set data(data: Array<any>) {
     this._data = [].concat(data);
     this.reset();
   }
 
-  protected get filteredData() {
+  public get filteredData() {
     if (this._filteredData === undefined) {
-      this._filteredData = this.data.filter((item) => {
-        return !Object.keys(this.filterValues).some(
-          (key) => item[key] !== this.filterValues[key]
-        );
-      });
+      let filterKeys = Object.keys(this.filterValues);
+      if (filterKeys.length > 0) {
+        this._filteredData = this.data.filter((item) => {
+          return !Object.keys(this.filterValues).some(
+            (key) => item[key] !== this.filterValues[key]
+          );
+        });
+      } else {
+        this._filteredData = this.data;
+      }
     }
     return this._filteredData;
   }

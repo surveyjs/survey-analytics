@@ -63,13 +63,13 @@ test("getQuestions", () => {
 });
 
 test("set data via update", () => {
-  let qdata: Array<any> = visualizer["data"];
+  let qdata: Array<any> = visualizer["_panelVisualizer"]["data"];
   expect(qdata.length).toBe(6);
   expect(qdata[0]["Column 1"]).toBe("Trustworthy");
 });
 
 test("series marker is added to data", () => {
-  let qdata: Array<any> = visualizer["data"];
+  let qdata: Array<any> = visualizer["_panelVisualizer"]["data"];
   expect(qdata.length).toBe(6);
   expect(qdata[0][DataProvider.seriesMarkerKey]).toBe("Lizol");
   expect(qdata[1][DataProvider.seriesMarkerKey]).toBe("Harpic");
