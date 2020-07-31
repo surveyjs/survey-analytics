@@ -7,6 +7,7 @@ import { IVisualizerPanelElement, ElementVisibility, IState } from "./config";
 
 const Muuri = require("muuri");
 import "./visualizationPanel.scss";
+import { FilterInfo } from "./filterInfo";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -165,37 +166,10 @@ export class VisualizationPanel extends VisualizerBase {
       }
 
       if (visualizer instanceof SelectBase) {
-        var filterInfo = {
-          text: <HTMLElement>undefined,
-          htmlElement: <HTMLDivElement>undefined,
-          update: function (selection: any) {
-            if (selection !== undefined && selection.value !== undefined) {
-              this.htmlElement.style.display = "inline-block";
-              this.text.innerHTML = "Filter: [" + selection.text + "]";
-            } else {
-              this.htmlElement.style.display = "none";
-              this.text.innerHTML = "";
-            }
-          },
-        };
+        let filterInfo = new FilterInfo(visualizer);
 
         visualizer.registerToolbarItem("questionFilterInfo", () => {
-          filterInfo.htmlElement = <HTMLDivElement>(
-            DocumentHelper.createElement("div", "sa-question__filter")
-          );
-          filterInfo.text = DocumentHelper.createElement(
-            "span",
-            "sa-question__filter-text"
-          );
-          filterInfo.htmlElement.appendChild(filterInfo.text);
-
-          const filterClear = DocumentHelper.createButton(() => {
-            visualizer.setSelection(undefined);
-          }, localization.getString("clearButton"));
-          filterInfo.htmlElement.appendChild(filterClear);
-
           filterInfo.update(visualizer.selection);
-
           return filterInfo.htmlElement;
         });
 
