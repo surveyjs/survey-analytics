@@ -10,25 +10,32 @@ export class Matrix extends SelectBase {
     super(question, data, options);
   }
 
+  protected get matrixQuestion(): QuestionMatrixModel {
+    return <QuestionMatrixModel>this.question;
+  }
+
   public get name() {
     return "matrix";
   }
 
   getSeriesValues(): Array<string> {
-    const question: QuestionMatrixModel = <any>this.question;
-    return question.rows.map((row: ItemValue) => "" + row.value);
+    return this.matrixQuestion.rows.map((row: ItemValue) => "" + row.value);
   }
 
   getSeriesLabels(): Array<string> {
-    const question: QuestionMatrixModel = <any>this.question;
-    return question.rows.map((row: ItemValue) =>
-      ItemValue.getTextOrHtmlByValue(question.rows, row.value)
+    return this.matrixQuestion.rows.map((row: ItemValue) =>
+      ItemValue.getTextOrHtmlByValue(this.matrixQuestion.rows, row.value)
     );
   }
 
+  public getSelectedItemByText(itemText: string) {
+    return this.matrixQuestion.columns.filter(
+      (column: ItemValue) => column.text === itemText
+    )[0];
+  }
+
   valuesSource(): Array<ItemValue> {
-    const question: QuestionMatrixModel = <any>this.question;
-    return question.columns;
+    return this.matrixQuestion.columns;
   }
 
   getData(): any[] {

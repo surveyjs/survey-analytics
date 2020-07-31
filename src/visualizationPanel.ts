@@ -4,8 +4,9 @@ import { SelectBase } from "./selectBase";
 import { DocumentHelper } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, ElementVisibility, IState } from "./config";
+import { FilterInfo } from "./filterInfo";
+import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
 
-const Muuri = require("muuri");
 import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
@@ -44,6 +45,15 @@ export class VisualizationPanel extends VisualizerBase {
     private isTrustedAccess = false
   ) {
     super(null, data, options);
+
+    this._layoutEngine =
+      options.layoutEngine ||
+      new MuuriLayoutEngine(
+        this.allowDynamicLayout,
+        "." + questionLayoutedElementClassName
+      );
+    this._layoutEngine.onMoveCallback = (fromIndex: number, toIndex: number) =>
+      this.moveElement(fromIndex, toIndex);
 
     this.showHeader = false;
     if (this.options.survey) {
@@ -133,9 +143,7 @@ export class VisualizationPanel extends VisualizerBase {
     element.visibility = ElementVisibility.Visible;
     const questionElement = this.renderPanelElement(element);
     this.contentContainer.appendChild(questionElement);
-    if (!!this.layoutEngine) {
-      this.layoutEngine.add([questionElement]);
-    }
+    this.layoutEngine.add([questionElement]);
     this.visibleElementsChanged(element, "ADDED");
   }
 
@@ -143,9 +151,7 @@ export class VisualizationPanel extends VisualizerBase {
     const element = this.getElement(elementName);
     element.visibility = ElementVisibility.Invisible;
     if (!!element.renderedElement) {
-      if (!!this.layoutEngine) {
-        this.layoutEngine.remove([element.renderedElement]);
-      }
+      this.layoutEngine.remove([element.renderedElement]);
       this.contentContainer.removeChild(element.renderedElement);
       element.renderedElement = undefined;
     }
@@ -165,37 +171,10 @@ export class VisualizationPanel extends VisualizerBase {
       }
 
       if (visualizer instanceof SelectBase) {
-        var filterInfo = {
-          text: <HTMLElement>undefined,
-          htmlElement: <HTMLDivElement>undefined,
-          update: function (selection: any) {
-            if (selection !== undefined && selection.value !== undefined) {
-              this.htmlElement.style.display = "inline-block";
-              this.text.innerHTML = "Filter: [" + selection.text + "]";
-            } else {
-              this.htmlElement.style.display = "none";
-              this.text.innerHTML = "";
-            }
-          },
-        };
+        let filterInfo = new FilterInfo(visualizer);
 
         visualizer.registerToolbarItem("questionFilterInfo", () => {
-          filterInfo.htmlElement = <HTMLDivElement>(
-            DocumentHelper.createElement("div", "sa-question__filter")
-          );
-          filterInfo.text = DocumentHelper.createElement(
-            "span",
-            "sa-question__filter-text"
-          );
-          filterInfo.htmlElement.appendChild(filterInfo.text);
-
-          const filterClear = DocumentHelper.createButton(() => {
-            visualizer.setSelection(undefined);
-          }, localization.getString("clearButton"));
-          filterInfo.htmlElement.appendChild(filterClear);
-
           filterInfo.update(visualizer.selection);
-
           return filterInfo.htmlElement;
         });
 
@@ -287,12 +266,12 @@ export class VisualizationPanel extends VisualizerBase {
     );
   }
 
-  private getLayoutEngine: () => any;
+  private _layoutEngine: LayoutEngine;
   /**
    * Returns the layout engine instance if any.
    */
   public get layoutEngine() {
-    return !!this.getLayoutEngine && this.getLayoutEngine();
+    return this._layoutEngine;
   }
 
   protected buildElements(questions: any[]): IVisualizerPanelElement[] {
@@ -434,9 +413,6 @@ export class VisualizationPanel extends VisualizerBase {
    * container - HTML element to render the panel
    */
   public renderContent(container: HTMLElement) {
-    let layoutEngine: any = undefined;
-    this.getLayoutEngine = () => layoutEngine;
-
     container.className += " sa-panel__content sa-grid";
 
     this.visibleElements.forEach((element) => {
@@ -444,16 +420,8 @@ export class VisualizationPanel extends VisualizerBase {
       container.appendChild(questionElement);
     });
 
-    if (this.allowDynamicLayout) {
-      layoutEngine = new Muuri(container, {
-        items: "." + questionLayoutedElementClassName,
-        dragEnabled: true,
-      });
-      layoutEngine.on("move", (data: any) =>
-        this.moveElement(data.fromIndex, data.toIndex)
-      );
-    }
-    !!window && window.dispatchEvent(new UIEvent("resize"));
+    this.layoutEngine.start(container);
+    // !!window && window.dispatchEvent(new UIEvent("resize"));
   }
 
   protected moveElement(fromIndex: number, toIndex: number) {
@@ -466,13 +434,23 @@ export class VisualizationPanel extends VisualizerBase {
    * Destroys visualizer and all inner content.
    */
   protected destroyContent(container: HTMLElement) {
-    let layoutEngine = this.layoutEngine;
-    if (!!layoutEngine) {
-      layoutEngine.off("move");
-      layoutEngine.destroy();
-      this.getLayoutEngine = undefined;
-    }
+    this.layoutEngine.stop();
     super.destroyContent(container);
+  }
+
+  /**
+   * Method for clearing all rendered elements from outside.
+   */
+  public clear() {
+    if (!!this.toolbarContainer) {
+      this.destroyToolbar(this.toolbarContainer);
+    }
+    if (!!this.contentContainer) {
+      this.destroyContent(this.contentContainer);
+    }
+    if (!!this.footerContainer) {
+      this.destroyFooter(this.footerContainer);
+    }
   }
 
   /**
@@ -490,11 +468,7 @@ export class VisualizationPanel extends VisualizerBase {
    * Updates layout of visualizer inner content.
    */
   public layout() {
-    const layoutEngine = this.layoutEngine;
-    if (!!layoutEngine) {
-      layoutEngine.refreshItems();
-      layoutEngine.layout();
-    }
+    this.layoutEngine.update();
   }
 
   /**

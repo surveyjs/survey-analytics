@@ -185,7 +185,9 @@ export class PlotlyChartAdapter {
 
     (<any>chartNode)["on"]("plotly_click", (data: any) => {
       if (data.points.length > 0) {
-        const itemText = data.points[0].text;
+        const itemText = hasSeries
+          ? data.points[0].data.name
+          : data.points[0].text;
         const item: ItemValue = this.model.getSelectedItemByText(itemText);
         this.model.setSelection(item);
       }

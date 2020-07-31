@@ -243,14 +243,19 @@ export class VisualizerBase implements IDataInfo {
    */
   public refresh() {
     if (!!this.contentContainer) {
-      this.destroyContent(this.contentContainer);
-      this.renderContent(this.contentContainer);
+      setTimeout(() => {
+        this.destroyContent(this.contentContainer);
+        this.renderContent(this.contentContainer);
+        this.invokeOnUpdate();
+      });
     }
     if (!!this.footerContainer) {
-      this.destroyFooter(this.footerContainer);
-      this.renderFooter(this.footerContainer);
+      setTimeout(() => {
+        this.destroyFooter(this.footerContainer);
+        this.renderFooter(this.footerContainer);
+        this.invokeOnUpdate();
+      });
     }
-    this.invokeOnUpdate();
   }
 
   getRandomColor() {

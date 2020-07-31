@@ -28,7 +28,6 @@ export class SelectBase extends VisualizerBase {
           (option: any) => this.chartType === option.value,
           (e: any) => {
             this.setChartType(e.target.value);
-            this.onChartTypeChanged();
           }
         );
       }
@@ -86,8 +85,7 @@ export class SelectBase extends VisualizerBase {
       this.chartType !== chartType
     ) {
       this.chartType = chartType;
-      this.destroyContent(this.contentContainer);
-      this.renderContent(this.contentContainer);
+      this.onChartTypeChanged();
       this.invokeOnUpdate();
     }
   }
@@ -115,6 +113,9 @@ export class SelectBase extends VisualizerBase {
 
   setLabelsOrder(value: string) {
     this.orderByAnsweres = value;
+    this.destroyContent(this.contentContainer);
+    this.renderContent(this.contentContainer);
+    this.invokeOnUpdate();
   }
 
   onDataItemSelected: (selectedValue: any, selectedText: string) => void;
