@@ -4,17 +4,22 @@ import { VisualizationPanel } from "./visualizationPanel";
 import { Question, QuestionPanelDynamicModel, IQuestion } from "survey-core";
 
 export class VisualizationPanelDynamic extends VisualizerBase {
-  private _panelVisualizer: VisualizationPanel = undefined;
+  protected _panelVisualizer: VisualizationPanel = undefined;
 
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
-    options?: Object
+    options: { [index: string]: any } = {}
   ) {
     super(question, data, options);
-    this._panelVisualizer = new VisualizationPanel(this.getQuestions(), [], {
-      allowDynamicLayout: false,
-    });
+    var options = Object.assign({}, options);
+    options.allowDynamicLayout = false;
+    options.dataProvider = undefined;
+    this._panelVisualizer = new VisualizationPanel(
+      this.getQuestions(),
+      [],
+      options
+    );
     this.updateData(data);
   }
 
@@ -23,13 +28,14 @@ export class VisualizationPanelDynamic extends VisualizerBase {
   }
 
   updateData(data: Array<{ [index: string]: any }>) {
-    this.data = [];
-    data.forEach((dataItem) => {
-      if (!!dataItem[this.question.name]) {
-        this.data = this.data.concat(dataItem[this.question.name]);
+    super.updateData(data);
+    let panelData: Array<any> = [];
+    this.data.forEach((dataItem) => {
+      if (dataItem[this.question.name] !== undefined) {
+        panelData = panelData.concat(dataItem[this.question.name]);
       }
     });
-    this._panelVisualizer.updateData(this.data);
+    this._panelVisualizer.updateData(panelData);
   }
 
   getQuestions(): IQuestion[] {
@@ -38,7 +44,8 @@ export class VisualizationPanelDynamic extends VisualizerBase {
   }
 
   destroyContent(container: HTMLElement) {
-    this._panelVisualizer.destroy();
+    this._panelVisualizer.clear();
+    super.destroyContent(this.contentContainer);
   }
 
   renderContent(container: HTMLElement) {

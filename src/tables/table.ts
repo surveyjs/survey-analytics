@@ -86,6 +86,13 @@ export abstract class Table {
     return [].concat(this._rows);
   }
 
+  public clearCreatedRows(): void {
+    this._rows.forEach((row) => {
+      row.destroy();
+    });
+    this._rows = [];
+  }
+
   protected buildColumns = (survey: SurveyModel) => {
     return this.survey.getAllQuestions().map((question: Question) => {
       return {
@@ -116,6 +123,18 @@ export abstract class Table {
       (this.isTrustedAccess && visibility !== ColumnVisibility.Invisible) ||
       (!this.isTrustedAccess && visibility === ColumnVisibility.Visible)
     );
+  };
+
+  public isAvailable = (visibility: ColumnVisibility) => {
+    return (
+      this.isTrustedAccess || visibility !== ColumnVisibility.PublicInvisible
+    );
+  };
+
+  public getAvailableColumns = (): Array<ITableColumn> => {
+    return this.columns.filter((column: ITableColumn) => {
+      return this.isAvailable(column.visibility);
+    });
   };
 
   public get columns() {
@@ -222,6 +241,7 @@ export abstract class Table {
   }
 
   public destroy() {
+    this.clearCreatedRows();
     this.renderResult.innerHTML = "";
     this.renderResult = undefined;
   }
@@ -264,9 +284,7 @@ export abstract class TableRow {
   ) {
     this.details = new Details(table, this, detailsContainer);
     this.extensions = new TableExtensions(table);
-    table.onColumnsLocationChanged.add(() => {
-      this.closeDetails();
-    });
+    table.onColumnsLocationChanged.add(this.onColumnLocationChangedCallback);
   }
   public details: Details;
   public extensions: TableExtensions;
@@ -317,5 +335,15 @@ export abstract class TableRow {
 
   public remove(): void {
     this.table.removeRow(this);
+  }
+
+  private onColumnLocationChangedCallback = () => {
+    this.closeDetails();
+  };
+
+  public destroy(): void {
+    this.table.onColumnsLocationChanged.remove(
+      this.onColumnLocationChangedCallback
+    );
   }
 }

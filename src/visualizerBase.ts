@@ -1,5 +1,5 @@
 import { Question, QuestionCommentModel, settings } from "survey-core";
-import { IDataInfo } from "./dataProvider";
+import { IDataInfo, DataProvider } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { DocumentHelper } from "./utils";
 import { localization } from "./localizationManager";
@@ -9,6 +9,7 @@ import "./visualizerBase.scss";
 export class VisualizerBase implements IDataInfo {
   private _showHeader = true;
   private _footerVisualizer: VisualizerBase = undefined;
+  private _dataProvider: DataProvider = undefined;
   protected renderResult: HTMLElement = undefined;
   protected toolbarContainer: HTMLElement = undefined;
   protected contentContainer: HTMLElement = undefined;
@@ -22,9 +23,16 @@ export class VisualizerBase implements IDataInfo {
 
   constructor(
     public question: Question,
-    protected data: Array<{ [index: string]: any }>,
+    data: Array<{ [index: string]: any }>,
     protected options: { [index: string]: any } = {}
-  ) {}
+  ) {
+    this._dataProvider = options.dataProvider || new DataProvider(data);
+    this._dataProvider.onDataChanged.add(() => this.onDataChanged());
+  }
+
+  protected onDataChanged() {
+    this.refresh();
+  }
 
   get dataName(): string {
     return this.question.name;
@@ -36,6 +44,15 @@ export class VisualizerBase implements IDataInfo {
     );
   }
 
+  protected createVisualizer(question: Question) {
+    let options = Object.assign({}, this.options);
+    if (options.dataProvider === undefined) {
+      options.dataProvider = this.dataProvider;
+    }
+
+    return VisualizerFactory.createVisualizer(question, this.data, options);
+  }
+
   get footerVisualizer() {
     if (!this.hasFooter) {
       return undefined;
@@ -45,11 +62,8 @@ export class VisualizerBase implements IDataInfo {
         this.question.name + (settings || {}).commentPrefix
       );
       question.title = this.question.title;
-      this._footerVisualizer = VisualizerFactory.createVizualizer(
-        question,
-        this.data,
-        this.options
-      );
+
+      this._footerVisualizer = this.createVisualizer(question);
       this._footerVisualizer.onUpdate = () => this.invokeOnUpdate();
     }
     return this._footerVisualizer;
@@ -82,8 +96,21 @@ export class VisualizerBase implements IDataInfo {
     return "visualizer";
   }
 
+  protected get data() {
+    return this.dataProvider.filteredData;
+  }
+
+  protected get dataProvider(): DataProvider {
+    return this._dataProvider;
+  }
+
+  /**
+   * Updates visualizer data.
+   */
   updateData(data: Array<{ [index: string]: any }>) {
-    this.data = data;
+    if (!this.options.dataProvider) {
+      this.dataProvider.data = data;
+    }
     if (this.hasFooter) {
       this.footerVisualizer.updateData(data);
     }
@@ -216,14 +243,19 @@ export class VisualizerBase implements IDataInfo {
    */
   public refresh() {
     if (!!this.contentContainer) {
-      this.destroyContent(this.contentContainer);
-      this.renderContent(this.contentContainer);
+      setTimeout(() => {
+        this.destroyContent(this.contentContainer);
+        this.renderContent(this.contentContainer);
+        this.invokeOnUpdate();
+      });
     }
     if (!!this.footerContainer) {
-      this.destroyFooter(this.footerContainer);
-      this.renderFooter(this.footerContainer);
+      setTimeout(() => {
+        this.destroyFooter(this.footerContainer);
+        this.renderFooter(this.footerContainer);
+        this.invokeOnUpdate();
+      });
     }
-    this.invokeOnUpdate();
   }
 
   getRandomColor() {
@@ -274,5 +306,9 @@ export class VisualizerBase implements IDataInfo {
         this.renderToolbar(this.toolbarContainer);
       }
     }
+  }
+
+  getData(): any {
+    return this.dataProvider.getData(this);
   }
 }

@@ -176,7 +176,9 @@ export class DataTables extends Table {
                   "div",
                   "sa-table__action-container"
                 );
-                self.extensions.render(container, "column", columnsData[index]);
+                self.extensions.render(container, "column", {
+                  columnName: columnsData[index],
+                });
               }
               $thNode.prepend(container);
             });
@@ -247,7 +249,7 @@ export class DataTables extends Table {
   public detailButtonCreators: Array<(columnName?: string) => HTMLElement> = [];
 
   getColumns(): Array<Object> {
-    const columns: any = this.columns.map((column) => {
+    const columns: any = this.getAvailableColumns().map((column) => {
       var question = this.survey.getQuestionByName(column.name);
       return {
         name: column.name,

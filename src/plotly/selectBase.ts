@@ -83,7 +83,7 @@ export class PlotlyChartAdapter {
       traceConfig.marker.size = 16;
     }
 
-    datasets.forEach((dataset) => {
+    datasets.forEach((dataset: Array<number>) => {
       if (
         this.model.chartType === "pie" ||
         this.model.chartType === "doughnut"
@@ -184,8 +184,10 @@ export class PlotlyChartAdapter {
     const plot = Plotly.newPlot(chartNode, traces, layout, config);
 
     (<any>chartNode)["on"]("plotly_click", (data: any) => {
-      if (data.points.length > 0 && this.model.onDataItemSelected) {
-        const itemText = data.points[0].text;
+      if (data.points.length > 0) {
+        const itemText = hasSeries
+          ? data.points[0].data.name
+          : data.points[0].text;
         const item: ItemValue = this.model.getSelectedItemByText(itemText);
         this.model.setSelection(item);
       }

@@ -28,7 +28,6 @@ export class SelectBase extends VisualizerBase {
           (option: any) => this.chartType === option.value,
           (e: any) => {
             this.setChartType(e.target.value);
-            this.onChartTypeChanged();
           }
         );
       }
@@ -86,8 +85,7 @@ export class SelectBase extends VisualizerBase {
       this.chartType !== chartType
     ) {
       this.chartType = chartType;
-      this.destroyContent(this.contentContainer);
-      this.renderContent(this.contentContainer);
+      this.onChartTypeChanged();
       this.invokeOnUpdate();
     }
   }
@@ -99,11 +97,15 @@ export class SelectBase extends VisualizerBase {
   }
 
   setSelection(item: ItemValue) {
-    this.selectedItem = item;
-    this.onDataItemSelected(
-      (item && item.value) || undefined,
-      (item && item.text) || ""
-    );
+    if (this.selectedItem !== item) {
+      this.selectedItem = item;
+      if (this.onDataItemSelected !== undefined) {
+        this.onDataItemSelected(
+          item !== undefined ? item.value : undefined,
+          item !== undefined ? item.text : ""
+        );
+      }
+    }
   }
   get selection() {
     return this.selectedItem;
@@ -111,14 +113,12 @@ export class SelectBase extends VisualizerBase {
 
   setLabelsOrder(value: string) {
     this.orderByAnsweres = value;
+    this.destroyContent(this.contentContainer);
+    this.renderContent(this.contentContainer);
+    this.invokeOnUpdate();
   }
 
   onDataItemSelected: (selectedValue: any, selectedText: string) => void;
-
-  updateData(data: Array<{ [index: string]: any }>) {
-    super.updateData(data);
-    this.refresh();
-  }
 
   valuesSource(): Array<ItemValue> {
     const question = <QuestionSelectBase>this.question;
@@ -146,10 +146,5 @@ export class SelectBase extends VisualizerBase {
     if (this.question.hasOther) labels.unshift("Other");
 
     return labels;
-  }
-
-  getData(): any[] {
-    const dataProvider = new DataProvider(this.data);
-    return dataProvider.getData(this);
   }
 }

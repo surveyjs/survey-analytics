@@ -14,14 +14,20 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
   constructor(
     question: QuestionMatrixDropdownModel,
     data: Array<{ [index: string]: any }>,
-    options?: Object
+    options: { [index: string]: any } = {}
   ) {
     super(question, data, options);
-    this._panelVisualizer = new VisualizationPanel(this.getQuestions(), [], {
-      allowDynamicLayout: false,
-      seriesValues: question.rows.map((row: ItemValue) => row.value),
-      seriesLabels: question.rows.map((row: ItemValue) => row.text),
-    });
+    var options = Object.assign({}, options);
+    options.dataProvider = undefined;
+    options.allowDynamicLayout = false;
+    options.seriesValues = question.rows.map((row: ItemValue) => row.value);
+    options.seriesLabels = question.rows.map((row: ItemValue) => row.text);
+
+    this._panelVisualizer = new VisualizationPanel(
+      this.getQuestions(),
+      [],
+      options
+    );
     this.updateData(data);
   }
 
@@ -30,18 +36,19 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
   }
 
   updateData(data: Array<{ [index: string]: any }>) {
-    this.data = [];
-    data.forEach((dataItem) => {
+    super.updateData(data);
+    let panelData: Array<any> = [];
+    this.data.forEach((dataItem) => {
       let rawDataItem = dataItem[this.question.name];
       if (!!rawDataItem) {
         Object.keys(rawDataItem).forEach((key) => {
           var nestedDataItem = Object.assign({}, rawDataItem[key]);
           nestedDataItem[DataProvider.seriesMarkerKey] = key;
-          this.data.push(nestedDataItem);
+          panelData.push(nestedDataItem);
         });
       }
     });
-    this._panelVisualizer.updateData(this.data);
+    this._panelVisualizer.updateData(panelData);
   }
 
   getQuestions() {
@@ -52,7 +59,8 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
   }
 
   destroyContent(container: HTMLElement) {
-    this._panelVisualizer.destroy();
+    this._panelVisualizer.clear();
+    super.destroyContent(this.contentContainer);
   }
 
   renderContent(container: HTMLElement) {

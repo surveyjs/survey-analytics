@@ -1,4 +1,4 @@
-import { SurveyModel, Question, QuestionDropdownModel } from "survey-core";
+import { QuestionDropdownModel, ItemValue } from "survey-core";
 import { SelectBase } from "../src/selectBase";
 
 let selectBase: SelectBase;
@@ -61,4 +61,44 @@ test("createToolbarItems", () => {
   toolbarContainer = document.createElement("div");
   selectBase["createToolbarItems"](toolbarContainer);
   expect(toolbarContainer.children.length).toBe(0);
+});
+
+test("setSelection", () => {
+  let lastValue = undefined;
+  let lastText = undefined;
+  selectBase.onDataItemSelected = (val, text) => {
+    lastValue = val;
+    lastText = text;
+  };
+
+  selectBase.setSelection(new ItemValue(1, "One"));
+  expect(lastValue).toEqual(1);
+  expect(lastText).toEqual("One");
+
+  selectBase.setSelection(undefined);
+  expect(lastValue).toEqual(undefined);
+  expect(lastText).toEqual("");
+
+  selectBase.setSelection(new ItemValue(false, "False"));
+  expect(lastValue).toEqual(false);
+  expect(lastText).toEqual("False");
+
+  selectBase.setSelection(new ItemValue(true, "True"));
+  expect(lastValue).toEqual(true);
+  expect(lastText).toEqual("True");
+});
+
+test("setLabelsOrder triggers renderContent and update", () => {
+  selectBase.render(document.createElement("div"));
+  let updateCallCount = 0;
+  let renderCallCount = 0;
+  selectBase.onUpdate = () => {
+    updateCallCount++;
+  };
+  selectBase["renderContent"] = () => {
+    renderCallCount++;
+  };
+  selectBase.setLabelsOrder("asc");
+  expect(updateCallCount).toEqual(1);
+  expect(renderCallCount).toEqual(1);
 });

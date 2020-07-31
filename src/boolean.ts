@@ -1,7 +1,7 @@
 import { Question, QuestionBooleanModel } from "survey-core";
 import { ItemValue } from "survey-core";
 import { SelectBase } from "./selectBase";
-import { DataProvider } from './dataProvider';
+import { DataProvider } from "./dataProvider";
 
 export class BooleanModel extends SelectBase {
   protected chartTypes: string[];
@@ -39,7 +39,7 @@ export class BooleanModel extends SelectBase {
         : true,
       this.booleanQuestion.valueFalse !== undefined
         ? this.booleanQuestion.valueFalse
-        : false
+        : false,
     ];
   }
 
@@ -52,10 +52,5 @@ export class BooleanModel extends SelectBase {
       labels[1] = this.booleanQuestion.locLabelFalse.textOrHtml;
     }
     return labels;
-  }
-
-  getData(): any[] {
-    const dataProvider = new DataProvider(this.data);
-    return dataProvider.getData(this);
   }
 }

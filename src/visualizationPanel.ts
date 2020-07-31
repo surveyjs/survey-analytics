@@ -4,8 +4,9 @@ import { SelectBase } from "./selectBase";
 import { DocumentHelper } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, ElementVisibility, IState } from "./config";
-import { VisualizerFactory } from "./visualizerFactory";
-const Muuri = require("muuri");
+import { FilterInfo } from "./filterInfo";
+import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
+
 import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
@@ -29,12 +30,11 @@ export interface IVisualizerPanelRenderedElement
  * seriesValues - an array of series values in data to group data by series
  * seriesLabels - labels for series to display, if not passed the seriesValues are used as labels
  * survey - pass survey instance to use localses from the survey JSON
+ * dataProvider - dataProvider for this visualizer
  *
  * elements - list of visual element descriptions
  */
 export class VisualizationPanel extends VisualizerBase {
-  protected filteredData: Array<{ [index: string]: any }>;
-  protected filterValues: { [index: string]: any } = {};
   protected visualizers: Array<VisualizerBase> = [];
 
   constructor(
@@ -46,11 +46,19 @@ export class VisualizationPanel extends VisualizerBase {
   ) {
     super(null, data, options);
 
+    this._layoutEngine =
+      options.layoutEngine ||
+      new MuuriLayoutEngine(
+        this.allowDynamicLayout,
+        "." + questionLayoutedElementClassName
+      );
+    this._layoutEngine.onMoveCallback = (fromIndex: number, toIndex: number) =>
+      this.moveElement(fromIndex, toIndex);
+
     this.showHeader = false;
     if (this.options.survey) {
       localization.currentLocale = this.options.survey.locale;
     }
-    this.filteredData = data;
 
     if (_elements === undefined) {
       this._elements = this.buildElements(questions);
@@ -135,9 +143,7 @@ export class VisualizationPanel extends VisualizerBase {
     element.visibility = ElementVisibility.Visible;
     const questionElement = this.renderPanelElement(element);
     this.contentContainer.appendChild(questionElement);
-    if (!!this.layoutEngine) {
-      this.layoutEngine.add([questionElement]);
-    }
+    this.layoutEngine.add([questionElement]);
     this.visibleElementsChanged(element, "ADDED");
   }
 
@@ -145,9 +151,7 @@ export class VisualizationPanel extends VisualizerBase {
     const element = this.getElement(elementName);
     element.visibility = ElementVisibility.Invisible;
     if (!!element.renderedElement) {
-      if (!!this.layoutEngine) {
-        this.layoutEngine.remove([element.renderedElement]);
-      }
+      this.layoutEngine.remove([element.renderedElement]);
       this.contentContainer.removeChild(element.renderedElement);
       element.renderedElement = undefined;
     }
@@ -156,11 +160,7 @@ export class VisualizationPanel extends VisualizerBase {
 
   private buildVisualizers(questions: Array<Question>) {
     questions.forEach((question) => {
-      const visualizer = VisualizerFactory.createVizualizer(
-        question,
-        this.filteredData,
-        this.options
-      );
+      const visualizer = this.createVisualizer(question);
 
       if (this.allowHideQuestions) {
         visualizer.registerToolbarItem("removeQuestion", () => {
@@ -171,37 +171,10 @@ export class VisualizationPanel extends VisualizerBase {
       }
 
       if (visualizer instanceof SelectBase) {
-        var filterInfo = {
-          text: <HTMLElement>undefined,
-          htmlElement: <HTMLDivElement>undefined,
-          update: function (selection: any) {
-            if (!!selection && !!selection.value) {
-              this.htmlElement.style.display = "inline-block";
-              this.text.innerHTML = "Filter: [" + selection.text + "]";
-            } else {
-              this.htmlElement.style.display = "none";
-              this.text.innerHTML = "";
-            }
-          },
-        };
+        let filterInfo = new FilterInfo(visualizer);
 
         visualizer.registerToolbarItem("questionFilterInfo", () => {
-          filterInfo.htmlElement = <HTMLDivElement>(
-            DocumentHelper.createElement("div", "sa-question__filter")
-          );
-          filterInfo.text = DocumentHelper.createElement(
-            "span",
-            "sa-question__filter-text"
-          );
-          filterInfo.htmlElement.appendChild(filterInfo.text);
-
-          const filterClear = DocumentHelper.createButton(() => {
-            visualizer.setSelection(undefined);
-          }, localization.getString("clearButton"));
-          filterInfo.htmlElement.appendChild(filterClear);
-
           filterInfo.update(visualizer.selection);
-
           return filterInfo.htmlElement;
         });
 
@@ -293,12 +266,12 @@ export class VisualizationPanel extends VisualizerBase {
     );
   }
 
-  private getLayoutEngine: () => any;
+  private _layoutEngine: LayoutEngine;
   /**
    * Returns the layout engine instance if any.
    */
   public get layoutEngine() {
-    return !!this.getLayoutEngine && this.getLayoutEngine();
+    return this._layoutEngine;
   }
 
   protected buildElements(questions: any[]): IVisualizerPanelElement[] {
@@ -440,9 +413,6 @@ export class VisualizationPanel extends VisualizerBase {
    * container - HTML element to render the panel
    */
   public renderContent(container: HTMLElement) {
-    let layoutEngine: any = undefined;
-    this.getLayoutEngine = () => layoutEngine;
-
     container.className += " sa-panel__content sa-grid";
 
     this.visibleElements.forEach((element) => {
@@ -450,16 +420,8 @@ export class VisualizationPanel extends VisualizerBase {
       container.appendChild(questionElement);
     });
 
-    if (this.allowDynamicLayout) {
-      layoutEngine = new Muuri(container, {
-        items: "." + questionLayoutedElementClassName,
-        dragEnabled: true,
-      });
-      layoutEngine.on("move", (data: any) =>
-        this.moveElement(data.fromIndex, data.toIndex)
-      );
-    }
-    !!window && window.dispatchEvent(new UIEvent("resize"));
+    this.layoutEngine.start(container);
+    // !!window && window.dispatchEvent(new UIEvent("resize"));
   }
 
   protected moveElement(fromIndex: number, toIndex: number) {
@@ -472,25 +434,27 @@ export class VisualizationPanel extends VisualizerBase {
    * Destroys visualizer and all inner content.
    */
   protected destroyContent(container: HTMLElement) {
-    let layoutEngine = this.layoutEngine;
-    if (!!layoutEngine) {
-      layoutEngine.off("move");
-      layoutEngine.destroy();
-      this.getLayoutEngine = undefined;
-    }
+    this.layoutEngine.stop();
     super.destroyContent(container);
   }
 
   /**
-   * Updates visualizer data.
+   * Method for clearing all rendered elements from outside.
    */
-  updateData(data: Array<{ [index: string]: any }>) {
-    super.updateData(data);
-    this.applyFilter();
+  public clear() {
+    if (!!this.toolbarContainer) {
+      this.destroyToolbar(this.toolbarContainer);
+    }
+    if (!!this.contentContainer) {
+      this.destroyContent(this.contentContainer);
+    }
+    if (!!this.footerContainer) {
+      this.destroyFooter(this.footerContainer);
+    }
   }
 
   /**
-   * Redraws visualizer and all inner content.
+   * Redraws visualizer toobar and all inner content.
    */
   public refresh() {
     if (!!this.toolbarContainer) {
@@ -504,42 +468,14 @@ export class VisualizationPanel extends VisualizerBase {
    * Updates layout of visualizer inner content.
    */
   public layout() {
-    const layoutEngine = this.layoutEngine;
-    if (!!layoutEngine) {
-      layoutEngine.refreshItems();
-      layoutEngine.layout();
-    }
+    this.layoutEngine.update();
   }
 
   /**
    * Sets filter by question name and value.
    */
   public setFilter(questionName: string, selectedValue: any) {
-    var filterChanged = true;
-    if (selectedValue !== undefined) {
-      filterChanged = this.filterValues[questionName] !== selectedValue;
-      this.filterValues[questionName] = selectedValue;
-    } else {
-      filterChanged = this.filterValues[questionName] !== undefined;
-      delete this.filterValues[questionName];
-    }
-    if (filterChanged) {
-      this.applyFilter();
-    }
-  }
-
-  /**
-   * Applies filter to the data and update visualizers.
-   */
-  public applyFilter() {
-    this.filteredData = this.data.filter((item) => {
-      return !Object.keys(this.filterValues).some(
-        (key) => item[key] !== this.filterValues[key]
-      );
-    });
-    this.visualizers.forEach((visualizer) =>
-      visualizer.updateData(this.filteredData)
-    );
+    this.dataProvider.setFilter(questionName, selectedValue);
   }
 
   /**

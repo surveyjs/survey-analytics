@@ -25,50 +25,58 @@ export class NumberModel extends VisualizerBase {
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
-    options?: Object
+    options: { [index: string]: any } = {}
   ) {
     super(question, data, options);
+    this.registerToolbarItem("changeChartType", () => {
+      if (this.chartTypes.length > 1) {
+        return DocumentHelper.createSelector(
+          this.chartTypes.map((chartType) => {
+            return {
+              value: chartType,
+              text: localization.getString("chartType_" + chartType),
+            };
+          }),
+          (option: any) => this.chartType === option.value,
+          (e: any) => {
+            this.setChartType(e.target.value);
+          }
+        );
+      }
+      return null;
+    });
+  }
+
+  protected onDataChanged() {
+    this._resultAverage = undefined;
+    this._resultMin = undefined;
+    this._resultMax = undefined;
+    super.onDataChanged();
   }
 
   public get name() {
     return "number";
   }
 
-  updateData(data: Array<{ [index: string]: any }>) {
-    this._resultAverage = undefined;
-    this._resultMin = undefined;
-    this._resultMax = undefined;
-    super.updateData(data);
-    this.refresh();
-  }
+  protected onChartTypeChanged() {}
 
-  private toolbarChangeHandler = (e: any) => {
-    if (this.chartType !== e.target.value) {
-      this.chartType = e.target.value;
-      this.updateData(this.data);
+  protected setChartType(chartType: string) {
+    if (
+      this.chartTypes.indexOf(chartType) !== -1 &&
+      this.chartType !== chartType
+    ) {
+      this.chartType = chartType;
+      this.onChartTypeChanged();
+      this.destroyContent(this.contentContainer);
+      this.renderContent(this.contentContainer);
+      this.invokeOnUpdate();
     }
-  };
-
-  protected createToolbarItems(toolbar: HTMLDivElement) {
-    if (this.chartTypes.length > 1) {
-      const selectWrapper = DocumentHelper.createSelector(
-        this.chartTypes.map((chartType) => {
-          return {
-            value: chartType,
-            text: localization.getString("chartType_" + chartType),
-          };
-        }),
-        (option: any) => this.chartType === option.value,
-        this.toolbarChangeHandler
-      );
-      toolbar.appendChild(selectWrapper);
-    }
-    super.createToolbarItems(toolbar);
   }
 
   destroy() {
-    this.destroyContent(this.contentContainer);
     this._resultAverage = undefined;
+    this._resultMin = undefined;
+    this._resultMax = undefined;
     super.destroy();
   }
 

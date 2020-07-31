@@ -203,7 +203,7 @@ export class Tabulator extends Table {
       this.COLUMN_MIN_WIDTH > this.options.columnMinWidth
         ? this.COLUMN_MIN_WIDTH
         : this.options.columnMinWidth;
-    const columns: any = this.columns.map((column, index) => {
+    const columns: any = this.getAvailableColumns().map((column, index) => {
       var question = this.survey.getQuestionByName(column.name);
       return {
         field: column.name,
