@@ -99,11 +99,15 @@ export class SelectBase extends VisualizerBase {
   }
 
   setSelection(item: ItemValue) {
-    this.selectedItem = item;
-    this.onDataItemSelected(
-      (item && item.value) || undefined,
-      (item && item.text) || ""
-    );
+    if (this.selectedItem !== item) {
+      this.selectedItem = item;
+      if (this.onDataItemSelected !== undefined) {
+        this.onDataItemSelected(
+          item !== undefined ? item.value : undefined,
+          item !== undefined ? item.text : ""
+        );
+      }
+    }
   }
   get selection() {
     return this.selectedItem;
