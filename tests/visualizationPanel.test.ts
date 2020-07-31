@@ -32,7 +32,7 @@ test("allowDynamicLayout option", () => {
   expect(vis.allowDynamicLayout).toBeFalsy();
 
   vis.render(document.createElement("div"));
-  expect(vis.layoutEngine).toBe(undefined);
+  expect(vis.layoutEngine.allowed).toBe(false);
 });
 
 test("allowHideQuestions option", () => {

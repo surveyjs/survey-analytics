@@ -4,10 +4,10 @@ import { SelectBase } from "./selectBase";
 import { DocumentHelper } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, ElementVisibility, IState } from "./config";
-
-const Muuri = require("muuri");
-import "./visualizationPanel.scss";
 import { FilterInfo } from "./filterInfo";
+import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
+
+import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -45,6 +45,15 @@ export class VisualizationPanel extends VisualizerBase {
     private isTrustedAccess = false
   ) {
     super(null, data, options);
+
+    this._layoutEngine =
+      options.layoutEngine ||
+      new MuuriLayoutEngine(
+        this.allowDynamicLayout,
+        "." + questionLayoutedElementClassName
+      );
+    this._layoutEngine.onMoveCallback = (fromIndex: number, toIndex: number) =>
+      this.moveElement(fromIndex, toIndex);
 
     this.showHeader = false;
     if (this.options.survey) {
@@ -134,9 +143,7 @@ export class VisualizationPanel extends VisualizerBase {
     element.visibility = ElementVisibility.Visible;
     const questionElement = this.renderPanelElement(element);
     this.contentContainer.appendChild(questionElement);
-    if (!!this.layoutEngine) {
-      this.layoutEngine.add([questionElement]);
-    }
+    this.layoutEngine.add([questionElement]);
     this.visibleElementsChanged(element, "ADDED");
   }
 
@@ -144,9 +151,7 @@ export class VisualizationPanel extends VisualizerBase {
     const element = this.getElement(elementName);
     element.visibility = ElementVisibility.Invisible;
     if (!!element.renderedElement) {
-      if (!!this.layoutEngine) {
-        this.layoutEngine.remove([element.renderedElement]);
-      }
+      this.layoutEngine.remove([element.renderedElement]);
       this.contentContainer.removeChild(element.renderedElement);
       element.renderedElement = undefined;
     }
@@ -261,12 +266,12 @@ export class VisualizationPanel extends VisualizerBase {
     );
   }
 
-  private getLayoutEngine: () => any;
+  private _layoutEngine: LayoutEngine;
   /**
    * Returns the layout engine instance if any.
    */
   public get layoutEngine() {
-    return !!this.getLayoutEngine && this.getLayoutEngine();
+    return this._layoutEngine;
   }
 
   protected buildElements(questions: any[]): IVisualizerPanelElement[] {
@@ -408,9 +413,6 @@ export class VisualizationPanel extends VisualizerBase {
    * container - HTML element to render the panel
    */
   public renderContent(container: HTMLElement) {
-    let layoutEngine: any = undefined;
-    this.getLayoutEngine = () => layoutEngine;
-
     container.className += " sa-panel__content sa-grid";
 
     this.visibleElements.forEach((element) => {
@@ -418,16 +420,8 @@ export class VisualizationPanel extends VisualizerBase {
       container.appendChild(questionElement);
     });
 
-    if (this.allowDynamicLayout) {
-      layoutEngine = new Muuri(container, {
-        items: "." + questionLayoutedElementClassName,
-        dragEnabled: true,
-      });
-      layoutEngine.on("move", (data: any) =>
-        this.moveElement(data.fromIndex, data.toIndex)
-      );
-    }
-    !!window && window.dispatchEvent(new UIEvent("resize"));
+    this.layoutEngine.start(container);
+    // !!window && window.dispatchEvent(new UIEvent("resize"));
   }
 
   protected moveElement(fromIndex: number, toIndex: number) {
@@ -440,12 +434,7 @@ export class VisualizationPanel extends VisualizerBase {
    * Destroys visualizer and all inner content.
    */
   protected destroyContent(container: HTMLElement) {
-    let layoutEngine = this.layoutEngine;
-    if (!!layoutEngine) {
-      layoutEngine.off("move");
-      layoutEngine.destroy();
-      this.getLayoutEngine = undefined;
-    }
+    this.layoutEngine.stop();
     super.destroyContent(container);
   }
 
@@ -464,11 +453,7 @@ export class VisualizationPanel extends VisualizerBase {
    * Updates layout of visualizer inner content.
    */
   public layout() {
-    const layoutEngine = this.layoutEngine;
-    if (!!layoutEngine) {
-      layoutEngine.refreshItems();
-      layoutEngine.layout();
-    }
+    this.layoutEngine.update();
   }
 
   /**
