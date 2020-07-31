@@ -40,11 +40,25 @@
       #summaryContainer > .sa-question:nth-child(2) {
         width: 100%;
       }
+      .sa__matrix-table {
+        border-collapse: collapse;
+        border: 1px solid black;
+      }
+      .sa__matrix-table th {
+        font-weight: bold;
+      }
+      .sa__matrix-table th,
+      .sa__matrix-table td {
+        padding: 20px;
+        border: 1px solid black;
+      }
     </style>
 
     <div id="summaryContainer"></div>
     <script src="./data.js"></script>
     <script src="./customvisualizer.js"></script>
+    <script src="./custom_matrix.js"></script>
+
     <script src="./custom_vis.js"></script>
   </body>
 </html>
