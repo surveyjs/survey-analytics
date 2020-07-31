@@ -115,11 +115,6 @@ export class SelectBase extends VisualizerBase {
 
   onDataItemSelected: (selectedValue: any, selectedText: string) => void;
 
-  updateData(data: Array<{ [index: string]: any }>) {
-    super.updateData(data);
-    this.refresh();
-  }
-
   valuesSource(): Array<ItemValue> {
     const question = <QuestionSelectBase>this.question;
     return question["activeChoices"];
@@ -146,10 +141,5 @@ export class SelectBase extends VisualizerBase {
     if (this.question.hasOther) labels.unshift("Other");
 
     return labels;
-  }
-
-  getData(): any[] {
-    const dataProvider = new DataProvider(this.data);
-    return dataProvider.getData(this);
   }
 }

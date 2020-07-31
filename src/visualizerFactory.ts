@@ -6,7 +6,7 @@ export class VisualizerFactory {
   /**
    * Create visualizer by question.
    */
-  public static createVizualizer(
+  public static createVisualizer(
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: { [index: string]: any }

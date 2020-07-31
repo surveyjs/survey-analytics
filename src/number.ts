@@ -25,21 +25,20 @@ export class NumberModel extends VisualizerBase {
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
-    options?: Object
+    options: { [index: string]: any } = {}
   ) {
     super(question, data, options);
   }
 
-  public get name() {
-    return "number";
-  }
-
-  updateData(data: Array<{ [index: string]: any }>) {
+  protected onDataChanged() {
     this._resultAverage = undefined;
     this._resultMin = undefined;
     this._resultMax = undefined;
-    super.updateData(data);
-    this.refresh();
+    super.onDataChanged();
+  }
+
+  public get name() {
+    return "number";
   }
 
   private toolbarChangeHandler = (e: any) => {

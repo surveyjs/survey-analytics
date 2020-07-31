@@ -4,7 +4,7 @@ import { SelectBase } from "./selectBase";
 import { DocumentHelper } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, ElementVisibility, IState } from "./config";
-import { VisualizerFactory } from "./visualizerFactory";
+
 const Muuri = require("muuri");
 import "./visualizationPanel.scss";
 
@@ -29,12 +29,11 @@ export interface IVisualizerPanelRenderedElement
  * seriesValues - an array of series values in data to group data by series
  * seriesLabels - labels for series to display, if not passed the seriesValues are used as labels
  * survey - pass survey instance to use localses from the survey JSON
+ * dataProvider - dataProvider for this visualizer
  *
  * elements - list of visual element descriptions
  */
 export class VisualizationPanel extends VisualizerBase {
-  protected filteredData: Array<{ [index: string]: any }>;
-  protected filterValues: { [index: string]: any } = {};
   protected visualizers: Array<VisualizerBase> = [];
 
   constructor(
@@ -50,7 +49,6 @@ export class VisualizationPanel extends VisualizerBase {
     if (this.options.survey) {
       localization.currentLocale = this.options.survey.locale;
     }
-    this.filteredData = data;
 
     if (_elements === undefined) {
       this._elements = this.buildElements(questions);
@@ -156,11 +154,7 @@ export class VisualizationPanel extends VisualizerBase {
 
   private buildVisualizers(questions: Array<Question>) {
     questions.forEach((question) => {
-      const visualizer = VisualizerFactory.createVizualizer(
-        question,
-        this.filteredData,
-        this.options
-      );
+      const visualizer = this.createVisualizer(question);
 
       if (this.allowHideQuestions) {
         visualizer.registerToolbarItem("removeQuestion", () => {
@@ -175,7 +169,7 @@ export class VisualizationPanel extends VisualizerBase {
           text: <HTMLElement>undefined,
           htmlElement: <HTMLDivElement>undefined,
           update: function (selection: any) {
-            if (!!selection && !!selection.value) {
+            if (selection !== undefined && selection.value !== undefined) {
               this.htmlElement.style.display = "inline-block";
               this.text.innerHTML = "Filter: [" + selection.text + "]";
             } else {
@@ -482,15 +476,7 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
-   * Updates visualizer data.
-   */
-  updateData(data: Array<{ [index: string]: any }>) {
-    super.updateData(data);
-    this.applyFilter();
-  }
-
-  /**
-   * Redraws visualizer and all inner content.
+   * Redraws visualizer toobar and all inner content.
    */
   public refresh() {
     if (!!this.toolbarContainer) {
@@ -515,31 +501,7 @@ export class VisualizationPanel extends VisualizerBase {
    * Sets filter by question name and value.
    */
   public setFilter(questionName: string, selectedValue: any) {
-    var filterChanged = true;
-    if (selectedValue !== undefined) {
-      filterChanged = this.filterValues[questionName] !== selectedValue;
-      this.filterValues[questionName] = selectedValue;
-    } else {
-      filterChanged = this.filterValues[questionName] !== undefined;
-      delete this.filterValues[questionName];
-    }
-    if (filterChanged) {
-      this.applyFilter();
-    }
-  }
-
-  /**
-   * Applies filter to the data and update visualizers.
-   */
-  public applyFilter() {
-    this.filteredData = this.data.filter((item) => {
-      return !Object.keys(this.filterValues).some(
-        (key) => item[key] !== this.filterValues[key]
-      );
-    });
-    this.visualizers.forEach((visualizer) =>
-      visualizer.updateData(this.filteredData)
-    );
+    this.dataProvider.setFilter(questionName, selectedValue);
   }
 
   /**

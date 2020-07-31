@@ -20,11 +20,9 @@ export class WordCloudAdapter {
     const canvasNode = <HTMLCanvasElement>(
       DocumentHelper.createElement("canvas", "")
     );
-    const emptyTextNode = <HTMLElement>(
-      DocumentHelper.createElement("p", "", {
-        innerHTML: "There are no results yet",
-      })
-    );
+    const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
+      innerHTML: "There are no results yet",
+    });
 
     if (data.length === 0) {
       node.appendChild(emptyTextNode);
