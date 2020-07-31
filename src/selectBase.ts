@@ -28,7 +28,6 @@ export class SelectBase extends VisualizerBase {
           (option: any) => this.chartType === option.value,
           (e: any) => {
             this.setChartType(e.target.value);
-            this.onChartTypeChanged();
           }
         );
       }
@@ -86,6 +85,7 @@ export class SelectBase extends VisualizerBase {
       this.chartType !== chartType
     ) {
       this.chartType = chartType;
+      this.onChartTypeChanged();
       this.destroyContent(this.contentContainer);
       this.renderContent(this.contentContainer);
       this.invokeOnUpdate();
