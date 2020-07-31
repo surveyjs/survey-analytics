@@ -86,8 +86,6 @@ export class SelectBase extends VisualizerBase {
     ) {
       this.chartType = chartType;
       this.onChartTypeChanged();
-      this.destroyContent(this.contentContainer);
-      this.renderContent(this.contentContainer);
       this.invokeOnUpdate();
     }
   }
@@ -115,6 +113,9 @@ export class SelectBase extends VisualizerBase {
 
   setLabelsOrder(value: string) {
     this.orderByAnsweres = value;
+    this.destroyContent(this.contentContainer);
+    this.renderContent(this.contentContainer);
+    this.invokeOnUpdate();
   }
 
   onDataItemSelected: (selectedValue: any, selectedText: string) => void;
