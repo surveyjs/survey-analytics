@@ -118,6 +118,18 @@ export abstract class Table {
     );
   };
 
+  public isAvailable = (visibility: ColumnVisibility) => {
+    return (
+      this.isTrustedAccess || visibility !== ColumnVisibility.PublicInvisible
+    );
+  };
+
+  public getAvailableColumns = (): Array<ITableColumn> => {
+    return this.columns.filter((column: ITableColumn) => {
+      return this.isAvailable(column.visibility);
+    });
+  };
+
   public get columns() {
     return [].concat(this._columns);
   }
@@ -209,6 +221,7 @@ export abstract class Table {
 
   public refresh(hard: boolean = false) {
     if (this.isRendered) {
+      this._rows = [];
       this.currentPageNumber = this.getPageNumber();
       if (hard) {
         this.initTableData(this.data);

@@ -91,3 +91,35 @@ test("getState, setState, onStateChanged", () => {
   expect(count).toBe(2);
   expect(tables.state.locale).toEqual("ru");
 });
+
+test("test getAvailableColumns method", () => {
+  var table = new TableTest(new SurveyModel(), [], null, [], false);
+  table.columns = [
+    {
+      name: "visible",
+      displayName: "visible",
+      dataType: 0,
+      visibility: 0,
+      location: 0,
+    },
+    {
+      name: "invisible",
+      displayName: "invisible",
+      dataType: 0,
+      visibility: 1,
+      location: 0,
+    },
+    {
+      name: "publicinvisible",
+      displayName: "publicinvisible",
+      dataType: 0,
+      visibility: 2,
+      location: 0,
+    },
+  ];
+  var columnNames = table.getAvailableColumns().map((column) => column.name);
+  expect(columnNames).toEqual(["visible", "invisible"]);
+  table.isTrustedAccess = true;
+  columnNames = table.getAvailableColumns().map((column) => column.name);
+  expect(columnNames).toEqual(["visible", "invisible", "publicinvisible"]);
+});
