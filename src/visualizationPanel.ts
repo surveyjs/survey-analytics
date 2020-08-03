@@ -170,10 +170,6 @@ export class VisualizationPanel extends VisualizerBase {
     fromIndex = this._elements.indexOf(fromVisibleIndexElement);
     toIndex = this._elements.indexOf(toVisibleIndexElement);
 
-    console.log("from: " + fromVisibleIndex);
-    console.log("to: " + toVisibleIndex);
-    console.log("from: " + fromIndex);
-    console.log("to: " + toIndex);
     this.moveElement(fromIndex, toIndex);
   }
 
