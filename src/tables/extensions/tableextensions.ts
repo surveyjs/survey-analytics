@@ -5,6 +5,7 @@ interface ITableExtension {
   name: string;
   visibleIndex: number;
   render: (table: Table, opt: any) => HTMLElement;
+  destroy?: () => void;
 }
 
 export class TableExtensions {
@@ -12,6 +13,7 @@ export class TableExtensions {
   private static extensions: {
     [location: string]: Array<ITableExtension>;
   } = {};
+  private renderedExtensions: Array<ITableExtension> = [];
 
   public render(targetNode: HTMLElement, location: string, options?: any) {
     var extensions = TableExtensions.extensions[location];
@@ -22,10 +24,18 @@ export class TableExtensions {
           var action = extension.render(this.table, options);
           if (!!action) {
             targetNode.appendChild(action);
+            this.renderedExtensions.push(extension);
           }
         }
       });
     }
+  }
+
+  public destroy() {
+    this.renderedExtensions.forEach((extension) => {
+      if (!!extension.destroy) extension.destroy();
+    });
+    this.renderedExtensions = [];
   }
 
   public static registerExtension(extension: ITableExtension) {

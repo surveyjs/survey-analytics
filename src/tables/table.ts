@@ -242,6 +242,7 @@ export abstract class Table {
 
   public destroy() {
     this.clearCreatedRows();
+    this.extensions.destroy();
     this.renderResult.innerHTML = "";
     this.renderResult = undefined;
   }
@@ -345,5 +346,6 @@ export abstract class TableRow {
     this.table.onColumnsLocationChanged.remove(
       this.onColumnLocationChangedCallback
     );
+    this.extensions.destroy();
   }
 }
