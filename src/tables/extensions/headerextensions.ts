@@ -24,6 +24,9 @@ TableExtensions.registerExtension({
   location: "header",
   name: "showcolumn",
   visibleIndex: 2,
+  destroy: function () {
+    this.onDestroy();
+  },
   render: function (table: Table): HTMLElement {
     const dropdown = DocumentHelper.createElement(
       "select",
@@ -70,10 +73,14 @@ TableExtensions.registerExtension({
 
     update();
 
-    table.onColumnsVisibilityChanged.add(function () {
+    var onVisibilityChangedCallback = () => {
       update();
-    });
+    };
 
+    table.onColumnsVisibilityChanged.add(onVisibilityChangedCallback);
+    this.onDestroy = () => {
+      table.onColumnsVisibilityChanged.remove(onVisibilityChangedCallback);
+    };
     return dropdown;
   },
 });

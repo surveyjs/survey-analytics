@@ -22,7 +22,7 @@ TableExtensions.registerExtension({
   location: "row",
   name: "select",
   visibleIndex: -1,
-  render: function (table, opt) {
+  render: function (_table, opt) {
     var row = opt.row;
     var checkbox = <HTMLInputElement>DocumentHelper.createElement(
       "input",
