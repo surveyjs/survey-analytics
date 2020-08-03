@@ -301,3 +301,25 @@ test("setFilter method", () => {
     },
   ]);
 });
+
+test("moveVisibleElement if hidden elements exist", () => {
+  const originalElements = [
+    { name: "el0", visibility: 0 },
+    { name: "el1", visibility: 1 },
+    { name: "el2", visibility: 0 },
+    { name: "el3", visibility: 1 },
+    { name: "el4", visibility: 0 },
+  ];
+  const resultElements = [
+    { name: "el0", visibility: 0 },
+    { name: "el1", visibility: 1 },
+    { name: "el4", visibility: 0 },
+    { name: "el2", visibility: 0 },
+    { name: "el3", visibility: 1 },
+  ];
+  let visPanel = new VisualizationPanel([], [], {}, <any>originalElements);
+
+  visPanel["moveVisibleElement"](2, 1); // should be transform to visPanel["moveElement"](4, 2);
+
+  expect(visPanel.state.elements).toEqual(resultElements);
+});
