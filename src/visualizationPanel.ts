@@ -53,7 +53,7 @@ export class VisualizationPanel extends VisualizerBase {
         "." + questionLayoutedElementClassName
       );
     this._layoutEngine.onMoveCallback = (fromIndex: number, toIndex: number) =>
-      this.moveElement(fromIndex, toIndex);
+      this.moveVisibleElement(fromIndex, toIndex);
 
     this.showHeader = false;
     if (this.options.survey) {
@@ -100,7 +100,7 @@ export class VisualizationPanel extends VisualizerBase {
                 }),
               (option: any) => false,
               (e: any) => {
-                this.addElementToLayout(e.target.value);
+                this.showElement(e.target.value);
               }
             );
             (addElementSelector &&
@@ -138,7 +138,7 @@ export class VisualizationPanel extends VisualizerBase {
     }
   }
 
-  private addElementToLayout(elementName: string) {
+  protected showElement(elementName: string) {
     const element = this.getElement(elementName);
     element.visibility = ElementVisibility.Visible;
     const questionElement = this.renderPanelElement(element);
@@ -147,7 +147,7 @@ export class VisualizationPanel extends VisualizerBase {
     this.visibleElementsChanged(element, "ADDED");
   }
 
-  private removeElementFromLayout(elementName: string) {
+  protected hideElement(elementName: string) {
     const element = this.getElement(elementName);
     element.visibility = ElementVisibility.Invisible;
     if (!!element.renderedElement) {
@@ -158,6 +158,31 @@ export class VisualizationPanel extends VisualizerBase {
     this.visibleElementsChanged(element, "REMOVED");
   }
 
+  protected moveVisibleElement(
+    fromVisibleIndex: number,
+    toVisibleIndex: number
+  ) {
+    let fromIndex, toIndex;
+
+    let fromVisibleIndexElement = this.visibleElements[fromVisibleIndex];
+    let toVisibleIndexElement = this.visibleElements[toVisibleIndex];
+
+    fromIndex = this._elements.indexOf(fromVisibleIndexElement);
+    toIndex = this._elements.indexOf(toVisibleIndexElement);
+
+    console.log("from: " + fromVisibleIndex);
+    console.log("to: " + toVisibleIndex);
+    console.log("from: " + fromIndex);
+    console.log("to: " + toIndex);
+    this.moveElement(fromIndex, toIndex);
+  }
+
+  protected moveElement(fromIndex: number, toIndex: number) {
+    var elements = this._elements.splice(fromIndex, 1);
+    this._elements.splice(toIndex, 0, elements[0]);
+    this.visibleElementsChanged(elements[0], "MOVED");
+  }
+
   private buildVisualizers(questions: Array<Question>) {
     questions.forEach((question) => {
       const visualizer = this.createVisualizer(question);
@@ -165,7 +190,7 @@ export class VisualizationPanel extends VisualizerBase {
       if (this.allowHideQuestions) {
         visualizer.registerToolbarItem("removeQuestion", () => {
           return DocumentHelper.createButton(() => {
-            setTimeout(() => this.removeElementFromLayout(question.name), 0);
+            setTimeout(() => this.hideElement(question.name), 0);
           }, localization.getString("hideButton"));
         });
       }
@@ -422,12 +447,6 @@ export class VisualizationPanel extends VisualizerBase {
 
     this.layoutEngine.start(container);
     // !!window && window.dispatchEvent(new UIEvent("resize"));
-  }
-
-  protected moveElement(fromIndex: number, toIndex: number) {
-    var elements = this._elements.splice(fromIndex, 1);
-    this._elements.splice(toIndex, 0, elements[0]);
-    this.visibleElementsChanged(elements[0], "MOVED");
   }
 
   /**
