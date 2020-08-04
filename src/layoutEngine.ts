@@ -27,8 +27,8 @@ export class LayoutEngine {
     }
   }
 
-  add(elements: Array<HTMLElement>) {}
-  remove(elements: Array<HTMLElement>) {}
+  add(elements: Array<HTMLElement>, options?: any) {}
+  remove(elements: Array<HTMLElement>, options?: any) {}
 
   onMoveCallback: (fromIndex: number, toIndex: number) => void;
 
@@ -75,10 +75,10 @@ export class MuuriLayoutEngine extends LayoutEngine {
     }, 10);
   }
 
-  add(elements: Array<HTMLElement>) {
-    this._muuri.add(elements);
+  add(elements: Array<HTMLElement>, options?: any) {
+    this._muuri.add(elements, options);
   }
-  remove(elements: Array<HTMLElement>) {
-    this._muuri.remove(elements);
+  remove(elements: Array<HTMLElement>, options?: any) {
+    this._muuri.remove(elements, options);
   }
 }
