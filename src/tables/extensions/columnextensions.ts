@@ -1,6 +1,6 @@
 import { Table } from "../table";
 import { DocumentHelper } from "../../utils";
-import { localization } from "../..";
+import { localization } from "../../localizationManager";
 import { ColumnVisibility, QuestionLocation } from "../config";
 import { TableExtensions } from "./tableextensions";
 
