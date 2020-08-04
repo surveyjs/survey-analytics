@@ -57,10 +57,6 @@ export class DataTables extends Table {
     super(survey, data, options, _columns, isTrustedAccess);
   }
 
-  protected onColumnsChanged() {
-    this.columnsChanged.fire(this, { survey: this.survey });
-  }
-
   destroy() {
     if (!this.renderResult) return;
     const tableNode = this.renderResult.children[0];
@@ -205,9 +201,7 @@ export class DataTables extends Table {
     datatableApiRef.on(
       "column-reorder",
       (e: any, settings: any, details: any) => {
-        var deletedColumns = this._columns.splice(details.from - 1, 1);
-        this._columns.splice(details.to - 1, 0, deletedColumns[0]);
-        this.onColumnsChanged();
+        this.moveColumn(details.from - 1, details.to - 1);
       }
     );
     datatableApiRef

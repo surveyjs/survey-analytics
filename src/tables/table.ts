@@ -166,6 +166,12 @@ export abstract class Table {
     });
   }
 
+  public moveColumn(from: number, to: number) {
+    var deletedColumns = this._columns.splice(from, 1);
+    this._columns.splice(to, 0, deletedColumns[0]);
+    this.onStateChanged.fire(this, this.state);
+  }
+
   public setColumnLocation(columnName: string, location: QuestionLocation) {
     this.columns.filter(
       (column) => column.name === columnName

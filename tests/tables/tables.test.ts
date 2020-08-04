@@ -123,3 +123,36 @@ test("test getAvailableColumns method", () => {
   columnNames = table.getAvailableColumns().map((column) => column.name);
   expect(columnNames).toEqual(["visible", "invisible", "publicinvisible"]);
 });
+
+test("move column method", () => {
+  var table = new TableTest(new SurveyModel(), [], null, [], false);
+  table.columns = [
+    {
+      name: "column1",
+      displayName: "column1",
+      dataType: 0,
+      visibility: 0,
+      location: 0,
+    },
+    {
+      name: "column2",
+      displayName: "column2",
+      dataType: 0,
+      visibility: 0,
+      location: 0,
+    },
+    {
+      name: "column3",
+      displayName: "column3",
+      dataType: 0,
+      visibility: 0,
+      location: 0,
+    },
+  ];
+  table.moveColumn(0, 1);
+  var names = table.columns.map((column) => column.name);
+  expect(names).toEqual(["column2", "column1", "column3"]);
+  table.moveColumn(0, 2);
+  names = table.columns.map((column) => column.name);
+  expect(names).toEqual(["column1", "column3", "column2"]);
+});

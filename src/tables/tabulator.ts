@@ -153,8 +153,7 @@ export class Tabulator extends Table {
       this._columns.filter((col) => col.name == column.getField())[0]
     );
     var to = columns.indexOf(column) - 1;
-    var deletedColumns = this._columns.splice(from, 1);
-    this._columns.splice(to, 0, deletedColumns[0]);
+    this.moveColumn(from, to);
   };
 
   rowFormatter = (row: any): void => {
