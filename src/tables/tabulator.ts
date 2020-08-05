@@ -185,6 +185,18 @@ export class Tabulator extends Table {
     var actions = this.getHeaderActions(columnName);
     container.appendChild(actions);
     container.appendChild(title);
+    container.onmousedown = (e: any) => {
+      var parent = e.target;
+      while (
+        parent != container &&
+        !parent.classList.contains("sa-table__drag-button")
+      ) {
+        parent = parent.parentNode;
+      }
+      if (parent == container) {
+        e.stopPropagation();
+      }
+    };
     return container;
   };
 
