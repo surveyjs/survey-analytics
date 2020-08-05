@@ -38,7 +38,7 @@ export class DataTables extends Table {
    * <br/> options.survey current survey
    * @see getColumns
    */
-  public columnsChanged: Event<
+  public onColumnsReorder: Event<
     (sender: DataTables, options: any) => any,
     any
   > = new Event<(sender: DataTables, options: any) => any, any>();
@@ -202,6 +202,7 @@ export class DataTables extends Table {
       "column-reorder",
       (e: any, settings: any, details: any) => {
         this.moveColumn(details.from - 1, details.to - 1);
+        this.onColumnsReorder.fire(this, { columns: this.columns });
       }
     );
     datatableApiRef
@@ -285,7 +286,7 @@ export class DatatablesRow extends TableRow {
     this.rowElement = _innerRow.node();
     this.rowData = _innerRow.data();
     this._innerRow = this._innerRow.row(this.rowElement);
-    (<DataTables>table).columnsChanged.add(() => {
+    (<DataTables>table).onColumnsReorder.add(() => {
       this.render();
     });
   }
