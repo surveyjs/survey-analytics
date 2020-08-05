@@ -27,19 +27,6 @@ $root-font-size: 14px;
 
 @import "./table.scss";
 
-@mixin arrow() {
-  display: inline-block;
-  background: transparent;
-  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23a0a0a0;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E%0A");
-  background-repeat: no-repeat, repeat;
-  background-size: 9px 100%;
-  height: 10px;
-  width: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-indent: -9999px;
-}
-
 @mixin doubleArrow() {
   display: inline-block;
   background: transparent;
@@ -53,49 +40,6 @@ $root-font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-indent: -9999px;
-}
-
-@mixin dropdown() {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background: transparent;
-  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23404040;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E%0A");
-  background-repeat: no-repeat, repeat;
-  background-position: right 0.7em top 50%, 0 0;
-  background-size: 0.57em 100%;
-  height: 34px;
-  border-radius: 2px;
-  border: solid 1px $border-color;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: inherit;
-  padding: 0.25em 2em 0.25em 0.87em;
-
-  &:focus {
-    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%231AB394;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E ");
-    border-color: $border-color;
-    outline: none;
-  }
-  &::-ms-expand {
-    display: none;
-  }
-}
-
-@mixin input() {
-  height: 34px;
-  border: none;
-  border-bottom: 0.06em solid $border-color;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: inherit;
-  padding: 0.25em 1.5em 0.25em 0.87em;
-  background: transparent;
-
-  &:focus {
-    border-color: $main-color;
-    outline: none;
-  }
 }
 
 .sa-tabulator__header {
@@ -122,24 +66,15 @@ $root-font-size: 14px;
   text-align: right;
 }
 
-.sa-tabulator {
-  font-size: $root-font-size;
-  font-family: Segoe UI;
-
-  button {
-    cursor: pointer;
-    background-color: inherit;
-    outline: none;
-  }
-
-  select {
-    @include dropdown();
-  }
-
+.sa-tabulator__filter-container {
+  margin-bottom: 20px;
   input {
-    @include input();
+    box-sizing: border-box;
   }
+}
 
+//redefine tabulator's styles
+.sa-tabulator {
   .tabulator-page {
     margin-right: 15px;
     padding: 1px;
@@ -191,102 +126,64 @@ $root-font-size: 14px;
   .tabulator {
     border: 1px solid #ddd;
     background-color: $background-color;
+
+    .tabulator-row .tabulator-cell {
+      padding: 20px;
+      border-top: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+    }
+
+    .tabulator-header .tabulator-col {
+      padding: 13px 20px;
+      border-right: 1px solid #ddd;
+    }
+
+    .tabulator-header .tabulator-col .tabulator-col-content {
+      padding: 0;
+    }
+
+    .tabulator-header {
+      border-bottom: none;
+    }
+
+    .tabulator-header .tabulator-col.tabulator-sortable:hover {
+      background-color: white;
+    }
+
+    .tabulator-header,
+    .tabulator-header .tabulator-col {
+      background-color: white;
+    }
+
+    .tabulator-header .tabulator-col .tabulator-col-content .tabulator-arrow {
+      display: none;
+    }
+
+    .tabulator-row.tabulator-selectable:hover {
+      cursor: default;
+      background-color: $background-color;
+    }
+
+    .tabulator-row.tabulator-row-even {
+      background-color: $background-color;
+    }
+
+    .tabulator-header .tabulator-col .tabulator-col-content {
+      border-top: none;
+    }
+
+    .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
+      padding-right: 0;
+    }
+
+    .tabulator-tableHolder::-webkit-scrollbar {
+      height: 10px;
+      width: 10px;
+      background-color: $scroll-color;
+    }
+
+    .tabulator-tableHolder::-webkit-scrollbar-thumb {
+      background: $main-color;
+    }
   }
-
-  .tabulator-row .tabulator-cell {
-    padding: 20px;
-    border-top: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-  }
-
-  .tabulator .tabulator-header .tabulator-col {
-    padding: 13px 20px;
-    border-right: 1px solid #ddd;
-  }
-
-  .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
-    padding: 0;
-  }
-
-  .tabulator .tabulator-header {
-    border-bottom: none;
-  }
-}
-
-.sa-tabulator__table {
-  width: 100%;
-  background: $text-color-inverse;
-}
-
-.sa-tabulator__table th {
-  border: 1px solid $border-color;
-  border-left: none;
-  border-bottom: none;
-  &:first-child {
-    border-right: none;
-    border-left: 1px solid $border-color;
-  }
-  padding: 13px 20px;
-  position: relative;
-}
-
-.sa-tabulator__table {
-  th {
-    vertical-align: top;
-  }
-}
-
-.sa-tabulator__filter-container {
-  margin-bottom: 20px;
-  input {
-    box-sizing: border-box;
-  }
-}
-
-.tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover {
-  background-color: white;
-}
-.sa-tabulator .tabulator .tabulator-header,
-.sa-tabulator .tabulator .tabulator-header .tabulator-col {
-  background-color: white;
-}
-
-.sa-tabulator
-  .tabulator
-  .tabulator-header
-  .tabulator-col
-  .tabulator-col-content
-  .tabulator-arrow {
-  display: none;
-}
-.sa-tabulator .tabulator-row.tabulator-selectable:hover {
-  cursor: default;
-  background-color: $background-color;
-}
-.sa-tabulator .tabulator-row.tabulator-row-even {
-  background-color: $background-color;
-}
-.sa-tabulator
-  .tabulator
-  .tabulator-header
-  .tabulator-col
-  .tabulator-col-content {
-  border-top: none;
-}
-.sa-tabulator
-  .tabulator
-  .tabulator-header
-  .tabulator-col.tabulator-sortable
-  .tabulator-col-title {
-  padding-right: 0;
-}
-
-.sa-tabulator .tabulator-tableHolder::-webkit-scrollbar {
-  height: 10px;
-  width: 10px;
-  background-color: $scroll-color;
-}
-
-.sa-tabulator .tabulator-tableHolder::-webkit-scrollbar-thumb {
-  background: $main-color;
 }

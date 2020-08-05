@@ -15,77 +15,22 @@ $background-gray: #f7f7f7;
 
 @import "./table.scss";
 
-@mixin arrow() {
-  display: inline-block;
-  background: transparent;
-  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23a0a0a0;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E%0A");
-  background-repeat: no-repeat, repeat;
-  background-size: 9px 100%;
-  width: 10px;
-  height: 10px;
+.sa-datatables__table {
+  width: 100%;
+  background: $text-color-inverse;
 }
 
-@mixin dropdown() {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background: transparent;
-  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23404040;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E%0A");
-  background-repeat: no-repeat, repeat;
-  background-position: right 0.7em top 50%, 0 0;
-  background-size: 0.57em 100%;
-  height: 34px;
-  border-radius: 2px;
-  border: solid 1px $border-color;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: inherit;
-  padding: 0.25em 2em 0.25em 0.87em;
-
-  &:focus {
-    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%231AB394;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E ");
-    border-color: $border-color;
-    outline: none;
-  }
-  &::-ms-expand {
-    display: none;
-  }
-}
-
-@mixin input() {
-  height: 34px;
+.sa-datatables__details-container.sa-datatables__details-container.sa-datatables__details-container {
+  padding: 0;
   border: none;
-  border-bottom: 0.06em solid $border-color;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: inherit;
-  padding: 0.25em 1.5em 0.25em 0.87em;
-  background: transparent;
-
-  &:focus {
-    border-color: $main-color;
-    outline: none;
-  }
 }
 
+.sa-table__header-extensions {
+  width: calc(100% - 590px);
+}
+
+//redifine datatables' styles
 .sa-datatables {
-  font-size: $root-font-size;
-  font-family: Segoe UI;
-
-  button {
-    cursor: pointer;
-    background-color: inherit;
-    outline: none;
-  }
-
-  select {
-    @include dropdown();
-  }
-
-  input {
-    @include input();
-  }
-
   .dt-buttons {
     margin-left: 20px;
     float: left;
@@ -152,86 +97,53 @@ $background-gray: #f7f7f7;
     border-bottom: 1px solid #ddd;
     overflow: auto;
   }
-  .sa-datatables__detail-row + .sa-datatables__detail td {
-    border-top: none;
-  }
-  table.dataTable > thead > tr > th,
-  table.dataTable > tbody > tr > td {
-    min-width: 208px;
-  }
 
-  table.dataTable > thead > tr > th:first-child,
-  table.dataTable > tbody > tr > td:first-child {
-    min-width: auto;
-    border-left: 1px solid #ddd;
-    border-right: none;
-  }
-  table.dataTable > tbody > tr > td {
-    padding: 20px;
-    border-top: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-  }
+  table.dataTable {
+    & > thead > tr > th {
+      border: 1px solid $border-color;
+      border-left: none;
+      border-bottom: none;
+      padding: 13px 20px;
+      position: relative;
+      vertical-align: top;
+      pointer-events: none;
 
-  .sa-datatables__add-column {
-    background: transparent;
-    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' style='enable-background:new 0 0 16 16;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:rgba(159, 159, 159, 0.5);%7D .st1%7Bfill:rgba(159, 159, 159, 0.5);%7D%0A%3C/style%3E%3Cg%3E%3Cpath class='st1' d='M8,2.03C3.63,2.03,0,8,0,8s3.63,6.03,8,6.03s8-6,8-6S12.37,2.03,8,2.03z M8,12c-2.58,0-5.13-2.81-6-4 c1.07-1.47,3.61-4,6-4c2.58,0,5.13,2.81,6,4C12.93,9.47,10.39,12,8,12z'/%3E%3Ccircle class='st1' cx='8' cy='8' r='3'/%3E%3C/g%3E%3C/svg%3E"),
-      url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23404040;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E%0A");
-    background-repeat: no-repeat, no-repeat;
-    background-position: left 0.7em top 50%, right 0.7em top 50%;
-    background-size: 1em 100%, 0.57em 100%;
-    padding-left: 35px;
-    border: solid 1px $border-color;
-    pointer-events: all;
+      &:first-child {
+        border-right: none;
+        border-left: 1px solid $border-color;
+      }
+    }
 
-    &:focus {
-      background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' style='enable-background:new 0 0 16 16;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:rgba(159, 159, 159, 0.5);%7D .st1%7Bfill:rgba(159, 159, 159, 0.5);%7D%0A%3C/style%3E%3Cg%3E%3Cpath class='st1' d='M8,2.03C3.63,2.03,0,8,0,8s3.63,6.03,8,6.03s8-6,8-6S12.37,2.03,8,2.03z M8,12c-2.58,0-5.13-2.81-6-4 c1.07-1.47,3.61-4,6-4c2.58,0,5.13,2.81,6,4C12.93,9.47,10.39,12,8,12z'/%3E%3Ccircle class='st1' cx='8' cy='8' r='3'/%3E%3C/g%3E%3C/svg%3E"),
-        url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%231AB394;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E ") !important;
+    & > thead > tr > th,
+    & > tbody > tr > td {
+      min-width: 208px;
+    }
+
+    & > thead > tr > th:first-child,
+    & > tbody > tr > td:first-child {
+      min-width: auto;
+      border-left: 1px solid #ddd;
+      border-right: none;
+    }
+
+    & > tbody > tr > td {
+      padding: 20px;
+      border-top: 1px solid #ddd;
+      border-right: 1px solid #ddd;
     }
   }
 
-  .sa-table__header-extensions {
-    width: calc(100% - 590px);
+  .dataTables_scrollHead table {
+    border-bottom: none;
   }
-}
 
-.sa-datatables__table {
-  width: 100%;
-  background: $text-color-inverse;
-}
-.dataTables_scrollHead table {
-  border-bottom: none;
-}
-
-.sa-datatables__table th {
-  border: 1px solid $border-color;
-  border-left: none;
-  border-bottom: none;
-  &:first-child {
-    border-right: none;
-    border-left: 1px solid $border-color;
+  .dataTables_scrollBody::-webkit-scrollbar {
+    height: 10px;
+    width: 6px;
+    background-color: $scroll-color;
   }
-  padding: 13px 20px;
-  position: relative;
-}
 
-.sa-datatables__table {
-  th {
-    vertical-align: top;
-    pointer-events: none;
+  .dataTables_scrollBody::-webkit-scrollbar-thumb {
+    background: $main-color;
   }
-}
-
-.sa-datatables .dataTables_scrollBody::-webkit-scrollbar {
-  height: 10px;
-  width: 6px;
-  background-color: $scroll-color;
-}
-
-.sa-datatables .dataTables_scrollBody::-webkit-scrollbar-thumb {
-  background: $main-color;
-}
-
-.sa-datatables__details-container.sa-datatables__details-container.sa-datatables__details-container {
-  padding: 0;
-  border: none;
 }
