@@ -155,6 +155,10 @@ $root-font-size: 14px;
       background-color: white;
     }
 
+    .tabulator-header .tabulator-col:first-child {
+      pointer-events: none;
+    }
+
     .tabulator-header .tabulator-col .tabulator-col-content .tabulator-arrow {
       display: none;
     }
