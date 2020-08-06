@@ -202,9 +202,11 @@ export class DataTables extends Table {
       "column-reorder",
       (e: any, settings: any, details: any) => {
         this.moveColumn(details.from - 1, details.to - 1);
+        this.disableColumnReorder();
         this.onColumnsReorder.fire(this, { columns: this.columns });
       }
     );
+
     datatableApiRef
       .rows()
       .eq(0)
@@ -234,6 +236,14 @@ export class DataTables extends Table {
       });
     datatableApiRef.draw(false);
     this.renderResult = targetNode;
+  }
+
+  public enableColumnReorder() {
+    this.datatableApi.colReorder.enable(true);
+  }
+
+  public disableColumnReorder() {
+    this.datatableApi.colReorder.disable();
   }
 
   public doStateSave() {

@@ -65,6 +65,8 @@ export abstract class Table {
   public abstract applyFilter(value: string): void;
   public abstract applyColumnFilter(columnName: string, value: string): void;
   public abstract sortByColumn(columnName: string, direction: string): void;
+  public abstract disableColumnReorder(): void;
+  public abstract enableColumnReorder(): void;
 
   public getPageNumber(): number {
     return this.currentPageNumber;

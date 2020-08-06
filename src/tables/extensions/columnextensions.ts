@@ -14,8 +14,8 @@ TableExtensions.registerExtension({
       "sa-table__svg-button sa-table__drag-button"
     );
     btn.appendChild(DocumentHelper.createSvgElement("drag"));
-    btn.onclick = (e) => {
-      e.stopPropagation();
+    btn.onmousedown = (e) => {
+      table.enableColumnReorder();
     };
     return btn;
   },

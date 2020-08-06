@@ -69,6 +69,7 @@ export class Tabulator extends Table {
   private readonly COLUMN_MIN_WIDTH = 155;
   public tabulatorTables: any = null;
   private tableContainer: HTMLElement = null;
+  private isColumnReorderEnabled: boolean;
 
   public render = (targetNode: HTMLElement) => {
     targetNode.className += " sa-table sa-tabulator";
@@ -154,6 +155,7 @@ export class Tabulator extends Table {
     );
     var to = columns.indexOf(column) - 1;
     this.moveColumn(from, to);
+    this.disableColumnReorder();
   };
 
   rowFormatter = (row: any): void => {
@@ -186,14 +188,7 @@ export class Tabulator extends Table {
     container.appendChild(actions);
     container.appendChild(title);
     container.onmousedown = (e: any) => {
-      var parent = e.target;
-      while (
-        parent != container &&
-        !parent.classList.contains("sa-table__drag-button")
-      ) {
-        parent = parent.parentNode;
-      }
-      if (parent == container) {
+      if (!this.isColumnReorderEnabled) {
         e.stopPropagation();
       }
     };
@@ -298,6 +293,14 @@ export class Tabulator extends Table {
   public setPageSize(value: number): void {
     super.setPageSize(value);
     this.tabulatorTables.setPageSize(value);
+  }
+
+  public enableColumnReorder(): void {
+    this.isColumnReorderEnabled = true;
+  }
+
+  public disableColumnReorder(): void {
+    this.isColumnReorderEnabled = false;
   }
 
   public download(type: string): void {
