@@ -235,6 +235,7 @@ export class DataTables extends Table {
         tableRow.render();
       });
     datatableApiRef.draw(false);
+    this.disableColumnReorder();
     this.renderResult = targetNode;
   }
 
