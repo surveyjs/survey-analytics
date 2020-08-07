@@ -175,6 +175,13 @@ export class DataTables extends Table {
                 self.extensions.render(container, "column", {
                   columnName: columnsData[index],
                 });
+                container.onmousedown = (e) => {
+                  if (!self.isColumnReorderEnabled) {
+                    e.stopPropagation();
+                  } else {
+                    this.disableColumnReorder();
+              }
+                };
               }
               $thNode.prepend(container);
             });
@@ -235,18 +242,8 @@ export class DataTables extends Table {
         tableRow.render();
       });
     datatableApiRef.draw(false);
-    this.disableColumnReorder();
     this.renderResult = targetNode;
   }
-
-  public enableColumnReorder() {
-    this.datatableApi.colReorder.enable(true);
-  }
-
-  public disableColumnReorder() {
-    this.datatableApi.colReorder.disable();
-  }
-
   public doStateSave() {
     this.datatableApi.state.save();
   }
