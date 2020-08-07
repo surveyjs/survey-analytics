@@ -57,7 +57,7 @@ export class DataTables extends Table {
     super(survey, data, options, _columns, isTrustedAccess);
   }
 
-  destroy() {
+  public destroy() {
     if (!this.renderResult) return;
     const tableNode = this.renderResult.children[0];
     if (jQuery.fn.DataTable.isDataTable(tableNode)) {
@@ -69,8 +69,8 @@ export class DataTables extends Table {
 
   public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
     super.setColumnVisibility(columnName, visibility);
-    var isInvisible = visibility == ColumnVisibility.Invisible;
     this.datatableApi.column(columnName + ":name").visible(!isInvisible);
+    var isInvisible = visibility == ColumnVisibility.Invisible;
   }
 
   public setColumnLocation(columnName: string, location: QuestionLocation) {
@@ -110,7 +110,7 @@ export class DataTables extends Table {
     return this.datatableApi.page();
   }
 
-  render(targetNode: HTMLElement) {
+  public render(targetNode: HTMLElement): void {
     var self = this;
     targetNode.className += " sa-table sa-datatables";
     targetNode.innerHTML = "";
@@ -180,7 +180,7 @@ export class DataTables extends Table {
                     e.stopPropagation();
                   } else {
                     this.disableColumnReorder();
-              }
+                  }
                 };
               }
               $thNode.prepend(container);
@@ -244,14 +244,8 @@ export class DataTables extends Table {
     datatableApiRef.draw(false);
     this.renderResult = targetNode;
   }
-  public doStateSave() {
-    this.datatableApi.state.save();
-  }
-  public stateSaveCallback(settings: any, data: any) {}
 
-  public detailButtonCreators: Array<(columnName?: string) => HTMLElement> = [];
-
-  getColumns(): Array<Object> {
+  public getColumns(): Array<Object> {
     const columns: any = this.getAvailableColumns().map((column) => {
       var question = this.survey.getQuestionByName(column.name);
       return {

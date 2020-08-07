@@ -70,7 +70,7 @@ export class Tabulator extends Table {
   public tabulatorTables: any = null;
   private tableContainer: HTMLElement = null;
 
-  public render = (targetNode: HTMLElement) => {
+  public render(targetNode: HTMLElement): void {
     targetNode.className += " sa-table sa-tabulator";
     targetNode.innerHTML = "";
 
@@ -112,7 +112,7 @@ export class Tabulator extends Table {
     header.appendChild(paginationElement);
     this.extensions.render(extensionsContainer, "header");
     this.renderResult = targetNode;
-  };
+  }
 
   private createDownloadsBar(): HTMLElement {
     var createDownloadButton = (type: string, caption: string): HTMLElement => {
@@ -148,7 +148,7 @@ export class Tabulator extends Table {
     super.destroy();
   };
 
-  columnMovedCallback = (column: any, columns: any[]) => {
+  private columnMovedCallback = (column: any, columns: any[]) => {
     var from = this._columns.indexOf(
       this._columns.filter((col) => col.name == column.getField())[0]
     );
@@ -157,7 +157,7 @@ export class Tabulator extends Table {
     this.disableColumnReorder();
   };
 
-  rowFormatter = (row: any): void => {
+  private rowFormatter = (row: any): void => {
     var tableRow = new TabulatorRow(
       this,
       row.getCells()[0].getElement(),
@@ -173,12 +173,12 @@ export class Tabulator extends Table {
     this._rows.push(tableRow);
   };
 
-  protected getTitleFormatter = (
+  private getTitleFormatter(
     cell: any,
     formatterParams: any,
     onRendered: any,
     columnName: any
-  ) => {
+  ): HTMLElement {
     var container = DocumentHelper.createElement("div");
     var title = DocumentHelper.createElement("span", "", {
       innerHTML: cell.getValue(),
@@ -194,18 +194,18 @@ export class Tabulator extends Table {
       }
     };
     return container;
-  };
+  }
 
-  getHeaderActions = (columnName: string): HTMLElement => {
+  private getHeaderActions(columnName: string): HTMLElement {
     const container = DocumentHelper.createElement(
       "div",
       "sa-table__action-container"
     );
     this.extensions.render(container, "column", { columnName: columnName });
     return container;
-  };
+  }
 
-  protected getColumns = () => {
+  public getColumns(): Array<Object> {
     var minColumnWidth =
       this.COLUMN_MIN_WIDTH > this.options.columnMinWidth
         ? this.COLUMN_MIN_WIDTH
@@ -239,7 +239,7 @@ export class Tabulator extends Table {
     });
 
     return columns;
-  };
+  }
 
   public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
     super.setColumnVisibility(columnName, visibility);

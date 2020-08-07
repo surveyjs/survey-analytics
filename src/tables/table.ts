@@ -207,12 +207,6 @@ export abstract class Table {
     return column.visibility;
   }
 
-  public doStateSave() {
-    this.stateSaveCallback({ columns: this.columns }, this.data);
-  }
-
-  public stateSaveCallback(settings: any, data: any) {}
-
   public removeRow(row: TableRow): void {
     var index = this._rows.indexOf(row);
     this._rows.splice(index, 1);
