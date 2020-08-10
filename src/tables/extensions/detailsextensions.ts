@@ -72,6 +72,8 @@ export class Details {
   };
 
   public close() {
-    this.detailsTable.remove();
+    if (!!this.detailsTable.parentNode) {
+      this.detailsTable.parentNode.removeChild(this.detailsTable);
+    }
   }
 }

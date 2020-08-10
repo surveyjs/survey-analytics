@@ -228,7 +228,9 @@ export class DataTables extends Table {
               rowElement.nextSibling
             );
           } else {
-            detailsTr.remove();
+            if (!!detailsTr.parentNode) {
+              detailsTr.parentNode.removeChild(detailsTr);
+            }
           }
         });
         this._rows.push(tableRow);

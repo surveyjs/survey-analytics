@@ -41,7 +41,7 @@ TableExtensions.registerExtension({
         dropdown.style.display = "none";
         return;
       }
-      dropdown.style.display = "initial";
+      dropdown.style.display = "inline-block";
       dropdown.innerHTML = "";
       var option = DocumentHelper.createElement("option", "", {
         text: localization.getString("showColumn"),
@@ -78,6 +78,7 @@ TableExtensions.registerExtension({
     };
 
     table.onColumnsVisibilityChanged.add(onVisibilityChangedCallback);
+
     this.onDestroy = () => {
       table.onColumnsVisibilityChanged.remove(onVisibilityChangedCallback);
     };
