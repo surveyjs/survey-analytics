@@ -43,7 +43,7 @@ export class Details {
         rows.push(row);
       });
     var row = DocumentHelper.createElement("tr", "sa-table__detail");
-    var td = DocumentHelper.createElement("td", "", { colSpan: 1 });
+    var td = DocumentHelper.createElement("td", "", { colSpan: 3 });
     var extensions = new TableExtensions(this.table);
     extensions.render(td, "details", { row: this.row });
     if (td.children.length != 0) {
