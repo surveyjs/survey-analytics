@@ -82,7 +82,10 @@ TableExtensions.registerExtension({
   name: "filter",
   visibleIndex: 4,
   render: function (table: Table, options: any) {
-    var el = DocumentHelper.createInput("sa-table__filter", "Search...");
+    var el = DocumentHelper.createInput(
+      "sa-table__filter",
+      localization.getString("filterPlaceholder")
+    );
     el.onclick = (e) => e.stopPropagation();
     el.onchange = (e) => {
       table.applyColumnFilter(options.columnName, el.value);

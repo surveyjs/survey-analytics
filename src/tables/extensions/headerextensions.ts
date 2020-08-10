@@ -11,7 +11,7 @@ TableExtensions.registerExtension({
   render: function (table: Table): HTMLElement {
     const input = DocumentHelper.createInput(
       "sa-table__global-filter sa-table__header-extension",
-      "Search..."
+      localization.getString("filterPlaceholder")
     );
     input.onchange = (event: any) => {
       table.applyFilter(event.target.value);
@@ -117,14 +117,14 @@ TableExtensions.registerExtension({
       "span",
       "sa-table__entries-label sa-table__entries-label--right",
       {
-        innerHTML: "Show",
+        innerHTML: localization.getString("showLabel"),
       }
     );
     const entriesSpan = DocumentHelper.createElement(
       "span",
       "sa-table__entries-label sa-table__entries-label--left",
       {
-        innerHTML: "entries",
+        innerHTML: localization.getString("entriesLabel"),
       }
     );
 
@@ -143,7 +143,7 @@ TableExtensions.registerExtension({
     var btn = DocumentHelper.createElement(
       "button",
       "sa-table__btn sa-table__btn--green sa-table__header-extension ",
-      { innerHTML: "Remove rows" }
+      { innerHTML: localization.getString("removeRows") }
     );
     btn.onclick = function () {
       table.getCreatedRows().forEach(function (row) {
