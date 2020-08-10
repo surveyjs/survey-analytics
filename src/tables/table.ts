@@ -36,6 +36,7 @@ export abstract class Table {
   protected currentPageSize: number = 5;
   protected currentPageNumber: number;
   protected _rows: TableRow[] = [];
+  protected isColumnReorderEnabled: boolean;
 
   public onColumnsVisibilityChanged: Event<
     (sender: Table, options: any) => any,
@@ -65,8 +66,14 @@ export abstract class Table {
   public abstract applyFilter(value: string): void;
   public abstract applyColumnFilter(columnName: string, value: string): void;
   public abstract sortByColumn(columnName: string, direction: string): void;
-  public abstract disableColumnReorder(): void;
-  public abstract enableColumnReorder(): void;
+
+  public enableColumnReorder() {
+    this.isColumnReorderEnabled = true;
+  }
+
+  public disableColumnReorder(): void {
+    this.isColumnReorderEnabled = false;
+  }
 
   public getPageNumber(): number {
     return this.currentPageNumber;
@@ -199,12 +206,6 @@ export abstract class Table {
     var column = this.columns.filter((column) => column.name === columnName)[0];
     return column.visibility;
   }
-
-  public doStateSave() {
-    this.stateSaveCallback({ columns: this.columns }, this.data);
-  }
-
-  public stateSaveCallback(settings: any, data: any) {}
 
   public removeRow(row: TableRow): void {
     var index = this._rows.indexOf(row);
