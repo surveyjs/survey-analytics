@@ -9,7 +9,6 @@ $border-color: #d4d4d4;
 $scroll-color: #e2e2e2;
 $svg-color: rgba(#9f9f9f, 0.4);
 $svg-hover-color: #9f9f9f;
-$detail-color: rgba($background-color, 0.5);
 $root-font-size: 14px;
 $main-color: #1ab394;
 $dark-gray: #9b9b9b;
@@ -166,6 +165,10 @@ $root-font-size: 14px;
     .tabulator-row.tabulator-selectable:hover {
       cursor: default;
       background-color: $background-color;
+    }
+
+    .tabulator-row.tabulator-selectable.sa-table__detail-row:hover {
+      background-color: $detail-color;
     }
 
     .tabulator-row.tabulator-row-even {

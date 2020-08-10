@@ -239,12 +239,12 @@ a.sa-table__btn {
   margin-left: 5px;
 }
 
-.sa-table__detail-row.sa-table__detail-row.sa-table__detail-row.sa-table__detail-row.sa-table__detail-row {
+.sa-table__detail-row {
   background-color: $detail-color;
 }
 
 .sa-table__detail-table {
-  background-color: $background-gray;
+  background-color: $detail-color;
 }
 
 .sa-table input.sa-table__row-extension {
