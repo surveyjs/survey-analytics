@@ -305,7 +305,7 @@ export class DatatablesRow extends TableRow {
     return this.rowElement;
   }
 
-  public getData(): HTMLElement {
+  public getRowData(): HTMLElement {
     return this.rowData;
   }
 

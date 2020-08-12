@@ -323,7 +323,7 @@ export class TabulatorRow extends TableRow {
     return this.innerRow.getElement();
   }
 
-  public getData(): HTMLElement {
+  public getRowData(): HTMLElement {
     return this.innerRow.getData();
   }
 

@@ -34,7 +34,7 @@ export class Details {
           innerHTML: column.displayName,
         });
         var td2 = DocumentHelper.createElement("td");
-        td2.textContent = this.row.getData()[column.name];
+        td2.textContent = this.row.getRowData()[column.name];
         var td3 = DocumentHelper.createElement("td");
         td3.appendChild(this.createShowAsColumnButton(column.name));
         row.appendChild(td1);

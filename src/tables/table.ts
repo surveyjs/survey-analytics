@@ -305,8 +305,19 @@ export abstract class TableRow {
     any
   > = new Event<(sender: TableRow, options: any) => any, any>();
 
+  /**
+   * Returns row's html element
+   */
   public abstract getElement(): HTMLElement;
-  public abstract getData(): any;
+
+ /**
+   * Returns data, which is displayed in the row.
+   */
+  public abstract getRowData(): any;
+
+  /**
+   * Returns position of row in the table's data.
+   */
   public abstract getDataPosition(): number;
 
   protected isSelected: boolean;
