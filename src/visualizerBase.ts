@@ -24,7 +24,8 @@ export class VisualizerBase implements IDataInfo {
   constructor(
     public question: Question,
     data: Array<{ [index: string]: any }>,
-    protected options: { [index: string]: any } = {}
+    protected options: { [index: string]: any } = {},
+    private _name?: string
   ) {
     this._dataProvider = options.dataProvider || new DataProvider(data);
     this._dataProvider.onDataChanged.add(() => this.onDataChanged());
@@ -93,7 +94,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   public get name() {
-    return "visualizer";
+    return this._name || "visualizer";
   }
 
   protected get data() {
@@ -164,11 +165,19 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected destroyContent(container: HTMLElement) {
-    container.innerHTML = "";
+    if (!!this.options && typeof this.options.destroyContent === "function") {
+      this.options.destroyContent(container, this);
+    } else {
+      container.innerHTML = "";
+    }
   }
 
   protected renderContent(container: HTMLElement) {
-    container.innerHTML = "This question type is not visualized yet";
+    if (!!this.options && typeof this.options.renderContent === "function") {
+      this.options.renderContent(container, this);
+    } else {
+      container.innerHTML = "This question type is not visualized yet";
+    }
   }
 
   protected destroyFooter(container: HTMLElement) {

@@ -5,17 +5,14 @@ export class Matrix extends SelectBase {
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
-    options?: Object
+    options?: Object,
+    name?: string
   ) {
-    super(question, data, options);
+    super(question, data, options, name || "matrix");
   }
 
   protected get matrixQuestion(): QuestionMatrixModel {
     return <QuestionMatrixModel>this.question;
-  }
-
-  public get name() {
-    return "matrix";
   }
 
   getSeriesValues(): Array<string> {

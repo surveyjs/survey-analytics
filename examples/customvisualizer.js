@@ -5,16 +5,10 @@ Survey.Serializer.addClass("custom-question", [], null, "text");
 
 // Custom visualizer finds min and max values across all the answers on this question and shows them
 function CustomVisualizer(question, data) {
-  var self = this;
-  self.question = question;
-  self.data = data;
-  self.toolbarItemCreators = {};
-
-  var getData = function () {
+  var getData = function (visualizer) {
     var result = [Number.MAX_VALUE, Number.MIN_VALUE];
-
-    self.data.forEach(function (row) {
-      var rowValue = row[self.question.name];
+    visualizer.data.forEach(function (row) {
+      var rowValue = row[visualizer.question.name];
       if (!!rowValue) {
         if (rowValue.min < result[0]) {
           result[0] = rowValue.min;
@@ -28,8 +22,8 @@ function CustomVisualizer(question, data) {
     return result;
   };
 
-  var renderContent = function (contentContainer) {
-    var data2render = getData();
+  var renderContent = function (contentContainer, visualizer) {
+    var data2render = getData(visualizer);
     var minEl = document.createElement("div");
     var minTextEl = document.createElement("span");
     minTextEl.innerText = "Min: ";
@@ -47,41 +41,12 @@ function CustomVisualizer(question, data) {
     maxEl.appendChild(maxValEl);
     contentContainer.appendChild(maxEl);
   };
-
-  return {
-    name: "minMaxVisualizer",
-    render: function (targetElement) {
-      self.targetElement = targetElement || self.targetElement;
-
-      var toolbarNodeContainer = document.createElement("div");
-      var contentContainer = document.createElement("div");
-      contentContainer.className = "sa-visualizer__content";
-
-      renderContent(contentContainer);
-
-      var toolbar = document.createElement("div");
-      toolbar.className = "sa-toolbar";
-      toolbarNodeContainer.appendChild(toolbar);
-      SurveyAnalytics.VisualizerBase.prototype.createToolbarItems.apply(self, [
-        toolbar,
-      ]);
-
-      self.targetElement.appendChild(toolbarNodeContainer);
-      self.targetElement.appendChild(contentContainer);
-    },
-    registerToolbarItem: function (itemName, creator) {
-      SurveyAnalytics.VisualizerBase.prototype.registerToolbarItem.apply(self, [
-        itemName,
-        creator,
-      ]);
-    },
-    updateData: function (data) {
-      self.data = data;
-    },
-    destroy: function () {
-      self.targetElement.innerHTML = "";
-    },
-  };
+  return new SurveyAnalytics.VisualizerBase(
+    question,
+    data,
+    { renderContent: renderContent },
+    "minMaxVisualizer"
+  );
 }
 
 // Register custom visualizer for the given question type
@@ -95,16 +60,11 @@ SurveyAnalytics.localization.locales["en"]["visualizer_minMaxVisualizer"] =
 
 // Custom visualizer finds min value across all the answers on this question and shows it
 function CustomMinVisualizer(question, data) {
-  var self = this;
-  self.question = question;
-  self.data = data;
-  self.toolbarItemCreators = {};
-
-  var getData = function () {
+  var getData = function (visualizerBase) {
     var result = Number.MAX_VALUE;
 
-    self.data.forEach(function (row) {
-      var rowValue = row[self.question.name];
+    visualizerBase.data.forEach(function (row) {
+      var rowValue = row[visualizerBase.dataName];
       if (!!rowValue) {
         if (rowValue.min < result) {
           result = rowValue.min;
@@ -115,8 +75,8 @@ function CustomMinVisualizer(question, data) {
     return result;
   };
 
-  var renderContent = function (contentContainer) {
-    var data2render = getData();
+  var renderContent = function (contentContainer, visualizer) {
+    var data2render = getData(visualizer);
     var minEl = document.createElement("div");
     var minTextEl = document.createElement("span");
     minTextEl.innerText = "Min: ";
@@ -127,40 +87,14 @@ function CustomMinVisualizer(question, data) {
     contentContainer.appendChild(minEl);
   };
 
-  return {
-    name: "minVisualizer",
-    render: function (targetElement) {
-      self.targetElement = targetElement || self.targetElement;
-
-      var toolbarNodeContainer = document.createElement("div");
-      var contentContainer = document.createElement("div");
-      contentContainer.className = "sa-visualizer__content";
-
-      renderContent(contentContainer);
-
-      var toolbar = document.createElement("div");
-      toolbar.className = "sa-toolbar";
-      toolbarNodeContainer.appendChild(toolbar);
-      SurveyAnalytics.VisualizerBase.prototype.createToolbarItems.apply(self, [
-        toolbar,
-      ]);
-
-      self.targetElement.appendChild(toolbarNodeContainer);
-      self.targetElement.appendChild(contentContainer);
+  return new SurveyAnalytics.VisualizerBase(
+    question,
+    data,
+    {
+      renderContent: renderContent,
     },
-    registerToolbarItem: function (itemName, creator) {
-      SurveyAnalytics.VisualizerBase.prototype.registerToolbarItem.apply(self, [
-        itemName,
-        creator,
-      ]);
-    },
-    updateData: function (data) {
-      self.data = data;
-    },
-    destroy: function () {
-      self.targetElement.innerHTML = "";
-    },
-  };
+    "minVisualizer"
+  );
 }
 
 // Register the second custom visualizer for the given question type

@@ -27,7 +27,7 @@ export class VisualizationManager {
   /**
    * Get visualizers (constructors) for question type.
    */
-  public static getVisualizersByType(typeName: string) {
+  public static getVisualizersByType(typeName: string): VisualizerConstructor[] {
     let vizualizers = VisualizationManager.vizualizers[typeName];
     if (!vizualizers) {
       return [VisualizerBase];

@@ -9,9 +9,10 @@ export class VisualizationPanelDynamic extends VisualizerBase {
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
-    options: { [index: string]: any } = {}
+    options: { [index: string]: any } = {},
+    name?: string
   ) {
-    super(question, data, options);
+    super(question, data, options, name || "panelDynamic");
     var options = Object.assign({}, options);
     options.allowDynamicLayout = false;
     options.dataProvider = undefined;

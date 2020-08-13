@@ -42,9 +42,9 @@ export class VisualizationPanel extends VisualizerBase {
     data: Array<{ [index: string]: any }>,
     options: { [index: string]: any } = {},
     private _elements: Array<IVisualizerPanelRenderedElement> = undefined,
-    private isTrustedAccess = false
+    private isTrustedAccess = false,
   ) {
-    super(null, data, options);
+    super(null, data, options, "panel");
 
     this._layoutEngine =
       options.layoutEngine ||
@@ -259,13 +259,6 @@ export class VisualizationPanel extends VisualizerBase {
       });
     }
     localization.currentLocale = newLocale;
-  }
-
-  /**
-   * Returns name of the visualizer - 'panel' for the VisualizationPanel.
-   */
-  public get name() {
-    return "panel";
   }
 
   /**

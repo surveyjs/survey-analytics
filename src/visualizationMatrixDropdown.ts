@@ -14,9 +14,10 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
   constructor(
     question: QuestionMatrixDropdownModel,
     data: Array<{ [index: string]: any }>,
-    options: { [index: string]: any } = {}
+    options: { [index: string]: any } = {},
+    name?: string
   ) {
-    super(question, data, options);
+    super(question, data, options, name || "matrixDropdown");
     var options = Object.assign({}, options);
     options.dataProvider = undefined;
     options.allowDynamicLayout = false;
@@ -29,10 +30,6 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
       options
     );
     this.updateData(data);
-  }
-
-  public get name() {
-    return "matrixDropdown";
   }
 
   updateData(data: Array<{ [index: string]: any }>) {

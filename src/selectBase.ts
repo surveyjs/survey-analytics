@@ -13,9 +13,10 @@ export class SelectBase extends VisualizerBase {
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
-    options?: Object
+    options?: Object,
+    name?: string
   ) {
-    super(question, data, options);
+    super(question, data, options, name || "selectBase");
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
         return DocumentHelper.createSelector(
@@ -58,10 +59,6 @@ export class SelectBase extends VisualizerBase {
 
   protected chartTypes: string[] = [];
   public chartType: string;
-
-  public get name() {
-    return "selectBase";
-  }
 
   private updateOrderSelector() {
     if (!!this.choicesOrder) {

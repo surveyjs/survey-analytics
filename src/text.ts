@@ -52,14 +52,11 @@ export class Text extends VisualizerBase {
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
-    options?: Object
+    options?: Object,
+    name?: string
   ) {
-    super(question, data, options);
+    super(question, data, options, name || "text");
     this._textTableAdapter = new TextTableAdapter(this);
-  }
-
-  public get name() {
-    return "text";
   }
 
   getData() {

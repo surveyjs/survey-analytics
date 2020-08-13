@@ -12,11 +12,7 @@ export class BooleanModel extends SelectBase {
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(question, data, options);
-  }
-
-  public get name() {
-    return "boolean";
+    super(question, data, options, name || "boolean");
   }
 
   public get booleanQuestion() {

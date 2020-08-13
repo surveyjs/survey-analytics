@@ -7,6 +7,10 @@ import "../localization/russian";
 
 export * from "../dataProvider";
 
+export * from "../number";
+export * from "../selectBase";
+export * from "../matrix";
+export * from "../boolean";
 export * from "../visualizerBase";
 export * from "../visualizationManager";
 export * from "../visualizationPanel";

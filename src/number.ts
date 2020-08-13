@@ -25,9 +25,10 @@ export class NumberModel extends VisualizerBase {
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
-    options: { [index: string]: any } = {}
+    options: { [index: string]: any } = {},
+    name?: string
   ) {
-    super(question, data, options);
+    super(question, data, options, name || "number");
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
         return DocumentHelper.createSelector(
@@ -52,10 +53,6 @@ export class NumberModel extends VisualizerBase {
     this._resultMin = undefined;
     this._resultMax = undefined;
     super.onDataChanged();
-  }
-
-  public get name() {
-    return "number";
   }
 
   protected onChartTypeChanged() {}
