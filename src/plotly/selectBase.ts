@@ -83,7 +83,10 @@ export class PlotlyChartAdapter {
       traceConfig.marker.size = 16;
     }
 
-    datasets.forEach((dataset: Array<number>) => {
+    var texts = this.model.showPercentages
+      ? this.model.getPercentages()
+      : datasets;
+    datasets.forEach((dataset: Array<number>, index: number) => {
       if (
         this.model.chartType === "pie" ||
         this.model.chartType === "doughnut"
@@ -95,7 +98,16 @@ export class PlotlyChartAdapter {
           })
         );
       } else {
-        traces.push(Object.assign({}, traceConfig, { x: dataset }));
+        var trace = Object.assign({}, traceConfig, {
+          x: dataset,
+          text: texts[index],
+        });
+        if (this.model.showPercentages) {
+          trace.textposition = "inside";
+          trace.texttemplate = "%{value} (%{text}%)";
+          trace.width = 0.9;
+        }
+        traces.push(trace);
       }
     });
 
@@ -147,17 +159,22 @@ export class PlotlyChartAdapter {
 
     if (hasSeries) {
       layout.showlegend = true;
-      if (
-        this.model.chartType === "pie" ||
-        this.model.chartType === "doughnut"
-      ) {
-        layout.grid = { rows: 1, columns: traces.length };
-      } else if (this.model.chartType === "stackedbar") {
-        layout.height = undefined;
-        layout.barmode = "stack";
-      } else {
-        layout.height = undefined;
+
+      switch (this.model.chartType) {
+        case "pie":
+        case "doughnut":
+          layout.grid = { rows: 1, columns: traces.length };
+          break;
+        case "stackedbar":
+          layout.barmode = "stack";
+        case "bar":
+          layout.height =
+            (labels.length + (labels.length + 1) * 0.5) * 15 * traces.length;
+          break;
+        default:
+          layout.height = undefined;
       }
+
       labels.forEach((label, index) => {
         if (
           this.model.chartType === "pie" ||
@@ -167,13 +184,15 @@ export class PlotlyChartAdapter {
         } else {
           traces[index].hoverinfo = "x+name";
           traces[index].marker.color = undefined;
+          traces[index].name = label;
+
           if (this.model.chartType === "stackedbar") {
             traces[index].type = "bar";
-            traces[index].name = label;
-            traces[index].width = 0.5 / traces.length;
-          } else {
-            traces[index].name = label;
-            traces[index].width = 0.5 / traces.length;
+          }
+
+          if (traces[index].type == "bar") {
+            traces[index].width =
+              (this.model.showPercentages ? 0.7 : 0.5) / traces.length;
           }
         }
       });

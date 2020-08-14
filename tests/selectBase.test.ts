@@ -102,3 +102,22 @@ test("setLabelsOrder triggers renderContent and update", () => {
   expect(updateCallCount).toEqual(1);
   expect(renderCallCount).toEqual(1);
 });
+
+test("check getPercentages method", () => {
+  expect(selectBase.getPercentages()).toEqual([[50, 25, 0, 25, 0, 0]]);
+});
+
+test("setShowPercentages triggers renderContent and update", () => {
+  selectBase.render(document.createElement("div"));
+  let updateCallCount = 0;
+  let renderCallCount = 0;
+  selectBase.onUpdate = () => {
+    updateCallCount++;
+  };
+  selectBase["renderContent"] = () => {
+    renderCallCount++;
+  };
+  selectBase.showPercentages = true;
+  expect(updateCallCount).toEqual(1);
+  expect(renderCallCount).toEqual(1);
+});

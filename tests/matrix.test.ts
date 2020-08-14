@@ -66,3 +66,14 @@ test("getData method", () => {
     [0, 0],
   ]);
 });
+
+test("check getPercentages method", () => {
+  expect(matrix.getPercentages()).toEqual([
+    [33, 33],
+    [67, 33],
+    [0, 33],
+    [0, 0],
+    [0, 0],
+    [0, 0],
+  ]);
+});

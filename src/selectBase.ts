@@ -8,6 +8,8 @@ import { DataProvider } from "./dataProvider";
 export class SelectBase extends VisualizerBase {
   private selectedItem: ItemValue = undefined;
   private choicesOrder: HTMLDivElement = undefined;
+  private showPercentageBtn: HTMLElement = undefined;
+  private _showPercentages: boolean;
   public orderByAnsweres: string = "default";
 
   constructor(
@@ -55,6 +57,27 @@ export class SelectBase extends VisualizerBase {
       }
       return this.choicesOrder;
     });
+
+    this.registerToolbarItem("showPercentages", () => {
+      if (
+        this.options.allowShowPercentages &&
+        (this.chartTypes.indexOf("bar") !== -1 ||
+          this.chartTypes.indexOf("stackedbar") !== -1)
+      ) {
+        var updateCaption = () => {
+          this.showPercentageBtn.innerHTML = this._showPercentages
+            ? localization.getString("hidePercentages")
+            : localization.getString("showPercentages");
+        };
+        this.showPercentageBtn = DocumentHelper.createButton(() => {
+          this.showPercentages = !this._showPercentages;
+          updateCaption();
+        });
+        updateCaption();
+        this.updateShowPercentageBtn();
+        return this.showPercentageBtn;
+      }
+    });
   }
 
   protected chartTypes: string[] = [];
@@ -71,9 +94,18 @@ export class SelectBase extends VisualizerBase {
     }
   }
 
+  private updateShowPercentageBtn() {
+    if (this.chartType == "bar" || this.chartType == "stackedbar") {
+      this.showPercentageBtn.style.display = "inline";
+    } else {
+      this.showPercentageBtn.style.display = "none";
+    }
+  }
+
   protected onChartTypeChanged() {
     this.setLabelsOrder("default");
     this.updateOrderSelector();
+    this.updateShowPercentageBtn();
   }
 
   protected setChartType(chartType: string) {
@@ -108,8 +140,21 @@ export class SelectBase extends VisualizerBase {
     return this.selectedItem;
   }
 
+  public get showPercentages(): boolean {
+    return this._showPercentages;
+  }
+
+  public set showPercentages(val: boolean) {
+    this._showPercentages = val;
+    this.refreshContent();
+  }
+
   setLabelsOrder(value: string) {
     this.orderByAnsweres = value;
+    this.refreshContent();
+  }
+
+  refreshContent() {
     this.destroyContent(this.contentContainer);
     this.renderContent(this.contentContainer);
     this.invokeOnUpdate();
@@ -143,5 +188,30 @@ export class SelectBase extends VisualizerBase {
     if (this.question.hasOther) labels.unshift("Other");
 
     return labels;
+  }
+
+  getPercentages(): Array<Array<number>> {
+    var data: Array<Array<number>> = this.getData();
+    var percentages: Array<Array<number>> = [];
+    if (data.length < 2) {
+      data.forEach((res, index) => {
+        var sum = res.reduce((sum, val) => sum + val);
+        percentages[index] = res.map((val) => {
+          return sum && Math.round((val / sum) * 100);
+        });
+      });
+    } else {
+      for (var i = 0; i < data[0].length; i++) {
+        var sum = 0;
+        for (var j = 0; j < data.length; j++) {
+          sum += data[j][i];
+        }
+        for (var j = 0; j < data.length; j++) {
+          if (!Array.isArray(percentages[j])) percentages[j] = [];
+          percentages[j][i] = sum && Math.round((data[j][i] / sum) * 100);
+        }
+      }
+    }
+    return percentages;
   }
 }

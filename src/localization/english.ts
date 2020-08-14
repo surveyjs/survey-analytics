@@ -35,6 +35,8 @@ export var englishStrings = {
   descOrder: "Descending",
   showMinorColumns: "Show minor columns",
   otherCommentTitle: "Other items and comments",
+  showPercentages: "Show percentages",
+  hidePercentages: "Hide percentages",
 };
 
 //Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.
