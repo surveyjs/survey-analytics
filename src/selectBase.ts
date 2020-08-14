@@ -95,10 +95,12 @@ export class SelectBase extends VisualizerBase {
   }
 
   private updateShowPercentageBtn() {
-    if (this.chartType == "bar" || this.chartType == "stackedbar") {
-      this.showPercentageBtn.style.display = "inline";
-    } else {
-      this.showPercentageBtn.style.display = "none";
+    if (!!this.showPercentageBtn) {
+      if (this.chartType == "bar" || this.chartType == "stackedbar") {
+        this.showPercentageBtn.style.display = "inline";
+      } else {
+        this.showPercentageBtn.style.display = "none";
+      }
     }
   }
 
