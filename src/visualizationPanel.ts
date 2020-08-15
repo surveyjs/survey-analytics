@@ -12,6 +12,14 @@ import "./visualizationPanel.scss";
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
 
+if (!!document) {
+  const svgTemplate = require("html-loader?interpolate!val-loader!./svgbundle.html");
+  const templateHolder = document.createElement("div");
+  templateHolder.style.display = "none";
+  templateHolder.innerHTML = svgTemplate;
+  document.head.appendChild(templateHolder);
+}
+
 export interface IVisualizerPanelRenderedElement
   extends IVisualizerPanelElement {
   renderedElement?: HTMLElement;
@@ -42,7 +50,7 @@ export class VisualizationPanel extends VisualizerBase {
     data: Array<{ [index: string]: any }>,
     options: { [index: string]: any } = {},
     private _elements: Array<IVisualizerPanelRenderedElement> = undefined,
-    private isTrustedAccess = false,
+    private isTrustedAccess = false
   ) {
     super(null, data, options, "panel");
 
@@ -159,6 +167,20 @@ export class VisualizationPanel extends VisualizerBase {
     this.visibleElementsChanged(element, "REMOVED");
   }
 
+  protected makeElementPrivate(element: any) {
+    if (element.visibility !== ElementVisibility.Visible) return;
+
+    element.visibility = ElementVisibility.PublicInvisible;
+    this.onStateChanged.fire(this, this.state);
+  }
+
+  protected makeElementPublic(element: any) {
+    if (element.visibility !== ElementVisibility.PublicInvisible) return;
+
+    element.visibility = ElementVisibility.Visible;
+    this.onStateChanged.fire(this, this.state);
+  }
+
   protected moveVisibleElement(
     fromVisibleIndex: number,
     toVisibleIndex: number
@@ -189,6 +211,38 @@ export class VisualizationPanel extends VisualizerBase {
           return DocumentHelper.createButton(() => {
             setTimeout(() => this.hideElement(question.name), 0);
           }, localization.getString("hideButton"));
+        });
+      }
+
+      if (this.isTrustedAccess) {
+        visualizer.registerToolbarItem("makePrivatePublic", () => {
+          const element = this.getElement(question.name);
+
+          const state =
+            element.visibility === ElementVisibility.Visible
+              ? "first"
+              : "second";
+
+          const pathMakePrivateSvg = "makeprivate";
+          const pathMakePublicSvg = "makepublic";
+          const makePrivateTitle = localization.getString("makePrivateButton");
+          const makePublicTitle = localization.getString("makePublicButton");
+          const doPrivate = (e: any) => {
+            setTimeout(() => this.makeElementPrivate(element), 0);
+          };
+          const doPublic = (e: any) => {
+            setTimeout(() => this.makeElementPublic(element), 0);
+          };
+
+          return DocumentHelper.createSvgToggleButton(
+            pathMakePublicSvg,
+            pathMakePrivateSvg,
+            makePrivateTitle,
+            makePublicTitle,
+            doPrivate,
+            doPublic,
+            state
+          );
         });
       }
 

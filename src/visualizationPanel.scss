@@ -88,6 +88,28 @@
   }
 }
 
+.sa-toolbar__svg-button {
+  width: 15px;
+  height: 15px;
+  padding: 0;
+  border: none;
+  outline: none;
+  background-color: inherit;
+  cursor: pointer;
+  use {
+    fill: $svg-color;
+  }
+  &:hover {
+    use {
+      fill: $svg-hover-color;
+    }
+  }
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
 .sa-toolbar__button--right {
   float: right;
 }
