@@ -25,6 +25,8 @@ export var englishStrings = {
   chartType_gauge: "Gauge",
   chartType_bullet: "Bullet",
   hideButton: "Hide",
+  makePrivateButton: "Make private",
+  makePublicButton: "Make public",
   showButton: "Show",
   resetFilter: "Reset Filter",
   changeLocale: "Change Locale",

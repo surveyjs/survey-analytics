@@ -3,7 +3,12 @@ import { VisualizerBase } from "./visualizerBase";
 import { SelectBase } from "./selectBase";
 import { DocumentHelper } from "./utils/index";
 import { localization } from "./localizationManager";
-import { IVisualizerPanelElement, ElementVisibility, IState } from "./config";
+import {
+  IVisualizerPanelElement,
+  ElementVisibility,
+  IState,
+  IPermission,
+} from "./config";
 import { FilterInfo } from "./filterInfo";
 import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
 
@@ -11,6 +16,14 @@ import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
+
+if (!!document) {
+  const svgTemplate = require("html-loader?interpolate!val-loader!./svgbundle.html");
+  const templateHolder = document.createElement("div");
+  templateHolder.style.display = "none";
+  templateHolder.innerHTML = svgTemplate;
+  document.head.appendChild(templateHolder);
+}
 
 export interface IVisualizerPanelRenderedElement
   extends IVisualizerPanelElement {
@@ -42,7 +55,7 @@ export class VisualizationPanel extends VisualizerBase {
     data: Array<{ [index: string]: any }>,
     options: { [index: string]: any } = {},
     private _elements: Array<IVisualizerPanelRenderedElement> = undefined,
-    private isTrustedAccess = false,
+    private isTrustedAccess = false
   ) {
     super(null, data, options, "panel");
 
@@ -159,6 +172,22 @@ export class VisualizationPanel extends VisualizerBase {
     this.visibleElementsChanged(element, "REMOVED");
   }
 
+  protected makeElementPrivate(element: any) {
+    if (element.visibility !== ElementVisibility.Visible) return;
+
+    element.visibility = ElementVisibility.PublicInvisible;
+    this.onStateChanged.fire(this, this.state);
+    this.onPermissionsChangedCallback(this);
+  }
+
+  protected makeElementPublic(element: any) {
+    if (element.visibility !== ElementVisibility.PublicInvisible) return;
+
+    element.visibility = ElementVisibility.Visible;
+    this.onStateChanged.fire(this, this.state);
+    this.onPermissionsChangedCallback(this);
+  }
+
   protected moveVisibleElement(
     fromVisibleIndex: number,
     toVisibleIndex: number
@@ -189,6 +218,38 @@ export class VisualizationPanel extends VisualizerBase {
           return DocumentHelper.createButton(() => {
             setTimeout(() => this.hideElement(question.name), 0);
           }, localization.getString("hideButton"));
+        });
+      }
+
+      if (this.isTrustedAccess) {
+        visualizer.registerToolbarItem("makePrivatePublic", () => {
+          const element = this.getElement(question.name);
+
+          const state =
+            element.visibility === ElementVisibility.Visible
+              ? "first"
+              : "second";
+
+          const pathMakePrivateSvg = "makeprivate";
+          const pathMakePublicSvg = "makepublic";
+          const makePrivateTitle = localization.getString("makePrivateButton");
+          const makePublicTitle = localization.getString("makePublicButton");
+          const doPrivate = (e: any) => {
+            setTimeout(() => this.makeElementPrivate(element), 0);
+          };
+          const doPublic = (e: any) => {
+            setTimeout(() => this.makeElementPublic(element), 0);
+          };
+
+          return DocumentHelper.createSvgToggleButton(
+            pathMakePublicSvg,
+            pathMakePrivateSvg,
+            makePrivateTitle,
+            makePublicTitle,
+            doPublic,
+            doPrivate,
+            state
+          );
         });
       }
 
@@ -385,9 +446,14 @@ export class VisualizationPanel extends VisualizerBase {
    * state - new state of the panel
    */
   public onStateChanged = new Event<
-    (sender: VisualizationPanel, options: any) => any,
+    (sender: VisualizationPanel, state: any) => any,
     any
   >();
+
+  /**
+   * Fires when permissions changed
+   */
+  public onPermissionsChangedCallback: any;
 
   /**
    * Renders given panel element.
@@ -503,6 +569,34 @@ export class VisualizationPanel extends VisualizerBase {
     this._elements = [].concat(newState.elements || []);
     this.setLocale(newState.locale);
     this.refresh();
+  }
+
+  /**
+   * Gets vizualization panel permissions.
+   */
+  public get permissions(): IPermission[] {
+    return <any>this._elements.map((element) => {
+      return {
+        name: element.name,
+        visibility: element.visibility,
+      };
+    });
+  }
+  /**
+   * Sets vizualization panel permissions.
+   */
+  public set permissions(permissions: IPermission[]) {
+    const updatedElements = this._elements.map((element) => {
+      permissions.forEach((permission) => {
+        if (permission.name === element.name)
+          element.visibility = permission.visibility;
+      });
+
+      return { ...element };
+    });
+    this._elements = [].concat(updatedElements);
+    this.refresh();
+    this.onPermissionsChangedCallback(this);
   }
 
   destroy() {

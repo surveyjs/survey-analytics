@@ -74,6 +74,49 @@ export class DocumentHelper {
     return btn;
   }
 
+  public static createSvgToggleButton(
+    svgPath1: string,
+    svPpath2: string,
+    text1: string,
+    text2: string,
+    handler1: (e: any) => any,
+    handler2: (e: any) => any,
+    state = "first",
+    className = "sa-toolbar__button sa-toolbar__svg-button"
+  ): HTMLElement {
+    const svg1 = DocumentHelper.createSvgElement(svgPath1);
+    const svg2 = DocumentHelper.createSvgElement(svPpath2);
+    const button = DocumentHelper.createElement("button", className);
+
+    const toggle = (e: any) => {
+      if (state === "first") {
+        state = "second";
+        button.title = text2;
+        button.removeChild(svg1);
+        button.appendChild(svg2);
+        handler2(e);
+      } else if (state === "second") {
+        state = "first";
+        button.title = text1;
+        button.removeChild(svg2);
+        button.appendChild(svg1);
+        handler1(e);
+      }
+    };
+
+    if (state === "first") {
+      button.title = text1;
+      button.appendChild(svg1);
+    } else if ((state = "second")) {
+      button.title = text2;
+      button.appendChild(svg2);
+    }
+
+    button.onclick = toggle;
+
+    return button;
+  }
+
   public static createInput(
     className: string,
     placeholder = "",
