@@ -64,6 +64,26 @@ test("buildColumns method", () => {
   expect(tables.locale).toBe("ru");
 });
 
+test("get/set permissions, onPermissionsChangedCallback", () => {
+  let tables = new TableTest(new SurveyModel(json), [], null, [], false);
+  let count = 0;
+
+  tables.onPermissionsChangedCallback = () => {
+    count++;
+  };
+
+  expect(tables.permissions[0].name).toEqual("car");
+  expect(tables.permissions[0].visibility).toEqual(0);
+
+  const newPermissions = tables.permissions;
+  newPermissions[0].visibility = 2;
+
+  tables.permissions = newPermissions;
+
+  expect(count).toEqual(1);
+  expect(tables.permissions[0].visibility).toEqual(2);
+});
+
 test("getState, setState, onStateChanged", () => {
   let tables = new TableTest(new SurveyModel(), [], null, [], false);
 
@@ -85,10 +105,10 @@ test("getState, setState, onStateChanged", () => {
 
   tables.state = newState;
   expect(tables.state).toEqual(newState);
-  expect(count).toBe(1);
+  expect(count).toBe(0);
 
   tables.locale = "ru";
-  expect(count).toBe(2);
+  expect(count).toBe(1);
   expect(tables.state.locale).toEqual("ru");
 });
 

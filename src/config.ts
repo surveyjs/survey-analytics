@@ -15,3 +15,8 @@ export interface IState {
   locale: string;
   elements: IVisualizerPanelElement[];
 }
+
+export interface IPermission {
+  name: string;
+  visibility: ElementVisibility;
+}

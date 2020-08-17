@@ -3,7 +3,12 @@ import { VisualizerBase } from "./visualizerBase";
 import { SelectBase } from "./selectBase";
 import { DocumentHelper } from "./utils/index";
 import { localization } from "./localizationManager";
-import { IVisualizerPanelElement, ElementVisibility, IState } from "./config";
+import {
+  IVisualizerPanelElement,
+  ElementVisibility,
+  IState,
+  IPermission,
+} from "./config";
 import { FilterInfo } from "./filterInfo";
 import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
 
@@ -172,6 +177,7 @@ export class VisualizationPanel extends VisualizerBase {
 
     element.visibility = ElementVisibility.PublicInvisible;
     this.onStateChanged.fire(this, this.state);
+    this.onPermissionsChangedCallback(this);
   }
 
   protected makeElementPublic(element: any) {
@@ -179,6 +185,7 @@ export class VisualizationPanel extends VisualizerBase {
 
     element.visibility = ElementVisibility.Visible;
     this.onStateChanged.fire(this, this.state);
+    this.onPermissionsChangedCallback(this);
   }
 
   protected moveVisibleElement(
@@ -439,9 +446,14 @@ export class VisualizationPanel extends VisualizerBase {
    * state - new state of the panel
    */
   public onStateChanged = new Event<
-    (sender: VisualizationPanel, options: any) => any,
+    (sender: VisualizationPanel, state: any) => any,
     any
   >();
+
+  /**
+   * Fires when permissions changed
+   */
+  public onPermissionsChangedCallback: any;
 
   /**
    * Renders given panel element.
@@ -557,6 +569,34 @@ export class VisualizationPanel extends VisualizerBase {
     this._elements = [].concat(newState.elements || []);
     this.setLocale(newState.locale);
     this.refresh();
+  }
+
+  /**
+   * Gets vizualization panel permissions.
+   */
+  public get permissions(): IPermission[] {
+    return <any>this._elements.map((element) => {
+      return {
+        name: element.name,
+        visibility: element.visibility,
+      };
+    });
+  }
+  /**
+   * Sets vizualization panel permissions.
+   */
+  public set permissions(permissions: IPermission[]) {
+    const updatedElements = this._elements.map((element) => {
+      permissions.forEach((permission) => {
+        if (permission.name === element.name)
+          element.visibility = permission.visibility;
+      });
+
+      return { ...element };
+    });
+    this._elements = [].concat(updatedElements);
+    this.refresh();
+    this.onPermissionsChangedCallback(this);
   }
 
   destroy() {

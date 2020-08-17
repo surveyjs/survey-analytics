@@ -323,3 +323,45 @@ test("moveVisibleElement if hidden elements exist", () => {
 
   expect(visPanel.state.elements).toEqual(resultElements);
 });
+
+test("get/set permissions, onPermissionsChangedCallback", () => {
+  const json = {
+    elements: [
+      {
+        type: "text",
+        name: "question1",
+      },
+      {
+        type: "text",
+        name: "question2",
+      },
+    ],
+  };
+  const data = [
+    {
+      question1: "1-1",
+      question2: "1-2",
+    },
+    {
+      question1: "2-1",
+      question2: "2-2",
+    },
+  ];
+  let count = 0;
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
+  visPanel.onPermissionsChangedCallback = () => {
+    count++;
+  };
+
+  expect(visPanel.permissions[0].name).toEqual("question1");
+  expect(visPanel.permissions[0].visibility).toEqual(0);
+
+  const newPermissions = visPanel.permissions;
+  newPermissions[0].visibility = 2;
+
+  visPanel.permissions = newPermissions;
+
+  expect(count).toEqual(1);
+  expect(visPanel.permissions[0].visibility).toEqual(2);
+});

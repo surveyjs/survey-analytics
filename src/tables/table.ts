@@ -9,6 +9,7 @@ import {
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { TableExtensions } from "./extensions/tableextensions";
+import { IPermission } from '../config';
 
 export abstract class Table {
   protected tableData: any;
@@ -275,15 +276,46 @@ export abstract class Table {
   public set state(newState: ITableState) {
     localization.currentLocale = newState.locale;
     this._columns = newState.elements;
-    this.onStateChanged.fire(this, this.state);
   }
   /**
-   * Fires when vizualization panel state changed.
+   * Fires when table state changed.
    */
   public onStateChanged = new Event<
     (sender: Table, options: any) => any,
     any
   >();
+
+    /**
+   * Gets table permissions.
+   */
+  public get permissions(): IPermission[] {
+    return <any>this._columns.map((column) => {
+      return {
+        name: column.name,
+        visibility: column.visibility,
+      };
+    });
+  }
+  /**
+   * Sets table permissions.
+   */
+  public set permissions(permissions: IPermission[]) {
+    const updatedElements = this._columns.map((column) => {
+      permissions.forEach((permission) => {
+        if (permission.name === column.name)
+        column.visibility = permission.visibility;
+      });
+
+      return { ...column };
+    });
+    this._columns = [].concat(updatedElements);
+    this.onPermissionsChangedCallback(this);
+  }
+
+  /**
+   * Fires when permissions changed
+   */
+  public onPermissionsChangedCallback: any;
 }
 
 export abstract class TableRow {
@@ -310,7 +342,7 @@ export abstract class TableRow {
    */
   public abstract getElement(): HTMLElement;
 
- /**
+  /**
    * Returns data, which is displayed in the row.
    */
   public abstract getRowData(): any;
