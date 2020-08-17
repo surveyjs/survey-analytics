@@ -104,8 +104,14 @@ export class DocumentHelper {
       }
     };
 
-    button.title = text1;
-    button.appendChild(svg1);
+    if (state === "first") {
+      button.title = text1;
+      button.appendChild(svg1);
+    } else if ((state = "second")) {
+      button.title = text2;
+      button.appendChild(svg2);
+    }
+
     button.onclick = toggle;
 
     return button;
