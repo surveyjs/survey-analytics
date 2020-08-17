@@ -239,8 +239,8 @@ export class VisualizationPanel extends VisualizerBase {
             pathMakePrivateSvg,
             makePrivateTitle,
             makePublicTitle,
-            doPrivate,
             doPublic,
+            doPrivate,
             state
           );
         });
