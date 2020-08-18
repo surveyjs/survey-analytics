@@ -121,9 +121,7 @@ export class PlotlySetup {
         return l;
       }),
       hoverinfo: "x+y",
-      orientation: "h",
       mode: "markers",
-      width: 0.5,
       marker: <any>{},
     };
 
@@ -173,14 +171,17 @@ export class PlotlySetup {
     };
 
     if (hasSeries) {
-      layout.showlegend = true;
-      layout.grid = { rows: Math.round(traces.length / 2), columns: 2 };
+      layout.grid = {
+        rows: Math.round(traces.length / 2),
+        columns: 2,
+      };
       layout.annotations = [];
       labels.forEach((label, index) => {
         traces[index].domain = {
           column: index % 2,
           row: Math.floor(index / 2),
         };
+        traces[index].title = { position: "bottom center", text: label };
       });
     }
     return { traces, layout, hasSeries };
