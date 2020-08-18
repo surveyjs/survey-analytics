@@ -56,7 +56,9 @@ export class PlotlyChartAdapter {
       if (data.points.length > 0) {
         const itemText = plotlyOptions.hasSeries
           ? data.points[0].data.name
-          : data.points[0].text;
+          : Array.isArray(data.points[0].customdata)
+          ? data.points[0].customdata[0]
+          : data.points[0].customdata;
         const item: ItemValue = this.model.getSelectedItemByText(itemText);
         this.model.setSelection(item);
       }
@@ -144,6 +146,7 @@ export class PlotlySetup {
         Object.assign({}, traceConfig, {
           values: dataset,
           labels: hasSeries ? seriesLabels : labels,
+          customdata: hasSeries ? seriesLabels : labels,
         })
       );
     });
@@ -215,6 +218,7 @@ export class PlotlySetup {
         }
         return l;
       }),
+      customdata: hasSeries ? seriesLabels : labels,
       hoverinfo: "x+y",
       orientation: "h",
       mode: "markers",
@@ -311,6 +315,7 @@ export class PlotlySetup {
         }
         return l;
       }),
+      customdata: hasSeries ? seriesLabels : labels,
       text: hasSeries ? seriesLabels : labels,
       hoverinfo: "x+y",
       orientation: "h",
