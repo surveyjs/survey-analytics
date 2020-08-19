@@ -114,7 +114,7 @@ TableExtensions.registerExtension({
         currentVisibility = ColumnVisibility.PublicInvisible;
       }
       table.setColumnVisibility(options.columnName, currentVisibility);
-      table.onPermissionsChangedCallback(table);
+      table.onPermissionsChangedCallback && table.onPermissionsChangedCallback(table);
       updateState(currentVisibility);
     };
 

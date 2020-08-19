@@ -350,6 +350,10 @@ test("get/set permissions, onPermissionsChangedCallback", () => {
   let count = 0;
   const survey = new SurveyModel(json);
   let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
+
+  const p = visPanel.permissions;
+  visPanel.permissions = p;
+
   visPanel.onPermissionsChangedCallback = () => {
     count++;
   };
