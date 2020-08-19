@@ -68,6 +68,9 @@ test("get/set permissions, onPermissionsChangedCallback", () => {
   let tables = new TableTest(new SurveyModel(json), [], null, [], false);
   let count = 0;
 
+  const p = tables.permissions;
+  tables.permissions = p;
+
   tables.onPermissionsChangedCallback = () => {
     count++;
   };

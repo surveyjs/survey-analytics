@@ -177,7 +177,7 @@ export class VisualizationPanel extends VisualizerBase {
 
     element.visibility = ElementVisibility.PublicInvisible;
     this.onStateChanged.fire(this, this.state);
-    this.onPermissionsChangedCallback(this);
+    this.onPermissionsChangedCallback && this.onPermissionsChangedCallback(this);
   }
 
   protected makeElementPublic(element: any) {
@@ -185,7 +185,7 @@ export class VisualizationPanel extends VisualizerBase {
 
     element.visibility = ElementVisibility.Visible;
     this.onStateChanged.fire(this, this.state);
-    this.onPermissionsChangedCallback(this);
+    this.onPermissionsChangedCallback && this.onPermissionsChangedCallback(this);
   }
 
   protected moveVisibleElement(
@@ -596,7 +596,7 @@ export class VisualizationPanel extends VisualizerBase {
     });
     this._elements = [].concat(updatedElements);
     this.refresh();
-    this.onPermissionsChangedCallback(this);
+    this.onPermissionsChangedCallback && this.onPermissionsChangedCallback(this);
   }
 
   destroy() {

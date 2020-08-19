@@ -309,7 +309,7 @@ export abstract class Table {
       return { ...column };
     });
     this._columns = [].concat(updatedElements);
-    this.onPermissionsChangedCallback(this);
+    this.onPermissionsChangedCallback && this.onPermissionsChangedCallback(this);
   }
 
   /**
