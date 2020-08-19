@@ -63,7 +63,9 @@ export class Tabulator extends Table {
   ) {
     super(survey, data, options, _columns, isTrustedAccess);
     const self = this;
-    if (!this.options) this.options = defaultOptions;
+    var patchedOptions = {};
+    Object.assign(patchedOptions, defaultOptions, options);
+    this.options = patchedOptions;
   }
 
   private readonly COLUMN_MIN_WIDTH = 155;
@@ -122,7 +124,7 @@ export class Tabulator extends Table {
         {
           innerHTML: caption,
           onclick: () => {
-            this.tabulatorTables.download(type);
+            this.download(type);
           },
         }
       );
