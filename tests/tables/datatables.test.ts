@@ -123,3 +123,30 @@ test.skip("makeprivate button existance", () => {
     )
   ).toBe(-1);
 });
+
+test("check that datatables takes into account column's width", () => {
+  let dataTables = new DataTables(new SurveyModel(), [], null, [
+    {
+      name: "q1",
+      displayName: "q1",
+      location: 0,
+      visibility: 0,
+      dataType: 0,
+      width: 100,
+    },
+    {
+      name: "q2",
+      displayName: "q2",
+      location: 0,
+      visibility: 0,
+      dataType: 0,
+      width: "200px",
+    },
+    { name: "q3", displayName: "q3", location: 0, visibility: 0, dataType: 0 },
+  ]);
+
+  const columns = <any>dataTables.getColumns();
+  expect(columns[1].width).toBe("100px");
+  expect(columns[2].width).toBe("200px");
+  expect(columns[3].width).toBe(undefined);
+});

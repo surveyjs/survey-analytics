@@ -198,7 +198,6 @@ export class DataTables extends Table {
     );
 
     targetNode.appendChild(tableNode);
-    tableNode.width = "100%";
     tableNode.className = "sa-datatables__table display responsive dataTable";
 
     const datatableApiRef = (this.datatableApi = jQuery(tableNode).DataTable(
@@ -263,6 +262,8 @@ export class DataTables extends Table {
         sTitle: (question && question.title) || column.displayName,
         visible: this.isColumnVisible(column),
         orderable: false,
+        width:
+          typeof column.width == "number" ? column.width + "px" : column.width,
         mRender: (_data: object, _type: string, row: any) => {
           var value = row[column.name];
           return typeof value === "string"
