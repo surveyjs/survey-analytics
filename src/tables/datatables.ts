@@ -254,7 +254,7 @@ export class DataTables extends Table {
     this.renderResult = targetNode;
   }
 
-  public getColumns(): Array<Object> {
+  public getColumns(): Array<any> {
     const columns: any = this.getAvailableColumns().map((column) => {
       var question = this.survey.getQuestionByName(column.name);
       return {

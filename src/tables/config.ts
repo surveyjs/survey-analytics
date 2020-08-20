@@ -19,6 +19,7 @@ export interface ITableColumn {
   dataType: ColumnDataType;
   visibility: ColumnVisibility;
   location: QuestionLocation;
+  width?: string | number;
 }
 
 export interface ITableState {

@@ -184,9 +184,7 @@ export abstract class Table {
   }
 
   public setColumnLocation(columnName: string, location: QuestionLocation) {
-    this.columns.filter(
-      (column) => column.name === columnName
-    )[0].location = location;
+    this.getColumnByName(columnName).location = location;
     this.onColumnsLocationChanged.fire(this, {
       columnName: columnName,
       location: location,
@@ -194,13 +192,23 @@ export abstract class Table {
     this.onStateChanged.fire(this, this.state);
   }
 
+  protected getColumnByName(columnName: string): ITableColumn {
+    return this._columns.filter((column) => column.name === columnName)[0];
+  }
+
   public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
-    var column = this.columns.filter((column) => column.name === columnName)[0];
+    var column = this.getColumnByName(columnName);
     column.visibility = visibility;
     this.onColumnsVisibilityChanged.fire(this, {
       columnName: columnName,
       columnVisibility: visibility,
     });
+    this.onStateChanged.fire(this, this.state);
+  }
+
+  public setColumnWidth(columnName: string, width: string | number) {
+    var column = this.getColumnByName(columnName);
+    column.width = width;
     this.onStateChanged.fire(this, this.state);
   }
 

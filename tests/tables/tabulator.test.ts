@@ -82,3 +82,30 @@ test("move column callback", () => {
   var order = tabulator.columns.map((column) => column.name);
   expect(order).toEqual(trueOrder);
 });
+
+test("check that tabulator takes into account column's width", () => {
+  const tabulator = new Tabulator(new SurveyModel(null), [], null);
+  tabulator.columns = [
+    {
+      name: "q1",
+      displayName: "q1",
+      dataType: 0,
+      visibility: 0,
+      location: 0,
+      width: 50,
+    },
+    {
+      name: "q2",
+      displayName: "q2",
+      dataType: 0,
+      visibility: 0,
+      location: 0,
+    },
+  ];
+  tabulator.render(document.createElement("table"));
+  var tabulatorColumns = tabulator.getColumns();
+  expect(tabulatorColumns[1].width).toBe(50);
+  expect(tabulatorColumns[1].widthShrink).toBe(0);
+  expect(tabulatorColumns[2].width).toBe(undefined);
+  expect(tabulatorColumns[2].widthShrink).toBe(1);
+});

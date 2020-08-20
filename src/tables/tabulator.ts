@@ -101,6 +101,7 @@ export class Tabulator extends Table {
       paginationButtonCount: this.options.paginationButtonCount,
       paginationElement: paginationElement,
       columnMoved: this.columnMovedCallback,
+      columnResized: this.columnResizedCallback,
       tooltipsHeader: true,
       tooltips: (cell: any) => cell.getValue(),
     });
@@ -151,12 +152,15 @@ export class Tabulator extends Table {
   };
 
   private columnMovedCallback = (column: any, columns: any[]) => {
-    var from = this._columns.indexOf(
-      this._columns.filter((col) => col.name == column.getField())[0]
-    );
+    var from = this._columns.indexOf(this.getColumnByName(column.getField()));
     var to = columns.indexOf(column) - 1;
     this.moveColumn(from, to);
     this.disableColumnReorder();
+  };
+
+  private columnResizedCallback = (column: any) => {
+    this.setColumnWidth(column.getField(), column.getWidth());
+    this.layout();
   };
 
   private rowFormatter = (row: any): void => {
@@ -207,7 +211,7 @@ export class Tabulator extends Table {
     return container;
   }
 
-  public getColumns(): Array<Object> {
+  public getColumns(): Array<any> {
     var minColumnWidth =
       this.COLUMN_MIN_WIDTH > this.options.columnMinWidth
         ? this.COLUMN_MIN_WIDTH
@@ -218,7 +222,8 @@ export class Tabulator extends Table {
         field: column.name,
         title: (question && question.title) || column.displayName,
         minWidth: minColumnWidth,
-        widthShrink: 1,
+        width: column.width,
+        widthShrink: !column.width ? 1 : 0,
         visible: this.isColumnVisible(column),
         headerSort: false,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {

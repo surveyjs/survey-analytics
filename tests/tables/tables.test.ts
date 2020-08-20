@@ -181,7 +181,7 @@ test("move column method", () => {
   expect(names).toEqual(["column1", "column3", "column2"]);
 });
 
-test("check that setPageSize fires onStateChanges", () => {
+test("check that setPageSize fires onStateChanged", () => {
   var table = new TableTest(new SurveyModel(), [], null, [], false);
   var count = 0;
   table.onStateChanged.add(() => {
@@ -197,4 +197,38 @@ test("check save/restore page size in the state", () => {
   expect(table.state.pageSize).toBe(2);
   table.state = { elements: [], locale: "", pageSize: 4 };
   expect(table.getPageSize()).toBe(4);
+});
+
+test("check setColumnWidth method", () => {
+  var table = new TableTest(new SurveyModel(), [], null, [], false);
+  table.columns = [
+    {
+      name: "column1",
+      displayName: "column1",
+      dataType: 0,
+      visibility: 0,
+      location: 0,
+    },
+  ];
+  table.setColumnWidth("column1", 50);
+  expect(table.columns[0].width).toBe(50);
+});
+
+test("check that setColumnWidth fires onStateChanged", () => {
+  var table = new TableTest(new SurveyModel(), [], null, [], false);
+  var count = 0;
+  table.columns = [
+    {
+      name: "column1",
+      displayName: "column1",
+      dataType: 0,
+      visibility: 0,
+      location: 0,
+    },
+  ];
+  table.onStateChanged.add(() => {
+    count++;
+  });
+  table.setColumnWidth("column1", 50);
+  expect(count).toBe(1);
 });
