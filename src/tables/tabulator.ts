@@ -93,7 +93,7 @@ export class Tabulator extends Table {
       data,
       layout: "fitColumns",
       pagination: "local",
-      paginationSize: 5,
+      paginationSize: this.currentPageSize,
       movableColumns: true,
       maxHeight: "100%",
       columns,
@@ -284,18 +284,24 @@ export class Tabulator extends Table {
   }
 
   public getPageNumber(): number {
-    if (!this.tabulatorTables) return 1;
+    if (!this.isRendered) {
+      return 1;
+    }
     return this.tabulatorTables.getPage();
   }
 
   public setPageNumber(value: number): void {
-    this.tabulatorTables.setPage(value);
     super.setPageNumber(value);
+    if (this.isRendered) {
+      this.tabulatorTables.setPage(value);
+    }
   }
 
   public setPageSize(value: number): void {
     super.setPageSize(value);
-    this.tabulatorTables.setPageSize(value);
+    if (this.isRendered) {
+      this.tabulatorTables.setPageSize(value);
+    }
   }
 
   public download(type: string): void {

@@ -9,7 +9,7 @@ import {
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { TableExtensions } from "./extensions/tableextensions";
-import { IPermission } from '../config';
+import { IPermission } from "../config";
 
 export abstract class Table {
   protected tableData: any;
@@ -90,6 +90,7 @@ export abstract class Table {
 
   public setPageSize(value: number): void {
     this.currentPageSize = value;
+    this.onStateChanged.fire(this, this.state);
   }
 
   public getCreatedRows(): TableRow[] {
@@ -268,6 +269,7 @@ export abstract class Table {
     return {
       locale: localization.currentLocale,
       elements: [].concat(this._columns),
+      pageSize: this.currentPageSize,
     };
   }
   /**
@@ -276,6 +278,7 @@ export abstract class Table {
   public set state(newState: ITableState) {
     localization.currentLocale = newState.locale;
     this._columns = newState.elements;
+    this.currentPageSize = newState.pageSize;
   }
   /**
    * Fires when table state changed.
@@ -285,7 +288,7 @@ export abstract class Table {
     any
   >();
 
-    /**
+  /**
    * Gets table permissions.
    */
   public get permissions(): IPermission[] {
@@ -303,13 +306,14 @@ export abstract class Table {
     const updatedElements = this._columns.map((column) => {
       permissions.forEach((permission) => {
         if (permission.name === column.name)
-        column.visibility = permission.visibility;
+          column.visibility = permission.visibility;
       });
 
       return { ...column };
     });
     this._columns = [].concat(updatedElements);
-    this.onPermissionsChangedCallback && this.onPermissionsChangedCallback(this);
+    this.onPermissionsChangedCallback &&
+      this.onPermissionsChangedCallback(this);
   }
 
   /**

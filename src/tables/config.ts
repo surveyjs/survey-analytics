@@ -24,4 +24,5 @@ export interface ITableColumn {
 export interface ITableState {
   locale: string;
   elements: ITableColumn[];
+  pageSize: number;
 }

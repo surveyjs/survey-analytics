@@ -69,8 +69,8 @@ export class DataTables extends Table {
 
   public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
     super.setColumnVisibility(columnName, visibility);
-    this.datatableApi.column(columnName + ":name").visible(!isInvisible);
     var isInvisible = visibility == ColumnVisibility.Invisible;
+    this.datatableApi.column(columnName + ":name").visible(!isInvisible);
   }
 
   public setColumnLocation(columnName: string, location: QuestionLocation) {
@@ -98,15 +98,22 @@ export class DataTables extends Table {
 
   public setPageSize(value: number): void {
     super.setPageSize(value);
-    this.datatableApi.page.len(value).draw(false);
+    if (this.isRendered) {
+      this.datatableApi.page.len(value).draw(false);
+    }
   }
 
   public setPageNumber(value: number): void {
     super.setPageNumber(value);
-    this.datatableApi.page(value).draw(false);
+    if (this.isRendered) {
+      this.datatableApi.page(value).draw(false);
+    }
   }
 
   public getPageNumber(): number {
+    if (!this.isRendered) {
+      return 0;
+    }
     return this.datatableApi.page();
   }
 
@@ -133,7 +140,7 @@ export class DataTables extends Table {
         dom: 'B<"sa-table__header-extensions">prtip',
         // ordering: false,
         data: this.tableData,
-        pageLength: 5,
+        pageLength: this.currentPageSize,
         responsive: false,
         scrollX: true,
         columns: columns,
