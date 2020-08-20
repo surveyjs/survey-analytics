@@ -28,7 +28,6 @@ class TableTest extends Table {
   applyColumnFilter() {}
   applyFilter() {}
   render() {}
-  setPageSize() {}
   sortByColumn() {}
 }
 
@@ -93,10 +92,12 @@ test("getState, setState, onStateChanged", () => {
   let initialState: ITableState = {
     locale: "",
     elements: [],
+    pageSize: 5,
   };
   let newState: ITableState = {
     locale: "fr",
     elements: [],
+    pageSize: 5,
   };
   let count = 0;
 
@@ -178,4 +179,22 @@ test("move column method", () => {
   table.moveColumn(0, 2);
   names = table.columns.map((column) => column.name);
   expect(names).toEqual(["column1", "column3", "column2"]);
+});
+
+test("check that setPageSize fires onStateChanges", () => {
+  var table = new TableTest(new SurveyModel(), [], null, [], false);
+  var count = 0;
+  table.onStateChanged.add(() => {
+    count++;
+  });
+  table.setPageSize(2);
+  expect(count).toBe(1);
+});
+
+test("check save/restore page size in the state", () => {
+  var table = new TableTest(new SurveyModel(), [], null, [], false);
+  table.setPageSize(2);
+  expect(table.state.pageSize).toBe(2);
+  table.state = { elements: [], locale: "", pageSize: 4 };
+  expect(table.getPageSize()).toBe(4);
 });
