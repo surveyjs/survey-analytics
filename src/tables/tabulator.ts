@@ -250,18 +250,34 @@ export class Tabulator extends Table {
 
   public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
     super.setColumnVisibility(columnName, visibility);
-    if (visibility == ColumnVisibility.Invisible)
-      this.tabulatorTables.hideColumn(columnName);
-    else this.tabulatorTables.showColumn(columnName);
-    this.layout();
+    if (this.isRendered) {
+      if (visibility == ColumnVisibility.Invisible)
+        this.tabulatorTables.hideColumn(columnName);
+      else this.tabulatorTables.showColumn(columnName);
+      this.layout();
+    }
   }
 
   public setColumnLocation(columnName: string, location: QuestionLocation) {
     super.setColumnLocation(columnName, location);
-    if (location == QuestionLocation.Row)
-      this.tabulatorTables.hideColumn(columnName);
-    else this.tabulatorTables.showColumn(columnName);
-    this.layout();
+    if (this.isRendered) {
+      if (location == QuestionLocation.Row)
+        this.tabulatorTables.hideColumn(columnName);
+      else this.tabulatorTables.showColumn(columnName);
+      this.layout();
+    }
+  }
+
+  public setColumnWidth(columnName: string, width: number | string) {
+    super.setColumnWidth(columnName, width);
+    if (this.isRendered) {
+      var definition = this.tabulatorTables
+        .getColumn(columnName)
+        .getDefinition();
+      definition.width = width;
+      definition.widthShrink = 0;
+      this.layout();
+    }
   }
 
   public sortByColumn(columnName: string, direction: string) {

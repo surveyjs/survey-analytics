@@ -102,10 +102,29 @@ test("check that tabulator takes into account column's width", () => {
       location: 0,
     },
   ];
-  tabulator.render(document.createElement("table"));
   var tabulatorColumns = tabulator.getColumns();
   expect(tabulatorColumns[1].width).toBe(50);
   expect(tabulatorColumns[1].widthShrink).toBe(0);
   expect(tabulatorColumns[2].width).toBe(undefined);
   expect(tabulatorColumns[2].widthShrink).toBe(1);
+});
+
+test("check that tabulator take into account column's width after layout (check widthShrink)", () => {
+  const tabulator = new Tabulator(new SurveyModel(null), [], null);
+  tabulator.columns = [
+    {
+      name: "q1",
+      displayName: "q1",
+      dataType: 0,
+      visibility: 0,
+      location: 0,
+    },
+  ];
+  tabulator.render(document.createElement("table"));
+  var columnDefinitions = tabulator.tabulatorTables.getColumnDefinitions();
+  expect(columnDefinitions[1].width).toBe(undefined);
+  expect(columnDefinitions[1].widthShrink).toBe(1);
+  tabulator.setColumnWidth("q1", 150);
+  expect(columnDefinitions[1].width).toBe(150);
+  expect(columnDefinitions[1].widthShrink).toBe(0);
 });
