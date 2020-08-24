@@ -48,7 +48,7 @@ export class MuuriLayoutEngine extends LayoutEngine {
   protected startCore(container: HTMLElement) {
     this._muuri = new Muuri(container, {
       dragStartPredicate: {
-        handle: ".sa-question__title",
+        handle: ".sa-question__title--draggable",
       },
       items: this._selector,
       dragEnabled: true,
@@ -76,9 +76,9 @@ export class MuuriLayoutEngine extends LayoutEngine {
   }
 
   add(elements: Array<HTMLElement>, options?: any) {
-    this._muuri.add(elements, options);
+    if (this._allowed) this._muuri.add(elements, options);
   }
   remove(elements: Array<HTMLElement>, options?: any) {
-    this._muuri.remove(elements, options);
+    if (this._allowed) this._muuri.remove(elements, options);
   }
 }

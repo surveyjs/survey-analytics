@@ -46,6 +46,9 @@
   color: $text-color;
   margin: 0;
   margin-bottom: 1em;
+}
+
+.sa-question__title--draggable {
   cursor: move;
   &:after {
     content: " ";

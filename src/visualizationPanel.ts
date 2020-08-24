@@ -177,7 +177,8 @@ export class VisualizationPanel extends VisualizerBase {
 
     element.visibility = ElementVisibility.PublicInvisible;
     this.onStateChanged.fire(this, this.state);
-    this.onPermissionsChangedCallback && this.onPermissionsChangedCallback(this);
+    this.onPermissionsChangedCallback &&
+      this.onPermissionsChangedCallback(this);
   }
 
   protected makeElementPublic(element: any) {
@@ -185,7 +186,8 @@ export class VisualizationPanel extends VisualizerBase {
 
     element.visibility = ElementVisibility.Visible;
     this.onStateChanged.fire(this, this.state);
-    this.onPermissionsChangedCallback && this.onPermissionsChangedCallback(this);
+    this.onPermissionsChangedCallback &&
+      this.onPermissionsChangedCallback(this);
   }
 
   protected moveVisibleElement(
@@ -472,6 +474,13 @@ export class VisualizationPanel extends VisualizerBase {
       ? questionElementClassName + " " + questionLayoutedElementClassName
       : questionElementClassName;
     titleElement.className = questionElementClassName + "__title";
+    if (this.allowDynamicLayout) {
+      titleElement.className =
+        titleElement.className +
+        " " +
+        questionElementClassName +
+        "__title--draggable";
+    }
     questionContent.className = questionElementClassName + "__content";
 
     questionContent.appendChild(titleElement);
@@ -596,7 +605,8 @@ export class VisualizationPanel extends VisualizerBase {
     });
     this._elements = [].concat(updatedElements);
     this.refresh();
-    this.onPermissionsChangedCallback && this.onPermissionsChangedCallback(this);
+    this.onPermissionsChangedCallback &&
+      this.onPermissionsChangedCallback(this);
   }
 
   destroy() {
