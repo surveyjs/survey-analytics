@@ -148,6 +148,13 @@ test("test getAvailableColumns method", () => {
   expect(columnNames).toEqual(["visible", "invisible", "publicinvisible"]);
 });
 
+test("partial state", () => {
+  let tables = new TableTest(new SurveyModel(), [], null, [], false);
+  tables.state = { locale: "ru" };
+  tables.state = { pageSize: 4 };
+  tables.state = { elements: [] };
+});
+
 test("move column method", () => {
   var table = new TableTest(new SurveyModel(), [], null, [], false);
   table.columns = [

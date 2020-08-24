@@ -575,8 +575,11 @@ export class VisualizationPanel extends VisualizerBase {
    * Sets vizualization panel state.
    */
   public set state(newState: IState) {
-    this._elements = [].concat(newState.elements || []);
-    this.setLocale(newState.locale);
+    if (typeof newState.elements !== "undefined")
+      this._elements = [].concat(newState.elements);
+
+    if (typeof newState.locale !== "undefined") this.setLocale(newState.locale);
+
     this.refresh();
   }
 

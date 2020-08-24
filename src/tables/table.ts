@@ -284,9 +284,14 @@ export abstract class Table {
    * Vizualization panel state setter.
    */
   public set state(newState: ITableState) {
-    localization.currentLocale = newState.locale;
-    this._columns = newState.elements;
-    this.currentPageSize = newState.pageSize;
+    if (typeof newState.locale !== "undefined")
+      localization.currentLocale = newState.locale;
+
+    if (typeof newState.elements !== "undefined")
+      this._columns = newState.elements;
+
+    if (typeof newState.pageSize !== "undefined")
+      this.currentPageSize = newState.pageSize;
   }
   /**
    * Fires when table state changed.

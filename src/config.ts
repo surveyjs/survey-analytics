@@ -12,8 +12,8 @@ export interface IVisualizerPanelElement {
 }
 
 export interface IState {
-  locale: string;
-  elements: IVisualizerPanelElement[];
+  locale?: string;
+  elements?: IVisualizerPanelElement[];
 }
 
 export interface IPermission {

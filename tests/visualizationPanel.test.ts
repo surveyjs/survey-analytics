@@ -226,6 +226,36 @@ test("getState/setState and results order", () => {
   expect(oldState.elements[1].name).toEqual(visPanel.state.elements[0].name);
 });
 
+test("partial state", () => {
+  const json = {
+    elements: [
+      {
+        type: "text",
+        name: "question1",
+      },
+      {
+        type: "text",
+        name: "question2",
+      },
+    ],
+  };
+  const data = [
+    {
+      question1: "1-1",
+      question2: "1-2",
+    },
+    {
+      question1: "2-1",
+      question2: "2-2",
+    },
+  ];
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
+
+  visPanel.state = { locale: "ru" };
+  visPanel.state = { elements: [] };
+});
+
 test("onVisibleElementsChanged and onStateChanged raised on move element", () => {
   const originalElements = [{ name: "el1" }, { name: "el2" }, { name: "el3" }];
   const resultElements = [{ name: "el2" }, { name: "el3" }, { name: "el1" }];
