@@ -333,8 +333,8 @@ export class Tabulator extends Table {
     );
   }
 
-  public layout() {
-    this.tabulatorTables.redraw();
+  public layout(hard: boolean = false) {
+    this.tabulatorTables.redraw(hard);
   }
 }
 
