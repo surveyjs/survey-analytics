@@ -14,22 +14,14 @@ if (!!document) {
   document.head.appendChild(templateHolder);
 }
 
-interface IDownloadOptions {
-  pdf?: any;
-  csv?: any;
-  xlsx?: any;
-}
-
 interface IOptions {
-  downloadRowRange: string;
-  downloadHiddenColumns: boolean;
-  columnMinWidth: number;
-  actionsColumnWidth: number;
-  paginationButtonCount: number;
-  downloadOptions: IDownloadOptions;
+  tabulatorOptions?: any;
+  downloadHiddenColumns?: boolean;
+  actionsColumnWidth?: number;
+  downloadOptions?: { [type: string]: any };
 }
 
-var defaultDownloadOptions: IDownloadOptions = {
+var defaultDownloadOptions = {
   pdf: {
     isVisible: true,
     orientation: "portrait", //set page orientation to portrait
@@ -49,12 +41,9 @@ var defaultDownloadOptions: IDownloadOptions = {
 };
 
 export var defaultOptions: IOptions = {
-  downloadRowRange: "all",
-  downloadHiddenColumns: false,
-  columnMinWidth: 248,
-  downloadOptions: defaultDownloadOptions,
-  paginationButtonCount: 3,
   actionsColumnWidth: 60,
+  downloadHiddenColumns: false,
+  downloadOptions: defaultDownloadOptions,
 };
 
 export class Tabulator extends Table {
@@ -93,23 +82,31 @@ export class Tabulator extends Table {
     targetNode.appendChild(header);
     targetNode.appendChild(this.tableContainer);
 
-    this.tabulatorTables = new TabulatorTables(this.tableContainer, {
-      data,
-      layout: "fitColumns",
-      pagination: "local",
-      paginationSize: this.currentPageSize,
-      movableColumns: true,
-      maxHeight: "100%",
-      columns,
-      rowFormatter: this.rowFormatter,
-      paginationButtonCount: this.options.paginationButtonCount,
-      paginationElement: paginationElement,
-      columnMoved: this.columnMovedCallback,
-      columnResized: this.columnResizedCallback,
-      tooltipsHeader: true,
-      tooltips: (cell: any) => cell.getValue(),
-      downloadRowRange: this.options.downloadRowRange,
-    });
+    var config = {};
+    Object.assign(
+      config,
+      {
+        data,
+        layout: "fitColumns",
+        pagination: "local",
+        paginationSize: this.currentPageSize,
+        movableColumns: true,
+        maxHeight: "100%",
+        columns,
+        rowFormatter: this.rowFormatter,
+        paginationElement: paginationElement,
+        columnMoved: this.columnMovedCallback,
+        columnResized: this.columnResizedCallback,
+        tooltipsHeader: true,
+        tooltips: (cell: any) => cell.getValue(),
+        downloadRowRange: "all",
+        columnMinWidth: 248,
+        paginationButtonCount: 3,
+      },
+      this.options.tabulatorOptions
+    );
+
+    this.tabulatorTables = new TabulatorTables(this.tableContainer, config);
 
     const extensionsContainer = DocumentHelper.createElement(
       "div",
@@ -217,16 +214,11 @@ export class Tabulator extends Table {
   }
 
   public getColumns(): Array<any> {
-    var minColumnWidth =
-      this.COLUMN_MIN_WIDTH > this.options.columnMinWidth
-        ? this.COLUMN_MIN_WIDTH
-        : this.options.columnMinWidth;
     const columns: any = this.getAvailableColumns().map((column, index) => {
       var question = this.survey.getQuestionByName(column.name);
       return {
         field: column.name,
         title: (question && question.title) || column.displayName,
-        minWidth: minColumnWidth,
         width: column.width,
         widthShrink: !column.width ? 1 : 0,
         visible: this.isColumnVisible(column),
@@ -248,6 +240,7 @@ export class Tabulator extends Table {
       title: "",
       download: false,
       resizable: false,
+      minWidth: this.options.actionsColumnWidth,
       width: this.options.actionsColumnWidth,
     });
 
@@ -335,7 +328,7 @@ export class Tabulator extends Table {
     this.tabulatorTables.download(
       type,
       `results.${type}`,
-      (<any>this.options.downloadOptions)[type]
+      this.options.downloadOptions[type] || defaultOptions.downloadOptions[type]
     );
   }
 
