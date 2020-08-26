@@ -21,6 +21,8 @@ interface IDownloadOptions {
 }
 
 interface IOptions {
+  downloadRowRange: string;
+  downloadHiddenColumns: boolean;
   columnMinWidth: number;
   actionsColumnWidth: number;
   paginationButtonCount: number;
@@ -47,6 +49,8 @@ var defaultDownloadOptions: IDownloadOptions = {
 };
 
 export var defaultOptions: IOptions = {
+  downloadRowRange: "all",
+  downloadHiddenColumns: false,
   columnMinWidth: 248,
   downloadOptions: defaultDownloadOptions,
   paginationButtonCount: 3,
@@ -104,6 +108,7 @@ export class Tabulator extends Table {
       columnResized: this.columnResizedCallback,
       tooltipsHeader: true,
       tooltips: (cell: any) => cell.getValue(),
+      downloadRowRange: this.options.downloadRowRange,
     });
 
     const extensionsContainer = DocumentHelper.createElement(
@@ -226,6 +231,7 @@ export class Tabulator extends Table {
         widthShrink: !column.width ? 1 : 0,
         visible: this.isColumnVisible(column),
         headerSort: false,
+        download: this.options.downloadHiddenColumns ? true : undefined,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(
             cell,

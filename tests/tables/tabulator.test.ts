@@ -128,3 +128,49 @@ test("check that tabulator take into account column's width after layout (check 
   expect(columnDefinitions[1].width).toBe(150);
   expect(columnDefinitions[1].widthShrink).toBe(0);
 });
+
+test("check that tabulator take into account downloadRowRange option", () => {
+  const tabulator = new Tabulator(new SurveyModel(null), [], null);
+  tabulator.render(document.createElement("table"));
+  expect(tabulator.tabulatorTables.options.downloadRowRange).toBe("all");
+  (<any>tabulator).options.downloadRowRange = "active";
+  tabulator.render(document.createElement("table"));
+  expect(tabulator.tabulatorTables.options.downloadRowRange).toBe("active");
+});
+
+test("check that tabulator take into account downloadHiddenColumns option", () => {
+  const tabulator = new Tabulator(new SurveyModel(null), [], null);
+  tabulator.columns = [
+    {
+      name: "q1",
+      displayName: "q1",
+      dataType: 0,
+      visibility: 0,
+      location: 0,
+    },
+  ];
+
+  tabulator.render(document.createElement("table"));
+  expect(tabulator.tabulatorTables.getColumnDefinitions()[1].download).toBe(
+    undefined
+  );
+
+  (<any>tabulator).options.downloadHiddenColumns = true;
+  tabulator.render(document.createElement("table"));
+  expect(tabulator.tabulatorTables.getColumnDefinitions()[1].download).toBe(
+    true
+  );
+});
+
+test("check that action column doesn't export", () => {
+  const tabulator = new Tabulator(new SurveyModel(null), [], null);
+  tabulator.render(document.createElement("table"));
+  expect(tabulator.tabulatorTables.getColumnDefinitions()[0].download).toBe(
+    false
+  );
+  (<any>tabulator).options.downloadHiddenColumns = true;
+  tabulator.render(document.createElement("table"));
+  expect(tabulator.tabulatorTables.getColumnDefinitions()[0].download).toBe(
+    false
+  );
+});
