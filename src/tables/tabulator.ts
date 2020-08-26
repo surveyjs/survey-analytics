@@ -41,6 +41,7 @@ var defaultDownloadOptions = {
 };
 
 export var defaultOptions: IOptions = {
+  tabulatorOptions: {},
   actionsColumnWidth: 60,
   downloadHiddenColumns: false,
   downloadOptions: defaultDownloadOptions,

@@ -49,7 +49,7 @@ test("getColumns method", () => {
   const columns = <any>tabulator["getColumns"]();
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"field":"","title":"","download":false,"resizable":false,"width":60},{"field":"car","title":"What car are you driving?","minWidth":248,"widthShrink":1,"visible":true,"headerSort":false},{"field":"photo","title":"photo","minWidth":248,"widthShrink":1,"visible":false,"headerSort":false}]'
+    '[{"field":"","title":"","download":false,"resizable":false,"minWidth":60,"width":60},{"field":"car","title":"What car are you driving?","widthShrink":1,"visible":true,"headerSort":false},{"field":"photo","title":"photo","widthShrink":1,"visible":false,"headerSort":false}]'
   );
 });
 
@@ -133,7 +133,7 @@ test("check that tabulator take into account downloadRowRange option", () => {
   const tabulator = new Tabulator(new SurveyModel(null), [], null);
   tabulator.render(document.createElement("table"));
   expect(tabulator.tabulatorTables.options.downloadRowRange).toBe("all");
-  (<any>tabulator).options.downloadRowRange = "active";
+  (<any>tabulator).options.tabulatorOptions.downloadRowRange = "active";
   tabulator.render(document.createElement("table"));
   expect(tabulator.tabulatorTables.options.downloadRowRange).toBe("active");
 });
