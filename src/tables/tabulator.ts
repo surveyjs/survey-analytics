@@ -1,6 +1,6 @@
 import { Table, TableRow } from "./table";
 import { SurveyModel } from "survey-core";
-import { ColumnVisibility, QuestionLocation } from "./config";
+import { QuestionLocation } from "./config";
 
 import "./tabulator.scss";
 import { DocumentHelper } from "../utils";
@@ -52,10 +52,9 @@ export class Tabulator extends Table {
     survey: SurveyModel,
     data: Array<Object>,
     options: IOptions,
-    _columns: Array<any> = [],
-    isTrustedAccess = false
+    _columns: Array<any> = []
   ) {
-    super(survey, data, options, _columns, isTrustedAccess);
+    super(survey, data, options, _columns);
     const self = this;
     var patchedOptions = {};
     Object.assign(patchedOptions, defaultOptions, options);
@@ -215,7 +214,7 @@ export class Tabulator extends Table {
   }
 
   public getColumns(): Array<any> {
-    const columns: any = this.getAvailableColumns().map((column, index) => {
+    const columns: any = this.columns.map((column, index) => {
       var question = this.survey.getQuestionByName(column.name);
       return {
         field: column.name,
@@ -248,12 +247,14 @@ export class Tabulator extends Table {
     return columns;
   }
 
-  public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
-    super.setColumnVisibility(columnName, visibility);
+  public setColumnVisibility(columnName: string, isVisible: boolean) {
+    super.setColumnVisibility(columnName, isVisible);
     if (this.isRendered) {
-      if (visibility == ColumnVisibility.Invisible)
+      if (isVisible) {
+        this.tabulatorTables.showColumn(columnName);
+      } else {
         this.tabulatorTables.hideColumn(columnName);
-      else this.tabulatorTables.showColumn(columnName);
+      }
       this.layout();
     }
   }

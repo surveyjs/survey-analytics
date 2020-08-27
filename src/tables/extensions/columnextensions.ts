@@ -1,8 +1,8 @@
 import { Table } from "../table";
 import { DocumentHelper } from "../../utils";
 import { localization } from "../../localizationManager";
-import { ColumnVisibility, QuestionLocation } from "../config";
 import { TableExtensions } from "./tableextensions";
+import { QuestionLocation, ITableColumn } from "../config";
 
 TableExtensions.registerExtension({
   location: "column",
@@ -56,7 +56,7 @@ TableExtensions.registerExtension({
     var btn = DocumentHelper.createSvgButton("hide");
     btn.title = localization.getString("hideColumn");
     btn.onclick = () => {
-      table.setColumnVisibility(options.columnName, ColumnVisibility.Invisible);
+      table.setColumnVisibility(options.columnName, false);
     };
     return btn;
   },
@@ -102,34 +102,30 @@ TableExtensions.registerExtension({
     const button = DocumentHelper.createElement("button");
     const makePrivateSvg = DocumentHelper.createSvgElement("makeprivate");
     const makePublicSvg = DocumentHelper.createSvgElement("makepublic");
-    var currentVisibility = table.getColumnVisibility(options.columnName);
-    updateState(currentVisibility);
+    const column = table.getColumnByName(options.columnName);
+
+    updateState(column);
     button.appendChild(makePrivateSvg);
     button.appendChild(makePublicSvg);
     button.onclick = (e) => {
       e.stopPropagation();
-      if (currentVisibility === ColumnVisibility.PublicInvisible) {
-        currentVisibility = ColumnVisibility.Visible;
-      } else {
-        currentVisibility = ColumnVisibility.PublicInvisible;
-      }
-      table.setColumnVisibility(options.columnName, currentVisibility);
-      table.onPermissionsChangedCallback && table.onPermissionsChangedCallback(table);
-      updateState(currentVisibility);
+      column.isPublic = !column.isPublic;
+      updateState(column);
+      table.onPermissionsChangedCallback &&
+        table.onPermissionsChangedCallback(table);
     };
 
-    function updateState(visibility: ColumnVisibility) {
-      const isPrivate = visibility === ColumnVisibility.PublicInvisible;
-      if (isPrivate) {
-        button.className = "sa-table__svg-button sa-table__svg-button--active";
-        button.title = localization.getString("makePublicColumn");
-        makePrivateSvg.style.display = "block";
-        makePublicSvg.style.display = "none";
-      } else {
+    function updateState(column: ITableColumn) {
+      if (column.isPublic) {
         button.className = "sa-table__svg-button";
         button.title = localization.getString("makePrivateColumn");
         makePrivateSvg.style.display = "none";
         makePublicSvg.style.display = "block";
+      } else {
+        button.className = "sa-table__svg-button sa-table__svg-button--active";
+        button.title = localization.getString("makePublicColumn");
+        makePrivateSvg.style.display = "block";
+        makePublicSvg.style.display = "none";
       }
     }
     return button;

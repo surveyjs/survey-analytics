@@ -1,6 +1,5 @@
 import { localization } from "../../localizationManager";
 import { Table } from "../table";
-import { ColumnVisibility } from "../config";
 import { DocumentHelper } from "../../utils";
 import { TableExtensions } from "./tableextensions";
 
@@ -35,7 +34,7 @@ TableExtensions.registerExtension({
 
     function update() {
       var hiddenColumns = table.columns.filter(
-        (column: any) => column.visibility === ColumnVisibility.Invisible
+        (column: any) => !column.isVisible
       );
       if (hiddenColumns.length == 0) {
         dropdown.style.display = "none";
@@ -68,7 +67,7 @@ TableExtensions.registerExtension({
       const val = e.target.value;
       e.stopPropagation();
       if (!val) return;
-      table.setColumnVisibility(val, ColumnVisibility.Visible);
+      table.setColumnVisibility(val, true);
     };
 
     update();

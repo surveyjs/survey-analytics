@@ -1,6 +1,5 @@
 import { SurveyModel } from "survey-core";
 import { Tabulator } from "../../src/tables/tabulator";
-import { ColumnVisibility } from "../../src/tables/config";
 
 const json = {
   questions: [
@@ -26,22 +25,9 @@ test("buildColumns method", () => {
   const columns = <any>tabulator["buildColumns"](survey);
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"name":"car","displayName":"What car are you driving?","dataType":0,"visibility":0,"location":0},{"name":"photo","displayName":"photo","dataType":1,"visibility":1,"location":0}]'
+    '[{"name":"car","displayName":"What car are you driving?","dataType":0,"isVisible":true,"isPublic":true,"location":0},{"name":"photo","displayName":"photo","dataType":1,"isVisible":false,"isPublic":true,"location":0}]'
   );
 });
-
-test("isVisible method", () => {
-  let tabulator = new Tabulator(new SurveyModel(), [], null);
-  expect(tabulator.isVisible(ColumnVisibility.Invisible)).toBeFalsy();
-  expect(tabulator.isVisible(ColumnVisibility.PublicInvisible)).toBeFalsy();
-  expect(tabulator.isVisible(ColumnVisibility.Visible)).toBeTruthy();
-
-  tabulator = new Tabulator(new SurveyModel(), [], null, [], true);
-  expect(tabulator.isVisible(ColumnVisibility.Invisible)).toBeFalsy();
-  expect(tabulator.isVisible(ColumnVisibility.PublicInvisible)).toBeTruthy();
-  expect(tabulator.isVisible(ColumnVisibility.Visible)).toBeTruthy();
-});
-
 test("getColumns method", () => {
   const survey = new SurveyModel(json);
   const tabulator = new Tabulator(survey, [], null);
@@ -90,7 +76,8 @@ test("check that tabulator takes into account column's width", () => {
       name: "q1",
       displayName: "q1",
       dataType: 0,
-      visibility: 0,
+      isVisible: true,
+      isPublic: true,
       location: 0,
       width: 50,
     },
@@ -98,7 +85,8 @@ test("check that tabulator takes into account column's width", () => {
       name: "q2",
       displayName: "q2",
       dataType: 0,
-      visibility: 0,
+      isVisible: true,
+      isPublic: true,
       location: 0,
     },
   ];
@@ -116,7 +104,8 @@ test("check that tabulator take into account column's width after layout (check 
       name: "q1",
       displayName: "q1",
       dataType: 0,
-      visibility: 0,
+      isVisible: true,
+      isPublic: true,
       location: 0,
     },
   ];
@@ -145,7 +134,8 @@ test("check that tabulator take into account downloadHiddenColumns option", () =
       name: "q1",
       displayName: "q1",
       dataType: 0,
-      visibility: 0,
+      isVisible: true,
+      isPublic: true,
       location: 0,
     },
   ];

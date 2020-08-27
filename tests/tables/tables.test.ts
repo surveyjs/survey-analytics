@@ -1,11 +1,6 @@
 import { SurveyModel, Question } from "survey-core";
 import { Table } from "../../src/tables/table";
-import {
-  ColumnDataType,
-  ColumnVisibility,
-  QuestionLocation,
-  ITableState,
-} from "../../src/tables/config";
+import { ITableState } from "../../src/tables/config";
 
 const json = {
   questions: [
@@ -33,30 +28,18 @@ class TableTest extends Table {
 
 test("buildColumns method", () => {
   const survey = new SurveyModel(json);
-  const tables = new TableTest(survey, [], null, [], false);
+  const tables = new TableTest(survey, [], null, []);
 
   const columns = <any>tables["buildColumns"](survey);
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"name":"car","displayName":"What car are you driving?","dataType":0,"visibility":0,"location":0},{"name":"photo","displayName":"photo","dataType":1,"visibility":1,"location":0}]'
+    '[{"name":"car","displayName":"What car are you driving?","dataType":0,"isVisible":true,"isPublic":true,"location":0},{"name":"photo","displayName":"photo","dataType":1,"isVisible":false,"isPublic":true,"location":0}]'
   );
 });
 
-test("isVisible method", () => {
-  let tables = new TableTest(new SurveyModel(), [], null, [], false);
-  expect(tables.isVisible(ColumnVisibility.Invisible)).toBeFalsy();
-  expect(tables.isVisible(ColumnVisibility.PublicInvisible)).toBeFalsy();
-  expect(tables.isVisible(ColumnVisibility.Visible)).toBeTruthy();
-
-  tables = new TableTest(new SurveyModel(), [], null, [], true);
-  expect(tables.isVisible(ColumnVisibility.Invisible)).toBeFalsy();
-  expect(tables.isVisible(ColumnVisibility.PublicInvisible)).toBeTruthy();
-  expect(tables.isVisible(ColumnVisibility.Visible)).toBeTruthy();
-});
-
-test("buildColumns method", () => {
+test("locale", () => {
   const survey = new SurveyModel(json);
-  const tables = new TableTest(survey, [], null, [], false);
+  const tables = new TableTest(survey, [], null, []);
 
   expect(tables.locale).toBe("");
   tables.locale = "ru";
@@ -64,7 +47,7 @@ test("buildColumns method", () => {
 });
 
 test("get/set permissions, onPermissionsChangedCallback", () => {
-  let tables = new TableTest(new SurveyModel(json), [], null, [], false);
+  let tables = new TableTest(new SurveyModel(json), [], null, []);
   let count = 0;
 
   const p = tables.permissions;
@@ -75,19 +58,19 @@ test("get/set permissions, onPermissionsChangedCallback", () => {
   };
 
   expect(tables.permissions[0].name).toEqual("car");
-  expect(tables.permissions[0].visibility).toEqual(0);
+  expect(tables.permissions[0].isPublic).toEqual(true);
 
   const newPermissions = tables.permissions;
-  newPermissions[0].visibility = 2;
+  newPermissions[0].isPublic = false;
 
   tables.permissions = newPermissions;
 
   expect(count).toEqual(1);
-  expect(tables.permissions[0].visibility).toEqual(2);
+  expect(tables.permissions[0].isPublic).toEqual(false);
 });
 
 test("getState, setState, onStateChanged", () => {
-  let tables = new TableTest(new SurveyModel(), [], null, [], false);
+  let tables = new TableTest(new SurveyModel(), [], null, []);
 
   let initialState: ITableState = {
     locale: "",
@@ -116,67 +99,38 @@ test("getState, setState, onStateChanged", () => {
   expect(tables.state.locale).toEqual("ru");
 });
 
-test("test getAvailableColumns method", () => {
-  var table = new TableTest(new SurveyModel(), [], null, [], false);
-  table.columns = [
-    {
-      name: "visible",
-      displayName: "visible",
-      dataType: 0,
-      visibility: 0,
-      location: 0,
-    },
-    {
-      name: "invisible",
-      displayName: "invisible",
-      dataType: 0,
-      visibility: 1,
-      location: 0,
-    },
-    {
-      name: "publicinvisible",
-      displayName: "publicinvisible",
-      dataType: 0,
-      visibility: 2,
-      location: 0,
-    },
-  ];
-  var columnNames = table.getAvailableColumns().map((column) => column.name);
-  expect(columnNames).toEqual(["visible", "invisible"]);
-  table.isTrustedAccess = true;
-  columnNames = table.getAvailableColumns().map((column) => column.name);
-  expect(columnNames).toEqual(["visible", "invisible", "publicinvisible"]);
-});
-
 test("partial state", () => {
-  let tables = new TableTest(new SurveyModel(), [], null, [], false);
+  let tables = new TableTest(new SurveyModel(), [], null, []);
   tables.state = { locale: "ru" };
   tables.state = { pageSize: 4 };
   tables.state = { elements: [] };
 });
 
 test("move column method", () => {
-  var table = new TableTest(new SurveyModel(), [], null, [], false);
+  var table = new TableTest(new SurveyModel(), [], null, []);
   table.columns = [
     {
       name: "column1",
       displayName: "column1",
       dataType: 0,
-      visibility: 0,
+      isVisible: true,
+      isPublic: true,
       location: 0,
     },
     {
       name: "column2",
       displayName: "column2",
       dataType: 0,
-      visibility: 0,
+      isVisible: true,
+      isPublic: true,
       location: 0,
     },
     {
       name: "column3",
       displayName: "column3",
       dataType: 0,
-      visibility: 0,
+      isVisible: true,
+      isPublic: true,
       location: 0,
     },
   ];
@@ -189,7 +143,7 @@ test("move column method", () => {
 });
 
 test("check that setPageSize fires onStateChanged", () => {
-  var table = new TableTest(new SurveyModel(), [], null, [], false);
+  var table = new TableTest(new SurveyModel(), [], null, []);
   var count = 0;
   table.onStateChanged.add(() => {
     count++;
@@ -199,7 +153,7 @@ test("check that setPageSize fires onStateChanged", () => {
 });
 
 test("check save/restore page size in the state", () => {
-  var table = new TableTest(new SurveyModel(), [], null, [], false);
+  var table = new TableTest(new SurveyModel(), [], null, []);
   table.setPageSize(2);
   expect(table.state.pageSize).toBe(2);
   table.state = { elements: [], locale: "", pageSize: 4 };
@@ -207,13 +161,14 @@ test("check save/restore page size in the state", () => {
 });
 
 test("check setColumnWidth method", () => {
-  var table = new TableTest(new SurveyModel(), [], null, [], false);
+  var table = new TableTest(new SurveyModel(), [], null, []);
   table.columns = [
     {
       name: "column1",
       displayName: "column1",
       dataType: 0,
-      visibility: 0,
+      isVisible: true,
+      isPublic: true,
       location: 0,
     },
   ];
@@ -222,14 +177,15 @@ test("check setColumnWidth method", () => {
 });
 
 test("check that setColumnWidth fires onStateChanged", () => {
-  var table = new TableTest(new SurveyModel(), [], null, [], false);
+  var table = new TableTest(new SurveyModel(), [], null, []);
   var count = 0;
   table.columns = [
     {
       name: "column1",
       displayName: "column1",
       dataType: 0,
-      visibility: 0,
+      isVisible: true,
+      isPublic: true,
       location: 0,
     },
   ];

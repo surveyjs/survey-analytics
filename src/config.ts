@@ -1,13 +1,8 @@
-export enum ElementVisibility {
-  Visible,
-  Invisible,
-  PublicInvisible,
-}
-
 export interface IVisualizerPanelElement {
   name: string;
   displayName: string;
-  visibility: ElementVisibility;
+  isVisible: boolean;
+  isPublic: boolean;
   type?: string;
 }
 
@@ -18,5 +13,5 @@ export interface IState {
 
 export interface IPermission {
   name: string;
-  visibility: ElementVisibility;
+  isPublic: boolean;
 }

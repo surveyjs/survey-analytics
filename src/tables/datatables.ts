@@ -1,6 +1,6 @@
 import { Table, TableRow } from "./table";
 import { SurveyModel, Event } from "survey-core";
-import { ITableColumn, ColumnVisibility, QuestionLocation } from "./config";
+import { ITableColumn, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
 
 import "./datatables.scss";
@@ -51,10 +51,9 @@ export class DataTables extends Table {
     survey: SurveyModel,
     data: Array<Object>,
     options: DataTablesOptions,
-    _columns: Array<ITableColumn> = [],
-    isTrustedAccess = false
+    _columns: Array<ITableColumn> = []
   ) {
-    super(survey, data, options, _columns, isTrustedAccess);
+    super(survey, data, options, _columns);
   }
 
   public destroy() {
@@ -67,10 +66,9 @@ export class DataTables extends Table {
     super.destroy();
   }
 
-  public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
-    super.setColumnVisibility(columnName, visibility);
-    var isInvisible = visibility == ColumnVisibility.Invisible;
-    this.datatableApi.column(columnName + ":name").visible(!isInvisible);
+  public setColumnVisibility(columnName: string, isVisible: boolean) {
+    super.setColumnVisibility(columnName, isVisible);
+    this.datatableApi.column(columnName + ":name").visible(isVisible);
   }
 
   public setColumnLocation(columnName: string, location: QuestionLocation) {
@@ -254,7 +252,7 @@ export class DataTables extends Table {
   }
 
   public getColumns(): Array<any> {
-    const columns: any = this.getAvailableColumns().map((column) => {
+    const columns: any = this.columns.map((column) => {
       var question = this.survey.getQuestionByName(column.name);
       return {
         name: column.name,

@@ -1,6 +1,6 @@
 import { SurveyModel, Question, Event } from "survey-core";
 import {
-  ColumnVisibility,
+  IPermission,
   QuestionLocation,
   ColumnDataType,
   ITableState,
@@ -9,7 +9,6 @@ import {
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { TableExtensions } from "./extensions/tableextensions";
-import { IPermission } from "../config";
 
 export abstract class Table {
   protected tableData: any;
@@ -18,8 +17,7 @@ export abstract class Table {
     protected survey: SurveyModel,
     protected data: Array<Object>,
     protected options: any,
-    protected _columns: Array<any> = [],
-    public isTrustedAccess: boolean
+    protected _columns: Array<any> = []
   ) {
     if (_columns.length === 0) {
       this._columns = this.buildColumns(survey);
@@ -113,40 +111,17 @@ export abstract class Table {
           question.getType() !== "file"
             ? ColumnDataType.Text
             : ColumnDataType.FileLink,
-        visibility:
-          question.getType() !== "file"
-            ? ColumnVisibility.Visible
-            : ColumnVisibility.Invisible,
+        isVisible: question.getType() !== "file",
+        isPublic: true,
         location: QuestionLocation.Column,
       };
     });
   };
 
-  public isColumnVisible(column: any) {
-    return (
-      column.location == QuestionLocation.Column &&
-      this.isVisible(column.visibility)
-    );
+  public isColumnVisible(column: ITableColumn) {
+    if (column.location !== QuestionLocation.Column) return false;
+    return column.isVisible;
   }
-
-  public isVisible = (visibility: ColumnVisibility) => {
-    return (
-      (this.isTrustedAccess && visibility !== ColumnVisibility.Invisible) ||
-      (!this.isTrustedAccess && visibility === ColumnVisibility.Visible)
-    );
-  };
-
-  public isAvailable = (visibility: ColumnVisibility) => {
-    return (
-      this.isTrustedAccess || visibility !== ColumnVisibility.PublicInvisible
-    );
-  };
-
-  public getAvailableColumns = (): Array<ITableColumn> => {
-    return this.columns.filter((column: ITableColumn) => {
-      return this.isAvailable(column.visibility);
-    });
-  };
 
   public get columns() {
     return [].concat(this._columns);
@@ -192,16 +167,16 @@ export abstract class Table {
     this.onStateChanged.fire(this, this.state);
   }
 
-  protected getColumnByName(columnName: string): ITableColumn {
+  public getColumnByName(columnName: string): ITableColumn {
     return this._columns.filter((column) => column.name === columnName)[0];
   }
 
-  public setColumnVisibility(columnName: string, visibility: ColumnVisibility) {
+  public setColumnVisibility(columnName: string, isVisible: boolean) {
     var column = this.getColumnByName(columnName);
-    column.visibility = visibility;
+    column.isVisible = isVisible;
     this.onColumnsVisibilityChanged.fire(this, {
       columnName: columnName,
-      columnVisibility: visibility,
+      columnVisibility: isVisible,
     });
     this.onStateChanged.fire(this, this.state);
   }
@@ -210,11 +185,6 @@ export abstract class Table {
     var column = this.getColumnByName(columnName);
     column.width = width;
     this.onStateChanged.fire(this, this.state);
-  }
-
-  public getColumnVisibility(columnName: string): ColumnVisibility {
-    var column = this.columns.filter((column) => column.name === columnName)[0];
-    return column.visibility;
   }
 
   public removeRow(row: TableRow): void {
@@ -305,10 +275,10 @@ export abstract class Table {
    * Gets table permissions.
    */
   public get permissions(): IPermission[] {
-    return <any>this._columns.map((column) => {
+    return <any>this._columns.map((column: ITableColumn) => {
       return {
         name: column.name,
-        visibility: column.visibility,
+        isPublic: column.isPublic,
       };
     });
   }
@@ -316,10 +286,10 @@ export abstract class Table {
    * Sets table permissions.
    */
   public set permissions(permissions: IPermission[]) {
-    const updatedElements = this._columns.map((column) => {
+    const updatedElements = this._columns.map((column: ITableColumn) => {
       permissions.forEach((permission) => {
         if (permission.name === column.name)
-          column.visibility = permission.visibility;
+          column.isPublic = permission.isPublic;
       });
 
       return { ...column };

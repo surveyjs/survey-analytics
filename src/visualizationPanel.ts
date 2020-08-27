@@ -3,12 +3,7 @@ import { VisualizerBase } from "./visualizerBase";
 import { SelectBase } from "./selectBase";
 import { DocumentHelper } from "./utils/index";
 import { localization } from "./localizationManager";
-import {
-  IVisualizerPanelElement,
-  ElementVisibility,
-  IState,
-  IPermission,
-} from "./config";
+import { IVisualizerPanelElement, IState, IPermission } from "./config";
 import { FilterInfo } from "./filterInfo";
 import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
 
@@ -40,6 +35,7 @@ export interface IVisualizerPanelRenderedElement
  * options:
  * allowDynamicLayout - set it to false to disable items drag/drop reordering and dynamic layouting
  * allowHideQuestions - set it to false to deny user to hide/show individual questions
+ * allowMakeQuestionsPrivate - set it to true to allow make elements private/public also see persmissions property
  * seriesValues - an array of series values in data to group data by series
  * seriesLabels - labels for series to display, if not passed the seriesValues are used as labels
  * survey - pass survey instance to use localses from the survey JSON
@@ -54,8 +50,7 @@ export class VisualizationPanel extends VisualizerBase {
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
     options: { [index: string]: any } = {},
-    private _elements: Array<IVisualizerPanelRenderedElement> = undefined,
-    private isTrustedAccess = false
+    private _elements: Array<IVisualizerPanelRenderedElement> = undefined
   ) {
     super(null, data, options, "panel");
 
@@ -154,7 +149,7 @@ export class VisualizationPanel extends VisualizerBase {
   protected showElement(elementName: string) {
     const element = this.getElement(elementName);
     const elementIndex = this._elements.indexOf(element);
-    element.visibility = ElementVisibility.Visible;
+    element.isVisible = true;
     const questionElement = this.renderPanelElement(element);
     this.contentContainer.appendChild(questionElement);
     this.layoutEngine.add([questionElement], { index: elementIndex });
@@ -163,7 +158,7 @@ export class VisualizationPanel extends VisualizerBase {
 
   protected hideElement(elementName: string) {
     const element = this.getElement(elementName);
-    element.visibility = ElementVisibility.Invisible;
+    element.isVisible = false;
     if (!!element.renderedElement) {
       this.layoutEngine.remove([element.renderedElement]);
       this.contentContainer.removeChild(element.renderedElement);
@@ -172,19 +167,15 @@ export class VisualizationPanel extends VisualizerBase {
     this.visibleElementsChanged(element, "REMOVED");
   }
 
-  protected makeElementPrivate(element: any) {
-    if (element.visibility !== ElementVisibility.Visible) return;
-
-    element.visibility = ElementVisibility.PublicInvisible;
+  protected makeElementPrivate(element: IVisualizerPanelElement) {
+    element.isPublic = false;
     this.onStateChanged.fire(this, this.state);
     this.onPermissionsChangedCallback &&
       this.onPermissionsChangedCallback(this);
   }
 
-  protected makeElementPublic(element: any) {
-    if (element.visibility !== ElementVisibility.PublicInvisible) return;
-
-    element.visibility = ElementVisibility.Visible;
+  protected makeElementPublic(element: IVisualizerPanelElement) {
+    element.isPublic = true;
     this.onStateChanged.fire(this, this.state);
     this.onPermissionsChangedCallback &&
       this.onPermissionsChangedCallback(this);
@@ -223,14 +214,11 @@ export class VisualizationPanel extends VisualizerBase {
         });
       }
 
-      if (this.isTrustedAccess) {
+      if (this.allowMakeQuestionsPrivate) {
         visualizer.registerToolbarItem("makePrivatePublic", () => {
           const element = this.getElement(question.name);
 
-          const state =
-            element.visibility === ElementVisibility.Visible
-              ? "first"
-              : "second";
+          const state = element.isPublic ? "first" : "second";
 
           const pathMakePrivateSvg = "makeprivate";
           const pathMakePublicSvg = "makepublic";
@@ -344,6 +332,13 @@ export class VisualizationPanel extends VisualizerBase {
     );
   }
 
+  /**
+   * Returns whether the VisualizationPanel allows to make private/public individual inner visualizers for work with permissions.
+   */
+  public get allowMakeQuestionsPrivate() {
+    return this.options.allowMakeQuestionsPrivate === true;
+  }
+
   private _layoutEngine: LayoutEngine;
   /**
    * Returns the layout engine instance if any.
@@ -357,7 +352,8 @@ export class VisualizationPanel extends VisualizerBase {
       return {
         name: question.name,
         displayName: question.title,
-        visibility: ElementVisibility.Visible,
+        isVisible: true,
+        isPublic: true,
         type: undefined,
       };
     });
@@ -372,28 +368,41 @@ export class VisualizationPanel extends VisualizerBase {
       return {
         name: element.name,
         displayName: element.displayName,
-        visibility: element.visibility,
+        isVisible: element.isVisible,
+        isPublic: element.isPublic,
         type: element.type,
       };
     });
   }
 
   /**
-   * Checks whether certain element is visible.
+   * Returns panel's visible elements.
    */
-  public isVisible(visibility: ElementVisibility) {
-    return (
-      (this.isTrustedAccess && visibility !== ElementVisibility.Invisible) ||
-      (!this.isTrustedAccess && visibility === ElementVisibility.Visible)
+  public get visibleElements() {
+    return this._elements.filter((el: IVisualizerPanelElement) => el.isVisible);
+  }
+
+  /**
+   * Returns panel's hidden elements.
+   */
+  public get hiddenElements() {
+    return this._elements.filter(
+      (el: IVisualizerPanelElement) => !el.isVisible
     );
   }
 
-  protected get visibleElements() {
-    return this._elements.filter((el) => this.isVisible(el.visibility));
+  /**
+   * Returns panel's public elements.
+   */
+  public get publicElements() {
+    return this._elements.filter((el: IVisualizerPanelElement) => el.isPublic);
   }
 
-  protected get hiddenElements() {
-    return this._elements.filter((el) => !this.isVisible(el.visibility));
+  /**
+   * Returns panel's private elements.
+   */
+  public get privateElements() {
+    return this._elements.filter((el: IVisualizerPanelElement) => !el.isPublic);
   }
 
   protected get locales() {
@@ -448,7 +457,7 @@ export class VisualizationPanel extends VisualizerBase {
    * state - new state of the panel
    */
   public onStateChanged = new Event<
-    (sender: VisualizationPanel, state: any) => any,
+    (sender: VisualizationPanel, state: IState) => any,
     any
   >();
 
@@ -590,7 +599,7 @@ export class VisualizationPanel extends VisualizerBase {
     return <any>this._elements.map((element) => {
       return {
         name: element.name,
-        visibility: element.visibility,
+        isPublic: element.isPublic,
       };
     });
   }
@@ -601,7 +610,7 @@ export class VisualizationPanel extends VisualizerBase {
     const updatedElements = this._elements.map((element) => {
       permissions.forEach((permission) => {
         if (permission.name === element.name)
-          element.visibility = permission.visibility;
+          element.isPublic = permission.isPublic;
       });
 
       return { ...element };

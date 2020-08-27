@@ -1,8 +1,3 @@
-export enum ColumnVisibility {
-  Visible,
-  Invisible,
-  PublicInvisible,
-}
 export enum QuestionLocation {
   Column,
   Row,
@@ -17,7 +12,8 @@ export interface ITableColumn {
   name: string;
   displayName: string;
   dataType: ColumnDataType;
-  visibility: ColumnVisibility;
+  isVisible: boolean;
+  isPublic: boolean;
   location: QuestionLocation;
   width?: string | number;
 }
@@ -26,4 +22,9 @@ export interface ITableState {
   locale?: string;
   elements?: ITableColumn[];
   pageSize?: number;
+}
+
+export interface IPermission {
+  name: string;
+  isPublic: boolean;
 }

@@ -160,7 +160,8 @@ test("getState, setState, onStateChanged", () => {
         displayName: "question1",
         name: "question1",
         type: undefined,
-        visibility: 0,
+        isVisible: true,
+        isPublic: true,
       },
     ],
   };
@@ -171,7 +172,8 @@ test("getState, setState, onStateChanged", () => {
         displayName: "question2",
         name: "question2",
         type: "bar",
-        visibility: 1,
+        isVisible: false,
+        isPublic: true,
       },
     ],
   };
@@ -334,18 +336,18 @@ test("setFilter method", () => {
 
 test("moveVisibleElement if hidden elements exist", () => {
   const originalElements = [
-    { name: "el0", visibility: 0 },
-    { name: "el1", visibility: 1 },
-    { name: "el2", visibility: 0 },
-    { name: "el3", visibility: 1 },
-    { name: "el4", visibility: 0 },
+    { name: "el0", isVisible: true },
+    { name: "el1", isVisible: false },
+    { name: "el2", isVisible: true },
+    { name: "el3", isVisible: false },
+    { name: "el4", isVisible: true },
   ];
   const resultElements = [
-    { name: "el0", visibility: 0 },
-    { name: "el1", visibility: 1 },
-    { name: "el4", visibility: 0 },
-    { name: "el2", visibility: 0 },
-    { name: "el3", visibility: 1 },
+    { name: "el0", isVisible: true },
+    { name: "el1", isVisible: false },
+    { name: "el4", isVisible: true },
+    { name: "el2", isVisible: true },
+    { name: "el3", isVisible: false },
   ];
   let visPanel = new VisualizationPanel([], [], {}, <any>originalElements);
 
@@ -389,13 +391,13 @@ test("get/set permissions, onPermissionsChangedCallback", () => {
   };
 
   expect(visPanel.permissions[0].name).toEqual("question1");
-  expect(visPanel.permissions[0].visibility).toEqual(0);
+  expect(visPanel.permissions[0].isPublic).toEqual(true);
 
   const newPermissions = visPanel.permissions;
-  newPermissions[0].visibility = 2;
+  newPermissions[0].isPublic = false;
 
   visPanel.permissions = newPermissions;
 
   expect(count).toEqual(1);
-  expect(visPanel.permissions[0].visibility).toEqual(2);
+  expect(visPanel.permissions[0].isPublic).toEqual(false);
 });
