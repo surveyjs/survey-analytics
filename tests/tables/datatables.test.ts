@@ -94,19 +94,19 @@ test.skip("createDetailMarkup method", () => {
 
 test.skip("makeprivate button existance", () => {
   const survey = new SurveyModel(json);
-  let dataTables = new DataTables(survey, [], null, undefined, true);
+  let dataTables = new DataTables(survey, [], null, undefined);
 
   expect(
-    dataTables.headerButtonCreators.indexOf(
-      dataTables.createColumnPrivateButton
+    dataTables["headerButtonCreators"].indexOf(
+      dataTables["createColumnPrivateButton"]
     )
   ).toBe(2);
 
-  dataTables = new DataTables(survey, [], null, undefined, false);
+  dataTables = new DataTables(survey, [], null, undefined);
 
   expect(
-    dataTables.headerButtonCreators.indexOf(
-      dataTables.createColumnPrivateButton
+    dataTables["headerButtonCreators"].indexOf(
+      dataTables["createColumnPrivateButton"]
     )
   ).toBe(-1);
 });
