@@ -277,7 +277,7 @@ export class PlotlySetup {
     if (hasSeries) {
       layout.showlegend = true;
       layout.height =
-        (labels.length + (labels.length + 1) * 0.5) * 15 * traces.length;
+        (labels.length + (labels.length + 1) * 0.5) * 19 * seriesLabels.length;
       if (model.chartType == "stackedbar") {
         layout.barmode = "stack";
       }
