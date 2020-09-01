@@ -17,22 +17,47 @@ export class VisualizationManager {
     typeName: string,
     constructor: VisualizerConstructor
   ) {
-    let vizualizers = VisualizationManager.vizualizers[typeName];
-    if (!vizualizers) {
-      vizualizers = [];
-      VisualizationManager.vizualizers[typeName] = vizualizers;
+    let visualizers = VisualizationManager.vizualizers[typeName];
+    if (!visualizers) {
+      visualizers = [];
+      VisualizationManager.vizualizers[typeName] = visualizers;
     }
-    vizualizers.push(constructor);
+    visualizers.push(constructor);
+  }
+  /**
+   * Unregister visualizer (constructor) for question type.
+   */
+  public static unregisterVisualizer(
+    typeName: string,
+    constructor: VisualizerConstructor
+  ) {
+    let visualizers = VisualizationManager.vizualizers[typeName];
+    if (!!visualizers) {
+      let index = visualizers.indexOf(constructor);
+      if (index !== -1) {
+        visualizers.splice(index, 1);
+      }
+    }
+  }
+  /**
+   * Unregister visualizer (constructor) for all question types.
+   */
+  public static unregisterVisualizerForAll(constructor: VisualizerConstructor) {
+    Object.keys(VisualizationManager.vizualizers).forEach((key) =>
+      VisualizationManager.unregisterVisualizer(key, constructor)
+    );
   }
   /**
    * Get visualizers (constructors) for question type.
    */
-  public static getVisualizersByType(typeName: string): VisualizerConstructor[] {
-    let vizualizers = VisualizationManager.vizualizers[typeName];
-    if (!vizualizers) {
+  public static getVisualizersByType(
+    typeName: string
+  ): VisualizerConstructor[] {
+    let visualizers = VisualizationManager.vizualizers[typeName];
+    if (!visualizers) {
       return [VisualizerBase];
     }
-    return vizualizers;
+    return visualizers;
   }
   /**
    * Get visualizers (constructors) for question type.
