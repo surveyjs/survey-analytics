@@ -254,6 +254,8 @@ export abstract class Table {
    * Vizualization panel state setter.
    */
   public set state(newState: ITableState) {
+    if (!newState) return;
+
     if (typeof newState.locale !== "undefined")
       localization.currentLocale = newState.locale;
 

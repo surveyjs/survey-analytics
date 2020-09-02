@@ -89,6 +89,7 @@ test("getState, setState, onStateChanged", () => {
   });
 
   expect(tables.state).toEqual(initialState);
+  tables.state = null;
 
   tables.state = newState;
   expect(tables.state).toEqual(newState);
