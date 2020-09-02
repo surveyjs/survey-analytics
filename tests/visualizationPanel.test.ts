@@ -184,6 +184,7 @@ test("getState, setState, onStateChanged", () => {
   });
 
   expect(visPanel.state).toEqual(initialState);
+  visPanel.state = null;
 
   visPanel.state = newState;
   expect(visPanel.state).toEqual(newState);

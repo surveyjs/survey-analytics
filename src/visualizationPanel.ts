@@ -584,6 +584,8 @@ export class VisualizationPanel extends VisualizerBase {
    * Sets vizualization panel state.
    */
   public set state(newState: IState) {
+    if (!newState) return;
+
     if (typeof newState.elements !== "undefined")
       this._elements = [].concat(newState.elements);
 

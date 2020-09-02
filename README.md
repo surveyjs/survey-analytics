@@ -1,12 +1,13 @@
 ![SurveyJS Analytics](https://surveyjstest.azurewebsites.net/Content/Images/design/analytics/Monitor.png)
 
-# SurveyJS Analytics (BETA)
+# SurveyJS Analytics
 
 [![Build Status](https://dev.azure.com/SurveyJS/survey-analytics/_apis/build/status/survey-analytics-release?branchName=master)](https://dev.azure.com/SurveyJS/survey-analytics/_build/latest?definitionId=17&branchName=master)
 
 SurveyJS Analytics library allows to render survey results as charts or tables
 
 ## Main Features
+
 - Count answers and render results as charts for the select type questions
 - Count answers and render results as gauge for range type question
 - Three different types of charts: bar, pie and line
@@ -19,15 +20,16 @@ SurveyJS Analytics library allows to render survey results as charts or tables
 You may review the [analytics example](https://surveyjstest.azurewebsites.net/Examples/Library/?id=analytics-nps) or check this standalone plnkr [example](https://plnkr.co/edit/bCk64wdvOLShXkPyvGfk?p=preview).
 
 Other live examples:
+
 - [how to show chanrt for the one question](https://next.plnkr.co/edit/3yIIFnbcn8RMJQHY?preview).
 
 ## Licensing
 
-SurveyJS Analytics library is currently in BETA. Unlike SurveyJS Library itself, this library will be distributed under commercial license. Please read more about licensing on our [license page](https://surveyjstest.azurewebsites.net/Licenses#Analytics).
+Unlike SurveyJS Library itself, this library is distributed under commercial license. Please read more about licensing on our [license page](https://surveyjstest.azurewebsites.net/Licenses#Analytics).
 
-## Support and realease version
+## Support
 
-Analytics library will be out of the beta as soon as we see that our customers may successfully use it in their products. If you feel that we have missed some important functionality or found a bug, please write us [here](https://github.com/surveyjs/survey-analytics/issues) on our [support desk](https://surveyjs.answerdesk.io/).
+If you feel that we have missed some important functionality or found a bug, please write us [here](https://github.com/surveyjs/survey-analytics/issues) on our [support desk](https://surveyjs.answerdesk.io/).
 
 ## Building survey-analytics from sources
 
@@ -61,7 +63,7 @@ To build library yourself:
     ```
 
     This command will run local http server at the http://localhost:7777
-    
+
     You can open http://localhost:7777/examples/examples
 
 5.  **Run unit tests**
@@ -69,8 +71,6 @@ To build library yourself:
     npm test
     ```
     This command will run unit tests
-
-
 
 ## Nearest plans (July 2020 - Sep 2020)
 
