@@ -65,6 +65,10 @@ steps:
     npm test
   displayName: 'unit tests'
 
+- script: |
+    npm run testcafe_ci
+  displayName: 'functional tests'
+
 - powershell: |
     git push --follow-tags origin master;
   displayName: 'push release commit to github'

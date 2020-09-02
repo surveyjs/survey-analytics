@@ -68,6 +68,11 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
+      npm run testcafe_ci
+    displayName: "functional tests"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
       npm run doc_gen
     displayName: 'generate docs'
 
