@@ -121,3 +121,15 @@ test("setShowPercentages triggers renderContent and update", () => {
   expect(updateCallCount).toEqual(1);
   expect(renderCallCount).toEqual(1);
 });
+
+test("change visible choices triggers dataProvider reset", () => {
+  var resetCallCount = 0;
+  var oldResetFunc = (<any>selectBase).dataProvider.reset;
+  (<any>selectBase).dataProvider.reset = () => {
+    resetCallCount++;
+  };
+  selectBase.question.choices = ["add1"];
+  expect(resetCallCount).toEqual(1);
+  (<any>selectBase).dataProvider.reset = oldResetFunc;
+  selectBase.question.choices = choices;
+});

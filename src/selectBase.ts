@@ -19,6 +19,9 @@ export class SelectBase extends VisualizerBase {
     name?: string
   ) {
     super(question, data, options, name || "selectBase");
+    question.visibleChoicesChangedCallback = () => {
+      this.dataProvider.reset();
+    };
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
         return DocumentHelper.createSelector(
