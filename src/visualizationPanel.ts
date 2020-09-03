@@ -63,7 +63,7 @@ export class VisualizationPanel extends VisualizerBase {
     this._layoutEngine.onMoveCallback = (fromIndex: number, toIndex: number) =>
       this.moveVisibleElement(fromIndex, toIndex);
 
-    this.showHeader = false;
+    this.showHeader = true;
     if (this.options.survey) {
       localization.currentLocale = this.options.survey.locale;
     }
