@@ -1,10 +1,13 @@
-import { Question } from "survey-core";
+import { Question, ItemValue } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
+import { IVisualizerWithSelection } from "./selectBase";
 
-export class AlternativeVisualizersWrapper extends VisualizerBase {
+export class AlternativeVisualizersWrapper
+  extends VisualizerBase
+  implements IVisualizerWithSelection {
   constructor(
     private visualizers: Array<VisualizerBase>,
     question: Question,
@@ -19,6 +22,12 @@ export class AlternativeVisualizersWrapper extends VisualizerBase {
     }
     this.visualizers.forEach((visualizer) => {
       visualizer.onUpdate = () => this.invokeOnUpdate();
+      if (visualizer.supportSelection) {
+        this._supportSelection = true;
+        this.visualizersWithSelection.push(
+          <IVisualizerWithSelection>(<any>visualizer)
+        );
+      }
     });
 
     this.registerToolbarItem("changeVisualizer", () =>
@@ -38,6 +47,8 @@ export class AlternativeVisualizersWrapper extends VisualizerBase {
   }
 
   protected visualizerContainer: HTMLElement;
+  private visualizersWithSelection: Array<IVisualizerWithSelection> = [];
+  private selectedItem: ItemValue;
   private visualizer: VisualizerBase;
 
   private setVisualizer(name: string) {
@@ -53,6 +64,24 @@ export class AlternativeVisualizersWrapper extends VisualizerBase {
     this.visualizers.forEach((visualizer) => {
       visualizer.updateData(data);
     });
+  }
+
+  public set onDataItemSelected(
+    val: (selectedValue: any, selectedText: string) => void
+  ) {
+    this.visualizersWithSelection.forEach((visualizer) => {
+      visualizer.onDataItemSelected = val;
+    });
+  }
+
+  setSelection(item: ItemValue) {
+    this.visualizersWithSelection.forEach((visualizer) => {
+      visualizer.setSelection(item);
+    });
+  }
+
+  get selection() {
+    return (<any>this.visualizer).selection || this.selectedItem;
   }
 
   protected renderContent(container: HTMLElement) {

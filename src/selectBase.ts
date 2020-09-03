@@ -2,16 +2,22 @@ import { Question, QuestionSelectBase, ItemValue } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils/index";
-import { VisualizerFactory } from "./visualizerFactory";
-import { DataProvider } from "./dataProvider";
 
-export class SelectBase extends VisualizerBase {
-  private selectedItem: ItemValue = undefined;
+export interface IVisualizerWithSelection {
+  selection: ItemValue;
+  onDataItemSelected: (selectedValue: any, selectedText: string) => void;
+  setSelection(item: ItemValue): void;
+}
+
+export class SelectBase
+  extends VisualizerBase
+  implements IVisualizerWithSelection {
+  protected selectedItem: ItemValue = undefined;
   private choicesOrder: HTMLDivElement = undefined;
   private showPercentageBtn: HTMLElement = undefined;
   private _showPercentages: boolean;
   public orderByAnsweres: string = "default";
-
+  protected _supportSelection: boolean = true;
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,

@@ -1,6 +1,6 @@
 import { Event, Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
-import { SelectBase } from "./selectBase";
+import { SelectBase, IVisualizerWithSelection } from "./selectBase";
 import { DocumentHelper } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, IState, IPermission } from "./config";
@@ -243,15 +243,18 @@ export class VisualizationPanel extends VisualizerBase {
         });
       }
 
-      if (visualizer instanceof SelectBase) {
-        let filterInfo = new FilterInfo(visualizer);
+      if (visualizer.supportSelection) {
+        const visualizerWithSelection = <IVisualizerWithSelection>(
+          (<any>visualizer)
+        );
+        let filterInfo = new FilterInfo(visualizerWithSelection);
 
         visualizer.registerToolbarItem("questionFilterInfo", () => {
-          filterInfo.update(visualizer.selection);
+          filterInfo.update(visualizerWithSelection.selection);
           return filterInfo.htmlElement;
         });
 
-        visualizer.onDataItemSelected = (
+        visualizerWithSelection.onDataItemSelected = (
           selectedValue: any,
           selectedText: string
         ) => {
