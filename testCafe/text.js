@@ -13,7 +13,7 @@ var data = [{ text: "answer1" }, { text: "answer2" }, { text: "answer3" }];
 
 var options = {};
 
-fixture`basetests`.page`${url}`.beforeEach(async (t) => {
+fixture`text`.page`${url}`.beforeEach(async (t) => {
   await t.resizeWindow(1920, 1080);
   await initSummary(json, data, options);
 });

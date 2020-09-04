@@ -33,7 +33,7 @@ var options = {
   allowShowPercentages: true,
 };
 
-fixture`basetests`.page`${url}`.beforeEach(async (t) => {
+fixture`selectbase`.page`${url}`.beforeEach(async (t) => {
   await t.resizeWindow(1920, 1080);
   await initSummary(json, data, options);
 });
