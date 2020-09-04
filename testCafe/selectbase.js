@@ -1,5 +1,6 @@
 const { initSummary, url } = require("./settings");
 const { Selector, ClientFunction } = require("testcafe");
+const assert = require("assert");
 var json = {
   elements: [
     {
@@ -39,8 +40,31 @@ fixture`selectbase`.page`${url}`.beforeEach(async (t) => {
 });
 
 test("check data filtering", async (t) => {
-  //check simple items
-  //check other item
+  var isBarVisible = ClientFunction((no) => {
+    return !!document
+      .querySelector(`.trace.bars .point:nth-child(${no})`)
+      .getBoundingClientRect().width;
+  });
+  //check data filtering for regular choice
+  await t.click(Selector(".trace.bars .point:nth-child(2)")); //selector for choice with value 1
+  assert.ok(!(await isBarVisible(3)));
+  assert.ok(!(await isBarVisible(1)));
+  assert.ok(await isBarVisible(2));
+
+  await t.click(Selector("span").withText("Clear"));
+  assert.ok(await isBarVisible(3));
+  assert.ok(await isBarVisible(2));
+  assert.ok(await isBarVisible(1));
+
+  //check data filtering for other choice
+  await t.click(Selector(".trace.bars .point:nth-child(1)")); //selector for 'other' choice
+  assert.ok(!(await isBarVisible(3)));
+  assert.ok(!(await isBarVisible(2)));
+  assert.ok(await isBarVisible(1));
+  await t.click(Selector("span").withText("Clear"));
+  assert.ok(await isBarVisible(3));
+  assert.ok(await isBarVisible(2));
+  assert.ok(await isBarVisible(1));
 });
 
 test("check use values as labels", async (t) => {
