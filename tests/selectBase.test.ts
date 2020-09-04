@@ -133,3 +133,11 @@ test("change visible choices triggers dataProvider reset", () => {
   (<any>selectBase).dataProvider.reset = oldResetFunc;
   selectBase.question.choices = choices;
 });
+
+test("check that getSelectedItemByText take into account other item", () => {
+  selectBase.question.hasOther = true;
+  selectBase.question.otherText = "Other";
+  expect(selectBase.getSelectedItemByText("Other")).toEqual(
+    selectBase.question.otherItem
+  );
+});

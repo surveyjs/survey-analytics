@@ -131,9 +131,13 @@ export class SelectBase
   }
 
   public getSelectedItemByText(itemText: string) {
-    return this.question.choices.filter(
-      (choice: ItemValue) => choice.text === itemText
-    )[0];
+    if (this.question.hasOther && itemText == this.question.otherText) {
+      return this.question.otherItem;
+    } else {
+      return this.question.choices.filter(
+        (choice: ItemValue) => choice.text === itemText
+      )[0];
+    }
   }
 
   setSelection(item: ItemValue) {
