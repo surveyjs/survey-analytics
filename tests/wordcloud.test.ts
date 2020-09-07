@@ -7,7 +7,6 @@ test("remove stopwords", () => {
     { q1: "mega mega Super answer" },
   ]);
   var data = wc.getData();
-  debugger;
   expect(Object.keys(data).length).toEqual(3);
   expect(data.filter((d) => d[0] === "The").length).toEqual(0);
   expect(data.filter((d) => d[0] === "mega").length).toEqual(1);
