@@ -1,4 +1,4 @@
-const { initSummary, url } = require("./settings");
+const { initSummary, url, RGBToHex } = require("./settings");
 const { Selector, ClientFunction } = require("testcafe");
 const assert = require("assert");
 var json = {
@@ -39,6 +39,14 @@ fixture`selectbase`.page`${url}`.beforeEach(async (t) => {
   await initSummary(json, data, options);
 });
 
+const getYAxisValues = ClientFunction(() => {
+  var yValues = [];
+  document.querySelectorAll(".yaxislayer-above g.ytick text").forEach((el) => {
+    yValues.push(el.getAttribute("data-unformatted"));
+  });
+  return yValues;
+});
+
 test("check data filtering", async (t) => {
   var isBarVisible = ClientFunction((no) => {
     return !!document
@@ -68,15 +76,6 @@ test("check data filtering", async (t) => {
 });
 
 test("check use values as labels", async (t) => {
-  var getYAxisValues = ClientFunction(() => {
-    var yValues = [];
-    document
-      .querySelectorAll(".yaxislayer-above g.ytick text")
-      .forEach((el) => {
-        yValues.push(el.getAttribute("data-unformatted"));
-      });
-    return yValues;
-  });
   var options = { useValuesAsLabels: true };
   await initSummary(json, data, options);
   var yAxisValues = await getYAxisValues();
@@ -173,4 +172,51 @@ test("check that footer has no childs with false hasOther and hasComment", async
   var data = [{ radio: 1 }];
   await initSummary(json, data, options);
   await t.expect(Selector(".sa-visualizer__footer").child().count).eql(0);
+});
+
+test("check ordering", async (t) => {
+  const getColorsOrder = ClientFunction(() => {
+    var colors = [];
+    document.querySelectorAll(".trace.bars .point path").forEach((el) => {
+      colors.push(el.style.fill);
+    });
+    return colors;
+  });
+
+  const clickSelectOption = async (text) => {
+    await t
+      .click(Selector(".sa-question__select").withText(text))
+      .click(Selector(Selector(".sa-question__select option").withText(text)));
+  };
+
+  await initSummary(json, data.concat({ radio: 1 }), options);
+
+  //check default order
+  assert.deepEqual(await getYAxisValues(), ["Other", "One", "Two"]);
+  assert.deepEqual(
+    (await getColorsOrder()).map((color) => {
+      return RGBToHex(color);
+    }),
+    ["#86e1fb", "#3999fb", "#ff6771"]
+  );
+
+  //check ascending order
+  await clickSelectOption("Ascending");
+  assert.deepEqual(await getYAxisValues(), ["One", "Other", "Two"]);
+  assert.deepEqual(
+    (await getColorsOrder()).map((color) => {
+      return RGBToHex(color);
+    }),
+    ["#3999fb", "#86e1fb", "#ff6771"]
+  );
+
+  //check descending order
+  await clickSelectOption("Descending");
+  assert.deepEqual(await getYAxisValues(), ["Two", "Other", "One"]);
+  assert.deepEqual(
+    (await getColorsOrder()).map((color) => {
+      return RGBToHex(color);
+    }),
+    ["#ff6771", "#86e1fb", "#3999fb"]
+  );
 });
