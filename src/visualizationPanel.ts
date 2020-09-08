@@ -161,8 +161,7 @@ export class VisualizationPanel extends VisualizerBase {
     const element = this.getElement(elementName);
     const elementIndex = this._elements.indexOf(element);
     element.isVisible = true;
-    const questionElement = this.renderPanelElement(element);
-    this.contentContainer.appendChild(questionElement);
+    const questionElement = this.renderPanelElement(element, this.contentContainer);
     this.layoutEngine.add([questionElement], { index: elementIndex });
     this.visibleElementsChanged(element, "ADDED");
   }
