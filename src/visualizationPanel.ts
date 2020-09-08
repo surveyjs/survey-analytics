@@ -327,7 +327,7 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
-   * Returns whether the VisualizationPanel allows dynamic layouting - rearrange items via drap/drop.
+   * Returns whether the VisualizationPanel allows dynamic layouting - rearrange items via drap/drop. Set via options.
    */
   public get allowDynamicLayout() {
     return (
