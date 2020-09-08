@@ -137,8 +137,33 @@ export class DocumentHelper {
 export var options = {
   runningInBrowser: typeof window.URL.createObjectURL === "function",
 };
+
 export function allowDomRendering() {
   return options.runningInBrowser;
+}
+
+export function createCommercialLicenseLink() {
+  const container = DocumentHelper.createElement("div", "sa-commercial");
+  const link = DocumentHelper.createElement("a", "sa-commercial__text", {
+    href: "https://www.surveyjs.io/Buy",
+    target: "_blank",
+  });
+  const containerSpan = DocumentHelper.createElement("span", "");
+  const icon = DocumentHelper.createSvgElement("noncommercial");
+  const textSpan = DocumentHelper.createElement(
+    "span",
+    "sa-commercial__product",
+    {
+      innerHTML: `Please purchase a SurveyJS Analytics developer license
+        to
+        use it in your
+        app.`,
+    }
+  );
+  container.appendChild(link).appendChild(containerSpan);
+  containerSpan.appendChild(icon);
+  containerSpan.appendChild(textSpan);
+  return container;
 }
 
 export class DataHelper {

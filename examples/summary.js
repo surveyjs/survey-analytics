@@ -41,6 +41,7 @@ var options = {
   // allowHideQuestions: false,
   // allowShowPercentages: false,
   // useValuesAsLabels: false
+  // haveCommercialLicense: false,
 };
 
 var visPanel = new SurveyAnalytics.VisualizationPanel(

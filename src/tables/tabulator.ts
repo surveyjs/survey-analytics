@@ -66,8 +66,8 @@ export class Tabulator extends Table {
   private tableContainer: HTMLElement = null;
 
   public render(targetNode: HTMLElement): void {
+    super.render(targetNode);
     targetNode.className += " sa-table sa-tabulator";
-    targetNode.innerHTML = "";
 
     const columns = this.getColumns();
     const data = this.tableData;

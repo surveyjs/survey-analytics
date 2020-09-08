@@ -179,6 +179,24 @@
   margin-top: 1px;
 }
 
+.sa-commercial {
+  font-size: 12px;
+  padding: 1em 0 0.5em 2em;
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: $main-color;
+  }
+}
+.sa-commercial__text {
+  font-weight: bold;
+  text-decoration: none;
+  color: $main-color;
+}
+.sa-commercial__product {
+  padding-left: 0.5em;
+}
+
 /* latin-ext */
 @font-face {
   font-family: "Raleway";
