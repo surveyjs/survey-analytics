@@ -9,14 +9,16 @@ import {
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { TableExtensions } from "./extensions/tableextensions";
+import { createCommercialLicenseLink } from "../utils";
 
 export abstract class Table {
   protected tableData: any;
   protected extensions: TableExtensions;
+  private haveCommercialLicense = false;
   constructor(
     protected survey: SurveyModel,
     protected data: Array<Object>,
-    protected options: any,
+    protected options: any = {},
     protected _columns: Array<any> = []
   ) {
     if (_columns.length === 0) {
@@ -28,8 +30,12 @@ export abstract class Table {
     if (_columns.length === 0) {
       this._columns = this.buildColumns(survey);
     }
-
     this.extensions = new TableExtensions(this);
+
+    this.haveCommercialLicense =
+      typeof options.haveCommercialLicense !== "undefined"
+        ? options.haveCommercialLicense
+        : false;
   }
   protected renderResult: HTMLElement;
   protected currentPageSize: number = 5;
@@ -61,10 +67,16 @@ export abstract class Table {
     return this.data;
   }
 
-  public abstract render(targetNode: HTMLElement): void;
   public abstract applyFilter(value: string): void;
   public abstract applyColumnFilter(columnName: string, value: string): void;
   public abstract sortByColumn(columnName: string, direction: string): void;
+
+  public render(targetNode: HTMLElement): void {
+    targetNode.innerHTML = "";
+    if (!this.haveCommercialLicense) {
+      targetNode.appendChild(createCommercialLicenseLink());
+    }
+  }
 
   public enableColumnReorder() {
     this.isColumnReorderEnabled = true;

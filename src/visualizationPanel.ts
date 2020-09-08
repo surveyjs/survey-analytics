@@ -1,7 +1,7 @@
 import { Event, Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
-import { DocumentHelper } from "./utils/index";
+import { DocumentHelper, createCommercialLicenseLink } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, IState, IPermission } from "./config";
 import { FilterInfo } from "./filterInfo";
@@ -45,7 +45,7 @@ export interface IVisualizerPanelRenderedElement
  */
 export class VisualizationPanel extends VisualizerBase {
   protected visualizers: Array<VisualizerBase> = [];
-
+  private haveCommercialLicense = false;
   constructor(
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
@@ -72,7 +72,17 @@ export class VisualizationPanel extends VisualizerBase {
       this._elements = this.buildElements(questions);
     }
 
+    this.haveCommercialLicense =
+      typeof options.haveCommercialLicense !== "undefined"
+        ? options.haveCommercialLicense
+        : false;
+
     this.buildVisualizers(questions);
+    if (!this.haveCommercialLicense) {
+      this.registerToolbarItem("commercialLicense", () => {
+        return createCommercialLicenseLink();
+      });
+    }
 
     this.registerToolbarItem("resetFilter", () => {
       return DocumentHelper.createButton(() => {
@@ -83,6 +93,7 @@ export class VisualizationPanel extends VisualizerBase {
         });
       }, localization.getString("resetFilter"));
     });
+
     this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
       if (this.allowHideQuestions) {
         let addElementSelector: HTMLElement = undefined;

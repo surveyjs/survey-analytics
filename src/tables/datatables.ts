@@ -116,9 +116,9 @@ export class DataTables extends Table {
   }
 
   public render(targetNode: HTMLElement): void {
+    super.render(targetNode);
     var self = this;
     targetNode.className += " sa-table sa-datatables";
-    targetNode.innerHTML = "";
 
     const tableNode = <HTMLTableElement>(
       DocumentHelper.createElement("table", "")
