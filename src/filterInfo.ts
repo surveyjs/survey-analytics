@@ -1,13 +1,12 @@
-import { SelectBase } from "./selectBase";
+import { IVisualizerWithSelection } from "./selectBase";
 import { DocumentHelper } from "./utils";
 import { localization } from "./localizationManager";
-import { ItemValue } from "survey-core";
 
 export class FilterInfo {
   private _htmlElement: HTMLDivElement = undefined;
   private text: HTMLElement = undefined;
 
-  constructor(visualizer: SelectBase) {
+  constructor(visualizer: IVisualizerWithSelection) {
     this._htmlElement = <HTMLDivElement>(
       DocumentHelper.createElement("div", "sa-question__filter")
     );

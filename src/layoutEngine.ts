@@ -54,13 +54,13 @@ export class MuuriLayoutEngine extends LayoutEngine {
       dragEnabled: true,
     });
     this._muuri.on(
-      "move",
+      "dragReleaseEnd",
       (data: any) =>
         this.onMoveCallback && this.onMoveCallback(data.fromIndex, data.toIndex)
     );
   }
   protected stopCore() {
-    this._muuri.off("move");
+    this._muuri.off("dragReleaseEnd");
     this._muuri.destroy();
     this._muuri = undefined;
   }

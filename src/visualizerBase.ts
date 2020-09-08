@@ -14,6 +14,7 @@ export class VisualizerBase implements IDataInfo {
   protected toolbarContainer: HTMLElement = undefined;
   protected contentContainer: HTMLElement = undefined;
   protected footerContainer: HTMLElement = undefined;
+  protected _supportSelection: boolean = false;
   // public static otherCommentQuestionType = "comment"; // TODO: make it configureable - allow choose what kind of question/visualizer will be used for comments/others
   public static otherCommentCollapsed = true;
 
@@ -68,6 +69,10 @@ export class VisualizerBase implements IDataInfo {
       this._footerVisualizer.onUpdate = () => this.invokeOnUpdate();
     }
     return this._footerVisualizer;
+  }
+
+  public get supportSelection(): boolean {
+    return this._supportSelection;
   }
 
   getSeriesValues(): Array<string> {

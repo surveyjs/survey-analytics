@@ -17,12 +17,12 @@ var json = {
 
 var data = [
   {
-    bool2: false,
     bool: true,
+    bool2: false,
   },
   {
-    bool2: false,
     bool: true,
+    bool2: false,
   },
   {
     bool: false,
@@ -46,24 +46,24 @@ test("check show/hide questions", async (t) => {
       (question) => question.displayName == title
     )[0].isVisible;
   });
-  const questionSelector = "Question 1";
-  const question = Selector("#summaryContainer .sa-question div").withText(
-    questionSelector
-  );
+  const questionTitle = "Question 1";
+  const questionSelector = Selector(
+    "#summaryContainer .sa-question div"
+  ).withText(questionTitle);
   const showDropdown = Selector("#summaryContainer .sa-question__select");
   await t
-    .expect(question.exists)
+    .expect(questionSelector.exists)
     .ok()
-    .click(question.find("span").withText("Hide"))
-    .expect(question.exists)
+    .click(questionSelector.find("span").withText("Hide"))
+    .expect(questionSelector.exists)
     .notOk()
-    .expect(isVisibleInState(questionSelector))
+    .expect(isVisibleInState(questionTitle))
     .notOk()
     .click(showDropdown)
-    .click(showDropdown.find("option").withText(questionSelector))
-    .expect(question.exists)
+    .click(showDropdown.find("option").withText(questionTitle))
+    .expect(questionSelector.exists)
     .ok()
-    .expect(isVisibleInState(questionSelector))
+    .expect(isVisibleInState(questionTitle))
     .ok();
 });
 
@@ -91,4 +91,32 @@ test("check change questions layout", async (t) => {
     )
     .expect(getPositionInState(questionTitle))
     .eql(1);
+});
+
+test("check filtering data", async (t) => {
+  const questionTitle = "Question 1";
+  const secondQuestionTitle = "Question 2";
+  const questionSelector = Selector(
+    "#summaryContainer .sa-question div"
+  ).withText(questionTitle);
+
+  const secondQuestionSelector = Selector(
+    "#summaryContainer .sa-question div"
+  ).withText(secondQuestionTitle);
+
+  await t
+    .click(questionSelector.find("[data-unformatted='Yes<br>66.7%']"))
+    .expect(questionSelector.find("[data-unformatted='No<br>33.3%']").exists)
+    .notOk()
+    .expect(
+      secondQuestionSelector.find("[data-unformatted='Yes<br>33.3%']").exists
+    )
+    .notOk()
+    .click(questionSelector.find("span").withText("Clear"))
+    .expect(questionSelector.find("[data-unformatted='No<br>33.3%']").exists)
+    .ok()
+    .expect(
+      secondQuestionSelector.find("[data-unformatted='Yes<br>33.3%']").exists
+    )
+    .ok();
 });
