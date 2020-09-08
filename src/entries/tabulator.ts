@@ -3,6 +3,7 @@ export * from "../localizationManager";
 //localization
 import "../localization/farsi";
 import "../localization/french";
+import "../localization/norwegian";
 
 //extensions
 import "../tables/extensions/rowextensions";
