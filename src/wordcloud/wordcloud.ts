@@ -71,7 +71,13 @@ export class WordCloud extends VisualizerBase {
   getData() {
     let result: { [key: string]: number } = {};
 
-    let stopWords = textHelper.getStopWords();
+    let stopWords: string[] = [];
+    if (this.options.survey && this.options.survey.locale) {
+      stopWords = textHelper.getStopWords(this.options.survey.locale);
+    } else {
+      stopWords = textHelper.getStopWords();
+    }
+
     let stopTheWord = (word: string) => {
       if (stopWords.indexOf(word) !== -1) {
         return "";
