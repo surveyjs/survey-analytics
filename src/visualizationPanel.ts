@@ -472,10 +472,16 @@ export class VisualizationPanel extends VisualizerBase {
   /**
    * Renders given panel element.
    */
-  protected renderPanelElement(element: IVisualizerPanelRenderedElement) {
+  protected renderPanelElement(
+    element: IVisualizerPanelRenderedElement,
+    container: HTMLElement
+  ) {
     const visualizer = this.getVisualizer(element.name);
 
     const questionElement = DocumentHelper.createElement("div");
+
+    container.appendChild(questionElement);
+
     const questionContent = DocumentHelper.createElement("div");
     const titleElement = DocumentHelper.createElement("h3");
     const vizualizerElement = DocumentHelper.createElement("div");
@@ -518,8 +524,7 @@ export class VisualizationPanel extends VisualizerBase {
     container.className += " sa-panel__content sa-grid";
 
     this.visibleElements.forEach((element) => {
-      let questionElement = this.renderPanelElement(element);
-      container.appendChild(questionElement);
+      let questionElement = this.renderPanelElement(element, container);
     });
 
     this.layoutEngine.start(container);
