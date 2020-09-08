@@ -18,7 +18,7 @@ export abstract class Table {
   constructor(
     protected survey: SurveyModel,
     protected data: Array<Object>,
-    protected options: any = {},
+    protected options: any,
     protected _columns: Array<any> = []
   ) {
     if (_columns.length === 0) {
@@ -33,9 +33,10 @@ export abstract class Table {
     this.extensions = new TableExtensions(this);
 
     this.haveCommercialLicense =
-      typeof options.haveCommercialLicense !== "undefined"
+      !!options &&
+      (typeof options.haveCommercialLicense !== "undefined"
         ? options.haveCommercialLicense
-        : false;
+        : false);
   }
   protected renderResult: HTMLElement;
   protected currentPageSize: number = 5;
