@@ -7,6 +7,9 @@ declare type VisualizerConstructor = new (
   options?: Object
 ) => any;
 
+/**
+ * Visualizers repository. You need to register a visualizer, link it to the question type name in order to visualize the question answers with the certain representation.
+ */
 export class VisualizationManager {
   static alternativesVisualizer: any = undefined;
   static vizualizers: { [index: string]: Array<VisualizerConstructor> } = {};

@@ -2,9 +2,13 @@ import { Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 
+/**
+ * Visualizers factory. Creates visualizer for the given question.
+ */
 export class VisualizerFactory {
   /**
-   * Create visualizer by question.
+   * Create visualizer by question. You can pass data and options to the created visualizer as well.
+   * If more then one visualizer are registered for the question, then they are combined using wrapper for showing alternative viaualizers.
    */
   public static createVisualizer(
     question: Question,

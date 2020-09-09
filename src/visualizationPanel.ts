@@ -26,22 +26,24 @@ export interface IVisualizerPanelRenderedElement
 }
 
 /**
- * VisualizationPanel is responsible for displaying an array of survey questions
+ * VisualizationPanel is responsible for visualizing an array of survey questions
  *
  * constructor parameters:
- * questions - an array of survey questions to visualize
- * data - an array of answers in format of survey result
+ * questions - an array of survey questions to visualize,
+ * data - an array of answers in format of survey result,
+ * options - object with the following options,
+ * elements - list of visual element descriptions
  *
  * options:
- * allowDynamicLayout - set it to false to disable items drag/drop reordering and dynamic layouting
- * allowHideQuestions - set it to false to deny user to hide/show individual questions
- * allowMakeQuestionsPrivate - set it to true to allow make elements private/public also see persmissions property
- * seriesValues - an array of series values in data to group data by series
- * seriesLabels - labels for series to display, if not passed the seriesValues are used as labels
- * survey - pass survey instance to use localses from the survey JSON
- * dataProvider - dataProvider for this visualizer
+ * allowDynamicLayout - set it to false to disable items drag/drop reordering and dynamic layouting,
+ * allowHideQuestions - set it to false to deny user to hide/show individual questions,
+ * allowMakeQuestionsPrivate - set it to true to allow make elements private/public also see persmissions property,
+ * seriesValues - an array of series values in data to group data by series,
+ * seriesLabels - labels for series to display, if not passed the seriesValues are used as labels,
+ * survey - pass survey instance to use localses from the survey JSON,
+ * dataProvider - dataProvider for this visualizer,
+ * layoutEngine - layout engine to be used for layouting inner visualizers
  *
- * elements - list of visual element descriptions
  */
 export class VisualizationPanel extends VisualizerBase {
   protected visualizers: Array<VisualizerBase> = [];
@@ -161,7 +163,10 @@ export class VisualizationPanel extends VisualizerBase {
     const element = this.getElement(elementName);
     const elementIndex = this._elements.indexOf(element);
     element.isVisible = true;
-    const questionElement = this.renderPanelElement(element, this.contentContainer);
+    const questionElement = this.renderPanelElement(
+      element,
+      this.contentContainer
+    );
     this.layoutEngine.add([questionElement], { index: elementIndex });
     this.visibleElementsChanged(element, "ADDED");
   }

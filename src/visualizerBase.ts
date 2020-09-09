@@ -6,6 +6,22 @@ import { localization } from "./localizationManager";
 
 import "./visualizerBase.scss";
 
+/**
+ * VisualizerBase is a base object for all visuzlizers. It responsible for the rendering and destroying visualizer.
+ *
+ * constructor parameters:
+ * question - a survey question to visualize,
+ * data - an array of answers in format of survey result,
+ * options - object with the following options,
+ * name - visualizer name
+ *
+ * options:
+ * seriesValues - an array of series values in data to group data by series,
+ * seriesLabels - labels for series to display, if not passed the seriesValues are used as labels,
+ * survey - pass survey instance to use localses from the survey JSON,
+ * dataProvider - dataProvider for this visualizer,
+ *
+ */
 export class VisualizerBase implements IDataInfo {
   private _showHeader = true;
   private _footerVisualizer: VisualizerBase = undefined;
@@ -36,10 +52,16 @@ export class VisualizerBase implements IDataInfo {
     this.refresh();
   }
 
+  /**
+   * Name of the data field of data object from the data array.
+   */
   get dataName(): string {
     return this.question.name;
   }
 
+  /**
+   * Indicates whether visualizer has footer. Usually it is true then a question has comment or choices question has other item.
+   */
   get hasFooter() {
     return (
       !!this.question && (this.question.hasComment || this.question.hasOther)
@@ -55,6 +77,9 @@ export class VisualizerBase implements IDataInfo {
     return VisualizerFactory.createVisualizer(question, this.data, options);
   }
 
+  /**
+   * Footer visualizer getter.
+   */
   get footerVisualizer() {
     if (!this.hasFooter) {
       return undefined;
@@ -71,26 +96,44 @@ export class VisualizerBase implements IDataInfo {
     return this._footerVisualizer;
   }
 
+  /**
+   * Indicates whether visualizer supports selection. Visualizers of questions with choices allow to select choice by clicking on the diagram bar and filter other data for the selected item.
+   */
   public get supportSelection(): boolean {
     return this._supportSelection;
   }
 
+  /**
+   * Series values getter. Some questions (used in matrices) should be grouped by matrix rows. This groups are called series.
+   */
   getSeriesValues(): Array<string> {
     return this.options.seriesValues || [];
   }
 
+  /**
+   * Series labels getter. Some questions (used in matrices) should be grouped by matrix rows. This groups are called series.
+   */
   getSeriesLabels(): Array<string> {
     return this.options.seriesLabels || this.getSeriesValues();
   }
 
+  /**
+   * Available values of question answers (available choices).
+   */
   getValues(): Array<any> {
     throw new Error("Method not implemented.");
   }
 
+  /**
+   * Available labels of question answers (human readable representation of available choices).
+   */
   getLabels(): Array<string> {
     return this.getValues();
   }
 
+  /**
+   * Registers creator of visualizer toolbar item.
+   */
   public registerToolbarItem(
     name: string,
     creator: (toolbar?: HTMLDivElement) => HTMLElement
@@ -98,14 +141,23 @@ export class VisualizerBase implements IDataInfo {
     this.toolbarItemCreators[name] = creator;
   }
 
+  /**
+   * The name of the visaulizer.
+   */
   public get name() {
     return this._name || "visualizer";
   }
 
+  /**
+   * The actual data of the visaulizer.
+   */
   protected get data() {
     return this.dataProvider.filteredData;
   }
 
+  /**
+   * The data provider is used by the visaulizer.
+   */
   protected get dataProvider(): DataProvider {
     return this._dataProvider;
   }
@@ -128,6 +180,9 @@ export class VisualizerBase implements IDataInfo {
     this.onUpdate && this.onUpdate();
   }
 
+  /**
+   * Destroys visualizer.
+   */
   destroy() {
     if (!!this.renderResult) {
       this.destroyToolbar(this.toolbarContainer);
@@ -155,10 +210,16 @@ export class VisualizerBase implements IDataInfo {
     });
   }
 
+  /**
+   * Destroys visualizer toolbar.
+   */
   protected destroyToolbar(container: HTMLElement) {
     container.innerHTML = "";
   }
 
+  /**
+   * Renderss visualizer toolbar.
+   */
   protected renderToolbar(container: HTMLElement) {
     if (this.showHeader) {
       const toolbar = <HTMLDivElement>(
@@ -169,6 +230,10 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  /**
+   * Destroys visualizer content.
+   * Usually overriden in descendants.
+   */
   protected destroyContent(container: HTMLElement) {
     if (!!this.options && typeof this.options.destroyContent === "function") {
       this.options.destroyContent(container, this);
@@ -177,6 +242,10 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  /**
+   * Renders visualizer content.
+   * Usually overriden in descendants.
+   */
   protected renderContent(container: HTMLElement) {
     if (!!this.options && typeof this.options.renderContent === "function") {
       this.options.renderContent(container, this);
@@ -185,10 +254,16 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  /**
+   * Destroys visualizer footer.
+   */
   protected destroyFooter(container: HTMLElement) {
     container.innerHTML = "";
   }
 
+  /**
+   * Renders visualizer footer.
+   */
   protected renderFooter(container: HTMLElement) {
     container.innerHTML = "";
     if (this.hasFooter) {
@@ -227,6 +302,9 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  /**
+   * Renders visualizer in the given container.
+   */
   render(targetElement: HTMLElement) {
     this.renderResult = targetElement;
 
@@ -322,6 +400,9 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  /**
+   * Returns data to be used in the visualizer.
+   */
   getData(): any {
     return this.dataProvider.getData(this);
   }
