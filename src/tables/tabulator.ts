@@ -4,6 +4,7 @@ import { QuestionLocation } from "./config";
 
 import "./tabulator.scss";
 import { DocumentHelper } from "../utils";
+import { localization } from "../localizationManager";
 const TabulatorTables = require("tabulator-tables");
 
 if (!!document) {
@@ -18,12 +19,12 @@ interface IOptions {
   tabulatorOptions?: any;
   downloadHiddenColumns?: boolean;
   actionsColumnWidth?: number;
+  downloadButtons: Array<string>;
   downloadOptions?: { [type: string]: any };
 }
 
-var defaultDownloadOptions = {
+const defaultDownloadOptions = {
   pdf: {
-    isVisible: true,
     orientation: "portrait", //set page orientation to portrait
     autoTable: {
       //advanced table styling
@@ -36,14 +37,15 @@ var defaultDownloadOptions = {
       margin: { top: 60 },
     },
   },
-  csv: { isVisible: true, delimiter: "," },
-  xlsx: { isVisible: true, sheetName: "results" },
+  csv: { delimiter: "," },
+  xlsx: { sheetName: "results" },
 };
 
-export var defaultOptions: IOptions = {
+const defaultOptions: IOptions = {
   tabulatorOptions: {},
   actionsColumnWidth: 60,
   downloadHiddenColumns: false,
+  downloadButtons: ["pdf", "xlsx", "csv"],
   downloadOptions: defaultDownloadOptions,
 };
 
@@ -138,13 +140,15 @@ export class Tabulator extends Table {
       "div",
       "sa-tabulator__downloads-bar"
     );
-    if (this.options.downloadOptions.xlsx.isVisible) {
-      container.appendChild(createDownloadButton("xlsx", "Excel"));
-    }
-    if (this.options.downloadOptions.pdf.isVisible) {
-      container.appendChild(createDownloadButton("pdf", "PDF"));
-    }
-    container.appendChild(createDownloadButton("csv", "CSV"));
+
+    this.options.downloadButtons.forEach((type: string) => {
+      container.appendChild(
+        createDownloadButton(
+          type,
+          localization.getString(`${type}DownloadCaption`)
+        )
+      );
+    });
     return container;
   }
 
