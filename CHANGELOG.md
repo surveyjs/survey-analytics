@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.2](https://github.com/surveyjs/survey-analytics/compare/v1.8.1...v1.8.2) (2020-09-10)
+
+### [1.8.1](https://github.com/surveyjs/survey-analytics/compare/v1.8.0...v1.8.1) (2020-09-09)
+
+
+### Bug Fixes
+
+* add 'name' argument in the boolean's constructor ([a90e870](https://github.com/surveyjs/survey-analytics/commit/a90e8708d83593a28597983bda2894031af3151c))
+
 ## [1.8.0](https://github.com/surveyjs/survey-analytics/compare/v1.7.28...v1.8.0) (2020-09-02)
 
 ### [1.7.28](https://github.com/surveyjs/survey-analytics/compare/v1.7.27...v1.7.28) (2020-08-25)

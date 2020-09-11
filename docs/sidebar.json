@@ -9,10 +9,22 @@
       "Title": "Analytics API",
       "Items": [
         {
+          "Name": "visualizerbase",
+          "Title": "Base Visualization Element"
+        },
+        {
           "Name": "visualizationpanel",
           "Title": "Visualization Panel"
+        },
+        {
+          "Name": "visualizationmanager",
+          "Title": "Visualizers Repository"
+        },
+        {
+          "Name": "visualizerfactory",
+          "Title": "Visualizer Factory"
         }
-       ]
+      ]
     }
   ]
 }
