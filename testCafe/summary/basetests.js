@@ -1,4 +1,4 @@
-const { initSummary, url } = require("./settings");
+const { initSummary, url } = require("../settings");
 const { Selector, ClientFunction } = require("testcafe");
 var json = {
   elements: [
@@ -67,6 +67,34 @@ test("check show/hide questions", async (t) => {
     .ok();
 });
 
+test("check show/hide questions set from constructor", async (t) => {
+  await initSummary(json, data, {}, [
+    {
+      name: "bool",
+      displayName: "Question 1",
+      isVisible: false,
+      renderedElement: {},
+    },
+    {
+      name: "bool2",
+      displayName: "Question 2",
+      isVisible: true,
+      renderedElement: {},
+    },
+  ]);
+  await t
+    .expect(
+      Selector("#summaryContainer .sa-question div").withText("Question 1")
+        .exists
+    )
+    .notOk()
+    .expect(
+      Selector("#summaryContainer .sa-question div").withText("Question 2")
+        .exists
+    )
+    .ok();
+});
+
 test("check change questions layout", async (t) => {
   const getPositionInState = ClientFunction((title) => {
     var question = visPanel.state.elements.filter(
@@ -119,4 +147,11 @@ test("check filtering data", async (t) => {
       secondQuestionSelector.find("[data-unformatted='Yes<br>33.3%']").exists
     )
     .ok();
+});
+
+test("check show/hide commercial license caption", async (t) => {
+  const commercialSelector = Selector("div.sa-commercial");
+  await t.expect(Selector(commercialSelector).exists).ok();
+  await initSummary(json, data, { haveCommercialLicense: true });
+  await t.expect(Selector(commercialSelector).exists).notOk();
 });

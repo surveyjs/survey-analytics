@@ -1,4 +1,4 @@
-const { initSummary, url, RGBToHex } = require("./settings");
+const { initSummary, url, RGBToHex } = require("../settings");
 const { Selector, ClientFunction } = require("testcafe");
 const assert = require("assert");
 var json = {

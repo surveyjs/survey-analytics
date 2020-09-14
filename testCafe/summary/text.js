@@ -1,4 +1,4 @@
-const { initSummary, url } = require("./settings");
+const { initSummary, url } = require("../settings");
 const { Selector, ClientFunction } = require("testcafe");
 var json = {
   elements: [
