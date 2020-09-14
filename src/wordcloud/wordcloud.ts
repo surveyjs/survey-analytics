@@ -4,6 +4,7 @@ import { VisualizationManager } from "../visualizationManager";
 import { textHelper } from "./stopwords/index";
 import WordCloudLib from "wordcloud";
 import { DocumentHelper } from "../utils";
+import { localization } from "../localizationManager";
 
 export class WordCloudAdapter {
   private _wordcloud: any;
@@ -72,8 +73,9 @@ export class WordCloud extends VisualizerBase {
     let result: { [key: string]: number } = {};
 
     let stopWords: string[] = [];
-    if (this.options.survey && this.options.survey.locale) {
-      stopWords = textHelper.getStopWords(this.options.survey.locale);
+    const locale = localization.currentLocale; 
+    if (locale) {
+      stopWords = textHelper.getStopWords(locale);
     } else {
       stopWords = textHelper.getStopWords();
     }
