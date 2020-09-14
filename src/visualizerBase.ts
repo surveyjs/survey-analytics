@@ -26,6 +26,7 @@ export class VisualizerBase implements IDataInfo {
   private _showHeader = true;
   private _footerVisualizer: VisualizerBase = undefined;
   private _dataProvider: DataProvider = undefined;
+  protected labelTruncateLength: number = 27;
   protected renderResult: HTMLElement = undefined;
   protected toolbarContainer: HTMLElement = undefined;
   protected contentContainer: HTMLElement = undefined;
@@ -41,11 +42,15 @@ export class VisualizerBase implements IDataInfo {
   constructor(
     public question: Question,
     data: Array<{ [index: string]: any }>,
-    protected options: { [index: string]: any } = {},
+    public options: { [index: string]: any } = {},
     private _name?: string
   ) {
     this._dataProvider = options.dataProvider || new DataProvider(data);
     this._dataProvider.onDataChanged.add(() => this.onDataChanged());
+
+    if (typeof options.labelTruncateLength !== "undefined") {
+      this.labelTruncateLength = options.labelTruncateLengt;
+    }
   }
 
   protected onDataChanged() {

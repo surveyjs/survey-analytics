@@ -36,6 +36,7 @@ export interface IVisualizerPanelRenderedElement
  *
  * options:
  * allowDynamicLayout - set it to false to disable items drag/drop reordering and dynamic layouting,
+ * labelTruncateLength - the length of the label where the truncation starts. Set to -1 to disable truncate. Default is 27.
  * allowHideQuestions - set it to false to deny user to hide/show individual questions,
  * allowMakeQuestionsPrivate - set it to true to allow make elements private/public also see persmissions property,
  * seriesValues - an array of series values in data to group data by series,
