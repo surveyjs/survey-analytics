@@ -153,3 +153,17 @@ test("check bar width with hasSeries and showPercentages equal true", () => {
   expect(config.traces[0].width).toEqual(0.7 / 7);
   matrixJson.columns.pop();
 });
+
+test("getTruncatedLabel method", () => {
+  const label = "Some very very very very long string for unit testing !";
+
+  expect(PlotlySetup.getTruncatedLabel(label, -1).length).toBe(55);
+  expect(PlotlySetup.getTruncatedLabel(label, null).length).toBe(55);
+  expect(PlotlySetup.getTruncatedLabel(label, 125).length).toBe(55);
+
+  expect(PlotlySetup.getTruncatedLabel(label, 5).indexOf("...")).not.toBe(-1);
+  expect(PlotlySetup.getTruncatedLabel(label, 5).length).toBe(8);
+
+  expect(PlotlySetup.getTruncatedLabel(label, 50).indexOf("...")).not.toBe(-1);
+  expect(PlotlySetup.getTruncatedLabel(label, 50).length).toBe(53);
+});

@@ -104,6 +104,18 @@ export class PlotlySetup {
     return this.setups[charType](model);
   }
 
+  static getTruncatedLabel = (label: string, labelTruncateLength: number) => {
+    const truncateSymbols = "...";
+    const truncateSymbolsLength = truncateSymbols.length;
+
+    if (!labelTruncateLength) return label;
+    if (labelTruncateLength === -1) return label;
+    if (label.length <= labelTruncateLength + truncateSymbolsLength)
+      return label;
+
+    return label.substring(0, labelTruncateLength) + truncateSymbols;
+  };
+
   static setupPie(model: SelectBase): PlotlyOptions {
     let datasets = model.getData();
     let seriesValues = model.getSeriesValues();
@@ -116,11 +128,11 @@ export class PlotlySetup {
     const traceConfig: any = {
       type: model.chartType,
       y: hasSeries ? seriesLabels : labels,
-      text: (hasSeries ? seriesLabels : labels).map((l) => {
-        if (l.length > 30) {
-          return l.substring(0, 27) + "...";
-        }
-        return l;
+      text: (hasSeries ? seriesLabels : labels).map((label: string) => {
+        return PlotlySetup.getTruncatedLabel(
+          label,
+          model.options.labelTruncateLength
+        );
       }),
       hoverinfo: "x+y",
       mode: "markers",
@@ -212,11 +224,11 @@ export class PlotlySetup {
     }
     const traceConfig: any = {
       type: model.chartType,
-      y: (hasSeries ? seriesLabels : labels).map((l) => {
-        if (l.length > 30) {
-          return l.substring(0, 27) + "...";
-        }
-        return l;
+      y: (hasSeries ? seriesLabels : labels).map((label: string) => {
+        return PlotlySetup.getTruncatedLabel(
+          label,
+          model.options.labelTruncateLength
+        );
       }),
       customdata: hasSeries ? seriesLabels : labels,
       hoverinfo: "x+y",
@@ -309,11 +321,11 @@ export class PlotlySetup {
 
     const traceConfig: any = {
       type: "scatter",
-      y: (hasSeries ? seriesLabels : labels).map((l) => {
-        if (l.length > 30) {
-          return l.substring(0, 27) + "...";
-        }
-        return l;
+      y: (hasSeries ? seriesLabels : labels).map((label: string) => {
+        return PlotlySetup.getTruncatedLabel(
+          label,
+          model.options.labelTruncateLength
+        );
       }),
       customdata: hasSeries ? seriesLabels : labels,
       text: hasSeries ? seriesLabels : labels,
