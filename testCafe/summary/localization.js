@@ -52,9 +52,10 @@ test("check change locale", async (t) => {
     "Сменить язык"
   );
 
-  assert.deepEqual(await getYAxisValues(), [
-    json.questions[0].choices.map((choice) => choice.text.ru),
-  ]);
+  assert.deepEqual(
+    await getYAxisValues(),
+    json.questions[0].choices.map((choice) => choice.text.ru)
+  );
 
   await t
     .expect(Selector(".sa-question__title").innerText)
@@ -73,7 +74,7 @@ test("check change locale", async (t) => {
     .eql(json.questions[0].title.default);
 
   await t
-    .expect(Selector(".sa-question__select").withText("Change locale"))
+    .expect(Selector(".sa-question__select").withText("Change Locale").exists)
     .ok();
   assert.strictEqual(await getLocaleInState(), "");
 });
