@@ -1,4 +1,4 @@
-const { initSummary, url, RGBToHex } = require("../settings");
+const { initSummary, url, RGBToHex, getYAxisValues } = require("../settings");
 const { Selector, ClientFunction } = require("testcafe");
 const assert = require("assert");
 var json = {
@@ -37,14 +37,6 @@ var options = {
 fixture`selectbase`.page`${url}`.beforeEach(async (t) => {
   await t.resizeWindow(1920, 1080);
   await initSummary(json, data, options);
-});
-
-const getYAxisValues = ClientFunction(() => {
-  var yValues = [];
-  document.querySelectorAll(".yaxislayer-above g.ytick text").forEach((el) => {
-    yValues.push(el.getAttribute("data-unformatted"));
-  });
-  return yValues;
 });
 
 test("check data filtering", async (t) => {
