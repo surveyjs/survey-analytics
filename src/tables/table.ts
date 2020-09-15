@@ -269,8 +269,11 @@ export abstract class Table {
   public set state(newState: ITableState) {
     if (!newState) return;
 
-    if (typeof newState.locale !== "undefined")
+    if (typeof newState.locale !== "undefined") {
       localization.currentLocale = newState.locale;
+      this.survey.locale = newState.locale;
+      this.initTableData(this.data);
+    }
 
     if (typeof newState.elements !== "undefined")
       this._columns = newState.elements;
