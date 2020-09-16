@@ -44,6 +44,7 @@ export class AlternativeVisualizersWrapper
     );
 
     this.visualizer = visualizers[0];
+    this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
   }
 
   protected visualizerContainer: HTMLElement;
@@ -51,12 +52,20 @@ export class AlternativeVisualizersWrapper
   private selectedItem: ItemValue;
   private visualizer: VisualizerBase;
 
+  private onAfterVisualizerRenderCallback = () => {
+    this.afterRender(this.contentContainer);
+  };
+
   private setVisualizer(name: string) {
     if (!!this.visualizer) {
+      this.visualizer.onAfterRender.remove(
+        this.onAfterVisualizerRenderCallback
+      );
       this.visualizer.destroy();
     }
     this.visualizer = this.visualizers.filter((v) => v.name === name)[0];
     this.refresh();
+    this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
   }
 
   updateData(data: Array<{ [index: string]: any }>) {
@@ -91,6 +100,7 @@ export class AlternativeVisualizersWrapper
 
   destroy() {
     this.visualizers.forEach((visualizer) => {
+      visualizer.onAfterRender.remove(this.onAfterVisualizerRenderCallback);
       visualizer.onUpdate = undefined;
     });
     this.visualizer.destroy();

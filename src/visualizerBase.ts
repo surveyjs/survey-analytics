@@ -3,6 +3,7 @@ import { IDataInfo, DataProvider } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { DocumentHelper } from "./utils";
 import { localization } from "./localizationManager";
+import { Event } from "survey-core";
 
 import "./visualizerBase.scss";
 
@@ -34,6 +35,18 @@ export class VisualizerBase implements IDataInfo {
   protected _supportSelection: boolean = false;
   // public static otherCommentQuestionType = "comment"; // TODO: make it configureable - allow choose what kind of question/visualizer will be used for comments/others
   public static otherCommentCollapsed = true;
+
+  /**
+  * The event is fired right after a visualizer's content is rendered in DOM.
+  **/
+  public onAfterRender: Event<
+    (sender: VisualizerBase, options: any) => any,
+    any
+  > = new Event<(sender: VisualizerBase, options: any) => any, any>();
+
+  protected afterRender(contentContainer: HTMLElement) {
+    this.onAfterRender.fire(this, { htmlElement: contentContainer });
+  }
 
   protected toolbarItemCreators: {
     [name: string]: (toolbar?: HTMLDivElement) => HTMLElement;
@@ -257,6 +270,7 @@ export class VisualizerBase implements IDataInfo {
     } else {
       container.innerHTML = "This question type is not visualized yet";
     }
+    this.afterRender(container);
   }
 
   /**

@@ -29,8 +29,13 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
       [],
       options
     );
+    this._panelVisualizer.onAfterRender.add(this.onPanelAfterRenderCallback);
     this.updateData(data);
   }
+
+  private onPanelAfterRenderCallback = () => {
+    this.afterRender(this.contentContainer);
+  };
 
   updateData(data: Array<{ [index: string]: any }>) {
     super.updateData(data);
@@ -62,6 +67,11 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
 
   renderContent(container: HTMLElement) {
     this._panelVisualizer.render(container);
+  }
+
+  destroy() {
+    super.destroy();
+    this._panelVisualizer.onAfterRender.remove(this.onPanelAfterRenderCallback);
   }
 }
 

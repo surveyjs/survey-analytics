@@ -108,7 +108,9 @@ export class GaugePlotly extends NumberModel {
   protected renderContent(container: HTMLElement) {
     const chartNode: HTMLElement = DocumentHelper.createElement("div");
     container.appendChild(chartNode);
-    this._chartAdapter.create(chartNode);
+    this._chartAdapter.create(chartNode).then(() => {
+      this.afterRender(this.contentContainer);
+    });
   }
 }
 

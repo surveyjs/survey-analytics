@@ -402,3 +402,40 @@ test("get/set permissions, onPermissionsChangedCallback", () => {
   expect(count).toEqual(1);
   expect(visPanel.permissions[0].isPublic).toEqual(false);
 });
+
+test("check onAfterRender", () => {
+  const json = {
+    elements: [
+      {
+        type: "text",
+        name: "question1",
+      },
+      {
+        type: "text",
+        name: "question2",
+      },
+    ],
+  };
+  const data = [
+    {
+      question1: "1-1",
+      question2: "1-2",
+    },
+    {
+      question1: "2-1",
+      question2: "2-2",
+    },
+  ];
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
+  var count = 0;
+  visPanel.onAfterRender.add(() => {
+    count++;
+  });
+  (<any>visPanel).visualizers[0].afterRender(null);
+  expect((<any>visPanel).renderedQuestionsCount).toEqual(1);
+  expect(count).toEqual(0);
+  (<any>visPanel).visualizers[1].afterRender(null);
+  expect((<any>visPanel).renderedQuestionsCount).toEqual(0);
+  expect(count).toEqual(1);
+});

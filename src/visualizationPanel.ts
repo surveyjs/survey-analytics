@@ -48,7 +48,8 @@ export interface IVisualizerPanelRenderedElement
  */
 export class VisualizationPanel extends VisualizerBase {
   protected visualizers: Array<VisualizerBase> = [];
-  private haveCommercialLicense = false;
+  private haveCommercialLicense: boolean = false;
+  private renderedQuestionsCount: number = 0;
   constructor(
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
@@ -159,6 +160,17 @@ export class VisualizationPanel extends VisualizerBase {
       });
     }
   }
+
+  private onAfterRenderQuestionCallback = (
+    sender: VisualizerBase,
+    options: any
+  ) => {
+    this.renderedQuestionsCount++;
+    if (this.renderedQuestionsCount == this.questions.length) {
+      this.renderedQuestionsCount = 0;
+      this.afterRender(this.contentContainer);
+    }
+  };
 
   protected showElement(elementName: string) {
     const element = this.getElement(elementName);
@@ -280,6 +292,7 @@ export class VisualizationPanel extends VisualizerBase {
       }
 
       visualizer.onUpdate = () => this.layout();
+      visualizer.onAfterRender.add(this.onAfterRenderQuestionCallback);
       this.visualizers.push(visualizer);
     });
   }
@@ -290,6 +303,7 @@ export class VisualizationPanel extends VisualizerBase {
       if (visualizer instanceof SelectBase) {
         visualizer.onDataItemSelected = undefined;
       }
+      visualizer.onAfterRender.remove(this.onAfterRenderQuestionCallback);
       visualizer.destroy();
     });
     this.visualizers = [];

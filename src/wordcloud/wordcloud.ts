@@ -73,7 +73,7 @@ export class WordCloud extends VisualizerBase {
     let result: { [key: string]: number } = {};
 
     let stopWords: string[] = [];
-    const locale = localization.currentLocale; 
+    const locale = localization.currentLocale;
     if (locale) {
       stopWords = textHelper.getStopWords(locale);
     } else {
@@ -135,6 +135,7 @@ export class WordCloud extends VisualizerBase {
 
   protected renderContent(container: HTMLElement) {
     this._wordcloudAdapter.create(container);
+    this.afterRender(this.contentContainer);
   }
 
   destroy() {

@@ -62,3 +62,20 @@ test("setSelection and getSelection", () => {
   expect(selectBase.selection.value).toEqual(3);
   expect(anotherSelectBase.selection.value).toEqual(3);
 });
+
+test("check onAfterRender", () => {
+  var count = 0;
+  alternativeVisualizersWrapper.onAfterRender.add(() => {
+    count++;
+  });
+  alternativeVisualizersWrapper.render(document.createElement("div"));
+  expect(count).toEqual(1);
+  (<any>alternativeVisualizersWrapper).setVisualizer(
+    (<any>alternativeVisualizersWrapper).visualizers[1].name
+  );
+  expect(count).toEqual(1);
+  (<any>alternativeVisualizersWrapper).renderContent(
+    (<any>alternativeVisualizersWrapper).contentContainer
+  );
+  expect(count).toEqual(2);
+});

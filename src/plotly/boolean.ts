@@ -58,7 +58,9 @@ export class BooleanPlotly extends BooleanModel {
       DocumentHelper.createElement("div")
     );
     container.appendChild(chartNode);
-    this._chartAdapter.create(chartNode);
+    this._chartAdapter.create(chartNode).then(() => {
+      this.afterRender(this.contentContainer);
+    });
   }
 }
 

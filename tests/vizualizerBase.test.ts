@@ -57,3 +57,16 @@ test("footer visualizer data, updateData", () => {
   expect(visualizer["data"]).toEqual(newData);
   expect(visualizer["_footerVisualizer"]["data"]).toEqual(newData);
 });
+
+test("check onAfterRender", () => {
+  var question = new QuestionDropdownModel("q1");
+  question.hasOther = true;
+
+  let count = 0;
+  let visualizer = new VisualizerBase(question, []);
+  visualizer.onAfterRender.add(() => {
+    count++;
+  });
+  (<any>visualizer).renderContent(document.createElement("div"));
+  expect(count).toEqual(1);
+});

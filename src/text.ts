@@ -95,6 +95,7 @@ export class Text extends VisualizerBase {
 
   protected renderContent(container: HTMLElement) {
     this._textTableAdapter.create(container);
+    this.afterRender(this.contentContainer);
   }
 
   destroy() {

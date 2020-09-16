@@ -84,3 +84,13 @@ test("series options for inner panel visualizer", () => {
     json.questions[0].rows
   );
 });
+
+test("check onAfterRender", () => {
+  let count = 0;
+  visualizer.onAfterRender.add(() => {
+    count++;
+  });
+  const innerPanelVisualizer: any = visualizer["_panelVisualizer"];
+  innerPanelVisualizer.afterRender();
+  expect(count).toEqual(1);
+});

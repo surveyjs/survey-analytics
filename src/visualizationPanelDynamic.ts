@@ -5,7 +5,6 @@ import { Question, QuestionPanelDynamicModel, IQuestion } from "survey-core";
 
 export class VisualizationPanelDynamic extends VisualizerBase {
   protected _panelVisualizer: VisualizationPanel = undefined;
-
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
@@ -21,8 +20,13 @@ export class VisualizationPanelDynamic extends VisualizerBase {
       [],
       options
     );
+    this._panelVisualizer.onAfterRender.add(this.onAfterRenderPanelCallback);
     this.updateData(data);
   }
+
+  private onAfterRenderPanelCallback = () => {
+    this.afterRender(this.contentContainer);
+  };
 
   public get name() {
     return "panelDynamic";
@@ -51,6 +55,11 @@ export class VisualizationPanelDynamic extends VisualizerBase {
 
   renderContent(container: HTMLElement) {
     this._panelVisualizer.render(container);
+  }
+
+  public destroy() {
+    super.destroy();
+    this._panelVisualizer.onAfterRender.remove(this.onAfterRenderPanelCallback);
   }
 }
 
