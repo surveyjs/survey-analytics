@@ -4,6 +4,7 @@ export * from "../localizationManager";
 import "../localization/farsi";
 import "../localization/french";
 import "../localization/norwegian";
+import "../localization/russian";
 
 //extensions
 import "../tables/extensions/rowextensions";
