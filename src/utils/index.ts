@@ -142,7 +142,7 @@ export function allowDomRendering() {
   return options.runningInBrowser;
 }
 
-export function createCommercialLicenseLink() {
+function createCommercialLicenseLink() {
   const container = DocumentHelper.createElement("div", "sa-commercial");
   const link = DocumentHelper.createElement("a", "sa-commercial__text", {
     href: "https://www.surveyjs.io/Buy",
@@ -164,6 +164,24 @@ export function createCommercialLicenseLink() {
   containerSpan.appendChild(icon);
   containerSpan.appendChild(textSpan);
   return container;
+}
+export function updateCommercialLicenseLink(
+  container: HTMLElement,
+  haveCommercialLicense: boolean,
+  commercialLicenseLink: HTMLElement
+): HTMLElement {
+  if (!haveCommercialLicense) {
+    if (!commercialLicenseLink) {
+      commercialLicenseLink = createCommercialLicenseLink();
+      container.prepend(commercialLicenseLink);
+    }
+  } else {
+    if (!!commercialLicenseLink) {
+      container.removeChild(commercialLicenseLink);
+      commercialLicenseLink = undefined;
+    }
+  }
+  return commercialLicenseLink;
 }
 
 export class DataHelper {
