@@ -9,13 +9,12 @@ import {
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { TableExtensions } from "./extensions/tableextensions";
-import { updateCommercialLicenseLink } from "../utils";
+import { createCommercialLicenseLink } from "../utils";
 
 export abstract class Table {
   protected tableData: any;
   protected extensions: TableExtensions;
-  private _haveCommercialLicense = false;
-  private commercialLicenseLink: HTMLElement;
+  private haveCommercialLicense = false;
   constructor(
     protected survey: SurveyModel,
     protected data: Array<Object>,
@@ -75,11 +74,9 @@ export abstract class Table {
 
   public render(targetNode: HTMLElement): void {
     targetNode.innerHTML = "";
-    this.commercialLicenseLink = updateCommercialLicenseLink(
-      targetNode,
-      this._haveCommercialLicense,
-      this.commercialLicenseLink
-    );
+    if (!this.haveCommercialLicense) {
+      targetNode.appendChild(createCommercialLicenseLink());
+    }
   }
 
   public enableColumnReorder() {
@@ -324,20 +321,6 @@ export abstract class Table {
    * Fires when permissions changed
    */
   public onPermissionsChangedCallback: any;
-
-  /**
-   * You have right to set this property to true if you have bought the commercial licence only. It will remove the text about non-commerical usage on the top of the widget. Setting this property true without having a commercial licence is illegal.
-   */
-  public set haveCommercialLicense(val: boolean) {
-    this._haveCommercialLicense = val;
-    if (!!this.renderResult) {
-      this.commercialLicenseLink = updateCommercialLicenseLink(
-        this.renderResult,
-        this._haveCommercialLicense,
-        this.commercialLicenseLink
-      );
-    }
-  }
 }
 
 export abstract class TableRow {

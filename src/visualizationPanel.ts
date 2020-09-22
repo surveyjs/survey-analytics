@@ -1,7 +1,7 @@
 import { Event, Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
-import { DocumentHelper, updateCommercialLicenseLink } from "./utils/index";
+import { DocumentHelper, createCommercialLicenseLink } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, IState, IPermission } from "./config";
 import { FilterInfo } from "./filterInfo";
@@ -48,8 +48,7 @@ export interface IVisualizerPanelRenderedElement
  */
 export class VisualizationPanel extends VisualizerBase {
   protected visualizers: Array<VisualizerBase> = [];
-  private _haveCommercialLicense: boolean = false;
-  private commercialLicenseLink: HTMLElement;
+  private haveCommercialLicense: boolean = false;
   private renderedQuestionsCount: number = 0;
   constructor(
     protected questions: Array<any>,
@@ -77,12 +76,17 @@ export class VisualizationPanel extends VisualizerBase {
       this._elements = this.buildElements(questions);
     }
 
-    this._haveCommercialLicense =
+    this.haveCommercialLicense =
       typeof options.haveCommercialLicense !== "undefined"
         ? options.haveCommercialLicense
         : false;
 
     this.buildVisualizers(questions);
+    if (!this.haveCommercialLicense) {
+      this.registerToolbarItem("commercialLicense", () => {
+        return createCommercialLicenseLink();
+      });
+    }
 
     this.registerToolbarItem("resetFilter", () => {
       return DocumentHelper.createButton(() => {
@@ -537,15 +541,6 @@ export class VisualizationPanel extends VisualizerBase {
     return questionElement;
   }
 
-  public render(targetNode: HTMLElement) {
-    super.render(targetNode);
-    this.commercialLicenseLink = updateCommercialLicenseLink(
-      targetNode,
-      this._haveCommercialLicense,
-      this.commercialLicenseLink
-    );
-  }
-
   protected renderToolbar(container: HTMLElement) {
     container.className += " sa-panel__header";
     super.renderToolbar(container);
@@ -664,20 +659,6 @@ export class VisualizationPanel extends VisualizerBase {
     this.refresh();
     this.onPermissionsChangedCallback &&
       this.onPermissionsChangedCallback(this);
-  }
-
-  /**
-   * You have right to set this property to true if you have bought the commercial licence only. It will remove the text about non-commerical usage on the top of the widget. Setting this property true without having a commercial licence is illegal.
-   */
-  public set haveCommercialLicense(val: boolean) {
-    this._haveCommercialLicense = val;
-    if (!!this.renderResult) {
-      this.commercialLicenseLink = updateCommercialLicenseLink(
-        this.renderResult,
-        this._haveCommercialLicense,
-        this.commercialLicenseLink
-      );
-    }
   }
 
   destroy() {
