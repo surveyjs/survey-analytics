@@ -47,6 +47,10 @@ export class DataTables extends Table {
     jQuery = $;
   }
 
+  public static set haveCommercialLicense(val: boolean) {
+    Table.haveCommercialLicense = val;
+  }
+
   constructor(
     survey: SurveyModel,
     data: Array<Object>,

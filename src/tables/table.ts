@@ -12,6 +12,7 @@ import { TableExtensions } from "./extensions/tableextensions";
 import { createCommercialLicenseLink } from "../utils";
 
 export abstract class Table {
+  public static haveCommercialLicense: boolean = false;
   protected tableData: any;
   protected extensions: TableExtensions;
   private haveCommercialLicense = false;
@@ -33,10 +34,11 @@ export abstract class Table {
     this.extensions = new TableExtensions(this);
 
     this.haveCommercialLicense =
-      !!options &&
-      (typeof options.haveCommercialLicense !== "undefined"
-        ? options.haveCommercialLicense
-        : false);
+      Table.haveCommercialLicense ||
+      (!!options &&
+        (typeof options.haveCommercialLicense !== "undefined"
+          ? options.haveCommercialLicense
+          : false));
   }
   protected renderResult: HTMLElement;
   protected currentPageSize: number = 5;

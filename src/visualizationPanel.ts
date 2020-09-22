@@ -47,6 +47,7 @@ export interface IVisualizerPanelRenderedElement
  *
  */
 export class VisualizationPanel extends VisualizerBase {
+  public static haveCommercialLicense: boolean = false;
   protected visualizers: Array<VisualizerBase> = [];
   private haveCommercialLicense: boolean = false;
   private renderedQuestionsCount: number = 0;
@@ -77,9 +78,10 @@ export class VisualizationPanel extends VisualizerBase {
     }
 
     this.haveCommercialLicense =
-      typeof options.haveCommercialLicense !== "undefined"
+      VisualizationPanel.haveCommercialLicense ||
+      (typeof options.haveCommercialLicense !== "undefined"
         ? options.haveCommercialLicense
-        : false;
+        : false);
 
     this.buildVisualizers(questions);
     if (!this.haveCommercialLicense) {

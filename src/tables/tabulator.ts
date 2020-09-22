@@ -50,6 +50,10 @@ const defaultOptions: IOptions = {
 };
 
 export class Tabulator extends Table {
+  public static set haveCommercialLicense(val: boolean) {
+    Table.haveCommercialLicense = val;
+  }
+
   constructor(
     survey: SurveyModel,
     data: Array<Object>,
@@ -57,7 +61,6 @@ export class Tabulator extends Table {
     _columns: Array<any> = []
   ) {
     super(survey, data, options, _columns);
-    const self = this;
     var patchedOptions = {};
     Object.assign(patchedOptions, defaultOptions, options);
     this.options = patchedOptions;
