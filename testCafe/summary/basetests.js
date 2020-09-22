@@ -150,8 +150,14 @@ test("check filtering data", async (t) => {
 });
 
 test("check show/hide commercial license caption", async (t) => {
+  var enableHaveCommercialLicense = ClientFunction(() => {
+    SurveyAnalytics.VisualizationPanel.haveCommercialLicense = true;
+  });
   const commercialSelector = Selector("div.sa-commercial");
   await t.expect(Selector(commercialSelector).exists).ok();
   await initSummary(json, data, { haveCommercialLicense: true });
+  await t.expect(Selector(commercialSelector).exists).notOk();
+  await enableHaveCommercialLicense();
+  await initSummary(json, data, {});
   await t.expect(Selector(commercialSelector).exists).notOk();
 });
