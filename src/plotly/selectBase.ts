@@ -208,18 +208,24 @@ export class PlotlySetup {
     let seriesLabels = model.getSeriesLabels();
     let labels = model.getLabels();
     let colors = model.getColors();
+    var texts = model.showPercentages ? model.getPercentages() : datasets;
+
     const traces: any = [];
     const hasSeries = datasets.length > 1 && seriesValues.length > 1;
 
     if (model.orderByAnsweres == "asc" || model.orderByAnsweres == "desc") {
+      var zippedArray = model.showPercentages
+        ? DataHelper.zipArrays(labels, colors, texts[0])
+        : DataHelper.zipArrays(labels, colors);
       let dict = DataHelper.sortDictionary(
-        DataHelper.zipArrays(labels, colors),
+        zippedArray,
         datasets[0],
         model.orderByAnsweres == "desc"
       );
-      let labelsAndColors = DataHelper.unzipArrays(dict.keys);
-      labels = labelsAndColors.first;
-      colors = labelsAndColors.second;
+      let unzippedArray = DataHelper.unzipArrays(dict.keys);
+      labels = unzippedArray[0];
+      colors = unzippedArray[1];
+      if (model.showPercentages) texts[0] = unzippedArray[2];
       datasets[0] = dict.values;
     }
     const traceConfig: any = {
@@ -238,8 +244,6 @@ export class PlotlySetup {
       marker: <any>{},
     };
     traceConfig.marker.color = colors;
-
-    var texts = model.showPercentages ? model.getPercentages() : datasets;
 
     datasets.forEach((dataset: Array<number>, index: number) => {
       var trace = Object.assign({}, traceConfig, {

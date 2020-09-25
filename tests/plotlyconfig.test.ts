@@ -79,6 +79,59 @@ test("check bar config with non default label ordering", () => {
   (<any>selectBase).orderByAnsweres = "default";
 });
 
+test("check bar config with non default label ordering and enabled showPercentages flag", () => {
+  (<any>selectBase).orderByAnsweres = "desc";
+  (<any>selectBase)._showPercentages = true;
+  var config = PlotlySetup.setupBar(selectBase);
+  var trueColors = [
+    "#ff6771",
+    "#ffc152",
+    "#aba1ff",
+    "#3999fb",
+    "#1eb496",
+    "#86e1fb",
+  ];
+  var trueY = [
+    "brother_text",
+    "son_text",
+    "daughter_text",
+    "mother_text",
+    "sister_text",
+    "father_text",
+  ];
+  var truePercentages = [0, 0, 0, 25, 25, 50];
+  var trueX = [0, 0, 0, 1, 1, 2];
+
+  expect(config.traces[0].x).toEqual(trueX);
+  expect(config.traces[0].y).toEqual(trueY);
+  expect(config.traces[0].marker.color).toEqual(trueColors);
+  expect(config.traces[0].text).toEqual(truePercentages);
+  (<any>selectBase).orderByAnsweres = "asc";
+
+  var config = PlotlySetup.setupBar(selectBase);
+  expect(config.traces[0].x).toEqual(trueX.reverse());
+  expect(config.traces[0].y).toEqual([
+    "father_text",
+    "mother_text",
+    "sister_text",
+    "brother_text",
+    "son_text",
+    "daughter_text",
+  ]);
+  expect(config.traces[0].marker.color).toEqual([
+    "#86e1fb",
+    "#3999fb",
+    "#1eb496",
+    "#ff6771",
+    "#ffc152",
+    "#aba1ff",
+  ]);
+  expect(config.traces[0].text).toEqual(truePercentages.reverse());
+
+  (<any>selectBase).orderByAnsweres = "default";
+  (<any>selectBase)._showPercentages = false;
+});
+
 const matrixJson = {
   type: "matrix",
   name: "question1",

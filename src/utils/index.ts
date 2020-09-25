@@ -167,23 +167,26 @@ export function createCommercialLicenseLink() {
 }
 
 export class DataHelper {
-  public static zipArrays(first: any[], second: any[]): any[][] {
+  public static zipArrays(...arrays: any[]): any[][] {
     let zipArray: any[] = [];
-    for (let i = 0; i < Math.min(first.length, second.length); i++) {
-      zipArray[i] = [first[i], second[i]];
+    for (let i = 0; i < arrays[0].length; i++) {
+      zipArray[i] = [];
+      arrays.forEach((arr) => {
+        zipArray[i].push(arr[i]);
+      });
     }
     return zipArray;
   }
 
-  public static unzipArrays(
-    zipArray: any[][]
-  ): { first: any[]; second: any[] } {
-    let twoArrays: any = { first: [], second: [] };
+  public static unzipArrays(zipArray: any[][]): any[][] {
+    let arrays: any[][] = [];
     zipArray.forEach((value, i) => {
-      twoArrays.first[i] = value[0];
-      twoArrays.second[i] = value[1];
+      value.forEach((val, j) => {
+        if (!arrays[j]) arrays[j] = [];
+        arrays[j][i] = val;
+      });
     });
-    return twoArrays;
+    return arrays;
   }
   public static sortDictionary(
     keys: any[],
@@ -199,7 +202,7 @@ export class DataHelper {
       return desc ? comparator(a, b, false) : comparator(a, b);
     });
     let keysAndValues = this.unzipArrays(dictionary);
-    return { keys: keysAndValues.first, values: keysAndValues.second };
+    return { keys: keysAndValues[0], values: keysAndValues[1] };
   }
 
   public static toPercentage(value: number, maxValue: number) {
