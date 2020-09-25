@@ -64,8 +64,10 @@ export class NumberModel extends VisualizerBase {
     ) {
       this.chartType = chartType;
       this.onChartTypeChanged();
-      this.destroyContent(this.contentContainer);
-      this.renderContent(this.contentContainer);
+      if (!!this.contentContainer) {
+        this.destroyContent(this.contentContainer);
+        this.renderContent(this.contentContainer);
+      }
       this.invokeOnUpdate();
     }
   }

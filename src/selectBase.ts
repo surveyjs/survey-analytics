@@ -170,8 +170,10 @@ export class SelectBase
   }
 
   refreshContent() {
-    this.destroyContent(this.contentContainer);
-    this.renderContent(this.contentContainer);
+    if (!!this.contentContainer) {
+      this.destroyContent(this.contentContainer);
+      this.renderContent(this.contentContainer);
+    }
     this.invokeOnUpdate();
   }
 
