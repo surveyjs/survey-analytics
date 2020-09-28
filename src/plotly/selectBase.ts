@@ -1,5 +1,4 @@
-import { Question } from "survey-core";
-import { ItemValue } from "survey-core";
+import { Question, ItemValue, Event } from "survey-core";
 import { SelectBase } from "../selectBase";
 import { VisualizationManager } from "../visualizationManager";
 import { allowDomRendering, DataHelper, DocumentHelper } from "../utils";
@@ -33,6 +32,22 @@ export class PlotlyChartAdapter {
       displaylogo: false,
       responsive: true,
       locale: localization.currentLocale,
+      modeBarButtonsToRemove: ["toImage"],
+      modeBarButtonsToAdd: [{
+        name: "toImageSjs",
+        title: localization.getString("saveDiagramAsPNG"),
+        icon: Plotly.Icons.camera,
+        click: (gd: any) => {
+          let options = {
+            format: PlotlySetup.imageExportFormat,
+            // width: 800,
+            // height: 600,
+            filename: this.model.question.name
+          };
+          PlotlySetup.onImageSaving.fire(this.model, options);
+          Plotly.downloadImage(gd, options);
+        }
+      }]
     };
     if (SelectBasePlotly.displayModeBar !== undefined) {
       config.displayModeBar = SelectBasePlotly.displayModeBar;
@@ -92,6 +107,15 @@ export interface PlotlyOptions {
 }
 
 export class PlotlySetup {
+  public static imageExportFormat = "png";
+  /**
+   * Fires when end user clicks on the 'save as image' button.
+   */
+  public static onImageSaving = new Event<
+    (sender: SelectBasePlotly, options: any) => any,
+    any
+  >();
+
   static setups: { [type: string]: (model: SelectBase) => PlotlyOptions } = {
     bar: PlotlySetup.setupBar,
     stackedbar: PlotlySetup.setupBar,

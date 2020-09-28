@@ -36,6 +36,10 @@ var survey = new Survey.SurveyModel(json);
 
 // SurveyAnalytics.SelectBasePlotly.displayModeBar = false;
 
+SurveyAnalytics.PlotlySetup.onImageSaving.add(function(selectBaseVisualizer, options) {
+  options.filename = "Exported " + selectBaseVisualizer.question.name;
+});
+
 var options = {
   // allowDynamicLayout: false,
   // allowHideQuestions: false,
