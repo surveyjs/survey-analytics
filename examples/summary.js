@@ -40,6 +40,10 @@ SurveyAnalytics.PlotlySetup.onImageSaving.add(function(selectBaseVisualizer, opt
   options.filename = "Exported " + selectBaseVisualizer.question.name;
 });
 
+SurveyAnalytics.PlotlySetup.onPlotCreating.add(function(selectBaseVisualizer, options) {
+  options.config.modeBarButtonsToRemove.push("lasso2d");
+});
+
 var options = {
   // allowDynamicLayout: false,
   // allowHideQuestions: false,

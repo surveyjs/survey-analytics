@@ -60,6 +60,13 @@ export class PlotlyChartAdapter {
       config
     );
 
+    let options = {
+      traces: plotlyOptions.traces,
+      layout: plotlyOptions.layout,
+      config: config
+    };
+    PlotlySetup.onPlotCreating.fire(this.model, options);
+
     const plot = Plotly.newPlot(
       chartNode,
       plotlyOptions.traces,
@@ -112,6 +119,15 @@ export class PlotlySetup {
    * Fires when end user clicks on the 'save as image' button.
    */
   public static onImageSaving = new Event<
+    (sender: SelectBasePlotly, options: any) => any,
+    any
+  >();
+
+  /**
+   * Fires before plot will be created. User can change traces, layout and config of the plot.
+   * Options is an object with the following fields: traces, layout and config of the plot.
+   */
+  public static onPlotCreating = new Event<
     (sender: SelectBasePlotly, options: any) => any,
     any
   >();
