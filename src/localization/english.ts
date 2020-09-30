@@ -32,7 +32,7 @@ export var englishStrings = {
   changeLocale: "Change Locale",
   clearButton: "Clear",
   addElement: "Choose question to show...",
-  defaultOrder: "Default",
+  defaultOrder: "Default Order",
   ascOrder: "Ascending",
   descOrder: "Descending",
   showMinorColumns: "Show minor columns",
@@ -43,6 +43,8 @@ export var englishStrings = {
   xlsxDownloadCaption: "Excel",
   csvDownloadCaption: "CSV",
   saveDiagramAsPNG: "Download plot as a png",
+  hideEmptyAnswers: "Hide empty answers",
+  showEmptyAnswers: "Show empty answers"
 };
 
 //Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.

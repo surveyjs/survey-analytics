@@ -50,6 +50,9 @@ var options = {
   // allowShowPercentages: false,
   // useValuesAsLabels: false
   // haveCommercialLicense: false,
+  // allowChangeAnswersOrder: true,
+  // allowHideEmptyAnswers: true,
+  // hideEmptyAnswers: true
 };
 
 var visPanel = new SurveyAnalytics.VisualizationPanel(
