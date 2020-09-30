@@ -44,7 +44,11 @@ export var englishStrings = {
   csvDownloadCaption: "CSV",
   saveDiagramAsPNG: "Download plot as a png",
   hideEmptyAnswers: "Hide empty answers",
-  showEmptyAnswers: "Show empty answers"
+  showEmptyAnswers: "Show empty answers",
+  "topNValueText-1": "All answers",
+  "topNValueText5": "Top 5 answers",
+  "topNValueText10": "Top 10 answers",
+  "topNValueText20": "Top 20 answers",
 };
 
 //Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.

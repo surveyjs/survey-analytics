@@ -53,7 +53,8 @@ var options = {
   // allowChangeAnswersOrder: true,
   // answersOrder: "desc"
   // allowHideEmptyAnswers: true,
-  // hideEmptyAnswers: true
+  // hideEmptyAnswers: true,
+  // allowTopNAnswers: true
 };
 
 var visPanel = new SurveyAnalytics.VisualizationPanel(

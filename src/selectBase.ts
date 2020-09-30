@@ -16,10 +16,15 @@ export class SelectBase
   private choicesOrderSelector: HTMLDivElement = undefined;
   private showPercentageBtn: HTMLElement = undefined;
   private emptyAnswersBtn: HTMLElement = undefined;
+  private topNSelector: HTMLDivElement = undefined;
   private _showPercentages: boolean = false;
   protected _answersOrder: string = "default";
   protected _supportSelection: boolean = true;
-  private _hideEmptyAnswers = false;
+  private _hideEmptyAnswers = false;  
+  private _topN = -1;
+  public static topNValuesDefaults = [-1, 5, 10, 20];
+  public topNValues = [].concat(SelectBase.topNValuesDefaults);
+
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
@@ -99,6 +104,25 @@ export class SelectBase
       }
       return this.emptyAnswersBtn;
     });
+    this.registerToolbarItem("topNAnswers", () => {
+      if (
+        this.options.allowTopNAnswers &&
+        this.getSeriesValues().length === 0 &&
+        this.chartTypes.indexOf("bar") !== -1
+      ) {
+        this.topNSelector = DocumentHelper.createSelector(this.topNValues.map(value => {
+            return { text: localization.getString("topNValueText" + value), value: value };
+          }),
+          (option) => false,
+          (e) => {
+            this.setTopN(parseInt(e.target.value));
+            this.updateData(this.data);
+          }
+        );
+        this.updateTopNSelector();
+      }
+      return this.topNSelector;
+    });
   }
 
   protected chartTypes: string[] = [];
@@ -141,11 +165,23 @@ export class SelectBase
     }
   }
 
+  private updateTopNSelector() {
+    if (!!this.topNSelector) {
+      if (this.chartType == "bar") {
+        this.topNSelector.style.display = "inline-block";
+      } else {
+        this.topNSelector.style.display = "none";
+      }
+      this.topNSelector.getElementsByTagName("select")[0].value = <any>this._topN;
+    }
+  }
+
   protected onChartTypeChanged() {
     this.setAnswersOrder("default");
     this.updateOrderSelector();
     this.updateShowPercentageBtn();
     this.updateEmptyAnswersBtn();
+    this.updateTopNSelector();
   }
 
   protected setChartType(chartType: string) {
@@ -214,6 +250,16 @@ export class SelectBase
     this.refreshContent();
   }
 
+  public get topN() {
+    return this._topN;
+  }
+
+  setTopN(value: number) {
+    this._topN = value;
+    this.updateTopNSelector();
+    this.refreshContent();
+  }
+
   refreshContent() {
     if (!!this.contentContainer) {
       this.destroyContent(this.contentContainer);
@@ -278,20 +324,30 @@ export class SelectBase
   }
 
   protected answersDataReady(answersData: { datasets: Array<any>, labels: Array<string>, colors: Array<string>, texts: Array<any> }) {
-    if(!this._hideEmptyAnswers) return answersData;
-    let result = {
-      datasets: <Array<any>>[[]],
-      labels: <Array<string>>[],
-      colors: <Array<string>>[],
-      texts: <Array<any>>[[]]
-    }
-    for(var i=0; i<answersData.datasets[0].length; i++) {
-      if(answersData.datasets[0][i] != 0) {
-        result.datasets[0].push(answersData.datasets[0][i]);
-        result.labels.push(answersData.labels[i]);
-        result.colors.push(answersData.colors[i]);
-        result.texts[0].push(answersData.texts[0][i]);
+    let result: any = {};
+    if(this.hideEmptyAnswers) {
+      result = {
+        datasets: <Array<any>>[[]],
+        labels: <Array<string>>[],
+        colors: <Array<string>>[],
+        texts: <Array<any>>[[]]
       }
+      for(var i=0; i<answersData.datasets[0].length; i++) {
+        if(answersData.datasets[0][i] != 0) {
+          result.datasets[0].push(answersData.datasets[0][i]);
+          result.labels.push(answersData.labels[i]);
+          result.colors.push(answersData.colors[i]);
+          result.texts[0].push(answersData.texts[0][i]);
+        }
+      }
+    } else {
+      result = answersData;
+    }
+    if(this.topN > 0) {
+      result.datasets[0] = result.datasets[0].slice(-this.topN);
+      result.labels = result.labels.slice(-this.topN);
+      result.colors = result.colors.slice(-this.topN);
+      result.texts[0] = result.texts[0].slice(-this.topN);
     }
     return result;
   }
