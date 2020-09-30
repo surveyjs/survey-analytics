@@ -1,7 +1,7 @@
-import { Question, QuestionSelectBase, ItemValue } from "survey-core";
+import { Question, QuestionSelectBase, ItemValue, Event } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
-import { DocumentHelper } from "./utils/index";
+import { DataHelper, DocumentHelper } from "./utils/index";
 
 export interface IVisualizerWithSelection {
   selection: ItemValue;
@@ -230,5 +230,51 @@ export class SelectBase
       }
     }
     return percentages;
+  }
+
+  /**
+   * Fires when answer data has been combined before they passed to draw graph.
+   * options - the answers data object containing: datasets, labels, colors, additional texts (percentage).
+   * options fields can be modified
+   */
+  public onAnswersDataReady = new Event<
+    (sender: SelectBase, options: any) => any,
+    any
+  >();
+
+  /**
+   * Returns object with all infotmation for data visualization: datasets, labels, colors, additional texts (percentage).
+   */
+  public getAnswersData() {
+    let datasets = this.getData();
+    let labels = this.getLabels();
+    let colors = this.getColors();
+    var texts = this.showPercentages ? this.getPercentages() : datasets;
+
+    if (this.orderByAnsweres == "asc" || this.orderByAnsweres == "desc") {
+      var zippedArray = this.showPercentages
+        ? DataHelper.zipArrays(labels, colors, texts[0])
+        : DataHelper.zipArrays(labels, colors);
+      let dict = DataHelper.sortDictionary(
+        zippedArray,
+        datasets[0],
+        this.orderByAnsweres == "desc"
+      );
+      let unzippedArray = DataHelper.unzipArrays(dict.keys);
+      labels = unzippedArray[0];
+      colors = unzippedArray[1];
+      if (this.showPercentages) texts[0] = unzippedArray[2];
+      datasets[0] = dict.values;
+    }
+
+    let answersData = {
+      datasets,
+      labels,
+      colors,
+      texts
+    }
+    this.onAnswersDataReady.fire(this, answersData);
+
+    return answersData;
   }
 }

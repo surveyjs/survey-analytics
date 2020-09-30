@@ -243,31 +243,13 @@ export class PlotlySetup {
   }
 
   static setupBar(model: SelectBase): PlotlyOptions {
-    let datasets = model.getData();
     let seriesValues = model.getSeriesValues();
     let seriesLabels = model.getSeriesLabels();
-    let labels = model.getLabels();
-    let colors = model.getColors();
-    var texts = model.showPercentages ? model.getPercentages() : datasets;
+    let { datasets, labels, colors, texts } = model.getAnswersData();
 
     const traces: any = [];
     const hasSeries = datasets.length > 1 && seriesValues.length > 1;
 
-    if (model.orderByAnsweres == "asc" || model.orderByAnsweres == "desc") {
-      var zippedArray = model.showPercentages
-        ? DataHelper.zipArrays(labels, colors, texts[0])
-        : DataHelper.zipArrays(labels, colors);
-      let dict = DataHelper.sortDictionary(
-        zippedArray,
-        datasets[0],
-        model.orderByAnsweres == "desc"
-      );
-      let unzippedArray = DataHelper.unzipArrays(dict.keys);
-      labels = unzippedArray[0];
-      colors = unzippedArray[1];
-      if (model.showPercentages) texts[0] = unzippedArray[2];
-      datasets[0] = dict.values;
-    }
     const traceConfig: any = {
       type: model.chartType,
       y: (hasSeries ? seriesLabels : labels).map((label: string) => {
