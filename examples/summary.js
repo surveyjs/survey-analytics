@@ -51,6 +51,7 @@ var options = {
   // useValuesAsLabels: false
   // haveCommercialLicense: false,
   // allowChangeAnswersOrder: true,
+  // answersOrder: "desc"
   // allowHideEmptyAnswers: true,
   // hideEmptyAnswers: true
 };

@@ -32,6 +32,7 @@ export class SelectBase
     };
     this._showPercentages = this.options.showPercentages === true;
     this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
+    this._answersOrder = this.options.answersOrder || "default";
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
         return DocumentHelper.createSelector(
@@ -122,8 +123,8 @@ export class SelectBase
         this.choicesOrderSelector.style.display = "inline-block";
       } else {
         this.choicesOrderSelector.style.display = "none";
-        this.choicesOrderSelector.getElementsByTagName("select")[0].value = this.answersOrder;
       }
+      this.choicesOrderSelector.getElementsByTagName("select")[0].value = this.answersOrder;
     }
   }
 
