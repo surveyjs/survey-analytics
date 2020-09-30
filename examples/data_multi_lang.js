@@ -4,7 +4,7 @@ function randomIntFromInterval(min, max) {
 }
 
 var json = {
-  locale: "ru",
+  locale: "fr",
   questions: [
     {
       type: "dropdown",
@@ -12,6 +12,7 @@ var json = {
       title: {
         default: "How satisfied are you with the Product?",
         ru: "Насколько Вас устраивает наш продукт?",
+        fr: "Êtes-vous satisfait du produit?"
       },
       choices: [
         {
@@ -19,6 +20,7 @@ var json = {
           text: {
             default: "Not Satisfied",
             ru: "Coвсем не устраивает",
+            fr: "Pas satisfait"
           },
         },
         {
@@ -26,6 +28,7 @@ var json = {
           text: {
             default: "Satisfied",
             ru: "Устраивает",
+            fr: "Satisfait"
           },
         },
         {
@@ -33,6 +36,7 @@ var json = {
           text: {
             default: "Completely satisfied",
             ru: "Полностью устраивает",
+            fr: "Complètement satisfait"
           },
         },
       ],
