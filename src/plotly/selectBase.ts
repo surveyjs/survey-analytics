@@ -157,11 +157,10 @@ export class PlotlySetup {
   };
 
   static setupPie(model: SelectBase): PlotlyOptions {
-    let datasets = model.getData();
     let seriesValues = model.getSeriesValues();
     let seriesLabels = model.getSeriesLabels();
-    let labels = model.getLabels();
-    let colors = model.getColors();
+    let { datasets, labels, colors, texts } = model.getAnswersData();
+
     const traces: any = [];
     const hasSeries = datasets.length > 1 && seriesValues.length > 1;
 
@@ -337,12 +336,10 @@ export class PlotlySetup {
   }
 
   static setupScatter(model: SelectBase): PlotlyOptions {
-    let datasets = model.getData();
     let seriesValues = model.getSeriesValues();
     let seriesLabels = model.getSeriesLabels();
+    let { datasets, labels, colors, texts } = model.getAnswersData();
     const hasSeries = datasets.length > 1 && seriesValues.length > 1;
-    let labels = model.getLabels();
-    let colors = model.getColors();
     const traces: any = [];
 
     const traceConfig: any = {
