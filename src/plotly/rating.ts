@@ -92,9 +92,10 @@ export class GaugePlotly extends NumberModel {
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
-    options?: Object
+    options?: Object,
+    name?: string
   ) {
-    super(question, data, options);
+    super(question, data, options, name);
     this.chartTypes = GaugePlotly.types;
     this.chartType = this.chartTypes[0];
     this._chartAdapter = new PlotlyGaugeAdapter(this);

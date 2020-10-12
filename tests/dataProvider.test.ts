@@ -1,4 +1,4 @@
-import { DataProvider } from "../src/dataProvider";
+import { DataProvider, IDataInfo } from "../src/dataProvider";
 import { SurveyModel } from "survey-core";
 import { VisualizationMatrixDropdown } from "../src/visualizationMatrixDropdown";
 import { VisualizationManager } from "../src/visualizationManager";
@@ -267,4 +267,10 @@ test("getData for matrix dropdown inner visualizers", () => {
     [1, 0, 2, 0, 0],
     [0, 0, 0, 2, 1],
   ]);
+});
+
+test("custom getDataCore function", () => {
+  const statistics = [[1,2]];
+  const dataProvider = new DataProvider(<any>[], (dataInfo: IDataInfo) => statistics);
+  expect(dataProvider.getData(<any>{})).toEqual(statistics);
 });

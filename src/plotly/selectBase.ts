@@ -430,9 +430,10 @@ export class SelectBasePlotly extends SelectBase {
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
-    options?: Object
+    options?: Object,
+    name?: string
   ) {
-    super(question, data, options);
+    super(question, data, options, name);
     this.chartTypes = SelectBasePlotly.types;
     this.chartType = this.chartTypes[0];
     this._chartAdapter = new PlotlyChartAdapter(this);
