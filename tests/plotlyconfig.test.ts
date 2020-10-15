@@ -30,7 +30,7 @@ var selectBase = new SelectBasePlotly(question, data, {});
 
 test("check bar height with different numbers of choices", () => {
   var config = PlotlySetup.setupBar(selectBase);
-  expect(config.layout.height).toEqual(190);
+  expect(config.layout.height).toEqual(215);
   selectBase.question.choices = [
     { value: "add1" },
     { value: "add2" },
@@ -39,7 +39,7 @@ test("check bar height with different numbers of choices", () => {
     { value: "add5" },
   ].concat(choices);
   var config = PlotlySetup.setupBar(selectBase);
-  expect(config.layout.height).toEqual(340);
+  expect(config.layout.height).toEqual(365);
   selectBase.question.choices = choices;
 });
 

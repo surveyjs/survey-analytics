@@ -202,7 +202,7 @@ export class PlotlySetup {
       );
     });
     const radius = labels.length < 10 ? labels.length * 50 + 100 : 550;
-    const height = radius * Math.round(traces.length / 2);
+    const height = radius * Math.round(traces.length / 2) + 25;
     const layout: any = {
       font: {
         family: "Segoe UI, sans-serif",
@@ -213,7 +213,7 @@ export class PlotlySetup {
       height: height,
       margin: {
         l: 0,
-        t: 0,
+        t: 25,
         b: 0,
         r: 10,
       },
@@ -279,7 +279,7 @@ export class PlotlySetup {
       traces.push(trace);
     });
 
-    const height = (labels.length + (labels.length + 1) * 0.5) * 20;
+    const height = (labels.length + (labels.length + 1) * 0.5) * 20 + 25;
 
     const layout: any = {
       font: {
@@ -290,7 +290,7 @@ export class PlotlySetup {
       },
       height: height,
       margin: {
-        t: 0,
+        t: 25,
         b: 0,
         r: 10,
       },
@@ -373,7 +373,7 @@ export class PlotlySetup {
       }
     });
 
-    const height = (labels.length + (labels.length + 1) * 0.5) * 20;
+    const height = (labels.length + (labels.length + 1) * 0.5) * 20 + 25;
 
     const layout: any = {
       font: {
@@ -384,7 +384,7 @@ export class PlotlySetup {
       },
       height: height,
       margin: {
-        t: 0,
+        t: 25,
         b: 0,
         r: 10,
       },
