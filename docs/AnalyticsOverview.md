@@ -18,7 +18,7 @@ SurveyJS Analytics library allows to render survey results <br/> as charts or ta
 
 ## Usage (modern ES, modules)
 ```javascript
-
+import * as SurveyAnalytics from "survey-analytics";
 ```
 
 ## Usage (ES5, scripts)
