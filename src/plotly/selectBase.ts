@@ -4,11 +4,11 @@ import { VisualizationManager } from "../visualizationManager";
 import { allowDomRendering, DataHelper, DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
 
-var Plotly: any = null;
-if (allowDomRendering()) {
-  Plotly = <any>require("plotly.js-dist");
-}
-
+// var Plotly: any = null;
+// if (allowDomRendering()) {
+//   Plotly = <any>require("plotly.js-dist");
+// }
+var Plotly = (<any>global).Plotly;
 export class PlotlyChartAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
 

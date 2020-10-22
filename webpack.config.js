@@ -9,42 +9,36 @@ var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 var packageJson = require("./package.json");
 
-function PascalCaseNamePlugin(options) {
-}
+function PascalCaseNamePlugin(options) {}
 
-PascalCaseNamePlugin.prototype.apply = function(compiler) {
+PascalCaseNamePlugin.prototype.apply = function (compiler) {
   const REGEXP_NAME = /\[pc-name\]/gi,
-      REGEXP_ID = /\[id\]/gi;
+    REGEXP_ID = /\[id\]/gi;
 
-  compiler.hooks.compilation.tap("PascalCaseNamePlugin", compilation => {
-       const mainTemplate = compilation.mainTemplate;
+  compiler.hooks.compilation.tap("PascalCaseNamePlugin", (compilation) => {
+    const mainTemplate = compilation.mainTemplate;
 
-      mainTemplate.hooks.assetPath.tap(
-          "PascalCaseNamePlugin",
-          (path, data) => {
+    mainTemplate.hooks.assetPath.tap("PascalCaseNamePlugin", (path, data) => {
+      const chunk = data.chunk;
+      const chunkName = chunk && (chunk.name || chunk.id);
 
-              const chunk = data.chunk;
-              const chunkName = chunk && (chunk.name || chunk.id);
+      if (typeof path === "function") {
+        path = path(data);
+      }
 
-              if (typeof path === "function") {
-                  path = path(data);
-              }
-
-              return path.replace(REGEXP_NAME, (match, ...args) => {
-                  var components = chunkName.split(".");
-                  components = components.map(function(componentName) {
-                    if(componentName === "summary") {
-                      return "";
-                    }
-                    return componentName[0].toUpperCase() +  
-                    componentName.slice(1);
-                  });
-                  return components.join("");
-              });
-           }
-      );
-  })
-}
+      return path.replace(REGEXP_NAME, (match, ...args) => {
+        var components = chunkName.split(".");
+        components = components.map(function (componentName) {
+          if (componentName === "summary") {
+            return "";
+          }
+          return componentName[0].toUpperCase() + componentName.slice(1);
+        });
+        return components.join("");
+      });
+    });
+  });
+};
 
 var svgStoreUtils = require(path.resolve(
   __dirname,
@@ -124,10 +118,7 @@ module.exports = function (options) {
         __dirname,
         "./src/entries/tabulator"
       ),
-      "survey.analytics": path.resolve(
-        __dirname,
-        "./src/entries/summary"
-      ),
+      "survey.analytics": path.resolve(__dirname, "./src/entries/summary"),
     },
     resolve: {
       extensions: [".ts", ".js"],
@@ -211,9 +202,6 @@ module.exports = function (options) {
       },
       "plotly.js-dist": {
         root: "Plotly",
-        commonjs2: "plotly.js-dist",
-        commonjs: "plotly.js-dist",
-        amd: "plotly.js-dist",
       },
       "tabulator-tables": {
         root: "Tabulator",
