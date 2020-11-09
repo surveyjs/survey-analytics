@@ -1,3 +1,5 @@
+jest.mock("plotly.js", () => {}, { virtual: true });
+
 import { PlotlySetup, SelectBasePlotly } from "../src/plotly/selectBase";
 import { QuestionDropdownModel, QuestionMatrixModel } from "survey-core";
 import { Matrix } from "../src/matrix";
