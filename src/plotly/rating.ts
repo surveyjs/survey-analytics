@@ -9,10 +9,9 @@ import { localization } from "../localizationManager";
 //   Plotly = <any>require("plotly.js-dist");
 // }
 
-var Plotly = (<any>global).Plotly;
-
 export class PlotlyGaugeAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
+  private Plotly = (<any>global).Plotly;
 
   constructor(private model: GaugePlotly) {}
 
@@ -77,11 +76,11 @@ export class PlotlyGaugeAdapter {
       locale: localization.currentLocale,
     };
 
-    return Plotly.newPlot(chartNode, data, layout, config);
+    return this.Plotly.newPlot(chartNode, data, layout, config);
   }
 
   public destroy(node: HTMLElement) {
-    Plotly.purge(node);
+    this.Plotly.purge(node);
     this._chart = undefined;
   }
 }

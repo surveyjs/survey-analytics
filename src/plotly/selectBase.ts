@@ -8,9 +8,9 @@ import { localization } from "../localizationManager";
 // if (allowDomRendering()) {
 //   Plotly = <any>require("plotly.js-dist");
 // }
-var Plotly = (<any>global).Plotly;
 export class PlotlyChartAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
+  private Plotly = (<any>global).Plotly;
 
   constructor(protected model: SelectBase) {}
 
@@ -36,7 +36,7 @@ export class PlotlyChartAdapter {
       modeBarButtonsToAdd: [{
         name: "toImageSjs",
         title: localization.getString("saveDiagramAsPNG"),
-        icon: Plotly.Icons.camera,
+        icon: this.Plotly.Icons.camera,
         click: (gd: any) => {
           let options = {
             format: PlotlySetup.imageExportFormat,
@@ -45,7 +45,7 @@ export class PlotlyChartAdapter {
             filename: this.model.question.name
           };
           PlotlySetup.onImageSaving.fire(this.model, options);
-          Plotly.downloadImage(gd, options);
+          this.Plotly.downloadImage(gd, options);
         }
       }]
     };
@@ -67,7 +67,7 @@ export class PlotlyChartAdapter {
     };
     PlotlySetup.onPlotCreating.fire(this.model, options);
 
-    const plot = Plotly.newPlot(
+    const plot = this.Plotly.newPlot(
       chartNode,
       plotlyOptions.traces,
       plotlyOptions.layout,
@@ -102,7 +102,7 @@ export class PlotlyChartAdapter {
   }
 
   public destroy(node: HTMLElement) {
-    Plotly.purge(node);
+    this.Plotly.purge(node);
     this._chart = undefined;
   }
 }
