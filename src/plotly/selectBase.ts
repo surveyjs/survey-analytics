@@ -3,14 +3,10 @@ import { SelectBase } from "../selectBase";
 import { VisualizationManager } from "../visualizationManager";
 import { allowDomRendering, DataHelper, DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
+import Plotly from "plotly.js";
 
-// var Plotly: any = null;
-// if (allowDomRendering()) {
-//   Plotly = <any>require("plotly.js-dist");
-// }
 export class PlotlyChartAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
-  private Plotly = (<any>global).Plotly;
 
   constructor(protected model: SelectBase) {}
 
@@ -33,21 +29,23 @@ export class PlotlyChartAdapter {
       responsive: true,
       locale: localization.currentLocale,
       modeBarButtonsToRemove: ["toImage"],
-      modeBarButtonsToAdd: [{
-        name: "toImageSjs",
-        title: localization.getString("saveDiagramAsPNG"),
-        icon: this.Plotly.Icons.camera,
-        click: (gd: any) => {
-          let options = {
-            format: PlotlySetup.imageExportFormat,
-            // width: 800,
-            // height: 600,
-            filename: this.model.question.name
-          };
-          PlotlySetup.onImageSaving.fire(this.model, options);
-          this.Plotly.downloadImage(gd, options);
-        }
-      }]
+      modeBarButtonsToAdd: [
+        {
+          name: "toImageSjs",
+          title: localization.getString("saveDiagramAsPNG"),
+          icon: (<any>Plotly).Icons.camera,
+          click: (gd: any) => {
+            let options = {
+              format: PlotlySetup.imageExportFormat,
+              // width: 800,
+              // height: 600,
+              filename: this.model.question.name,
+            };
+            PlotlySetup.onImageSaving.fire(this.model, options);
+            (<any>Plotly).downloadImage(gd, options);
+          },
+        },
+      ],
     };
     if (SelectBasePlotly.displayModeBar !== undefined) {
       config.displayModeBar = SelectBasePlotly.displayModeBar;
@@ -63,11 +61,11 @@ export class PlotlyChartAdapter {
     let options = {
       traces: plotlyOptions.traces,
       layout: plotlyOptions.layout,
-      config: config
+      config: config,
     };
     PlotlySetup.onPlotCreating.fire(this.model, options);
 
-    const plot = this.Plotly.newPlot(
+    const plot = (<any>Plotly).newPlot(
       chartNode,
       plotlyOptions.traces,
       plotlyOptions.layout,
@@ -102,7 +100,7 @@ export class PlotlyChartAdapter {
   }
 
   public destroy(node: HTMLElement) {
-    this.Plotly.purge(node);
+    (<any>Plotly).purge(node);
     this._chart = undefined;
   }
 }

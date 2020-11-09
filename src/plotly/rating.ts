@@ -3,15 +3,10 @@ import { NumberModel } from "../number";
 import { VisualizationManager } from "../visualizationManager";
 import { allowDomRendering, DataHelper, DocumentHelper } from "../utils/index";
 import { localization } from "../localizationManager";
-
-// var Plotly: any = null;
-// if (allowDomRendering()) {
-//   Plotly = <any>require("plotly.js-dist");
-// }
+import Plotly from "plotly.js";
 
 export class PlotlyGaugeAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
-  private Plotly = (<any>global).Plotly;
 
   constructor(private model: GaugePlotly) {}
 
@@ -76,11 +71,11 @@ export class PlotlyGaugeAdapter {
       locale: localization.currentLocale,
     };
 
-    return this.Plotly.newPlot(chartNode, data, layout, config);
+    return (<any>Plotly).newPlot(chartNode, data, layout, config);
   }
 
   public destroy(node: HTMLElement) {
-    this.Plotly.purge(node);
+    (<any>Plotly).purge(node);
     this._chart = undefined;
   }
 }
