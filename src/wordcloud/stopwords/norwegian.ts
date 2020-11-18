@@ -1,4 +1,5 @@
 export var stopWords = new Array(
+  "...",
   "alle",
   "andre",
   "arbeid",
