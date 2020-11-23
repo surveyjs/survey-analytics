@@ -57,6 +57,10 @@ var options = {
   // allowTopNAnswers: true
 };
 
+// SurveyAnalytics.WordCloudAdapter.drawOutOfBound = false;
+// SurveyAnalytics.WordCloudAdapter.shrinkToFit = true;
+// SurveyAnalytics.WordCloudAdapter.weightFactor = 30;
+
 var visPanel = new SurveyAnalytics.VisualizationPanel(
   // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   survey.getAllQuestions(),
