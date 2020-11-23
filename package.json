@@ -74,7 +74,6 @@
     "@types/lodash": "4.14.121",
     "@types/node": "7.0.4",
     "@types/plotly.js": "^1.44.11",
-    "@types/tabulator-tables": "^4.6.0",
     "@types/wordcloud": "^1.1.1",
     "ajv": "4.11.2",
     "concurrently": "^5.3.0",
