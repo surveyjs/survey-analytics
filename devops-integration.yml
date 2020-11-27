@@ -126,10 +126,10 @@ steps:
   - task: CopyFiles@2
     inputs:
       SourceFolder: '$(Build.SourcesDirectory)/survey-analytics/packages'
-      targetFolder: $(Build.ArtifactStagingDirectory)/packages/survey-analytics
+      targetFolder: $(Build.ArtifactStagingDirectory)/SurveyJSAnalyticsBuild/packages/survey-analytics
 
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/SurveyJSAnalyticsBuild/'
       ArtifactName: 'SurveyJSAnalyticsBuild'
       publishLocation: 'Container'
