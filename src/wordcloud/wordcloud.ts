@@ -9,6 +9,11 @@ import { localization } from "../localizationManager";
 export class WordCloudAdapter {
   private _wordcloud: any;
 
+  public static drawOutOfBound = false;
+  public static shrinkToFit = true;
+  public static abortThreshold: any = undefined;
+  public static weightFactor = 20;
+
   constructor(private model: WordCloud) {}
 
   public get wordcloud() {
@@ -34,7 +39,10 @@ export class WordCloudAdapter {
 
     const config = {
       list: data,
-      weightFactor: 20,
+      weightFactor: WordCloudAdapter.weightFactor,
+      abortThreshold: WordCloudAdapter.abortThreshold,
+      drawOutOfBound: WordCloudAdapter.drawOutOfBound,
+      shrinkToFit: WordCloudAdapter.shrinkToFit,
       fontFamily: "Segoe UI Bold, sans-serif",
       color: (word: string, weight: number) => {
         return this.model.getRandomColor();

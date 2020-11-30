@@ -30,8 +30,14 @@ steps:
 
   - task: NodeTool@0
     inputs:
-      versionSpec: "12.x"
+      versionSpec: "14.x"
     displayName: "Install Node.js"
+
+  - powershell: |
+      $env:GIT_REDIRECT_STDERR = '2>&1'
+      git config --global user.email "kurmanov.work@gmail.com"
+      git config --global user.name "dmitrykurmanov"
+    displayName: 'set up Git config'
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
@@ -55,6 +61,26 @@ steps:
       Contents: "**"
       TargetFolder: "$(Build.SourcesDirectory)/survey-analytics/node_modules/survey-core"
       OverWrite: true
+  
+  # npm run release with version
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(System.ArtifactsDirectory)/SurveyJSLibraryBuild/'
+      Contents: 'version.txt'
+      TargetFolder: '$(Build.SourcesDirectory)/'
+      OverWrite: true
+    displayName: 'Copy Build Artifact - SurveyJSVersion File'
+
+  - powershell: |
+      $version = Get-Content $(Build.SourcesDirectory)/version.txt
+      Write-Host "##vso[task.setvariable variable=SurveyJSVersion;]$version"
+    displayName: 'setup SurveyJSVersion variable from SurveyJSVersionFile'
+
+  - powershell: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm run release -- --release-as $(SurveyJSVersion)
+    displayName: 'npm run release specific version'
+#####################################################
   
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
@@ -88,9 +114,6 @@ steps:
   # https://stackoverflow.com/questions/58485585/azure-pipeline-powershell-and-git-on-windows-server-2019-gives-error-in-output
   - powershell: |
       cd $(Build.SourcesDirectory)/service
-      $env:GIT_REDIRECT_STDERR = '2>&1'
-      git config --global user.email "kurmanov.work@gmail.com"
-      git config --global user.name "dmitrykurmanov"
       git checkout master
       git pull origin master
       git fetch --tags --force
@@ -103,10 +126,10 @@ steps:
   - task: CopyFiles@2
     inputs:
       SourceFolder: '$(Build.SourcesDirectory)/survey-analytics/packages'
-      targetFolder: $(Build.ArtifactStagingDirectory)/packages/survey-analytics
+      targetFolder: $(Build.ArtifactStagingDirectory)/SurveyJSAnalyticsBuild/packages/survey-analytics
 
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/SurveyJSAnalyticsBuild/'
       ArtifactName: 'SurveyJSAnalyticsBuild'
       publishLocation: 'Container'

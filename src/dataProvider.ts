@@ -23,7 +23,7 @@ export class DataProvider {
   private _statisticsCache: { [index: string]: Array<Array<number>> };
   protected filterValues: { [index: string]: any } = {};
 
-  constructor(private _data: Array<any> = []) {}
+  constructor(private _data: Array<any> = [], private _getDataCore: (dataInfo: IDataInfo) => number[][]  = undefined) {}
 
   public reset() {
     if (
@@ -78,6 +78,10 @@ export class DataProvider {
   }
 
   protected getDataCore(dataInfo: IDataInfo) {
+    if(!!this._getDataCore) {
+      return this._getDataCore(dataInfo);
+    }
+
     const dataName = dataInfo.dataName;
     const statistics: Array<Array<number>> = [];
 

@@ -1,6 +1,10 @@
 import { SurveyModel } from "survey-core";
 import { Tabulator } from "../../src/tables/tabulator";
 
+jest.mock("tabulator-tables", () => {
+  return { default: jest.requireActual("tabulator-tables") };
+});
+
 const json = {
   questions: [
     {

@@ -58,8 +58,7 @@ export class SelectBase
     this.registerToolbarItem("changeAnswersOrder", () => {
       if (
         (this.options.allowChangeAnswersOrder === undefined || this.options.allowChangeAnswersOrder) &&
-        this.getSeriesValues().length === 0 &&
-        this.chartTypes.indexOf("bar") !== -1
+        this.getSeriesValues().length === 0
       ) {
         this.choicesOrderSelector = DocumentHelper.createSelector(
           [
@@ -69,8 +68,7 @@ export class SelectBase
           ],
           (option) => false,
           (e) => {
-            this.setAnswersOrder(e.target.value);
-            this.updateData(this.data);
+            this.answersOrder = e.target.value;
           }
         );
         this.updateOrderSelector();
@@ -93,12 +91,10 @@ export class SelectBase
     this.registerToolbarItem("hideEmptyAnswers", () => {
       if (
         this.options.allowHideEmptyAnswers &&
-        this.getSeriesValues().length === 0 &&
-        this.chartTypes.indexOf("bar") !== -1
+        this.getSeriesValues().length === 0
       ) {
         this.emptyAnswersBtn = DocumentHelper.createButton(() => {
-          this.setHideEmptyAnswers(!this._hideEmptyAnswers);
-          this.updateData(this.data);
+          this.hideEmptyAnswers = !this._hideEmptyAnswers;
         });
         this.updateEmptyAnswersBtn();
       }
@@ -107,16 +103,14 @@ export class SelectBase
     this.registerToolbarItem("topNAnswers", () => {
       if (
         this.options.allowTopNAnswers &&
-        this.getSeriesValues().length === 0 &&
-        this.chartTypes.indexOf("bar") !== -1
+        this.getSeriesValues().length === 0
       ) {
         this.topNSelector = DocumentHelper.createSelector(this.topNValues.map(value => {
             return { text: localization.getString("topNValueText" + value), value: value };
           }),
           (option) => false,
           (e) => {
-            this.setTopN(parseInt(e.target.value));
-            this.updateData(this.data);
+            this.topN = parseInt(e.target.value);
           }
         );
         this.updateTopNSelector();
@@ -133,7 +127,7 @@ export class SelectBase
       this.emptyAnswersBtn.innerHTML = this._hideEmptyAnswers
         ? localization.getString("showEmptyAnswers")
         : localization.getString("hideEmptyAnswers");
-      if (this.chartType == "bar") {
+      if (this.chartType == "bar" || this.chartType == "scatter") {
         this.emptyAnswersBtn.style.display = "inline";
       } else {
         this.emptyAnswersBtn.style.display = "none";
@@ -143,7 +137,7 @@ export class SelectBase
 
   private updateOrderSelector() {
     if (!!this.choicesOrderSelector) {
-      if (this.chartType == "bar") {
+      if (this.chartType == "bar" || this.chartType == "scatter" || ((this.chartType == "pie" || this.chartType == "doughnut") && this.topN > 0)) {
         this.choicesOrderSelector.style.display = "inline-block";
       } else {
         this.choicesOrderSelector.style.display = "none";
@@ -167,17 +161,11 @@ export class SelectBase
 
   private updateTopNSelector() {
     if (!!this.topNSelector) {
-      if (this.chartType == "bar") {
-        this.topNSelector.style.display = "inline-block";
-      } else {
-        this.topNSelector.style.display = "none";
-      }
       this.topNSelector.getElementsByTagName("select")[0].value = <any>this._topN;
     }
   }
 
   protected onChartTypeChanged() {
-    this.setAnswersOrder("default");
     this.updateOrderSelector();
     this.updateShowPercentageBtn();
     this.updateEmptyAnswersBtn();
@@ -191,7 +179,7 @@ export class SelectBase
     ) {
       this.chartType = chartType;
       this.onChartTypeChanged();
-      this.invokeOnUpdate();
+      this.refreshContent();
     }
   }
 
@@ -234,7 +222,7 @@ export class SelectBase
     return this._answersOrder;
   }
 
-  setAnswersOrder(value: string) {
+  public set answersOrder(value: string) {
     this._answersOrder = value;
     this.updateOrderSelector();
     this.refreshContent();
@@ -244,7 +232,7 @@ export class SelectBase
     return this._hideEmptyAnswers;
   }
 
-  setHideEmptyAnswers(value: boolean) {
+  public set hideEmptyAnswers(value: boolean) {
     this._hideEmptyAnswers = value;
     this.updateEmptyAnswersBtn();
     this.refreshContent();
@@ -254,9 +242,10 @@ export class SelectBase
     return this._topN;
   }
 
-  setTopN(value: number) {
+  public set topN(value: number) {
     this._topN = value;
     this.updateTopNSelector();
+    this.updateOrderSelector();
     this.refreshContent();
   }
 

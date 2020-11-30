@@ -5,7 +5,7 @@ import { QuestionLocation } from "./config";
 import "./tabulator.scss";
 import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
-const TabulatorTables = require("tabulator-tables");
+import TabulatorTables from "tabulator-tables";
 
 if (!!document) {
   const svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");

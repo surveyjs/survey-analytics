@@ -72,23 +72,16 @@ To build library yourself:
     ```
     This command will run unit tests
 
-## Nearest plans (July 2020 - Sep 2020)
+## Nearest plans (Nov 2020 - Dec 2020)
 
-Our task list of Survey Analytics pack before the official release:
+Our task list of Survey Analytics pack:
 
-- Implement tabulator support as table-view visualizer
-- Unify data provider interface between datatables visualizer and tabulator
-- Decide (if possible) what will be released: datatables or tabulator
-- Refactor visualizer code responsible for DOM elements manipulation (introduce helpers objects)
-- Split survey-analytics package on several bundles
 - Make it easy to integrate/replace new (custom) visualizers
 - Implement data providing server side prototype
-
-After release:
-
 - Introduce (or use 3rd party) data processing engine for survey analytics
 - Support high load scenario - process at least billion records
 
 ## Limitations
 
 - SurveyJS Analytics doesn't support objects as values (e.g. of dropdown, radiogroup and other select question items)
+- WordCloud visualizer is too slow for large texts and significant answers count

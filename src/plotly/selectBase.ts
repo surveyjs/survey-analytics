@@ -3,11 +3,7 @@ import { SelectBase } from "../selectBase";
 import { VisualizationManager } from "../visualizationManager";
 import { allowDomRendering, DataHelper, DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
-
-var Plotly: any = null;
-if (allowDomRendering()) {
-  Plotly = <any>require("plotly.js-dist");
-}
+import Plotly from "plotly.js";
 
 export class PlotlyChartAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
@@ -33,21 +29,23 @@ export class PlotlyChartAdapter {
       responsive: true,
       locale: localization.currentLocale,
       modeBarButtonsToRemove: ["toImage"],
-      modeBarButtonsToAdd: [{
-        name: "toImageSjs",
-        title: localization.getString("saveDiagramAsPNG"),
-        icon: Plotly.Icons.camera,
-        click: (gd: any) => {
-          let options = {
-            format: PlotlySetup.imageExportFormat,
-            // width: 800,
-            // height: 600,
-            filename: this.model.question.name
-          };
-          PlotlySetup.onImageSaving.fire(this.model, options);
-          Plotly.downloadImage(gd, options);
-        }
-      }]
+      modeBarButtonsToAdd: [
+        {
+          name: "toImageSjs",
+          title: localization.getString("saveDiagramAsPNG"),
+          icon: (<any>Plotly).Icons.camera,
+          click: (gd: any) => {
+            let options = {
+              format: PlotlySetup.imageExportFormat,
+              // width: 800,
+              // height: 600,
+              filename: this.model.question.name,
+            };
+            PlotlySetup.onImageSaving.fire(this.model, options);
+            (<any>Plotly).downloadImage(gd, options);
+          },
+        },
+      ],
     };
     if (SelectBasePlotly.displayModeBar !== undefined) {
       config.displayModeBar = SelectBasePlotly.displayModeBar;
@@ -63,11 +61,11 @@ export class PlotlyChartAdapter {
     let options = {
       traces: plotlyOptions.traces,
       layout: plotlyOptions.layout,
-      config: config
+      config: config,
     };
     PlotlySetup.onPlotCreating.fire(this.model, options);
 
-    const plot = Plotly.newPlot(
+    const plot = (<any>Plotly).newPlot(
       chartNode,
       plotlyOptions.traces,
       plotlyOptions.layout,
@@ -102,7 +100,7 @@ export class PlotlyChartAdapter {
   }
 
   public destroy(node: HTMLElement) {
-    Plotly.purge(node);
+    (<any>Plotly).purge(node);
     this._chart = undefined;
   }
 }
@@ -157,11 +155,10 @@ export class PlotlySetup {
   };
 
   static setupPie(model: SelectBase): PlotlyOptions {
-    let datasets = model.getData();
     let seriesValues = model.getSeriesValues();
     let seriesLabels = model.getSeriesLabels();
-    let labels = model.getLabels();
-    let colors = model.getColors();
+    let { datasets, labels, colors, texts } = model.getAnswersData();
+
     const traces: any = [];
     const hasSeries = datasets.length > 1 && seriesValues.length > 1;
 
@@ -203,7 +200,7 @@ export class PlotlySetup {
       );
     });
     const radius = labels.length < 10 ? labels.length * 50 + 100 : 550;
-    const height = radius * Math.round(traces.length / 2);
+    const height = radius * Math.round(traces.length / 2) + 25;
     const layout: any = {
       font: {
         family: "Segoe UI, sans-serif",
@@ -214,7 +211,7 @@ export class PlotlySetup {
       height: height,
       margin: {
         l: 0,
-        t: 0,
+        t: 25,
         b: 0,
         r: 10,
       },
@@ -280,7 +277,7 @@ export class PlotlySetup {
       traces.push(trace);
     });
 
-    const height = (labels.length + (labels.length + 1) * 0.5) * 20;
+    const height = (labels.length + (labels.length + 1) * 0.5) * 20 + 25;
 
     const layout: any = {
       font: {
@@ -291,7 +288,7 @@ export class PlotlySetup {
       },
       height: height,
       margin: {
-        t: 0,
+        t: 25,
         b: 0,
         r: 10,
       },
@@ -337,12 +334,10 @@ export class PlotlySetup {
   }
 
   static setupScatter(model: SelectBase): PlotlyOptions {
-    let datasets = model.getData();
     let seriesValues = model.getSeriesValues();
     let seriesLabels = model.getSeriesLabels();
+    let { datasets, labels, colors, texts } = model.getAnswersData();
     const hasSeries = datasets.length > 1 && seriesValues.length > 1;
-    let labels = model.getLabels();
-    let colors = model.getColors();
     const traces: any = [];
 
     const traceConfig: any = {
@@ -376,7 +371,7 @@ export class PlotlySetup {
       }
     });
 
-    const height = (labels.length + (labels.length + 1) * 0.5) * 20;
+    const height = (labels.length + (labels.length + 1) * 0.5) * 20 + 25;
 
     const layout: any = {
       font: {
@@ -387,7 +382,7 @@ export class PlotlySetup {
       },
       height: height,
       margin: {
-        t: 0,
+        t: 25,
         b: 0,
         r: 10,
       },
@@ -430,9 +425,10 @@ export class SelectBasePlotly extends SelectBase {
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
-    options?: Object
+    options?: Object,
+    name?: string
   ) {
-    super(question, data, options);
+    super(question, data, options, name);
     this.chartTypes = SelectBasePlotly.types;
     this.chartType = this.chartTypes[0];
     this._chartAdapter = new PlotlyChartAdapter(this);

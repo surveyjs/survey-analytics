@@ -56,11 +56,11 @@ test("createToolbarItems", () => {
   selectBase["chartTypes"] = ["one", "two"];
   var toolbarContainer = document.createElement("div");
   selectBase["createToolbarItems"](toolbarContainer);
-  expect(toolbarContainer.children.length).toBe(1);
+  expect(toolbarContainer.children.length).toBe(2);
   selectBase["chartTypes"] = ["one"];
   toolbarContainer = document.createElement("div");
   selectBase["createToolbarItems"](toolbarContainer);
-  expect(toolbarContainer.children.length).toBe(0);
+  expect(toolbarContainer.children.length).toBe(1);
 });
 
 test("setSelection", () => {
@@ -88,7 +88,7 @@ test("setSelection", () => {
   expect(lastText).toEqual("True");
 });
 
-test("setAnswersOrder triggers renderContent and update", () => {
+test("set answersOrder triggers renderContent and update", () => {
   selectBase.render(document.createElement("div"));
   let updateCallCount = 0;
   let renderCallCount = 0;
@@ -98,7 +98,7 @@ test("setAnswersOrder triggers renderContent and update", () => {
   selectBase["renderContent"] = () => {
     renderCallCount++;
   };
-  selectBase.setAnswersOrder("asc");
+  selectBase.answersOrder = "asc";
   expect(updateCallCount).toEqual(1);
   expect(renderCallCount).toEqual(1);
 });
@@ -149,16 +149,16 @@ test("getAnswersData method", () => {
 test("hide empty items", () => {
   expect(selectBase.hideEmptyAnswers).toBe(false);
   expect(selectBase.getAnswersData()).toEqual({"colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198"], "datasets": [[2, 1, 0, 1, 0, 0]], "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"], "texts": [[2, 1, 0, 1, 0, 0]]});
-  selectBase.setHideEmptyAnswers(true);
+  selectBase.hideEmptyAnswers = true;
   expect(selectBase.getAnswersData()).toEqual({"colors": ["#86e1fb", "#3999fb", "#1eb496"], "datasets": [[2, 1, 1]], "labels": ["father_text", "mother_text", "sister_text"], "texts": [[2, 1, 1]]});
 });
 
 test("change answers order", () => {
-  selectBase.setHideEmptyAnswers(true);
+  selectBase.hideEmptyAnswers = true;
   expect(selectBase.answersOrder).toBe("default");
   expect(selectBase.getAnswersData()).toEqual({"colors": ["#86e1fb", "#3999fb", "#1eb496"], "datasets": [[2, 1, 1]], "labels": ["father_text", "mother_text", "sister_text"], "texts": [[2, 1, 1]]});
-  selectBase.setAnswersOrder("asc");
+  selectBase.answersOrder = "asc";
   expect(selectBase.getAnswersData()).toEqual({"colors": ["#86e1fb", "#3999fb", "#1eb496"], "datasets": [[2, 1, 1]], "labels": ["father_text", "mother_text", "sister_text"], "texts": [[2, 1, 1]]});
-  selectBase.setAnswersOrder("desc");
+  selectBase.answersOrder = "desc";
   expect(selectBase.getAnswersData()).toEqual({"colors": ["#3999fb", "#1eb496", "#86e1fb"], "datasets": [[1, 1, 2]], "labels": ["mother_text", "sister_text", "father_text"], "texts": [[1, 1, 2]]});
 });

@@ -1,3 +1,5 @@
+jest.mock("plotly.js", () => {}, { virtual: true });
+
 import { PlotlySetup, SelectBasePlotly } from "../src/plotly/selectBase";
 import { QuestionDropdownModel, QuestionMatrixModel } from "survey-core";
 import { Matrix } from "../src/matrix";
@@ -30,7 +32,7 @@ var selectBase = new SelectBasePlotly(question, data, {});
 
 test("check bar height with different numbers of choices", () => {
   var config = PlotlySetup.setupBar(selectBase);
-  expect(config.layout.height).toEqual(190);
+  expect(config.layout.height).toEqual(215);
   selectBase.question.choices = [
     { value: "add1" },
     { value: "add2" },
@@ -39,7 +41,7 @@ test("check bar height with different numbers of choices", () => {
     { value: "add5" },
   ].concat(choices);
   var config = PlotlySetup.setupBar(selectBase);
-  expect(config.layout.height).toEqual(340);
+  expect(config.layout.height).toEqual(365);
   selectBase.question.choices = choices;
 });
 
@@ -54,7 +56,7 @@ test("check bar config with showPercentages", () => {
 });
 
 test("check bar config with non default label ordering", () => {
-  selectBase.setAnswersOrder("desc");
+  selectBase.answersOrder = "desc";
   var config = PlotlySetup.setupBar(selectBase);
   var trueColors = [
     "#ff6771",
@@ -76,11 +78,11 @@ test("check bar config with non default label ordering", () => {
   expect(config.traces[0].x).toEqual(trueX);
   expect(config.traces[0].y).toEqual(trueY);
   expect(config.traces[0].marker.color).toEqual(trueColors);
-  selectBase.setAnswersOrder("default");
+  selectBase.answersOrder = "default";
 });
 
 test("check bar config with non default label ordering and enabled showPercentages flag", () => {
-  selectBase.setAnswersOrder("desc");
+  selectBase.answersOrder = "desc";
   selectBase.showPercentages = true;
   var config = PlotlySetup.setupBar(selectBase);
   var trueColors = [
@@ -106,7 +108,7 @@ test("check bar config with non default label ordering and enabled showPercentag
   expect(config.traces[0].y).toEqual(trueY);
   expect(config.traces[0].marker.color).toEqual(trueColors);
   expect(config.traces[0].text).toEqual(truePercentages);
-  selectBase.setAnswersOrder("asc");
+  selectBase.answersOrder = "asc";
 
   var config = PlotlySetup.setupBar(selectBase);
   expect(config.traces[0].x).toEqual(trueX.reverse());
@@ -128,7 +130,7 @@ test("check bar config with non default label ordering and enabled showPercentag
   ]);
   expect(config.traces[0].text).toEqual(truePercentages.reverse());
 
-  selectBase.setAnswersOrder("default");
+  selectBase.answersOrder = "default";
   selectBase.showPercentages = false;
 });
 
