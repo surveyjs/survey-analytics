@@ -7,10 +7,10 @@
 <a href="https://github.com/DevExpress/testcafe">
 <img alt="Tested with TestCafe" src="https://img.shields.io/badge/tested%20with-TestCafe-2fa4cf.svg">
 </a>
-<a href="https://github.com/surveyjs/survey-library/issues">
+<a href="https://github.com/surveyjs/survey-analytics/issues">
 <img alt="Issues" src="https://img.shields.io/github/issues/surveyjs/survey-analytics.svg">
 </a>
-<a href="https://github.com/surveyjs/survey-library/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+">
+<a href="https://github.com/surveyjs/survey-analytics/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+">
 <img alt="Closed issues" src="https://img.shields.io/github/issues-closed/surveyjs/survey-analytics.svg">
 </a>
 
