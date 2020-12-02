@@ -1,4 +1,4 @@
-![SurveyJS Analytics](https://surveyjstest.azurewebsites.net/Content/Images/design/analytics/Monitor.png)
+![SurveyJS Analytics](https://raw.githubusercontent.com/surveyjs/survey-analytics/master/docs/images/survey-analytics-note.png)
 
 # SurveyJS Analytics
 

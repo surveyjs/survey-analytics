@@ -13,8 +13,8 @@ SurveyJS Analytics library allows to render survey results <br/> as charts or ta
 
 ## Screenshots
 
-![SurveyJS Analytics example page 1](https://github.com/surveyjs/surveyjs/blob/master/docs/images/survey-analytics-page-1.png?raw=true)
-![SurveyJS Analytics example page 2](https://github.com/surveyjs/surveyjs/blob/master/docs/images/survey-analytics-page-2.png?raw=true)
+![SurveyJS Analytics example page 1](https://raw.githubusercontent.com/surveyjs/survey-analytics/master/docs/images/survey-analytics-page-1.png)
+![SurveyJS Analytics example page 2](https://raw.githubusercontent.com/surveyjs/survey-analytics/master/docs/images/survey-analytics-page-2.png)
 
 ## Usage (modern ES, modules)
 ```javascript
