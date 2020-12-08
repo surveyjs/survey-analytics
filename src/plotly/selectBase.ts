@@ -240,6 +240,9 @@ export class PlotlySetup {
   }
 
   static setupBar(model: SelectBase): PlotlyOptions {
+    let lineHeight = 30;
+    let topMargin = 30;
+    let bottomMargin = 30;
     let seriesValues = model.getSeriesValues();
     let seriesLabels = model.getSeriesLabels();
     let { datasets, labels, colors, texts } = model.getAnswersData();
@@ -260,6 +263,7 @@ export class PlotlySetup {
       orientation: "h",
       mode: "markers",
       width: 0.5,
+      bargap: 0.5,
       marker: <any>{},
     };
     traceConfig.marker.color = colors;
@@ -273,11 +277,12 @@ export class PlotlySetup {
         trace.textposition = "inside";
         trace.texttemplate = "%{value} (%{text}%)";
         trace.width = 0.9;
+        trace.bargap = 0.1;
       }
       traces.push(trace);
     });
 
-    const height = (labels.length + (labels.length + 1) * 0.5) * 20 + 25;
+    const height = (labels.length + 1) * lineHeight + topMargin + bottomMargin;
 
     const layout: any = {
       font: {
@@ -288,8 +293,8 @@ export class PlotlySetup {
       },
       height: height,
       margin: {
-        t: 25,
-        b: 0,
+        t: topMargin,
+        b: bottomMargin,
         r: 10,
       },
       colorway: colors,
@@ -311,8 +316,7 @@ export class PlotlySetup {
 
     if (hasSeries) {
       layout.showlegend = true;
-      layout.height =
-        (labels.length + (labels.length + 1) * 0.5) * 19 * seriesLabels.length;
+      layout.height = (labels.length + 1) * lineHeight * seriesLabels.length + topMargin + bottomMargin;
       if (model.chartType == "stackedbar") {
         layout.barmode = "stack";
       }

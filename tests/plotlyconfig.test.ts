@@ -32,7 +32,7 @@ var selectBase = new SelectBasePlotly(question, data, {});
 
 test("check bar height with different numbers of choices", () => {
   var config = PlotlySetup.setupBar(selectBase);
-  expect(config.layout.height).toEqual(215);
+  expect(config.layout.height).toEqual(270);
   selectBase.question.choices = [
     { value: "add1" },
     { value: "add2" },
@@ -41,7 +41,7 @@ test("check bar height with different numbers of choices", () => {
     { value: "add5" },
   ].concat(choices);
   var config = PlotlySetup.setupBar(selectBase);
-  expect(config.layout.height).toEqual(365);
+  expect(config.layout.height).toEqual(420);
   selectBase.question.choices = choices;
 });
 
@@ -166,7 +166,7 @@ let matrix = new Matrix(matrixQuestion, matrixData, {});
 
 test("check bar height with hasSeries equals true", () => {
   var config = PlotlySetup.setupBar(matrix);
-  expect(config.layout.height).toEqual(361);
+  expect(config.layout.height).toEqual(480);
 
   //increase count of columns
   matrixJson.columns.push("add1");
@@ -174,7 +174,7 @@ test("check bar height with hasSeries equals true", () => {
   moreColsMatrixQuestion.fromJSON(matrixJson);
   let moreColsMatrix = new Matrix(moreColsMatrixQuestion, matrixData, {});
   var config = PlotlySetup.setupBar(moreColsMatrix);
-  expect(config.layout.height).toEqual(418);
+  expect(config.layout.height).toEqual(540);
   matrixJson.columns.pop();
 
   //increase count of rows
@@ -183,7 +183,7 @@ test("check bar height with hasSeries equals true", () => {
   moreRowsMatrixQuestion.fromJSON(matrixJson);
   let moreRowsMatrix = new Matrix(moreRowsMatrixQuestion, matrixData, {});
   config = PlotlySetup.setupBar(moreRowsMatrix);
-  expect(config.layout.height).toEqual(541.5);
+  expect(config.layout.height).toEqual(690);
   matrixJson.rows.pop();
 });
 
