@@ -1,8 +1,18 @@
-![SurveyJS Analytics](https://surveyjstest.azurewebsites.net/Content/Images/design/analytics/Monitor.png)
+![SurveyJS Analytics](https://raw.githubusercontent.com/surveyjs/survey-analytics/master/docs/images/survey-analytics-note.png)
 
 # SurveyJS Analytics
 
-[![Build Status](https://dev.azure.com/SurveyJS/survey-analytics/_apis/build/status/survey-analytics-release?branchName=master)](https://dev.azure.com/SurveyJS/survey-analytics/_build/latest?definitionId=17&branchName=master)
+
+[![Build Status](https://dev.azure.com/SurveyJS/SurveyJS%20Integration%20Tests/_apis/build/status/SurveyJS%20Library?branchName=master)](https://dev.azure.com/SurveyJS/SurveyJS%20Integration%20Tests/_build/latest?definitionId=7&branchName=master)
+<a href="https://github.com/DevExpress/testcafe">
+<img alt="Tested with TestCafe" src="https://img.shields.io/badge/tested%20with-TestCafe-2fa4cf.svg">
+</a>
+<a href="https://github.com/surveyjs/survey-analytics/issues">
+<img alt="Open Issues" title="Open Issues" src="https://img.shields.io/github/issues/surveyjs/survey-analytics.svg">
+</a>
+<a href="https://github.com/surveyjs/survey-analytics/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+">
+<img alt="Closed issues" title="Closed issues" src="https://img.shields.io/github/issues-closed/surveyjs/survey-analytics.svg">
+</a>
 
 SurveyJS Analytics library allows to render survey results as charts or tables
 

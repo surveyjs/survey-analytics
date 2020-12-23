@@ -118,6 +118,7 @@ steps:
       git pull origin master
       git fetch --tags --force
       git add surveyjs.io/App_Data/DocsAnalytics
+      git reset -- surveyjs.io/App_Data/DocsAnalytics/images
       git commit -m "[skip ci] Updated survey-analytics docs"
       git pull origin master
       git push origin master
