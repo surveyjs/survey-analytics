@@ -67,9 +67,9 @@ export class PlotlyChartAdapter {
 
     const plot = (<any>Plotly).newPlot(
       chartNode,
-      plotlyOptions.traces,
-      plotlyOptions.layout,
-      config
+      options.traces,
+      options.layout,
+      options.config
     );
 
     (<any>chartNode)["on"]("plotly_click", (data: any) => {

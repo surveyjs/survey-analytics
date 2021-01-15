@@ -3,7 +3,9 @@ import { NumberModel } from "../number";
 import { VisualizationManager } from "../visualizationManager";
 import { allowDomRendering, DataHelper, DocumentHelper } from "../utils/index";
 import { localization } from "../localizationManager";
+import { PlotlySetup } from "./selectBase";
 import Plotly from "plotly.js";
+
 
 export class PlotlyGaugeAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
@@ -71,7 +73,19 @@ export class PlotlyGaugeAdapter {
       locale: localization.currentLocale,
     };
 
-    return (<any>Plotly).newPlot(chartNode, data, layout, config);
+    let options = {
+      traces: data,
+      layout: layout,
+      config: config,
+    };
+    PlotlySetup.onPlotCreating.fire(this.model, options);
+
+    return (<any>Plotly).newPlot(
+      chartNode,
+      options.traces,
+      options.layout,
+      options.config
+    );
   }
 
   public destroy(node: HTMLElement) {
