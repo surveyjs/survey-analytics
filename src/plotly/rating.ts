@@ -6,7 +6,6 @@ import { localization } from "../localizationManager";
 import { PlotlySetup } from "./selectBase";
 import Plotly from "plotly.js";
 
-
 export class PlotlyGaugeAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
 
@@ -74,7 +73,7 @@ export class PlotlyGaugeAdapter {
     };
 
     let options = {
-      traces: data,
+      data: data,
       layout: layout,
       config: config,
     };
@@ -82,7 +81,7 @@ export class PlotlyGaugeAdapter {
 
     return (<any>Plotly).newPlot(
       chartNode,
-      options.traces,
+      options.data,
       options.layout,
       options.config
     );
