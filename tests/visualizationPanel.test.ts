@@ -439,3 +439,22 @@ test("check onAfterRender", () => {
   expect((<any>visPanel).renderedQuestionsCount).toEqual(0);
   expect(count).toEqual(1);
 });
+
+test("strip html tags from title", () => {
+  const json = {
+    elements: [
+      {
+        type: "text",
+        name: "question1",
+        title: "<p>Some <span class='my-class'>formatted</span> text</p>"
+      }
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), []);
+  let element = visPanel.getElement("question1");
+  expect(element.displayName).toEqual("Some formatted text");
+  visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { stripHtmlFromTitles: false });
+  element = visPanel.getElement("question1");
+  expect(element.displayName).toEqual(json.elements[0].title);
+});
