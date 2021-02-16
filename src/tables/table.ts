@@ -9,7 +9,10 @@ import {
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { TableExtensions } from "./extensions/tableextensions";
-import { createCommercialLicenseLink } from "../utils";
+import {
+  createCommercialLicenseLink,
+  createLinksContainer,
+} from "../utils";
 
 export abstract class Table {
   public static haveCommercialLicense: boolean = false;
@@ -126,7 +129,6 @@ export abstract class Table {
           question.getType() !== "file"
             ? ColumnDataType.Text
             : ColumnDataType.FileLink,
-        isVisible: question.getType() !== "file",
         isPublic: true,
         location: QuestionLocation.Column,
       };
@@ -158,10 +160,18 @@ export abstract class Table {
         if (question) {
           displayValue = question.displayValue;
         }
-        dataItem[column.name] =
-          typeof displayValue === "string"
-            ? displayValue
-            : JSON.stringify(displayValue) || "";
+        if (column.dataType === ColumnDataType.FileLink) {
+          if (Array.isArray(displayValue)) {
+            dataItem[column.name] = createLinksContainer(
+              displayValue
+            ).outerHTML;
+          }
+        } else {
+          dataItem[column.name] =
+            typeof displayValue === "string"
+              ? displayValue
+              : JSON.stringify(displayValue) || "";
+        }
       });
       return dataItem;
     });
