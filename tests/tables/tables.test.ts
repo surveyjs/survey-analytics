@@ -33,7 +33,7 @@ test("buildColumns method", () => {
   const columns = <any>tables["buildColumns"](survey);
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"name":"car","displayName":"What car are you driving?","dataType":0,"isVisible":true,"isPublic":true,"location":0},{"name":"photo","displayName":"photo","dataType":1,"isVisible":false,"isPublic":true,"location":0}]'
+    '[{"name":"car","displayName":"What car are you driving?","dataType":0,"isPublic":true,"location":0},{"name":"photo","displayName":"photo","dataType":1,"isPublic":true,"location":0}]'
   );
 });
 
