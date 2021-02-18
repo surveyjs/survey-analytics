@@ -129,6 +129,7 @@ export abstract class Table {
           question.getType() !== "file"
             ? ColumnDataType.Text
             : ColumnDataType.FileLink,
+        isVisible: true,
         isPublic: true,
         location: QuestionLocation.Column,
       };
