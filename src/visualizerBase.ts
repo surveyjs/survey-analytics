@@ -106,7 +106,7 @@ export class VisualizerBase implements IDataInfo {
       const question = new QuestionCommentModel(
         this.question.name + (settings || {}).commentPrefix
       );
-      question.title = this.question.title;
+      question.title = this.processText(this.question.title);
 
       this._footerVisualizer = this.createVisualizer(question);
       this._footerVisualizer.onUpdate = () => this.invokeOnUpdate();
@@ -367,6 +367,15 @@ export class VisualizerBase implements IDataInfo {
         this.invokeOnUpdate();
       });
     }
+  }
+
+  protected processText(text: string): string {
+    if(this.options.stripHtmlFromTitles !== false) {
+      let originalText = text || "";
+      let processedText = originalText.replace(/(<([^>]+)>)/gi, "");
+      return processedText;
+    }
+    return text;
   }
 
   getRandomColor() {

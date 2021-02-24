@@ -340,7 +340,7 @@ export class VisualizationPanel extends VisualizerBase {
       (this.questions || []).forEach((question) => {
         const element = this.getElement(question.name);
         if (!!element) {
-          element.displayName = question.title;
+          element.displayName = this.processText(question.title);
         }
       });
     }
@@ -386,7 +386,7 @@ export class VisualizationPanel extends VisualizerBase {
     return (questions || []).map((question) => {
       return {
         name: question.name,
-        displayName: question.title,
+        displayName: this.processText(question.title),
         isVisible: true,
         isPublic: true,
         type: undefined,

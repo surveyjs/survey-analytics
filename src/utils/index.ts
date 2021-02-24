@@ -209,3 +209,19 @@ export class DataHelper {
     return (value / maxValue) * 100;
   }
 }
+
+export function createLinksContainer(
+  links: Array<{ name: string; content: any }>
+): HTMLElement {
+  const linksContainer = DocumentHelper.createElement("div");
+  links.forEach((link) => {
+    linksContainer.appendChild(
+      DocumentHelper.createElement("a", "", {
+        innerHTML: link.name,
+        download: link.name,
+        href: link.content,
+      })
+    );
+  });
+  return linksContainer;
+}

@@ -11,11 +11,10 @@ export class Details {
     private row: TableRow,
     protected targetNode: HTMLElement
   ) {
-    var detailsTable = DocumentHelper.createElement(
+    this.detailsTable = DocumentHelper.createElement(
       "table",
       "sa-table__detail-table"
     );
-    this.detailsTable = detailsTable;
     this.table.onColumnsLocationChanged.add(() => {
       this.close();
     });

@@ -1,6 +1,6 @@
 import { Table, TableRow } from "./table";
 import { SurveyModel } from "survey-core";
-import { QuestionLocation } from "./config";
+import { ColumnDataType, QuestionLocation } from "./config";
 
 import "./tabulator.scss";
 import { DocumentHelper } from "../utils";
@@ -231,6 +231,7 @@ export class Tabulator extends Table {
         visible: this.isColumnVisible(column),
         headerSort: false,
         download: this.options.downloadHiddenColumns ? true : undefined,
+        formatter: column.dataType == ColumnDataType.FileLink ? "html": "plaintext",
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(
             cell,

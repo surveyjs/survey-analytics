@@ -338,6 +338,9 @@ export class PlotlySetup {
   }
 
   static setupScatter(model: SelectBase): PlotlyOptions {
+    let lineHeight = 30;
+    let topMargin = 30;
+    let bottomMargin = 30;
     let seriesValues = model.getSeriesValues();
     let seriesLabels = model.getSeriesLabels();
     let { datasets, labels, colors, texts } = model.getAnswersData();
@@ -375,7 +378,7 @@ export class PlotlySetup {
       }
     });
 
-    const height = (labels.length + (labels.length + 1) * 0.5) * 20 + 25;
+    const height = (labels.length + 1) * lineHeight + topMargin + bottomMargin;
 
     const layout: any = {
       font: {
@@ -386,8 +389,8 @@ export class PlotlySetup {
       },
       height: height,
       margin: {
-        t: 25,
-        b: 0,
+        t: topMargin,
+        b: bottomMargin,
         r: 10,
       },
       colorway: colors,
