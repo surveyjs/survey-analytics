@@ -48,6 +48,10 @@ export class AlternativeVisualizersWrapper
   }
 
   protected visualizerContainer: HTMLElement;
+  protected get hasFooter(): boolean {
+    return false;
+  }
+
   private visualizersWithSelection: Array<IVisualizerWithSelection> = [];
   private selectedItem: ItemValue;
   private visualizer: VisualizerBase;
