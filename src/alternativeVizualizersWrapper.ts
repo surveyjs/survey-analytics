@@ -48,7 +48,7 @@ export class AlternativeVisualizersWrapper
   }
 
   protected visualizerContainer: HTMLElement;
-  protected get hasFooter(): boolean {
+  public get hasFooter(): boolean {
     return false;
   }
 
