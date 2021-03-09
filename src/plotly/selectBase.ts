@@ -476,3 +476,4 @@ VisualizationManager.registerVisualizer("checkbox", SelectBasePlotly);
 VisualizationManager.registerVisualizer("radiogroup", SelectBasePlotly);
 VisualizationManager.registerVisualizer("dropdown", SelectBasePlotly);
 VisualizationManager.registerVisualizer("imagepicker", SelectBasePlotly);
+VisualizationManager.registerVisualizer("ranking", SelectBasePlotly);
