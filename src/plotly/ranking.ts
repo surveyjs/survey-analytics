@@ -24,14 +24,18 @@ export class RankingPlotly extends SelectBasePlotly {
     let plotlyData = this.getEmptyData();
 
     results.forEach((result) => {
-      result.forEach((resultValue, resultValueIndex, result) => {
-        let index = choices.indexOf(resultValue);
-        plotlyData[index] =
-          +plotlyData[index] + (result.length - resultValueIndex);
-      });
+      this.applyResultToPlotlyData(result, plotlyData, choices);
     });
 
     return [plotlyData];
+  }
+
+  applyResultToPlotlyData(result, plotlyData, choices) {
+    result.forEach((resultValue, resultValueIndex, result) => {
+      let index = choices.indexOf(resultValue);
+      plotlyData[index] =
+        +plotlyData[index] + (result.length - resultValueIndex);
+    });
   }
 }
 

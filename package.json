@@ -63,7 +63,7 @@
     "jquery": "3.5.0",
     "muuri": "^0.8.0",
     "plotly.js": "1.57.1",
-    "survey-core": "^1.5.0",
+    "survey-core": "^1.8.34",
     "tabulator-tables": "4.8.4",
     "wordcloud": "^1.1.0"
   },
