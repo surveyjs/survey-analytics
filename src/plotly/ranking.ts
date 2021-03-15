@@ -31,6 +31,8 @@ export class RankingPlotly extends SelectBasePlotly {
   }
 
   applyResultToPlotlyData(result, plotlyData, choices) {
+    if (!result || !plotlyData || !choices) return;
+
     result.forEach((resultValue, resultValueIndex, result) => {
       let index = choices.indexOf(resultValue);
       plotlyData[index] =
