@@ -9,6 +9,8 @@ var normalizedData = data.map(function (item) {
   return item;
 });
 
+// SurveyAnalyticsTabulator.TableExtensions.unregisterExtension("header", "changelocale");
+
 var surveyAnalyticsTabulator = new SurveyAnalyticsTabulator.Tabulator(
   survey,
   normalizedData
