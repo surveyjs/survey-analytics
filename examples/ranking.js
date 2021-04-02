@@ -25,6 +25,17 @@ var json = {
 var data = [
   {
     "smartphone-features": [
+      "Price",
+      "Battery life",
+      "Screen size",
+      "Storage space",
+      "Camera quality",
+      "Durability",
+      "Processor power",
+    ],
+  },
+  {
+    "smartphone-features": [
       "Battery life",
       "Screen size",
       "Storage space",
@@ -36,27 +47,52 @@ var data = [
   },
   {
     "smartphone-features": [
-      "Price",
-      "Processor power",
       "Battery life",
       "Screen size",
       "Storage space",
       "Camera quality",
       "Durability",
-    ],
-  },
-  {
-    "smartphone-features": [
-      "Durability",
-      "Screen size",
-      "Battery life",
-      "Storage space",
       "Processor power",
       "Price",
-      "Camera quality",
     ],
   },
 ];
+
+// var data = [
+//   {
+//     "smartphone-features": [
+//       "Battery life",
+//       "Screen size",
+//       "Storage space",
+//       "Camera quality",
+//       "Durability",
+//       "Processor power",
+//       "Price",
+//     ],
+//   },
+//   {
+//     "smartphone-features": [
+//       "Price",
+//       "Processor power",
+//       "Battery life",
+//       "Screen size",
+//       "Storage space",
+//       "Camera quality",
+//       "Durability",
+//     ],
+//   },
+//   {
+//     "smartphone-features": [
+//       "Durability",
+//       "Screen size",
+//       "Battery life",
+//       "Storage space",
+//       "Processor power",
+//       "Price",
+//       "Camera quality",
+//     ],
+//   },
+// ];
 
 var survey = new Survey.SurveyModel(json);
 
