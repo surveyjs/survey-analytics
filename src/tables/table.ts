@@ -19,7 +19,7 @@ export abstract class Table {
   constructor(
     protected survey: SurveyModel,
     protected data: Array<Object>,
-    protected options: any,
+    protected options: any = {},
     protected _columns: Array<any> = []
   ) {
     if (_columns.length === 0) {
