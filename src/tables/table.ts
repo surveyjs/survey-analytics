@@ -9,10 +9,7 @@ import {
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { TableExtensions } from "./extensions/tableextensions";
-import {
-  createCommercialLicenseLink,
-  createLinksContainer,
-} from "../utils";
+import { createCommercialLicenseLink, createLinksContainer } from "../utils";
 
 export abstract class Table {
   public static haveCommercialLicense: boolean = false;
@@ -159,7 +156,11 @@ export abstract class Table {
         var displayValue = item[column.name];
         const question = this.survey.getQuestionByName(column.name);
         if (question) {
-          displayValue = question.displayValue;
+          if (this.options.useValuesAsLabels) {
+            displayValue = question.value;
+          } else {
+            displayValue = question.displayValue;
+          }
         }
         if (column.dataType === ColumnDataType.FileLink) {
           if (Array.isArray(displayValue)) {

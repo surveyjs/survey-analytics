@@ -196,3 +196,21 @@ test("check that setColumnWidth fires onStateChanged", () => {
   table.setColumnWidth("column1", 50);
   expect(count).toBe(1);
 });
+
+test("check useValuesAsLabels option", () => {
+  const json = {
+    questions: [
+      {
+        type: "radiogroup",
+        name: "radio",
+        choices: [{ value: "choiceValue", text: "choiceText" }],
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  var data = [{ radio: "choiceValue" }];
+  var table = new TableTest(survey, data, {}, []);
+  expect((<any>table).tableData[0]["radio"]).toEqual("choiceText");
+  table = new TableTest(survey, data, { useValuesAsLabels: true }, []);
+  expect((<any>table).tableData[0]["radio"]).toEqual("choiceValue");
+});
