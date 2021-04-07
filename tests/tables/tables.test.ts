@@ -214,3 +214,30 @@ test("check useValuesAsLabels option", () => {
   table = new TableTest(survey, data, { useValuesAsLabels: true }, []);
   expect((<any>table).tableData[0]["radio"]).toEqual("choiceValue");
 });
+
+test("check onGetQuestionValue event", () => {
+  const json = {
+    questions: [
+      {
+        type: "radiogroup",
+        name: "radio",
+        choices: [{ value: "choiceValue", text: "choiceText" }],
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  var data = [{ radio: "choiceValue" }];
+  var table = new TableTest(survey, data, {}, []);
+  expect((<any>table).tableData[0]["radio"]).toEqual("choiceText");
+  table = new TableTest(
+    survey,
+    data,
+    {
+      onGetQuestionValue: (opt) => {
+        opt.displayValue = opt.question.value;
+      },
+    },
+    []
+  );
+  expect((<any>table).tableData[0]["radio"]).toEqual("choiceValue");
+});

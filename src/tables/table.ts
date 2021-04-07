@@ -11,6 +11,20 @@ import { localization } from "../localizationManager";
 import { TableExtensions } from "./extensions/tableextensions";
 import { createCommercialLicenseLink, createLinksContainer } from "../utils";
 
+export interface ITableOptions {
+  [index: string]: any;
+  /**
+   * Use this event to change the display value of question in table.
+   * <br/> `sender` - the table object that fires the event.
+   * <br/> `options.question` - the question obect for which event is fired.
+   * <br/> `options.displayValue` - the question display value. You can change this option before it is displayed in the table.
+   */
+  onGetQuestionValue?: (options: {
+    question: Question;
+    displayValue: any;
+  }) => void;
+}
+
 export abstract class Table {
   public static haveCommercialLicense: boolean = false;
   protected tableData: any;
@@ -19,7 +33,7 @@ export abstract class Table {
   constructor(
     protected survey: SurveyModel,
     protected data: Array<Object>,
-    protected options: any = {},
+    protected options: ITableOptions = {},
     protected _columns: Array<any> = []
   ) {
     if (_columns.length === 0) {
@@ -174,7 +188,13 @@ export abstract class Table {
               ? displayValue
               : JSON.stringify(displayValue) || "";
         }
+        const opt = { question: question, displayValue: dataItem[column.name] };
+        if (typeof this.options.onGetQuestionValue === "function") {
+          this.options.onGetQuestionValue(opt);
+        }
+        dataItem[column.name] = opt.displayValue;
       });
+
       return dataItem;
     });
   }

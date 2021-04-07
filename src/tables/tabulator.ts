@@ -1,4 +1,4 @@
-import { Table, TableRow } from "./table";
+import { ITableOptions, Table, TableRow } from "./table";
 import { SurveyModel } from "survey-core";
 import { ColumnDataType, QuestionLocation } from "./config";
 
@@ -15,7 +15,7 @@ if (!!document) {
   document.head.appendChild(templateHolder);
 }
 
-interface IOptions {
+interface ITabulatorOptions extends ITableOptions {
   tabulatorOptions?: any;
   downloadHiddenColumns?: boolean;
   actionsColumnWidth?: number;
@@ -41,7 +41,7 @@ const defaultDownloadOptions = {
   xlsx: { sheetName: "results" },
 };
 
-const defaultOptions: IOptions = {
+const defaultOptions: ITabulatorOptions = {
   tabulatorOptions: {},
   actionsColumnWidth: 60,
   downloadHiddenColumns: false,
@@ -57,7 +57,7 @@ export class Tabulator extends Table {
   constructor(
     survey: SurveyModel,
     data: Array<Object>,
-    options: IOptions,
+    options: ITabulatorOptions,
     _columns: Array<any> = []
   ) {
     super(survey, data, options, _columns);
@@ -231,7 +231,8 @@ export class Tabulator extends Table {
         visible: this.isColumnVisible(column),
         headerSort: false,
         download: this.options.downloadHiddenColumns ? true : undefined,
-        formatter: column.dataType == ColumnDataType.FileLink ? "html": "plaintext",
+        formatter:
+          column.dataType == ColumnDataType.FileLink ? "html" : "plaintext",
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(
             cell,

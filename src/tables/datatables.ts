@@ -1,4 +1,4 @@
-import { Table, TableRow } from "./table";
+import { ITableOptions, Table, TableRow } from "./table";
 import { SurveyModel, Event } from "survey-core";
 import { ColumnDataType, ITableColumn, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
@@ -15,7 +15,7 @@ if (!!document) {
 
 var jQuery = (<any>window)["jQuery"];
 
-interface DataTablesOptions {
+interface DataTablesOptions extends ITableOptions {
   buttons: boolean | string[] | any[] | any;
 
   dom: string;
