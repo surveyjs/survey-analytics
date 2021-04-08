@@ -24,6 +24,7 @@ interface ITabulatorOptions extends ITableOptions {
 }
 
 const defaultDownloadOptions = {
+  fileName: "results",
   pdf: {
     orientation: "portrait", //set page orientation to portrait
     autoTable: {
@@ -338,7 +339,7 @@ export class Tabulator extends Table {
   public download(type: string): void {
     this.tabulatorTables.download(
       type,
-      `results.${type}`,
+      `${this.options.downloadOptions.fileName}.${type}`,
       this.options.downloadOptions[type] || defaultOptions.downloadOptions[type]
     );
   }
