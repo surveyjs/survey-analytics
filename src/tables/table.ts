@@ -133,13 +133,17 @@ export abstract class Table {
 
   protected buildColumns = (survey: SurveyModel) => {
     return this.survey.getAllQuestions().map((question: Question) => {
+      let dataType = ColumnDataType.Text;
+      if(question.getType() === "file") {
+        dataType = ColumnDataType.FileLink;
+      }
+      if(question.getType() === "signaturepad") {
+        dataType = ColumnDataType.Image;
+      }
       return {
         name: question.name,
         displayName: (question.title || "").trim() || question.name,
-        dataType:
-          question.getType() !== "file"
-            ? ColumnDataType.Text
-            : ColumnDataType.FileLink,
+        dataType,
         isVisible: true,
         isPublic: true,
         location: QuestionLocation.Column,

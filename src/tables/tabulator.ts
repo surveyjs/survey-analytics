@@ -223,7 +223,14 @@ export class Tabulator extends Table {
 
   public getColumns(): Array<any> {
     const columns: any = this.columns.map((column, index) => {
-      var question = this.survey.getQuestionByName(column.name);
+      let question = this.survey.getQuestionByName(column.name);
+      let formatter = "plaintext";
+      if(column.dataType == ColumnDataType.FileLink) {
+        formatter = "html";
+      }
+      if(column.dataType == ColumnDataType.Image) {
+        formatter = "image";
+      }
       return {
         field: column.name,
         title: (question && question.title) || column.displayName,
@@ -232,8 +239,7 @@ export class Tabulator extends Table {
         visible: this.isColumnVisible(column),
         headerSort: false,
         download: this.options.downloadHiddenColumns ? true : undefined,
-        formatter:
-          column.dataType == ColumnDataType.FileLink ? "html" : "plaintext",
+        formatter,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(
             cell,

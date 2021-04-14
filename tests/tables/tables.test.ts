@@ -1,6 +1,6 @@
 import { SurveyModel, Question } from "survey-core";
 import { Table } from "../../src/tables/table";
-import { ITableState } from "../../src/tables/config";
+import { ColumnDataType, ITableState } from "../../src/tables/config";
 
 const json = {
   questions: [
@@ -35,6 +35,16 @@ test("buildColumns method", () => {
   expect(JSON.stringify(columns)).toBe(
     '[{"name":"car","displayName":"What car are you driving?","dataType":0,"isVisible":true,"isPublic":true,"location":0},{"name":"photo","displayName":"photo","dataType":1,"isVisible":true,"isPublic":true,"location":0}]'
   );
+});
+
+test("signaturepad column data type", () => {
+  const survey = new SurveyModel({elements: [{ type: "signaturepad", name: "q1" }]});
+  const tables = new TableTest(survey, [], null, []);
+
+  const columns = <any>tables["buildColumns"](survey);
+  expect(columns.length).toBe(1);
+  expect(columns[0].dataType).toBe(ColumnDataType.Image);
+  expect(columns[0].name).toBe("q1");
 });
 
 test("locale", () => {

@@ -271,6 +271,9 @@ export class DataTables extends Table {
           if (column.dataType === ColumnDataType.FileLink) {
             return value;
           }
+          if (column.dataType === ColumnDataType.Image) {
+            return "<image src='" + value + "'/>"
+          }
           return typeof value === "string"
             ? jQuery("<div>").text(value).html()
             : JSON.stringify(value);

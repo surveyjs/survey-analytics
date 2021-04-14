@@ -1,6 +1,10 @@
 import { SurveyModel } from "survey-core";
-import { Tabulator } from "../../src/tables/tabulator";
+import { Tabulator, TabulatorRow } from "../../src/tables/tabulator";
 import { TableExtensions } from "../../src/tables/extensions/tableextensions";
+import { Details } from "../../src/tables/extensions/detailsextensions";
+import { TableRow } from "../../src/tables/table";
+import { DocumentHelper } from "../../src/utils";
+import { QuestionLocation } from "../../src/tables/config";
 
 const json = {
   questions: [
@@ -135,4 +139,17 @@ test("check rendering extension with render's null return value", () => {
     }
   }).not.toThrow(Error);
   (<any>TableExtensions).extensions["header"].splice(0, 1);
+});
+
+test("render image in details", () => {
+  const survey = new SurveyModel({elements: [{ type: "signaturepad", name: "q1" }]});
+  const tabulator = new Tabulator(survey, [], null);
+  tabulator.columns[0].location = QuestionLocation.Row;
+  const extensionsContainer = DocumentHelper.createElement("div");
+  const detailsContainer = DocumentHelper.createElement("div");
+  const tableRow = new TabulatorRow(tabulator, extensionsContainer, detailsContainer, { getData: () => ({ q1: "signature" }) });
+  const detailsTarget = DocumentHelper.createElement("div");
+  const details = new Details(tabulator, tableRow, detailsTarget);
+  details.open();
+  expect(detailsTarget).toMatchSnapshot();
 });
