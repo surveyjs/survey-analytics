@@ -98,6 +98,9 @@ module.exports = function (options) {
           headerText: dts_banner,
         });
         rimraf.sync(packagePath + "typings");
+        fs.createReadStream("./LICENSE").pipe(
+          fs.createWriteStream(packagePath + "LICENSE")
+        );
         fs.createReadStream("./README.md").pipe(
           fs.createWriteStream(packagePath + "README.md")
         );
