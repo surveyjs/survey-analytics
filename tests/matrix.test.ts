@@ -77,3 +77,59 @@ test("check getPercentages method", () => {
     [0, 0],
   ]);
 });
+
+test("hide empty answers", () => {
+  const question = new QuestionMatrixModel("q1");
+  question.columns = ["Morning", "Afternoon"];
+  question.rows = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  var data: any = [
+    {
+      q1: {
+        Monday: "Morning",
+        Tuesday: "Afternoon",
+      },
+    },
+    {
+      q1: {
+        Monday: "Morning",
+        Tuesday: "Afternoon",
+      },
+    },
+  ];
+  var matrix = new Matrix(question, data);
+  matrix.hideEmptyAnswers = true;
+  expect(matrix.getAnswersData()).toEqual({
+    colors: ["#86e1fb", "#3999fb"],
+    datasets: [
+      [2, 0],
+      [0, 2],
+    ],
+    labels: ["Morning", "Afternoon"],
+    seriesLabels: ["Monday", "Tuesday"],
+    texts: [
+      [2, 0],
+      [0, 2],
+    ],
+  });
+  data = [
+    {
+      q1: {
+        Monday: "Afternoon",
+      },
+    },
+    {
+      q1: {
+        Tuesday: "Afternoon",
+      },
+    },
+  ];
+  var matrix = new Matrix(question, data);
+  matrix.hideEmptyAnswers = true;
+  expect(matrix.getAnswersData()).toEqual({
+    colors: ["#3999fb"],
+    datasets: [[1, 1]],
+    labels: ["Afternoon"],
+    seriesLabels: ["Monday", "Tuesday"],
+    texts: [[1, 1]],
+  });
+});
