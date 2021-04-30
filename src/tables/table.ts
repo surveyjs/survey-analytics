@@ -13,6 +13,11 @@ import { createCommercialLicenseLink, createLinksContainer } from "../utils";
 
 export interface ITableOptions {
   [index: string]: any;
+
+  /**
+   * Set this property to true to render column headings using question names
+   */
+  useNamesAsTitles?: boolean;
   /**
    * Use this event to change the display value of question in table.
    * <br/> `sender` - the table object that fires the event.
@@ -143,7 +148,10 @@ export abstract class Table {
       }
       columns.push({
         name: question.name,
-        displayName: (question.title || "").trim() || question.name,
+        displayName:
+          this.options && this.options.useNamesAsTitles
+            ? question.name
+            : (question.title || "").trim() || question.name,
         dataType,
         isVisible: true,
         isPublic: true,
