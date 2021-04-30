@@ -1,4 +1,4 @@
-import { SurveyModel, Question, Event } from "survey-core";
+import { SurveyModel, Question, Event, settings } from "survey-core";
 import {
   IPermission,
   QuestionLocation,
@@ -34,7 +34,7 @@ export abstract class Table {
     protected survey: SurveyModel,
     protected data: Array<Object>,
     protected options: ITableOptions = {},
-    protected _columns: Array<any> = []
+    protected _columns: Array<ITableColumn> = []
   ) {
     if (_columns.length === 0) {
       this._columns = this.buildColumns(survey);
@@ -132,23 +132,41 @@ export abstract class Table {
   }
 
   protected buildColumns = (survey: SurveyModel) => {
-    return this.survey.getAllQuestions().map((question: Question) => {
+    let columns: Array<ITableColumn> = [];
+    this.survey.getAllQuestions().forEach((question: Question) => {
       let dataType = ColumnDataType.Text;
-      if(question.getType() === "file") {
+      if (question.getType() === "file") {
         dataType = ColumnDataType.FileLink;
       }
-      if(question.getType() === "signaturepad") {
+      if (question.getType() === "signaturepad") {
         dataType = ColumnDataType.Image;
       }
-      return {
+      columns.push({
         name: question.name,
         displayName: (question.title || "").trim() || question.name,
         dataType,
         isVisible: true,
         isPublic: true,
         location: QuestionLocation.Column,
-      };
+      });
+      if (
+        question.hasComment ||
+        (question.hasOther && question.getStoreOthersAsComment())
+      ) {
+        columns.push({
+          name: `${question.name}${settings.commentPrefix}`,
+          displayName: question.hasOther
+            ? question.otherText
+            : question.commentText,
+          isComment: true,
+          dataType,
+          isVisible: true,
+          isPublic: true,
+          location: QuestionLocation.Column,
+        });
+      }
     });
+    return columns;
   };
 
   public isColumnVisible(column: ITableColumn) {
@@ -174,7 +192,9 @@ export abstract class Table {
         var displayValue = item[column.name];
         const question = this.survey.getQuestionByName(column.name);
         if (question) {
-          if (this.options.useValuesAsLabels) {
+          if (column.isComment) {
+            displayValue = question.comment;
+          } else if (this.options.useValuesAsLabels) {
             displayValue = question.value;
           } else {
             displayValue = question.displayValue;

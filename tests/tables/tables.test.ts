@@ -38,7 +38,9 @@ test("buildColumns method", () => {
 });
 
 test("signaturepad column data type", () => {
-  const survey = new SurveyModel({elements: [{ type: "signaturepad", name: "q1" }]});
+  const survey = new SurveyModel({
+    elements: [{ type: "signaturepad", name: "q1" }],
+  });
   const tables = new TableTest(survey, [], null, []);
 
   const columns = <any>tables["buildColumns"](survey);
@@ -250,4 +252,127 @@ test("check onGetQuestionValue event", () => {
     []
   );
   expect((<any>table).tableData[0]["radio"]).toEqual("choiceValue");
+});
+
+test("check columns for question with comment", () => {
+  const json = {
+    questions: [
+      {
+        type: "radiogroup",
+        title: "Radio",
+        name: "radio",
+        choices: [{ value: "choiceValue", text: "choiceText" }],
+        commentText: "Describe Radio",
+        hasComment: true,
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  var data = [];
+  var table = new TableTest(survey, data, {}, []);
+  survey.getL;
+  expect((<any>table).columns[0].name).toEqual("radio");
+  expect(<any>table.columns[1].name).toEqual("radio-Comment");
+  expect(<any>table.columns[1].displayName).toEqual("Describe Radio");
+  expect(<any>table.columns[1].dataType).toEqual(ColumnDataType.Text);
+});
+
+test("check columns for question with other and storeOthersAsComment: true", () => {
+  const json = {
+    questions: [
+      {
+        type: "radiogroup",
+        title: "Radio",
+        name: "radio",
+        choices: [{ value: "choiceValue", text: "choiceText" }],
+        otherText: "Other (Describe Radio)",
+        hasOther: true,
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  var data = [];
+  var table = new TableTest(survey, data, {}, []);
+  survey.getL;
+  expect((<any>table).columns[0].name).toEqual("radio");
+  expect(<any>table.columns[1].name).toEqual("radio-Comment");
+  expect(<any>table.columns[1].displayName).toEqual("Other (Describe Radio)");
+  expect(<any>table.columns[1].dataType).toEqual(ColumnDataType.Text);
+});
+
+test("check columns for question with other and storeOthersAsComment: false", () => {
+  const json = {
+    questions: [
+      {
+        type: "radiogroup",
+        title: "Radio",
+        name: "radio",
+        storeOthersAsComment: false,
+        choices: [{ value: "choiceValue", text: "choiceText" }],
+        otherText: "Other (Describe Radio)",
+        hasOther: true,
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  var data = [];
+  var table = new TableTest(survey, data, {}, []);
+  survey.getL;
+  expect((<any>table).columns[0].name).toEqual("radio");
+  expect((<any>table).columns.length).toEqual(1);
+});
+
+test("check data for question with comment", () => {
+  const json = {
+    questions: [
+      {
+        type: "radiogroup",
+        name: "radio",
+        choices: [{ value: "choiceValue", text: "choiceText" }],
+        hasComment: true,
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  var data = [{ radio: "choiceValue", "radio-Comment": "commentValue" }];
+  var table = new TableTest(survey, data, {}, []);
+  expect((<any>table).tableData[0]["radio"]).toEqual("choiceText");
+  expect((<any>table).tableData[0]["radio-Comment"]).toEqual("commentValue");
+});
+
+test("check data for question with other and storeOthersAsComment: true", () => {
+  const json = {
+    questions: [
+      {
+        type: "radiogroup",
+        name: "radio",
+        choices: [{ value: "choiceValue", text: "choiceText" }],
+        hasOther: true,
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  var data = [{ radio: "choiceValue", "radio-Comment": "otherValue" }];
+  var table = new TableTest(survey, data, {}, []);
+  expect((<any>table).tableData[0]["radio"]).toEqual("choiceText");
+  expect((<any>table).tableData[0]["radio-Comment"]).toEqual("otherValue");
+});
+
+test("check data for question with other and storeOthersAsComment: true", () => {
+  const json = {
+    questions: [
+      {
+        type: "radiogroup",
+        name: "radio",
+        storeOthersAsComment: false,
+        choices: [{ value: "choiceValue", text: "choiceText" }],
+        hasOther: true,
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  var data = [{ radio: "otherValue" }];
+  var table = new TableTest(survey, data, {}, []);
+  expect((<any>table).tableData[0]["radio"]).toEqual("otherValue");
+  expect((<any>table).tableData[0]["radio-Comment"]).toBeUndefined();
 });

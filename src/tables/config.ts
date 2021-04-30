@@ -16,6 +16,7 @@ export interface ITableColumn {
   isPublic: boolean;
   location: QuestionLocation;
   width?: string | number;
+  isComment?: boolean;
 }
 
 export interface ITableState {
