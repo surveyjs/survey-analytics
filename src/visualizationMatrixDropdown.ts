@@ -56,7 +56,13 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
   getQuestions() {
     const matrixdropdown: QuestionMatrixDropdownModel = <any>this.question;
     return matrixdropdown.columns.map(
-      (column: MatrixDropdownColumn) => column.templateQuestion
+      (column: MatrixDropdownColumn) => {
+        const cellQuestion = column.templateQuestion;
+        if(Array.isArray(cellQuestion.choices) && cellQuestion.choices.length === 0) {
+          cellQuestion.choices = matrixdropdown.choices;
+        }
+        return cellQuestion;
+      }
     );
   }
 

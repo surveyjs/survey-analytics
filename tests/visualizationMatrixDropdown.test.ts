@@ -16,7 +16,9 @@ const json = {
           choices: ["High Quality", "Natural", "Trustworthy"],
         },
         { name: "Column 2", title: "Review Mark", choices: [1, 2, 3, 4, 5] },
+        { name: "Column 3", title: "Default choices" },
       ],
+      choices: ["one", "two", "three"],
       rows: ["Lizol", "Harpic"],
     },
   ],
@@ -57,9 +59,10 @@ beforeEach(() => {
 
 test("getQuestions", () => {
   let questions = visualizer.getQuestions();
-  expect(questions.length).toBe(2);
+  expect(questions.length).toBe(3);
   expect(questions[0].name).toBe("Column 1");
   expect(questions[1].name).toBe("Column 2");
+  expect(questions[2].name).toBe("Column 3");
 });
 
 test("set data via update", () => {
@@ -93,4 +96,12 @@ test("check onAfterRender", () => {
   const innerPanelVisualizer: any = visualizer["_panelVisualizer"];
   innerPanelVisualizer.afterRender();
   expect(count).toEqual(1);
+});
+
+test("check default choices - passed from matrixdropdown to default column type", () => {
+  let questions = visualizer.getQuestions();
+  expect(questions.length).toBe(3);
+  const defaultCHoices = questions[2].choices;
+  expect(defaultCHoices.length).toBe(3);
+  expect(defaultCHoices[0].value).toBe("one");
 });
