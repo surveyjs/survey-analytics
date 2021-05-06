@@ -323,6 +323,12 @@ var json = {
           title:
             "How could our products be improved to better meet your needs?",
         },
+        {
+          type: "signaturepad",
+          name: "signature",
+          title:
+            "Signature",
+        },
       ],
     },
   ],

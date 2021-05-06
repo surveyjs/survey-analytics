@@ -41,6 +41,12 @@ var json = {
         },
       ],
     },
+    {
+      type: "signaturepad",
+      name: "signature",
+      title:
+        "Signature",
+    },
   ],
 };
 
