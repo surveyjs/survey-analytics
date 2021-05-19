@@ -37,8 +37,8 @@ export class VisualizerBase implements IDataInfo {
   public static otherCommentCollapsed = true;
 
   /**
-  * The event is fired right after a visualizer's content is rendered in DOM.
-  **/
+   * The event is fired right after a visualizer's content is rendered in DOM.
+   **/
   public onAfterRender: Event<
     (sender: VisualizerBase, options: any) => any,
     any
@@ -118,7 +118,11 @@ export class VisualizerBase implements IDataInfo {
    * Indicates whether visualizer supports selection. Visualizers of questions with choices allow to select choice by clicking on the diagram bar and filter other data for the selected item.
    */
   public get supportSelection(): boolean {
-    return this._supportSelection;
+    return (
+      (this.options.allowSelection === undefined ||
+        this.options.allowSelection) &&
+      this._supportSelection
+    );
   }
 
   /**
@@ -370,7 +374,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected processText(text: string): string {
-    if(this.options.stripHtmlFromTitles !== false) {
+    if (this.options.stripHtmlFromTitles !== false) {
       let originalText = text || "";
       let processedText = originalText.replace(/(<([^>]+)>)/gi, "");
       return processedText;
