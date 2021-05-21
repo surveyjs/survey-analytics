@@ -288,8 +288,9 @@ export class SelectBase
       (choice) => choice.value
     );
 
-    if (this.question.hasOther) values.unshift("other");
-
+    if (this.question.hasOther) {
+      values.unshift("other");
+    }
     return values;
   }
 
@@ -301,8 +302,9 @@ export class SelectBase
       ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value)
     );
 
-    if (this.question.hasOther) labels.unshift("Other");
-
+    if (this.question.hasOther) {
+      labels.unshift(this.question.otherText);
+    }
     return labels;
   }
 

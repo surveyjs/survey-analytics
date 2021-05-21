@@ -268,7 +268,7 @@ export class VisualizerBase implements IDataInfo {
     if (!!this.options && typeof this.options.renderContent === "function") {
       this.options.renderContent(container, this);
     } else {
-      container.innerHTML = "This question type is not visualized yet";
+      container.innerHTML = localization.getString("noVisualizerForQuestion");
     }
     this.afterRender(container);
   }

@@ -28,6 +28,7 @@ export var englishStrings = {
   makePrivateButton: "Make private",
   makePublicButton: "Make public",
   showButton: "Show",
+  filter: "Filter",
   resetFilter: "Reset Filter",
   changeLocale: "Change Locale",
   clearButton: "Clear",
@@ -49,6 +50,7 @@ export var englishStrings = {
   "topNValueText5": "Top 5 answers",
   "topNValueText10": "Top 10 answers",
   "topNValueText20": "Top 20 answers",
+  noVisualizerForQuestion: "This question type is not visualized yet"
 };
 
 //Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.

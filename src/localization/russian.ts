@@ -9,6 +9,7 @@ export var russianStrings = {
   makePrivateColumn: "Make column private",
   makePublicColumn: "Make column public",
   moveToDetail: "Move to Detail",
+  filter: "Фильтр",
   showAsColumn: "Show as Column",
   visualizer_text: "Texts in table",
   visualizer_wordcloud: "Wordcloud",
@@ -29,7 +30,8 @@ export var russianStrings = {
   ascOrder: "Ascending",
   descOrder: "Descending",
   showMinorColumns: "Show minor columns",
-  otherCommentTitle: "Other items and comments",
+  otherCommentTitle: "Другое и комментарии",
+  noVisualizerForQuestion: "Этот тип вопроса еще не поддерживается аналитикой"
 };
 
 localization.locales["ru"] = russianStrings;
