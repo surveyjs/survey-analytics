@@ -29,7 +29,8 @@ export var frenchStrings = {
     descOrder: "Descendant",
     showMinorColumns: "Afficher les colonnes mineures",
     otherCommentTitle: "Autre élément et commentaires",
-    noVisualizerForQuestion: "Ce type de question n'est pas encore visualisé"
+    noVisualizerForQuestion: "Ce type de question n'est pas encore visualisé",
+    noResults: "Il n'y a pas encore de résultats"
 };
 
 localization.locales["fr"] = frenchStrings;

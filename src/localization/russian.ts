@@ -31,7 +31,8 @@ export var russianStrings = {
   descOrder: "Descending",
   showMinorColumns: "Show minor columns",
   otherCommentTitle: "Другое и комментарии",
-  noVisualizerForQuestion: "Этот тип вопроса еще не поддерживается аналитикой"
+  noVisualizerForQuestion: "Этот тип вопроса еще не поддерживается аналитикой",
+  noResults: "Результаты отсутствуют"
 };
 
 localization.locales["ru"] = russianStrings;

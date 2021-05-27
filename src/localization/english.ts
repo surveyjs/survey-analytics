@@ -50,7 +50,8 @@ export var englishStrings = {
   "topNValueText5": "Top 5 answers",
   "topNValueText10": "Top 10 answers",
   "topNValueText20": "Top 20 answers",
-  noVisualizerForQuestion: "This question type is not visualized yet"
+  noVisualizerForQuestion: "This question type is not visualized yet",
+  noResults: "There are no results yet"
 };
 
 //Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.
