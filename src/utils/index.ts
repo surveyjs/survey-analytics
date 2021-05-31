@@ -225,3 +225,18 @@ export function createLinksContainer(
   });
   return linksContainer;
 }
+
+export function createImagesContainer(
+  links: Array<{ name: string; content: any }>
+): HTMLElement {
+  const linksContainer = DocumentHelper.createElement("div");
+  links.forEach((link) => {
+    linksContainer.appendChild(
+      DocumentHelper.createElement("img", "", {
+        alt: link.name,
+        src: link.content,
+      })
+    );
+  });
+  return linksContainer;
+}

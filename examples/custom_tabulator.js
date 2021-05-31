@@ -11,6 +11,8 @@ var normalizedData = data.map(function (item) {
 
 // SurveyAnalyticsTabulator.TableExtensions.unregisterExtension("header", "changelocale");
 
+SurveyAnalyticsTabulator.Table.showFilesAsImages = true;
+
 var surveyAnalyticsTabulator = new SurveyAnalyticsTabulator.Tabulator(
   survey,
   normalizedData

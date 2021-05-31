@@ -14,6 +14,8 @@ var normalizedData = data.map(function (item) {
 
 // SurveyAnalyticsDatatables.TableExtensions.unregisterExtension("header", "changelocale");
 
+SurveyAnalyticsDatatables.Table.showFilesAsImages = true;
+
 SurveyAnalyticsDatatables.TableExtensions.registerExtension({
   location: "details",
   name: "showinsurvey",

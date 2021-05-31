@@ -9,7 +9,7 @@ import {
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { TableExtensions } from "./extensions/tableextensions";
-import { createCommercialLicenseLink, createLinksContainer } from "../utils";
+import { createCommercialLicenseLink, createImagesContainer, createLinksContainer, DocumentHelper } from "../utils";
 
 export interface ITableOptions {
   [index: string]: any;
@@ -31,6 +31,7 @@ export interface ITableOptions {
 }
 
 export abstract class Table {
+  public static showFilesAsImages = false;
   public static haveCommercialLicense: boolean = false;
   protected tableData: any;
   protected extensions: TableExtensions;
@@ -210,7 +211,9 @@ export abstract class Table {
         }
         if (column.dataType === ColumnDataType.FileLink) {
           if (Array.isArray(displayValue)) {
-            dataItem[column.name] = createLinksContainer(
+            dataItem[column.name] = Table.showFilesAsImages ? createImagesContainer(
+              displayValue
+            ).outerHTML : createLinksContainer(
               displayValue
             ).outerHTML;
           }
