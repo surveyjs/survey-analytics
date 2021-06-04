@@ -146,3 +146,28 @@ test("check that datatables takes into account column's width", () => {
   expect(columns[2].width).toBe("200px");
   expect(columns[3].width).toBe(undefined);
 });
+
+test("useNamesAsTitles option", () => {
+  const surveyJson = {
+    questions: [
+      {
+        type: "text",
+        name: "str",
+        title: "String",
+      },
+    ],
+  };
+  const survey = new SurveyModel(surveyJson);
+
+  let dataTables = new DataTables(survey, [], null);
+  let columns = <any>dataTables.getColumns();
+  expect(JSON.stringify(columns)).toBe(
+    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"str","data":"str","sTitle":"String","visible":true,"orderable":false}]'
+  );
+
+  dataTables = new DataTables(survey, [], <any>{ useNamesAsTitles: true });
+  columns = <any>dataTables.getColumns();
+  expect(JSON.stringify(columns)).toBe(
+    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"str","data":"str","sTitle":"str","visible":true,"orderable":false}]'
+  );
+});

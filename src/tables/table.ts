@@ -42,6 +42,10 @@ export abstract class Table {
     protected options: ITableOptions = {},
     protected _columns: Array<ITableColumn> = []
   ) {
+    if(!this.options) {
+      this.options = {};
+    }
+
     if (_columns.length === 0) {
       this._columns = this.buildColumns(survey);
     }

@@ -77,7 +77,10 @@ SurveyAnalyticsDatatables.TableExtensions.findExtension(
 
 var surveyAnalyticsDataTables = new SurveyAnalyticsDatatables.DataTables(
   survey,
-  normalizedData
+  normalizedData,
+  {
+    // useNamesAsTitles: true
+  }
 );
 
 surveyAnalyticsDataTables.render(

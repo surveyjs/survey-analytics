@@ -168,3 +168,28 @@ test("check that action column doesn't export", () => {
     false
   );
 });
+
+test("useNamesAsTitles option", () => {
+  const surveyJson = {
+    questions: [
+      {
+        type: "text",
+        name: "str",
+        title: "String",
+      },
+    ],
+  };
+  const survey = new SurveyModel(surveyJson);
+
+  let tabulator = new Tabulator(survey, [], null);
+  let columns = <any>tabulator.getColumns();
+  expect(JSON.stringify(columns)).toBe(
+    "[{\"field\":\"\",\"title\":\"\",\"download\":false,\"resizable\":false,\"minWidth\":60,\"width\":60},{\"field\":\"str\",\"title\":\"String\",\"widthShrink\":1,\"visible\":true,\"headerSort\":false,\"formatter\":\"plaintext\"}]"
+  );
+
+  tabulator = new Tabulator(survey, [], <any>{ useNamesAsTitles: true });
+  columns = <any>tabulator.getColumns();
+  expect(JSON.stringify(columns)).toBe(
+    "[{\"field\":\"\",\"title\":\"\",\"download\":false,\"resizable\":false,\"minWidth\":60,\"width\":60},{\"field\":\"str\",\"title\":\"str\",\"widthShrink\":1,\"visible\":true,\"headerSort\":false,\"formatter\":\"plaintext\"}]"
+  );
+});
