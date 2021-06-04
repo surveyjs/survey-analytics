@@ -233,7 +233,7 @@ export class Tabulator extends Table {
       }
       return {
         field: column.name,
-        title: (question && question.title) || column.displayName,
+        title: (question && (this.options.useNamesAsTitles ? question.name : question.title)) || column.displayName,
         width: column.width,
         widthShrink: !column.width ? 1 : 0,
         visible: this.isColumnVisible(column),

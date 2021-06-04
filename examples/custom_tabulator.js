@@ -15,7 +15,10 @@ SurveyAnalyticsTabulator.Table.showFilesAsImages = true;
 
 var surveyAnalyticsTabulator = new SurveyAnalyticsTabulator.Tabulator(
   survey,
-  normalizedData
+  normalizedData,
+  {
+    // useNamesAsTitles: true
+  }
 );
 
 SurveyAnalyticsTabulator.TableExtensions.registerExtension({

@@ -261,7 +261,7 @@ export class DataTables extends Table {
       return {
         name: column.name,
         data: column.name,
-        sTitle: (question && question.title) || column.displayName,
+        sTitle: (question && (this.options.useNamesAsTitles ? question.name : question.title)) || column.displayName,
         visible: this.isColumnVisible(column),
         orderable: false,
         width:
