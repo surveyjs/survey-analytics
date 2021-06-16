@@ -1,6 +1,14 @@
-import { SurveyModel } from "survey-core";
+import { SurveyModel, QuestionCommentModel } from "survey-core";
+import { WordCloud } from "../src/wordcloud/wordcloud";
+import { Text } from "../src/text";
+import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrapper";
 import { VisualizationPanel } from "../src/visualizationPanel";
 import { IState } from "../src/config";
+import { VisualizationManager } from "../src/visualizationManager";
+
+VisualizationManager.registerVisualizer("comment", Text);
+VisualizationManager.registerVisualizer("comment", WordCloud);
+VisualizationManager.registerAlternativesVisualizer(AlternativeVisualizersWrapper);
 
 test("allowDynamicLayout option", () => {
   const json = {
@@ -457,4 +465,25 @@ test("strip html tags from title", () => {
   visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { stripHtmlFromTitles: false });
   element = visPanel.getElement("question1");
   expect(element.displayName).toEqual(json.elements[0].title);
+});
+
+test("pass backgroundColor to children", () => {
+  const json = {
+    elements: [
+      {
+        type: "comment",
+        name: "question1"
+      }
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), []);
+  visPanel.backgroundColor = "red";
+  const visualizer: AlternativeVisualizersWrapper = <AlternativeVisualizersWrapper>visPanel.getVisualizer("question1");
+  const alternatives = visualizer.getVisualizers();
+  const wordcloud: WordCloud = <WordCloud>alternatives[0];
+  const text: Text = <Text>alternatives[1];
+  expect(visualizer.backgroundColor).toEqual("red");
+  expect(wordcloud.backgroundColor).toEqual("red");
+  expect(text.backgroundColor).toEqual("red");
 });

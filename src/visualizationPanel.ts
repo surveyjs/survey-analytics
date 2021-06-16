@@ -232,6 +232,11 @@ export class VisualizationPanel extends VisualizerBase {
     this.visibleElementsChanged(elements[0], "MOVED");
   }
 
+  protected setBackgroundColorCore(color: string) {
+    super.setBackgroundColorCore(color);
+    this.visualizers.forEach(visualizer => visualizer.backgroundColor = color);
+  }
+
   private buildVisualizers(questions: Array<Question>) {
     questions.forEach((question) => {
       const visualizer = this.createVisualizer(question);
@@ -532,6 +537,7 @@ export class VisualizationPanel extends VisualizerBase {
         "__title--draggable";
     }
     questionContent.className = questionElementClassName + "__content";
+    questionContent.style.backgroundColor = this.backgroundColor;
 
     questionContent.appendChild(titleElement);
     questionContent.appendChild(vizualizerElement);

@@ -52,6 +52,10 @@ export class AlternativeVisualizersWrapper
     return false;
   }
 
+  public getVisualizers() {
+    return this.visualizers;
+  }
+
   private visualizersWithSelection: Array<IVisualizerWithSelection> = [];
   private selectedItem: ItemValue;
   private visualizer: VisualizerBase;
@@ -100,6 +104,11 @@ export class AlternativeVisualizersWrapper
   protected renderContent(container: HTMLElement) {
     this.visualizerContainer = container;
     this.visualizer.render(this.visualizerContainer);
+  }
+
+  protected setBackgroundColorCore(color: string) {
+    super.setBackgroundColorCore(color);
+    this.visualizers.forEach(visualizer => visualizer.backgroundColor = color);
   }
 
   destroy() {
