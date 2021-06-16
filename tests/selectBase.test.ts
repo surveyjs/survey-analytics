@@ -162,3 +162,13 @@ test("change answers order", () => {
   selectBase.answersOrder = "desc";
   expect(selectBase.getAnswersData()).toEqual({"colors": ["#3999fb", "#1eb496", "#86e1fb"], "datasets": [[1, 1, 2]], "labels": ["mother_text", "sister_text", "father_text"], "seriesLabels": [], "texts": [[1, 1, 2]]});
 });
+
+test("check allowSelection option", () => {
+  const question = new QuestionDropdownModel("q1");
+  let visualizer = new SelectBase(question, [], {});
+  expect(visualizer.supportSelection).toEqual(true);
+  visualizer = new SelectBase(question, [], { allowSelection: true });
+  expect(visualizer.supportSelection).toEqual(true);
+  visualizer = new SelectBase(question, [], { allowSelection: false });
+  expect(visualizer.supportSelection).toEqual(false);
+});
