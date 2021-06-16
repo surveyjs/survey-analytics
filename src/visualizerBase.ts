@@ -387,8 +387,19 @@ export class VisualizerBase implements IDataInfo {
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
-  backgroundColor = "#f7f7f7";
+  private _backgroundColor = "#f7f7f7";
 
+  get backgroundColor() { return this.getBackgroundColorCore(); }
+  set backgroundColor(value) { this.setBackgroundColorCore(value); }
+
+  protected getBackgroundColorCore() {
+    return this._backgroundColor;
+  }
+  protected setBackgroundColorCore(color: string) {
+    this._backgroundColor = color;
+    if(this.footerVisualizer) this.footerVisualizer.backgroundColor = color;
+  }
+  
   static customColors: string[] = [];
   private static colors = [
     "#86e1fb",
