@@ -13,7 +13,7 @@
     "build_dev": "webpack --env.buildType dev",
     "build_prod": "npm run build_dev && webpack --env.buildType prod && node dts_cleaner.js packages/survey.analytics.d.ts"
   },
-  "version": "1.8.53",
+  "version": "1.8.54",
   "name": "survey-analytics",
   "description": "SurveyJS analytics Library.",
   "main": "survey.analytics.js",
