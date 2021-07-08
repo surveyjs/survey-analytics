@@ -177,8 +177,8 @@ test("getState, setState, onStateChanged", () => {
     locale: "fr",
     elements: [
       {
-        displayName: "question2",
-        name: "question2",
+        displayName: "question1",
+        name: "question1",
         type: "bar",
         isVisible: false,
         isPublic: true,
@@ -487,3 +487,72 @@ test("pass backgroundColor to children", () => {
   expect(wordcloud.backgroundColor).toEqual("red");
   expect(text.backgroundColor).toEqual("red");
 });
+
+test("set state for non-existing questions", () => {
+  const json = {
+    elements: [
+      {
+        type: "text",
+        name: "question1",
+      },
+      {
+        type: "text",
+        name: "question2",
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), []);
+
+  expect(visPanel.getElements().length).toBe(2);
+  expect(visPanel.state).toEqual({
+    "elements": [
+      {
+        "displayName": "question1",
+        "isPublic": true,
+        "isVisible": true,
+        "name": "question1",
+        "type": undefined,
+      },
+      {
+        "displayName": "question2",
+        "isPublic": true,
+        "isVisible": true,
+        "name": "question2",
+        "type": undefined,
+      },
+    ],
+    "locale": "ru",
+  });
+
+  visPanel.state = {
+    "elements": [
+      {
+        "displayName": "question1",
+        "isPublic": true,
+        "isVisible": true,
+        "name": "question1",
+      },
+      {
+        "displayName": "question3",
+        "isPublic": true,
+        "isVisible": true,
+        "name": "question3",
+      },
+    ],
+  };
+  expect(visPanel.state).toEqual({
+    "elements": [
+      {
+        "displayName": "question1",
+        "isPublic": true,
+        "isVisible": true,
+        "name": "question1",
+        "type": undefined,
+      },
+    ],
+    "locale": "ru",
+  });
+
+});
+
