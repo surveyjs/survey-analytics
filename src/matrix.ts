@@ -1,5 +1,5 @@
 import { ItemValue, QuestionMatrixModel, Question } from "survey-core";
-import { SelectBase } from "./selectBase";
+import { IAnswersData, SelectBase } from "./selectBase";
 
 export class Matrix extends SelectBase {
   constructor(
@@ -9,6 +9,7 @@ export class Matrix extends SelectBase {
     name?: string
   ) {
     super(question, data, options, name || "matrix");
+    this.getAnswersData();
   }
 
   protected get matrixQuestion(): QuestionMatrixModel {
@@ -33,6 +34,70 @@ export class Matrix extends SelectBase {
 
   valuesSource(): Array<ItemValue> {
     return this.matrixQuestion.columns;
+  }
+
+  private getHasAnswersInAllSeriesArray(
+    datasets: Array<Array<any>>
+  ): Array<boolean> {
+    let result: Array<boolean> = Array<boolean>();
+    for (let i = 0; i < datasets[0].length; i++) {
+      for (let j = 0; j < datasets.length; j++) {
+        if (datasets[j][i] != 0) {
+          result[i] = true;
+        }
+      }
+    }
+    return result;
+  }
+
+  private getHasAnswersInSeries(dataset: Array<any>) {
+    for (let i = 0; i < dataset.length; i++) {
+      if (dataset[i] != 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  protected hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData {
+    const result: IAnswersData = {
+      datasets: <Array<Array<any>>>[],
+      labels: <Array<string>>[],
+      colors: <Array<string>>[],
+      texts: <Array<Array<any>>>[],
+      seriesLabels: <Array<string>>[],
+    };
+
+    const hasAnswersInAllSeriesArr = this.getHasAnswersInAllSeriesArray(
+      answersData.datasets
+    );
+    for (let i = 0; i < answersData.datasets.length; i++) {
+      const hasAnswersInSeries = this.getHasAnswersInSeries(
+        answersData.datasets[i]
+      );
+      if (hasAnswersInSeries) {
+        result.labels.push(answersData.labels[i]);
+        result.colors.push(answersData.colors[i]);
+      } else {
+        continue;
+      }
+      const datasets = [];
+      const texts = [];
+      for (let j = 0; j < answersData.datasets[0].length; j++) {
+        if (hasAnswersInAllSeriesArr[j]) {
+          datasets.push(answersData.datasets[i][j]);
+          texts.push(answersData.texts[i][j]);
+        }
+      }
+      result.datasets.push(datasets);
+      result.texts.push(texts);
+    }
+    for (let i = 0; i < answersData.datasets[0].length; i++) {
+      if (hasAnswersInAllSeriesArr[i]) {
+        result.seriesLabels.push(answersData.seriesLabels[i]);
+      }
+    }
+    return result;
   }
 
   getData(): any[] {

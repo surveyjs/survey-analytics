@@ -1,6 +1,7 @@
 import { Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
+import { localization } from "./localizationManager";
 
 import "./text.scss";
 import { DocumentHelper } from "./utils";
@@ -11,7 +12,7 @@ export class TextTableAdapter {
   public create(container: HTMLElement) {
     const { columnsCount, data } = this.model.getData();
     const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
-      innerHTML: "There are no results yet",
+      innerHTML: localization.getString("noResults"),
     });
 
     if (data.length === 0) {

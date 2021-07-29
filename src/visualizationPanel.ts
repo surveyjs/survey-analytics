@@ -48,7 +48,7 @@ export interface IVisualizerPanelRenderedElement
  */
 export class VisualizationPanel extends VisualizerBase {
   public static haveCommercialLicense: boolean = false;
-  protected visualizers: Array<VisualizerBase> = [];
+  public visualizers: Array<VisualizerBase> = [];
   private haveCommercialLicense: boolean = false;
   private renderedQuestionsCount: number = 0;
   constructor(
@@ -232,6 +232,11 @@ export class VisualizationPanel extends VisualizerBase {
     this.visibleElementsChanged(elements[0], "MOVED");
   }
 
+  protected setBackgroundColorCore(color: string) {
+    super.setBackgroundColorCore(color);
+    this.visualizers.forEach(visualizer => visualizer.backgroundColor = color);
+  }
+
   private buildVisualizers(questions: Array<Question>) {
     questions.forEach((question) => {
       const visualizer = this.createVisualizer(question);
@@ -340,7 +345,7 @@ export class VisualizationPanel extends VisualizerBase {
       (this.questions || []).forEach((question) => {
         const element = this.getElement(question.name);
         if (!!element) {
-          element.displayName = question.title;
+          element.displayName = this.processText(question.title);
         }
       });
     }
@@ -386,7 +391,7 @@ export class VisualizationPanel extends VisualizerBase {
     return (questions || []).map((question) => {
       return {
         name: question.name,
-        displayName: question.title,
+        displayName: this.processText(question.title),
         isVisible: true,
         isPublic: true,
         type: undefined,
@@ -532,6 +537,7 @@ export class VisualizationPanel extends VisualizerBase {
         "__title--draggable";
     }
     questionContent.className = questionElementClassName + "__content";
+    questionContent.style.backgroundColor = this.backgroundColor;
 
     questionContent.appendChild(titleElement);
     questionContent.appendChild(vizualizerElement);
@@ -626,8 +632,10 @@ export class VisualizationPanel extends VisualizerBase {
   public set state(newState: IState) {
     if (!newState) return;
 
-    if (typeof newState.elements !== "undefined")
-      this._elements = [].concat(newState.elements);
+    if (Array.isArray(newState.elements)) {
+      const questionNames = this.questions.map(q => q.name);
+      this._elements = [].concat(newState.elements.filter(e => (questionNames.indexOf(e.name) !== -1)));
+    }
 
     if (typeof newState.locale !== "undefined") this.setLocale(newState.locale);
 

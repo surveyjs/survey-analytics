@@ -1,6 +1,6 @@
-import { Table, TableRow } from "./table";
+import { ITableOptions, Table, TableRow } from "./table";
 import { SurveyModel } from "survey-core";
-import { QuestionLocation } from "./config";
+import { ColumnDataType, QuestionLocation } from "./config";
 
 import "./tabulator.scss";
 import { DocumentHelper } from "../utils";
@@ -15,7 +15,7 @@ if (!!document) {
   document.head.appendChild(templateHolder);
 }
 
-interface IOptions {
+interface ITabulatorOptions extends ITableOptions {
   tabulatorOptions?: any;
   downloadHiddenColumns?: boolean;
   actionsColumnWidth?: number;
@@ -24,6 +24,7 @@ interface IOptions {
 }
 
 const defaultDownloadOptions = {
+  fileName: "results",
   pdf: {
     orientation: "portrait", //set page orientation to portrait
     autoTable: {
@@ -41,7 +42,7 @@ const defaultDownloadOptions = {
   xlsx: { sheetName: "results" },
 };
 
-const defaultOptions: IOptions = {
+const defaultOptions: ITabulatorOptions = {
   tabulatorOptions: {},
   actionsColumnWidth: 60,
   downloadHiddenColumns: false,
@@ -57,7 +58,7 @@ export class Tabulator extends Table {
   constructor(
     survey: SurveyModel,
     data: Array<Object>,
-    options: IOptions,
+    options: ITabulatorOptions,
     _columns: Array<any> = []
   ) {
     super(survey, data, options, _columns);
@@ -222,15 +223,23 @@ export class Tabulator extends Table {
 
   public getColumns(): Array<any> {
     const columns: any = this.columns.map((column, index) => {
-      var question = this.survey.getQuestionByName(column.name);
+      let question = this.survey.getQuestionByName(column.name);
+      let formatter = "plaintext";
+      if(column.dataType == ColumnDataType.FileLink) {
+        formatter = "html";
+      }
+      if(column.dataType == ColumnDataType.Image) {
+        formatter = "image";
+      }
       return {
         field: column.name,
-        title: (question && question.title) || column.displayName,
+        title: (question && (this.options.useNamesAsTitles ? question.name : question.title)) || column.displayName,
         width: column.width,
         widthShrink: !column.width ? 1 : 0,
         visible: this.isColumnVisible(column),
         headerSort: false,
         download: this.options.downloadHiddenColumns ? true : undefined,
+        formatter,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(
             cell,
@@ -336,7 +345,7 @@ export class Tabulator extends Table {
   public download(type: string): void {
     this.tabulatorTables.download(
       type,
-      `results.${type}`,
+      `${this.options.downloadOptions.fileName}.${type}`,
       this.options.downloadOptions[type] || defaultOptions.downloadOptions[type]
     );
   }

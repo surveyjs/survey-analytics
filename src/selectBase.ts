@@ -9,6 +9,14 @@ export interface IVisualizerWithSelection {
   setSelection(item: ItemValue): void;
 }
 
+export interface IAnswersData {
+  datasets: Array<Array<any>>;
+  labels: Array<string>;
+  colors: Array<string>;
+  texts: Array<Array<any>>;
+  seriesLabels: Array<string>;
+}
+
 export class SelectBase
   extends VisualizerBase
   implements IVisualizerWithSelection {
@@ -20,7 +28,7 @@ export class SelectBase
   private _showPercentages: boolean = false;
   protected _answersOrder: string = "default";
   protected _supportSelection: boolean = true;
-  private _hideEmptyAnswers = false;  
+  private _hideEmptyAnswers = false;
   private _topN = -1;
   public static topNValuesDefaults = [-1, 5, 10, 20];
   public topNValues = [].concat(SelectBase.topNValuesDefaults);
@@ -57,7 +65,8 @@ export class SelectBase
     });
     this.registerToolbarItem("changeAnswersOrder", () => {
       if (
-        (this.options.allowChangeAnswersOrder === undefined || this.options.allowChangeAnswersOrder) &&
+        (this.options.allowChangeAnswersOrder === undefined ||
+          this.options.allowChangeAnswersOrder) &&
         this.getSeriesValues().length === 0
       ) {
         this.choicesOrderSelector = DocumentHelper.createSelector(
@@ -89,10 +98,7 @@ export class SelectBase
       }
     });
     this.registerToolbarItem("hideEmptyAnswers", () => {
-      if (
-        this.options.allowHideEmptyAnswers &&
-        this.getSeriesValues().length === 0
-      ) {
+      if (this.options.allowHideEmptyAnswers) {
         this.emptyAnswersBtn = DocumentHelper.createButton(() => {
           this.hideEmptyAnswers = !this._hideEmptyAnswers;
         });
@@ -105,8 +111,12 @@ export class SelectBase
         this.options.allowTopNAnswers &&
         this.getSeriesValues().length === 0
       ) {
-        this.topNSelector = DocumentHelper.createSelector(this.topNValues.map(value => {
-            return { text: localization.getString("topNValueText" + value), value: value };
+        this.topNSelector = DocumentHelper.createSelector(
+          this.topNValues.map((value) => {
+            return {
+              text: localization.getString("topNValueText" + value),
+              value: value,
+            };
           }),
           (option) => false,
           (e) => {
@@ -121,7 +131,7 @@ export class SelectBase
 
   protected chartTypes: string[] = [];
   public chartType: string;
-  
+
   private updateEmptyAnswersBtn() {
     if (!!this.emptyAnswersBtn) {
       this.emptyAnswersBtn.innerHTML = this._hideEmptyAnswers
@@ -137,12 +147,19 @@ export class SelectBase
 
   private updateOrderSelector() {
     if (!!this.choicesOrderSelector) {
-      if (this.chartType == "bar" || this.chartType == "scatter" || ((this.chartType == "pie" || this.chartType == "doughnut") && this.topN > 0)) {
+      if (
+        this.chartType == "bar" ||
+        this.chartType == "scatter" ||
+        ((this.chartType == "pie" || this.chartType == "doughnut") &&
+          this.topN > 0)
+      ) {
         this.choicesOrderSelector.style.display = "inline-block";
       } else {
         this.choicesOrderSelector.style.display = "none";
       }
-      this.choicesOrderSelector.getElementsByTagName("select")[0].value = this.answersOrder;
+      this.choicesOrderSelector.getElementsByTagName(
+        "select"
+      )[0].value = this.answersOrder;
     }
   }
 
@@ -161,7 +178,9 @@ export class SelectBase
 
   private updateTopNSelector() {
     if (!!this.topNSelector) {
-      this.topNSelector.getElementsByTagName("select")[0].value = <any>this._topN;
+      this.topNSelector.getElementsByTagName("select")[0].value = <any>(
+        this._topN
+      );
     }
   }
 
@@ -269,8 +288,9 @@ export class SelectBase
       (choice) => choice.value
     );
 
-    if (this.question.hasOther) values.unshift("other");
-
+    if (this.question.hasOther) {
+      values.unshift("other");
+    }
     return values;
   }
 
@@ -282,8 +302,9 @@ export class SelectBase
       ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value)
     );
 
-    if (this.question.hasOther) labels.unshift("Other");
-
+    if (this.question.hasOther) {
+      labels.unshift(this.question.otherText);
+    }
     return labels;
   }
 
@@ -312,27 +333,33 @@ export class SelectBase
     return percentages;
   }
 
-  protected answersDataReady(answersData: { datasets: Array<any>, labels: Array<string>, colors: Array<string>, texts: Array<any> }) {
+  protected hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData {
+    var result = {
+      datasets: <Array<any>>[[]],
+      labels: <Array<string>>[],
+      colors: <Array<string>>[],
+      texts: <Array<any>>[[]],
+      seriesLabels: answersData.seriesLabels,
+    };
+    for (var i = 0; i < answersData.datasets[0].length; i++) {
+      if (answersData.datasets[0][i] != 0) {
+        result.datasets[0].push(answersData.datasets[0][i]);
+        result.labels.push(answersData.labels[i]);
+        result.colors.push(answersData.colors[i]);
+        result.texts[0].push(answersData.texts[0][i]);
+      }
+    }
+    return result;
+  }
+
+  protected answersDataReady(answersData: IAnswersData) {
     let result: any = {};
-    if(this.hideEmptyAnswers) {
-      result = {
-        datasets: <Array<any>>[[]],
-        labels: <Array<string>>[],
-        colors: <Array<string>>[],
-        texts: <Array<any>>[[]]
-      }
-      for(var i=0; i<answersData.datasets[0].length; i++) {
-        if(answersData.datasets[0][i] != 0) {
-          result.datasets[0].push(answersData.datasets[0][i]);
-          result.labels.push(answersData.labels[i]);
-          result.colors.push(answersData.colors[i]);
-          result.texts[0].push(answersData.texts[0][i]);
-        }
-      }
+    if (this.hideEmptyAnswers) {
+      result = this.hideEmptyAnswersInData(answersData);
     } else {
       result = answersData;
     }
-    if(this.topN > 0) {
+    if (this.topN > 0) {
       result.datasets[0] = result.datasets[0].slice(-this.topN);
       result.labels = result.labels.slice(-this.topN);
       result.colors = result.colors.slice(-this.topN);
@@ -354,7 +381,8 @@ export class SelectBase
   /**
    * Returns object with all infotmation for data visualization: datasets, labels, colors, additional texts (percentage).
    */
-  public getAnswersData() {
+  public getAnswersData(): IAnswersData {
+    let seriesLabels = this.getSeriesLabels();
     let datasets = this.getData();
     let labels = this.getLabels();
     let colors = this.getColors();
@@ -380,8 +408,9 @@ export class SelectBase
       datasets,
       labels,
       colors,
-      texts
-    }
+      texts,
+      seriesLabels,
+    };
     answersData = this.answersDataReady(answersData);
     this.onAnswersDataReady.fire(this, answersData);
 

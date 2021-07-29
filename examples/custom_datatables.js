@@ -12,6 +12,10 @@ var normalizedData = data.map(function (item) {
   return item;
 });
 
+// SurveyAnalyticsDatatables.TableExtensions.unregisterExtension("header", "changelocale");
+
+SurveyAnalyticsDatatables.Table.showFilesAsImages = true;
+
 SurveyAnalyticsDatatables.TableExtensions.registerExtension({
   location: "details",
   name: "showinsurvey",
@@ -73,7 +77,10 @@ SurveyAnalyticsDatatables.TableExtensions.findExtension(
 
 var surveyAnalyticsDataTables = new SurveyAnalyticsDatatables.DataTables(
   survey,
-  normalizedData
+  normalizedData,
+  {
+    // useNamesAsTitles: true
+  }
 );
 
 surveyAnalyticsDataTables.render(

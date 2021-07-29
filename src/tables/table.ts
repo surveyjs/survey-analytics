@@ -1,4 +1,4 @@
-import { SurveyModel, Question, Event } from "survey-core";
+import { SurveyModel, Question, Event, settings } from "survey-core";
 import {
   IPermission,
   QuestionLocation,
@@ -9,9 +9,29 @@ import {
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { TableExtensions } from "./extensions/tableextensions";
-import { createCommercialLicenseLink } from "../utils";
+import { createCommercialLicenseLink, createImagesContainer, createLinksContainer, DocumentHelper } from "../utils";
+
+export interface ITableOptions {
+  [index: string]: any;
+
+  /**
+   * Set this property to true to render column headings using question names
+   */
+  useNamesAsTitles?: boolean;
+  /**
+   * Use this event to change the display value of question in table.
+   * <br/> `sender` - the table object that fires the event.
+   * <br/> `options.question` - the question obect for which event is fired.
+   * <br/> `options.displayValue` - the question display value. You can change this option before it is displayed in the table.
+   */
+  onGetQuestionValue?: (options: {
+    question: Question;
+    displayValue: any;
+  }) => void;
+}
 
 export abstract class Table {
+  public static showFilesAsImages = false;
   public static haveCommercialLicense: boolean = false;
   protected tableData: any;
   protected extensions: TableExtensions;
@@ -19,9 +39,13 @@ export abstract class Table {
   constructor(
     protected survey: SurveyModel,
     protected data: Array<Object>,
-    protected options: any,
-    protected _columns: Array<any> = []
+    protected options: ITableOptions = {},
+    protected _columns: Array<ITableColumn> = []
   ) {
+    if(!this.options) {
+      this.options = {};
+    }
+
     if (_columns.length === 0) {
       this._columns = this.buildColumns(survey);
     }
@@ -118,19 +142,44 @@ export abstract class Table {
   }
 
   protected buildColumns = (survey: SurveyModel) => {
-    return this.survey.getAllQuestions().map((question: Question) => {
-      return {
+    let columns: Array<ITableColumn> = [];
+    this.survey.getAllQuestions().forEach((question: Question) => {
+      let dataType = ColumnDataType.Text;
+      if (question.getType() === "file") {
+        dataType = ColumnDataType.FileLink;
+      }
+      if (question.getType() === "signaturepad") {
+        dataType = ColumnDataType.Image;
+      }
+      columns.push({
         name: question.name,
-        displayName: (question.title || "").trim() || question.name,
-        dataType:
-          question.getType() !== "file"
-            ? ColumnDataType.Text
-            : ColumnDataType.FileLink,
-        isVisible: question.getType() !== "file",
+        displayName:
+          this.options && this.options.useNamesAsTitles
+            ? question.name
+            : (question.title || "").trim() || question.name,
+        dataType,
+        isVisible: true,
         isPublic: true,
         location: QuestionLocation.Column,
-      };
+      });
+      if (
+        question.hasComment ||
+        (question.hasOther && question.getStoreOthersAsComment())
+      ) {
+        columns.push({
+          name: `${question.name}${settings.commentPrefix}`,
+          displayName: question.hasOther
+            ? question.otherText
+            : question.commentText,
+          isComment: true,
+          dataType,
+          isVisible: true,
+          isPublic: true,
+          location: QuestionLocation.Column,
+        });
+      }
     });
+    return columns;
   };
 
   public isColumnVisible(column: ITableColumn) {
@@ -156,13 +205,35 @@ export abstract class Table {
         var displayValue = item[column.name];
         const question = this.survey.getQuestionByName(column.name);
         if (question) {
-          displayValue = question.displayValue;
+          if (column.isComment) {
+            displayValue = question.comment;
+          } else if (this.options.useValuesAsLabels) {
+            displayValue = question.value;
+          } else {
+            displayValue = question.displayValue;
+          }
         }
-        dataItem[column.name] =
-          typeof displayValue === "string"
-            ? displayValue
-            : JSON.stringify(displayValue) || "";
+        if (column.dataType === ColumnDataType.FileLink) {
+          if (Array.isArray(displayValue)) {
+            dataItem[column.name] = Table.showFilesAsImages ? createImagesContainer(
+              displayValue
+            ).outerHTML : createLinksContainer(
+              displayValue
+            ).outerHTML;
+          }
+        } else {
+          dataItem[column.name] =
+            typeof displayValue === "string"
+              ? displayValue
+              : JSON.stringify(displayValue) || "";
+        }
+        const opt = { question: question, displayValue: dataItem[column.name] };
+        if (typeof this.options.onGetQuestionValue === "function") {
+          this.options.onGetQuestionValue(opt);
+        }
+        dataItem[column.name] = opt.displayValue;
       });
+
       return dataItem;
     });
   }

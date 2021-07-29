@@ -37,8 +37,8 @@ export class VisualizerBase implements IDataInfo {
   public static otherCommentCollapsed = true;
 
   /**
-  * The event is fired right after a visualizer's content is rendered in DOM.
-  **/
+   * The event is fired right after a visualizer's content is rendered in DOM.
+   **/
   public onAfterRender: Event<
     (sender: VisualizerBase, options: any) => any,
     any
@@ -106,7 +106,7 @@ export class VisualizerBase implements IDataInfo {
       const question = new QuestionCommentModel(
         this.question.name + (settings || {}).commentPrefix
       );
-      question.title = this.question.title;
+      question.title = this.processText(this.question.title);
 
       this._footerVisualizer = this.createVisualizer(question);
       this._footerVisualizer.onUpdate = () => this.invokeOnUpdate();
@@ -118,7 +118,11 @@ export class VisualizerBase implements IDataInfo {
    * Indicates whether visualizer supports selection. Visualizers of questions with choices allow to select choice by clicking on the diagram bar and filter other data for the selected item.
    */
   public get supportSelection(): boolean {
-    return this._supportSelection;
+    return (
+      (this.options.allowSelection === undefined ||
+        this.options.allowSelection) &&
+      this._supportSelection
+    );
   }
 
   /**
@@ -268,7 +272,7 @@ export class VisualizerBase implements IDataInfo {
     if (!!this.options && typeof this.options.renderContent === "function") {
       this.options.renderContent(container, this);
     } else {
-      container.innerHTML = "This question type is not visualized yet";
+      container.innerHTML = localization.getString("noVisualizerForQuestion");
     }
     this.afterRender(container);
   }
@@ -369,13 +373,33 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  protected processText(text: string): string {
+    if (this.options.stripHtmlFromTitles !== false) {
+      let originalText = text || "";
+      let processedText = originalText.replace(/(<([^>]+)>)/gi, "");
+      return processedText;
+    }
+    return text;
+  }
+
   getRandomColor() {
     const colors = this.getColors();
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
-  backgroundColor = "#f7f7f7";
+  private _backgroundColor = "#f7f7f7";
 
+  get backgroundColor() { return this.getBackgroundColorCore(); }
+  set backgroundColor(value) { this.setBackgroundColorCore(value); }
+
+  protected getBackgroundColorCore() {
+    return this._backgroundColor;
+  }
+  protected setBackgroundColorCore(color: string) {
+    this._backgroundColor = color;
+    if(this.footerVisualizer) this.footerVisualizer.backgroundColor = color;
+  }
+  
   static customColors: string[] = [];
   private static colors = [
     "#86e1fb",

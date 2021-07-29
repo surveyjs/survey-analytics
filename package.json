@@ -13,7 +13,7 @@
     "build_dev": "webpack --env.buildType dev",
     "build_prod": "npm run build_dev && webpack --env.buildType prod && node dts_cleaner.js packages/survey.analytics.d.ts"
   },
-  "version": "1.8.22",
+  "version": "1.8.58",
   "name": "survey-analytics",
   "description": "SurveyJS analytics Library.",
   "main": "survey.analytics.js",
@@ -46,7 +46,7 @@
     "url": "https://github.com/surveyjs/survey-analytics.git"
   },
   "homepage": "https://surveyjs.io/",
-  "license": "Commercial",
+  "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "datatables.net": "^1.10.20",
     "datatables.net-buttons": "^1.6.0",
@@ -63,7 +63,7 @@
     "jquery": "3.5.0",
     "muuri": "^0.8.0",
     "plotly.js": "1.57.1",
-    "survey-core": "^1.5.0",
+    "survey-core": "^1.8.34",
     "tabulator-tables": "4.8.4",
     "wordcloud": "^1.1.0"
   },
@@ -99,7 +99,7 @@
     "testcafe": "^1.9.2",
     "ts-jest": "^26.1.1",
     "ts-loader": "^7.0.5",
-    "typescript": "3.9.6",
+    "typescript": "^4.2.2",
     "url-loader": "0.6.2",
     "val-loader": "0.5.0",
     "webpack": "^4.43.0",

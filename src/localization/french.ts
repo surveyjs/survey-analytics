@@ -19,6 +19,7 @@ export var frenchStrings = {
     chartType_scatter: "Nuages de points",
     chartType_gauge: "Gauge",
     chartType_bullet: "Bulles",
+    filter: "Filtre",
     hideButton: "Masquer",
     resetFilter: "Rafraichir Filtres",
     clearButton: "Rafraichir",
@@ -26,7 +27,10 @@ export var frenchStrings = {
     defaultOrder: "Defaut",
     ascOrder: "Ascendant",
     descOrder: "Descendant",
-    showMinorColumns: "Afficher les colonnes mineures"
+    showMinorColumns: "Afficher les colonnes mineures",
+    otherCommentTitle: "Autre élément et commentaires",
+    noVisualizerForQuestion: "Ce type de question n'est pas encore visualisé",
+    noResults: "Il n'y a pas encore de résultats"
 };
 
 localization.locales["fr"] = frenchStrings;

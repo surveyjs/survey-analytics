@@ -1,7 +1,7 @@
 import { TableRow } from "../table";
 import { Table } from "../table";
 import { DocumentHelper } from "../../utils";
-import { QuestionLocation } from "../config";
+import { ColumnDataType, QuestionLocation } from "../config";
 import { TableExtensions } from "./tableextensions";
 import { localization } from "../../localizationManager";
 
@@ -11,11 +11,10 @@ export class Details {
     private row: TableRow,
     protected targetNode: HTMLElement
   ) {
-    var detailsTable = DocumentHelper.createElement(
+    this.detailsTable = DocumentHelper.createElement(
       "table",
       "sa-table__detail-table"
     );
-    this.detailsTable = detailsTable;
     this.table.onColumnsLocationChanged.add(() => {
       this.close();
     });
@@ -35,6 +34,9 @@ export class Details {
         });
         var td2 = DocumentHelper.createElement("td");
         td2.textContent = this.row.getRowData()[column.name];
+        if(column.dataType === ColumnDataType.Image) {
+          td2.innerHTML = "<image src='" + td2.textContent + "'/>";
+        }
         var td3 = DocumentHelper.createElement("td");
         td3.appendChild(this.createShowAsColumnButton(column.name));
         row.appendChild(td1);

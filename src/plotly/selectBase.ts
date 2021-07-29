@@ -67,9 +67,9 @@ export class PlotlyChartAdapter {
 
     const plot = (<any>Plotly).newPlot(
       chartNode,
-      plotlyOptions.traces,
-      plotlyOptions.layout,
-      config
+      options.traces,
+      options.layout,
+      options.config
     );
 
     (<any>chartNode)["on"]("plotly_click", (data: any) => {
@@ -155,12 +155,16 @@ export class PlotlySetup {
   };
 
   static setupPie(model: SelectBase): PlotlyOptions {
-    let seriesValues = model.getSeriesValues();
-    let seriesLabels = model.getSeriesLabels();
-    let { datasets, labels, colors, texts } = model.getAnswersData();
+    let {
+      datasets,
+      labels,
+      colors,
+      texts,
+      seriesLabels,
+    } = model.getAnswersData();
 
     const traces: any = [];
-    const hasSeries = datasets.length > 1 && seriesValues.length > 1;
+    const hasSeries = seriesLabels.length > 1;
 
     const traceConfig: any = {
       type: model.chartType,
@@ -243,12 +247,16 @@ export class PlotlySetup {
     let lineHeight = 30;
     let topMargin = 30;
     let bottomMargin = 30;
-    let seriesValues = model.getSeriesValues();
-    let seriesLabels = model.getSeriesLabels();
-    let { datasets, labels, colors, texts } = model.getAnswersData();
+    let {
+      datasets,
+      labels,
+      colors,
+      texts,
+      seriesLabels,
+    } = model.getAnswersData();
 
     const traces: any = [];
-    const hasSeries = datasets.length > 1 && seriesValues.length > 1;
+    const hasSeries = seriesLabels.length > 1;
 
     const traceConfig: any = {
       type: model.chartType,
@@ -316,7 +324,10 @@ export class PlotlySetup {
 
     if (hasSeries) {
       layout.showlegend = true;
-      layout.height = (labels.length + 1) * lineHeight * seriesLabels.length + topMargin + bottomMargin;
+      layout.height =
+        (labels.length + 1) * lineHeight * seriesLabels.length +
+        topMargin +
+        bottomMargin;
       if (model.chartType == "stackedbar") {
         layout.barmode = "stack";
       }
@@ -338,10 +349,17 @@ export class PlotlySetup {
   }
 
   static setupScatter(model: SelectBase): PlotlyOptions {
-    let seriesValues = model.getSeriesValues();
-    let seriesLabels = model.getSeriesLabels();
-    let { datasets, labels, colors, texts } = model.getAnswersData();
-    const hasSeries = datasets.length > 1 && seriesValues.length > 1;
+    let lineHeight = 30;
+    let topMargin = 30;
+    let bottomMargin = 30;
+    let {
+      datasets,
+      labels,
+      colors,
+      texts,
+      seriesLabels,
+    } = model.getAnswersData();
+    const hasSeries = seriesLabels.length > 1;
     const traces: any = [];
 
     const traceConfig: any = {
@@ -375,7 +393,7 @@ export class PlotlySetup {
       }
     });
 
-    const height = (labels.length + (labels.length + 1) * 0.5) * 20 + 25;
+    const height = (labels.length + 1) * lineHeight + topMargin + bottomMargin;
 
     const layout: any = {
       font: {
@@ -386,8 +404,8 @@ export class PlotlySetup {
       },
       height: height,
       margin: {
-        t: 25,
-        b: 0,
+        t: topMargin,
+        b: bottomMargin,
         r: 10,
       },
       colorway: colors,

@@ -1,6 +1,6 @@
-import { Table, TableRow } from "./table";
+import { ITableOptions, Table, TableRow } from "./table";
 import { SurveyModel, Event } from "survey-core";
-import { ITableColumn, QuestionLocation } from "./config";
+import { ColumnDataType, ITableColumn, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
 
 import "./datatables.scss";
@@ -15,7 +15,7 @@ if (!!document) {
 
 var jQuery = (<any>window)["jQuery"];
 
-interface DataTablesOptions {
+interface DataTablesOptions extends ITableOptions {
   buttons: boolean | string[] | any[] | any;
 
   dom: string;
@@ -261,13 +261,19 @@ export class DataTables extends Table {
       return {
         name: column.name,
         data: column.name,
-        sTitle: (question && question.title) || column.displayName,
+        sTitle: (question && (this.options.useNamesAsTitles ? question.name : question.title)) || column.displayName,
         visible: this.isColumnVisible(column),
         orderable: false,
         width:
           typeof column.width == "number" ? column.width + "px" : column.width,
-        mRender: (_data: object, _type: string, row: any) => {
+        render: (_data: object, _type: string, row: any) => {
           var value = row[column.name];
+          if (column.dataType === ColumnDataType.FileLink) {
+            return value;
+          }
+          if (column.dataType === ColumnDataType.Image) {
+            return "<image src='" + value + "'/>"
+          }
           return typeof value === "string"
             ? jQuery("<div>").text(value).html()
             : JSON.stringify(value);

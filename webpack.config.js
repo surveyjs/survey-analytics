@@ -45,16 +45,19 @@ var svgStoreUtils = require(path.resolve(
   "./node_modules/webpack-svgstore-plugin/src/helpers/utils.js"
 ));
 
+const today = new Date();
+const year = today.getFullYear();
+
 var banner = [
   "surveyjs - SurveyJS Analytics library v" + packageJson.version,
-  "Copyright (c) 2015-2019 Devsoft Baltic OÜ  - http://surveyjs.io/",
+  "Copyright (c) 2015-" + year + " Devsoft Baltic OÜ  - http://surveyjs.io/",
   "License: MIT (http://www.opensource.org/licenses/mit-license.php)",
 ].join("\n");
 
 // TODO add to dts_bundler
 var dts_banner = [
   "Type definitions for SurveyJS Analytics library v" + packageJson.version,
-  "Copyright (c) 2015-2019 Devsoft Baltic OÜ  - http://surveyjs.io/",
+  "Copyright (c) 2015-" + year + " Devsoft Baltic OÜ  - http://surveyjs.io/",
   "Definitions by: Devsoft Baltic OÜ <https://github.com/surveyjs/>",
   "",
 ].join("\n");
@@ -95,6 +98,9 @@ module.exports = function (options) {
           headerText: dts_banner,
         });
         rimraf.sync(packagePath + "typings");
+        fs.createReadStream("./LICENSE").pipe(
+          fs.createWriteStream(packagePath + "LICENSE")
+        );
         fs.createReadStream("./README.md").pipe(
           fs.createWriteStream(packagePath + "README.md")
         );

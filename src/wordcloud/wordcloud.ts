@@ -27,7 +27,7 @@ export class WordCloudAdapter {
       DocumentHelper.createElement("canvas", "")
     );
     const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
-      innerHTML: "There are no results yet",
+      innerHTML: localization.getString("noResults"),
     });
 
     if (data.length === 0) {

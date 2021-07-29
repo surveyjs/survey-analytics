@@ -1,6 +1,14 @@
-import { SurveyModel } from "survey-core";
+import { SurveyModel, QuestionCommentModel } from "survey-core";
+import { WordCloud } from "../src/wordcloud/wordcloud";
+import { Text } from "../src/text";
+import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrapper";
 import { VisualizationPanel } from "../src/visualizationPanel";
 import { IState } from "../src/config";
+import { VisualizationManager } from "../src/visualizationManager";
+
+VisualizationManager.registerVisualizer("comment", Text);
+VisualizationManager.registerVisualizer("comment", WordCloud);
+VisualizationManager.registerAlternativesVisualizer(AlternativeVisualizersWrapper);
 
 test("allowDynamicLayout option", () => {
   const json = {
@@ -169,8 +177,8 @@ test("getState, setState, onStateChanged", () => {
     locale: "fr",
     elements: [
       {
-        displayName: "question2",
-        name: "question2",
+        displayName: "question1",
+        name: "question1",
         type: "bar",
         isVisible: false,
         isPublic: true,
@@ -439,3 +447,112 @@ test("check onAfterRender", () => {
   expect((<any>visPanel).renderedQuestionsCount).toEqual(0);
   expect(count).toEqual(1);
 });
+
+test("strip html tags from title", () => {
+  const json = {
+    elements: [
+      {
+        type: "text",
+        name: "question1",
+        title: "<p>Some <span class='my-class'>formatted</span> text</p>"
+      }
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), []);
+  let element = visPanel.getElement("question1");
+  expect(element.displayName).toEqual("Some formatted text");
+  visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { stripHtmlFromTitles: false });
+  element = visPanel.getElement("question1");
+  expect(element.displayName).toEqual(json.elements[0].title);
+});
+
+test("pass backgroundColor to children", () => {
+  const json = {
+    elements: [
+      {
+        type: "comment",
+        name: "question1"
+      }
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), []);
+  visPanel.backgroundColor = "red";
+  const visualizer: AlternativeVisualizersWrapper = <AlternativeVisualizersWrapper>visPanel.getVisualizer("question1");
+  const alternatives = visualizer.getVisualizers();
+  const wordcloud: WordCloud = <WordCloud>alternatives[0];
+  const text: Text = <Text>alternatives[1];
+  expect(visualizer.backgroundColor).toEqual("red");
+  expect(wordcloud.backgroundColor).toEqual("red");
+  expect(text.backgroundColor).toEqual("red");
+});
+
+test("set state for non-existing questions", () => {
+  const json = {
+    elements: [
+      {
+        type: "text",
+        name: "question1",
+      },
+      {
+        type: "text",
+        name: "question2",
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), []);
+
+  expect(visPanel.getElements().length).toBe(2);
+  expect(visPanel.state).toEqual({
+    "elements": [
+      {
+        "displayName": "question1",
+        "isPublic": true,
+        "isVisible": true,
+        "name": "question1",
+        "type": undefined,
+      },
+      {
+        "displayName": "question2",
+        "isPublic": true,
+        "isVisible": true,
+        "name": "question2",
+        "type": undefined,
+      },
+    ],
+    "locale": "ru",
+  });
+
+  visPanel.state = {
+    "elements": [
+      {
+        "displayName": "question1",
+        "isPublic": true,
+        "isVisible": true,
+        "name": "question1",
+      },
+      {
+        "displayName": "question3",
+        "isPublic": true,
+        "isVisible": true,
+        "name": "question3",
+      },
+    ],
+  };
+  expect(visPanel.state).toEqual({
+    "elements": [
+      {
+        "displayName": "question1",
+        "isPublic": true,
+        "isVisible": true,
+        "name": "question1",
+        "type": undefined,
+      },
+    ],
+    "locale": "ru",
+  });
+
+});
+

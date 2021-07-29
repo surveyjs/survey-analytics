@@ -7,7 +7,7 @@ resources:
   repositories:
     - repository: Service # The name used to reference this repository in the checkout step
       type: github
-      endpoint: surveyjs
+      endpoint: dmitrykurmanov:admin
       name: surveyjs/service
 
 trigger:
@@ -118,8 +118,7 @@ steps:
       git pull origin master
       git fetch --tags --force
       git add surveyjs.io/App_Data/DocsAnalytics
-      git reset -- surveyjs.io/App_Data/DocsAnalytics/images
-      git commit -m "[skip ci] Updated survey-analytics docs"
+      git commit -m "updated survey-analytics docs"
       git pull origin master
       git push origin master
     displayName: 'git surveyjs/service push updated docs'

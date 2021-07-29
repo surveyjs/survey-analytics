@@ -29,7 +29,7 @@ test("buildColumns method", () => {
   const columns = <any>tabulator["buildColumns"](survey);
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"name":"car","displayName":"What car are you driving?","dataType":0,"isVisible":true,"isPublic":true,"location":0},{"name":"photo","displayName":"photo","dataType":1,"isVisible":false,"isPublic":true,"location":0}]'
+    '[{"name":"car","displayName":"What car are you driving?","dataType":0,"isVisible":true,"isPublic":true,"location":0},{"name":"photo","displayName":"photo","dataType":1,"isVisible":true,"isPublic":true,"location":0}]'
   );
 });
 test("getColumns method", () => {
@@ -39,7 +39,7 @@ test("getColumns method", () => {
   const columns = <any>tabulator["getColumns"]();
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"field":"","title":"","download":false,"resizable":false,"minWidth":60,"width":60},{"field":"car","title":"What car are you driving?","widthShrink":1,"visible":true,"headerSort":false},{"field":"photo","title":"photo","widthShrink":1,"visible":false,"headerSort":false}]'
+    '[{"field":"","title":"","download":false,"resizable":false,"minWidth":60,"width":60},{"field":"car","title":"What car are you driving?","widthShrink":1,"visible":true,"headerSort":false,"formatter":"plaintext"},{"field":"photo","title":"photo","widthShrink":1,"visible":true,"headerSort":false,"formatter":"html"}]'
   );
 });
 
@@ -166,5 +166,30 @@ test("check that action column doesn't export", () => {
   tabulator.render(document.createElement("table"));
   expect(tabulator.tabulatorTables.getColumnDefinitions()[0].download).toBe(
     false
+  );
+});
+
+test("useNamesAsTitles option", () => {
+  const surveyJson = {
+    questions: [
+      {
+        type: "text",
+        name: "str",
+        title: "String",
+      },
+    ],
+  };
+  const survey = new SurveyModel(surveyJson);
+
+  let tabulator = new Tabulator(survey, [], null);
+  let columns = <any>tabulator.getColumns();
+  expect(JSON.stringify(columns)).toBe(
+    "[{\"field\":\"\",\"title\":\"\",\"download\":false,\"resizable\":false,\"minWidth\":60,\"width\":60},{\"field\":\"str\",\"title\":\"String\",\"widthShrink\":1,\"visible\":true,\"headerSort\":false,\"formatter\":\"plaintext\"}]"
+  );
+
+  tabulator = new Tabulator(survey, [], <any>{ useNamesAsTitles: true });
+  columns = <any>tabulator.getColumns();
+  expect(JSON.stringify(columns)).toBe(
+    "[{\"field\":\"\",\"title\":\"\",\"download\":false,\"resizable\":false,\"minWidth\":60,\"width\":60},{\"field\":\"str\",\"title\":\"str\",\"widthShrink\":1,\"visible\":true,\"headerSort\":false,\"formatter\":\"plaintext\"}]"
   );
 });

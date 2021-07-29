@@ -44,6 +44,32 @@ export class TableExtensions {
     this.extensions[extension.location].push(extension);
   }
 
+  private static removeExtension(extension: ITableExtension) {
+    if(!extension) {
+      return;
+    }
+    const extensions = TableExtensions.extensions[extension.location];
+    const index = extensions.indexOf(extension);
+    if(index >= 0) {
+      extensions.splice(index, 1);
+    }
+  }
+
+  public static unregisterExtension(
+    location: string,
+    actionName: string
+  ) {
+    if(!actionName) {
+      return;
+    }
+    if(!!location) {
+      const extension = TableExtensions.findExtension(location, actionName);
+      TableExtensions.removeExtension(extension);
+    } else {
+      Object.keys(this.extensions).forEach((location:string) => TableExtensions.unregisterExtension(location, actionName));
+    }
+  }
+
   public static findExtension(
     location: string,
     actionName: string

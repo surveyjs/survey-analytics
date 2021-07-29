@@ -9,9 +9,16 @@ var normalizedData = data.map(function (item) {
   return item;
 });
 
+// SurveyAnalyticsTabulator.TableExtensions.unregisterExtension("header", "changelocale");
+
+SurveyAnalyticsTabulator.Table.showFilesAsImages = true;
+
 var surveyAnalyticsTabulator = new SurveyAnalyticsTabulator.Tabulator(
   survey,
-  normalizedData
+  normalizedData,
+  {
+    // useNamesAsTitles: true
+  }
 );
 
 SurveyAnalyticsTabulator.TableExtensions.registerExtension({

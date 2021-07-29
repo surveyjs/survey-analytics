@@ -26,7 +26,7 @@ test("buildColumns method", () => {
   const columns = <any>dataTables["buildColumns"](survey);
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"name":"car","displayName":"What car are you driving?","dataType":0,"isVisible":true,"isPublic":true,"location":0},{"name":"photo","displayName":"photo","dataType":1,"isVisible":false,"isPublic":true,"location":0}]'
+    '[{"name":"car","displayName":"What car are you driving?","dataType":0,"isVisible":true,"isPublic":true,"location":0},{"name":"photo","displayName":"photo","dataType":1,"isVisible":true,"isPublic":true,"location":0}]'
   );
 });
 
@@ -37,7 +37,7 @@ test("getColumns method", () => {
   const columns = <any>dataTables.getColumns();
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"car","data":"car","sTitle":"What car are you driving?","visible":true,"orderable":false},{"name":"photo","data":"photo","sTitle":"photo","visible":false,"orderable":false}]'
+    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"car","data":"car","sTitle":"What car are you driving?","visible":true,"orderable":false},{"name":"photo","data":"photo","sTitle":"photo","visible":true,"orderable":false}]'
   );
 });
 test("pass columns through ctor", () => {
@@ -145,4 +145,29 @@ test("check that datatables takes into account column's width", () => {
   expect(columns[1].width).toBe("100px");
   expect(columns[2].width).toBe("200px");
   expect(columns[3].width).toBe(undefined);
+});
+
+test("useNamesAsTitles option", () => {
+  const surveyJson = {
+    questions: [
+      {
+        type: "text",
+        name: "str",
+        title: "String",
+      },
+    ],
+  };
+  const survey = new SurveyModel(surveyJson);
+
+  let dataTables = new DataTables(survey, [], null);
+  let columns = <any>dataTables.getColumns();
+  expect(JSON.stringify(columns)).toBe(
+    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"str","data":"str","sTitle":"String","visible":true,"orderable":false}]'
+  );
+
+  dataTables = new DataTables(survey, [], <any>{ useNamesAsTitles: true });
+  columns = <any>dataTables.getColumns();
+  expect(JSON.stringify(columns)).toBe(
+    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"str","data":"str","sTitle":"str","visible":true,"orderable":false}]'
+  );
 });

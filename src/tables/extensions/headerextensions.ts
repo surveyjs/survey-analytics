@@ -50,8 +50,8 @@ TableExtensions.registerExtension({
       dropdown.appendChild(option);
 
       hiddenColumns.forEach((column: any) => {
-        var text = column.displayName;
-        if (text.length > 20) {
+        var text = column.displayName || column.name;
+        if (!!text && text.length > 20) {
           text = text.substring(0, 20) + "...";
         }
         var option = DocumentHelper.createElement("option", "", {
