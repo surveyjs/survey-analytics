@@ -4,6 +4,7 @@ export * from "../localizationManager";
 import "../localization/farsi";
 import "../localization/french";
 import "../localization/norwegian";
+import "../localization/portuguese";
 import "../localization/russian";
 import "../localization/dutch";
 import "../localization/spanish";
