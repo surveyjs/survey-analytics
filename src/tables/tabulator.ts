@@ -108,6 +108,7 @@ export class Tabulator extends Table {
         downloadRowRange: "all",
         columnMinWidth: 248,
         paginationButtonCount: 3,
+        nestedFieldSeparator: false,
       },
       this.options.tabulatorOptions
     );
