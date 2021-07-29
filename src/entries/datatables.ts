@@ -6,6 +6,7 @@ import "../localization/french";
 import "../localization/norwegian";
 import "../localization/portuguese";
 import "../localization/russian";
+import "../localization/dutch";
 
 //extensions
 import "../tables/extensions/rowextensions";

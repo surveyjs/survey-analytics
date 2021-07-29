@@ -48,7 +48,7 @@ export interface IVisualizerPanelRenderedElement
  */
 export class VisualizationPanel extends VisualizerBase {
   public static haveCommercialLicense: boolean = false;
-  protected visualizers: Array<VisualizerBase> = [];
+  public visualizers: Array<VisualizerBase> = [];
   private haveCommercialLicense: boolean = false;
   private renderedQuestionsCount: number = 0;
   constructor(
@@ -632,8 +632,10 @@ export class VisualizationPanel extends VisualizerBase {
   public set state(newState: IState) {
     if (!newState) return;
 
-    if (typeof newState.elements !== "undefined")
-      this._elements = [].concat(newState.elements);
+    if (Array.isArray(newState.elements)) {
+      const questionNames = this.questions.map(q => q.name);
+      this._elements = [].concat(newState.elements.filter(e => (questionNames.indexOf(e.name) !== -1)));
+    }
 
     if (typeof newState.locale !== "undefined") this.setLocale(newState.locale);
 

@@ -6,6 +6,8 @@ import "../localization/french";
 import "../localization/norwegian";
 import "../localization/portuguese";
 import "../localization/russian";
+import "../localization/dutch";
+import "../localization/spanish";
 
 export * from "../dataProvider";
 
