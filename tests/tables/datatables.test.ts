@@ -37,7 +37,7 @@ test("getColumns method", () => {
   const columns = <any>dataTables.getColumns();
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"car","data":"car","sTitle":"What car are you driving?","visible":true,"orderable":false},{"name":"photo","data":"photo","sTitle":"photo","visible":true,"orderable":false}]'
+    "[{\"orderable\":false,\"data\":null,\"defaultContent\":\"\"},{\"name\":\"car\",\"data\":\"car\",\"sTitle\":\"What car are you driving?\",\"visible\":true,\"orderable\":false,\"defaultContent\":\"\"},{\"name\":\"photo\",\"data\":\"photo\",\"sTitle\":\"photo\",\"visible\":true,\"orderable\":false,\"defaultContent\":\"\"}]"
   );
 });
 test("pass columns through ctor", () => {
@@ -62,12 +62,12 @@ test("pass columns through ctor", () => {
 
   const columns = <any>dataTables.getColumns();
   expect(JSON.stringify(columns)).toBe(
-    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"id","data":"id","sTitle":"Id","visible":true,"orderable":false},{"name":"happenedAt","data":"happenedAt","sTitle":"Happened At","visible":false,"orderable":false}]'
+    "[{\"orderable\":false,\"data\":null,\"defaultContent\":\"\"},{\"name\":\"id\",\"data\":\"id\",\"sTitle\":\"Id\",\"visible\":true,\"orderable\":false,\"defaultContent\":\"\"},{\"name\":\"happenedAt\",\"data\":\"happenedAt\",\"sTitle\":\"Happened At\",\"visible\":false,\"orderable\":false,\"defaultContent\":\"\"}]"
   );
 });
 
 test.skip("createDetailMarkup method", () => {
-  let dataTables = new DataTables(new SurveyModel(), [{}], null, [
+  let dataTables: any = new DataTables(new SurveyModel(), [{}], null, [
     {
       name: "id",
       displayName: "Id",
@@ -94,7 +94,7 @@ test.skip("createDetailMarkup method", () => {
 
 test.skip("makeprivate button existance", () => {
   const survey = new SurveyModel(json);
-  let dataTables = new DataTables(survey, [], null, undefined);
+  let dataTables: any = new DataTables(survey, [], null, undefined);
 
   expect(
     dataTables["headerButtonCreators"].indexOf(
@@ -162,12 +162,12 @@ test("useNamesAsTitles option", () => {
   let dataTables = new DataTables(survey, [], null);
   let columns = <any>dataTables.getColumns();
   expect(JSON.stringify(columns)).toBe(
-    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"str","data":"str","sTitle":"String","visible":true,"orderable":false}]'
+    "[{\"orderable\":false,\"data\":null,\"defaultContent\":\"\"},{\"name\":\"str\",\"data\":\"str\",\"sTitle\":\"String\",\"visible\":true,\"orderable\":false,\"defaultContent\":\"\"}]"
   );
 
   dataTables = new DataTables(survey, [], <any>{ useNamesAsTitles: true });
   columns = <any>dataTables.getColumns();
   expect(JSON.stringify(columns)).toBe(
-    '[{"orderable":false,"data":null,"defaultContent":""},{"name":"str","data":"str","sTitle":"str","visible":true,"orderable":false}]'
+    "[{\"orderable\":false,\"data\":null,\"defaultContent\":\"\"},{\"name\":\"str\",\"data\":\"str\",\"sTitle\":\"str\",\"visible\":true,\"orderable\":false,\"defaultContent\":\"\"}]"
   );
 });

@@ -9,7 +9,7 @@ export class RankingPlotly extends SelectBasePlotly {
 
   getEmptyData() {
     const choices = this.getValues();
-    let data = [];
+    let data: any = [];
 
     data.length = choices.length;
     data.fill(0);
@@ -30,10 +30,10 @@ export class RankingPlotly extends SelectBasePlotly {
     return [plotlyData];
   }
 
-  applyResultToPlotlyData(result, plotlyData, choices) {
+  applyResultToPlotlyData(result: any[], plotlyData: any, choices: any) {
     if (!result || !plotlyData || !choices) return;
 
-    result.forEach((resultValue, resultValueIndex, result) => {
+    result.forEach((resultValue: any, resultValueIndex: number, result: any[]) => {
       let index = choices.indexOf(resultValue);
       plotlyData[index] =
         +plotlyData[index] + (result.length - resultValueIndex);
