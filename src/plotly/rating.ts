@@ -126,3 +126,4 @@ export class GaugePlotly extends NumberModel {
 
 VisualizationManager.registerVisualizer("number", GaugePlotly);
 VisualizationManager.registerVisualizer("rating", GaugePlotly);
+VisualizationManager.registerVisualizer("expression", GaugePlotly);
