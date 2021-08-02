@@ -48,7 +48,7 @@ export interface IVisualizerPanelRenderedElement
  */
 export class VisualizationPanel extends VisualizerBase {
   public static haveCommercialLicense: boolean = false;
-  protected visualizers: Array<VisualizerBase> = [];
+  public visualizers: Array<VisualizerBase> = [];
   private haveCommercialLicense: boolean = false;
   private renderedQuestionsCount: number = 0;
   constructor(
@@ -460,7 +460,7 @@ export class VisualizationPanel extends VisualizerBase {
   /**
    * Returns panel element visualizer by the question name.
    */
-  getVisualizer(dataName: string) {
+  public getVisualizer(dataName: string) {
     return this.visualizers.filter((v) => v.dataName === dataName)[0];
   }
 
