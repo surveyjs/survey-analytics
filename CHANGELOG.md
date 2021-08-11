@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.60](https://github.com/surveyjs/survey-analytics/compare/v1.8.59...v1.8.60) (2021-08-11)
+
 ### [1.8.59](https://github.com/surveyjs/survey-analytics/compare/v1.8.58...v1.8.59) (2021-08-03)
 
 ### [1.8.58](https://github.com/surveyjs/survey-analytics/compare/v1.8.57...v1.8.58) (2021-07-28)
