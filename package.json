@@ -9,7 +9,7 @@
     "release": "standard-version --message \"Release: %s [skip ci]\" ",
     "doc_gen": "node doc_generator/lib_docgenerator.js src/index.ts",
     "doc_update": "chmod +x ./docupdate_npm.sh && ./docupdate_npm.sh",
-    "build_watch": "webpack --env.buildType dev --watch",
+    "watch:dev": "webpack --env.buildType dev --watch",
     "build_dev": "webpack --env.buildType dev",
     "build_prod": "npm run build_dev && webpack --env.buildType prod && node dts_cleaner.js packages/survey.analytics.d.ts"
   },
