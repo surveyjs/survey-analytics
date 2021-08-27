@@ -451,7 +451,10 @@ export class SelectBasePlotly extends SelectBase {
     name?: string
   ) {
     super(question, data, options, name);
-    this.chartTypes = SelectBasePlotly.types;
+    this.chartTypes = [].concat(SelectBasePlotly.types);
+    if (this.getSeriesValues().length > 0 && this.chartTypes.indexOf("stackedbar") === -1) {
+      this.chartTypes.push("stackedbar");
+    }
     this.chartType = this.chartTypes[0];
     this._chartAdapter = new PlotlyChartAdapter(this);
   }
