@@ -37,6 +37,10 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     this.updateData(data);
   }
 
+  public get matrixDropdownVisualizer() {
+    return this._matrixDropdownVisualizer;
+  }
+
   private onPanelAfterRenderCallback = () => {
     this.afterRender(this.contentContainer);
   };

@@ -143,24 +143,24 @@ test("check that getSelectedItemByText take into account other item", () => {
 });
 
 test("getAnswersData method", () => {
-  expect(selectBase.getAnswersData()).toEqual({"colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198"], "datasets": [[2, 1, 0, 1, 0, 0]], "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"], "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0]]});
+  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198"], "datasets": [[2, 1, 0, 1, 0, 0]], "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"], "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0]] });
 });
 
 test("hide empty items", () => {
   expect(selectBase.hideEmptyAnswers).toBe(false);
-  expect(selectBase.getAnswersData()).toEqual({"colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198"], "datasets": [[2, 1, 0, 1, 0, 0]], "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"], "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0]]},);
+  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198"], "datasets": [[2, 1, 0, 1, 0, 0]], "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"], "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0]] },);
   selectBase.hideEmptyAnswers = true;
-  expect(selectBase.getAnswersData()).toEqual({"colors": ["#86e1fb", "#3999fb", "#1eb496"], "datasets": [[2, 1, 1]], "labels": ["father_text", "mother_text", "sister_text"], "texts": [[2, 1, 1]], "seriesLabels": []});
+  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#86e1fb", "#3999fb", "#1eb496"], "datasets": [[2, 1, 1]], "labels": ["father_text", "mother_text", "sister_text"], "texts": [[2, 1, 1]], "seriesLabels": [] });
 });
 
 test("change answers order", () => {
   selectBase.hideEmptyAnswers = true;
   expect(selectBase.answersOrder).toBe("default");
-  expect(selectBase.getAnswersData()).toEqual({"colors": ["#86e1fb", "#3999fb", "#1eb496"], "datasets": [[2, 1, 1]], "labels": ["father_text", "mother_text", "sister_text"], "texts": [[2, 1, 1]], "seriesLabels": [] });
+  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#86e1fb", "#3999fb", "#1eb496"], "datasets": [[2, 1, 1]], "labels": ["father_text", "mother_text", "sister_text"], "texts": [[2, 1, 1]], "seriesLabels": [] });
   selectBase.answersOrder = "asc";
-  expect(selectBase.getAnswersData()).toEqual({"colors": ["#86e1fb", "#3999fb", "#1eb496"], "datasets": [[2, 1, 1]], "labels": ["father_text", "mother_text", "sister_text"], "seriesLabels": [], "texts": [[2, 1, 1]]});
+  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#86e1fb", "#3999fb", "#1eb496"], "datasets": [[2, 1, 1]], "labels": ["father_text", "mother_text", "sister_text"], "seriesLabels": [], "texts": [[2, 1, 1]] });
   selectBase.answersOrder = "desc";
-  expect(selectBase.getAnswersData()).toEqual({"colors": ["#3999fb", "#1eb496", "#86e1fb"], "datasets": [[1, 1, 2]], "labels": ["mother_text", "sister_text", "father_text"], "seriesLabels": [], "texts": [[1, 1, 2]]});
+  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#3999fb", "#1eb496", "#86e1fb"], "datasets": [[1, 1, 2]], "labels": ["mother_text", "sister_text", "father_text"], "seriesLabels": [], "texts": [[1, 1, 2]] });
 });
 
 test("check allowSelection option", () => {
@@ -171,4 +171,17 @@ test("check allowSelection option", () => {
   expect(visualizer.supportSelection).toEqual(true);
   visualizer = new SelectBase(question, [], { allowSelection: false });
   expect(visualizer.supportSelection).toEqual(false);
+});
+
+test("transpose method", () => {
+  const data = [
+    [1, 1, 10],
+    [1, 1, 11],
+    [1, 0, 12],
+    [0, 0, 13],
+    [0, 0, 14],
+    [0, 0, 15],
+  ];
+  const transposed = selectBase["transpose"](data);
+  expect(transposed).toEqual([[1, 1, 1, 0, 0, 0], [1, 1, 0, 0, 0, 0], [10, 11, 12, 13, 14, 15]]);
 });

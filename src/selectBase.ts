@@ -24,6 +24,7 @@ export class SelectBase
   private choicesOrderSelector: HTMLDivElement = undefined;
   private showPercentageBtn: HTMLElement = undefined;
   private emptyAnswersBtn: HTMLElement = undefined;
+  private transposeDataBtn: HTMLElement = undefined;
   private topNSelector: HTMLDivElement = undefined;
   private _showPercentages: boolean = false;
   protected _answersOrder: string = "default";
@@ -32,6 +33,7 @@ export class SelectBase
   private _topN = -1;
   public static topNValuesDefaults = [-1, 5, 10, 20];
   public topNValues = [].concat(SelectBase.topNValuesDefaults);
+  private _transposeData: boolean = false;
 
   constructor(
     question: Question,
@@ -127,6 +129,15 @@ export class SelectBase
       }
       return this.topNSelector;
     });
+    this.registerToolbarItem("transposeData", () => {
+      if (this.options.allowTransposeData) {
+        this.transposeDataBtn = DocumentHelper.createButton(() => {
+          this.transposeData = !this.transposeData;
+        });
+        this.updateTransposeDataBtn();
+      }
+      return this.transposeDataBtn;
+    });
   }
 
   protected chartTypes: string[] = [];
@@ -141,6 +152,19 @@ export class SelectBase
         this.emptyAnswersBtn.style.display = "inline";
       } else {
         this.emptyAnswersBtn.style.display = "none";
+      }
+    }
+  }
+
+  private updateTransposeDataBtn() {
+    if (!!this.transposeDataBtn) {
+      this.transposeDataBtn.innerHTML = this.transposeData
+        ? localization.getString("showPerColumns")
+        : localization.getString("showPerValues");
+      if (this.getSeriesValues().length > 0) {
+        this.transposeDataBtn.style.display = "inline";
+      } else {
+        this.transposeDataBtn.style.display = "none";
       }
     }
   }
@@ -254,6 +278,16 @@ export class SelectBase
   public set hideEmptyAnswers(value: boolean) {
     this._hideEmptyAnswers = value;
     this.updateEmptyAnswersBtn();
+    this.refreshContent();
+  }
+
+  public get transposeData() {
+    return this._transposeData;
+  }
+
+  public set transposeData(value: boolean) {
+    this._transposeData = value;
+    this.updateTransposeDataBtn();
     this.refreshContent();
   }
 
@@ -388,6 +422,14 @@ export class SelectBase
     let colors = this.getColors();
     var texts = this.showPercentages ? this.getPercentages() : datasets;
 
+    if (this.transposeData) {
+      datasets = this.transpose(datasets);
+      texts = this.transpose(texts);
+      const temp = seriesLabels;
+      seriesLabels = labels;
+      labels = temp;
+    }
+
     if (this.answersOrder == "asc" || this.answersOrder == "desc") {
       var zippedArray = this.showPercentages
         ? DataHelper.zipArrays(labels, colors, texts[0])
@@ -415,5 +457,17 @@ export class SelectBase
     this.onAnswersDataReady.fire(this, answersData);
 
     return answersData;
+  }
+  protected transpose(data: Array<Array<number>>): Array<Array<number>> {
+    const dim2 = data[0].length;
+    const result = new Array<Array<number>>(dim2);
+    for (let i = 0; i < dim2; ++i)
+      result[i] = new Array<number>(data.length);
+
+    for (let i = 0; i < data.length; ++i)
+      for (let j = 0; j < dim2; ++j) {
+        result[j][i] = data[i][j];
+      }
+    return result;
   }
 }

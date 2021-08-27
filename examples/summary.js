@@ -36,13 +36,13 @@ var survey = new Survey.SurveyModel(json);
 
 // SurveyAnalytics.SelectBasePlotly.displayModeBar = false;
 
-SurveyAnalytics.PlotlySetup.onImageSaving.add(function(selectBaseVisualizer, options) {
+SurveyAnalytics.PlotlySetup.onImageSaving.add(function (selectBaseVisualizer, options) {
   options.filename = "Exported " + selectBaseVisualizer.question.name;
 });
 
-SurveyAnalytics.PlotlySetup.onPlotCreating.add(function(selectBaseVisualizer, options) {
-  options.config.modeBarButtonsToRemove.push("lasso2d");
-});
+// SurveyAnalytics.PlotlySetup.onPlotCreating.add(function(selectBaseVisualizer, options) {
+//   options.config.modeBarButtonsToRemove.push("lasso2d");
+// });
 
 var options = {
   // allowDynamicLayout: false,
