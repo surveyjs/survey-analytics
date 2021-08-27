@@ -207,11 +207,9 @@ export class VisualizerBase implements IDataInfo {
    */
   destroy() {
     if (!!this.renderResult) {
-      this.destroyToolbar(this.toolbarContainer);
+      this.clear();
       this.toolbarContainer = undefined;
-      this.destroyContent(this.contentContainer);
       this.contentContainer = undefined;
-      this.destroyFooter(this.footerContainer);
       this.footerContainer = undefined;
       this.renderResult.innerHTML = "";
       this.renderResult = undefined;
@@ -220,6 +218,21 @@ export class VisualizerBase implements IDataInfo {
       this._footerVisualizer.destroy();
       this._footerVisualizer.onUpdate = undefined;
       this._footerVisualizer = undefined;
+    }
+  }
+
+  /**
+   * Method for clearing all rendered elements from outside.
+   */
+  public clear() {
+    if (!!this.toolbarContainer) {
+      this.destroyToolbar(this.toolbarContainer);
+    }
+    if (!!this.contentContainer) {
+      this.destroyContent(this.contentContainer);
+    }
+    if (!!this.footerContainer) {
+      this.destroyFooter(this.footerContainer);
     }
   }
 
@@ -397,9 +410,9 @@ export class VisualizerBase implements IDataInfo {
   }
   protected setBackgroundColorCore(color: string) {
     this._backgroundColor = color;
-    if(this.footerVisualizer) this.footerVisualizer.backgroundColor = color;
+    if (this.footerVisualizer) this.footerVisualizer.backgroundColor = color;
   }
-  
+
   static customColors: string[] = [];
   private static colors = [
     "#86e1fb",
@@ -417,7 +430,7 @@ export class VisualizerBase implements IDataInfo {
   getColors(count = 10) {
     const colors =
       Array.isArray(VisualizerBase.customColors) &&
-      VisualizerBase.customColors.length > 0
+        VisualizerBase.customColors.length > 0
         ? VisualizerBase.customColors
         : VisualizerBase.colors;
 

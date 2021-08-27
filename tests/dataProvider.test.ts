@@ -244,7 +244,7 @@ test("getData for matrix dropdown inner visualizers", () => {
   const question = survey.getQuestionByName("question2");
   let visualizer = new VisualizationMatrixDropdown(<any>question, data);
 
-  const innerPanelVisualizer: any = visualizer["_panelVisualizer"];
+  const innerPanelVisualizer: any = visualizer["_matrixDropdownVisualizer"];
   expect(innerPanelVisualizer["visualizers"][0].getData()).toEqual([
     [0, 2, 1],
     [1, 1, 1],
@@ -270,7 +270,47 @@ test("getData for matrix dropdown inner visualizers", () => {
 });
 
 test("custom getDataCore function", () => {
-  const statistics = [[1,2]];
+  const statistics = [[1, 2]];
   const dataProvider = new DataProvider(<any>[], (dataInfo: IDataInfo) => statistics);
   expect(dataProvider.getData(<any>{})).toEqual(statistics);
+});
+
+test("getData for matrix dropdown grouped", () => {
+  const data = [
+    {
+      "__sa_series_name": "Process",
+      "1st Most Difficult": "Process 2",
+      "2nd Most Difficult": "Process 3",
+      "3rd Most Difficult": "Process 5"
+    },
+    {
+      "__sa_series_name": "Process",
+      "1st Most Difficult": "Process 3",
+      "2nd Most Difficult": "Process 1",
+      "3rd Most Difficult": "Process 4"
+    },
+    {
+      "__sa_series_name": "Process",
+      "1st Most Difficult": "Process 1",
+      "2nd Most Difficult": "Process 2",
+      "3rd Most Difficult": "Process 3"
+    },
+  ];
+  const dataProvider = new DataProvider(data);
+  const rows = ["Process"];
+  const choices = ["Process 1", "Process 2", "Process 3", "Process 4", "Process 5", "Process 6"];
+  const columns = ["1st Most Difficult", "2nd Most Difficult", "3rd Most Difficult"];
+  expect(
+    dataProvider.getData({
+      dataName: columns,
+      getValues: () => choices,
+      getLabels: () => choices,
+      getSeriesValues: () => rows,
+      getSeriesLabels: () => rows,
+    })
+  ).toEqual([
+    [[1, 1, 1, 0, 0, 0]],
+    [[1, 1, 1, 0, 0, 0]],
+    [[0, 0, 1, 1, 1, 0]],
+  ]);
 });

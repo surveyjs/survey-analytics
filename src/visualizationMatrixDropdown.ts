@@ -2,6 +2,7 @@ import {
   QuestionMatrixDropdownModel,
   MatrixDropdownColumn,
   ItemValue,
+  Helpers,
 } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
@@ -9,7 +10,7 @@ import { VisualizationPanel } from "./visualizationPanel";
 import { DataProvider } from "./dataProvider";
 
 export class VisualizationMatrixDropdown extends VisualizerBase {
-  protected _panelVisualizer: VisualizationPanel = undefined;
+  protected _matrixDropdownVisualizer: VisualizerBase = undefined;
 
   constructor(
     question: QuestionMatrixDropdownModel,
@@ -24,12 +25,15 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     options.seriesValues = question.rows.map((row: ItemValue) => row.value);
     options.seriesLabels = question.rows.map((row: ItemValue) => row.text);
 
-    this._panelVisualizer = new VisualizationPanel(
-      this.getQuestions(),
-      [],
-      options
-    );
-    this._panelVisualizer.onAfterRender.add(this.onPanelAfterRenderCallback);
+    const innerQuestions = this.getQuestions();
+    const canGroupColumns = innerQuestions.every(innerQuestion => Helpers.isArraysEqual(innerQuestion.choices, this.question.choices));
+    if (canGroupColumns) {
+      var creators = VisualizationManager.getVisualizersByType("matrixdropdown-grouped");
+      this._matrixDropdownVisualizer = new creators[0](this.question, [], options);
+    } else {
+      this._matrixDropdownVisualizer = new VisualizationPanel(innerQuestions, [], options);
+    }
+    this._matrixDropdownVisualizer.onAfterRender.add(this.onPanelAfterRenderCallback);
     this.updateData(data);
   }
 
@@ -50,7 +54,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
         });
       }
     });
-    this._panelVisualizer.updateData(panelData);
+    this._matrixDropdownVisualizer.updateData(panelData);
   }
 
   getQuestions() {
@@ -58,7 +62,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     return matrixdropdown.columns.map(
       (column: MatrixDropdownColumn) => {
         const cellQuestion = column.templateQuestion;
-        if(Array.isArray(cellQuestion.choices) && cellQuestion.choices.length === 0) {
+        if (Array.isArray(cellQuestion.choices) && cellQuestion.choices.length === 0) {
           cellQuestion.choices = matrixdropdown.choices;
         }
         return cellQuestion;
@@ -67,17 +71,17 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
   }
 
   destroyContent(container: HTMLElement) {
-    this._panelVisualizer.clear();
+    this._matrixDropdownVisualizer.clear();
     super.destroyContent(this.contentContainer);
   }
 
   renderContent(container: HTMLElement) {
-    this._panelVisualizer.render(container);
+    this._matrixDropdownVisualizer.render(container);
   }
 
   destroy() {
     super.destroy();
-    this._panelVisualizer.onAfterRender.remove(this.onPanelAfterRenderCallback);
+    this._matrixDropdownVisualizer.onAfterRender.remove(this.onPanelAfterRenderCallback);
   }
 }
 

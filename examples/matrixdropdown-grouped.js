@@ -8,20 +8,16 @@ var json = {
           "type": "matrixdropdown",
           "name": "question4",
           "title": "Please select the top 3 processes that you perceived as most difficult or troublesome.",
-          "isRequired": true,
           "showHeader": false,
           "columns": [
             {
               "name": "1st Most Difficult",
-              "isRequired": true
             },
             {
               "name": "2nd Most Difficult",
-              "isRequired": true
             },
             {
               "name": "3rd Most Difficult",
-              "isRequired": true
             }
           ],
           "choices": [

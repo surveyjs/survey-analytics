@@ -578,21 +578,6 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
-   * Method for clearing all rendered elements from outside.
-   */
-  public clear() {
-    if (!!this.toolbarContainer) {
-      this.destroyToolbar(this.toolbarContainer);
-    }
-    if (!!this.contentContainer) {
-      this.destroyContent(this.contentContainer);
-    }
-    if (!!this.footerContainer) {
-      this.destroyFooter(this.footerContainer);
-    }
-  }
-
-  /**
    * Redraws visualizer toobar and all inner content.
    */
   public refresh() {

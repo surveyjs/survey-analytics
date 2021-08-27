@@ -9,7 +9,7 @@ import { Event } from "survey-core";
  * getSeriesLabels - function returning an array of human-friendly descriptions for series values
  */
 export interface IDataInfo {
-  dataName: string;
+  dataName: string | Array<string>;
   getValues(): Array<any>;
   getLabels(): Array<string>;
   getSeriesValues(): Array<string>;
@@ -20,10 +20,17 @@ export class DataProvider {
   public static seriesMarkerKey = "__sa_series_name";
 
   private _filteredData: Array<{ [index: string]: any }>;
-  private _statisticsCache: { [index: string]: Array<Array<number>> };
+  private _statisticsCache: { [index: string]: Array<Array<number>> | Array<Array<Array<number>>> };
   protected filterValues: { [index: string]: any } = {};
 
-  constructor(private _data: Array<any> = [], private _getDataCore: (dataInfo: IDataInfo) => number[][]  = undefined) {}
+  private getStatisticsCacheKey(dataInfo: IDataInfo): string {
+    if (Array.isArray(dataInfo.dataName)) {
+      return dataInfo.dataName.join("-");
+    }
+    return dataInfo.dataName;
+  }
+
+  constructor(private _data: Array<any> = [], private _getDataCore: (dataInfo: IDataInfo) => number[][] = undefined) { }
 
   public reset() {
     if (
@@ -78,12 +85,12 @@ export class DataProvider {
   }
 
   protected getDataCore(dataInfo: IDataInfo) {
-    if(!!this._getDataCore) {
+    if (!!this._getDataCore) {
       return this._getDataCore(dataInfo);
     }
 
-    const dataName = dataInfo.dataName;
-    const statistics: Array<Array<number>> = [];
+    const dataNames = Array.isArray(dataInfo.dataName) ? dataInfo.dataName : [dataInfo.dataName];
+    const statistics: Array<Array<Array<number>>> = [];
 
     const values = dataInfo.getValues();
     const valuesIndex: { [index: string]: number } = {};
@@ -95,63 +102,69 @@ export class DataProvider {
     const seriesIndex: { [index: string]: number } = {};
     series.forEach((val: any, index: number) => {
       seriesIndex[val] = index;
-      statistics.push(new Array<number>(values.length).fill(0));
     });
 
-    if (statistics.length === 0) {
-      statistics.push(new Array<number>(values.length).fill(0));
+    const seriesLength = series.length || 1;
+    for (var i = 0; i < dataNames.length; ++i) {
+      const dataNameStatistics = new Array<Array<number>>();
+      for (var j = 0; j < seriesLength; ++j) {
+        dataNameStatistics.push(new Array<number>(values.length).fill(0));
+      }
+      statistics.push(dataNameStatistics);
     }
 
-    this.filteredData.forEach((row) => {
-      const rowValue: any = row[dataName];
-      if (rowValue !== undefined) {
-        const rowValues = Array.isArray(rowValue) ? rowValue : [rowValue];
-        if (series.length > 0) {
-          if (row[DataProvider.seriesMarkerKey] !== undefined) {
-            // Series are labelled by seriesMarkerKey in row data
-            const seriesNo =
-              seriesIndex[row[DataProvider.seriesMarkerKey]] || 0;
-            rowValues.forEach((val) => {
-              statistics[seriesNo][valuesIndex[val]]++;
-            });
-          } else {
-            // Series are the keys in question value (matrix question)
-            // TODO: think about the de-normalization and combine with the previous case
-            rowValues.forEach((val) => {
-              series.forEach((seriesName) => {
-                if (val[seriesName] !== undefined) {
-                  const seriesNo = seriesIndex[seriesName] || 0;
-                  statistics[seriesNo][valuesIndex[val[seriesName]]]++;
-                }
+    this.filteredData.forEach((row: any) => {
+      dataNames.forEach((dataName, index) => {
+        const rowValue: any = row[dataName];
+        if (rowValue !== undefined) {
+          const rowValues = Array.isArray(rowValue) ? rowValue : [rowValue];
+          if (series.length > 0) {
+            if (row[DataProvider.seriesMarkerKey] !== undefined) {
+              // Series are labelled by seriesMarkerKey in row data
+              const seriesNo =
+                seriesIndex[row[DataProvider.seriesMarkerKey]] || 0;
+              rowValues.forEach((val) => {
+                statistics[index][seriesNo][valuesIndex[val]]++;
               });
-            });
+            } else {
+              // Series are the keys in question value (matrix question)
+              // TODO: think about the de-normalization and combine with the previous case
+              rowValues.forEach((val) => {
+                series.forEach((seriesName) => {
+                  if (val[seriesName] !== undefined) {
+                    const seriesNo = seriesIndex[seriesName] || 0;
+                    statistics[index][seriesNo][valuesIndex[val[seriesName]]]++;
+                  }
+                });
+              });
+            }
+          } else {
+            // No series
+            rowValues.forEach((val) => statistics[0][0][valuesIndex[val]]++);
           }
-        } else {
-          // No series
-          rowValues.forEach((val) => statistics[0][valuesIndex[val]]++);
         }
-      }
+      });
     });
 
-    this._statisticsCache[dataName] = statistics;
-    return statistics;
+    const cacheKey = this.getStatisticsCacheKey(dataInfo);
+    return Array.isArray(dataInfo.dataName) ? statistics : statistics[0];
   }
 
   /**
    * Returns calculated statisctics for the IDataInfo object.
    */
   getData(dataInfo: IDataInfo) {
-    const dataName = dataInfo.dataName;
+    const cacheKey = this.getStatisticsCacheKey(dataInfo);
     if (
       this._statisticsCache === undefined ||
-      this._statisticsCache[dataName] === undefined
+      this._statisticsCache[cacheKey] === undefined
     ) {
       if (this._statisticsCache === undefined) {
         this._statisticsCache = {};
       }
-      this._statisticsCache[dataName] = this.getDataCore(dataInfo);
+      this._statisticsCache[cacheKey] = this.getDataCore(dataInfo);
     }
-    return [].concat(this._statisticsCache[dataName]);
+    return [].concat(this._statisticsCache[cacheKey]);
   }
 
   /**

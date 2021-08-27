@@ -66,20 +66,20 @@ test("getQuestions", () => {
 });
 
 test("set data via update", () => {
-  let qdata: Array<any> = visualizer["_panelVisualizer"]["data"];
+  let qdata: Array<any> = visualizer["_matrixDropdownVisualizer"]["data"];
   expect(qdata.length).toBe(6);
   expect(qdata[0]["Column 1"]).toBe("Trustworthy");
 });
 
 test("series marker is added to data", () => {
-  let qdata: Array<any> = visualizer["_panelVisualizer"]["data"];
+  let qdata: Array<any> = visualizer["_matrixDropdownVisualizer"]["data"];
   expect(qdata.length).toBe(6);
   expect(qdata[0][DataProvider.seriesMarkerKey]).toBe("Lizol");
   expect(qdata[1][DataProvider.seriesMarkerKey]).toBe("Harpic");
 });
 
 test("series options for inner panel visualizer", () => {
-  const innerPanelVisualizer = visualizer["_panelVisualizer"];
+  const innerPanelVisualizer = visualizer["_matrixDropdownVisualizer"];
   expect(innerPanelVisualizer.getSeriesValues()).toEqual(
     json.questions[0].rows
   );
@@ -93,7 +93,7 @@ test("check onAfterRender", () => {
   visualizer.onAfterRender.add(() => {
     count++;
   });
-  const innerPanelVisualizer: any = visualizer["_panelVisualizer"];
+  const innerPanelVisualizer: any = visualizer["_matrixDropdownVisualizer"];
   innerPanelVisualizer.afterRender();
   expect(count).toEqual(1);
 });
