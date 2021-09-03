@@ -347,7 +347,7 @@ export class SelectBase
     var percentages: Array<Array<number>> = [];
     if (data.length < 2) {
       data.forEach((res, index) => {
-        var sum = res.reduce((sum, val) => sum + val);
+        var sum = res.reduce((sum, val) => sum + val, 0);
         percentages[index] = res.map((val) => {
           return sum && Math.round((val / sum) * 100);
         });
