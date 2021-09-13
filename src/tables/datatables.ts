@@ -273,7 +273,7 @@ export class DataTables extends Table {
             return value;
           }
           if (column.dataType === ColumnDataType.Image) {
-            return "<image src='" + value + "'/>"
+            return "<image src='" + value + "'/>";
           }
           return typeof value === "string"
             ? jQuery("<div>").text(value).html()

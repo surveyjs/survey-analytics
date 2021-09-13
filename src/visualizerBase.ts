@@ -48,9 +48,7 @@ export class VisualizerBase implements IDataInfo {
     this.onAfterRender.fire(this, { htmlElement: contentContainer });
   }
 
-  protected toolbarItemCreators: {
-    [name: string]: (toolbar?: HTMLDivElement) => HTMLElement;
-  } = {};
+  protected toolbarItemCreators: { [name: string]: (toolbar?: HTMLDivElement) => HTMLElement } = {};
 
   constructor(
     public question: Question,

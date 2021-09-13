@@ -25,8 +25,8 @@ export interface ITableOptions {
    * <br/> `options.displayValue` - the question display value. You can change this option before it is displayed in the table.
    */
   onGetQuestionValue?: (options: {
-    question: Question;
-    displayValue: any;
+    question: Question,
+    displayValue: any,
   }) => void;
 }
 

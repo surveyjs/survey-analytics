@@ -1,4 +1,4 @@
-export var stopWords = new Array(
+export var stopWords = [
   "de",
   "en",
   "van",
@@ -100,4 +100,4 @@ export var stopWords = new Array(
   "iemand",
   "geweest",
   "andere"
-);
+];

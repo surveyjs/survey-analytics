@@ -1,4 +1,4 @@
-export var stopWords = new Array(
+export var stopWords = [
   "...",
   "alle",
   "andre",
@@ -218,4 +218,4 @@ export var stopWords = new Array(
   "vørt",
   "æ",
   "å"
-);
+];
