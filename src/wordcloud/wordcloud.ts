@@ -51,6 +51,7 @@ export class WordCloudAdapter {
       rotationSteps: 2,
       backgroundColor: this.model.backgroundColor,
       click: function (item: any) {
+        // eslint-disable-next-line no-console
         console.log(item[0] + ": " + item[1]);
       },
     };

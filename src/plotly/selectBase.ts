@@ -77,8 +77,8 @@ export class PlotlyChartAdapter {
         const itemText = plotlyOptions.hasSeries
           ? data.points[0].data.name
           : Array.isArray(data.points[0].customdata)
-          ? data.points[0].customdata[0]
-          : data.points[0].customdata;
+            ? data.points[0].customdata[0]
+            : data.points[0].customdata;
         const item: ItemValue = this.model.getSelectedItemByText(itemText);
         this.model.setSelection(item);
       }

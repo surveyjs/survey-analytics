@@ -55,7 +55,6 @@ export class PlotlyDateTimeAdapter {
   }
 }
 
-
 export class DateTimePlotly extends DateTimeModel {
   private _chartAdapter: PlotlyDateTimeAdapter;
 
@@ -72,7 +71,6 @@ export class DateTimePlotly extends DateTimeModel {
     this.chartType = this.chartTypes[0];
     this._chartAdapter = new PlotlyDateTimeAdapter(this);
   }
-
 
   protected renderContent(container: HTMLElement) {
     const chartNode: HTMLElement = DocumentHelper.createElement("div");

@@ -10,9 +10,7 @@ interface ITableExtension {
 
 export class TableExtensions {
   constructor(private table: Table) {}
-  private static extensions: {
-    [location: string]: Array<ITableExtension>;
-  } = {};
+  private static extensions: { [location: string]: Array<ITableExtension> } = {};
   private renderedExtensions: Array<ITableExtension> = [];
 
   public render(targetNode: HTMLElement, location: string, options?: any) {

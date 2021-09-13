@@ -1,7 +1,7 @@
 export class DocumentHelper {
   public static createSelector(
-    options: Array<{ value: string; text: string }>,
-    isSelected: (option: { value: string; text: string }) => boolean,
+    options: Array<{ value: string, text: string }>,
+    isSelected: (option: { value: string, text: string }) => boolean,
     handler: (e: any) => void
   ) {
     const selectWrapper = document.createElement("div");
@@ -192,7 +192,7 @@ export class DataHelper {
     keys: any[],
     values: any[],
     desc: boolean
-  ): { keys: any[]; values: any[] } {
+  ): { keys: any[], values: any[] } {
     let dictionary = this.zipArrays(keys, values);
     let comparator = (a: any[], b: any[], asc: boolean = true) => {
       let result = a[1] < b[1] ? 1 : a[1] == b[1] ? 0 : -1;
@@ -211,7 +211,7 @@ export class DataHelper {
 }
 
 export function createLinksContainer(
-  links: Array<{ name: string; content: any }>
+  links: Array<{ name: string, content: any }>
 ): HTMLElement {
   const linksContainer = DocumentHelper.createElement("div");
   links.forEach((link) => {
@@ -227,7 +227,7 @@ export function createLinksContainer(
 }
 
 export function createImagesContainer(
-  links: Array<{ name: string; content: any }>
+  links: Array<{ name: string, content: any }>
 ): HTMLElement {
   const linksContainer = DocumentHelper.createElement("div");
   links.forEach((link) => {

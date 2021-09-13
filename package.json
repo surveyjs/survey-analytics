@@ -11,7 +11,9 @@
     "doc_update": "chmod +x ./docupdate_npm.sh && ./docupdate_npm.sh",
     "watch:dev": "webpack --env.buildType dev --watch",
     "build_dev": "webpack --env.buildType dev",
-    "build_prod": "npm run build_dev && webpack --env.buildType prod && node dts_cleaner.js packages/survey.analytics.d.ts"
+    "build_prod": "npm run build_dev && webpack --env.buildType prod && node dts_cleaner.js packages/survey.analytics.d.ts",
+    "lint": "eslint ./src --quiet",
+    "pre-push-check": "npm run lint && npm run test"
   },
   "version": "1.8.65",
   "name": "survey-analytics",
@@ -75,11 +77,14 @@
     "@types/node": "7.0.4",
     "@types/plotly.js": "^1.44.11",
     "@types/wordcloud": "^1.1.1",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
     "ajv": "4.11.2",
     "concurrently": "^5.3.0",
     "css-loader": "^3.6.0",
     "dotenv": "4.0.0",
     "dts-bundle": "0.7.2",
+    "eslint": "^7.32.0",
     "github-api": "^3.3.0",
     "html-loader": "^0.4.4",
     "http-server": "^0.12.3",
@@ -109,7 +114,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm test"
+      "pre-push": "npm run pre-push-check"
     }
   }
 }
