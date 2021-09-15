@@ -26,17 +26,20 @@ interface ITabulatorOptions extends ITableOptions {
 const defaultDownloadOptions = {
   fileName: "results",
   pdf: {
-    orientation: "portrait", //set page orientation to portrait
+    orientation: "landscape", //set page orientation to portrait
     autoTable: {
       //advanced table styling
       styles: {
-        fillColor: [26, 179, 148],
+        columnWidth: 1,
       },
-      columnStyles: {
-        id: { fillColor: 255 },
-      },
-      margin: { top: 60 },
+      margin: { top: 10, right: 10, bottom: 10, left: 10 },
     },
+    processOnDownload(tabulator: Tabulator, options: any) {
+      const minWidth = (tabulator.tabulatorTables.getColumns(true).filter((col: any) => col.isVisible()).length - 1) * 186.72;
+      if(minWidth > 841.89) {
+        options.jsPDF = { format: [595.28, minWidth] };
+      }
+    }
   },
   csv: { delimiter: "," },
   xlsx: { sheetName: "results" },
@@ -343,11 +346,17 @@ export class Tabulator extends Table {
     }
   }
 
+  private getDownloadOptions(type: string): any {
+    const options = Object.assign({}, this.options.downloadOptions[type] || defaultOptions.downloadOptions[type]);
+    if(!!options.processOnDownload) options.processOnDownload(this, options);
+    return options;
+  }
+
   public download(type: string): void {
     this.tabulatorTables.download(
       type,
       `${this.options.downloadOptions.fileName}.${type}`,
-      this.options.downloadOptions[type] || defaultOptions.downloadOptions[type]
+      this.getDownloadOptions(type)
     );
   }
 
