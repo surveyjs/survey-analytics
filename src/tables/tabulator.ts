@@ -21,25 +21,24 @@ interface ITabulatorOptions extends ITableOptions {
   actionsColumnWidth?: number;
   downloadButtons: Array<string>;
   downloadOptions?: { [type: string]: any };
+  /*
+   *use  to change options dynamically
+   */
+  onDownloadCallbacks?: {
+    [type: string]: (tabulator: Tabulator, options: any) => void,
+  };
 }
 
 const defaultDownloadOptions = {
   fileName: "results",
   pdf: {
-    orientation: "landscape", //set page orientation to portrait
+    orientation: "landscape",
     autoTable: {
-      //advanced table styling
       styles: {
         columnWidth: 1,
       },
       margin: { top: 10, right: 10, bottom: 10, left: 10 },
     },
-    processOnDownload(tabulator: Tabulator, options: any) {
-      const minWidth = (tabulator.tabulatorTables.getColumns(true).filter((col: any) => col.isVisible()).length - 1) * 186.72;
-      if(minWidth > 841.89) {
-        options.jsPDF = { format: [595.28, minWidth] };
-      }
-    }
   },
   csv: { delimiter: "," },
   xlsx: { sheetName: "results" },
@@ -51,6 +50,19 @@ const defaultOptions: ITabulatorOptions = {
   downloadHiddenColumns: false,
   downloadButtons: ["pdf", "xlsx", "csv"],
   downloadOptions: defaultDownloadOptions,
+  onDownloadCallbacks: {
+    pdf: (tabulator: Tabulator, options) => {
+      const minWidth =
+        (tabulator.tabulatorTables
+          .getColumns(true)
+          .filter((col: any) => col.isVisible()).length -
+          1) *
+        186.72;
+      if (minWidth > 841.89) {
+        options.jsPDF = { format: [595.28, minWidth] };
+      }
+    },
+  },
 };
 
 export class Tabulator extends Table {
@@ -65,9 +77,7 @@ export class Tabulator extends Table {
     _columns: Array<any> = []
   ) {
     super(survey, data, options, _columns);
-    var patchedOptions = {};
-    Object.assign(patchedOptions, defaultOptions, options);
-    this.options = patchedOptions;
+    this.options = Object.assign({}, defaultOptions, options);
   }
 
   private readonly COLUMN_MIN_WIDTH = 155;
@@ -229,15 +239,18 @@ export class Tabulator extends Table {
     const columns: any = this.columns.map((column, index) => {
       let question = this.survey.getQuestionByName(column.name);
       let formatter = "plaintext";
-      if(column.dataType == ColumnDataType.FileLink) {
+      if (column.dataType == ColumnDataType.FileLink) {
         formatter = "html";
       }
-      if(column.dataType == ColumnDataType.Image) {
+      if (column.dataType == ColumnDataType.Image) {
         formatter = "image";
       }
       return {
         field: column.name,
-        title: (question && (this.options.useNamesAsTitles ? question.name : question.title)) || column.displayName,
+        title:
+          (question &&
+            (this.options.useNamesAsTitles ? question.name : question.title)) ||
+          column.displayName,
         width: column.width,
         widthShrink: !column.width ? 1 : 0,
         visible: this.isColumnVisible(column),
@@ -267,7 +280,7 @@ export class Tabulator extends Table {
     return columns;
   }
 
-  public setColumnVisibility(columnName: string, isVisible: boolean) {
+  public setColumnVisibility(columnName: string, isVisible: boolean): void {
     super.setColumnVisibility(columnName, isVisible);
     if (this.isRendered) {
       if (isVisible) {
@@ -279,7 +292,7 @@ export class Tabulator extends Table {
     }
   }
 
-  public setColumnLocation(columnName: string, location: QuestionLocation) {
+  public setColumnLocation(columnName: string, location: QuestionLocation): void {
     super.setColumnLocation(columnName, location);
     if (this.isRendered) {
       if (location == QuestionLocation.Row)
@@ -289,7 +302,7 @@ export class Tabulator extends Table {
     }
   }
 
-  public setColumnWidth(columnName: string, width: number | string) {
+  public setColumnWidth(columnName: string, width: number | string): void {
     super.setColumnWidth(columnName, width);
     if (this.isRendered) {
       var definition = this.tabulatorTables
@@ -301,11 +314,11 @@ export class Tabulator extends Table {
     }
   }
 
-  public sortByColumn(columnName: string, direction: string) {
+  public sortByColumn(columnName: string, direction: string): void {
     this.tabulatorTables.setSort(columnName, direction);
   }
 
-  public applyColumnFilter(columnName: string, value: string) {
+  public applyColumnFilter(columnName: string, value: string): void {
     this.tabulatorTables.setFilter(columnName, "like", value);
   }
 
@@ -347,8 +360,12 @@ export class Tabulator extends Table {
   }
 
   private getDownloadOptions(type: string): any {
-    const options = Object.assign({}, this.options.downloadOptions[type] || defaultOptions.downloadOptions[type]);
-    if(!!options.processOnDownload) options.processOnDownload(this, options);
+    const options = Object.assign(
+      {},
+      this.options.downloadOptions[type] || defaultOptions.downloadOptions[type]
+    );
+    const onDownloadCallback = this.options.onDownloadCallbacks[type];
+    if (!!onDownloadCallback) onDownloadCallback(this, options);
     return options;
   }
 
@@ -360,7 +377,7 @@ export class Tabulator extends Table {
     );
   }
 
-  public layout(hard: boolean = false) {
+  public layout(hard: boolean = false): void {
     this.tabulatorTables.redraw(hard);
   }
 }
@@ -387,7 +404,7 @@ export class TabulatorRow extends TableRow {
     return this.innerRow.getPosition();
   }
 
-  public remove() {
+  public remove(): void {
     this.innerRow.delete();
     super.remove();
   }
