@@ -193,3 +193,48 @@ test("useNamesAsTitles option", () => {
     "[{\"field\":\"\",\"title\":\"\",\"download\":false,\"resizable\":false,\"minWidth\":60,\"width\":60},{\"field\":\"str\",\"title\":\"str\",\"widthShrink\":1,\"visible\":true,\"headerSort\":false,\"formatter\":\"plaintext\"}]"
   );
 });
+
+test("check pdf options before download", () => {
+  const surveyJson = {
+    questions: [
+      {
+        type: "text",
+        name: "question 1",
+      },
+      {
+        type: "text",
+        name: "question 2",
+      },
+      {
+        type: "text",
+        name: "question 3",
+      },
+      {
+        type: "text",
+        name: "question 4",
+      },
+      {
+        type: "text",
+        name: "question 5",
+      },
+      {
+        type: "text",
+        name: "question 6",
+      },
+    ],
+  };
+  const survey = new SurveyModel(surveyJson);
+  const tabulator = new Tabulator(survey, [], null);
+  tabulator.render(document.createElement("div"));
+  let options = tabulator['getDownloadOptions']("pdf");
+  expect(options.jsPDF.format).toEqual([595.28, 1120.32]);
+  tabulator.setColumnVisibility("question 1", false);
+  options = tabulator['getDownloadOptions']("pdf");
+  expect(options.jsPDF.format).toEqual([595.28, 933.6]);
+  tabulator.setColumnVisibility("question 2", false);
+  options = tabulator['getDownloadOptions']("pdf");
+  expect(options.jsPDF).toEqual(undefined); //a4 default format
+  tabulator.setColumnVisibility("question 3", false);
+  options = tabulator['getDownloadOptions']("pdf");
+  expect(options.jsPDF).toEqual(undefined); //a4 default format
+});
