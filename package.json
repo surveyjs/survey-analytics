@@ -5,7 +5,7 @@
     "test_dev": "jest --watch",
     "test_debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
     "testcafe": "concurrently \"http-server\" \"testcafe chrome testCafe/\"",
-    "testcafe_ci": "http-server --silent & testcafe chrome:headless testCafe/ --reporter dashboard",
+    "testcafe_ci": "http-server --silent & testcafe chrome:headless testCafe/ --reporter minimal,dashboard",
     "release": "standard-version --message \"Release: %s [skip ci]\" ",
     "doc_gen": "node doc_generator/lib_docgenerator.js src/index.ts",
     "doc_update": "chmod +x ./docupdate_npm.sh && ./docupdate_npm.sh",
