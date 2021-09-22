@@ -94,7 +94,6 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
-      echo "$TESTCAFE_DASHBOARD_URL"
       npm run testcafe_ci
     displayName: "functional tests"
     env:
