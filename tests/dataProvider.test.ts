@@ -314,3 +314,78 @@ test("getData for matrix dropdown grouped", () => {
     [[0, 0, 1, 1, 1, 0]],
   ]);
 });
+
+test("filter data by matrix value", () => {
+  const data = [
+    {
+      Quality: {
+        affordable: "1",
+        "does what it claims": "1",
+        "better then others": "1",
+        "easy to use": "1",
+      },
+      organization_type: "Custom",
+      developer_count: "3-5",
+    },
+    {
+      Quality: {
+        affordable: "3",
+        "does what it claims": "4",
+        "better then others": "2",
+        "easy to use": "3",
+      },
+      organization_type: "Consulting",
+      developer_count: "> 10",
+    },
+  ];
+  const dataProvider = new DataProvider(data);
+  const values = ["Custom", "Consulting", "ISV"];
+  const dataInfo = {
+    dataName: "organization_type",
+    getValues: () => values,
+    getLabels: () => values,
+    getSeriesValues: () => [],
+    getSeriesLabels: () => [],
+  };
+
+  expect(dataProvider.filteredData).toEqual([
+    { "Quality": { "affordable": "1", "better then others": "1", "does what it claims": "1", "easy to use": "1" }, "developer_count": "3-5", "organization_type": "Custom" },
+    { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
+  ]);
+  expect(
+    dataProvider.getData(dataInfo)
+  ).toEqual([
+    [1, 1, 0],
+  ]);
+
+  dataProvider.setFilter("developer_count", "3-5");
+  expect(dataProvider.filteredData).toEqual([
+    { "Quality": { "affordable": "1", "better then others": "1", "does what it claims": "1", "easy to use": "1" }, "developer_count": "3-5", "organization_type": "Custom" },
+  ]);
+  expect(
+    dataProvider.getData(dataInfo)
+  ).toEqual([
+    [1, 0, 0],
+  ]);
+
+  dataProvider.setFilter("developer_count", undefined);
+  expect(dataProvider.filteredData).toEqual([
+    { "Quality": { "affordable": "1", "better then others": "1", "does what it claims": "1", "easy to use": "1" }, "developer_count": "3-5", "organization_type": "Custom" },
+    { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
+  ]);
+  expect(
+    dataProvider.getData(dataInfo)
+  ).toEqual([
+    [1, 1, 0],
+  ]);
+
+  dataProvider.setFilter("Quality", { "affordable": "3" });
+  expect(dataProvider.filteredData).toEqual([
+    { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
+  ]);
+  expect(
+    dataProvider.getData(dataInfo)
+  ).toEqual([
+    [0, 1, 0],
+  ]);
+});

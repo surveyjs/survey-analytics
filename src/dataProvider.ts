@@ -57,7 +57,16 @@ export class DataProvider {
       if (filterKeys.length > 0) {
         this._filteredData = this.data.filter((item) => {
           return !Object.keys(this.filterValues).some(
-            (key) => item[key] !== this.filterValues[key]
+            (key) => {
+              const filterValue = this.filterValues[key];
+              const questionValue = item[key];
+              if (typeof questionValue === "object") {
+                if (typeof filterValue !== "object")
+                  return true;
+                return !questionContainsValue(questionValue, filterValue);
+              }
+              return item[key] !== this.filterValues[key];
+            }
           );
         });
       } else {
@@ -181,3 +190,17 @@ export class DataProvider {
     }
   }
 }
+
+function questionContainsValue(questionValue: any, filterValue: any) {
+  const questionValueKeys = Object.keys(questionValue);
+  const filterValueKeys = Object.keys(filterValue);
+
+  if (filterValueKeys.length > questionValueKeys.length) return false;
+
+  for (var key of filterValueKeys) {
+    if (filterValue[key] !== questionValue[key]) return false;
+  }
+
+  return true;
+}
+
