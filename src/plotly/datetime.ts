@@ -9,7 +9,7 @@ import Plotly from "plotly.js";
 export class PlotlyDateTimeAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
 
-  constructor(private model: DateTimePlotly) {}
+  constructor(private model: DateTimePlotly) { }
 
   public get chart() {
     return this._chart;
@@ -90,8 +90,8 @@ export class DateTimePlotly extends DateTimeModel {
     });
   }
 
-  protected onChartTypeChanged() {}
- 
+  protected onChartTypeChanged() { }
+
   protected setChartType(chartType: string) {
     if (
       this.chartTypes.indexOf(chartType) !== -1 &&
