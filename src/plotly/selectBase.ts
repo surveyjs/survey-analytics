@@ -8,14 +8,14 @@ import Plotly from "plotly.js";
 export class PlotlyChartAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
 
-  constructor(protected model: SelectBase) {}
+  constructor(protected model: SelectBase) { }
 
   protected patchConfigParameters(
     chartNode: object,
     traces: Array<object>,
     layout: object,
     config: object
-  ) {}
+  ) { }
 
   public get chart() {
     return this._chart;
@@ -74,13 +74,31 @@ export class PlotlyChartAdapter {
 
     (<any>chartNode)["on"]("plotly_click", (data: any) => {
       if (data.points.length > 0) {
-        const itemText = plotlyOptions.hasSeries
-          ? data.points[0].data.name
-          : Array.isArray(data.points[0].customdata)
+        let itemText = "";
+        if (!plotlyOptions.hasSeries) {
+          itemText = Array.isArray(data.points[0].customdata)
             ? data.points[0].customdata[0]
             : data.points[0].customdata;
-        const item: ItemValue = this.model.getSelectedItemByText(itemText);
-        this.model.setSelection(item);
+          const item: ItemValue = this.model.getSelectedItemByText(itemText);
+          this.model.setSelection(item);
+        } else {
+          itemText = data.points[0].data.name;
+          const propertyLabel = data.points[0].label;
+          const seriesValues = this.model.getSeriesValues();
+          const seriesLabels = this.model.getSeriesLabels();
+          const propertyValue = seriesValues[seriesLabels.indexOf(propertyLabel)];
+          const selectedItem: ItemValue = this.model.getSelectedItemByText(itemText);
+          const item = new ItemValue({ [propertyValue]: selectedItem.value }, propertyLabel + ": " + selectedItem.text);
+          this.model.setSelection(item);
+        }
+
+        // const itemText = plotlyOptions.hasSeries
+        //   ? data.points[0].data.name
+        //   : Array.isArray(data.points[0].customdata)
+        //     ? data.points[0].customdata[0]
+        //     : data.points[0].customdata;
+        // const item: ItemValue = this.model.getSelectedItemByText(itemText);
+        // this.model.setSelection(item);
       }
     });
 

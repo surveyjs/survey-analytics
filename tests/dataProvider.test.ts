@@ -389,3 +389,95 @@ test("filter data by matrix value", () => {
     [0, 1, 0],
   ]);
 });
+
+test("filter data by matrix value - number and string", () => {
+  const data = [
+    {
+      Quality: {
+        affordable: "1",
+        "does what it claims": "1",
+        "better then others": "1",
+        "easy to use": "1",
+      },
+      organization_type: "Custom",
+      developer_count: "3-5",
+    },
+    {
+      Quality: {
+        affordable: "3",
+        "does what it claims": "4",
+        "better then others": "2",
+        "easy to use": "3",
+      },
+      organization_type: "Consulting",
+      developer_count: "> 10",
+    },
+  ];
+  const dataProvider = new DataProvider(data);
+  const values = ["Custom", "Consulting", "ISV"];
+  const dataInfo = {
+    dataName: "organization_type",
+    getValues: () => values,
+    getLabels: () => values,
+    getSeriesValues: () => [],
+    getSeriesLabels: () => [],
+  };
+
+  expect(dataProvider.filteredData).toEqual([
+    { "Quality": { "affordable": "1", "better then others": "1", "does what it claims": "1", "easy to use": "1" }, "developer_count": "3-5", "organization_type": "Custom" },
+    { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
+  ]);
+  expect(
+    dataProvider.getData(dataInfo)
+  ).toEqual([
+    [1, 1, 0],
+  ]);
+
+  dataProvider.setFilter("Quality", { "affordable": 3 });
+  expect(dataProvider.filteredData).toEqual([
+    { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
+  ]);
+  expect(
+    dataProvider.getData(dataInfo)
+  ).toEqual([
+    [0, 1, 0],
+  ]);
+});
+
+test("filter data for matrix dropdown question column values - pre-processed data", () => {
+  const data = [
+    { __sa_series_name: "Lizol", "Column 1": "Trustworthy", "Column 2": 3 },
+    { __sa_series_name: "Harpic", "Column 1": "High Quality", "Column 2": 4 },
+    { __sa_series_name: "Lizol", "Column 1": "Natural", "Column 2": 3 },
+    { __sa_series_name: "Harpic", "Column 1": "Natural", "Column 2": 4 },
+    { __sa_series_name: "Lizol", "Column 1": "Natural", "Column 2": 1 },
+    { __sa_series_name: "Harpic", "Column 1": "Trustworthy", "Column 2": 5 },
+  ];
+  const dataProvider = new DataProvider(data);
+
+  dataProvider.setFilter("Column 1", { "Lizol": "Natural" });
+  expect(
+    dataProvider.getData({
+      dataName: "Column 1",
+      getValues: () => ["High Quality", "Natural", "Trustworthy"],
+      getLabels: () => ["High Quality", "Natural", "Trustworthy"],
+      getSeriesValues: () => ["Lizol", "Harpic"],
+      getSeriesLabels: () => ["Lizol", "Harpic"],
+    })
+  ).toEqual([
+    [0, 2, 0],
+    [0, 0, 0],
+  ]);
+  expect(
+    dataProvider.getData({
+      dataName: "Column 2",
+      getValues: () => [1, 2, 3, 4, 5],
+      getLabels: () => ["1", "2", "3", "4", "5"],
+      getSeriesValues: () => ["Lizol", "Harpic"],
+      getSeriesLabels: () => ["Lizol", "Harpic"],
+    })
+  ).toEqual([
+    [1, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0],
+  ]);
+});

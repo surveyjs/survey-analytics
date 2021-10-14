@@ -65,6 +65,10 @@ export class DataProvider {
                   return true;
                 return !questionContainsValue(questionValue, filterValue);
               }
+              const seriesValue = item[DataProvider.seriesMarkerKey];
+              if (!!seriesValue && typeof filterValue === "object") {
+                return questionValue !== filterValue[seriesValue];
+              }
               return item[key] !== this.filterValues[key];
             }
           );
@@ -198,7 +202,7 @@ function questionContainsValue(questionValue: any, filterValue: any) {
   if (filterValueKeys.length > questionValueKeys.length) return false;
 
   for (var key of filterValueKeys) {
-    if (filterValue[key] !== questionValue[key]) return false;
+    if (filterValue[key] != questionValue[key]) return false;
   }
 
   return true;
