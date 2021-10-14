@@ -9,7 +9,7 @@ import Plotly from "plotly.js";
 export class PlotlyDateTimeAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
 
-  constructor(private model: DateTimePlotly) {}
+  constructor(private model: DateTimePlotly) { }
 
   public get chart() {
     return this._chart;
@@ -58,7 +58,7 @@ export class PlotlyDateTimeAdapter {
 export class DateTimePlotly extends DateTimeModel {
   private _chartAdapter: PlotlyDateTimeAdapter;
 
-  public static types = ["scatter"];
+  public static types = ["scatter", "bar"];
 
   constructor(
     question: Question,
@@ -70,6 +70,41 @@ export class DateTimePlotly extends DateTimeModel {
     this.chartTypes = DateTimePlotly.types;
     this.chartType = this.chartTypes[0];
     this._chartAdapter = new PlotlyDateTimeAdapter(this);
+
+    this.registerToolbarItem("changeChartType", () => {
+      if (this.chartTypes.length > 1) {
+        return DocumentHelper.createSelector(
+          this.chartTypes.map((chartType) => {
+            return {
+              value: chartType,
+              text: localization.getString("chartType_" + chartType),
+            };
+          }),
+          (option: any) => this.chartType === option.value,
+          (e: any) => {
+            this.setChartType(e.target.value);
+          }
+        );
+      }
+      return null;
+    });
+  }
+
+  protected onChartTypeChanged() { }
+
+  protected setChartType(chartType: string) {
+    if (
+      this.chartTypes.indexOf(chartType) !== -1 &&
+      this.chartType !== chartType
+    ) {
+      this.chartType = chartType;
+      this.onChartTypeChanged();
+      if (!!this.contentContainer) {
+        this.destroyContent(this.contentContainer);
+        this.renderContent(this.contentContainer);
+      }
+      this.invokeOnUpdate();
+    }
   }
 
   protected renderContent(container: HTMLElement) {
