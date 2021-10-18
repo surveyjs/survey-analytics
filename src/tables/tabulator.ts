@@ -6,6 +6,7 @@ import "./tabulator.scss";
 import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
 import TabulatorTables from "tabulator-tables";
+import { ARIAL_FONT } from "./custom_jspdf_font";
 
 if (!!document) {
   const svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");
@@ -33,11 +34,17 @@ const defaultDownloadOptions = {
   fileName: "results",
   pdf: {
     orientation: "landscape",
-    autoTable: {
-      styles: {
-        columnWidth: 1,
-      },
-      margin: { top: 10, right: 10, bottom: 10, left: 10 },
+    autoTable: function (doc: any) {
+      doc.addFileToVFS("custom_helvetica.ttf", ARIAL_FONT);
+      doc.addFont("custom_helvetica.ttf", "custom_helvetica", "normal");
+      return {
+        styles: {
+          font: "custom_helvetica",
+          fontStyle: "normal",
+          columnWidth: 1,
+        },
+        margin: { top: 10, right: 10, bottom: 10, left: 10 },
+      };
     },
   },
   csv: { delimiter: "," },
