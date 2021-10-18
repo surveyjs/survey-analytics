@@ -17,6 +17,8 @@ export var englishStrings = {
   entriesLabel: "entries",
   visualizer_text: "Texts in table",
   visualizer_wordcloud: "Wordcloud",
+  visualizer_histogram: "Histogram",
+  visualizer_gauge: "Gauge",
   chartType_bar: "Bar",
   chartType_stackedbar: "Stacked Bar",
   chartType_doughnut: "Doughnut",
