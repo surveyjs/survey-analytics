@@ -16,6 +16,7 @@ export * from "../selectBase";
 export * from "../matrix";
 export * from "../boolean";
 export * from "../datetime";
+export * from "../histogram";
 export * from "../visualizerBase";
 export * from "../visualizationManager";
 export * from "../visualizationPanel";
