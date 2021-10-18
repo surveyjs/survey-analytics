@@ -334,6 +334,7 @@ export class PlotlySetup {
       xaxis: {
         rangemode: "nonnegative",
         automargin: true,
+        dtick: 1
       },
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
