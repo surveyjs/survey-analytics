@@ -64,6 +64,10 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  protected get questionOptions() {
+    return this.options[this.question.name];
+  }
+
   protected onDataChanged() {
     this.refresh();
   }

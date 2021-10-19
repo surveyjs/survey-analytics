@@ -113,7 +113,16 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
     allowShowPercentages: true,
     allowHideEmptyAnswers: false,
     allowTransposeData: false,
-    allowTopNAnswers: true
+    allowTopNAnswers: true,
+    age: {
+      intervals: [
+        { start: 0, end: 7, label: "childhood" },
+        { start: 7, end: 14, label: "adolescence" },
+        { start: 14, end: 19, label: "youth" },
+        { start: 19, end: 70, label: "adult" },
+        { start: 70, end: 100, label: "old age" }
+      ]
+    }
   }
 );
 visPanel.showHeader = true;

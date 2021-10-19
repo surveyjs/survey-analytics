@@ -77,7 +77,7 @@ export class HistogramModel extends SelectBase {
 
   public getValues(): Array<any> {
     const continiousValues = this.getContiniousValues();
-    if (continiousValues.length > HistogramModel.UseIntervalsFrom) {
+    if (this.hasCustomIntervals || continiousValues.length > HistogramModel.UseIntervalsFrom) {
       return this.intervals.map(interval => interval.label);
     }
     return continiousValues.map(value => value.original);
@@ -85,13 +85,21 @@ export class HistogramModel extends SelectBase {
 
   public getLabels(): Array<string> {
     const continiousValues = this.getContiniousValues();
-    if (continiousValues.length > HistogramModel.UseIntervalsFrom) {
+    if (this.hasCustomIntervals || continiousValues.length > HistogramModel.UseIntervalsFrom) {
       return this.intervals.map(interval => interval.label);
     }
     return continiousValues.map(value => value.original);
   }
 
+  public get hasCustomIntervals() {
+    return !!this.questionOptions && Array.isArray(this.questionOptions.intervals);
+  }
+
   public get intervals() {
+    if (this.hasCustomIntervals) {
+      return this.questionOptions.intervals;
+    }
+
     if (this._cachedIntervals === undefined) {
       const continiousValues = this.getContiniousValues();
       this._cachedIntervals = [];
@@ -116,7 +124,7 @@ export class HistogramModel extends SelectBase {
 
   public getData() {
     const continiousValues = this.getContiniousValues();
-    if (continiousValues.length <= HistogramModel.UseIntervalsFrom) {
+    if (!this.hasCustomIntervals && continiousValues.length <= HistogramModel.UseIntervalsFrom) {
       return super.getData();
     }
     const intervals = this.intervals;

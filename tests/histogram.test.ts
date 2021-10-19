@@ -122,3 +122,102 @@ test("date empty data", () => {
   expect(histValues).toMatchObject([]);
   expect(histData).toMatchObject([[]]);
 });
+
+test("number custom intervals", () => {
+  const question: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "number",
+    name: "age",
+  };
+  const ages = [
+    { age: 1 }, { age: 1 }, { age: 1 }, { age: 1 }, { age: 1 }, { age: 1 }, { age: 1 },
+    { age: 2 }, { age: 2 }, { age: 2 }, { age: 2 }, { age: 2 },
+    { age: 8 }, { age: 8 }, { age: 8 }, { age: 8 }, { age: 8 }, { age: 8 },
+    { age: 9 },
+    { age: 10 },
+    { age: 11 },
+    { age: 12 },
+    { age: 13 },
+    { age: 14 },
+    { age: 15 },
+    { age: 16 },
+    { age: 17 },
+    { age: 18 },
+    { age: 19 },
+    { age: 20 },
+    { age: 21 },
+    { age: 22 },
+    { age: 23 },
+    { age: 24 },
+    { age: 25 },
+    { age: 26 },
+    { age: 27 },
+    { age: 28 },
+    { age: 29 },
+    { age: 75 },
+  ];
+  const date = new HistogramModel(question, ages, {
+    age: {
+      intervals: [
+        { start: 0, end: 7, label: "childhood" },
+        { start: 7, end: 14, label: "adolescence" },
+        { start: 14, end: 19, label: "youth" },
+        { start: 19, end: 70, label: "adult" },
+        { start: 70, end: 100, label: "old age" }
+      ]
+    }
+  });
+
+  const histValues = date.getValues();
+  const histIntervals = date.intervals;
+  const histData = date.getData();
+
+  expect(histIntervals.length).toBe(5);
+  expect(histValues).toMatchObject([
+    "childhood",
+    "adolescence",
+    "youth",
+    "adult",
+    "old age"
+  ]);
+  expect(histData).toMatchObject([[12,
+    11,
+    5,
+    11,
+    1]]);
+});
+
+test("number custom intervals for small result sets", () => {
+  const question: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "number",
+    name: "age",
+  };
+  const date = new HistogramModel(question, data, {
+    age: {
+      intervals: [
+        { start: 0, end: 7, label: "childhood" },
+        { start: 7, end: 14, label: "adolescence" },
+        { start: 14, end: 19, label: "youth" },
+        { start: 19, end: 70, label: "adult" },
+        { start: 70, end: 100, label: "old age" }
+      ]
+    }
+  });
+
+  const histValues = date.getValues();
+  const histIntervals = date.intervals;
+  const histData = date.getData();
+
+  expect(histIntervals.length).toBe(5);
+  expect(histValues).toMatchObject([
+    "childhood",
+    "adolescence",
+    "youth",
+    "adult",
+    "old age"
+  ]);
+  expect(histData).toMatchObject([[0, 0, 3, 5, 0]]);
+});
