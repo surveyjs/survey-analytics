@@ -5,4 +5,3 @@ export * from "./ranking";
 export * from "./matrixdropdown-grouped";
 export * from "./histogram";
 export * from "./rating";
-export * from "./datetime";
