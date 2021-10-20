@@ -29,6 +29,12 @@ export class HistogramModel extends SelectBase {
     }
   }
 
+  private reset() {
+    this._continiousData = undefined;
+    this._cachedValues = undefined;
+    this._cachedIntervals = undefined;
+  }
+
   public getContiniousValue(value: any): number {
     if (this.valueType === "date") {
       return Date.parse(value);
@@ -44,17 +50,25 @@ export class HistogramModel extends SelectBase {
   }
 
   public getSelectedItemByText(itemText: string) {
-    return new ItemValue(null);
+    if (this.hasCustomIntervals || this.getContiniousValues().length > HistogramModel.UseIntervalsFrom) {
+      const interval = this.intervals.filter(interval => interval.label === itemText)[0];
+      return new ItemValue(interval, interval !== undefined ? interval.label : "");
+    }
+    const originalValue = this.getLabels().filter(label => label === itemText)[0];
+    return new ItemValue(originalValue, originalValue);
   }
 
   /**
    * Updates visualizer data.
    */
   public updateData(data: Array<{ [index: string]: any }>) {
-    this._continiousData = undefined;
-    this._cachedValues = undefined;
-    this._cachedIntervals = undefined;
+    this.reset();
     super.updateData(data);
+  }
+
+  protected onDataChanged() {
+    this.reset();
+    super.onDataChanged();
   }
 
   protected getContiniousValues() {

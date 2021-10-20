@@ -481,3 +481,39 @@ test("filter data for matrix dropdown question column values - pre-processed dat
     [0, 0, 0, 0, 0],
   ]);
 });
+
+test("filter by interval", () => {
+  const data = [
+    { date: "2021-10-13", age: 17 },
+    { date: "2021-10-13", age: 17 },
+    { date: "2021-10-13", age: 17 },
+    { date: "2011-10-13", age: 30 },
+    { date: "2011-10-13", age: 30 },
+    { date: "2004-10-13", age: 40 },
+    { date: "2004-10-13", age: 40 },
+    { date: "2016-10-13", age: 25 },
+  ];
+  const dataProvider = new DataProvider(data);
+
+  dataProvider.setFilter("age", { start: 14, end: 19, label: "youth" });
+  expect(
+    dataProvider.filteredData
+  ).toEqual([
+    { date: "2021-10-13", age: 17 },
+    { date: "2021-10-13", age: 17 },
+    { date: "2021-10-13", age: 17 }
+  ]);
+
+  dataProvider.setFilter("age", undefined);
+  expect(
+    dataProvider.filteredData
+  ).toEqual(data);
+
+  dataProvider.setFilter("date", { start: Date.parse("2003-10-13"), end: Date.parse("2005-10-13"), label: "2004" });
+  expect(
+    dataProvider.filteredData
+  ).toEqual([
+    { date: "2004-10-13", age: 40 },
+    { date: "2004-10-13", age: 40 },
+  ]);
+});

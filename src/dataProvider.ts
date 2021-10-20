@@ -59,15 +59,26 @@ export class DataProvider {
           return !Object.keys(this.filterValues).some(
             (key) => {
               const filterValue = this.filterValues[key];
+              const filterValueType = typeof filterValue;
               const questionValue = item[key];
               if (typeof questionValue === "object") {
-                if (typeof filterValue !== "object")
+                if (filterValueType !== "object")
                   return true;
                 return !questionContainsValue(questionValue, filterValue);
               }
               const seriesValue = item[DataProvider.seriesMarkerKey];
-              if (!!seriesValue && typeof filterValue === "object") {
+              if (!!seriesValue && filterValueType === "object") {
                 return questionValue !== filterValue[seriesValue];
+              }
+              if (filterValueType === "object" && filterValue.start !== undefined && filterValue.end !== undefined) {
+                let continioiusValue = typeof questionValue === "number" ? questionValue : Date.parse(questionValue);
+                if (isNaN(continioiusValue)) {
+                  continioiusValue = Number.parseFloat(questionValue);
+                  if (isNaN(continioiusValue)) {
+                    return true;
+                  }
+                }
+                return continioiusValue < filterValue.start || continioiusValue >= filterValue.end;
               }
               return item[key] !== this.filterValues[key];
             }
