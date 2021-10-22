@@ -209,6 +209,22 @@ export class Tabulator extends Table {
 
     this._rows.push(tableRow);
   };
+  private accessorDownload = (cellData: any, rowData: any, reason: string, _: any, columnComponent: any, rowComponent: any) => {
+    const columnDefinition = columnComponent.getDefinition();
+    const questionName = columnDefinition.field;
+    const column = this.columns.filter(col => col.name === questionName)[0];
+    if (!!column && rowComponent) {
+      const dataRow = this.data[rowComponent.getPosition()];
+      const dataCell = dataRow[questionName];
+      if (column.dataType === ColumnDataType.Image) {
+        return questionName;
+      }
+      if (column.dataType === ColumnDataType.FileLink && Array.isArray(dataCell)) {
+        return (dataCell || []).map(f => f.name).join(", ");
+      }
+    }
+    return cellData;
+  }
 
   private getTitleFormatter(
     cell: any,
@@ -264,6 +280,7 @@ export class Tabulator extends Table {
         headerSort: false,
         download: this.options.downloadHiddenColumns ? true : undefined,
         formatter,
+        accessorDownload: this.accessorDownload,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(
             cell,

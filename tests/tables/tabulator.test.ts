@@ -226,15 +226,51 @@ test("check pdf options before download", () => {
   const survey = new SurveyModel(surveyJson);
   const tabulator = new Tabulator(survey, [], null);
   tabulator.render(document.createElement("div"));
-  let options = tabulator['getDownloadOptions']("pdf");
+  let options = tabulator["getDownloadOptions"]("pdf");
   expect(options.jsPDF.format).toEqual([595.28, 1120.32]);
   tabulator.setColumnVisibility("question 1", false);
-  options = tabulator['getDownloadOptions']("pdf");
+  options = tabulator["getDownloadOptions"]("pdf");
   expect(options.jsPDF.format).toEqual([595.28, 933.6]);
   tabulator.setColumnVisibility("question 2", false);
-  options = tabulator['getDownloadOptions']("pdf");
+  options = tabulator["getDownloadOptions"]("pdf");
   expect(options.jsPDF).toEqual(undefined); //a4 default format
   tabulator.setColumnVisibility("question 3", false);
-  options = tabulator['getDownloadOptions']("pdf");
+  options = tabulator["getDownloadOptions"]("pdf");
   expect(options.jsPDF).toEqual(undefined); //a4 default format
+});
+
+test("image and file export formatter", () => {
+  const surveyJson = {
+    questions: [
+      {
+        type: "signaturepad",
+        name: "signature",
+        title:
+          "Signature",
+      },
+      {
+        type: "file",
+        title: "Please upload your photo",
+        name: "image"
+      }
+    ],
+  };
+  const survey = new SurveyModel(surveyJson);
+
+  const data = [{
+    signature: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAA",
+    "image": [
+      { "name": "file1.png", "type": "image/png", "content": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAA" },
+      { "name": "file2.png", "type": "image/png", "content": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAA" }]
+  }];
+
+  const tabulator = new Tabulator(survey, data, null);
+  const columns = <any>tabulator.getColumns();
+  const accessorDownload: any = columns[1].accessorDownload;
+
+  const fileCell = accessorDownload(undefined, undefined, undefined, undefined, { getDefinition: () => ({ field: "image" }) }, { getPosition: () => 0 });
+  expect(fileCell).toBe("file1.png, file2.png");
+
+  const imageCell = accessorDownload(undefined, undefined, undefined, undefined, { getDefinition: () => ({ field: "signature" }) }, { getPosition: () => 0 });
+  expect(imageCell).toBe("signature");
 });

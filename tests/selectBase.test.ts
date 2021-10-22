@@ -1,4 +1,4 @@
-import { QuestionDropdownModel, ItemValue } from "survey-core";
+import { QuestionDropdownModel, ItemValue, QuestionImagePickerModel } from "survey-core";
 import { SelectBase } from "../src/selectBase";
 
 let selectBase: SelectBase;
@@ -184,4 +184,31 @@ test("transpose method", () => {
   ];
   const transposed = selectBase["transpose"](data);
   expect(transposed).toEqual([[1, 1, 1, 0, 0, 0], [1, 1, 0, 0, 0, 0], [10, 11, 12, 13, 14, 15]]);
+});
+
+test("imagePicker getValues order", () => {
+  const imagePicker = new QuestionImagePickerModel("q1");
+  imagePicker.choices = [
+    {
+      "value": "lion",
+      "imageLink": "https://surveyjs.io/Content/Images/examples/image-picker/lion.jpg"
+    }, {
+      "value": "giraffe",
+      "imageLink": "https://surveyjs.io/Content/Images/examples/image-picker/giraffe.jpg"
+    }, {
+      "value": "panda",
+      "imageLink": "https://surveyjs.io/Content/Images/examples/image-picker/panda.jpg"
+    }, {
+      "value": "camel",
+      "imageLink": "https://surveyjs.io/Content/Images/examples/image-picker/camel.jpg"
+    }
+  ];
+  const visualizer = new SelectBase(imagePicker, [], {});
+
+  expect(visualizer.getValues()).toEqual([
+    "lion",
+    "giraffe",
+    "panda",
+    "camel",
+  ]);
 });
