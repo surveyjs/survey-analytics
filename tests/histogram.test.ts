@@ -221,3 +221,19 @@ test("number custom intervals for small result sets", () => {
   ]);
   expect(histData).toMatchObject([[0, 0, 3, 5, 0]]);
 });
+
+test("histogram no series if passed in options", () => {
+  const question: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "number",
+    name: "age",
+  };
+  const number = new HistogramModel(question, data, {
+    seriesValues: [1, 2, 3],
+    seriesLabels: [1, 2, 3],
+  });
+
+  expect(number.getSeriesValues()).toMatchObject([]);
+  expect(number.getSeriesLabels()).toMatchObject([]);
+});

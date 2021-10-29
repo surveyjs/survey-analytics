@@ -35,6 +35,20 @@ export class HistogramModel extends SelectBase {
     this._cachedIntervals = undefined;
   }
 
+  /**
+   * Series values getter. Some questions (used in matrices) should be grouped by matrix rows. This groups are called series.
+   */
+  getSeriesValues(): Array<string> {
+    return [];
+  }
+
+  /**
+   * Series labels getter. Some questions (used in matrices) should be grouped by matrix rows. This groups are called series.
+   */
+  getSeriesLabels(): Array<string> {
+    return [];
+  }
+
   public getContiniousValue(value: any): number {
     if (this.valueType === "date") {
       return Date.parse(value);
