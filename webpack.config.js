@@ -62,6 +62,12 @@ var dts_banner = [
   "",
 ].join("\n");
 
+function copyFileWithBanner(source, destination, banner) {
+  var writeStream = fs.createWriteStream(destination)
+  writeStream.write("/*\n" + banner + "*/\n\n");
+  fs.createReadStream(source).pipe(writeStream);
+}
+
 module.exports = function (options) {
   var packagePath = __dirname + "/packages/";
   var isProductionBuild = options.buildType === "prod";
@@ -97,6 +103,8 @@ module.exports = function (options) {
           outputAsModuleFolder: true,
           headerText: dts_banner,
         });
+        copyFileWithBanner("./pckg_content/survey.analytics.datatables.d.ts", "./packages/survey.analytics.datatables.d.ts", dts_banner);
+        copyFileWithBanner("./pckg_content/survey.analytics.tabulator.d.ts", "./packages/survey.analytics.tabulator.d.ts", dts_banner);
         rimraf.sync(packagePath + "typings");
         fs.createReadStream("./LICENSE").pipe(
           fs.createWriteStream(packagePath + "LICENSE")

@@ -1,0 +1,1 @@
+declare module "survey-analytics/survey.analytics.tabulator";
