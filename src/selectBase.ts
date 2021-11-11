@@ -27,6 +27,7 @@ export class SelectBase
   private transposeDataBtn: HTMLElement = undefined;
   private topNSelector: HTMLDivElement = undefined;
   private _showPercentages: boolean = false;
+  private _showOnlyPercentages: boolean = false;
   protected _answersOrder: string = "default";
   protected _supportSelection: boolean = true;
   private _hideEmptyAnswers = false;
@@ -46,6 +47,7 @@ export class SelectBase
       this.dataProvider.reset();
     };
     this._showPercentages = this.options.showPercentages === true;
+    this._showOnlyPercentages = this.options.showOnlyPercentages === true;
     this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
     this._answersOrder = this.options.answersOrder || "default";
     this.registerToolbarItem("changeChartType", () => {
@@ -249,6 +251,15 @@ export class SelectBase
   }
   get selection() {
     return this.selectedItem;
+  }
+
+  public get showOnlyPercentages(): boolean {
+    return this._showOnlyPercentages;
+  }
+
+  public set showOnlyPercentages(val: boolean) {
+    this._showOnlyPercentages = val;
+    this.refreshContent();
   }
 
   public get showPercentages(): boolean {

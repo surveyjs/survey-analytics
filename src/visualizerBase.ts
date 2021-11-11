@@ -93,7 +93,6 @@ export class VisualizerBase implements IDataInfo {
     if (options.dataProvider === undefined) {
       options.dataProvider = this.dataProvider;
     }
-
     return VisualizerFactory.createVisualizer(question, this.data, options);
   }
 
