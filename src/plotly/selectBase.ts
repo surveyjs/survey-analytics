@@ -250,7 +250,7 @@ export class PlotlySetup {
         columns: 2,
       };
       layout.annotations = [];
-      labels.forEach((label, index) => {
+      seriesLabels.forEach((label, index) => {
         traces[index].domain = {
           column: index % 2,
           row: Math.floor(index / 2),
@@ -352,7 +352,7 @@ export class PlotlySetup {
         layout.barmode = "stack";
       }
 
-      labels.forEach((label, index) => {
+      seriesLabels.forEach((label, index) => {
         traces[index].hoverinfo = "x+name";
         traces[index].marker.color = undefined;
         traces[index].name = label;
@@ -449,7 +449,7 @@ export class PlotlySetup {
       layout.showlegend = true;
       layout.height = undefined;
 
-      labels.forEach((label, index) => {
+      seriesLabels.forEach((label, index) => {
         traces[index].hoverinfo = "x+name";
         traces[index].marker.color = undefined;
         traces[index].name = label;

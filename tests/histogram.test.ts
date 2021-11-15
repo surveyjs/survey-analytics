@@ -234,6 +234,9 @@ test("histogram no series if passed in options", () => {
     seriesLabels: [1, 2, 3],
   });
 
-  expect(number.getSeriesValues()).toMatchObject([]);
-  expect(number.getSeriesLabels()).toMatchObject([]);
+  expect(number.getSeriesValues()).toMatchObject([1, 2, 3]);
+  expect(number.getSeriesLabels()).toMatchObject([1, 2, 3]);
+
+  const chartData = number.getData();
+  expect(chartData).toMatchObject([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]);
 });
