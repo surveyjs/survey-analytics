@@ -43,7 +43,6 @@ var json = {
             {
               "name": "Column 1",
               "cellType": "rating",
-              choices: [1, 2, 3, 4, 5],
             },
             {
               "name": "Column 2",
@@ -93,18 +92,18 @@ var data = [
         "Column 1": 2,
         "Column 2": 2
       },
-      "Row 3": {
-        "Column 1": 3,
-        "Column 2": 3
-      },
-      "Row 4": {
-        "Column 1": 4,
-        "Column 2": 4
-      },
-      "Row 5": {
-        "Column 1": 5,
-        "Column 2": 5
-      }
+      // "Row 3": {
+      //   "Column 1": 3,
+      //   "Column 2": 1
+      // },
+      // "Row 4": {
+      //   "Column 1": 4,
+      //   "Column 2": 4
+      // },
+      // "Row 5": {
+      //   "Column 1": 5,
+      //   "Column 2": 5
+      // }
     },
     "hystogram-matrixdynamic": [
       {
@@ -142,15 +141,15 @@ var data = [
       "Row 2": {
         "Column 1": 4
       },
-      "Row 3": {
-        "Column 1": 3
-      },
-      "Row 4": {
-        "Column 1": 2
-      },
-      "Row 5": {
-        "Column 1": 1
-      }
+      // "Row 3": {
+      //   "Column 1": 3
+      // },
+      // "Row 4": {
+      //   "Column 1": 2
+      // },
+      // "Row 5": {
+      //   "Column 1": 1
+      // }
     },
     question1: { Lizol: "Very Good", Harpic: "Very Good" },
     question2: {
@@ -166,15 +165,15 @@ var data = [
       "Row 2": {
         "Column 1": 1
       },
-      "Row 3": {
-        "Column 1": 1
-      },
-      "Row 4": {
-        "Column 1": 1
-      },
-      "Row 5": {
-        "Column 1": 1
-      }
+      // "Row 3": {
+      //   "Column 1": 1
+      // },
+      // "Row 4": {
+      //   "Column 1": 1
+      // },
+      // "Row 5": {
+      //   "Column 1": 1
+      // }
     },
     question1: { Lizol: "Very Good", Harpic: "Good" },
     question2: {

@@ -222,7 +222,7 @@ test("number custom intervals for small result sets", () => {
   expect(histData).toMatchObject([[0, 0, 3, 5, 0]]);
 });
 
-test("histogram no series if passed in options", () => {
+test("histogram series if passed in options", () => {
   const question: any = {
     getType: () => "text",
     type: "text",
@@ -239,4 +239,51 @@ test("histogram no series if passed in options", () => {
 
   const chartData = number.getData();
   expect(chartData).toMatchObject([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]);
+});
+
+test("histogram series data", () => {
+  const preparedData = [
+    {
+      "Column 1": 1,
+      "Column 2": 1,
+      "__sa_series_name": "Row 1"
+    },
+    {
+      "Column 1": 2,
+      "Column 2": 2,
+      "__sa_series_name": "Row 2"
+    },
+    {
+      "Column 1": 3,
+      "Column 2": 1,
+      "__sa_series_name": "Row 3"
+    },
+    {
+      "Column 1": 4,
+      "Column 2": 4,
+      "__sa_series_name": "Row 4"
+    },
+    {
+      "Column 1": 5,
+      "Column 2": 5,
+      "__sa_series_name": "Row 5"
+    },
+  ];
+  const question: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "number",
+    name: "Column 2",
+  };
+  const series = ["Row 1", "Row 2", "Row 3", "Row 4", "Row 5"];
+  const number = new HistogramModel(question, preparedData, {
+    seriesValues: series,
+    seriesLabels: series,
+  });
+
+  expect(number.getSeriesValues()).toMatchObject(series);
+  expect(number.getSeriesLabels()).toMatchObject(series);
+
+  const chartData = number.getData();
+  expect(chartData).toMatchObject([[1, 0, 0, 0], [0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]);
 });
