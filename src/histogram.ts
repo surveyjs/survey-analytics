@@ -1,10 +1,11 @@
 import { ItemValue, Question } from "survey-core";
+import { DataProvider } from "./dataProvider";
 import { SelectBase } from "./selectBase";
 
 export class HistogramModel extends SelectBase {
   protected valueType: "date" | "number" = "number";
   private _cachedValues: Array<{ original: any, continious: number }> = undefined;
-  private _continiousData: Array<number> = undefined;
+  private _continiousData: { [series: string]: Array<number> } = undefined;
   private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
   protected chartTypes: string[];
   public chartType: string;
@@ -73,13 +74,19 @@ export class HistogramModel extends SelectBase {
 
   protected getContiniousValues() {
     if (this._cachedValues === undefined) {
-      this._continiousData = [];
+      const series = this.getSeriesValues();
+      if (series.length === 0) {
+        series.push("");
+      }
+      this._continiousData = {};
+      series.forEach(seriesValue => this._continiousData[seriesValue] = []);
       const hash = {};
       this.data.forEach(dataItem => {
         const answerData = dataItem[this.dataName];
         if (answerData !== undefined) {
+          const seriesValue = dataItem[DataProvider.seriesMarkerKey] || "";
           // TODO: _continiousData should be sorted in order to speed-up statistics calculation in the getData function
-          this._continiousData.push(this.getContiniousValue(answerData));
+          this._continiousData[seriesValue].push(this.getContiniousValue(answerData));
           hash[answerData] = 0;
         }
       });
@@ -142,15 +149,22 @@ export class HistogramModel extends SelectBase {
       return super.getData();
     }
     const intervals = this.intervals;
-    const statistics = intervals.map(i => 0);
-    this._continiousData.forEach(dataValue => {
-      for (let i = 0; i < intervals.length; ++i) {
-        if (intervals[i].start <= dataValue && dataValue < intervals[i].end) {
-          statistics[i]++;
-          break;
+    const statistics: Array<Array<number>> = [];
+    const series = this.getSeriesValues();
+    if (series.length === 0) {
+      series.push("");
+    }
+    for (var i = 0; i < series.length; ++i) {
+      statistics.push(intervals.map(i => 0));
+      this._continiousData[series[i]].forEach(dataValue => {
+        for (let j = 0; j < intervals.length; ++j) {
+          if (intervals[j].start <= dataValue && dataValue < intervals[j].end) {
+            statistics[i][j]++;
+            break;
+          }
         }
-      }
-    });
-    return [statistics];
+      });
+    }
+    return statistics;
   }
 }

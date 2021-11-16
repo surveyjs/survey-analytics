@@ -222,26 +222,13 @@ test("number custom intervals for small result sets", () => {
   expect(histData).toMatchObject([[0, 0, 3, 5, 0]]);
 });
 
-test("histogram series if passed in options", () => {
+test("histogram series default algorithm data", () => {
   const question: any = {
     getType: () => "text",
     type: "text",
     inputType: "number",
-    name: "age",
+    name: "Column 2",
   };
-  const number = new HistogramModel(question, data, {
-    seriesValues: [1, 2, 3],
-    seriesLabels: [1, 2, 3],
-  });
-
-  expect(number.getSeriesValues()).toMatchObject([1, 2, 3]);
-  expect(number.getSeriesLabels()).toMatchObject([1, 2, 3]);
-
-  const chartData = number.getData();
-  expect(chartData).toMatchObject([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]);
-});
-
-test("histogram series data", () => {
   const preparedData = [
     {
       "Column 1": 1,
@@ -269,6 +256,87 @@ test("histogram series data", () => {
       "__sa_series_name": "Row 5"
     },
   ];
+
+  const series = ["Row 1", "Row 2", "Row 3", "Row 4", "Row 5"];
+  const number = new HistogramModel(question, preparedData, {
+    seriesValues: series,
+    seriesLabels: series,
+  });
+
+  expect(number.getSeriesValues()).toMatchObject(series);
+  expect(number.getSeriesLabels()).toMatchObject(series);
+
+  const chartData = number.getData();
+  expect(chartData).toMatchObject([[1, 0, 0, 0], [0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]);
+});
+
+test("histogram series intervals data", () => {
+  const preparedData = [
+    {
+      "Column 2": 1,
+      "__sa_series_name": "Row 1"
+    },
+    {
+      "Column 2": 2,
+      "__sa_series_name": "Row 2"
+    },
+    {
+      "Column 2": 1,
+      "__sa_series_name": "Row 3"
+    },
+    {
+      "Column 2": 4,
+      "__sa_series_name": "Row 4"
+    },
+    {
+      "Column 2": 5,
+      "__sa_series_name": "Row 5"
+    },
+    {
+      "Column 2": 6,
+      "__sa_series_name": "Row 1"
+    },
+    {
+      "Column 2": 7,
+      "__sa_series_name": "Row 2"
+    },
+    {
+      "Column 2": 8,
+      "__sa_series_name": "Row 3"
+    },
+    {
+      "Column 2": 9,
+      "__sa_series_name": "Row 4"
+    },
+    {
+      "Column 2": 10,
+      "__sa_series_name": "Row 5"
+    },
+    {
+      "Column 2": 11,
+      "__sa_series_name": "Row 1"
+    },
+    {
+      "Column 2": 12,
+      "__sa_series_name": "Row 2"
+    },
+    {
+      "Column 2": 13,
+      "__sa_series_name": "Row 3"
+    },
+    {
+      "Column 2": 14,
+      "__sa_series_name": "Row 4"
+    },
+    {
+      "Column 2": 16,
+      "__sa_series_name": "Row 5"
+    },
+    {
+      "Column 2": 16,
+      "__sa_series_name": "Row 5"
+    },
+  ];
   const question: any = {
     getType: () => "text",
     type: "text",
@@ -281,9 +349,67 @@ test("histogram series data", () => {
     seriesLabels: series,
   });
 
-  expect(number.getSeriesValues()).toMatchObject(series);
-  expect(number.getSeriesLabels()).toMatchObject(series);
-
   const chartData = number.getData();
-  expect(chartData).toMatchObject([[1, 0, 0, 0], [0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]);
+  expect(chartData).toMatchObject([
+    [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      2,
+    ],
+  ]);
 });
