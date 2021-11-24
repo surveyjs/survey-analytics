@@ -82,11 +82,10 @@ To build library yourself:
     ```
     This command will run unit tests
 
-## Nearest plans (Nov 2020 - Dec 2020)
+## Nearest plans
 
 Our task list of Survey Analytics pack:
 
-- Make it easy to integrate/replace new (custom) visualizers
 - Implement data providing server side prototype
 - Introduce (or use 3rd party) data processing engine for survey analytics
 - Support high load scenario - process at least billion records
