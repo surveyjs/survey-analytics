@@ -212,3 +212,15 @@ test("imagePicker getValues order", () => {
     "camel",
   ]);
 });
+
+test("getPercentages method", () => {
+  selectBase.updateData([
+    { q1: "father", },
+    { q1: "father", },
+    { q1: "father", },
+    { q1: "mother", },
+    { q1: "mother", },
+    { q1: "sister", },
+  ]);
+  expect(selectBase.getPercentages()).toEqual([[50, 33.33, 0, 16.67, 0, 0]]);
+});

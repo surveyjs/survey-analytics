@@ -360,7 +360,7 @@ export class SelectBase
       data.forEach((res, index) => {
         var sum = res.reduce((sum, val) => sum + val, 0);
         percentages[index] = res.map((val) => {
-          return sum && Math.round((val / sum) * 100);
+          return sum && (Math.round((val / sum) * 10000) / 100);
         });
       });
     } else {

@@ -47,7 +47,9 @@ SurveyAnalytics.PlotlySetup.onImageSaving.add(function (selectBaseVisualizer, op
 var options = {
   // allowDynamicLayout: false,
   // allowHideQuestions: false,
-  // allowShowPercentages: false,
+  // allowShowPercentages: true,
+  // showPercentages: true,
+  // showOnlyPercentages: true,
   // useValuesAsLabels: false
   // haveCommercialLicense: false,
   // allowChangeAnswersOrder: true,
