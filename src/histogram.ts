@@ -21,12 +21,10 @@ export class HistogramModel extends SelectBase {
   ) {
     super(question, data, options, name || "histogram");
     const questionType = question.getType();
-    if (questionType === "rating" || questionType === "text" && question["inputType"] === "number") {
-      this.valueType = "number";
-    } else if (questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
+    if (questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
       this.valueType = "date";
     } else {
-      throw new Error("Not supported question type: " + questionType);
+      this.valueType = "number";
     }
   }
 

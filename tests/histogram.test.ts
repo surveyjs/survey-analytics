@@ -413,3 +413,13 @@ test("histogram series intervals data", () => {
     ],
   ]);
 });
+
+test("custom widget default histogram", () => {
+  const question: any = {
+    getType: () => "nouislider",
+    type: "nouislider",
+    name: "age",
+  };
+  const number = new HistogramModel(question, data);
+  expect(number["valueType"]).toBe("number");
+});
