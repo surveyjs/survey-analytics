@@ -1,4 +1,4 @@
-import { Question } from "survey-core";
+import { Question, QuestionRatingModel } from "survey-core";
 import { NumberModel } from "../number";
 import { VisualizationManager } from "../visualizationManager";
 import { allowDomRendering, DataHelper, DocumentHelper } from "../utils/index";
@@ -20,7 +20,7 @@ export class PlotlyGaugeAdapter {
     let [level, minValue, maxValue] = this.model.getData();
 
     if (question.getType() === "rating") {
-      const rateValues = question.visibleRateValues;
+      const rateValues = (<QuestionRatingModel>question).visibleRateValues;
       maxValue = rateValues[rateValues.length - 1].value;
       minValue = rateValues[0].value;
     }

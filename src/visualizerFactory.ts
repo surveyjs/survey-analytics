@@ -17,8 +17,8 @@ export class VisualizerFactory {
   ): VisualizerBase {
     let type;
 
-    if (question.getType() === "text" && question.inputType) {
-      type = question.inputType;
+    if (question.getType() === "text" && (<any>question).inputType) {
+      type = (<any>question).inputType;
     } else {
       type = question.getType();
     }

@@ -43,7 +43,7 @@ export class SelectBase
     name?: string
   ) {
     super(question, data, options, name || "selectBase");
-    question.visibleChoicesChangedCallback = () => {
+    (<any>question).visibleChoicesChangedCallback = () => {
       this.dataProvider.reset();
     };
     this._showPercentages = this.options.showPercentages === true;
@@ -229,10 +229,11 @@ export class SelectBase
   }
 
   public getSelectedItemByText(itemText: string) {
-    if (this.question.hasOther && itemText == this.question.otherText) {
-      return this.question.otherItem;
+    const selBase = <QuestionSelectBase>this.question;
+    if (this.question.hasOther && itemText == selBase.otherText) {
+      return selBase.otherItem;
     } else {
-      return this.question.choices.filter(
+      return selBase.choices.filter(
         (choice: ItemValue) => choice.text === itemText
       )[0];
     }
@@ -346,9 +347,9 @@ export class SelectBase
     const labels: Array<string> = this.valuesSource().map((choice) =>
       ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value)
     );
-
-    if (this.question.hasOther) {
-      labels.unshift(this.question.otherText);
+    const selBase = <QuestionSelectBase>this.question;
+    if (selBase.hasOther) {
+      labels.unshift(selBase.otherText);
     }
     return labels;
   }

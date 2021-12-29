@@ -3,6 +3,7 @@ import {
   MatrixDropdownColumn,
   ItemValue,
   Helpers,
+  QuestionSelectBase,
 } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
@@ -26,7 +27,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     options.seriesLabels = question.rows.map((row: ItemValue) => row.text);
 
     const innerQuestions = this.getQuestions();
-    const canGroupColumns = innerQuestions.every(innerQuestion => Helpers.isArraysEqual(innerQuestion.choices, this.question.choices));
+    const canGroupColumns = innerQuestions.every(innerQuestion => Helpers.isArraysEqual(innerQuestion.choices, (<QuestionSelectBase>this.question).choices));
     if (canGroupColumns) {
       var creators = VisualizationManager.getVisualizersByType("matrixdropdown-grouped");
       this._matrixDropdownVisualizer = new creators[0](this.question, [], options);
@@ -65,7 +66,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     const matrixdropdown: QuestionMatrixDropdownModel = <any>this.question;
     return matrixdropdown.columns.map(
       (column: MatrixDropdownColumn) => {
-        const cellQuestion = column.templateQuestion;
+        const cellQuestion: any = column.templateQuestion;
         if (Array.isArray(cellQuestion.choices) && cellQuestion.choices.length === 0) {
           cellQuestion.choices = matrixdropdown.choices;
         }

@@ -1,4 +1,4 @@
-import { SurveyModel, Question, Event, settings } from "survey-core";
+import { SurveyModel, Question, Event, settings, QuestionSelectBase } from "survey-core";
 import {
   IPermission,
   QuestionLocation,
@@ -164,12 +164,12 @@ export abstract class Table {
       });
       if (
         question.hasComment ||
-        (question.hasOther && question.getStoreOthersAsComment())
+        (question.hasOther && (<QuestionSelectBase>question).getStoreOthersAsComment())
       ) {
         columns.push({
           name: `${question.name}${settings.commentPrefix}`,
           displayName: question.hasOther
-            ? question.otherText
+            ? (<any>question).otherText
             : question.commentText,
           isComment: true,
           dataType,
