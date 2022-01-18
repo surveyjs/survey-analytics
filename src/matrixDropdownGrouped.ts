@@ -38,6 +38,10 @@ export class MatrixDropdownGrouped extends SelectBase {
     return this.matrixQuestion.choices;
   }
 
+  protected isSupportMissingAnswers(): boolean {
+    return false;
+  }
+
   getData(): any[] {
     const values = this.getValues();
     const series = this.getSeriesValues();

@@ -27,6 +27,9 @@ beforeEach(() => {
     {
       q1: "sister",
     },
+    {
+
+    }
   ];
   selectBase = new SelectBase(question, data, {});
 });
@@ -223,4 +226,16 @@ test("getPercentages method", () => {
     { q1: "sister", },
   ]);
   expect(selectBase.getPercentages()).toEqual([[50, 33.33, 0, 16.67, 0, 0]]);
+});
+
+test("showMissingAnswers", () => {
+  expect(selectBase["isSupportMissingAnswers"]()).toBeTruthy();
+  expect(selectBase.showMissingAnswers).toBeFalsy();
+  expect(selectBase.getValues()).toEqual(["father", "mother", "brother", "sister", "son", "daughter"]);
+  expect(selectBase.getLabels()).toEqual(["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"]);
+  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0]]);
+  selectBase.showMissingAnswers = true;
+  expect(selectBase.getValues()).toEqual(["father", "mother", "brother", "sister", "son", "daughter", undefined]);
+  expect(selectBase.getLabels()).toEqual(["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text", "Missing answers"]);
+  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0, 1]]);
 });

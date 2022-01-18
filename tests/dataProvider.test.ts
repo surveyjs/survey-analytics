@@ -517,3 +517,67 @@ test("filter by interval", () => {
     { date: "2004-10-13", age: 40 },
   ]);
 });
+
+test("getData for boolean question values + missing answers", () => {
+  var data = [
+    {
+      q1: true,
+    },
+    {
+      q1: true,
+    },
+    {
+      q2: true,
+    },
+    {
+      q1: false,
+    },
+    {
+      q1: true,
+    },
+    {
+
+    }
+  ];
+  const dataProvider = new DataProvider(data);
+  expect(
+    dataProvider.getData({
+      dataName: "q1",
+      getValues: () => [true, false, undefined],
+      getLabels: () => ["true", "false", "missing"],
+      getSeriesValues: () => [],
+      getSeriesLabels: () => [],
+    })
+  ).toEqual([[3, 1, 2]]);
+});
+
+test("getData for select base question values + missing answers", () => {
+  const choices = ["father", "mother", "brother", "sister", "son", "dauhter"];
+  const data = [
+    {
+      q1: "father",
+    },
+    {
+      q1: "father",
+    },
+    {
+      q1: "mother",
+    },
+    {
+      q1: "sister",
+    },
+    {
+
+    }
+  ];
+  const dataProvider = new DataProvider(data);
+  expect(
+    dataProvider.getData({
+      dataName: "q1",
+      getValues: () => choices.concat([undefined]),
+      getLabels: () => choices.concat(["missing"]),
+      getSeriesValues: () => [],
+      getSeriesLabels: () => [],
+    })
+  ).toEqual([[2, 1, 0, 1, 0, 0, 1]]);
+});

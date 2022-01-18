@@ -32,7 +32,14 @@ export class DataProvider {
 
   constructor(private _data: Array<any> = [], private _getDataCore: (dataInfo: IDataInfo) => number[][] = undefined) { }
 
-  public reset() {
+  public reset(dataInfo?: IDataInfo) {
+    if(!!dataInfo) {
+      if(this._statisticsCache !== undefined) {
+        const cacheKey = this.getStatisticsCacheKey(dataInfo);
+        delete this._statisticsCache[cacheKey];
+      }
+      return;
+    }
     if (
       this._statisticsCache !== undefined ||
       this._filteredData !== undefined
@@ -121,6 +128,7 @@ export class DataProvider {
     values.forEach((val: any, index: number) => {
       valuesIndex[val] = index;
     });
+    const processMissingAnswers = values.indexOf(undefined) !== -1;
 
     const series = dataInfo.getSeriesValues();
     const seriesIndex: { [index: string]: number } = {};
@@ -140,7 +148,7 @@ export class DataProvider {
     this.filteredData.forEach((row: any) => {
       dataNames.forEach((dataName, index) => {
         const rowValue: any = row[dataName];
-        if (rowValue !== undefined) {
+        if (rowValue !== undefined || processMissingAnswers) {
           const rowValues = Array.isArray(rowValue) ? rowValue : [rowValue];
           if (series.length > 0) {
             if (row[DataProvider.seriesMarkerKey] !== undefined) {
@@ -170,7 +178,6 @@ export class DataProvider {
       });
     });
 
-    const cacheKey = this.getStatisticsCacheKey(dataInfo);
     return Array.isArray(dataInfo.dataName) ? statistics : statistics[0];
   }
 

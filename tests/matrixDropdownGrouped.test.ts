@@ -97,3 +97,8 @@ test("check getPercentages method", () => {
     [0, 0, 0],
   ]);
 });
+
+test("SupportMissingAnswers", () => {
+  expect(matrix["isSupportMissingAnswers"]()).toBeFalsy();
+  expect(matrix.showMissingAnswers).toBeFalsy();
+});

@@ -94,6 +94,10 @@ export class HistogramModel extends SelectBase {
     return this._cachedValues;
   }
 
+  protected isSupportMissingAnswers(): boolean {
+    return false;
+  }
+
   public getValues(): Array<any> {
     const continiousValues = this.getContiniousValues();
     if (this.hasCustomIntervals || continiousValues.length > HistogramModel.UseIntervalsFrom) {

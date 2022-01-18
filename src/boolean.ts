@@ -2,6 +2,7 @@ import { Question, QuestionBooleanModel } from "survey-core";
 import { ItemValue } from "survey-core";
 import { SelectBase } from "./selectBase";
 import { DataProvider } from "./dataProvider";
+import { localization } from "./localizationManager";
 
 export class BooleanModel extends SelectBase {
   protected chartTypes: string[];
@@ -30,7 +31,7 @@ export class BooleanModel extends SelectBase {
   }
 
   getValues(): Array<any> {
-    return [
+    const values = [
       this.booleanQuestion.valueTrue !== undefined
         ? this.booleanQuestion.valueTrue
         : true,
@@ -38,15 +39,22 @@ export class BooleanModel extends SelectBase {
         ? this.booleanQuestion.valueFalse
         : false,
     ];
+    if (this.showMissingAnswers) {
+      values.push(undefined);
+    }
+    return values;
   }
 
   getLabels(): Array<string> {
-    var labels = this.getValues();
+    var labels = [].concat(this.getValues());
     if (this.booleanQuestion.labelTrue !== undefined) {
       labels[0] = this.booleanQuestion.locLabelTrue.textOrHtml;
     }
     if (this.booleanQuestion.labelFalse !== undefined) {
       labels[1] = this.booleanQuestion.locLabelFalse.textOrHtml;
+    }
+    if (this.showMissingAnswers) {
+      labels[2] = localization.getString("missingAnswersLabel");
     }
     return labels;
   }

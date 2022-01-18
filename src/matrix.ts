@@ -16,6 +16,10 @@ export class Matrix extends SelectBase {
     return <QuestionMatrixModel>this.question;
   }
 
+  protected isSupportMissingAnswers(): boolean {
+    return false;
+  }
+
   getSeriesValues(): Array<string> {
     return this.matrixQuestion.rows.map((row: ItemValue) => "" + row.value);
   }

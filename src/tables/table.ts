@@ -164,7 +164,7 @@ export abstract class Table {
       });
       if (
         question.hasComment ||
-        (question.hasOther && (<QuestionSelectBase>question).getStoreOthersAsComment())
+        (question.hasOther && (<QuestionSelectBase>question)["getStoreOthersAsComment"]())
       ) {
         columns.push({
           name: `${question.name}${settings.commentPrefix}`,

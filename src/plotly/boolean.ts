@@ -20,6 +20,9 @@ export class PlotlyBoolChartAdapter extends PlotlyChartAdapter {
       BooleanPlotly.trueColor || colors[0],
       BooleanPlotly.falseColor || colors[1],
     ];
+    if(this.model.showMissingAnswers) {
+      boolColors.push(colors[2]);
+    }
 
     if (this.model.chartType === "pie" || this.model.chartType === "doughnut") {
       traces.forEach((trace: any) => {

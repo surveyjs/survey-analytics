@@ -35,6 +35,8 @@ export class SelectBase
   public static topNValuesDefaults = [-1, 5, 10, 20];
   public topNValues = [].concat(SelectBase.topNValuesDefaults);
   private _transposeData: boolean = false;
+  private _showMissingAnswers: boolean = false;
+  private missingAnswersBtn: HTMLElement = undefined;
 
   constructor(
     question: Question,
@@ -50,6 +52,7 @@ export class SelectBase
     this._showOnlyPercentages = this.options.showOnlyPercentages === true;
     this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
     this._answersOrder = this.options.answersOrder || "default";
+    this._showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
         return DocumentHelper.createSelector(
@@ -140,6 +143,15 @@ export class SelectBase
       }
       return this.transposeDataBtn;
     });
+    this.registerToolbarItem("showMissingAnswers", () => {
+      if (this.isSupportMissingAnswers() && this.options.allowShowMissingAnswers) {
+        this.missingAnswersBtn = DocumentHelper.createButton(() => {
+          this.showMissingAnswers = !this._showMissingAnswers;
+        });
+        this.updateMissingAnswersBtn();
+      }
+      return this.missingAnswersBtn;
+    });
   }
 
   protected chartTypes: string[] = [];
@@ -207,6 +219,14 @@ export class SelectBase
       this.topNSelector.getElementsByTagName("select")[0].value = <any>(
         this._topN
       );
+    }
+  }
+
+  private updateMissingAnswersBtn() {
+    if (!!this.missingAnswersBtn) {
+      this.missingAnswersBtn.innerHTML = this._showMissingAnswers
+        ? localization.getString("hideMissingAnswers")
+        : localization.getString("showMissingAnswers");
     }
   }
 
@@ -314,6 +334,21 @@ export class SelectBase
     this.refreshContent();
   }
 
+  protected isSupportMissingAnswers(): boolean {
+    return true;
+  }
+
+  public get showMissingAnswers() {
+    return this._showMissingAnswers;
+  }
+
+  public set showMissingAnswers(value: boolean) {
+    this._showMissingAnswers = this.isSupportMissingAnswers() && value;
+    this.updateMissingAnswersBtn();
+    this.dataProvider.reset(this);
+    this.refreshContent();
+  }
+
   refreshContent() {
     if (!!this.contentContainer) {
       this.destroyContent(this.contentContainer);
@@ -337,6 +372,9 @@ export class SelectBase
     if (this.question.hasOther) {
       values.unshift("other");
     }
+    if (this.showMissingAnswers) {
+      values.push(undefined);
+    }
     return values;
   }
 
@@ -350,6 +388,9 @@ export class SelectBase
     const selBase = <QuestionSelectBase>this.question;
     if (selBase.hasOther) {
       labels.unshift(selBase.otherText);
+    }
+    if (this.showMissingAnswers) {
+      labels.push(localization.getString("missingAnswersLabel"));
     }
     return labels;
   }

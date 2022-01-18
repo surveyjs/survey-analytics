@@ -133,3 +133,8 @@ test("hide empty answers", () => {
     texts: [[1, 1]],
   });
 });
+
+test("SupportMissingAnswers", () => {
+  expect(matrix["isSupportMissingAnswers"]()).toBeFalsy();
+  expect(matrix.showMissingAnswers).toBeFalsy();
+});

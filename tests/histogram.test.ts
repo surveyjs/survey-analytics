@@ -50,6 +50,8 @@ test("number default histogram", () => {
   expect(number["valueType"]).toBe("number");
   expect(histValues).toMatchObject(["17", "25", "30", "40"]);
   expect(histData).toMatchObject([[3, 1, 2, 2]]);
+
+  expect(number["isSupportMissingAnswers"]()).toBeFalsy();
 });
 
 test("date default histogram", () => {
@@ -67,6 +69,8 @@ test("date default histogram", () => {
   expect(date["valueType"]).toBe("date");
   expect(histValues).toMatchObject(["2004-10-13", "2011-10-13", "2016-10-13", "2021-10-13"]);
   expect(histData).toMatchObject([[2, 2, 1, 3]]);
+
+  expect(date["isSupportMissingAnswers"]()).toBeFalsy();
 });
 
 test("date default intervals", () => {
