@@ -35,7 +35,7 @@ steps:
 
   - task: Cache@2
     inputs:
-      key: 'npm-cache-analytics | "$(Agent.OS)" | $(Build.SourcesDirectory)/survey-analytics/package.json'
+      key: 'npm-cache-analytics | $(Build.SourcesDirectory)/survey-analytics/package.json'
       path: $(Build.SourcesDirectory)/survey-analytics/node_modules
       cacheHitVar: NPM_CACHE_RESTORED
     displayName: Cache NPM
