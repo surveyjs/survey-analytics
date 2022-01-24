@@ -1,48 +1,33 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Matrixes Example</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../packages/survey.analytics.css"
-    />
+<head>
+  <title>Matrixes Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <script src="https://cdn.rawgit.com/inexorabletash/polyfill/master/typedarray.js"></script>
+  <link rel="stylesheet" type="text/css" href="../packages/survey.analytics.css" />
 
-    <script src="https://polyfill.io/v3/polyfill.min.js"></script>
+  <script src="https://cdn.rawgit.com/inexorabletash/polyfill/master/typedarray.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.8.3.min.js"></script>
 
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="https://unpkg.com/c3@0.7.1/c3.css"
-    />
+  <script src="https://unpkg.com/wordcloud@1.1.0/src/wordcloud2.js"></script>
 
-    <script src="https://unpkg.com/d3@5.9.2/dist/d3.min.js"></script>
-    <script src="https://unpkg.com/c3@0.7.1/c3.js"></script>
+  <script src="../node_modules/survey-core/survey.core.js"></script>
+  <script src="../packages/survey.analytics.js"></script>
+</head>
 
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<body>
+  <style>
+    #summaryContainer>.sa-question:nth-child(2) {
+      width: 100%;
+    }
+  </style>
 
-    <script src="https://unpkg.com/wordcloud@1.1.0/src/wordcloud2.js"></script>
+  <div id="summaryContainer"></div>
+  <script src="./matrixes.js"></script>
+</body>
 
-    <script src="../node_modules/survey-core/survey.core.js"></script>
-    <script src="../packages/survey.analytics.js"></script>
-  </head>
-
-  <body>
-    <style>
-      #summaryContainer > .sa-question:nth-child(2) {
-        width: 100%;
-      }
-    </style>
-
-    <div id="summaryContainer"></div>
-    <script src="./matrixes.js"></script>
-  </body>
 </html>

@@ -288,6 +288,8 @@ export class PlotlySetup {
       hoverinfo: "x+y",
       orientation: "h",
       mode: "markers",
+      textangle: 0,
+      textposition: "inside",
       width: 0.5,
       bargap: 0.5,
       marker: <any>{},
