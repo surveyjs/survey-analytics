@@ -38,7 +38,7 @@ export class HistogramModel extends SelectBase {
     if (this.valueType === "date") {
       return Date.parse(value);
     }
-    return Number.parseFloat(value);
+    return parseFloat(value);
   }
 
   public getString(value: number): string {

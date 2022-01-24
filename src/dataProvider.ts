@@ -80,7 +80,7 @@ export class DataProvider {
               if (filterValueType === "object" && filterValue.start !== undefined && filterValue.end !== undefined) {
                 let continioiusValue = typeof questionValue === "number" ? questionValue : Date.parse(questionValue);
                 if (isNaN(continioiusValue)) {
-                  continioiusValue = Number.parseFloat(questionValue);
+                  continioiusValue = parseFloat(questionValue);
                   if (isNaN(continioiusValue)) {
                     return true;
                   }
