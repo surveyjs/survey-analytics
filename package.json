@@ -6,6 +6,7 @@
     "test_debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
     "testcafe": "concurrently \"http-server\" \"testcafe chrome testCafe/\"",
     "testcafe_ci": "http-server --silent & testcafe chrome:headless testCafe/ --reporter minimal,dashboard",
+    "testcafe_file": "concurrently \"http-server --silent\" \"testcafe chrome testCafe/summary/selectbase.js --selector-timeout 1500 --reporter minimal --debug-mode\"",
     "release": "standard-version --message \"Release: %s [skip ci]\" ",
     "doc_gen": "node doc_generator/lib_docgenerator.js src/index.ts",
     "doc_update": "chmod +x ./docupdate_npm.sh && ./docupdate_npm.sh",
