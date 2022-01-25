@@ -27,7 +27,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     options.seriesLabels = question.rows.map((row: ItemValue) => row.text);
 
     const innerQuestions = this.getQuestions();
-    const canGroupColumns = innerQuestions.every(innerQuestion => Helpers.isArraysEqual(innerQuestion.choices, (<QuestionSelectBase>this.question).choices));
+    const canGroupColumns = options.seriesValues.length == 1 && innerQuestions.every(innerQuestion => Helpers.isArraysEqual(innerQuestion.choices, (<QuestionSelectBase>this.question).choices));
     if (canGroupColumns) {
       var creators = VisualizationManager.getVisualizersByType("matrixdropdown-grouped");
       this._matrixDropdownVisualizer = new creators[0](this.question, [], options);
