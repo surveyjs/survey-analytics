@@ -3,7 +3,7 @@ import { SelectBase } from "../selectBase";
 import { VisualizationManager } from "../visualizationManager";
 import { allowDomRendering, DataHelper, DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
-import Plotly from "plotly.js";
+import Plotly from "plotly.js-dist-min";
 
 export class PlotlyChartAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;

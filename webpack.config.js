@@ -9,7 +9,7 @@ var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 var packageJson = require("./package.json");
 
-function PascalCaseNamePlugin(options) {}
+function PascalCaseNamePlugin(options) { }
 
 PascalCaseNamePlugin.prototype.apply = function (compiler) {
   const REGEXP_NAME = /\[pc-name\]/gi,
@@ -214,11 +214,11 @@ module.exports = function (options) {
         commonjs: "wordcloud",
         amd: "wordcloud",
       },
-      "plotly.js": {
+      "plotly.js-dist-min": {
         root: "Plotly",
-        commonjs2: "plotly.js",
-        commonjs: "plotly.js",
-        amd: "plotly.js",
+        commonjs2: "plotly.js-dist-min",
+        commonjs: "plotly.js-dist-min",
+        amd: "plotly.js-dist-min",
       },
       "tabulator-tables": {
         root: "Tabulator",
