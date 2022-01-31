@@ -1,4 +1,5 @@
 jest.mock("plotly.js", () => {}, { virtual: true });
+global.URL.createObjectURL = jest.fn();
 
 import { PlotlySetup, SelectBasePlotly } from "../src/plotly/selectBase";
 import { QuestionDropdownModel, QuestionMatrixModel } from "survey-core";
