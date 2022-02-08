@@ -1,66 +1,52 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Datatables Example</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <script src="https://unpkg.com/jquery"></script>
+<head>
+  <title>Datatables Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <script src="../node_modules/datatables.net/js/jquery.dataTables.js"></script>
-    <script src="../node_modules/datatables.net-dt/js/dataTables.dataTables.js"></script>
-    <script src="../node_modules/datatables.net-buttons/js/dataTables.buttons.js"></script>
-    <script src="../node_modules/datatables.net-buttons/js/buttons.print.js"></script>
-    <script src="../node_modules/datatables.net-buttons/js/buttons.html5.js"></script>
-    <script src="../node_modules/datatables.net-colreorder/js/dataTables.colReorder.js"></script>
-    <script src="../node_modules/datatables.net-responsive/js/dataTables.responsive.js"></script>
-    <script src="../node_modules/datatables.net-rowgroup/js/dataTables.rowGroup.js"></script>
-    <script src="../node_modules/datatables.net-select/js/dataTables.select.js"></script>
+  <script src="https://unpkg.com/jquery"></script>
 
-    <script src="../node_modules/datatables.net-buttons-dt/js/buttons.dataTables.js"></script>
-    <script src="../node_modules/datatables.net-colreorder-dt/js/colReorder.dataTables.js"></script>
-    <script src="../node_modules/datatables.net-responsive-dt/js/responsive.dataTables.js"></script>
-    <script src="../node_modules/datatables.net-rowgroup-dt/js/rowGroup.dataTables.js"></script>
-    <script src="../node_modules/datatables.net-select-dt/js/select.dataTables.js"></script>
+  <script src="../node_modules/datatables.net/js/jquery.dataTables.js"></script>
+  <script src="../node_modules/datatables.net-dt/js/dataTables.dataTables.js"></script>
+  <script src="../node_modules/datatables.net-buttons/js/dataTables.buttons.js"></script>
+  <script src="../node_modules/datatables.net-buttons/js/buttons.print.js"></script>
+  <script src="../node_modules/datatables.net-buttons/js/buttons.html5.js"></script>
+  <script src="../node_modules/datatables.net-colreorder/js/dataTables.colReorder.js"></script>
+  <script src="../node_modules/datatables.net-responsive/js/dataTables.responsive.js"></script>
+  <script src="../node_modules/datatables.net-rowgroup/js/dataTables.rowGroup.js"></script>
+  <script src="../node_modules/datatables.net-select/js/dataTables.select.js"></script>
 
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../node_modules/datatables.net-colreorder-dt/css/colReorder.dataTables.css"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../node_modules/datatables.net-responsive-dt/css/responsive.dataTables.css"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../node_modules/datatables.net-rowgroup-dt/css/rowGroup.dataTables.css"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../node_modules/datatables.net-select-dt/css/select.dataTables.css"
-    />
+  <script src="../node_modules/datatables.net-buttons-dt/js/buttons.dataTables.js"></script>
+  <script src="../node_modules/datatables.net-colreorder-dt/js/colReorder.dataTables.js"></script>
+  <script src="../node_modules/datatables.net-responsive-dt/js/responsive.dataTables.js"></script>
+  <script src="../node_modules/datatables.net-rowgroup-dt/js/rowGroup.dataTables.js"></script>
+  <script src="../node_modules/datatables.net-select-dt/js/select.dataTables.js"></script>
 
-    <script src="../node_modules/survey-core/survey.core.js"></script>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../packages/survey.analytics.datatables.css"
-    />
+  <link rel="stylesheet" type="text/css"
+    href="../node_modules/datatables.net-colreorder-dt/css/colReorder.dataTables.css" />
+  <link rel="stylesheet" type="text/css"
+    href="../node_modules/datatables.net-responsive-dt/css/responsive.dataTables.css" />
+  <link rel="stylesheet" type="text/css"
+    href="../node_modules/datatables.net-rowgroup-dt/css/rowGroup.dataTables.css" />
+  <link rel="stylesheet" type="text/css" href="../node_modules/datatables.net-select-dt/css/select.dataTables.css" />
 
-    <script src="../packages/survey.analytics.datatables.js"></script>
-    <style>
-      .sa-datatables table.dataTable > thead > tr > th:first-child {
-        min-width: 45px;
-      }
-    </style>
-  </head>
+  <script src="../node_modules/survey-core/survey.core.js"></script>
+  <script src="../node_modules/survey-core/survey.i18n.js"></script>
+  <link rel="stylesheet" type="text/css" href="../packages/survey.analytics.datatables.css" />
 
-  <body>
-    <div id="dataTablesContainer"></div>
-    <script src="./data_multi_lang.js"></script>
-    <script src="./custom_datatables.js"></script>
-  </body>
+  <script src="../packages/survey.analytics.datatables.js"></script>
+  <style>
+    .sa-datatables table.dataTable>thead>tr>th:first-child {
+      min-width: 45px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="dataTablesContainer"></div>
+  <script src="./data_multi_lang.js"></script>
+  <script src="./custom_datatables.js"></script>
+</body>
+
 </html>
