@@ -239,3 +239,28 @@ test("showMissingAnswers", () => {
   expect(selectBase.getLabels()).toEqual(["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text", "Missing answers"]);
   expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0, 1]]);
 });
+
+test("valueName used for getData https://surveyjs.answerdesk.io/internal/ticket/details/T9071", () => {
+  var question = new QuestionDropdownModel("q1");
+  question.choices = choices;
+  question.valueName = "q1value";
+  var data = [
+    {
+      q1value: "father",
+    },
+    {
+      q1value: "father",
+    },
+    {
+      q1value: "mother",
+    },
+    {
+      q1value: "sister",
+    },
+    {
+
+    }
+  ];
+  selectBase = new SelectBase(question, data, {});
+  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0]]);
+});

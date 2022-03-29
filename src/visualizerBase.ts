@@ -76,7 +76,7 @@ export class VisualizerBase implements IDataInfo {
    * Name of the data field of data object from the data array.
    */
   get dataName(): string | Array<string> {
-    return this.question.name;
+    return this.question.valueName || this.question.name;
   }
 
   /**

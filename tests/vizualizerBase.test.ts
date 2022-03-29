@@ -70,3 +70,13 @@ test("check onAfterRender", () => {
   (<any>visualizer).renderContent(document.createElement("div"));
   expect(count).toEqual(1);
 });
+
+test("Use valueName for data https://surveyjs.answerdesk.io/internal/ticket/details/T9071", () => {
+  var question = new QuestionDropdownModel("q1");
+  let visualizer = new VisualizerBase(question, []);
+
+  expect(visualizer.dataName).toEqual("q1");
+
+  question.valueName = "q1value";
+  expect(visualizer.dataName).toEqual("q1value");
+});

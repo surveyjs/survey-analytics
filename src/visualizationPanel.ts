@@ -460,8 +460,8 @@ export class VisualizationPanel extends VisualizerBase {
   /**
    * Returns panel element visualizer by the question name.
    */
-  public getVisualizer(dataName: string) {
-    return this.visualizers.filter((v) => v.dataName === dataName)[0];
+  public getVisualizer(visualizerName: string) {
+    return this.visualizers.filter((v) => v.question.name === visualizerName)[0];
   }
 
   /**
