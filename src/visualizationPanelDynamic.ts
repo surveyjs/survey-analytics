@@ -32,8 +32,7 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     return "panelDynamic";
   }
 
-  updateData(data: Array<{ [index: string]: any }>) {
-    super.updateData(data);
+  private updatePanelVisualizerData() {
     let panelData: Array<any> = [];
     this.data.forEach((dataItem) => {
       if (dataItem[this.question.name] !== undefined) {
@@ -41,6 +40,16 @@ export class VisualizationPanelDynamic extends VisualizerBase {
       }
     });
     this._panelVisualizer.updateData(panelData);
+  }
+
+  updateData(data: Array<{ [index: string]: any }>) {
+    super.updateData(data);
+    this.updatePanelVisualizerData();
+  }
+
+  protected onDataChanged() {
+    this.updatePanelVisualizerData();
+    super.onDataChanged();
   }
 
   getQuestions(): IQuestion[] {

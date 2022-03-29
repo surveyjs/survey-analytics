@@ -68,6 +68,10 @@ export class VisualizerBase implements IDataInfo {
     return this.options[this.question.name];
   }
 
+  /**
+   * This method is called then data has been changed for some reason, e.g. filter was set.
+   * This method should be overriden if descendant computes own statistics or process data somehow.
+   */
   protected onDataChanged() {
     this.refresh();
   }

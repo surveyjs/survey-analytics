@@ -1,6 +1,7 @@
-import { SurveyModel, Question } from "survey-core";
+import { SurveyModel } from "survey-core";
 import { VisualizationMatrixDropdown } from "../src/visualizationMatrixDropdown";
 import { DataProvider } from "../src/dataProvider";
+import { VisualizationPanel } from "../src/visualizationPanel";
 
 const json = {
   questions: [
@@ -104,4 +105,278 @@ test("check default choices - passed from matrixdropdown to default column type"
   const defaultCHoices = questions[2].choices;
   expect(defaultCHoices.length).toBe(3);
   expect(defaultCHoices[0].value).toBe("one");
+});
+
+test("update inner matrixDropdownVisualizer data if filter has been changed", () => {
+  const json = {
+    "logoPosition": "right",
+    "pages": [
+      {
+        "name": "page1",
+        "elements": [
+          {
+            type: "boolean",
+            name: "bool",
+            title: "Please answer the question",
+            label: "Are you 21 or older?",
+            //"valueTrue": "true",
+            //"valueFalse": "false",
+            labelTrue: "Label True",
+            labelFalse: "Label False",
+          },
+          {
+            "type": "matrixdropdown",
+            "name": "att_intentions",
+            "title": "Select which behavi",
+            "columns": [
+              {
+                "name": "before",
+                "title": "LAST 30 DAYS"
+              },
+              {
+                "name": "intent",
+                "title": "INT"
+              }
+            ],
+            "choices": [
+              {
+                "value": "1",
+                "text": "Yes"
+              }
+            ],
+            "cellType": "checkbox",
+            "rows": [
+              {
+                "value": "act1",
+                "text": "Participa"
+              },
+              {
+                "value": "act2",
+                "text": "Donate"
+              },
+              {
+                "value": "act3",
+                "text": "Volunteer"
+              },
+              {
+                "value": "act4",
+                "text": "Collaborate"
+              },
+              {
+                "value": "act5",
+                "text": "Sign"
+              },
+              {
+                "value": "act6",
+                "text": "Buy"
+              },
+              {
+                "value": "act7",
+                "text": "Use"
+              },
+              {
+                "value": "act8",
+                "text": "Walk"
+              },
+              {
+                "value": "act9",
+                "text": "Recycle"
+              },
+              {
+                "value": "act10",
+                "text": "Conserve"
+              },
+              {
+                "value": "act_add1",
+                "text": "Gardening"
+              },
+              {
+                "value": "act_add2",
+                "text": "Play"
+              },
+              {
+                "value": "act_add3",
+                "text": "Use"
+              },
+              {
+                "value": "act_add4",
+                "text": "Spending"
+              },
+              {
+                "value": "act_add5",
+                "text": "Visit"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+
+  const data = [
+    {
+      bool: true,
+      att_intentions: {
+        act1: {
+          before: ["1"],
+          intent: ["1"]
+        },
+        act2: {
+          before: ["1"],
+          intent: ["1"]
+        },
+        act_add1: {
+          before: ["1"],
+          intent: ["1"]
+        }
+      },
+    }, {
+      bool: true,
+      att_intentions: {
+        act1: {
+          before: ["1"],
+          intent: ["1"]
+        },
+        act3: {
+          before: ["1"],
+          intent: ["1"]
+        },
+        act_add3: {
+          before: ["1"],
+          intent: ["1"]
+        }
+      },
+    }, {
+      bool: false,
+      att_intentions: {
+        act1: {
+          before: ["1"]
+        },
+        act2: {
+          before: ["1"],
+          intent: ["1"]
+        },
+        act_add1: {
+          before: ["1"],
+          intent: ["1"]
+        }
+      },
+    }
+  ];
+
+  const rootVisualizer = new VisualizationPanel(
+    survey.getAllQuestions(),
+    data
+  );
+  const mdVisualizer = rootVisualizer.visualizers[1] as VisualizationMatrixDropdown;
+
+  expect(mdVisualizer.matrixDropdownVisualizer["data"]).toEqual([
+    {
+      "__sa_series_name": "act1",
+      "before": [
+        "1",
+      ],
+      "intent": [
+        "1",
+      ],
+    },
+    {
+      "__sa_series_name": "act2",
+      "before": [
+        "1",
+      ],
+      "intent": [
+        "1",
+      ],
+    },
+    {
+      "__sa_series_name": "act_add1",
+      "before": [
+        "1",
+      ],
+      "intent": [
+        "1",
+      ],
+    },
+    {
+      "__sa_series_name": "act1",
+      "before": [
+        "1",
+      ],
+      "intent": [
+        "1",
+      ],
+    },
+    {
+      "__sa_series_name": "act3",
+      "before": [
+        "1",
+      ],
+      "intent": [
+        "1",
+      ],
+    },
+    {
+      "__sa_series_name": "act_add3",
+      "before": [
+        "1",
+      ],
+      "intent": [
+        "1",
+      ],
+    },
+    {
+      "__sa_series_name": "act1",
+      "before": [
+        "1",
+      ],
+    },
+    {
+      "__sa_series_name": "act2",
+      "before": [
+        "1",
+      ],
+      "intent": [
+        "1",
+      ],
+    },
+    {
+      "__sa_series_name": "act_add1",
+      "before": [
+        "1",
+      ],
+      "intent": [
+        "1",
+      ],
+    },
+  ]);
+
+  rootVisualizer.setFilter("bool", false);
+  expect(mdVisualizer.matrixDropdownVisualizer["data"]).toEqual([
+    {
+      "__sa_series_name": "act1",
+      "before": [
+        "1",
+      ],
+    },
+    {
+      "__sa_series_name": "act2",
+      "before": [
+        "1",
+      ],
+      "intent": [
+        "1",
+      ],
+    },
+    {
+      "__sa_series_name": "act_add1",
+      "before": [
+        "1",
+      ],
+      "intent": [
+        "1",
+      ],
+    },
+  ]);
 });

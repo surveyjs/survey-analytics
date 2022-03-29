@@ -46,8 +46,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     this.afterRender(this.contentContainer);
   };
 
-  updateData(data: Array<{ [index: string]: any }>) {
-    super.updateData(data);
+  private updateDropdownVisualizerData() {
     let panelData: Array<any> = [];
     this.data.forEach((dataItem) => {
       let rawDataItem = dataItem[this.question.name];
@@ -60,6 +59,16 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
       }
     });
     this._matrixDropdownVisualizer.updateData(panelData);
+  }
+
+  updateData(data: Array<{ [index: string]: any }>) {
+    super.updateData(data);
+    this.updateDropdownVisualizerData();
+  }
+
+  protected onDataChanged() {
+    this.updateDropdownVisualizerData();
+    super.onDataChanged();
   }
 
   getQuestions() {
