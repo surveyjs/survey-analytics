@@ -608,7 +608,11 @@ export class VisualizationPanel extends VisualizerBase {
   public get state(): IState {
     return {
       locale: this.locale,
-      elements: [].concat(this._elements),
+      elements: [].concat(this._elements.map(element => {
+        const visualizer = this.getVisualizer(element.name);
+        const elementState = { ...element, ...visualizer?.getState() };
+        return elementState;
+      })),
     };
   }
   /**
@@ -623,6 +627,13 @@ export class VisualizationPanel extends VisualizerBase {
     }
 
     if (typeof newState.locale !== "undefined") this.setLocale(newState.locale);
+
+    this._elements.forEach(elementState => {
+      const visualizer = this.getVisualizer(elementState.name);
+      if(visualizer !== undefined) {
+        visualizer.setState(elementState);
+      }
+    });
 
     this.refresh();
   }

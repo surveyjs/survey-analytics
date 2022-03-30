@@ -467,4 +467,10 @@ export class VisualizerBase implements IDataInfo {
   getData(): any {
     return this.dataProvider.getData(this);
   }
+
+  public getState(): any {
+    return {};
+  }
+  public setState(state: any): void {
+  }
 }

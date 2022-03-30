@@ -1,6 +1,7 @@
 import { SurveyModel, QuestionCommentModel } from "survey-core";
 import { WordCloud } from "../src/wordcloud/wordcloud";
 import { Text } from "../src/text";
+import { SelectBase } from "../src/selectBase";
 import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrapper";
 import { VisualizationPanel } from "../src/visualizationPanel";
 import { IState } from "../src/config";
@@ -8,6 +9,7 @@ import { VisualizationManager } from "../src/visualizationManager";
 
 VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
+VisualizationManager.registerVisualizer("checkbox", SelectBase);
 VisualizationManager.registerAlternativesVisualizer(AlternativeVisualizersWrapper);
 
 test("allowDynamicLayout option", () => {
@@ -141,21 +143,15 @@ test("getState, setState, onStateChanged", () => {
   const json = {
     elements: [
       {
+        type: "checkbox",
         name: "question1",
-        type: "paneldynamic",
-        isRequired: true,
-        templateElements: [
-          {
-            type: "text",
-            name: "question2",
-          },
-        ],
+        choices: [1, 2, 3]
       },
     ],
   };
   const data = [
     {
-      question1: [{ question2: "testValue" }],
+      question1: [1, 2],
     },
   ];
   const survey = new SurveyModel(json);
@@ -170,6 +166,10 @@ test("getState, setState, onStateChanged", () => {
         type: undefined,
         isVisible: true,
         isPublic: true,
+        chartType: "bar",
+        answersOrder: "default",
+        hideEmptyAnswers: false,
+        topN: -1
       },
     ],
   };
@@ -182,6 +182,10 @@ test("getState, setState, onStateChanged", () => {
         type: "bar",
         isVisible: false,
         isPublic: true,
+        chartType: "scatter",
+        answersOrder: "asc",
+        hideEmptyAnswers: true,
+        topN: 10
       },
     ],
   };
@@ -197,6 +201,12 @@ test("getState, setState, onStateChanged", () => {
   visPanel.state = newState;
   expect(visPanel.state).toEqual(newState);
   expect(count).toBe(0);
+
+  const visualizer = visPanel.visualizers[0] as SelectBase;
+  expect(visualizer.chartType).toBe("scatter");
+  expect(visualizer.answersOrder).toBe("asc");
+  expect(visualizer.hideEmptyAnswers).toBe(true);
+  expect(visualizer.topN).toBe(10);
 
   visPanel.locale = "ru";
   expect(count).toBe(1);

@@ -4,6 +4,10 @@ export interface IVisualizerPanelElement {
   isVisible: boolean;
   isPublic: boolean;
   type?: string;
+  chartType?: string;
+  answersOrder?: string;
+  hideEmptyAnswers?: boolean;
+  topN?: number;
 }
 
 export interface IState {

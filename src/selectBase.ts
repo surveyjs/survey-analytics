@@ -155,7 +155,7 @@ export class SelectBase
   }
 
   protected chartTypes: string[] = [];
-  public chartType: string;
+  public chartType: string = "bar";
 
   private updateEmptyAnswersBtn() {
     if (!!this.emptyAnswersBtn) {
@@ -313,7 +313,7 @@ export class SelectBase
     this.refreshContent();
   }
 
-  public get transposeData() {
+  public get transposeData(): boolean {
     return this._transposeData;
   }
 
@@ -323,7 +323,7 @@ export class SelectBase
     this.refreshContent();
   }
 
-  public get topN() {
+  public get topN(): number {
     return this._topN;
   }
 
@@ -522,5 +522,21 @@ export class SelectBase
         result[j][i] = data[i][j];
       }
     return result;
+  }
+
+  private static _stateProperties = ["chartType", "answersOrder", "hideEmptyAnswers", "topN"];
+  public getState(): any {
+    let state = {};
+    SelectBase._stateProperties.forEach(propertyName => {
+      state[propertyName] = this[propertyName];
+    });
+    return state;
+  }
+  public setState(state: any): void {
+    SelectBase._stateProperties.forEach(propertyName => {
+      if(state[propertyName] !== undefined) {
+        this[propertyName] = state[propertyName];
+      }
+    });
   }
 }
