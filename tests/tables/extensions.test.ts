@@ -27,7 +27,7 @@ const tabulator = new Tabulator(survey, [], null);
 (<any>TableExtensions).extensions["row"] = [];
 
 test("registerExtension method", () => {
-  var extension = {
+  var extension: any = {
     name: "test",
     location: "row",
     visibleIndex: 0,
@@ -39,13 +39,13 @@ test("registerExtension method", () => {
 });
 
 test("check extensions order with same index", () => {
-  TableExtensions.registerExtension({
+  TableExtensions.registerExtension(<any>{
     name: "prev",
     location: "row",
     visibleIndex: 0,
     render: null,
   });
-  TableExtensions.registerExtension({
+  TableExtensions.registerExtension(<any>{
     name: "next",
     location: "row",
     visibleIndex: 0,
@@ -55,7 +55,7 @@ test("check extensions order with same index", () => {
   expect(
     (<any>tableExtensions)
       .sortExtensions((<any>TableExtensions).extensions["row"])
-      .map((extension) => {
+      .map((extension: any) => {
         return extension.name;
       })
   ).toEqual(["prev", "next"]);
@@ -80,7 +80,7 @@ test("check extensions order index -1", () => {
   expect(
     (<any>tableExtensions)
       .sortExtensions((<any>TableExtensions).extensions["row"])
-      .map((extension) => {
+      .map((extension: any) => {
         return extension.name;
       })
   ).toEqual(["visible"]);
@@ -88,7 +88,7 @@ test("check extensions order index -1", () => {
 });
 
 test("check findExtension method", () => {
-  var extension = {
+  var extension: any = {
     name: "test",
     location: "row",
     visibleIndex: 0,
@@ -100,7 +100,7 @@ test("check findExtension method", () => {
 });
 
 test("check rendering extension with null render", () => {
-  var extension = {
+  var extension: any = {
     name: "test",
     location: "header",
     visibleIndex: 0,
@@ -118,11 +118,11 @@ test("check rendering extension with null render", () => {
 });
 
 test("check rendering extension with render's null return value", () => {
-  var extension = {
+  var extension: any = {
     name: "test",
     location: "header",
     visibleIndex: 0,
-    render: () => {
+    render: (): any => {
       return null;
     },
   };
@@ -142,7 +142,7 @@ test("check rendering extension with render's null return value", () => {
 });
 
 test("render image in details", () => {
-  const survey = new SurveyModel({elements: [{ type: "signaturepad", name: "q1" }]});
+  const survey = new SurveyModel({ elements: [{ type: "signaturepad", name: "q1" }] });
   const tabulator = new Tabulator(survey, [], null);
   tabulator.columns[0].location = QuestionLocation.Row;
   const extensionsContainer = DocumentHelper.createElement("div");

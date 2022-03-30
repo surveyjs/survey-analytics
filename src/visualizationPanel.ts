@@ -611,6 +611,9 @@ export class VisualizationPanel extends VisualizerBase {
       elements: [].concat(this._elements.map(element => {
         const visualizer = this.getVisualizer(element.name);
         const elementState = { ...element, ...visualizer?.getState() };
+        if(elementState.renderedElement !== undefined) {
+          delete elementState.renderedElement;
+        }
         return elementState;
       })),
     };

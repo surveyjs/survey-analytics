@@ -95,12 +95,10 @@ test("check show/hide questions set from constructor", async (t) => {
     .ok();
 });
 
-test("check change questions layout", async (t) => {
+test.only("check change questions layout", async (t) => {
   const getPositionInState = ClientFunction((title) => {
-    var question = visPanel.state.elements.filter(
-      (question) => question.displayName == title
-    )[0];
-    return visPanel.state.elements.indexOf(question);
+    var elements = visPanel.state.elements.map(function (element) { return element.displayName; });
+    return elements.indexOf(title);
   });
   const questionTitle = "Question 1";
   const questionSelector = Selector(
