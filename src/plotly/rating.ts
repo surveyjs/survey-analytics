@@ -3,7 +3,7 @@ import { NumberModel } from "../number";
 import { VisualizationManager } from "../visualizationManager";
 import { allowDomRendering, DataHelper, DocumentHelper } from "../utils/index";
 import { localization } from "../localizationManager";
-import { PlotlySetup } from "./selectBase";
+import { PlotlySetup } from "./setup";
 import Plotly from "plotly.js-dist-min";
 
 export class PlotlyGaugeAdapter {

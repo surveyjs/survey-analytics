@@ -1,8 +1,9 @@
 jest.mock("plotly.js", () => {}, { virtual: true });
-global.URL.createObjectURL = jest.fn();
+(<any>global).URL.createObjectURL = jest.fn();
 
-import { PlotlySetup, SelectBasePlotly } from "../src/plotly/selectBase";
-import { QuestionDropdownModel, QuestionMatrixModel } from "survey-core";
+import { PlotlySetup } from "../src/plotly/setup";
+import { SelectBasePlotly } from "../src/plotly/selectBase";
+import { QuestionDropdownModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
 import { Matrix } from "../src/matrix";
 
 let choices = [
@@ -34,7 +35,7 @@ var selectBase = new SelectBasePlotly(question, data, {});
 test("check bar height with different numbers of choices", () => {
   var config = PlotlySetup.setupBar(selectBase);
   expect(config.layout.height).toEqual(270);
-  selectBase.question.choices = [
+  (<QuestionSelectBase>selectBase.question).choices = [
     { value: "add1" },
     { value: "add2" },
     { value: "add3" },
@@ -43,7 +44,7 @@ test("check bar height with different numbers of choices", () => {
   ].concat(choices);
   var config = PlotlySetup.setupBar(selectBase);
   expect(config.layout.height).toEqual(420);
-  selectBase.question.choices = choices;
+  (<QuestionSelectBase>selectBase.question).choices = choices;
 });
 
 test("check bar config with showPercentages", () => {

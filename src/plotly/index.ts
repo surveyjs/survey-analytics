@@ -1,3 +1,4 @@
+export * from "./setup";
 export * from "./selectBase";
 export * from "./matrix";
 export * from "./boolean";

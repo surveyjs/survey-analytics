@@ -20,6 +20,7 @@ export var englishStrings = {
   visualizer_histogram: "Histogram",
   visualizer_number: "Average",
   chartType_bar: "Bar",
+  chartType_vbar: "Vertical Bar",
   chartType_stackedbar: "Stacked Bar",
   chartType_doughnut: "Doughnut",
   chartType_pie: "Pie",

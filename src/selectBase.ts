@@ -162,7 +162,7 @@ export class SelectBase
       this.emptyAnswersBtn.innerHTML = this._hideEmptyAnswers
         ? localization.getString("showEmptyAnswers")
         : localization.getString("hideEmptyAnswers");
-      if (this.chartType == "bar" || this.chartType == "scatter") {
+      if (this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "scatter") {
         this.emptyAnswersBtn.style.display = "inline";
       } else {
         this.emptyAnswersBtn.style.display = "none";
@@ -187,6 +187,7 @@ export class SelectBase
     if (!!this.choicesOrderSelector) {
       if (
         this.chartType == "bar" ||
+        this.chartType == "vbar" ||
         this.chartType == "scatter" ||
         ((this.chartType == "pie" || this.chartType == "doughnut") &&
           this.topN > 0)
@@ -206,7 +207,7 @@ export class SelectBase
       this.showPercentageBtn.innerHTML = this._showPercentages
         ? localization.getString("hidePercentages")
         : localization.getString("showPercentages");
-      if (this.chartType == "bar" || this.chartType == "stackedbar") {
+      if (this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "stackedbar") {
         this.showPercentageBtn.style.display = "inline";
       } else {
         this.showPercentageBtn.style.display = "none";
@@ -526,16 +527,16 @@ export class SelectBase
 
   private static _stateProperties = ["chartType", "answersOrder", "hideEmptyAnswers", "topN"];
   public getState(): any {
-    let state = {};
+    let state: any = {};
     SelectBase._stateProperties.forEach(propertyName => {
-      state[propertyName] = this[propertyName];
+      state[propertyName] = (<any>this)[propertyName];
     });
     return state;
   }
   public setState(state: any): void {
     SelectBase._stateProperties.forEach(propertyName => {
       if(state[propertyName] !== undefined) {
-        this[propertyName] = state[propertyName];
+        (<any>this)[propertyName] = state[propertyName];
       }
     });
   }
