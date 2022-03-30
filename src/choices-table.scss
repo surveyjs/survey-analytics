@@ -1,0 +1,45 @@
+@import "globals";
+
+.sa-choices-table__container {
+  width: 100%;
+  min-height: 200px;
+  max-height: 500px;
+  overflow: auto;
+}
+
+.sa-choices-table {
+  width: 100%;
+  font-family: SegoeUI, Arial, sans-serif;
+  font-size: 14px;
+  color: $text-color;
+	// border-collapse: collapse;
+  background-color: $background-color;
+}
+
+.sa-choices-table__cell {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: $border-color;
+  background-color: $background-color;
+  min-height: $form-element-height;
+}
+
+.sa-choices-table__cell-value {
+  text-align: right;
+  min-width: 30px;
+}
+
+.sa-choices-table__cell-header {
+  font-weight: bold;
+}
+
+.sa-choices-sparkline {
+  min-width: 100px;
+  height: 24px;
+  border: 1px solid $main-color;
+}
+.sa-choices-sparkline-value {
+  height: 100%;
+  background-color: $main-color;
+}

@@ -19,6 +19,8 @@ export var englishStrings = {
   visualizer_wordcloud: "Wordcloud",
   visualizer_histogram: "Histogram",
   visualizer_number: "Average",
+  visualizer_choices: "Table",
+  visualizer_selectBase: "Chart",
   chartType_bar: "Bar",
   chartType_vbar: "Vertical Bar",
   chartType_stackedbar: "Stacked Bar",
@@ -59,7 +61,10 @@ export var englishStrings = {
   noVisualizerForQuestion: "This question type is not visualized yet",
   noResults: "There are no results yet",
   showPerValues: "Per Values",
-  showPerColumns: "Per Columns"
+  showPerColumns: "Per Columns",
+  answer: "Answer",
+  percent: "Percent",
+  responses: "Responses"
 };
 
 //Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.
