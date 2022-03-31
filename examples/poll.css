@@ -1,0 +1,37 @@
+.sa-toolbar {
+  display: none;
+}
+
+.sa-poll-table {
+width: 100%;
+font-family: SegoeUI, Arial, sans-serif;
+font-size: 14px;
+color: #404040;
+/* border-collapse: collapse; */
+background-color: #f7f7f7;
+}
+
+.sa-poll-table__cell {
+padding: 8px;
+min-height: 34px;
+}
+
+.sa-poll-table__cell-value {
+text-align: right;
+min-width: 30px;
+}
+
+.sa-poll-table__cell-header {
+font-weight: bold;
+}
+
+.sa-poll-sparkline {
+min-width: 100px;
+height: 24px;
+border: 1px solid #1ab394;;
+border-radius: 5px;
+}
+.sa-poll-sparkline-value {
+height: 100%;
+background-color: #1ab394;;
+}
