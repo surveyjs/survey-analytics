@@ -121,7 +121,8 @@
 .sa-question__select-wrapper {
   position: relative;
   display: inline-block;
-  width: 200px;
+  min-width: 200px;
+  max-width: 300px;
 
   .sa-question__select {
     width: 100%;
@@ -134,8 +135,7 @@
     background: $text-color-inverse;
     border-color: $border-color;
     height: $form-element-height;
-    padding: 5px 5px 5px 15px;
-    padding-right: initial;
+    padding: 5px 23px 5px 15px;
     line-height: initial;
 
     &::-ms-expand {
