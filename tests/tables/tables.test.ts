@@ -1,7 +1,6 @@
-import { SurveyModel, Question } from "survey-core";
+import { SurveyModel, QuestionTextModel } from "survey-core";
 import { Table } from "../../src/tables/table";
 import { ColumnDataType, ITableState } from "../../src/tables/config";
-
 const json = {
   questions: [
     {
@@ -385,4 +384,25 @@ test("check useNamesAsTitles option", () => {
   const survey = new SurveyModel(json);
   var table = new TableTest(survey, [], { useNamesAsTitles: true }, []);
   expect((<any>table).columns[0].displayName).toEqual("radio");
+});
+
+test("check question which is not ready", () => {
+  const json = {
+    questions: [
+      {
+        type: "text",
+        name: "text",
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const question = <QuestionTextModel>survey.getAllQuestions()[0];
+  const data = [{ "text": "test_value" }];
+  question["isReadyValue"] = false;
+  const table = new TableTest(survey, data, []);
+  expect(table["tableData"][0]["text"]).toEqual("test_value");
+  question["isReadyValue"] = true;
+  data[0].text = "test_text";
+  question.onReadyChanged.fire(question, { isReady: true });
+  expect(table["tableData"][0]["text"]).toEqual("test_text");
 });

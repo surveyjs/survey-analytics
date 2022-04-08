@@ -198,6 +198,12 @@ export abstract class Table {
   }
 
   protected initTableData(data: Array<any>) {
+    const onReadyChangedCallback = (sender, options) => {
+      if(options.isReady) {
+        this.refresh(true);
+        sender.onReadyChanged.remove(onReadyChangedCallback);
+      }
+    };
     this.tableData = (data || []).map((item) => {
       var dataItem: any = {};
       this.survey.data = item;
@@ -210,7 +216,11 @@ export abstract class Table {
           } else if (this.options.useValuesAsLabels) {
             displayValue = question.value;
           } else {
-            displayValue = question.displayValue;
+            if(question.isReady) {
+              displayValue = question.displayValue;
+            } else {
+              question.onReadyChanged.add(onReadyChangedCallback);
+            }
           }
         }
         if (column.dataType === ColumnDataType.FileLink) {
@@ -302,12 +312,12 @@ export abstract class Table {
   }
 
   public refresh(hard: boolean = false) {
+    if (hard) {
+      this.initTableData(this.data);
+    }
     if (this.isRendered) {
       this.currentPageNumber = this.getPageNumber();
-      if (hard) {
-        this.initTableData(this.data);
-      }
-      var targetNode = this.renderResult;
+      const targetNode = this.renderResult;
       this.destroy();
       this.render(targetNode);
       this.setPageSize(this.currentPageSize);
