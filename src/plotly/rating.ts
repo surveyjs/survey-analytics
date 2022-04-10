@@ -8,6 +8,7 @@ import Plotly from "plotly.js-dist-min";
 
 export class PlotlyGaugeAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
+  public width = "100%";
 
   constructor(private model: GaugePlotly) {}
 
@@ -60,7 +61,7 @@ export class PlotlyGaugeAdapter {
     }
 
     var layout = {
-      width: 600,
+      width: this.width,
       height: height,
       plot_bgcolor: this.model.backgroundColor,
       paper_bgcolor: this.model.backgroundColor,
@@ -95,6 +96,7 @@ export class PlotlyGaugeAdapter {
 
 export class GaugePlotly extends NumberModel {
   private _chartAdapter: PlotlyGaugeAdapter;
+  private _gaugeContentNode = null;
 
   public static types = ["gauge", "bullet"];
 
@@ -115,12 +117,45 @@ export class GaugePlotly extends NumberModel {
     super.destroyContent(container);
   }
 
+  protected afterRender(contentContainer: HTMLElement): void {
+    super.afterRender(contentContainer);
+
+    this.resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        let el = entry.target;
+        if(entry.contentBoxSize) {
+          // Firefox implements `contentBoxSize` as a single content rect, rather than an array
+          const contentBoxSize = Array.isArray(entry.contentBoxSize) ? entry.contentBoxSize[0] : entry.contentBoxSize;
+          if (this._chartAdapter.width !== "" + (contentBoxSize.inlineSize / 2)) {
+            this._chartAdapter.width = "" + (contentBoxSize.inlineSize / 2);
+            this.reRenderContent();
+          }
+        } else {
+          if (this._chartAdapter.width !== "" + (entry.contentRect.width / 2)) {
+            this._chartAdapter.width = "" + (entry.contentRect.width / 2);
+            this.reRenderContent();
+          }
+        }
+      }
+    });
+
+    this.resizeObserver.observe(contentContainer);
+  }
+
+  // TODO probably we need to call resizeObserver.unobserve() in destroy method
+  private resizeObserver = null;
+
   protected renderContent(container: HTMLElement) {
+    this._gaugeContentNode = container;
     const chartNode: HTMLElement = DocumentHelper.createElement("div");
     container.appendChild(chartNode);
     this._chartAdapter.create(chartNode).then(() => {
       this.afterRender(this.contentContainer);
     });
+  }
+
+  protected reRenderContent() {
+    this.renderContent(this._gaugeContentNode);
   }
 }
 
