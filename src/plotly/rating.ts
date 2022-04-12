@@ -53,23 +53,21 @@ export class PlotlyGaugeAdapter {
       },
     ];
 
-    var height = 400;
-
-    if (this.model.chartType === "bullet") {
-      height = 250;
-    }
-
-    var layout = {
-      width: 600,
-      height: height,
+    var layout:any = {
       plot_bgcolor: this.model.backgroundColor,
       paper_bgcolor: this.model.backgroundColor,
     };
+
+    if (this.model.chartType === "bullet") {
+      layout.height = 250;
+      layout.width = 600;
+    }
 
     const config = {
       displayModeBar: false,
       staticPlot: true,
       locale: localization.currentLocale,
+      responsive: true
     };
 
     let options = {
