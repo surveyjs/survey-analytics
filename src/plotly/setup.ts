@@ -224,12 +224,13 @@ export class PlotlySetup {
 
     if (hasSeries) {
       layout.showlegend = true;
-      layout.height =
-        (labels.length + 1) * lineHeight * seriesLabels.length +
-        topMargin +
-        bottomMargin;
       if (model.chartType == "stackedbar") {
         layout.barmode = "stack";
+      } else {
+        layout.height =
+          (labels.length + 1) * lineHeight * seriesLabels.length +
+          topMargin +
+          bottomMargin;
       }
 
       labels.forEach((label, index) => {
@@ -239,10 +240,11 @@ export class PlotlySetup {
 
         if (model.chartType === "stackedbar") {
           traces[index].type = "bar";
+          traces[index].width = 0.5;
+        } else {
+          traces[index].width =
+            (model.showPercentages ? 0.7 : 0.5) / traces.length;
         }
-
-        traces[index].width =
-          (model.showPercentages ? 0.7 : 0.5) / traces.length;
       });
     }
     return { traces, layout, hasSeries };
