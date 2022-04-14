@@ -158,13 +158,13 @@ export class PlotlySetup {
     const traceConfig: any = {
       type: model.chartType,
       y: (hasSeries ? seriesLabels : labels).map((label: string) => {
-        return PlotlySetup.getTruncatedLabel(
-          label,
-          model.options.labelTruncateLength
-        );
+        return label;
+      }),
+      text: (hasSeries ? seriesLabels : labels).map((label: string) => {
+        return label;
       }),
       customdata: hasSeries ? seriesLabels : labels,
-      hoverinfo: "x+y",
+      hoverinfo: "text",
       orientation: "h",
       mode: "markers",
       textposition: "none",
@@ -178,6 +178,9 @@ export class PlotlySetup {
       var trace = Object.assign({}, traceConfig, {
         x: dataset,
         text: texts[index],
+        hovertext: (hasSeries ? seriesLabels : labels).map((label: string, labelIndex: number) => {
+          return `${texts[index][labelIndex]}, ${label}`;
+        }),
       });
       if (model.showPercentages) {
         let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
@@ -208,9 +211,18 @@ export class PlotlySetup {
       hovermode: "closest",
       yaxis: {
         automargin: true,
-        type: "category",
-        ticklen: 5,
-        tickcolor: "transparent",
+        //type: "category",
+        orientation: "h",
+        tickmode: "array",
+        tickvals: (hasSeries ? seriesLabels : labels).map((label: string) => {
+          return label;
+        }),
+        ticktext: (hasSeries ? seriesLabels : labels).map((label: string) => {
+          return PlotlySetup.getTruncatedLabel(
+            label,
+            model.options.labelTruncateLength
+          );
+        }),
       },
       xaxis: {
         rangemode: "nonnegative",
