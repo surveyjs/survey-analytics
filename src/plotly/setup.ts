@@ -154,9 +154,7 @@ export class PlotlySetup {
 
     const traces: any = [];
     const hasSeries = seriesLabels.length > 1;
-    const yFullTexts = (hasSeries ? seriesLabels : labels).map((label: string) => {
-      return label;
-    });
+    const yFullTexts = hasSeries ? seriesLabels : labels;
 
     const traceConfig: any = {
       type: model.chartType,
