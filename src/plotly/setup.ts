@@ -154,15 +154,14 @@ export class PlotlySetup {
 
     const traces: any = [];
     const hasSeries = seriesLabels.length > 1;
+    const yFullTexts = (hasSeries ? seriesLabels : labels).map((label: string) => {
+      return label;
+    });
 
     const traceConfig: any = {
       type: model.chartType,
-      y: (hasSeries ? seriesLabels : labels).map((label: string) => {
-        return label;
-      }),
-      text: (hasSeries ? seriesLabels : labels).map((label: string) => {
-        return label;
-      }),
+      y: yFullTexts,
+      text: yFullTexts,
       customdata: hasSeries ? seriesLabels : labels,
       hoverinfo: "text",
       orientation: "h",
@@ -178,7 +177,7 @@ export class PlotlySetup {
       var trace = Object.assign({}, traceConfig, {
         x: dataset,
         text: texts[index],
-        hovertext: (hasSeries ? seriesLabels : labels).map((label: string, labelIndex: number) => {
+        hovertext: yFullTexts.map((label: string, labelIndex: number) => {
           return `${texts[index][labelIndex]}, ${label}`;
         }),
       });
@@ -214,10 +213,8 @@ export class PlotlySetup {
         //type: "category",
         orientation: "h",
         tickmode: "array",
-        tickvals: (hasSeries ? seriesLabels : labels).map((label: string) => {
-          return label;
-        }),
-        ticktext: (hasSeries ? seriesLabels : labels).map((label: string) => {
+        tickvals: yFullTexts,
+        ticktext: yFullTexts.map((label: string) => {
           return PlotlySetup.getTruncatedLabel(
             label,
             model.options.labelTruncateLength
@@ -310,7 +307,7 @@ export class PlotlySetup {
     datasets.forEach((dataset: Array<number>, index: number) => {
       var trace = Object.assign({}, traceConfig, {
         x: labels,
-        y: model.showPercentages ? texts[index].map(y => y/100) : dataset,
+        y: model.showPercentages ? texts[index].map(y => y / 100) : dataset,
         text: texts[index],
       });
       if (model.showPercentages) {
@@ -323,7 +320,7 @@ export class PlotlySetup {
       traces.push(trace);
     });
 
-    if(model.showPercentages && model.showOnlyPercentages) {
+    if (model.showPercentages && model.showOnlyPercentages) {
       layout.yaxis = {
         automargin: true,
         tickformat: ".0%",

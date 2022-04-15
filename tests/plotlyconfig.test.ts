@@ -1,4 +1,4 @@
-jest.mock("plotly.js", () => {}, { virtual: true });
+jest.mock("plotly.js", () => { }, { virtual: true });
 (<any>global).URL.createObjectURL = jest.fn();
 
 import { PlotlySetup } from "../src/plotly/setup";
@@ -55,6 +55,45 @@ test("check bar config with showPercentages", () => {
   expect(config.traces[0].textposition).toBe("inside");
   expect(config.traces[0].texttemplate).toBe("%{value} (%{text}%)");
   (<any>selectBase)._showPercentages = false;
+});
+
+test("check bar config tick labels", () => {
+  (<any>selectBase)._showPercentages = true;
+  const labelTruncateLength = selectBase.options.labelTruncateLength;
+  selectBase.options.labelTruncateLength = 5;
+  const config = PlotlySetup.setupBar(selectBase);
+
+  const fullTexts = [
+    "father_text",
+    "mother_text",
+    "brother_text",
+    "sister_text",
+    "son_text",
+    "daughter_text"
+  ];
+  const truncatedTexts = [
+    "fathe...",
+    "mothe...",
+    "broth...",
+    "siste...",
+    "son_text",
+    "daugh..."
+  ];
+  const hoverTexts = [
+    "50, father_text",
+    "25, mother_text",
+    "0, brother_text",
+    "25, sister_text",
+    "0, son_text",
+    "0, daughter_text"
+  ];
+
+  expect(config.traces[0].y).toEqual(fullTexts);
+  expect(config.layout.yaxis.tickvals).toEqual(fullTexts);
+  expect(config.layout.yaxis.ticktext).toEqual(truncatedTexts);
+  expect(config.traces[0].hovertext).toEqual(hoverTexts);
+
+  selectBase.options.labelTruncateLength = labelTruncateLength;
 });
 
 test("check bar config with non default label ordering", () => {
