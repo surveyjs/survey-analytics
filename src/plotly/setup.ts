@@ -154,17 +154,14 @@ export class PlotlySetup {
 
     const traces: any = [];
     const hasSeries = seriesLabels.length > 1;
+    const yFullTexts = hasSeries ? seriesLabels : labels;
 
     const traceConfig: any = {
       type: model.chartType,
-      y: (hasSeries ? seriesLabels : labels).map((label: string) => {
-        return PlotlySetup.getTruncatedLabel(
-          label,
-          model.options.labelTruncateLength
-        );
-      }),
+      y: yFullTexts,
+      text: yFullTexts,
       customdata: hasSeries ? seriesLabels : labels,
-      hoverinfo: "x+y",
+      hoverinfo: "text",
       orientation: "h",
       mode: "markers",
       textposition: "none",
@@ -178,6 +175,9 @@ export class PlotlySetup {
       var trace = Object.assign({}, traceConfig, {
         x: dataset,
         text: texts[index],
+        hovertext: yFullTexts.map((label: string, labelIndex: number) => {
+          return `${texts[index][labelIndex]}, ${label}`;
+        }),
       });
       if (model.showPercentages) {
         let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
@@ -208,9 +208,16 @@ export class PlotlySetup {
       hovermode: "closest",
       yaxis: {
         automargin: true,
-        type: "category",
-        ticklen: 5,
-        tickcolor: "transparent",
+        //type: "category",
+        orientation: "h",
+        tickmode: "array",
+        tickvals: yFullTexts,
+        ticktext: yFullTexts.map((label: string) => {
+          return PlotlySetup.getTruncatedLabel(
+            label,
+            model.options.labelTruncateLength
+          );
+        }),
       },
       xaxis: {
         rangemode: "nonnegative",
@@ -298,7 +305,7 @@ export class PlotlySetup {
     datasets.forEach((dataset: Array<number>, index: number) => {
       var trace = Object.assign({}, traceConfig, {
         x: labels,
-        y: model.showPercentages ? texts[index].map(y => y/100) : dataset,
+        y: model.showPercentages ? texts[index].map(y => y / 100) : dataset,
         text: texts[index],
       });
       if (model.showPercentages) {
@@ -311,7 +318,7 @@ export class PlotlySetup {
       traces.push(trace);
     });
 
-    if(model.showPercentages && model.showOnlyPercentages) {
+    if (model.showPercentages && model.showOnlyPercentages) {
       layout.yaxis = {
         automargin: true,
         tickformat: ".0%",
