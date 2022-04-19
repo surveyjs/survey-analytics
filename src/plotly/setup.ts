@@ -241,7 +241,6 @@ export class PlotlySetup {
       }
 
       labels.forEach((label, index) => {
-        traces[index].hoverinfo = "x+name";
         traces[index].marker.color = undefined;
         traces[index].name = label;
 
@@ -253,7 +252,16 @@ export class PlotlySetup {
             (model.showPercentages ? 0.7 : 0.5) / traces.length;
         }
       });
+
+      traces.forEach((trace, traceIndex) => {
+        const percentString = model.showPercentages ? "%" : "";
+        traces[traceIndex].hovertext = [];
+        yFullTexts.forEach((yFullText, yFullTextIndex) => {
+          traces[traceIndex].hovertext.push(`${trace.y[yFullTextIndex]} : ${trace.name}, ${trace.text[yFullTextIndex]}${percentString}`);
+        });
+      });
     }
+
     return { traces, layout, hasSeries };
   }
 
