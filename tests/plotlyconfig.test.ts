@@ -96,6 +96,18 @@ test("check bar config tick labels", () => {
   selectBase.options.labelTruncateLength = labelTruncateLength;
 });
 
+test("check matrix config hovertexts", () => {
+  let matrixQuestion = new QuestionMatrixModel("question1");
+  matrixQuestion.fromJSON(matrixJson);
+
+  let matrixVisualizer = new Matrix(matrixQuestion, matrixData, {});
+  var config = PlotlySetup.setupBar(matrixVisualizer);
+
+  expect(config.traces[2].hovertext.length).toEqual(2);
+  expect(config.traces[2].hovertext[0]).toEqual("Lizol : Good, 0");
+  expect(config.traces[2].hovertext[1]).toEqual("Harpic : Good, 1");
+});
+
 test("check bar config with non default label ordering", () => {
   selectBase.answersOrder = "desc";
   var config = PlotlySetup.setupBar(selectBase);
