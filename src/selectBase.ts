@@ -28,6 +28,7 @@ export class SelectBase
   private topNSelector: HTMLDivElement = undefined;
   private _showPercentages: boolean = false;
   private _showOnlyPercentages: boolean = false;
+  private _percentagePrecision: number = 0;
   protected _answersOrder: string = "default";
   protected _supportSelection: boolean = true;
   private _hideEmptyAnswers = false;
@@ -50,6 +51,11 @@ export class SelectBase
     };
     this._showPercentages = this.options.showPercentages === true;
     this._showOnlyPercentages = this.options.showOnlyPercentages === true;
+
+    if (this.options.percentagePrecision) {
+      this._percentagePrecision = this.options.percentagePrecision;
+    }
+
     this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
     this._answersOrder = this.options.answersOrder || "default";
     this._showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
@@ -399,11 +405,14 @@ export class SelectBase
   getPercentages(): Array<Array<number>> {
     var data: Array<Array<number>> = this.getData();
     var percentages: Array<Array<number>> = [];
+    var percentagePrecision = this._percentagePrecision;
+
     if (data.length < 2) {
       data.forEach((res, index) => {
         var sum = res.reduce((sum, val) => sum + val, 0);
         percentages[index] = res.map((val) => {
-          return sum && (Math.round((val / sum) * 10000) / 100);
+          var value = percentagePrecision ? +(val / sum).toFixed(percentagePrecision) : Math.round((val / sum) * 10000);
+          return sum && (value / 100);
         });
       });
     } else {
@@ -414,7 +423,8 @@ export class SelectBase
         }
         for (var j = 0; j < data.length; j++) {
           if (!Array.isArray(percentages[j])) percentages[j] = [];
-          percentages[j][i] = sum && Math.round((data[j][i] / sum) * 100);
+          var value = percentagePrecision ? +((data[j][i] / sum) * 100).toFixed(percentagePrecision) : Math.round((data[j][i] / sum) * 100);
+          percentages[j][i] = sum && value;
         }
       }
     }
@@ -535,7 +545,7 @@ export class SelectBase
   }
   public setState(state: any): void {
     SelectBase._stateProperties.forEach(propertyName => {
-      if(state[propertyName] !== undefined) {
+      if (state[propertyName] !== undefined) {
         (<any>this)[propertyName] = state[propertyName];
       }
     });

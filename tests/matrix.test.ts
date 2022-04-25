@@ -78,6 +78,79 @@ test("check getPercentages method", () => {
   ]);
 });
 
+test("getPercentages percentagePrecision option", () => {
+  const json = {
+    "type": "matrix",
+    "name": "m1",
+    "columns": ["Strongly Agree", "Agree", "Somewhat Agree", "Disagree", "Strongly Disagree"],
+    "rows": ["Do you like tomatos?", "Do you like cucumbers?"]
+  };
+
+  const data1 = {
+    m1: {
+      "Do you like tomatos?": "Strongly Agree",
+      "Do you like cucumbers?": "Disagree",
+    }
+  };
+  const data2 = {
+    m1: {
+      "Do you like tomatos?": "Strongly Agree",
+      "Do you like cucumbers?": "Somewhat Agree",
+    }
+  };
+  const data3 = {
+    m1: {
+      "Do you like tomatos?": "Agree",
+      "Do you like cucumbers?": "Agree",
+    }
+  };
+  const data4 = {
+    m1: {
+      "Do you like tomatos?": "Somewhat Agree",
+      "Do you like cucumbers?": "Disagree",
+    }
+  };
+  const data5 = {
+    m1: {
+      "Do you like tomatos?": "Disagree",
+      "Do you like cucumbers?": "Somewhat Agree",
+    }
+  };
+  const data6 = {
+    m1: {
+      "Do you like tomatos?": "Strongly Disagree",
+      "Do you like cucumbers?": "Agree",
+    }
+  };
+
+  const data = [data1, data2, data3, data4, data5, data6];
+
+  const matrix = new QuestionMatrixModel("m1");
+  matrix.fromJSON(json);
+
+  let matrixVizualizer = new Matrix(matrix, data, {});
+
+  let percentages = matrixVizualizer.getPercentages();
+  let result = 0;
+
+  for (let index = 0; index < percentages.length; index++) {
+    result += percentages[index][0];
+  }
+
+  expect(result).toEqual(101);
+
+  matrixVizualizer = new Matrix(matrix, data, { percentagePrecision: 2 });
+
+  percentages = matrixVizualizer.getPercentages();
+  result = 0;
+
+  for (let index = 0; index < percentages.length; index++) {
+    result += percentages[index][0];
+  }
+
+  expect(result).toEqual(100.01);
+});
+
 test("hide empty answers", () => {
   const question = new QuestionMatrixModel("q1");
   question.columns = ["Morning", "Afternoon"];
