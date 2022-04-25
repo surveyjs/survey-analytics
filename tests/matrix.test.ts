@@ -78,7 +78,7 @@ test("check getPercentages method", () => {
   ]);
 });
 
-test("getPercentages summary should be 100%", () => {
+test("getPercentages percentagePrecision option", () => {
   const json = {
     "type": "matrix",
     "name": "m1",
@@ -128,17 +128,27 @@ test("getPercentages summary should be 100%", () => {
   const matrix = new QuestionMatrixModel("m1");
   matrix.fromJSON(json);
 
-  const matrixVizualizer = new Matrix(matrix, data, {});
+  let matrixVizualizer = new Matrix(matrix, data, {});
 
-  const percentages = matrixVizualizer.getPercentages();
+  let percentages = matrixVizualizer.getPercentages();
   let result = 0;
 
   for (let index = 0; index < percentages.length; index++) {
     result += percentages[index][0];
   }
 
-  // expect(matrixVizualizer.getPercentages()).toEqual([[33.33], [33.33], [33.33]]);
-  expect(result).toEqual(100);
+  expect(result).toEqual(101);
+
+  matrixVizualizer = new Matrix(matrix, data, { percentagePrecision: 2 });
+
+  percentages = matrixVizualizer.getPercentages();
+  result = 0;
+
+  for (let index = 0; index < percentages.length; index++) {
+    result += percentages[index][0];
+  }
+
+  expect(result).toEqual(100.01);
 });
 
 test("hide empty answers", () => {
