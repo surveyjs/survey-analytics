@@ -119,9 +119,12 @@ export class DataTables extends Table {
     return this.datatableApi.page();
   }
 
-  public render(targetNode: HTMLElement): void {
+  public render(targetNode: HTMLElement | string): void {
     super.render(targetNode);
     var self = this;
+    if (typeof targetNode === "string") {
+      targetNode = document.getElementById(targetNode);
+    }
     targetNode.className += " sa-table sa-datatables";
 
     const tableNode = <HTMLTableElement>(

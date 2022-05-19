@@ -91,8 +91,11 @@ export class Tabulator extends Table {
   public tabulatorTables: any = null;
   private tableContainer: HTMLElement = null;
 
-  public render(targetNode: HTMLElement): void {
+  public render(targetNode: HTMLElement | string): void {
     super.render(targetNode);
+    if (typeof targetNode === "string") {
+      targetNode = document.getElementById(targetNode);
+    }
     targetNode.className += " sa-table sa-tabulator";
 
     const columns = this.getColumns();

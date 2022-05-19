@@ -98,7 +98,10 @@ export abstract class Table {
   public abstract applyColumnFilter(columnName: string, value: string): void;
   public abstract sortByColumn(columnName: string, direction: string): void;
 
-  public render(targetNode: HTMLElement): void {
+  public render(targetNode: HTMLElement | string): void {
+    if (typeof targetNode === "string") {
+      targetNode = document.getElementById(targetNode);
+    }
     targetNode.innerHTML = "";
     if (!this.haveCommercialLicense) {
       targetNode.appendChild(createCommercialLicenseLink());

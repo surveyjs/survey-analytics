@@ -346,7 +346,10 @@ export class VisualizerBase implements IDataInfo {
   /**
    * Renders visualizer in the given container.
    */
-  render(targetElement: HTMLElement) {
+  render(targetElement: HTMLElement | string) {
+    if (typeof targetElement === "string") {
+      targetElement = document.getElementById(targetElement);
+    }
     this.renderResult = targetElement;
 
     this.toolbarContainer = DocumentHelper.createElement(
