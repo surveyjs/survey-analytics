@@ -406,3 +406,72 @@ test("check question which is not ready", () => {
   question.onReadyChanged.fire(question, { isReady: true });
   expect(table["tableData"][0]["text"]).toEqual("test_text");
 });
+
+test("Generate columns for question matrix", () => {
+  const json = {
+    "pages": [
+      {
+        "name": "page1",
+        "elements": [
+          {
+            "type": "matrix",
+            "name": "q1",
+            "columns": [
+              "Column 1",
+              "Column 2",
+              "Column 3"
+            ],
+            "rows": [
+              "Row 1",
+              "Row 2"
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [], {}, []);
+  expect((<any>table).columns.length).toEqual(2);
+  expect((<any>table).columns[0].name).toEqual("q1.Row 1");
+  expect((<any>table).columns[0].displayName).toEqual("q1 - Row 1");
+  expect(<any>table.columns[1].name).toEqual("q1.Row 2");
+  expect((<any>table).columns[1].displayName).toEqual("q1 - Row 2");
+});
+
+test("Fill columns data for question matrix", () => {
+  const json = {
+    "pages": [
+      {
+        "name": "page1",
+        "elements": [
+          {
+            "type": "matrix",
+            "name": "q1",
+            "columns": [
+              "Column 1",
+              { value: "Column 2", text: "Column 2 text" },
+              "Column 3"
+            ],
+            "rows": [
+              "Row 1",
+              "Row 2"
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [{
+    "q1": {
+      "Row 1": "Column 1",
+      "Row 2": "Column 2"
+    }
+  }], {}, []);
+  const tableData: Array<any> = (<any>table).tableData;
+  expect(tableData.length).toEqual(1);
+  expect(tableData[0]["q1"]).toBeUndefined();
+  expect(tableData[0]["q1.Row 1"]).toEqual("Column 1");
+  expect(tableData[0]["q1.Row 2"]).toEqual("Column 2 text");
+});

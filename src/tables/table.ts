@@ -1,4 +1,4 @@
-import { SurveyModel, Question, Event, settings, QuestionSelectBase } from "survey-core";
+import { SurveyModel, Question, Event, settings, QuestionSelectBase, QuestionMatrixModel, ItemValue } from "survey-core";
 import {
   IPermission,
   QuestionLocation,
@@ -144,10 +144,30 @@ export abstract class Table {
     this._rows = [];
   }
 
+  protected get useNamesAsTitles() {
+    return this.options && this.options.useNamesAsTitles === true;
+  }
+
   protected buildColumns = (survey: SurveyModel) => {
     let columns: Array<ITableColumn> = [];
     this.survey.getAllQuestions().forEach((question: Question) => {
       let dataType = ColumnDataType.Text;
+      if (question.getType() === "matrix") {
+        (<QuestionMatrixModel>question).rows.forEach(row => {
+          columns.push({
+            name: question.name + "." + row.value,
+            displayName:
+              (this.useNamesAsTitles
+                ? question.name
+                : (question.title || "").trim() || question.name) + " - " + (this.useNamesAsTitles ? row.value : row.locText.textOrHtml),
+            dataType,
+            isVisible: true,
+            isPublic: true,
+            location: QuestionLocation.Column,
+          });
+        });
+        return;
+      }
       if (question.getType() === "file") {
         dataType = ColumnDataType.FileLink;
       }
@@ -156,10 +176,9 @@ export abstract class Table {
       }
       columns.push({
         name: question.name,
-        displayName:
-          this.options && this.options.useNamesAsTitles
-            ? question.name
-            : (question.title || "").trim() || question.name,
+        displayName: this.useNamesAsTitles
+          ? question.name
+          : (question.title || "").trim() || question.name,
         dataType,
         isVisible: true,
         isPublic: true,
@@ -211,21 +230,32 @@ export abstract class Table {
       var dataItem: any = {};
       this.survey.data = item;
       this._columns.forEach((column) => {
-        var displayValue = item[column.name];
-        const question = this.survey.getQuestionByName(column.name);
-        if (question) {
-          if (column.isComment) {
-            displayValue = question.comment;
-          } else if (this.options.useValuesAsLabels) {
-            displayValue = question.value;
-          } else {
-            if(question.isReady) {
-              displayValue = question.displayValue;
+        const [valueName, valuePath] = column.name.split(".");
+        var displayValue = item[valueName];
+        const question = this.survey.getQuestionByName(valueName);
+
+        if(valuePath && typeof displayValue === "object") {
+          displayValue = displayValue[valuePath];
+          if (question.getType() === "matrix") {
+            const choiceValue = ItemValue.getItemByValue((<QuestionMatrixModel>question).columns, displayValue);
+            displayValue = this.options.useValuesAsLabels ? choiceValue.value : choiceValue.locText.textOrHtml;
+          }
+        } else {
+          if (question) {
+            if (column.isComment) {
+              displayValue = question.comment;
+            } else if (this.options.useValuesAsLabels) {
+              displayValue = question.value;
             } else {
-              question.onReadyChanged.add(onReadyChangedCallback);
+              if(question.isReady) {
+                displayValue = question.displayValue;
+              } else {
+                question.onReadyChanged.add(onReadyChangedCallback);
+              }
             }
           }
         }
+
         if (column.dataType === ColumnDataType.FileLink) {
           if (Array.isArray(displayValue)) {
             dataItem[column.name] = Table.showFilesAsImages ? createImagesContainer(
