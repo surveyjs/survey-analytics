@@ -1,4 +1,4 @@
-import { Event, Question } from "survey-core";
+import { Event, Question, SurveyModel } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
 import { DocumentHelper, createCommercialLicenseLink } from "./utils/index";
@@ -6,6 +6,7 @@ import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, IState, IPermission } from "./config";
 import { FilterInfo } from "./filterInfo";
 import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
+import { DataProvider } from "./dataProvider";
 
 import "./visualizationPanel.scss";
 
@@ -26,24 +27,136 @@ export interface IVisualizerPanelRenderedElement
 }
 
 /**
+ * This interface contains all available options to setup a visualization panel
+ */
+export interface IVisualizationPanelOptions {
+  // this object can contain sub-objects named as question to hold question-specific settings
+  // histogramQuestionName: {
+  //   intervals: []
+  // },
+
+  /**
+   * Set the length of a label where the truncation starts. Set to -1 to disable truncate. Default is 27
+   */
+  labelTruncateLength?: number;
+  /**
+   * Set it to true to allow make elements private/public also @see persmissions property
+   */
+  allowMakeQuestionsPrivate?: boolean;
+  /**
+   * An array of series values in data to group data by series
+   */
+  seriesValues?: string[];
+  /**
+   * Labels for series to display, if not passed the seriesValues are used as labels
+   */
+  seriesLabels?: string[];
+  /**
+   * Set it to true to force use values as labels
+   */
+  useValuesAsLabels?: boolean;
+  /**
+   * Pass survey instance to use localses from the survey JSON
+   */
+  survey?: SurveyModel;
+  /**
+   * dataProvider instance for this visualizer
+   */
+  dataProvider?: DataProvider;
+  /**
+   * Set it to false to deny user to hide/show individual questions, this will hide the corresponding question toolbar button
+   */
+  allowHideQuestions?: boolean;
+  /**
+   * Set it to false to disable items drag/drop reordering and dynamic layouting
+   */
+  allowDynamicLayout?: boolean;
+  /**
+   * Layout engine to be used for layouting inner visualizers @see LayoutEngine
+   */
+  layoutEngine?: LayoutEngine;
+  /**
+   * Set to true to allow to show percentages in bar charts, this will show the corresponding question toolbar button
+   */
+  allowShowPercentages?: boolean;
+  /**
+   * Set it to true to show percentages in bar charts
+   */
+  showPercentages?: boolean;
+  /**
+   * Set it to true to show percentages only in bar charts (don't show values)
+   */
+  showOnlyPercentages?: boolean;
+  /**
+   * Set percentage decimal presision
+   */
+  percentagePrecision?: number;
+  /**
+   *
+   */
+  haveCommercialLicense?: boolean;
+  /**
+   * Set to true to allow change answers order, choices are ordered by answers count, this will show the corresponding question toolbar dropdown
+   */
+  allowChangeAnswersOrder?: boolean;
+  /**
+   * Defauls answers order
+   */
+  answersOrder?: "default" | "desc" | "desc";
+  /**
+   * Set to true to allow hide empty answers, this will show the corresponding question toolbar button
+   */
+  allowHideEmptyAnswers?: boolean;
+  /**
+   * Set to true to hide empty answers
+   */
+  hideEmptyAnswers?: boolean;
+  /**
+   * Set to true to allow show top N answers, this will show the corresponding question toolbar dropdown
+   */
+  allowTopNAnswers?: boolean;
+  /**
+   * Set to true to allow show missing answers, this will show the corresponding question toolbar button
+   */
+  allowShowMissingAnswers?: boolean;
+  /**
+   * Set to true to allow to use experimental features: e.g. vertical bar chart configuration
+   */
+  allowExperimentalFeatures?: boolean;
+  /**
+   * Set default chart type
+   */
+  defaultChartType?: string;
+  /**
+   * Set to true to allow transpose data: answers in matrix can be grouped by columns or by rows, this will show the corresponding question toolbar button
+   */
+  allowTransposeData?: boolean;
+  /**
+   * Set to false to disable selection and cross filtering in charts
+   */
+  allowSelection?: boolean;
+  /**
+   * Pass a function to render content of a visualizer
+   */
+  renderContent?: Function;
+  /**
+   * Pass a function to destroy content of a visualizer
+   */
+  destroyContent?: Function;
+  /**
+   * Set to true to strip HTML tags from titles
+   */
+  stripHtmlFromTitles?: boolean;
+}
+
+/**
  * VisualizationPanel is responsible for visualizing an array of survey questions
- *
- * constructor parameters:
- * questions - an array of survey questions to visualize,
- * data - an array of answers in format of survey result,
- * options - object with the following options,
- * elements - list of visual element descriptions
- *
- * options:
- * allowDynamicLayout - set it to false to disable items drag/drop reordering and dynamic layouting,
- * labelTruncateLength - the length of the label where the truncation starts. Set to -1 to disable truncate. Default is 27.
- * allowHideQuestions - set it to false to deny user to hide/show individual questions,
- * allowMakeQuestionsPrivate - set it to true to allow make elements private/public also see persmissions property,
- * seriesValues - an array of series values in data to group data by series,
- * seriesLabels - labels for series to display, if not passed the seriesValues are used as labels,
- * survey - pass survey instance to use localses from the survey JSON,
- * dataProvider - dataProvider for this visualizer,
- * layoutEngine - layout engine to be used for layouting inner visualizers
+ * <br/>
+ * <br/> constructor parameters:
+ * <br/> questions - an array of survey questions to visualize,
+ * <br/> data - an array of answers in format of survey result,
+ * <br/> options - object of the IVisualizationPanelOptions type, @see IVisualizationPanelOptions
+ * <br/> elements - list of visual element descriptions
  *
  */
 export class VisualizationPanel extends VisualizerBase {
@@ -54,7 +167,7 @@ export class VisualizationPanel extends VisualizerBase {
   constructor(
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
-    options: { [index: string]: any } = {},
+    options: IVisualizationPanelOptions = { },
     private _elements: Array<IVisualizerPanelRenderedElement> = undefined
   ) {
     super(null, data, options, "panel");
