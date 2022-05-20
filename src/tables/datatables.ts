@@ -261,10 +261,11 @@ export class DataTables extends Table {
   public getColumns(): Array<any> {
     const columns: any = this.columns.map((column) => {
       var question = this.survey.getQuestionByName(column.name);
+      const columnTitle = (question && (this.options.useNamesAsTitles ? question.name : question.title)) || column.displayName;
       return {
         name: column.name,
         data: column.name,
-        sTitle: (question && (this.options.useNamesAsTitles ? question.name : question.title)) || column.displayName,
+        sTitle: jQuery?.fn.dataTable.render.text().display(columnTitle) || columnTitle,
         visible: this.isColumnVisible(column),
         orderable: false,
         defaultContent: "",

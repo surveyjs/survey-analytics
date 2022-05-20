@@ -95,7 +95,7 @@ test("check show/hide questions set from constructor", async (t) => {
     .ok();
 });
 
-test.only("check change questions layout", async (t) => {
+test("check change questions layout", async (t) => {
   const getPositionInState = ClientFunction((title) => {
     var elements = visPanel.state.elements.map(function (element) { return element.displayName; });
     return elements.indexOf(title);

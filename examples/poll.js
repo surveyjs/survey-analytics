@@ -46,7 +46,7 @@ function PollVisualizer(question, data) {
     var hasSeries = seriesLabels.length > 1;
 
     var emptyTextNode = SurveyAnalytics.DocumentHelper.createElement("p", "", {
-      innerHTML: SurveyAnalytics.localization.getString("noResults"),
+      innerText: SurveyAnalytics.localization.getString("noResults"),
     });
 
     if (datasets.length === 0 || datasets[0].length === 0) {

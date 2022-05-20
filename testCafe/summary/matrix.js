@@ -50,7 +50,7 @@ const getLegendValues = ClientFunction(() => {
   return legendValues;
 });
 //data filtering is not working now - See #91
-test.skip("check data filtering", async (t) => {});
+test.skip("check data filtering", async (t) => { });
 
 //Rows uses text instead of values
 test.skip("check use values as labels for rows", async (t) => {

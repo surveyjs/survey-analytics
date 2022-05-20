@@ -116,14 +116,14 @@ TableExtensions.registerExtension({
       "span",
       "sa-table__entries-label sa-table__entries-label--right",
       {
-        innerHTML: localization.getString("showLabel"),
+        innerText: localization.getString("showLabel"),
       }
     );
     const entriesSpan = DocumentHelper.createElement(
       "span",
       "sa-table__entries-label sa-table__entries-label--left",
       {
-        innerHTML: localization.getString("entriesLabel"),
+        innerText: localization.getString("entriesLabel"),
       }
     );
 
@@ -142,7 +142,7 @@ TableExtensions.registerExtension({
     var btn = DocumentHelper.createElement(
       "button",
       "sa-table__btn sa-table__btn--green sa-table__header-extension ",
-      { innerHTML: localization.getString("removeRows") }
+      { innerText: localization.getString("removeRows") }
     );
     btn.onclick = function () {
       table.getCreatedRows().forEach(function (row) {

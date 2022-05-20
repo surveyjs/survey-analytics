@@ -12,7 +12,7 @@ export class TextTableAdapter {
   public create(container: HTMLElement) {
     const { columnsCount, data } = this.model.getData();
     const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
-      innerHTML: localization.getString("noResults"),
+      innerText: localization.getString("noResults"),
     });
 
     if (data.length === 0) {
