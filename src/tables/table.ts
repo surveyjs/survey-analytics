@@ -4,12 +4,14 @@ import {
   QuestionLocation,
   ColumnDataType,
   ITableState,
+  ITableColumnData,
   ITableColumn,
 } from "./config";
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { TableExtensions } from "./extensions/tableextensions";
 import { createCommercialLicenseLink, createImagesContainer, createLinksContainer, DocumentHelper } from "../utils";
+import { ColumnBuilderFactory } from "./columnbuilder";
 
 export interface ITableOptions {
   [index: string]: any;
@@ -144,67 +146,20 @@ export abstract class Table {
     this._rows = [];
   }
 
-  protected get useNamesAsTitles() {
+  public get useNamesAsTitles() {
     return this.options && this.options.useNamesAsTitles === true;
   }
 
   protected buildColumns = (survey: SurveyModel) => {
     let columns: Array<ITableColumn> = [];
     this.survey.getAllQuestions().forEach((question: Question) => {
-      let dataType = ColumnDataType.Text;
-      if (question.getType() === "matrix") {
-        (<QuestionMatrixModel>question).rows.forEach(row => {
-          columns.push({
-            name: question.name + "." + row.value,
-            displayName:
-              (this.useNamesAsTitles
-                ? question.name
-                : (question.title || "").trim() || question.name) + " - " + (this.useNamesAsTitles ? row.value : row.locText.textOrHtml),
-            dataType,
-            isVisible: true,
-            isPublic: true,
-            location: QuestionLocation.Column,
-          });
-        });
-        return;
-      }
-      if (question.getType() === "file") {
-        dataType = ColumnDataType.FileLink;
-      }
-      if (question.getType() === "signaturepad") {
-        dataType = ColumnDataType.Image;
-      }
-      columns.push({
-        name: question.name,
-        displayName: this.useNamesAsTitles
-          ? question.name
-          : (question.title || "").trim() || question.name,
-        dataType,
-        isVisible: true,
-        isPublic: true,
-        location: QuestionLocation.Column,
-      });
-      if (
-        question.hasComment ||
-        (question.hasOther && (<QuestionSelectBase>question)["getStoreOthersAsComment"]())
-      ) {
-        columns.push({
-          name: `${question.name}${settings.commentPrefix}`,
-          displayName: question.hasOther
-            ? (<any>question).otherText
-            : question.commentText,
-          isComment: true,
-          dataType,
-          isVisible: true,
-          isPublic: true,
-          location: QuestionLocation.Column,
-        });
-      }
+      const builder = ColumnBuilderFactory.Instance.getColumnBuilder(question.getType());
+      columns = columns.concat(builder.buildColumns(question, this));
     });
     return columns;
   };
 
-  public isColumnVisible(column: ITableColumn) {
+  public isColumnVisible(column: ITableColumnData) {
     if (column.location !== QuestionLocation.Column) return false;
     return column.isVisible;
   }
@@ -230,47 +185,7 @@ export abstract class Table {
       var dataItem: any = {};
       this.survey.data = item;
       this._columns.forEach((column) => {
-        const [valueName, valuePath] = column.name.split(".");
-        var displayValue = item[valueName];
-        const question = this.survey.getQuestionByName(valueName);
-
-        if(valuePath && typeof displayValue === "object") {
-          displayValue = displayValue[valuePath];
-          if (question.getType() === "matrix") {
-            const choiceValue = ItemValue.getItemByValue((<QuestionMatrixModel>question).columns, displayValue);
-            displayValue = this.options.useValuesAsLabels ? choiceValue.value : choiceValue.locText.textOrHtml;
-          }
-        } else {
-          if (question) {
-            if (column.isComment) {
-              displayValue = question.comment;
-            } else if (this.options.useValuesAsLabels) {
-              displayValue = question.value;
-            } else {
-              if(question.isReady) {
-                displayValue = question.displayValue;
-              } else {
-                question.onReadyChanged.add(onReadyChangedCallback);
-              }
-            }
-          }
-        }
-
-        if (column.dataType === ColumnDataType.FileLink) {
-          if (Array.isArray(displayValue)) {
-            dataItem[column.name] = Table.showFilesAsImages ? createImagesContainer(
-              displayValue
-            ).outerHTML : createLinksContainer(
-              displayValue
-            ).outerHTML;
-          }
-        } else {
-          dataItem[column.name] =
-            typeof displayValue === "string"
-              ? displayValue
-              : JSON.stringify(displayValue) || "";
-        }
-        const opt = { question: question, displayValue: dataItem[column.name] };
+        const opt = column.getCellData(this.survey, item, this, this.options);
         if (typeof this.options.onGetQuestionValue === "function") {
           this.options.onGetQuestionValue(opt);
         }
@@ -409,7 +324,7 @@ export abstract class Table {
    * Gets table permissions.
    */
   public get permissions(): IPermission[] {
-    return <any>this._columns.map((column: ITableColumn) => {
+    return <any>this._columns.map((column: ITableColumnData) => {
       return {
         name: column.name,
         isPublic: column.isPublic,
@@ -420,7 +335,7 @@ export abstract class Table {
    * Sets table permissions.
    */
   public set permissions(permissions: IPermission[]) {
-    const updatedElements = this._columns.map((column: ITableColumn) => {
+    const updatedElements = this._columns.map((column: ITableColumnData) => {
       permissions.forEach((permission) => {
         if (permission.name === column.name)
           column.isPublic = permission.isPublic;
