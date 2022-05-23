@@ -3,10 +3,10 @@ import { BaseTableColumn, CommentTableColumn, MatrixTableColumn } from "./column
 import { QuestionLocation, ColumnDataType, ITableColumnData, ITableColumn } from "./config";
 import { Table } from "./table";
 
-export interface IColumnBuilder {
+export interface IColumnsBuilder {
   buildColumns(question: Question, table: Table): Array<ITableColumn>;
 }
-export class DefaultColumnBuilder implements IColumnBuilder {
+export class DefaultColumnsBuilder implements IColumnsBuilder {
   protected getDataType(): ColumnDataType {
     return ColumnDataType.Text;
   }
@@ -43,22 +43,22 @@ export class DefaultColumnBuilder implements IColumnBuilder {
   }
 }
 
-export class ColumnBuilderFactory {
-  public static Instance: ColumnBuilderFactory = new ColumnBuilderFactory();
+export class ColumnsBuilderFactory {
+  public static Instance: ColumnsBuilderFactory = new ColumnsBuilderFactory();
   private constructor() {}
 
-  private readonly columnBuilders: {[index: string]: IColumnBuilder } = {};
-  private readonly defaultColumnBuilder: IColumnBuilder = new DefaultColumnBuilder();
+  private readonly columnsBuilders: {[index: string]: IColumnsBuilder } = {};
+  private readonly defaultColumnsBuilder: IColumnsBuilder = new DefaultColumnsBuilder();
 
-  registerBuilderColumn(type: string, columnBuilder: IColumnBuilder) {
-    this.columnBuilders[type] = columnBuilder;
+  registerBuilderColumn(type: string, columnsBuilder: IColumnsBuilder) {
+    this.columnsBuilders[type] = columnsBuilder;
   }
-  getColumnBuilder(type: string) {
-    return this.columnBuilders[type] || this.defaultColumnBuilder;
+  getColumnsBuilder(type: string) {
+    return this.columnsBuilders[type] || this.defaultColumnsBuilder;
   }
 }
 
-export class MatrixColumnBuilder extends DefaultColumnBuilder {
+export class MatrixColumnsBuilder extends DefaultColumnsBuilder {
   public buildColumns(questionBase: Question, table: Table): Array<ITableColumn> {
     const question = <QuestionMatrixModel>questionBase;
     const columns = [];
@@ -78,18 +78,18 @@ export class MatrixColumnBuilder extends DefaultColumnBuilder {
     return columns;
   }
 }
-ColumnBuilderFactory.Instance.registerBuilderColumn("matrix", new MatrixColumnBuilder());
+ColumnsBuilderFactory.Instance.registerBuilderColumn("matrix", new MatrixColumnsBuilder());
 
-export class SignaturepadColumnBuilder extends DefaultColumnBuilder {
+export class SignaturepadColumnsBuilder extends DefaultColumnsBuilder {
   protected getDataType(): ColumnDataType {
     return ColumnDataType.Image;
   }
 }
-ColumnBuilderFactory.Instance.registerBuilderColumn("signaturepad", new SignaturepadColumnBuilder());
+ColumnsBuilderFactory.Instance.registerBuilderColumn("signaturepad", new SignaturepadColumnsBuilder());
 
-export class FileColumnBuilder extends DefaultColumnBuilder {
+export class FileColumnsBuilder extends DefaultColumnsBuilder {
   protected getDataType(): ColumnDataType {
     return ColumnDataType.FileLink;
   }
 }
-ColumnBuilderFactory.Instance.registerBuilderColumn("file", new FileColumnBuilder());
+ColumnsBuilderFactory.Instance.registerBuilderColumn("file", new FileColumnsBuilder());

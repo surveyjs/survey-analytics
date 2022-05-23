@@ -1,6 +1,6 @@
 import { ITableOptions, Table, TableRow } from "./table";
 import { SurveyModel, Event } from "survey-core";
-import { ColumnDataType, ITableColumnData, QuestionLocation } from "./config";
+import { ColumnDataType, ITableColumn, ITableColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
 
 import "./datatables.scss";
@@ -55,7 +55,7 @@ export class DataTables extends Table {
     survey: SurveyModel,
     data: Array<Object>,
     options: DataTablesOptions,
-    _columns: Array<ITableColumnData> = []
+    _columns: Array<ITableColumn> = []
   ) {
     super(survey, data, options, _columns);
   }

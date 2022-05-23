@@ -11,7 +11,7 @@ import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { TableExtensions } from "./extensions/tableextensions";
 import { createCommercialLicenseLink, createImagesContainer, createLinksContainer, DocumentHelper } from "../utils";
-import { ColumnBuilderFactory } from "./columnbuilder";
+import { ColumnsBuilderFactory } from "./columnbuilder";
 
 export interface ITableOptions {
   [index: string]: any;
@@ -153,7 +153,7 @@ export abstract class Table {
   protected buildColumns = (survey: SurveyModel) => {
     let columns: Array<ITableColumn> = [];
     this.survey.getAllQuestions().forEach((question: Question) => {
-      const builder = ColumnBuilderFactory.Instance.getColumnBuilder(question.getType());
+      const builder = ColumnsBuilderFactory.Instance.getColumnsBuilder(question.getType());
       columns = columns.concat(builder.buildColumns(question, this));
     });
     return columns;
