@@ -11,33 +11,41 @@ export class DefaultColumnsBuilder implements IColumnsBuilder {
     return ColumnDataType.Text;
   }
 
-  public buildColumns(question: Question, table: Table): Array<ITableColumn> {
-    const columns: Array<ITableColumn> = [];
-    columns.push(new BaseTableColumn({
-      name: question.name,
-      displayName: table.useNamesAsTitles
-        ? question.name
-        : (question.title || "").trim() || question.name,
-      dataType: this.getDataType(),
+  protected getColumnData(name: string, displayName: string, dataType?: ColumnDataType): ITableColumnData {
+    return {
+      name: name,
+      displayName: displayName,
+      dataType: dataType || this.getDataType(),
       isVisible: true,
       isPublic: true,
       location: QuestionLocation.Column,
-    }));
+    };
+  }
+  protected getCommentColumnData(name: string, displayName: string): ITableColumnData {
+    const commentColumnData = this.getColumnData(name, displayName, ColumnDataType.Text);
+    commentColumnData.isComment = true;
+    return commentColumnData;
+  }
+
+  protected buildColumnsCore(question: Question, table: Table): Array<ITableColumn> {
+    const columns: Array<ITableColumn> = [];
+    const displayName = table.useNamesAsTitles
+      ? question.name
+      : (question.title || "").trim() || question.name;
+    columns.push(new BaseTableColumn(this.getColumnData(question.name, displayName)));
+    return columns;
+  }
+
+  public buildColumns(question: Question, table: Table): Array<ITableColumn> {
+    const columns = this.buildColumnsCore(question, table);
     if (
       question.hasComment ||
       (question.hasOther && (<QuestionSelectBase>question)["getStoreOthersAsComment"]())
     ) {
-      columns.push(new CommentTableColumn({
-        name: `${question.name}${settings.commentPrefix}`,
-        displayName: question.hasOther
-          ? (<any>question).otherText
-          : question.commentText,
-        isComment: true,
-        dataType: this.getDataType(),
-        isVisible: true,
-        isPublic: true,
-        location: QuestionLocation.Column,
-      }));
+      columns.push(new CommentTableColumn(this.getCommentColumnData(`${question.name}${settings.commentPrefix}`, question.hasOther
+        ? (<any>question).otherText
+        : question.commentText,
+      )));
     }
     return columns;
   }
@@ -59,21 +67,15 @@ export class ColumnsBuilderFactory {
 }
 
 export class MatrixColumnsBuilder extends DefaultColumnsBuilder {
-  public buildColumns(questionBase: Question, table: Table): Array<ITableColumn> {
+  protected buildColumnsCore(questionBase: Question, table: Table): ITableColumn[] {
     const question = <QuestionMatrixModel>questionBase;
     const columns = [];
     question.rows.forEach(row => {
-      columns.push(new MatrixTableColumn({
-        name: question.name + "." + row.value,
-        displayName:
-          (table.useNamesAsTitles
-            ? question.name
-            : (question.title || "").trim() || question.name) + " - " + (table.useNamesAsTitles ? row.value : row.locText.textOrHtml),
-        dataType: this.getDataType(),
-        isVisible: true,
-        isPublic: true,
-        location: QuestionLocation.Column,
-      }));
+      columns.push(new MatrixTableColumn(this.getColumnData(question.name + "." + row.value,
+        (table.useNamesAsTitles
+          ? question.name
+          : (question.title || "").trim() || question.name) + " - " + (table.useNamesAsTitles ? row.value : row.locText.textOrHtml),
+      )));
     });
     return columns;
   }
