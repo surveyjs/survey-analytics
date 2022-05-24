@@ -27,124 +27,206 @@ export interface IVisualizerPanelRenderedElement
 }
 
 /**
- * This interface contains all available options to setup a visualization panel
+ * Visualization Panel configuration. Pass it as the third argument to the `VisualizationPanel` constructor:
+ * 
+ * ```js
+ * const vizPanel = new SurveyAnalytics.VisualizationPanel(surveyQuestions, surveyResults, vizPanelOptions);
+ * ```
  */
 export interface IVisualizationPanelOptions {
-  // this object can contain sub-objects named as question to hold question-specific settings
-  // histogramQuestionName: {
+  // An object named after a question that it configures
+  // questionName: {
   //   intervals: []
   // },
 
   /**
-   * Set the length of a label where the truncation starts. Set to -1 to disable truncate. Default is 27
+   * The number of label characters after which truncation starts.
+   * Set this property to -1 to disable truncation.
+   * 
+   * Default value: 27
    */
   labelTruncateLength?: number;
-  /**
-   * Set it to true to allow make elements private/public also @see persmissions property
-   */
+  
   allowMakeQuestionsPrivate?: boolean;
-  /**
-   * An array of series values in data to group data by series
-   */
+  
   seriesValues?: string[];
-  /**
-   * Labels for series to display, if not passed the seriesValues are used as labels
-   */
   seriesLabels?: string[];
-  /**
-   * Set it to true to force use values as labels
-   */
   useValuesAsLabels?: boolean;
+
   /**
-   * Pass survey instance to use localses from the survey JSON
+   * Pass a survey instance to use survey locales in the Visualization Panel.
    */
   survey?: SurveyModel;
   /**
-   * dataProvider instance for this visualizer
+   * A common data provider for all visualizers.
    */
   dataProvider?: DataProvider;
   /**
-   * Set it to false to deny user to hide/show individual questions, this will hide the corresponding question toolbar button
+   * Allows users to change the visibility of individual charts.
+   * This property adds a Hide button to each chart.
+   * 
+   * Default value: `true`
    */
   allowHideQuestions?: boolean;
   /**
-   * Set it to false to disable items drag/drop reordering and dynamic layouting
+   * Specifies whether to arrange charts based on the available screen space and allow users to reorder them via drag and drop.
+   * If this property is disabled, charts are displayed one under the other, and users cannot reorder them.
+   * 
+   * Default value: `true`
+   * 
+   * [View the "Disable the Layout Engine" example](https://surveyjs.io/Examples/Analytics?id=custom-layout)
+   * 
+   * @see layoutEngine
    */
   allowDynamicLayout?: boolean;
   /**
-   * Layout engine to be used for layouting inner visualizers @see LayoutEngine
+   * A layout engine used to arrange charts on the Visualization Panel.
+   * You can use this property to integrate a third-party layout engine with SurveyJS Analytics.
+   * 
+   * @see allowDynamicLayout
    */
   layoutEngine?: LayoutEngine;
   /**
-   * Set to true to allow to show percentages in bar charts, this will show the corresponding question toolbar button
+   * Allows users to switch between absolute and percentage values in bar charts.
+   * This property adds a Show Percentages button to each bar chart.
+   * 
+   * Default value: `false`
+   * 
+   * @see showPercentages
+   * @see showOnlyPercentages
+   * @see percentagePrecision
    */
   allowShowPercentages?: boolean;
   /**
-   * Set it to true to show percentages in bar charts
+   * Specifies whether bar charts display percentages in addition to absolute values.
+   * Users can change this property value if you enable the `allowShowPercentages` property.
+   * 
+   * Default value: `false`
+   *
+   * @see allowShowPercentages
+   * @see showOnlyPercentages
+   * @see percentagePrecision
    */
   showPercentages?: boolean;
   /**
-   * Set it to true to show percentages only in bar charts (don't show values)
+   * Specifies whether bar charts display only percentages, without absolute values.
+   * Applies only if the `allowShowPercentages` or `showPercentages` property is enables.
+   * 
+   * Default value: `false`
+   * 
+   * @see allowShowPercentages
+   * @see showPercentages
+   * @see percentagePrecision
    */
   showOnlyPercentages?: boolean;
   /**
-   * Set percentage decimal presision
+   * Specifies percentage precision.
+   * 
+   * Default value: ???
+   * 
+   * @see allowShowPercentages
+   * @see showPercentages
+   * @see showOnlyPercentages
    */
   percentagePrecision?: number;
   /**
-   *
+   * Removes the Free Trial bar.
+   * **IMPORTANT**: You can enable this property only if you have a SurveyJS Analytics commercial license. It is illegal to enable this property without a license.
    */
   haveCommercialLicense?: boolean;
   /**
-   * Set to true to allow change answers order, choices are ordered by answers count, this will show the corresponding question toolbar dropdown
+   * Allows users to sort answers by answer count. Applies only to bar and scatter charts.
+   * This property adds a Sorting dropdown to each bar and scatter chart.
+   * 
+   * Default value: `true`
+   * 
+   * @see answersOrder
    */
   allowChangeAnswersOrder?: boolean;
   /**
-   * Defauls answers order
+   * Specifies how to sort answers in bar and scatter charts.
+   * Accepted values:
+   * 
+   * - `"default"` (default) - Do not sort answers.
+   * - `"asc"` - Sort answers by ascending answer count.
+   * - `"desc"` - Sort answers by descending answer count.
+   * 
+   * Users can change this property value if you enable the `allowChangeAnswersOrder` property.
+   * 
+   * @see allowChangeAnswersOrder
    */
-  answersOrder?: "default" | "desc" | "desc";
+  answersOrder?: "default" | "asc" | "desc";
   /**
-   * Set to true to allow hide empty answers, this will show the corresponding question toolbar button
+   * Allows users to hide answers with zero count in bar and scatter charts.
+   * This property adds a Hide Empty Answers button to each bar and scatter chart.
+   * 
+   * Default value: `false`
    */
   allowHideEmptyAnswers?: boolean;
   /**
-   * Set to true to hide empty answers
+   * Hides answers with zero count in bar and scatter charts.
+   * Users can change this property value if you enable the `allowHideEmptyAnswers` property.
+   * 
+   * Default value: `false`
+   * 
+   * @see allowHideEmptyAnswers
    */
   hideEmptyAnswers?: boolean;
   /**
-   * Set to true to allow show top N answers, this will show the corresponding question toolbar dropdown
+   * Allows users to select whether to show top 5, 10, or 20 answers by answer count.
+   * This property adds a Top N Answers dropdown to each chart.
+   * 
+   * Default value: `false`
    */
   allowTopNAnswers?: boolean;
   /**
-   * Set to true to allow show missing answers, this will show the corresponding question toolbar button
+   * Allows users to show the number of respondents who did not answer a particular question.
+   * This property adds a Show Missing Answers button to each chart.
+   * 
+   * Default value: `false`
    */
   allowShowMissingAnswers?: boolean;
-  /**
-   * Set to true to allow to use experimental features: e.g. vertical bar chart configuration
-   */
+
   allowExperimentalFeatures?: boolean;
   /**
-   * Set default chart type
+   * Default chart type.
+   * 
+   * Accepted values:
+   * 
+   * - ???
+   * - ...
+   * 
+   * To set a type for an individual chart, access this chart in the `visualizers` array and set its `chartType` property to one of the values described above: 
+   * 
+   * ```js
+   * const vizPanel = new SurveyAnalytics.VisualizationPanel( ... );
+   * vizPanel.visualizers[0].chartType = "stackedbar";
+   * ```
+   * 
    */
   defaultChartType?: string;
   /**
-   * Set to true to allow transpose data: answers in matrix can be grouped by columns or by rows, this will show the corresponding question toolbar button
+   * Allows users to transpose a visualized matrix question.
+   * This property adds a Transpose button to charts that visualize matrixes. When users select Per Values, matrix rows go to chart arguments, and matrix columns form chart series. When users select Per Columns, matrix rows form chart series, and matrix columns go to chart arguments.
+   * 
+   * Default value: `false`
    */
   allowTransposeData?: boolean;
   /**
-   * Set to false to disable selection and cross filtering in charts
+   * Allows users to cross-filter charts. The filter applies when users selects a series point.
+   * 
+   * Default value: `true`
    */
   allowSelection?: boolean;
-  /**
-   * Pass a function to render content of a visualizer
-   */
+
   renderContent?: Function;
-  /**
-   * Pass a function to destroy content of a visualizer
-   */
   destroyContent?: Function;
+
   /**
-   * Set to true to strip HTML tags from titles
+   * Removes HTML tags from survey element titles.
+   * Survey element titles can contain HTML markup and are specified by users. An attacker can inject malicious code into the titles. To guard against it, keep this property set to `true`. 
+   * 
+   * Default value: `true`
    */
   stripHtmlFromTitles?: boolean;
 }
