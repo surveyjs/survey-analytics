@@ -5,6 +5,28 @@
       "Title": "Analytics Overview"
     },
     {
+      "Name": "get-started",
+      "Title": "Get Started with Survey Analytics",
+      "Items": [
+        {
+          "Name": "get-started-angular",
+          "Title": "Angular"
+        },
+        {
+          "Name": "get-started-vue",
+          "Title": "Vue"
+        },
+        {
+          "Name": "get-started-react",
+          "Title": "React"
+        },
+        {
+          "Name": "get-started-knockout-jquery",
+          "Title": "Knockout / jQuery"
+        }
+      ]
+    },
+    {
       "Name": "api",
       "Title": "Analytics API",
       "Items": [
