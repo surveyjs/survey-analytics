@@ -1,6 +1,6 @@
 import { ITableOptions, Table, TableRow } from "./table";
 import { SurveyModel, Event } from "survey-core";
-import { ColumnDataType, ITableColumn, ITableColumnData, QuestionLocation } from "./config";
+import { ColumnDataType, IColumn, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
 
 import "./datatables.scss";
@@ -55,9 +55,9 @@ export class DataTables extends Table {
     survey: SurveyModel,
     data: Array<Object>,
     options: DataTablesOptions,
-    _columns: Array<ITableColumn> = []
+    _columnsData: Array<IColumnData> = []
   ) {
-    super(survey, data, options, _columns);
+    super(survey, data, options, _columnsData);
   }
 
   public destroy() {
@@ -199,7 +199,7 @@ export class DataTables extends Table {
             });
         },
       },
-      this.options
+      this._options
     );
 
     targetNode.appendChild(tableNode);
@@ -260,11 +260,11 @@ export class DataTables extends Table {
 
   public getColumns(): Array<any> {
     const columns: any = this.columns.map((column) => {
-      var question = this.survey.getQuestionByName(column.name);
+      var question = this._survey.getQuestionByName(column.name);
       return {
         name: column.name,
         data: column.name,
-        sTitle: (question && (this.options.useNamesAsTitles ? question.name : question.title)) || column.displayName,
+        sTitle: (question && (this._options.useNamesAsTitles ? question.name : question.title)) || column.displayName,
         visible: this.isColumnVisible(column),
         orderable: false,
         defaultContent: "",

@@ -15,7 +15,8 @@ export interface ICellData {
   question: Question;
   displayValue: any;
 }
-export interface ITableColumnData {
+
+export interface IColumnData {
   name: string;
   displayName: string;
   dataType: ColumnDataType;
@@ -25,14 +26,15 @@ export interface ITableColumnData {
   width?: string | number;
   isComment?: boolean;
 }
-
-export interface ITableColumn extends ITableColumnData {
-  getCellData(survey: SurveyModel, data: any, table: Table, options: ITableOptions): ICellData;
+export interface IColumn extends IColumnData {
+  visibleIndex?: number;
+  fromJSON(json: any): void;
+  getCellData(table: Table, data: any): ICellData;
 }
 
 export interface ITableState {
   locale?: string;
-  elements?: ITableColumn[];
+  elements?: IColumnData[];
   pageSize?: number;
 }
 

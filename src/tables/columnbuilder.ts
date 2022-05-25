@@ -1,51 +1,29 @@
-import { Question, QuestionMatrixModel, QuestionSelectBase, settings } from "survey-core";
-import { BaseTableColumn, CommentTableColumn, MatrixTableColumn } from "./columns";
-import { QuestionLocation, ColumnDataType, ITableColumnData, ITableColumn } from "./config";
+import { Question, QuestionFileModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
+import { BaseColumn, CommentColumn, FileColumn, ImageColumn, MatrixColumn } from "./columns";
+import { IColumn } from "./config";
 import { Table } from "./table";
 
 export interface IColumnsBuilder {
-  buildColumns(question: Question, table: Table): Array<ITableColumn>;
+  buildColumns(question: Question, table: Table): Array<IColumn>;
 }
-export class DefaultColumnsBuilder implements IColumnsBuilder {
-  protected getDataType(): ColumnDataType {
-    return ColumnDataType.Text;
+export class DefaultColumnsBuilder<T extends Question = Question> implements IColumnsBuilder {
+  protected createColumn(question: T, table: Table) {
+    return new BaseColumn(question, table);
   }
 
-  protected getColumnData(name: string, displayName: string, dataType?: ColumnDataType): ITableColumnData {
-    return {
-      name: name,
-      displayName: displayName,
-      dataType: dataType || this.getDataType(),
-      isVisible: true,
-      isPublic: true,
-      location: QuestionLocation.Column,
-    };
-  }
-  protected getCommentColumnData(name: string, displayName: string): ITableColumnData {
-    const commentColumnData = this.getColumnData(name, displayName, ColumnDataType.Text);
-    commentColumnData.isComment = true;
-    return commentColumnData;
-  }
-
-  protected buildColumnsCore(question: Question, table: Table): Array<ITableColumn> {
-    const columns: Array<ITableColumn> = [];
-    const displayName = table.useNamesAsTitles
-      ? question.name
-      : (question.title || "").trim() || question.name;
-    columns.push(new BaseTableColumn(this.getColumnData(question.name, displayName)));
+  protected buildColumnsCore(question: T, table: Table): Array<IColumn> {
+    const columns: Array<IColumn> = [];
+    columns.push(this.createColumn(question, table));
     return columns;
   }
 
-  public buildColumns(question: Question, table: Table): Array<ITableColumn> {
+  public buildColumns(question: T, table: Table): Array<IColumn> {
     const columns = this.buildColumnsCore(question, table);
     if (
       question.hasComment ||
-      (question.hasOther && (<QuestionSelectBase>question)["getStoreOthersAsComment"]())
+      (question.hasOther && (<any>question as QuestionSelectBase)["getStoreOthersAsComment"]())
     ) {
-      columns.push(new CommentTableColumn(this.getCommentColumnData(`${question.name}${settings.commentPrefix}`, question.hasOther
-        ? (<any>question).otherText
-        : question.commentText,
-      )));
+      columns.push(new CommentColumn(question, table));
     }
     return columns;
   }
@@ -66,32 +44,28 @@ export class ColumnsBuilderFactory {
   }
 }
 
-export class MatrixColumnsBuilder extends DefaultColumnsBuilder {
-  protected buildColumnsCore(questionBase: Question, table: Table): ITableColumn[] {
+export class MatrixColumnsBuilder extends DefaultColumnsBuilder<QuestionMatrixModel> {
+  protected buildColumnsCore(questionBase: Question, table: Table): IColumn[] {
     const question = <QuestionMatrixModel>questionBase;
     const columns = [];
     question.rows.forEach(row => {
-      columns.push(new MatrixTableColumn(this.getColumnData(question.name + "." + row.value,
-        (table.useNamesAsTitles
-          ? question.name
-          : (question.title || "").trim() || question.name) + " - " + (table.useNamesAsTitles ? row.value : row.locText.textOrHtml),
-      )));
+      columns.push(new MatrixColumn(question, row, table));
     });
     return columns;
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("matrix", new MatrixColumnsBuilder());
 
-export class SignaturepadColumnsBuilder extends DefaultColumnsBuilder {
-  protected getDataType(): ColumnDataType {
-    return ColumnDataType.Image;
+export class ImageColumnsBuilder extends DefaultColumnsBuilder {
+  protected createColumn(question: Question, table: Table): ImageColumn {
+    return new ImageColumn(question, table);
   }
 }
-ColumnsBuilderFactory.Instance.registerBuilderColumn("signaturepad", new SignaturepadColumnsBuilder());
+ColumnsBuilderFactory.Instance.registerBuilderColumn("signaturepad", new ImageColumnsBuilder());
 
-export class FileColumnsBuilder extends DefaultColumnsBuilder {
-  protected getDataType(): ColumnDataType {
-    return ColumnDataType.FileLink;
+export class FileColumnsBuilder extends DefaultColumnsBuilder<QuestionFileModel> {
+  protected createColumn(question: QuestionFileModel, table: Table): FileColumn {
+    return new FileColumn(question, table);
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("file", new FileColumnsBuilder());

@@ -2,7 +2,7 @@ import { Table } from "../table";
 import { DocumentHelper } from "../../utils";
 import { localization } from "../../localizationManager";
 import { TableExtensions } from "./tableextensions";
-import { QuestionLocation, ITableColumn } from "../config";
+import { QuestionLocation, IColumn } from "../config";
 
 TableExtensions.registerExtension({
   location: "column",
@@ -115,7 +115,7 @@ TableExtensions.registerExtension({
         table.onPermissionsChangedCallback(table);
     };
 
-    function updateState(column: ITableColumn) {
+    function updateState(column: IColumn) {
       if (column.isPublic) {
         button.className = "sa-table__svg-button";
         button.title = localization.getString("makePrivateColumn");

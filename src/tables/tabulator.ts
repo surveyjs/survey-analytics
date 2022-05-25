@@ -1,6 +1,6 @@
 import { ITableOptions, Table, TableRow } from "./table";
 import { SurveyModel } from "survey-core";
-import { ColumnDataType, QuestionLocation } from "./config";
+import { ColumnDataType, IColumnData, QuestionLocation } from "./config";
 
 import "./tabulator.scss";
 import { DocumentHelper } from "../utils";
@@ -81,10 +81,10 @@ export class Tabulator extends Table {
     survey: SurveyModel,
     data: Array<Object>,
     options: ITabulatorOptions,
-    _columns: Array<any> = []
+    _columnsData: Array<IColumnData> = []
   ) {
-    super(survey, data, options, _columns);
-    this.options = Object.assign({}, defaultOptions, options);
+    super(survey, data, options, _columnsData);
+    this._options = Object.assign({}, defaultOptions, options);
   }
 
   private readonly COLUMN_MIN_WIDTH = 155;
@@ -133,7 +133,7 @@ export class Tabulator extends Table {
         paginationButtonCount: 3,
         nestedFieldSeparator: false,
       },
-      this.options.tabulatorOptions
+      this._options.tabulatorOptions
     );
 
     this.tabulatorTables = new TabulatorTables(this.tableContainer, config);
@@ -169,7 +169,7 @@ export class Tabulator extends Table {
       "sa-tabulator__downloads-bar"
     );
 
-    this.options.downloadButtons.forEach((type: string) => {
+    this._options.downloadButtons.forEach((type: string) => {
       container.appendChild(
         createDownloadButton(
           type,
@@ -263,7 +263,7 @@ export class Tabulator extends Table {
 
   public getColumns(): Array<any> {
     const columns: any = this.columns.map((column, index) => {
-      let question = this.survey.getQuestionByName(column.name);
+      let question = this._survey.getQuestionByName(column.name);
       let formatter = "plaintext";
       if (column.dataType == ColumnDataType.FileLink) {
         formatter = "html";
@@ -275,13 +275,13 @@ export class Tabulator extends Table {
         field: column.name,
         title:
           (question &&
-            (this.options.useNamesAsTitles ? question.name : question.title)) ||
+            (this._options.useNamesAsTitles ? question.name : question.title)) ||
           column.displayName,
         width: column.width,
         widthShrink: !column.width ? 1 : 0,
         visible: this.isColumnVisible(column),
         headerSort: false,
-        download: this.options.downloadHiddenColumns ? true : undefined,
+        download: this._options.downloadHiddenColumns ? true : undefined,
         formatter,
         accessorDownload: this.accessorDownload,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
@@ -300,8 +300,8 @@ export class Tabulator extends Table {
       title: "",
       download: false,
       resizable: false,
-      minWidth: this.options.actionsColumnWidth,
-      width: this.options.actionsColumnWidth,
+      minWidth: this._options.actionsColumnWidth,
+      width: this._options.actionsColumnWidth,
     });
 
     return columns;
@@ -389,9 +389,9 @@ export class Tabulator extends Table {
   private getDownloadOptions(type: string): any {
     const options = Object.assign(
       {},
-      this.options.downloadOptions[type] || defaultOptions.downloadOptions[type]
+      this._options.downloadOptions[type] || defaultOptions.downloadOptions[type]
     );
-    const onDownloadCallback = this.options.onDownloadCallbacks[type];
+    const onDownloadCallback = this._options.onDownloadCallbacks[type];
     if (!!onDownloadCallback) onDownloadCallback(this, options);
     return options;
   }
@@ -399,7 +399,7 @@ export class Tabulator extends Table {
   public download(type: string): void {
     this.tabulatorTables.download(
       type,
-      `${this.options.downloadOptions.fileName}.${type}`,
+      `${this._options.downloadOptions.fileName}.${type}`,
       this.getDownloadOptions(type)
     );
   }
