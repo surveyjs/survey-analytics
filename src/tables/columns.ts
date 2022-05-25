@@ -1,4 +1,4 @@
-import { ItemValue, MatrixRowModel, Question, QuestionFileModel, QuestionMatrixModel, settings, SurveyModel } from "survey-core";
+import { ItemValue, MatrixRowModel, Question, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, settings, SurveyModel } from "survey-core";
 import { createImagesContainer, createLinksContainer } from "../utils";
 import { ICellData, IColumn, ColumnDataType, QuestionLocation, IColumnData } from "./config";
 import { ITableOptions, Table } from "./table";
@@ -119,11 +119,10 @@ export class CommentColumn extends BaseColumn {
 }
 
 export class MatrixColumn extends BaseColumn<QuestionMatrixModel> {
-  private valueName: string;
   private valuePath: string;
   constructor(question: QuestionMatrixModel, private row: MatrixRowModel, table: Table) {
     super(question, table);
-    [this.valueName, this.valuePath] = this.name.split(".");
+    [this.valuePath] = this.name.split(".").slice(1);
   }
   protected getName(): string {
     return this.question.name + "." + this.row?.value;
@@ -138,7 +137,7 @@ export class MatrixColumn extends BaseColumn<QuestionMatrixModel> {
   }
 
   protected getDisplayValue(data: any, table: Table, options: ITableOptions) {
-    let displayValue = data[this.valueName];
+    let displayValue = data[this.question.name];
     if(this.valuePath && typeof displayValue === "object") {
       displayValue = displayValue[this.valuePath];
       if(displayValue !== undefined) {
@@ -168,6 +167,41 @@ export class FileColumn extends BaseColumn<QuestionFileModel> {
       ).outerHTML : createLinksContainer(
         displayValue
       ).outerHTML;
+    }
+    return displayValue;
+  }
+}
+
+export class MatrixDropdownColumn extends BaseColumn<QuestionMatrixDropdownModel> {
+  private rowValue: string;
+  private colName: string;
+  constructor(question: QuestionMatrixDropdownModel, protected row, protected col, table: Table) {
+    super(question, table);
+    [this.rowValue, this.colName] = this.name.split(".").slice(1);
+  }
+  protected getName(): string {
+    return this.question.name + "." + this.row.value + "." + this.col.name;
+  }
+  protected getDisplayName(): string {
+    const table = this.table;
+    const question = this.question;
+    return (this.table.useNamesAsTitles
+      ? question.name
+      : (question.title || "").trim() || question.name) + " - " + (table.useNamesAsTitles ? this.row.value : this.row.locText.textOrHtml) + " - " + (table.useNamesAsTitles ? this.col.name : this.col.locTitle.textOrHtml);
+
+  }
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions) {
+    let displayValue = data[this.question.name];
+    const question = this.question;
+    if(this.rowValue && this.colName && typeof displayValue === "object") {
+      let [rowId, colId] = [this.rowValue, this.colName];
+      displayValue = question.value;
+      if(!options.useValuesAsLabels) {
+        displayValue = question.displayValue;
+        rowId = question.rows.filter(row => row.value === this.rowValue)[0].text;
+        colId = question.getColumnByName(this.colName).title;
+      }
+      displayValue = (displayValue[rowId] && displayValue[rowId][colId]) || "";
     }
     return displayValue;
   }

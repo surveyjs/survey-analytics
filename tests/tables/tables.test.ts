@@ -598,3 +598,84 @@ test("check pass columns data via constructor", () => {
 
   expect(JSON.stringify(table.columns)).toBe("[{\"name\":\"q2\",\"displayName\":\"q2\",\"dataType\":0,\"isVisible\":false,\"isPublic\":true,\"location\":0},{\"name\":\"q1\",\"displayName\":\"q1_changed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":1},{\"name\":\"q2-Comment\",\"displayName\":\"Other (describe)\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":0},{\"name\":\"q3\",\"displayName\":\"not currently existed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":false,\"location\":0}]");
 });
+
+const matrixDropdownJson = {
+  "elements": [
+    {
+      "type": "matrixdropdown",
+      "name": "questionName",
+      "title": "Question Title",
+      "choices": [
+        { value: "value 1", text: "Value 1 Text" },
+        { value: "value 2", text: "Value 2 Text" }
+      ],
+      "columns": [
+        {
+          "name": "col 1",
+          "title": "Column 1 Title",
+        },
+        {
+          "name": "col 2",
+          "title": "Column 2 Title",
+        },
+      ],
+      "rows": [
+        {
+          "value": "row 1",
+          "text": "Row 1 Text"
+        }, {
+          "value": "row 2",
+          "text": "Row 2 Text"
+        }
+      ]
+    }
+  ]
+};
+
+test("check matrix dropdown columns", () => {
+  const survey = new SurveyModel(matrixDropdownJson);
+  let table = new TableTest(survey, [{
+  }], {}, []);
+  let columns = table.columns;
+  expect(columns.length).toBe(4);
+  expect(columns[0].name).toBe("questionName.row 1.col 1");
+  expect(columns[0].displayName).toBe("Question Title - Row 1 Text - Column 1 Title");
+  expect(columns[1].name).toBe("questionName.row 1.col 2");
+  expect(columns[1].displayName).toBe("Question Title - Row 1 Text - Column 2 Title");
+  expect(columns[2].name).toBe("questionName.row 2.col 1");
+  expect(columns[2].displayName).toBe("Question Title - Row 2 Text - Column 1 Title");
+  expect(columns[3].name).toBe("questionName.row 2.col 2");
+  expect(columns[3].displayName).toBe("Question Title - Row 2 Text - Column 2 Title");
+  table = new TableTest(survey, [{
+  }], {
+    useNamesAsTitles: true
+  }, []);
+  columns = table.columns;
+  expect(columns[0].displayName).toBe("questionName - row 1 - col 1");
+  expect(columns[1].displayName).toBe("questionName - row 1 - col 2");
+  expect(columns[2].displayName).toBe("questionName - row 2 - col 1");
+  expect(columns[3].displayName).toBe("questionName - row 2 - col 2");
+});
+
+test("check matrix dropdown fill data", () => {
+  const survey = new SurveyModel(matrixDropdownJson);
+  let table = new TableTest(survey, [{
+    "questionName": { "row 1": { "col 1": "value 1", "col 2": "value 2" }, "row 2": { "col 1": "", "col 2": "value 2" } }
+  }], {
+  }, []);
+  let tableData = (<any>table).tableData[0];
+  expect(expect(tableData["questionName.row 1.col 1"]).toEqual("Value 1 Text"));
+  expect(expect(tableData["questionName.row 1.col 2"]).toEqual("Value 2 Text"));
+  expect(expect(tableData["questionName.row 2.col 1"]).toEqual(""));
+  expect(expect(tableData["questionName.row 2.col 2"]).toEqual("Value 2 Text"));
+  table = new TableTest(survey, [{
+    "questionName": { "row 1": { "col 1": "value 1", "col 2": "value 2" }, "row 2": { "col 1": "", "col 2": "value 2" } }
+  }], {
+    useValuesAsLabels: true
+  }, []);
+  tableData = (<any>table).tableData[0];
+  expect(expect(tableData["questionName.row 1.col 1"]).toEqual("value 1"));
+  expect(expect(tableData["questionName.row 1.col 2"]).toEqual("value 2"));
+  expect(expect(tableData["questionName.row 2.col 1"]).toEqual(""));
+  expect(expect(tableData["questionName.row 2.col 2"]).toEqual("value 2"));
+});
