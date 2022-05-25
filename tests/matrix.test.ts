@@ -41,11 +41,11 @@ test("valuesSource method", () => {
 });
 
 test("getValues method", () => {
-  expect(matrix.getValues()).toEqual(matrixJson.columns);
+  expect(matrix.getValues()).toEqual(matrixJson.columns.reverse());
 });
 
 test("getLabels method", () => {
-  expect(matrix.getLabels()).toEqual(matrixJson.columns);
+  expect(matrix.getLabels()).toEqual(matrixJson.columns.reverse());
 });
 
 test("getSeriesValues method", () => {
@@ -64,7 +64,7 @@ test("getData method", () => {
     [0, 0],
     [0, 0],
     [0, 0],
-  ]);
+  ].reverse());
 });
 
 test("check getPercentages method", () => {
@@ -75,7 +75,7 @@ test("check getPercentages method", () => {
     [0, 0],
     [0, 0],
     [0, 0],
-  ]);
+  ].reverse());
 });
 
 test("getPercentages percentagePrecision option", () => {
@@ -176,13 +176,13 @@ test("hide empty answers", () => {
     datasets: [
       [2, 0],
       [0, 2],
-    ],
-    labels: ["Morning", "Afternoon"],
+    ].reverse(),
+    labels: ["Morning", "Afternoon"].reverse(),
     seriesLabels: ["Monday", "Tuesday"],
     texts: [
       [2, 0],
       [0, 2],
-    ],
+    ].reverse(),
   });
   data = [
     {
@@ -199,7 +199,7 @@ test("hide empty answers", () => {
   var matrix = new Matrix(question, data);
   matrix.hideEmptyAnswers = true;
   expect(matrix.getAnswersData()).toEqual({
-    colors: ["#3999fb"],
+    colors: ["#86e1fb"],
     datasets: [[1, 1]],
     labels: ["Afternoon"],
     seriesLabels: ["Monday", "Tuesday"],

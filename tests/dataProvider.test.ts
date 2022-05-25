@@ -246,26 +246,26 @@ test("getData for matrix dropdown inner visualizers", () => {
 
   const innerPanelVisualizer: any = visualizer["_matrixDropdownVisualizer"];
   expect(innerPanelVisualizer["visualizers"][0].getData()).toEqual([
-    [0, 2, 1],
-    [1, 1, 1],
+    [0, 2, 1].reverse(),
+    [1, 1, 1].reverse(),
   ]);
   expect(innerPanelVisualizer["visualizers"][1].getData()).toEqual([
-    [1, 0, 2, 0, 0],
-    [0, 0, 0, 2, 1],
+    [1, 0, 2, 0, 0].reverse(),
+    [0, 0, 0, 2, 1].reverse(),
   ]);
 
   const dataProvider = new DataProvider(<any>innerPanelVisualizer["data"]);
   expect(
     dataProvider.getData(<any>innerPanelVisualizer["visualizers"][0])
   ).toEqual([
-    [0, 2, 1],
-    [1, 1, 1],
+    [0, 2, 1].reverse(),
+    [1, 1, 1].reverse(),
   ]);
   expect(
     dataProvider.getData(<any>innerPanelVisualizer["visualizers"][1])
   ).toEqual([
-    [1, 0, 2, 0, 0],
-    [0, 0, 0, 2, 1],
+    [1, 0, 2, 0, 0].reverse(),
+    [0, 0, 0, 2, 1].reverse(),
   ]);
 });
 

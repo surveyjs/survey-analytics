@@ -70,7 +70,7 @@ test("check bar config tick labels", () => {
     "sister_text",
     "son_text",
     "daughter_text"
-  ];
+  ].reverse();
   const truncatedTexts = [
     "fathe...",
     "mothe...",
@@ -78,7 +78,7 @@ test("check bar config tick labels", () => {
     "siste...",
     "son_text",
     "daugh..."
-  ];
+  ].reverse();
   const hoverTexts = [
     "50, father_text",
     "25, mother_text",
@@ -86,7 +86,7 @@ test("check bar config tick labels", () => {
     "25, sister_text",
     "0, son_text",
     "0, daughter_text"
-  ];
+  ].reverse();
 
   expect(config.traces[0].y).toEqual(fullTexts);
   expect(config.layout.yaxis.tickvals).toEqual(fullTexts);
@@ -104,27 +104,27 @@ test("check matrix config hovertexts", () => {
   var config = PlotlySetup.setupBar(matrixVisualizer);
 
   expect(config.traces[2].hovertext.length).toEqual(2);
-  expect(config.traces[2].hovertext[0]).toEqual("Lizol : Good, 0");
-  expect(config.traces[2].hovertext[1]).toEqual("Harpic : Good, 1");
+  expect(config.traces[2].hovertext[0]).toEqual("Lizol : Fair, 0");
+  expect(config.traces[2].hovertext[1]).toEqual("Harpic : Fair, 0");
 });
 
 test("check bar config with non default label ordering", () => {
   selectBase.answersOrder = "desc";
   var config = PlotlySetup.setupBar(selectBase);
   var trueColors = [
+    "#86e1fb",
+    "#3999fb",
+    "#1eb496",
     "#ff6771",
     "#ffc152",
     "#aba1ff",
-    "#3999fb",
-    "#1eb496",
-    "#86e1fb",
   ];
   var trueY = [
-    "brother_text",
-    "son_text",
     "daughter_text",
-    "mother_text",
+    "son_text",
+    "brother_text",
     "sister_text",
+    "mother_text",
     "father_text",
   ];
   var trueX = [0, 0, 0, 1, 1, 2];
@@ -139,19 +139,19 @@ test("check bar config with non default label ordering and enabled showPercentag
   selectBase.showPercentages = true;
   var config = PlotlySetup.setupBar(selectBase);
   var trueColors = [
+    "#86e1fb",
+    "#3999fb",
+    "#1eb496",
     "#ff6771",
     "#ffc152",
     "#aba1ff",
-    "#3999fb",
-    "#1eb496",
-    "#86e1fb",
   ];
   var trueY = [
-    "brother_text",
-    "son_text",
     "daughter_text",
-    "mother_text",
+    "son_text",
+    "brother_text",
     "sister_text",
+    "mother_text",
     "father_text",
   ];
   var truePercentages = [0, 0, 0, 25, 25, 50];
@@ -167,19 +167,19 @@ test("check bar config with non default label ordering and enabled showPercentag
   expect(config.traces[0].x).toEqual(trueX.reverse());
   expect(config.traces[0].y).toEqual([
     "father_text",
-    "mother_text",
     "sister_text",
-    "brother_text",
-    "son_text",
+    "mother_text",
     "daughter_text",
+    "son_text",
+    "brother_text",
   ]);
   expect(config.traces[0].marker.color).toEqual([
+    "#aba1ff",
+    "#ff6771",
+    "#ffc152",
     "#86e1fb",
     "#3999fb",
     "#1eb496",
-    "#ff6771",
-    "#ffc152",
-    "#aba1ff",
   ]);
   expect(config.traces[0].text).toEqual(truePercentages.reverse());
 

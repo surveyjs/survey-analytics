@@ -13,7 +13,7 @@ let choices = [
 
 beforeEach(() => {
   var question = new QuestionDropdownModel("q1");
-  question.choices = choices;
+  question.choices = [].concat(choices);
   var data = [
     {
       q1: "father",
@@ -41,18 +41,18 @@ test("valuesSource method", () => {
 });
 
 test("getValues method", () => {
-  expect(selectBase.getValues()).toEqual(choices.map((choice) => choice.value));
+  expect(selectBase.getValues()).toEqual([].concat(choices).reverse().map((choice) => choice.value));
 });
 
 test("getLabels method", () => {
-  expect(selectBase.getLabels()).toEqual(choices.map((choice) => choice.text));
+  expect(selectBase.getLabels()).toEqual([].concat(choices).reverse().map((choice) => choice.text));
   selectBase["options"].useValuesAsLabels = true;
-  expect(selectBase.getLabels()).toEqual(choices.map((choice) => choice.value));
+  expect(selectBase.getLabels()).toEqual([].concat(choices).reverse().map((choice) => choice.value));
   selectBase["options"].useValuesAsLabels = false;
 });
 
 test("getData method", () => {
-  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0]]);
+  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
 });
 
 test("createToolbarItems", () => {
@@ -107,7 +107,7 @@ test("set answersOrder triggers renderContent and update", () => {
 });
 
 test("check getPercentages method", () => {
-  expect(selectBase.getPercentages()).toEqual([[50, 25, 0, 25, 0, 0]]);
+  expect(selectBase.getPercentages()).toEqual([[50, 25, 0, 25, 0, 0].reverse()]);
 });
 
 test("setShowPercentages triggers renderContent and update", () => {
@@ -131,39 +131,39 @@ test("change visible choices triggers dataProvider reset", () => {
   (<any>selectBase).dataProvider.reset = () => {
     resetCallCount++;
   };
-  selectBase.question.choices = ["add1"];
+  selectBase.question["choices"] = ["add1"];
   expect(resetCallCount).toEqual(1);
   (<any>selectBase).dataProvider.reset = oldResetFunc;
-  selectBase.question.choices = choices;
+  selectBase.question["choices"] = choices;
 });
 
 test("check that getSelectedItemByText take into account other item", () => {
   selectBase.question.hasOther = true;
-  selectBase.question.otherText = "Other";
+  selectBase.question["otherText"] = "Other";
   expect(selectBase.getSelectedItemByText("Other")).toEqual(
-    selectBase.question.otherItem
+    selectBase.question["otherItem"]
   );
 });
 
 test("getAnswersData method", () => {
-  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198"], "datasets": [[2, 1, 0, 1, 0, 0]], "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"], "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0]] });
+  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198"], "datasets": [[2, 1, 0, 1, 0, 0].reverse()], "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse(), "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0].reverse()] });
 });
 
 test("hide empty items", () => {
   expect(selectBase.hideEmptyAnswers).toBe(false);
-  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198"], "datasets": [[2, 1, 0, 1, 0, 0]], "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"], "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0]] },);
+  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198"], "datasets": [[2, 1, 0, 1, 0, 0].reverse()], "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse(), "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0].reverse()] },);
   selectBase.hideEmptyAnswers = true;
-  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#86e1fb", "#3999fb", "#1eb496"], "datasets": [[2, 1, 1]], "labels": ["father_text", "mother_text", "sister_text"], "texts": [[2, 1, 1]], "seriesLabels": [] });
+  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#ff6771", "#ffc152", "#aba1ff"], "datasets": [[2, 1, 1].reverse()], "labels": ["father_text", "mother_text", "sister_text"].reverse(), "texts": [[2, 1, 1].reverse()], "seriesLabels": [] });
 });
 
 test("change answers order", () => {
   selectBase.hideEmptyAnswers = true;
   expect(selectBase.answersOrder).toBe("default");
-  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#86e1fb", "#3999fb", "#1eb496"], "datasets": [[2, 1, 1]], "labels": ["father_text", "mother_text", "sister_text"], "texts": [[2, 1, 1]], "seriesLabels": [] });
+  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#ff6771", "#ffc152", "#aba1ff"], "datasets": [[2, 1, 1].reverse()], "labels": ["father_text", "mother_text", "sister_text"].reverse(), "texts": [[2, 1, 1].reverse()], "seriesLabels": [] });
   selectBase.answersOrder = "asc";
-  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#86e1fb", "#3999fb", "#1eb496"], "datasets": [[2, 1, 1]], "labels": ["father_text", "mother_text", "sister_text"], "seriesLabels": [], "texts": [[2, 1, 1]] });
+  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#aba1ff", "#ff6771", "#ffc152"], "datasets": [[2, 1, 1]], "labels": ["father_text", "sister_text", "mother_text"], "seriesLabels": [], "texts": [[2, 1, 1]] });
   selectBase.answersOrder = "desc";
-  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#3999fb", "#1eb496", "#86e1fb"], "datasets": [[1, 1, 2]], "labels": ["mother_text", "sister_text", "father_text"], "seriesLabels": [], "texts": [[1, 1, 2]] });
+  expect(selectBase.getAnswersData()).toEqual({ "colors": ["#ff6771", "#ffc152", "#aba1ff"], "datasets": [[1, 1, 2]], "labels": ["sister_text", "mother_text", "father_text"], "seriesLabels": [], "texts": [[1, 1, 2]] });
 });
 
 test("check allowSelection option", () => {
@@ -213,7 +213,7 @@ test("imagePicker getValues order", () => {
     "giraffe",
     "panda",
     "camel",
-  ]);
+  ].reverse());
 });
 
 test("getPercentages method", () => {
@@ -225,19 +225,19 @@ test("getPercentages method", () => {
     { q1: "mother", },
     { q1: "sister", },
   ]);
-  expect(selectBase.getPercentages()).toEqual([[50, 33.33, 0, 16.67, 0, 0]]);
+  expect(selectBase.getPercentages()).toEqual([[50, 33.33, 0, 16.67, 0, 0].reverse()]);
 });
 
 test("showMissingAnswers", () => {
   expect(selectBase["isSupportMissingAnswers"]()).toBeTruthy();
   expect(selectBase.showMissingAnswers).toBeFalsy();
-  expect(selectBase.getValues()).toEqual(["father", "mother", "brother", "sister", "son", "daughter"]);
-  expect(selectBase.getLabels()).toEqual(["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"]);
-  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0]]);
+  expect(selectBase.getValues()).toEqual(["father", "mother", "brother", "sister", "son", "daughter"].reverse());
+  expect(selectBase.getLabels()).toEqual(["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse());
+  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
   selectBase.showMissingAnswers = true;
-  expect(selectBase.getValues()).toEqual(["father", "mother", "brother", "sister", "son", "daughter", undefined]);
-  expect(selectBase.getLabels()).toEqual(["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text", "Missing answers"]);
-  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0, 1]]);
+  expect(selectBase.getValues()).toEqual([undefined, "father", "mother", "brother", "sister", "son", "daughter"].reverse());
+  expect(selectBase.getLabels()).toEqual(["Missing answers", "father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse());
+  expect(selectBase.getData()).toEqual([[1, 2, 1, 0, 1, 0, 0].reverse()]);
 });
 
 test("valueName used for getData https://surveyjs.answerdesk.io/internal/ticket/details/T9071", () => {
@@ -262,5 +262,5 @@ test("valueName used for getData https://surveyjs.answerdesk.io/internal/ticket/
     }
   ];
   selectBase = new SelectBase(question, data, {});
-  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0]]);
+  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
 });
