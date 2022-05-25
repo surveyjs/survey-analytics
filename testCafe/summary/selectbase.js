@@ -67,7 +67,7 @@ test("check data filtering", async (t) => {
   assert.ok(await isBarVisible(1));
 });
 
-test("check use values as labels", async (t) => {
+test.skip("check use values as labels", async (t) => {
   var options = { useValuesAsLabels: true };
   await initSummary(json, data, options);
   var yAxisValues = await getYAxisValues();

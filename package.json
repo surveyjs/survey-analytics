@@ -6,7 +6,7 @@
     "test_debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
     "testcafe": "concurrently \"http-server\" \"testcafe chrome testCafe/\"",
     "testcafe_ci": "http-server --silent & testcafe chrome:headless testCafe/ --reporter minimal,dashboard",
-    "testcafe_file": "concurrently \"http-server --silent\" \"testcafe chrome testCafe/summary/basetests.js --selector-timeout 1500 --reporter minimal --debug-mode\"",
+    "testcafe:file": "concurrently \"http-server --silent\" \"testcafe chrome testCafe/tabulator/basetests.js --selector-timeout 1500 --reporter minimal --debug-mode\"",
     "release": "standard-version --message \"Release: %s [skip ci]\" ",
     "doc_gen": "node doc_generator/lib_docgenerator.js src/index.ts",
     "doc_update": "chmod +x ./docupdate_npm.sh && ./docupdate_npm.sh",
@@ -16,7 +16,7 @@
     "lint": "eslint ./src --quiet",
     "pre-push-check": "npm run lint && npm run test"
   },
-  "version": "1.9.31",
+  "version": "1.9.32",
   "name": "survey-analytics",
   "description": "SurveyJS analytics Library.",
   "main": "survey.analytics.js",

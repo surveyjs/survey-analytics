@@ -155,7 +155,7 @@ export class Tabulator extends Table {
         "button",
         "sa-table__btn sa-table__btn--small sa-table__btn--gray",
         {
-          innerHTML: caption,
+          innerText: caption,
           onclick: () => {
             this.download(type);
           },
@@ -237,7 +237,7 @@ export class Tabulator extends Table {
   ): HTMLElement {
     var container = DocumentHelper.createElement("div");
     var title = DocumentHelper.createElement("span", "", {
-      innerHTML: cell.getValue(),
+      innerText: cell.getValue(),
     });
     var actions = this.getHeaderActions(columnName);
     container.appendChild(actions);

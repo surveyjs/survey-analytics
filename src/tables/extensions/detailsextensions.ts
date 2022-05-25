@@ -29,9 +29,8 @@ export class Details {
       .filter((column) => column.location === QuestionLocation.Row && column)
       .forEach((column) => {
         var row = DocumentHelper.createElement("tr", "sa-table__detail");
-        var td1 = DocumentHelper.createElement("td", "", {
-          innerHTML: column.displayName,
-        });
+        var td1 = DocumentHelper.createElement("td");
+        td1.appendChild(document.createTextNode(column.displayName));
         var td2 = DocumentHelper.createElement("td");
         td2.textContent = this.row.getRowData()[column.name];
         if(column.dataType === ColumnDataType.Image) {
@@ -62,9 +61,9 @@ export class Details {
   protected createShowAsColumnButton = (columnName: string): HTMLElement => {
     const button = DocumentHelper.createElement(
       "button",
-      "sa-table__btn sa-table__btn--gray",
-      { innerHTML: localization.getString("showAsColumn") }
+      "sa-table__btn sa-table__btn--gray"
     );
+    button.appendChild(document.createTextNode(localization.getString("showAsColumn")));
     button.onclick = (e) => {
       e.stopPropagation();
       this.table.setColumnLocation(columnName, QuestionLocation.Column);

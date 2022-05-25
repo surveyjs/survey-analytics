@@ -165,7 +165,7 @@ export class SelectBase
 
   private updateEmptyAnswersBtn() {
     if (!!this.emptyAnswersBtn) {
-      this.emptyAnswersBtn.innerHTML = this._hideEmptyAnswers
+      this.emptyAnswersBtn.innerText = this._hideEmptyAnswers
         ? localization.getString("showEmptyAnswers")
         : localization.getString("hideEmptyAnswers");
       if (this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "scatter") {
@@ -178,7 +178,7 @@ export class SelectBase
 
   private updateTransposeDataBtn() {
     if (!!this.transposeDataBtn) {
-      this.transposeDataBtn.innerHTML = this.transposeData
+      this.transposeDataBtn.innerText = this.transposeData
         ? localization.getString("showPerColumns")
         : localization.getString("showPerValues");
       if (this.getSeriesValues().length > 0) {
@@ -210,7 +210,7 @@ export class SelectBase
 
   private updateShowPercentageBtn() {
     if (!!this.showPercentageBtn) {
-      this.showPercentageBtn.innerHTML = this._showPercentages
+      this.showPercentageBtn.innerText = this._showPercentages
         ? localization.getString("hidePercentages")
         : localization.getString("showPercentages");
       if (this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "stackedbar") {
@@ -231,7 +231,7 @@ export class SelectBase
 
   private updateMissingAnswersBtn() {
     if (!!this.missingAnswersBtn) {
-      this.missingAnswersBtn.innerHTML = this._showMissingAnswers
+      this.missingAnswersBtn.innerText = this._showMissingAnswers
         ? localization.getString("hideMissingAnswers")
         : localization.getString("showMissingAnswers");
     }

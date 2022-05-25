@@ -46,8 +46,11 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
   protected getDataType(): ColumnDataType {
     return ColumnDataType.Text;
   }
-  protected getDiplayValueCore(data: any, table: Table, options: ITableOptions) {
-    let displayValue = data[this.name];
+  protected getDisplayValueCore(data: any) {
+    return data[this.name];
+  }
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
+    let displayValue = this.getDisplayValueCore(data);
     const question = this.question;
     const onReadyChangedCallback = (sender, options) => {
       if(options.isReady) {
@@ -68,9 +71,7 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
     }
     return displayValue;
   }
-
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
-    const displayValue = this.getDiplayValueCore(data, table, options);
+  private formatDisplayValue(displayValue: any) {
     return typeof displayValue === "string"
       ? displayValue
       : JSON.stringify(displayValue) || "";
@@ -78,7 +79,7 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
 
   public getCellData(table: Table, data: any): ICellData {
     const displayValue = this.getDisplayValue(data, table, table.options);
-    return { question: this.question, displayValue };
+    return { question: this.question, displayValue: this.formatDisplayValue(displayValue) };
   }
   public toJSON(): IColumnData {
     return {
@@ -99,7 +100,7 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
 
 export class DefaultColumn extends BaseColumn {
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
-    return data[this.name];
+    return this.getDisplayValueCore(data);
   }
 }
 
@@ -140,8 +141,10 @@ export class MatrixColumn extends BaseColumn<QuestionMatrixModel> {
     let displayValue = data[this.valueName];
     if(this.valuePath && typeof displayValue === "object") {
       displayValue = displayValue[this.valuePath];
-      const choiceValue = ItemValue.getItemByValue(this.question.columns, displayValue);
-      displayValue = options.useValuesAsLabels ? choiceValue.value : choiceValue.locText.textOrHtml;
+      if(displayValue !== undefined) {
+        const choiceValue = ItemValue.getItemByValue(this.question.columns, displayValue);
+        displayValue = options.useValuesAsLabels ? choiceValue.value : choiceValue.locText.textOrHtml;
+      }
     }
     return displayValue;
   }
@@ -158,7 +161,7 @@ export class FileColumn extends BaseColumn<QuestionFileModel> {
     return ColumnDataType.FileLink;
   }
   protected getDisplayValue(data: any, table: Table, options: ITableOptions) {
-    let displayValue = this.getDiplayValueCore(data, table, options);
+    let displayValue = this.getDisplayValueCore(data);
     if (Array.isArray(displayValue)) {
       displayValue = Table.showFilesAsImages ? createImagesContainer(
         displayValue

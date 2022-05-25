@@ -476,6 +476,39 @@ test("Fill columns data for question matrix", () => {
   expect(tableData[0]["q1.Row 2"]).toEqual("Column 2 text");
 });
 
+test("Fill columns data for question matrix - has unanswered rows https://github.com/surveyjs/survey-analytics/issues/246", () => {
+  const json = {
+    "pages": [
+      {
+        "name": "page1",
+        "elements": [
+          {
+            "type": "matrix",
+            "name": "q1",
+            "columns": [
+              "Column 1",
+              { value: "Column 2", text: "Column 2 text" },
+              "Column 3"
+            ],
+            "rows": [
+              "Row 1",
+              "Row 2"
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [{
+    "q1": {
+      "Row 2": "Column 2"
+    }
+  }], {}, []);
+  const tableData: Array<any> = (<any>table).tableData;
+  expect(tableData[0]["q1.Row 1"]).toEqual("");
+});
+
 test("Check table get/set state for columns", () => {
   const json = {
     "elements": [

@@ -25,7 +25,7 @@ SurveyAnalyticsDatatables.TableExtensions.registerExtension({
       "button",
       "rounded-button",
       {
-        innerHTML: "Show in Survey",
+        innerText: "Show in Survey",
         onclick: (e) => {
           e.stopPropagation();
         },
@@ -44,7 +44,7 @@ SurveyAnalyticsDatatables.TableExtensions.registerExtension({
       "button",
       "rounded-button rounded-button--danger",
       {
-        innerHTML: "Delete Result",
+        innerText: "Delete Result",
         onclick: (e) => {
           e.stopPropagation();
           opt.row.remove();

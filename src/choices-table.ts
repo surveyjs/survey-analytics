@@ -21,7 +21,7 @@ export class ChoicesTableAdapter {
     const hasSeries = seriesLabels.length > 1;
 
     const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
-      innerHTML: localization.getString("noResults"),
+      innerText: localization.getString("noResults"),
     });
 
     if (datasets.length === 0 || datasets[0].length === 0) {

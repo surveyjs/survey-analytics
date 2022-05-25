@@ -290,7 +290,7 @@ export class VisualizerBase implements IDataInfo {
     if (!!this.options && typeof this.options.renderContent === "function") {
       this.options.renderContent(container, this);
     } else {
-      container.innerHTML = localization.getString("noVisualizerForQuestion");
+      container.innerText = localization.getString("noVisualizerForQuestion");
     }
     this.afterRender(container);
   }

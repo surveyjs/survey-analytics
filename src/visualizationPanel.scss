@@ -78,6 +78,8 @@
   vertical-align: middle;
   cursor: pointer;
   border: 1px solid transparent;
+  white-space: nowrap;
+
   &:hover {
     border-color: $border-color;
     background-blend-mode: darken;

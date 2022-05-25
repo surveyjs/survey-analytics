@@ -154,10 +154,7 @@ export function createCommercialLicenseLink() {
     "span",
     "sa-commercial__product",
     {
-      innerHTML: `Please purchase a SurveyJS Analytics developer license
-        to
-        use it in your
-        app.`,
+      innerText: "Please purchase a SurveyJS Analytics developer license to use it in your app.",
     }
   );
   container.appendChild(link).appendChild(containerSpan);
@@ -217,7 +214,7 @@ export function createLinksContainer(
   links.forEach((link) => {
     linksContainer.appendChild(
       DocumentHelper.createElement("a", "", {
-        innerHTML: link.name,
+        innerText: link.name,
         download: link.name,
         href: link.content,
       })
