@@ -1,15 +1,17 @@
-import { SurveyModel, Question, Event, settings, QuestionSelectBase, QuestionMatrixModel, ItemValue } from "survey-core";
+import { SurveyModel, Question, Event, settings, QuestionSelectBase, QuestionMatrixModel, ItemValue, JsonError } from "survey-core";
 import {
   IPermission,
   QuestionLocation,
-  ColumnDataType,
   ITableState,
-  ITableColumn,
+  IColumn,
+  IColumnData,
 } from "./config";
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { TableExtensions } from "./extensions/tableextensions";
 import { createCommercialLicenseLink, createImagesContainer, createLinksContainer, DocumentHelper } from "../utils";
+import { ColumnsBuilderFactory } from "./columnbuilder";
+import { DefaultColumn } from "./columns";
 
 export interface ITableOptions {
   [index: string]: any;
@@ -36,32 +38,33 @@ export abstract class Table {
   protected tableData: any;
   protected extensions: TableExtensions;
   private haveCommercialLicense = false;
+  protected _columns: Array<IColumn>;
   constructor(
-    protected survey: SurveyModel,
+    protected _survey: SurveyModel,
     protected data: Array<Object>,
-    protected options: ITableOptions = {},
-    protected _columns: Array<ITableColumn> = []
+    protected _options: ITableOptions = {},
+    protected _columnsData: Array<IColumnData> = []
   ) {
-    if(!this.options) {
-      this.options = {};
+    if(!this._options) {
+      this._options = {};
     }
 
-    if (_columns.length === 0) {
-      this._columns = this.buildColumns(survey);
-    }
+    this._columns = this.buildColumns(_survey);
     this.initTableData(data);
-    localization.currentLocale = this.survey.locale;
+    localization.currentLocale = this._survey.locale;
+    this._columns = this.buildColumns(_survey);
 
-    if (_columns.length === 0) {
-      this._columns = this.buildColumns(survey);
+    if(_columnsData.length !== 0) {
+      this.updateColumnsFromData(this._columnsData);
     }
+
     this.extensions = new TableExtensions(this);
 
     this.haveCommercialLicense =
       Table.haveCommercialLicense ||
-      (!!options &&
-        (typeof options.haveCommercialLicense !== "undefined"
-          ? options.haveCommercialLicense
+      (!!_options &&
+        (typeof _options.haveCommercialLicense !== "undefined"
+          ? _options.haveCommercialLicense
           : false));
   }
   protected renderResult: HTMLElement;
@@ -92,6 +95,12 @@ export abstract class Table {
 
   public getData() {
     return this.data;
+  }
+  public get survey() {
+    return this._survey;
+  }
+  public get options() {
+    return this._options;
   }
 
   public abstract applyFilter(value: string): void;
@@ -144,67 +153,20 @@ export abstract class Table {
     this._rows = [];
   }
 
-  protected get useNamesAsTitles() {
-    return this.options && this.options.useNamesAsTitles === true;
+  public get useNamesAsTitles() {
+    return this._options && this._options.useNamesAsTitles === true;
   }
 
   protected buildColumns = (survey: SurveyModel) => {
-    let columns: Array<ITableColumn> = [];
-    this.survey.getAllQuestions().forEach((question: Question) => {
-      let dataType = ColumnDataType.Text;
-      if (question.getType() === "matrix") {
-        (<QuestionMatrixModel>question).rows.forEach(row => {
-          columns.push({
-            name: question.name + "." + row.value,
-            displayName:
-              (this.useNamesAsTitles
-                ? question.name
-                : (question.title || "").trim() || question.name) + " - " + (this.useNamesAsTitles ? row.value : row.locText.textOrHtml),
-            dataType,
-            isVisible: true,
-            isPublic: true,
-            location: QuestionLocation.Column,
-          });
-        });
-        return;
-      }
-      if (question.getType() === "file") {
-        dataType = ColumnDataType.FileLink;
-      }
-      if (question.getType() === "signaturepad") {
-        dataType = ColumnDataType.Image;
-      }
-      columns.push({
-        name: question.name,
-        displayName: this.useNamesAsTitles
-          ? question.name
-          : (question.title || "").trim() || question.name,
-        dataType,
-        isVisible: true,
-        isPublic: true,
-        location: QuestionLocation.Column,
-      });
-      if (
-        question.hasComment ||
-        (question.hasOther && (<QuestionSelectBase>question)["getStoreOthersAsComment"]())
-      ) {
-        columns.push({
-          name: `${question.name}${settings.commentPrefix}`,
-          displayName: question.hasOther
-            ? (<any>question).otherText
-            : question.commentText,
-          isComment: true,
-          dataType,
-          isVisible: true,
-          isPublic: true,
-          location: QuestionLocation.Column,
-        });
-      }
+    let columns: Array<IColumn> = [];
+    this._survey.getAllQuestions().forEach((question: Question) => {
+      const builder = ColumnsBuilderFactory.Instance.getColumnsBuilder(question.getType());
+      columns = columns.concat(builder.buildColumns(question, this));
     });
     return columns;
   };
 
-  public isColumnVisible(column: ITableColumn) {
+  public isColumnVisible(column: IColumn) {
     if (column.location !== QuestionLocation.Column) return false;
     return column.isVisible;
   }
@@ -213,66 +175,20 @@ export abstract class Table {
     return [].concat(this._columns);
   }
 
-  public set columns(columns: Array<ITableColumn>) {
+  public set columns(columns: Array<IColumn>) {
     this._columns = columns;
     this.refresh(true);
     this.onStateChanged.fire(this, this.state);
   }
 
   protected initTableData(data: Array<any>) {
-    const onReadyChangedCallback = (sender, options) => {
-      if(options.isReady) {
-        this.refresh(true);
-        sender.onReadyChanged.remove(onReadyChangedCallback);
-      }
-    };
     this.tableData = (data || []).map((item) => {
       var dataItem: any = {};
-      this.survey.data = item;
+      this._survey.data = item;
       this._columns.forEach((column) => {
-        const [valueName, valuePath] = column.name.split(".");
-        var displayValue = item[valueName];
-        const question = this.survey.getQuestionByName(valueName);
-
-        if(valuePath && typeof displayValue === "object") {
-          displayValue = displayValue[valuePath];
-          if (displayValue !== undefined && question.getType() === "matrix") {
-            const choiceValue = ItemValue.getItemByValue((<QuestionMatrixModel>question).columns, displayValue);
-            displayValue = this.options.useValuesAsLabels ? choiceValue.value : choiceValue.locText.textOrHtml;
-          }
-        } else {
-          if (question) {
-            if (column.isComment) {
-              displayValue = question.comment;
-            } else if (this.options.useValuesAsLabels) {
-              displayValue = question.value;
-            } else {
-              if(question.isReady) {
-                displayValue = question.displayValue;
-              } else {
-                question.onReadyChanged.add(onReadyChangedCallback);
-              }
-            }
-          }
-        }
-
-        if (column.dataType === ColumnDataType.FileLink) {
-          if (Array.isArray(displayValue)) {
-            dataItem[column.name] = Table.showFilesAsImages ? createImagesContainer(
-              displayValue
-            ).outerHTML : createLinksContainer(
-              displayValue
-            ).outerHTML;
-          }
-        } else {
-          dataItem[column.name] =
-            typeof displayValue === "string"
-              ? displayValue
-              : JSON.stringify(displayValue) || "";
-        }
-        const opt = { question: question, displayValue: dataItem[column.name] };
-        if (typeof this.options.onGetQuestionValue === "function") {
-          this.options.onGetQuestionValue(opt);
+        const opt = column.getCellData(this, item);
+        if (typeof this._options.onGetQuestionValue === "function") {
+          this._options.onGetQuestionValue(opt);
         }
         dataItem[column.name] = opt.displayValue;
       });
@@ -296,7 +212,7 @@ export abstract class Table {
     this.onStateChanged.fire(this, this.state);
   }
 
-  public getColumnByName(columnName: string): ITableColumn {
+  public getColumnByName(columnName: string): IColumn {
     return this._columns.filter((column) => column.name === columnName)[0];
   }
 
@@ -334,14 +250,14 @@ export abstract class Table {
    * Sets locale for table.
    */
   public set locale(newLocale: string) {
-    this.survey.locale = newLocale;
+    this._survey.locale = newLocale;
     localization.currentLocale = newLocale;
     this.refresh(true);
     this.onStateChanged.fire(this, this.state);
   }
 
   public getLocales(): Array<string> {
-    return [].concat(this.survey.getUsedLocales());
+    return [].concat(this._survey.getUsedLocales());
   }
 
   public refresh(hard: boolean = false) {
@@ -375,7 +291,7 @@ export abstract class Table {
   public get state(): ITableState {
     return {
       locale: localization.currentLocale,
-      elements: [].concat(this._columns),
+      elements: JSON.parse(JSON.stringify(this._columns)),
       pageSize: this.currentPageSize,
     };
   }
@@ -387,16 +303,37 @@ export abstract class Table {
 
     if (typeof newState.locale !== "undefined") {
       localization.currentLocale = newState.locale;
-      this.survey.locale = newState.locale;
+      this._survey.locale = newState.locale;
       this.initTableData(this.data);
     }
 
     if (typeof newState.elements !== "undefined")
-      this._columns = newState.elements;
-
+      this.updateColumnsFromData(newState.elements);
     if (typeof newState.pageSize !== "undefined")
       this.currentPageSize = newState.pageSize;
   }
+
+  private updateColumnsFromData(columnsData: Array<IColumnData>) {
+    const columns = this._columns;
+    columns.forEach(column => {
+      const el = columnsData.filter(el => column.name === el.name)[0];
+      if(!!el) {
+        column.fromJSON(el);
+        column.visibleIndex = columnsData.indexOf(el);
+      }
+    });
+    columnsData.forEach(el => {
+      let column = columns.filter(column => column.name === el.name)[0];
+      if(!column) {
+        column = new DefaultColumn(undefined, this);
+        column.fromJSON(el);
+        column.visibleIndex = columnsData.indexOf(el);
+        columns.push(column);
+      }
+    });
+    this._columns = this._columns.sort((col1, col2) => col1.visibleIndex - col2.visibleIndex);
+  }
+
   /**
    * Fires when table state changed.
    */
@@ -409,7 +346,7 @@ export abstract class Table {
    * Gets table permissions.
    */
   public get permissions(): IPermission[] {
-    return <any>this._columns.map((column: ITableColumn) => {
+    return <any>this._columns.map((column: IColumn) => {
       return {
         name: column.name,
         isPublic: column.isPublic,
@@ -420,13 +357,13 @@ export abstract class Table {
    * Sets table permissions.
    */
   public set permissions(permissions: IPermission[]) {
-    const updatedElements = this._columns.map((column: ITableColumn) => {
+    const updatedElements = this._columns.map((column: IColumn) => {
       permissions.forEach((permission) => {
         if (permission.name === column.name)
           column.isPublic = permission.isPublic;
       });
 
-      return { ...column };
+      return column;
     });
     this._columns = [].concat(updatedElements);
     this.onPermissionsChangedCallback &&

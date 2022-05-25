@@ -1,6 +1,6 @@
 import { SurveyModel, QuestionTextModel } from "survey-core";
 import { Table } from "../../src/tables/table";
-import { ColumnDataType, ITableState } from "../../src/tables/config";
+import { ColumnDataType, ITableState, QuestionLocation } from "../../src/tables/config";
 const json = {
   questions: [
     {
@@ -507,4 +507,94 @@ test("Fill columns data for question matrix - has unanswered rows https://github
   }], {}, []);
   const tableData: Array<any> = (<any>table).tableData;
   expect(tableData[0]["q1.Row 1"]).toEqual("");
+});
+
+test("Check table get/set state for columns", () => {
+  const json = {
+    "elements": [
+      {
+        name: "q1",
+        "type": "text",
+      },
+      {
+        name: "q2",
+        type: "dropdown"
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  let table = new TableTest(survey, [{
+    "q1": "q1_value",
+    "q2": "q2_value"
+  }], {}, []);
+  const state = table.state;
+  expect(JSON.stringify(table.state)).toBe("{\"locale\":\"\",\"elements\":[{\"name\":\"q1\",\"displayName\":\"q1\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":0},{\"name\":\"q2\",\"displayName\":\"q2\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":0}],\"pageSize\":5}");
+  survey.getQuestionByName("q2").hasComment = true;
+  table = new TableTest(survey, [{
+    "q1": "q1_value",
+    "q2": "q2_value",
+    "q2-Comment": "r32r2r23r23r",
+  }], {}, []);
+  state.elements[0].displayName = "q1_changed";
+  state.elements[0].location = QuestionLocation.Row;
+  state.elements[1].isVisible = false;
+
+  state.elements = [state.elements[1], state.elements[0]];
+  state.elements.push(
+    {
+      name: "q3",
+      displayName: "not currently existed",
+      dataType: ColumnDataType.Text,
+      location: 0,
+      isVisible: true,
+      isPublic: false,
+    }
+  );
+  table.state = state;
+
+  expect(JSON.stringify(table.columns)).toBe("[{\"name\":\"q2\",\"displayName\":\"q2\",\"dataType\":0,\"isVisible\":false,\"isPublic\":true,\"location\":0},{\"name\":\"q1\",\"displayName\":\"q1_changed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":1},{\"name\":\"q2-Comment\",\"displayName\":\"Other (describe)\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":0},{\"name\":\"q3\",\"displayName\":\"not currently existed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":false,\"location\":0}]");
+});
+
+test("check pass columns data via constructor", () => {
+  const json = {
+    "elements": [
+      {
+        name: "q1",
+        "type": "text",
+      },
+      {
+        name: "q2",
+        type: "dropdown"
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  let table = new TableTest(survey, [{
+    "q1": "q1_value",
+    "q2": "q2_value"
+  }], {}, []);
+  const state = table.state;
+  state.elements[0].displayName = "q1_changed";
+  state.elements[0].location = QuestionLocation.Row;
+  state.elements[1].isVisible = false;
+
+  state.elements = [state.elements[1], state.elements[0]];
+  state.elements.push(
+    {
+      name: "q3",
+      displayName: "not currently existed",
+      dataType: ColumnDataType.Text,
+      location: 0,
+      isVisible: true,
+      isPublic: false,
+    }
+  );
+  survey.getQuestionByName("q2").hasComment = true;
+  table = new TableTest(survey, [{
+    "q1": "q1_value",
+    "q2": "q2_value",
+    "q2-Comment": "r32r2r23r23r",
+  }], {}, state.elements);
+
+  expect(JSON.stringify(table.columns)).toBe("[{\"name\":\"q2\",\"displayName\":\"q2\",\"dataType\":0,\"isVisible\":false,\"isPublic\":true,\"location\":0},{\"name\":\"q1\",\"displayName\":\"q1_changed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":1},{\"name\":\"q2-Comment\",\"displayName\":\"Other (describe)\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":0},{\"name\":\"q3\",\"displayName\":\"not currently existed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":false,\"location\":0}]");
 });
