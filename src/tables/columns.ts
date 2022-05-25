@@ -1,4 +1,4 @@
-import { ItemValue, MatrixRowModel, Question, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, settings, SurveyModel } from "survey-core";
+import { ItemValue, MatrixRowModel, Question, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, settings } from "survey-core";
 import { createImagesContainer, createLinksContainer } from "../utils";
 import { ICellData, IColumn, ColumnDataType, QuestionLocation, IColumnData } from "./config";
 import { ITableOptions, Table } from "./table";
@@ -119,10 +119,11 @@ export class CommentColumn extends BaseColumn {
 }
 
 export class MatrixColumn extends BaseColumn<QuestionMatrixModel> {
+  private valueName: string;
   private valuePath: string;
   constructor(question: QuestionMatrixModel, private row: MatrixRowModel, table: Table) {
     super(question, table);
-    [this.valuePath] = this.name.split(".").slice(1);
+    [this.valueName, this.valuePath] = this.name.split(".");
   }
   protected getName(): string {
     return this.question.name + "." + this.row?.value;
@@ -137,7 +138,7 @@ export class MatrixColumn extends BaseColumn<QuestionMatrixModel> {
   }
 
   protected getDisplayValue(data: any, table: Table, options: ITableOptions) {
-    let displayValue = data[this.question.name];
+    let displayValue = data[this.valueName];
     if(this.valuePath && typeof displayValue === "object") {
       displayValue = displayValue[this.valuePath];
       if(displayValue !== undefined) {
@@ -171,7 +172,6 @@ export class FileColumn extends BaseColumn<QuestionFileModel> {
     return displayValue;
   }
 }
-
 export class MatrixDropdownColumn extends BaseColumn<QuestionMatrixDropdownModel> {
   private rowValue: string;
   private colName: string;
