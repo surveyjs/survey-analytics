@@ -89,7 +89,7 @@ test("check show/hide percentages", async (t) => {
   //check that percentages are shown when button is clicked
   await t.click(Selector("span").withText("Show percentages"));
   var valuesInsideBars = await getValuesInsideBars();
-  await t.expect(valuesInsideBars).eql(["2 (40%)", "2 (40%)", "1 (20%)"]);
+  await t.expect(valuesInsideBars).eql(["2 (40%)", "1 (20%)", "2 (40%)"]);
 
   //check that percentage are hided when button is double-clicked
   await t.click(Selector("span").withText("Hide percentages"));
@@ -184,7 +184,7 @@ test("check ordering", async (t) => {
   await initSummary(json, data.concat({ radio: 1 }), options);
 
   //check default order
-  assert.deepEqual(await getYAxisValues(), ["Other", "One", "Two"]);
+  assert.deepEqual(await getYAxisValues(), ["Other", "Two", "One"]);
   assert.deepEqual(
     (await getColorsOrder()).map((color) => {
       return RGBToHex(color);
@@ -199,7 +199,7 @@ test("check ordering", async (t) => {
     (await getColorsOrder()).map((color) => {
       return RGBToHex(color);
     }),
-    ["#3999fb", "#86e1fb", "#ff6771"]
+    ["#ff6771", "#86e1fb", "#3999fb"]
   );
 
   //check descending order
@@ -209,6 +209,5 @@ test("check ordering", async (t) => {
     (await getColorsOrder()).map((color) => {
       return RGBToHex(color);
     }),
-    ["#ff6771", "#86e1fb", "#3999fb"]
-  );
+    ["#3999fb", "#86e1fb", "#ff6771"]);
 });

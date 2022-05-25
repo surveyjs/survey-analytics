@@ -61,10 +61,10 @@ test.skip("check use values as labels for rows", async (t) => {
 });
 
 test("check use values as labels for columns", async (t) => {
-  assert.deepEqual(await getLegendValues(), ["Column 1", "Column 2"]);
+  assert.deepEqual(await getLegendValues(), ["Column 1", "Column 2"].reverse());
   var options = { useValuesAsLabels: true };
   await initSummary(json, data, options);
-  assert.deepEqual(await getLegendValues(), ["column1", "column2"]);
+  assert.deepEqual(await getLegendValues(), ["column1", "column2"].reverse());
 });
 
 test("check show/hide percentages", async (t) => {
@@ -83,8 +83,8 @@ test("check show/hide percentages", async (t) => {
 
   //check that percentages are shown when button is clicked
   await t.click(Selector("span").withText("Show percentages"));
-  assert.deepEqual(await getValuesInsideBars(1), ["2 (67%)", "1 (33%)"]);
-  assert.deepEqual(await getValuesInsideBars(2), ["1 (33%)", "2 (67%)"]);
+  assert.deepEqual(await getValuesInsideBars(1), ["2 (67%)", "1 (33%)"].reverse());
+  assert.deepEqual(await getValuesInsideBars(2), ["1 (33%)", "2 (67%)"].reverse());
 
   //check that percentage are hided when button is double-clicked
   await t.click(Selector("span").withText("Hide percentages"));
