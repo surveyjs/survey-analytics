@@ -1,5 +1,5 @@
-import { Question, QuestionFileModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
-import { BaseColumn, CommentColumn, FileColumn, ImageColumn, MatrixColumn } from "./columns";
+import { Question, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
+import { BaseColumn, CommentColumn, FileColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn } from "./columns";
 import { IColumn } from "./config";
 import { Table } from "./table";
 
@@ -69,3 +69,17 @@ export class FileColumnsBuilder extends DefaultColumnsBuilder<QuestionFileModel>
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("file", new FileColumnsBuilder());
+
+export class MatrixDropdownColumnBuilder extends DefaultColumnsBuilder {
+  public buildColumns(questionBase: QuestionMatrixDropdownModel, table: Table): Array<IColumn> {
+    const question = <QuestionMatrixDropdownModel>questionBase;
+    const columns = [];
+    question.rows.forEach(row => {
+      question.columns.forEach(col => {
+        columns.push(new MatrixDropdownColumn(question, row, col, table));
+      });
+    });
+    return columns;
+  }
+}
+ColumnsBuilderFactory.Instance.registerBuilderColumn("matrixdropdown", new MatrixDropdownColumnBuilder());
