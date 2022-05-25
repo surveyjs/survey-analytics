@@ -236,7 +236,7 @@ export abstract class Table {
 
         if(valuePath && typeof displayValue === "object") {
           displayValue = displayValue[valuePath];
-          if (question.getType() === "matrix") {
+          if (displayValue !== undefined && question.getType() === "matrix") {
             const choiceValue = ItemValue.getItemByValue((<QuestionMatrixModel>question).columns, displayValue);
             displayValue = this.options.useValuesAsLabels ? choiceValue.value : choiceValue.locText.textOrHtml;
           }
