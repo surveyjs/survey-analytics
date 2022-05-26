@@ -57,11 +57,11 @@ test("valuesSource method", () => {
 });
 
 test("getValues method", () => {
-  expect(matrix.getValues()).toEqual(matrixJson.choices);
+  expect(matrix.getValues()).toEqual(matrixJson.choices.reverse());
 });
 
 test("getLabels method", () => {
-  expect(matrix.getLabels()).toEqual(matrixJson.choices);
+  expect(matrix.getLabels()).toEqual(matrixJson.choices.reverse());
 });
 
 test("getSeriesValues method", () => {
@@ -84,7 +84,7 @@ test("getData method", () => {
     [0, 0, 1],
     [0, 0, 1],
     [0, 0, 0],
-  ]);
+  ].reverse());
 });
 
 test("check getPercentages method", () => {
@@ -95,7 +95,7 @@ test("check getPercentages method", () => {
     [0, 0, 33],
     [0, 0, 33],
     [0, 0, 0],
-  ]);
+  ].reverse());
 });
 
 test("SupportMissingAnswers", () => {

@@ -366,6 +366,10 @@ export class SelectBase
 
   onDataItemSelected: (selectedValue: any, selectedText: string) => void;
 
+  get showValuesInOriginalOrder() {
+    return this.options.showValuesInOriginalOrder !== false;
+  }
+
   valuesSource(): Array<ItemValue> {
     const question = <QuestionSelectBase>this.question;
     return question["activeChoices"];
@@ -377,10 +381,13 @@ export class SelectBase
     );
 
     if (this.question.hasOther) {
-      values.unshift("other");
+      values.push("other");
     }
     if (this.showMissingAnswers) {
-      values.push(undefined);
+      values.unshift(undefined);
+    }
+    if (this.showValuesInOriginalOrder) {
+      return values.reverse();
     }
     return values;
   }
@@ -394,10 +401,13 @@ export class SelectBase
     );
     const selBase = <QuestionSelectBase>this.question;
     if (selBase.hasOther) {
-      labels.unshift(selBase.otherText);
+      labels.push(selBase.otherText);
     }
     if (this.showMissingAnswers) {
-      labels.push(localization.getString("missingAnswersLabel"));
+      labels.unshift(localization.getString("missingAnswersLabel"));
+    }
+    if (this.showValuesInOriginalOrder) {
+      return labels.reverse();
     }
     return labels;
   }

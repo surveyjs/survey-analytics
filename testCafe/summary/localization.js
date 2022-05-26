@@ -54,7 +54,7 @@ test("check change locale", async (t) => {
 
   assert.deepEqual(
     await getYAxisValues(),
-    json.questions[0].choices.map((choice) => choice.text.ru)
+    json.questions[0].choices.map((choice) => choice.text.ru).reverse()
   );
 
   await t
@@ -67,7 +67,7 @@ test("check change locale", async (t) => {
 
   assert.deepEqual(
     await getYAxisValues(),
-    json.questions[0].choices.map((choice) => choice.text.default)
+    json.questions[0].choices.map((choice) => choice.text.default).reverse()
   );
   await t
     .expect(Selector(".sa-question__title").innerText)
@@ -84,7 +84,7 @@ test("check set locale from state", async (t) => {
 
   assert.deepEqual(
     await getYAxisValues(),
-    json.questions[0].choices.map((choice) => choice.text.default)
+    json.questions[0].choices.map((choice) => choice.text.default).reverse()
   );
   await t
     .expect(Selector(".sa-question__select").withText("Change Locale").exists)
