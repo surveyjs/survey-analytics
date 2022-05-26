@@ -1,97 +1,37 @@
-# Analytics Library for SurveyJS
+# SurveyJS Analytics Overview
 
-SurveyJS Analytics library allows to render survey results <br/> as charts or tables
+SurveyJS Analytics visualizes survey results and allows users to analyze them.
+
+![SurveyJS Analytics](images/survey-analytics-note.png)
 
 ## Features
 
-* Count answers and render results as charts for the select type questions
-* Count answers and render results as gauge for range type question
-* Three different types of charts: bar, pie and line
-* Wordcloud for text questions representation
-* Interactive filtering for the select type questions
-* Flexible layout and customizable colors
+- Supported chart types:
+  - Bar
+  - Pie
+  - Line
+  - Gauge
+  - Bullet
+  - Scatter
+  - Word cloud
+- Interactive filtering
+- Customizable colors
+- Dynamic layout
+- Chart reordering via drag and drop
 
-## Screenshots
+## Get Started
 
-![SurveyJS Analytics example page 1](https://raw.githubusercontent.com/surveyjs/survey-analytics/master/docs/images/survey-analytics-page-1.png)
-![SurveyJS Analytics example page 2](https://raw.githubusercontent.com/surveyjs/survey-analytics/master/docs/images/survey-analytics-page-2.png)
+- [Angular](/Documentation/Analytics?id=get-started-angular)
+- [Vue](/Documentation/Analytics?id=get-started-vue)
+- [React](/Documentation/Analytics?id=get-started-react)
+- [Knockout / jQuery](/Documentation/Analytics?id=get-started-knockout-jquery)
 
-## Usage (modern ES, modules)
-```javascript
-import * as SurveyAnalytics from "survey-analytics";
-```
+We also include multiple [demo examples](/Examples/Analytics) that allow you to edit and copy code.
 
-## Usage (ES5, scripts)
+## What's New
 
-Add these scripts to your web page
+Visit our [What's New page](/WhatsNew) for information on new features, recent bug fixes, and latest additions.
 
-```html
+## Licensing
 
-    <link rel="stylesheet" type="text/css" href="../packages/survey.analytics.css" />
-
-    <script src="https://cdn.rawgit.com/inexorabletash/polyfill/master/typedarray.js"></script>
-
-    <script src="https://polyfill.io/v3/polyfill.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/c3@0.7.1/c3.css" />
-
-    <script src="https://unpkg.com/d3@5.9.2/dist/d3.min.js"></script>
-    <script src="https://unpkg.com/c3@0.7.1/c3.js"></script>
-
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
-    <script src="https://unpkg.com/wordcloud@1.1.0/src/wordcloud2.js"></script>
-
-    <script src="../node_modules/survey-core/survey.core.js"></script>
-    <script src="../packages/survey.analytics.js"></script>
-
-```
-
-```javascript
-var surveyId = "your survey Id";
-var accessKey = "your access key";
-
-var survey = new Survey.SurveyModel({ surveyId: surveyId });
-
-var xhr = new XMLHttpRequest();
-xhr.open(
-  "GET",
-  "http://surveyjs.io/api/MySurveys/getSurveyResults/" +
-    surveyId +
-    "?accessKey=" +
-    accessKey
-);
-xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-xhr.onload = function () {
-  var result = xhr.response ? JSON.parse(xhr.response) : [];
-
-  var visPanel = new SurveyAnalytics.VisualizationPanel(
-    survey.getAllQuestions(),
-    data
-  );
-  visPanel.showHeader = true;
-  visPanel.render(document.getElementById("summaryContainer"));
-};
-xhr.send();
-```
-
-Please check the following setting in your "tsconfig.json" file (this setting is need for used charting library):
-
-```JSON
-    "module": "es2015",
-```
-
-## Examples
-
-* [NPS survey results summary](https://surveyjs.io/Examples/Library/?id=analytics-nps)
-* [NPS survey results summary (new)](https://surveyjs.io/Examples/Analytics/?id=analytics-nps)
-
-## Constraints
-
-* Wisualization for custom widgets is not implemented
-
-## License
-
-[Commercial](https://surveyjs.io/Home/Licenses#Analytics)
+SurveyJS Analytics is **not available for free commercial usage**. If you want to integrate it into your application, you must purchase a [commercial license](/Licenses#SurveyCreator).
