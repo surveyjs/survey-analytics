@@ -28,7 +28,7 @@ export interface IVisualizerPanelRenderedElement
 
 /**
  * Visualization Panel configuration. Pass it as the third argument to the `VisualizationPanel` constructor:
- * 
+ *
  * ```js
  * const vizPanel = new SurveyAnalytics.VisualizationPanel(surveyQuestions, surveyResults, vizPanelOptions);
  * ```
@@ -42,13 +42,13 @@ export interface IVisualizationPanelOptions {
   /**
    * The number of label characters after which truncation starts.
    * Set this property to -1 to disable truncation.
-   * 
+   *
    * Default value: 27
    */
   labelTruncateLength?: number;
-  
+
   allowMakeQuestionsPrivate?: boolean;
-  
+
   seriesValues?: string[];
   seriesLabels?: string[];
   useValuesAsLabels?: boolean;
@@ -64,34 +64,34 @@ export interface IVisualizationPanelOptions {
   /**
    * Allows users to change the visibility of individual charts.
    * This property adds a Hide button to each chart.
-   * 
+   *
    * Default value: `true`
    */
   allowHideQuestions?: boolean;
   /**
    * Specifies whether to arrange charts based on the available screen space and allow users to reorder them via drag and drop.
    * If this property is disabled, charts are displayed one under the other, and users cannot reorder them.
-   * 
+   *
    * Default value: `true`
-   * 
+   *
    * [View the "Disable the Layout Engine" example](https://surveyjs.io/Examples/Analytics?id=custom-layout)
-   * 
+   *
    * @see layoutEngine
    */
   allowDynamicLayout?: boolean;
   /**
    * A layout engine used to arrange charts on the Visualization Panel.
    * You can use this property to integrate a third-party layout engine with SurveyJS Analytics.
-   * 
+   *
    * @see allowDynamicLayout
    */
   layoutEngine?: LayoutEngine;
   /**
    * Allows users to switch between absolute and percentage values in bar charts.
    * This property adds a Show Percentages button to each bar chart.
-   * 
+   *
    * Default value: `false`
-   * 
+   *
    * @see showPercentages
    * @see showOnlyPercentages
    * @see percentagePrecision
@@ -100,7 +100,7 @@ export interface IVisualizationPanelOptions {
   /**
    * Specifies whether bar charts display percentages in addition to absolute values.
    * Users can change this property value if you enable the `allowShowPercentages` property.
-   * 
+   *
    * Default value: `false`
    *
    * @see allowShowPercentages
@@ -111,9 +111,9 @@ export interface IVisualizationPanelOptions {
   /**
    * Specifies whether bar charts display only percentages, without absolute values.
    * Applies only if the `allowShowPercentages` or `showPercentages` property is enables.
-   * 
+   *
    * Default value: `false`
-   * 
+   *
    * @see allowShowPercentages
    * @see showPercentages
    * @see percentagePrecision
@@ -121,9 +121,9 @@ export interface IVisualizationPanelOptions {
   showOnlyPercentages?: boolean;
   /**
    * Specifies percentage precision.
-   * 
+   *
    * Default value: 0
-   * 
+   *
    * @see allowShowPercentages
    * @see showPercentages
    * @see showOnlyPercentages
@@ -137,52 +137,52 @@ export interface IVisualizationPanelOptions {
   /**
    * Allows users to sort answers by answer count. Applies only to bar and scatter charts.
    * This property adds a Sorting dropdown to each bar and scatter chart.
-   * 
+   *
    * Default value: `true`
-   * 
+   *
    * @see answersOrder
    */
   allowChangeAnswersOrder?: boolean;
   /**
    * Specifies how to sort answers in bar and scatter charts.
    * Accepted values:
-   * 
+   *
    * - `"default"` (default) - Do not sort answers.
    * - `"asc"` - Sort answers by ascending answer count.
    * - `"desc"` - Sort answers by descending answer count.
-   * 
+   *
    * Users can change this property value if you enable the `allowChangeAnswersOrder` property.
-   * 
+   *
    * @see allowChangeAnswersOrder
    */
   answersOrder?: "default" | "asc" | "desc";
   /**
    * Allows users to hide answers with zero count in bar and scatter charts.
    * This property adds a Hide Empty Answers button to each bar and scatter chart.
-   * 
+   *
    * Default value: `false`
    */
   allowHideEmptyAnswers?: boolean;
   /**
    * Hides answers with zero count in bar and scatter charts.
    * Users can change this property value if you enable the `allowHideEmptyAnswers` property.
-   * 
+   *
    * Default value: `false`
-   * 
+   *
    * @see allowHideEmptyAnswers
    */
   hideEmptyAnswers?: boolean;
   /**
    * Allows users to select whether to show top 5, 10, or 20 answers by answer count.
    * This property adds a Top N Answers dropdown to each chart.
-   * 
+   *
    * Default value: `false`
    */
   allowTopNAnswers?: boolean;
   /**
    * Allows users to show the number of respondents who did not answer a particular question.
    * This property adds a Show Missing Answers button to each chart.
-   * 
+   *
    * Default value: `false`
    */
   allowShowMissingAnswers?: boolean;
@@ -190,31 +190,31 @@ export interface IVisualizationPanelOptions {
   allowExperimentalFeatures?: boolean;
   /**
    * Default chart type.
-   * 
+   *
    * Accepted values:
-   * 
+   *
    * - ???
    * - ...
-   * 
-   * To set a type for an individual chart, access this chart in the `visualizers` array and set its `chartType` property to one of the values described above: 
-   * 
+   *
+   * To set a type for an individual chart, access this chart in the `visualizers` array and set its `chartType` property to one of the values described above:
+   *
    * ```js
    * const vizPanel = new SurveyAnalytics.VisualizationPanel( ... );
    * vizPanel.visualizers[0].chartType = "stackedbar";
    * ```
-   * 
+   *
    */
   defaultChartType?: string;
   /**
    * Allows users to transpose a visualized matrix question.
    * This property adds a Transpose button to charts that visualize matrixes. When users select Per Values, matrix rows go to chart arguments, and matrix columns form chart series. When users select Per Columns, matrix rows form chart series, and matrix columns go to chart arguments.
-   * 
+   *
    * Default value: `false`
    */
   allowTransposeData?: boolean;
   /**
    * Allows users to cross-filter charts. The filter applies when users selects a series point.
-   * 
+   *
    * Default value: `true`
    */
   allowSelection?: boolean;
@@ -224,8 +224,8 @@ export interface IVisualizationPanelOptions {
 
   /**
    * Removes HTML tags from survey element titles.
-   * Survey element titles can contain HTML markup and are specified by users. An attacker can inject malicious code into the titles. To guard against it, keep this property set to `true`. 
-   * 
+   * Survey element titles can contain HTML markup and are specified by users. An attacker can inject malicious code into the titles. To guard against it, keep this property set to `true`.
+   *
    * Default value: `true`
    */
   stripHtmlFromTitles?: boolean;
