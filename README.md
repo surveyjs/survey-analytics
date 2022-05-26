@@ -1,7 +1,4 @@
-![SurveyJS Analytics](https://raw.githubusercontent.com/surveyjs/survey-analytics/master/docs/images/survey-analytics-note.png)
-
 # SurveyJS Analytics
-
 
 [![Build Status](https://dev.azure.com/SurveyJS/SurveyJS%20Integration%20Tests/_apis/build/status/SurveyJS%20Library?branchName=master)](https://dev.azure.com/SurveyJS/SurveyJS%20Integration%20Tests/_build/latest?definitionId=7&branchName=master)
 <a href="https://github.com/DevExpress/testcafe">
@@ -14,83 +11,77 @@
 <img alt="Closed issues" title="Closed issues" src="https://img.shields.io/github/issues-closed/surveyjs/survey-analytics.svg">
 </a>
 
-SurveyJS Analytics library allows to render survey results as charts or tables
+SurveyJS Analytics visualizes survey results and allows users to analyze them.
 
-## Main Features
+![SurveyJS Analytics](docs/images/survey-analytics-note.png)
 
-- Count answers and render results as charts for the select type questions
-- Count answers and render results as gauge for range type question
-- Three different types of charts: bar, pie and line
-- Wordcloud for text questions representation
-- Interactive filtering for the select type questions
-- Flexible layout and customizable colors
+## Features
 
-## Examples
+- Supported chart types:
+  - Bar
+  - Pie
+  - Line
+  - Gauge
+  - Bullet
+  - Scatter
+  - Word cloud
+- Interactive filtering
+- Customizable colors
+- Dynamic layout
+- Chart reordering via drag and drop
 
-You may review the [analytics example](https://surveyjstest.azurewebsites.net/Examples/Library/?id=analytics-nps) or check this standalone plnkr [example](https://plnkr.co/edit/bCk64wdvOLShXkPyvGfk?p=preview).
+## Get Started
 
-Other live examples:
+- [Angular](https://surveyjs.io/Documentation/Analytics?id=get-started-angular)
+- [Vue](https://surveyjs.io/Documentation/Analytics?id=get-started-vue)
+- [React](https://surveyjs.io/Documentation/Analytics?id=get-started-react)
+- [Knockout / jQuery](https://surveyjs.io/Documentation/Analytics?id=get-started-knockout-jquery)
 
-- [how to show chanrt for the one question](https://next.plnkr.co/edit/3yIIFnbcn8RMJQHY?preview).
+## Resources
 
-## Licensing
+- [Website](https://surveyjs.io/)
+- [Documentation](https://surveyjs.io/Documentation/Analytics)
+- [Live Examples](https://surveyjs.io/Examples/Analytics)
+- [What's New](https://surveyjs.io/WhatsNew)
 
-Unlike SurveyJS Library itself, this library is distributed under commercial license. Please read more about licensing on our [license page](https://surveyjstest.azurewebsites.net/Licenses#Analytics).
+## Build SurveyJS Analytics from Sources
 
-## Support
-
-If you feel that we have missed some important functionality or found a bug, please write us [here](https://github.com/surveyjs/survey-analytics/issues) on our [support desk](https://surveyjs.answerdesk.io/).
-
-## Building survey-analytics from sources
-
-To build library yourself:
-
-1.  **Clone the repo from GitHub**
+1. **Clone the repo**
 
     ```
     git clone https://github.com/surveyjs/survey-analytics.git
     cd survey-analytics
     ```
 
-2.  **Acquire build dependencies.** Make sure you have [Node.js](http://nodejs.org/) installed on your workstation. You need a version of Node.js greater than 6.0.0 and npm greater than 2.7.0. This is only needed to _build_ surveyjs from sources.
+1. **Install dependencies**          
+Make sure that you have Node.js v6.0.0 or later and npm v2.7.0 or later installed.
 
     ```
     npm install
     ```
 
-3.  **Build the library**
+1. **Build the library**
 
     ```
     npm run build_prod
     ```
 
-    After that you should have the library at 'packages' directory.
+    You can find the built scripts and style sheets in the `packages` folder.
 
-4.  **Run samples**
+1. **Run test examples**
 
     ```
     npm start
     ```
 
-    This command will run local http server at the http://localhost:7777
+    This command runs a local HTTP server at http://localhost:8080/.
 
-    You can open http://localhost:7777/examples/examples
+1. **Run unit tests**
 
-5.  **Run unit tests**
     ```
     npm test
     ```
-    This command will run unit tests
 
-## Nearest plans
+## Licensing
 
-Our task list of Survey Analytics pack:
-
-- Implement data providing server side prototype
-- Introduce (or use 3rd party) data processing engine for survey analytics
-- Support high load scenario - process at least billion records
-
-## Limitations
-
-- SurveyJS Analytics doesn't support objects as values (e.g. of dropdown, radiogroup and other select question items)
-- WordCloud visualizer is too slow for large texts and significant answers count
+SurveyJS Analytics is **not available for free commercial usage**. If you want to integrate it into your application, you must purchase a [commercial license](/Licenses#SurveyCreator).
