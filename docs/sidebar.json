@@ -39,6 +39,10 @@
           "Title": "Visualization Panel"
         },
         {
+          "Name": "IVisualizationPanelOptions",
+          "Title": "IVisualizationPanelOptions"
+        },
+        {
           "Name": "visualizationmanager",
           "Title": "Visualizers Repository"
         },
