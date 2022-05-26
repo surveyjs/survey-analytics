@@ -191,10 +191,13 @@ export interface IVisualizationPanelOptions {
   /**
    * Default chart type.
    *
-   * Accepted values:
+   * Accepted values depend on the question type as follows:
    *
-   * - ???
-   * - ...
+   * - Boolean: `"bar"` | `"pie"` | `"doughnut"`
+   * - Date, Number: `"bar"` | `"scatter"`
+   * - Matrix: `"bar"` | `"pie"` | `"doughnut"` | `"stackedbar"`
+   * - Rating: `"bar"` | `"scatter"` | `"gauge"` | `"bullet"`
+   * - Radiogroup, Checkbox, Dropdown, Image Picker: `"bar"` | `"pie"` | `"doughnut"` | `"scatter"`
    *
    * To set a type for an individual chart, access this chart in the `visualizers` array and set its `chartType` property to one of the values described above:
    *
