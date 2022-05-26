@@ -122,7 +122,7 @@ export interface IVisualizationPanelOptions {
   /**
    * Specifies percentage precision.
    * 
-   * Default value: ???
+   * Default value: 0
    * 
    * @see allowShowPercentages
    * @see showPercentages
