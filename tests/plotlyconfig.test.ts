@@ -72,12 +72,12 @@ test("check bar config tick labels", () => {
     "daughter_text"
   ].reverse();
   const truncatedTexts = [
-    "fathe...",
-    "mothe...",
-    "broth...",
-    "siste...",
-    "son_text",
-    "daugh..."
+    "fathe...  ",
+    "mothe...  ",
+    "broth...  ",
+    "siste...  ",
+    "son_text  ",
+    "daugh...  "
   ].reverse();
   const hoverTexts = [
     "50, father_text",
