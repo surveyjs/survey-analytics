@@ -67,7 +67,7 @@ test("check change locale", async (t) => {
 
   assert.deepEqual(
     await getYAxisValues(),
-    json.questions[0].choices.map((choice) => choice.text.default).reverse()
+    json.questions[0].choices.map((choice) => choice.text.default + "  ").reverse()
   );
   await t
     .expect(Selector(".sa-question__title").innerText)
