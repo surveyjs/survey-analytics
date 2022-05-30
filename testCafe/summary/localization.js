@@ -49,7 +49,7 @@ fixture`localization`.page`${url}`.beforeEach(async (t) => {
 test("check change locale", async (t) => {
   const getLocaleInState = ClientFunction(() => window.visPanel.state.locale);
   const changeLocaleDropdown = Selector(".sa-question__select").withText(
-    "Сменить язык"
+    "Русский"
   );
 
   assert.deepEqual(
@@ -63,7 +63,7 @@ test("check change locale", async (t) => {
 
   await t
     .click(changeLocaleDropdown)
-    .click(changeLocaleDropdown.find("option").withText("en"));
+    .click(changeLocaleDropdown.find("option").withText("English"));
 
   assert.deepEqual(
     await getYAxisValues(),
@@ -74,7 +74,7 @@ test("check change locale", async (t) => {
     .eql(json.questions[0].title.default);
 
   await t
-    .expect(Selector(".sa-question__select").withText("Change Locale").exists)
+    .expect(Selector(".sa-question__select").withText("English").exists)
     .ok();
   assert.strictEqual(await getLocaleInState(), "");
 });
@@ -87,6 +87,6 @@ test("check set locale from state", async (t) => {
     json.questions[0].choices.map((choice) => choice.text.default).reverse()
   );
   await t
-    .expect(Selector(".sa-question__select").withText("Change Locale").exists)
+    .expect(Selector(".sa-question__select").withText("English").exists)
     .ok();
 });
