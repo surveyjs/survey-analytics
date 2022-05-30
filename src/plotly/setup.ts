@@ -208,7 +208,7 @@ export class PlotlySetup {
       hovermode: "closest",
       yaxis: {
         automargin: true,
-        //type: "category",
+        type: "category",
         orientation: "h",
         tickmode: "array",
         tickvals: yFullTexts,

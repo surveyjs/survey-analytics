@@ -275,3 +275,8 @@ test("getTruncatedLabel method", () => {
   expect(PlotlySetup.getTruncatedLabel(label, 50).indexOf("...")).not.toBe(-1);
   expect(PlotlySetup.getTruncatedLabel(label, 50).length).toBe(53);
 });
+
+test("y axis type - https://github.com/surveyjs/survey-analytics/issues/241", () => {
+  var config = PlotlySetup.setupBar(selectBase);
+  expect(config.layout.yaxis.type).toEqual("category");
+});
