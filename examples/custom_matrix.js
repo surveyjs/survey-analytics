@@ -20,7 +20,7 @@ function CustomVisualizer(question, data) {
         question.rows,
         row.value
       );
-      th = document.createElement("th");
+      var th = document.createElement("th");
       th.innerHTML = value;
       header.appendChild(th);
     });
