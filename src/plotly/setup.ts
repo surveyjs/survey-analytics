@@ -216,7 +216,7 @@ export class PlotlySetup {
           return PlotlySetup.getTruncatedLabel(
             label,
             model.options.labelTruncateLength
-          );
+          ) + "  ";
         }),
       },
       xaxis: {
