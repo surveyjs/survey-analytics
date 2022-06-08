@@ -8,6 +8,7 @@ import "../localization/portuguese";
 import "../localization/russian";
 import "../localization/dutch";
 import "../localization/spanish";
+import "../localization/italian";
 
 export * from "../dataProvider";
 

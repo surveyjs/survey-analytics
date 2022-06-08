@@ -207,7 +207,7 @@ export class PlotlySetup {
       hovermode: "closest",
       yaxis: {
         automargin: true,
-        //type: "category",
+        type: "category",
         orientation: "h",
         tickmode: "array",
         tickvals: yFullTexts,
@@ -215,7 +215,7 @@ export class PlotlySetup {
           return PlotlySetup.getTruncatedLabel(
             label,
             model.options.labelTruncateLength
-          );
+          ) + "  ";
         }),
       },
       xaxis: {

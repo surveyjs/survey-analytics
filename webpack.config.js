@@ -3,7 +3,6 @@
 var webpack = require("webpack");
 var path = require("path");
 var fs = require("fs");
-var dts = require("dts-bundle");
 var rimraf = require("rimraf");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -54,14 +53,6 @@ var banner = [
   "License: MIT (http://www.opensource.org/licenses/mit-license.php)",
 ].join("\n");
 
-// TODO add to dts_bundler
-var dts_banner = [
-  "Type definitions for SurveyJS Analytics library v" + packageJson.version,
-  "Copyright (c) 2015-" + year + " Devsoft Baltic OÜ  - http://surveyjs.io/",
-  "Definitions by: Devsoft Baltic OÜ <https://github.com/surveyjs/>",
-  "",
-].join("\n");
-
 function copyFileWithBanner(source, destination, banner) {
   var writeStream = fs.createWriteStream(destination)
   writeStream.write("/*\n" + banner + "*/\n\n");
@@ -97,15 +88,6 @@ module.exports = function (options) {
       createSVGBundle();
     } else if (1 === percentage) {
       if (options.buildType === "prod") {
-        dts.bundle({
-          name: "../survey.analytics",
-          main: packagePath + "typings/index.d.ts",
-          outputAsModuleFolder: true,
-          headerText: dts_banner,
-        });
-        copyFileWithBanner("./pckg_content/survey.analytics.datatables.d.ts", "./packages/survey.analytics.datatables.d.ts", dts_banner);
-        copyFileWithBanner("./pckg_content/survey.analytics.tabulator.d.ts", "./packages/survey.analytics.tabulator.d.ts", dts_banner);
-        rimraf.sync(packagePath + "typings");
         fs.createReadStream("./LICENSE").pipe(
           fs.createWriteStream(packagePath + "LICENSE")
         );
@@ -149,12 +131,6 @@ module.exports = function (options) {
           test: /\.(ts)$/,
           use: {
             loader: "ts-loader",
-            options: {
-              compilerOptions: {
-                declaration: isProductionBuild,
-                outDir: packagePath + "typings/",
-              },
-            },
           },
         },
         {

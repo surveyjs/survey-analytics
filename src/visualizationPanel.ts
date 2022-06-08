@@ -341,17 +341,19 @@ export class VisualizationPanel extends VisualizerBase {
       return undefined;
     });
     if (this.locales.length > 1) {
+      const localeChoices = this.locales.map((element) => {
+        return {
+          value: element,
+          text: localization.getString(element)
+        };
+      });
+      // localeChoices.unshift({
+      //   value: "",
+      //   text: localization.getString("changeLocale"),
+      // });
       this.registerToolbarItem("changeLocale", () => {
-        return DocumentHelper.createSelector(
-          [localization.getString("changeLocale")]
-            .concat(this.locales)
-            .map((element) => {
-              return {
-                value: element,
-                text: element,
-              };
-            }),
-          (option: any) => false,
+        return DocumentHelper.createSelector(localeChoices,
+          (option: any) => !!option.value && this.locale === option.value,
           (e: any) => {
             var newLocale = e.target.value;
             this.locale = newLocale;

@@ -1,7 +1,6 @@
-//Uncomment this line on creating a translation file
-//import { localization } from "../localizationManager";
+import { localization } from "../localizationManager";
 
-export var englishStrings = {
+export var italianStrings = {
   groupButton: "Group By Me",
   ungroupButton: "Ungroup By Me",
   selectButton: "Select Me",
@@ -52,7 +51,7 @@ export var englishStrings = {
   pdfDownloadCaption: "PDF",
   xlsxDownloadCaption: "Excel",
   csvDownloadCaption: "CSV",
-  saveDiagramAsPNG: "Download plot as a png",
+  saveDiagramAsPNG: "Scarica il grafico come immagine png",
   hideEmptyAnswers: "Hide empty answers",
   showEmptyAnswers: "Show empty answers",
   "topNValueText-1": "All answers",
@@ -71,6 +70,5 @@ export var englishStrings = {
   responses: "Responses"
 };
 
-//Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.
-//localization.locales["en"] = englishStrings;
-//localization.localeNames["en"] = "English";
+localization.locales["it"] = italianStrings;
+localization.localeNames["it"] = "Italian";

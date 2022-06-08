@@ -58,8 +58,14 @@ steps:
   displayName: 'npm run release with SurveyJSVersion'
 
 - script: |
-    npm run build_prod
+    npm run build:prod
   displayName: 'build'
+
+- script: |
+    npm run build:types:summary
+    npm run build:types:datatables
+    npm run build:types:tabulator
+  displayName: "build typings"
 
 - script: |
     npm test

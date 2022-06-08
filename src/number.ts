@@ -142,14 +142,16 @@ export class NumberModel extends VisualizerBase {
       this._resultMin === undefined ||
       this._resultMax === undefined
     ) {
-      const questionValues: Array<any> = [];
       this._resultMin = Number.MAX_VALUE;
       this._resultMax = -Number.MAX_VALUE;
+      this._resultAverage = 0;
+      let actualAnswerCount = 0;
 
       this.data.forEach((rowData) => {
-        const questionValue: number = +rowData[this.question.name];
-        if (questionValue !== undefined) {
-          questionValues.push(questionValue);
+        if(rowData[this.question.name] !== undefined) {
+          const questionValue: number = +rowData[this.question.name];
+          actualAnswerCount++;
+          this._resultAverage += questionValue;
           if (this._resultMin > questionValue) {
             this._resultMin = questionValue;
           }
@@ -159,8 +161,9 @@ export class NumberModel extends VisualizerBase {
         }
       });
 
-      this._resultAverage =
-        questionValues.reduce((a, b) => a + b, 0) / questionValues.length;
+      if(actualAnswerCount > 0) {
+        this._resultAverage = this._resultAverage / actualAnswerCount;
+      }
       this._resultAverage = Math.ceil(this._resultAverage * 100) / 100;
     }
     return [this._resultAverage, this._resultMin, this._resultMax];

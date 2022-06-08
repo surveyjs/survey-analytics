@@ -184,7 +184,7 @@ test("check ordering", async (t) => {
   await initSummary(json, data.concat({ radio: 1 }), options);
 
   //check default order
-  assert.deepEqual(await getYAxisValues(), ["Other", "Two", "One"]);
+  assert.deepEqual(await getYAxisValues(), ["Other  ", "Two  ", "One  "]);
   assert.deepEqual(
     (await getColorsOrder()).map((color) => {
       return RGBToHex(color);
@@ -194,7 +194,7 @@ test("check ordering", async (t) => {
 
   //check ascending order
   await clickSelectOption("Ascending");
-  assert.deepEqual(await getYAxisValues(), ["One", "Other", "Two"]);
+  assert.deepEqual(await getYAxisValues(), ["One  ", "Other  ", "Two  "]);
   assert.deepEqual(
     (await getColorsOrder()).map((color) => {
       return RGBToHex(color);
@@ -204,7 +204,7 @@ test("check ordering", async (t) => {
 
   //check descending order
   await clickSelectOption("Descending");
-  assert.deepEqual(await getYAxisValues(), ["Two", "Other", "One"]);
+  assert.deepEqual(await getYAxisValues(), ["Two  ", "Other  ", "One  "]);
   assert.deepEqual(
     (await getColorsOrder()).map((color) => {
       return RGBToHex(color);

@@ -3,7 +3,7 @@ function CustomVisualizer(question, data) {
     var header = document.createElement("tr");
     header.appendChild(document.createElement("th"));
     visualizer.valuesSource().forEach(function (value) {
-      th = document.createElement("th");
+      var th = document.createElement("th");
       th.innerHTML = value.text;
       header.appendChild(th);
     });
