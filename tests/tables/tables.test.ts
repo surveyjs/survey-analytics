@@ -679,3 +679,64 @@ test("check matrix dropdown fill data", () => {
   expect(expect(tableData["questionName.row 2.col 1"]).toEqual(""));
   expect(expect(tableData["questionName.row 2.col 2"]).toEqual("value 2"));
 });
+
+const matrixDotsNameDropdownJson = {
+  "elements": [
+    {
+      "type": "matrixdropdown",
+      "name": "question.name",
+      "title": "Question Title",
+      "choices": [
+        { value: "value 1", text: "Value 1 Text" },
+        { value: "value 2", text: "Value 2 Text" }
+      ],
+      "columns": [
+        {
+          "name": "col 1",
+          "title": "Column 1 Title",
+        },
+        {
+          "name": "col 2",
+          "title": "Column 2 Title",
+        },
+      ],
+      "rows": [
+        {
+          "value": "row 1",
+          "text": "Row 1 Text"
+        }, {
+          "value": "row 2",
+          "text": "Row 2 Text"
+        }
+      ]
+    }
+  ]
+};
+
+test("check matrix dropdown columns name with dots", () => {
+  const survey = new SurveyModel(matrixDotsNameDropdownJson);
+  let table = new TableTest(survey, [{
+    "question.name": {
+      "row 1": {
+        "col 1": "value 1"
+      }
+    }
+  }], {}, []);
+  let columns = table.columns;
+  expect(columns.length).toBe(4);
+  expect(columns[0].name).toBe("question.name.row 1.col 1");
+  expect(columns[0].displayName).toBe("Question Title - Row 1 Text - Column 1 Title");
+  expect(columns[1].name).toBe("question.name.row 1.col 2");
+  expect(columns[1].displayName).toBe("Question Title - Row 1 Text - Column 2 Title");
+  expect(columns[2].name).toBe("question.name.row 2.col 1");
+  expect(columns[2].displayName).toBe("Question Title - Row 2 Text - Column 1 Title");
+  expect(columns[3].name).toBe("question.name.row 2.col 2");
+  expect(columns[3].displayName).toBe("Question Title - Row 2 Text - Column 2 Title");
+
+  let tableData = (<any>table).tableData[0];
+  expect(expect(tableData["question.name.row 1.col 1"]).toEqual("Value 1 Text"));
+  expect(expect(tableData["question.name.row 1.col 2"]).toEqual(""));
+  expect(expect(tableData["question.name.row 2.col 1"]).toEqual(""));
+  expect(expect(tableData["question.name.row 2.col 2"]).toEqual(""));
+});
+

@@ -123,7 +123,8 @@ export class MatrixColumn extends BaseColumn<QuestionMatrixModel> {
   private valuePath: string;
   constructor(question: QuestionMatrixModel, private row: MatrixRowModel, table: Table) {
     super(question, table);
-    [this.valueName, this.valuePath] = this.name.split(".");
+    this.valueName = this.question.name;
+    this.valuePath = this.row?.value;
   }
   protected getName(): string {
     return this.question.name + "." + this.row?.value;
@@ -177,7 +178,8 @@ export class MatrixDropdownColumn extends BaseColumn<QuestionMatrixDropdownModel
   private colName: string;
   constructor(question: QuestionMatrixDropdownModel, protected row, protected col, table: Table) {
     super(question, table);
-    [this.rowValue, this.colName] = this.name.split(".").slice(1);
+    this.rowValue = this.row.value;
+    this.colName = this.col.name;
   }
   protected getName(): string {
     return this.question.name + "." + this.row.value + "." + this.col.name;
