@@ -53,8 +53,9 @@ export class HistogramModel extends SelectBase {
       const interval = this.intervals.filter(interval => interval.label === itemText)[0];
       return new ItemValue(interval, interval !== undefined ? interval.label : "");
     }
-    const originalValue = this.getLabels().filter(label => label === itemText)[0];
-    return new ItemValue(originalValue, originalValue);
+    const labels = this.getLabels();
+    const labelIndex = labels.indexOf(itemText);
+    return new ItemValue(this.getValues()[labelIndex], labels[labelIndex]);
   }
 
   /**
@@ -85,10 +86,10 @@ export class HistogramModel extends SelectBase {
           const seriesValue = dataItem[DataProvider.seriesMarkerKey] || "";
           // TODO: _continiousData should be sorted in order to speed-up statistics calculation in the getData function
           this._continiousData[seriesValue].push(this.getContiniousValue(answerData));
-          hash[answerData] = 0;
+          hash[answerData] = answerData;
         }
       });
-      this._cachedValues = Object.keys(hash).map(key => ({ original: key, continious: this.getContiniousValue(key) }));
+      this._cachedValues = Object.keys(hash).map(key => ({ original: hash[key], continious: this.getContiniousValue(key) }));
       this._cachedValues.sort((a, b) => a.continious - b.continious);
     }
     return this._cachedValues;
@@ -111,7 +112,7 @@ export class HistogramModel extends SelectBase {
     if (this.hasCustomIntervals || continiousValues.length > HistogramModel.UseIntervalsFrom) {
       return this.intervals.map(interval => interval.label);
     }
-    return continiousValues.map(value => value.original);
+    return continiousValues.map(value => "" + value.original);
   }
 
   public get hasCustomIntervals() {

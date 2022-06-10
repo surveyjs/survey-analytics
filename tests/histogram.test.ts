@@ -45,10 +45,12 @@ test("number default histogram", () => {
   const number = new HistogramModel(question, data);
 
   const histValues = number.getValues();
+  const histLabels = number.getLabels();
   const histData = number.getData();
 
   expect(number["valueType"]).toBe("number");
-  expect(histValues).toMatchObject(["17", "25", "30", "40"]);
+  expect(histValues).toMatchObject([17, 25, 30, 40]);
+  expect(histLabels).toMatchObject(["17", "25", "30", "40"]);
   expect(histData).toMatchObject([[3, 1, 2, 2]]);
 
   expect(number["isSupportMissingAnswers"]()).toBeFalsy();
@@ -115,7 +117,7 @@ test("date empty data", () => {
     inputType: "date",
     name: "date",
   };
-  const dates = [];
+  const dates: any[] = [];
   const date = new HistogramModel(question, dates);
 
   const histValues = date.getValues();
@@ -426,4 +428,19 @@ test("custom widget default histogram", () => {
   };
   const number = new HistogramModel(question, data);
   expect(number["valueType"]).toBe("number");
+});
+
+test("histogram original data keep number original values", () => {
+  const question: any = {
+    getType: () => "rating",
+    type: "rating",
+    name: "question1",
+  };
+  const number = new HistogramModel(question, [{ "question2": "Yes", "question1": 3 }, { "question2": "It is going so well!!!", "question1": 5 }, { "question2": false, "question1": 5 }, { "question2": true, "question1": 1 }, { "question2": false, "question1": 5 }, { "question3": "item2", "question2": false, "question1": 5 }]);
+  expect(number.getValues()).toEqual([1, 3, 5]);
+  expect(number.getLabels()).toEqual(["1", "3", "5"]);
+
+  const selectedItem = number.getSelectedItemByText("5");
+  expect(selectedItem.value).toBe(5);
+  expect(selectedItem.text).toBe("5");
 });

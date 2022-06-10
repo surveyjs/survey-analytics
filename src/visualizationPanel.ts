@@ -1,6 +1,7 @@
 import { Event, Question, SurveyModel } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
+import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 import { DocumentHelper, createCommercialLicenseLink } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, IState, IPermission } from "./config";
@@ -291,7 +292,7 @@ export class VisualizationPanel extends VisualizerBase {
     this.registerToolbarItem("resetFilter", () => {
       return DocumentHelper.createButton(() => {
         this.visualizers.forEach((visualizer) => {
-          if (visualizer instanceof SelectBase) {
+          if (visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
             visualizer.setSelection(undefined);
           }
         });
