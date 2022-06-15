@@ -183,7 +183,6 @@ export class PlotlySetup {
         let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
         trace.textposition = "inside";
         trace.texttemplate = texttemplate;
-        trace.width = 0.9;
         trace.bargap = 0.1;
       }
       traces.push(trace);

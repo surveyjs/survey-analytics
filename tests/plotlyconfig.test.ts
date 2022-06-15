@@ -51,7 +51,7 @@ test("check bar config with showPercentages", () => {
   (<any>selectBase)._showPercentages = true;
   var config = PlotlySetup.setupBar(selectBase);
   expect([config.traces[0].text]).toEqual(selectBase.getPercentages());
-  expect(config.traces[0].width).toBe(0.9);
+  expect(config.traces[0].width).toBe(0.5);
   expect(config.traces[0].textposition).toBe("inside");
   expect(config.traces[0].texttemplate).toBe("%{value} (%{text}%)");
   (<any>selectBase)._showPercentages = false;
