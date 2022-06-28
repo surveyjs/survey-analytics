@@ -13,7 +13,7 @@
 
 SurveyJS Analytics visualizes survey results and allows users to analyze them.
 
-![SurveyJS Analytics](docs/images/survey-analytics-note.png)
+![SurveyJS Analytics](docs/images/survey-analytics-overview.png)
 
 ## Features
 
