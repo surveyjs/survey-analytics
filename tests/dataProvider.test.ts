@@ -210,9 +210,10 @@ test("getData for matrix dropdown inner visualizers", () => {
           {
             name: "Column 1",
             title: "My Opinion",
+            cellType: "dropdown",
             choices: ["High Quality", "Natural", "Trustworthy"],
           },
-          { name: "Column 2", title: "Review Mark", choices: [1, 2, 3, 4, 5] },
+          { name: "Column 2", cellType: "dropdown", title: "Review Mark", choices: [1, 2, 3, 4, 5] },
         ],
         rows: ["Lizol", "Harpic"],
       },
