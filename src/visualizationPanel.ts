@@ -132,6 +132,9 @@ export interface IVisualizationPanelOptions {
   percentagePrecision?: number;
   /**
    * Removes the Free Trial bar.
+   * 
+   * Default value: `false`
+   * 
    * **IMPORTANT**: You can enable this property only if you have a SurveyJS Analytics commercial license. It is illegal to enable this property without a license.
    */
   haveCommercialLicense?: boolean;
