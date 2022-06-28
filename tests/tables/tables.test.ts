@@ -120,7 +120,7 @@ test("partial state", () => {
 
 test("move column method", () => {
   var table = new TableTest(new SurveyModel(), [], null, []);
-  table.columns = [
+  table.columns = <any>[
     {
       name: "column1",
       displayName: "column1",
@@ -175,7 +175,7 @@ test("check save/restore page size in the state", () => {
 test("check setColumnWidth method", () => {
   var table = new TableTest(new SurveyModel(), [], null, []);
   table.columns = [
-    {
+    <any>{
       name: "column1",
       displayName: "column1",
       dataType: 0,
@@ -192,7 +192,7 @@ test("check that setColumnWidth fires onStateChanged", () => {
   var table = new TableTest(new SurveyModel(), [], null, []);
   var count = 0;
   table.columns = [
-    {
+    <any>{
       name: "column1",
       displayName: "column1",
       dataType: 0,
