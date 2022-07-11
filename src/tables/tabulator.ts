@@ -72,6 +72,15 @@ const defaultOptions: ITabulatorOptions = {
   },
 };
 
+const escapeCellFormula = (field: string) => {
+  const formulaPrefix = ["=", "+", "-", "@", String.fromCharCode(0x09), String.fromCharCode(0x0d)];
+  if (formulaPrefix.some(prefix => field.startsWith(prefix))) {
+    return "'" + field;
+  } else {
+    return field;
+  }
+};
+
 export class Tabulator extends Table {
   public static set haveCommercialLicense(val: boolean) {
     Table.haveCommercialLicense = val;
@@ -90,6 +99,7 @@ export class Tabulator extends Table {
   private readonly COLUMN_MIN_WIDTH = 155;
   public tabulatorTables: any = null;
   private tableContainer: HTMLElement = null;
+  private currentDownloadType: string = "";
 
   public render(targetNode: HTMLElement | string): void {
     super.render(targetNode);
@@ -225,6 +235,9 @@ export class Tabulator extends Table {
       if (column.dataType === ColumnDataType.FileLink && Array.isArray(dataCell)) {
         return (dataCell || []).map(f => f.name).join(", ");
       }
+    }
+    if (this.currentDownloadType === "csv" || this.currentDownloadType === "xlsx") {
+      return escapeCellFormula(cellData);
     }
     return cellData;
   }
@@ -397,6 +410,7 @@ export class Tabulator extends Table {
   }
 
   public download(type: string): void {
+    this.currentDownloadType = type;
     this.tabulatorTables.download(
       type,
       `${this._options.downloadOptions.fileName}.${type}`,
