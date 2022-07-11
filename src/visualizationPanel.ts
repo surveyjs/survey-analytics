@@ -35,13 +35,14 @@ export interface IVisualizerPanelRenderedElement
  * ```
  */
 export interface IVisualizationPanelOptions {
-  // An object named after a question that it configures
+  // An object named after a question that it configures.
   // questionName: {
   //   intervals: []
   // },
 
   /**
    * The number of label characters after which truncation starts.
+   * 
    * Set this property to -1 to disable truncation.
    *
    * Default value: 27
@@ -64,6 +65,7 @@ export interface IVisualizationPanelOptions {
   dataProvider?: DataProvider;
   /**
    * Allows users to change the visibility of individual charts.
+   * 
    * This property adds a Hide button to each chart.
    *
    * Default value: `true`
@@ -71,7 +73,8 @@ export interface IVisualizationPanelOptions {
   allowHideQuestions?: boolean;
   /**
    * Specifies whether to arrange charts based on the available screen space and allow users to reorder them via drag and drop.
-   * If this property is disabled, charts are displayed one under the other, and users cannot reorder them.
+   * 
+   * If this property is disabled, charts are displayed one under the other and users cannot reorder them.
    *
    * Default value: `true`
    *
@@ -82,6 +85,7 @@ export interface IVisualizationPanelOptions {
   allowDynamicLayout?: boolean;
   /**
    * A layout engine used to arrange charts on the Visualization Panel.
+   * 
    * You can use this property to integrate a third-party layout engine with SurveyJS Analytics.
    *
    * @see allowDynamicLayout
@@ -89,6 +93,7 @@ export interface IVisualizationPanelOptions {
   layoutEngine?: LayoutEngine;
   /**
    * Allows users to switch between absolute and percentage values in bar charts.
+   * 
    * This property adds a Show Percentages button to each bar chart.
    *
    * Default value: `false`
@@ -100,6 +105,7 @@ export interface IVisualizationPanelOptions {
   allowShowPercentages?: boolean;
   /**
    * Specifies whether bar charts display percentages in addition to absolute values.
+   * 
    * Users can change this property value if you enable the `allowShowPercentages` property.
    *
    * Default value: `false`
@@ -111,7 +117,8 @@ export interface IVisualizationPanelOptions {
   showPercentages?: boolean;
   /**
    * Specifies whether bar charts display only percentages, without absolute values.
-   * Applies only if the `allowShowPercentages` or `showPercentages` property is enables.
+   * 
+   * Applies only if the `allowShowPercentages` or `showPercentages` property is enabled.
    *
    * Default value: `false`
    *
@@ -140,6 +147,7 @@ export interface IVisualizationPanelOptions {
   haveCommercialLicense?: boolean;
   /**
    * Allows users to sort answers by answer count. Applies only to bar and scatter charts.
+   * 
    * This property adds a Sorting dropdown to each bar and scatter chart.
    *
    * Default value: `true`
@@ -162,6 +170,7 @@ export interface IVisualizationPanelOptions {
   answersOrder?: "default" | "asc" | "desc";
   /**
    * Allows users to hide answers with zero count in bar and scatter charts.
+   * 
    * This property adds a Hide Empty Answers button to each bar and scatter chart.
    *
    * Default value: `false`
@@ -169,6 +178,7 @@ export interface IVisualizationPanelOptions {
   allowHideEmptyAnswers?: boolean;
   /**
    * Hides answers with zero count in bar and scatter charts.
+   * 
    * Users can change this property value if you enable the `allowHideEmptyAnswers` property.
    *
    * Default value: `false`
@@ -178,6 +188,7 @@ export interface IVisualizationPanelOptions {
   hideEmptyAnswers?: boolean;
   /**
    * Allows users to select whether to show top 5, 10, or 20 answers by answer count.
+   * 
    * This property adds a Top N Answers dropdown to each chart.
    *
    * Default value: `false`
@@ -185,6 +196,7 @@ export interface IVisualizationPanelOptions {
   allowTopNAnswers?: boolean;
   /**
    * Allows users to show the number of respondents who did not answer a particular question.
+   * 
    * This property adds a Show Missing Answers button to each chart.
    *
    * Default value: `false`
@@ -214,13 +226,14 @@ export interface IVisualizationPanelOptions {
   defaultChartType?: string;
   /**
    * Allows users to transpose a visualized matrix question.
-   * This property adds a Transpose button to charts that visualize matrixes. When users select Per Values, matrix rows go to chart arguments, and matrix columns form chart series. When users select Per Columns, matrix rows form chart series, and matrix columns go to chart arguments.
+   *
+   * This property adds a Transpose button to charts that visualize matrixes. When users select Per Values, matrix rows go to chart arguments and matrix columns form chart series. When users select Per Columns, matrix rows form chart series and matrix columns go to chart arguments.
    *
    * Default value: `false`
    */
   allowTransposeData?: boolean;
   /**
-   * Allows users to cross-filter charts. The filter applies when users selects a series point.
+   * Allows users to cross-filter charts. The filter applies when users select a series point.
    *
    * Default value: `true`
    */
@@ -231,6 +244,7 @@ export interface IVisualizationPanelOptions {
 
   /**
    * Removes HTML tags from survey element titles.
+   * 
    * Survey element titles can contain HTML markup and are specified by users. An attacker can inject malicious code into the titles. To guard against it, keep this property set to `true`.
    *
    * Default value: `true`
