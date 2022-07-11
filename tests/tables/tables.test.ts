@@ -476,6 +476,43 @@ test("Fill columns data for question matrix", () => {
   expect(tableData[0]["q1.Row 2"]).toEqual("Column 2 text");
 });
 
+test("Fill columns data for question matrix - non existing values", () => {
+  const json = {
+    "pages": [
+      {
+        "name": "page1",
+        "elements": [
+          {
+            "type": "matrix",
+            "name": "q1",
+            "columns": [
+              "Column 1",
+              { value: "Column 2", text: "Column 2 text" },
+              "Column 3"
+            ],
+            "rows": [
+              "Row 1",
+              "Row 2"
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [{
+    "q1": {
+      "Row 1": "Column 4",
+      "Row 2": "Column 5"
+    }
+  }], {}, []);
+  const tableData: Array<any> = (<any>table).tableData;
+  expect(tableData.length).toEqual(1);
+  expect(tableData[0]["q1"]).toBeUndefined();
+  expect(tableData[0]["q1.Row 1"]).toEqual("Column 4");
+  expect(tableData[0]["q1.Row 2"]).toEqual("Column 5");
+});
+
 test("Fill columns data for question matrix - has unanswered rows https://github.com/surveyjs/survey-analytics/issues/246", () => {
   const json = {
     "pages": [

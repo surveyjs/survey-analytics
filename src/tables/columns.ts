@@ -144,7 +144,9 @@ export class MatrixColumn extends BaseColumn<QuestionMatrixModel> {
       displayValue = displayValue[this.valuePath];
       if(displayValue !== undefined) {
         const choiceValue = ItemValue.getItemByValue(this.question.columns, displayValue);
-        displayValue = options.useValuesAsLabels ? choiceValue.value : choiceValue.locText.textOrHtml;
+        if(!!choiceValue) {
+          displayValue = options.useValuesAsLabels ? choiceValue.value : choiceValue.locText.textOrHtml;
+        }
       }
     }
     return displayValue;
