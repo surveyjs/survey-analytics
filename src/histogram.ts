@@ -99,17 +99,21 @@ export class HistogramModel extends SelectBase {
     return false;
   }
 
+  protected get needUseRateValues() {
+    return this.question.getType() == "rating" && Array.isArray(this.question["rateValues"]) && this.question["rateValues"].length > 0;
+  }
+
   public getValues(): Array<any> {
     const continiousValues = this.getContiniousValues();
-    if (this.hasCustomIntervals || continiousValues.length > HistogramModel.UseIntervalsFrom) {
-      return this.intervals.map(interval => interval.label);
+    if (this.hasCustomIntervals || continiousValues.length > HistogramModel.UseIntervalsFrom || this.needUseRateValues) {
+      return this.intervals.map(interval => interval.start);
     }
     return continiousValues.map(value => value.original);
   }
 
   public getLabels(): Array<string> {
     const continiousValues = this.getContiniousValues();
-    if (this.hasCustomIntervals || continiousValues.length > HistogramModel.UseIntervalsFrom) {
+    if (this.hasCustomIntervals || continiousValues.length > HistogramModel.UseIntervalsFrom || this.needUseRateValues) {
       return this.intervals.map(interval => interval.label);
     }
     return continiousValues.map(value => "" + value.original);
@@ -121,7 +125,16 @@ export class HistogramModel extends SelectBase {
 
   public get intervals() {
     if (this.hasCustomIntervals) {
-      return this.questionOptions.intervals;
+      return this.questionOptions.intervals.reverse();
+    }
+
+    if(this.needUseRateValues) {
+      const rateValues = this.question["rateValues"] as ItemValue[];
+      return rateValues.map((rateValue, i) => ({
+        start: rateValue.value,
+        end: i < rateValues.length - 1 ? rateValues[i + 1].value : rateValue.value + 1,
+        label: rateValue.text
+      })).reverse();
     }
 
     if (this._cachedIntervals === undefined) {

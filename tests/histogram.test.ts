@@ -1,3 +1,4 @@
+import { SurveyModel } from "survey-core";
 import { HistogramModel } from "../src/histogram";
 
 const data = [
@@ -91,11 +92,24 @@ test("date default intervals", () => {
   const date = new HistogramModel(question, dates);
 
   const histValues = date.getValues();
+  const histLabels = date.getLabels();
   const histIntervals = date.intervals;
   const histData = date.getData();
 
   expect(histIntervals.length).toBe(10);
   expect(histValues).toMatchObject([
+    1577825999999,
+    1578085199999.2,
+    1578344399999.4,
+    1578603599999.5999,
+    1578862799999.7998,
+    1579121999999.9998,
+    1579381200000.1997,
+    1579640400000.3997,
+    1579899600000.5996,
+    1580158800000.7996,
+  ]);
+  expect(histLabels).toMatchObject([
     "12/31/2019-1/3/2020",
     "1/3/2020-1/6/2020",
     "1/6/2020-1/9/2020",
@@ -181,17 +195,19 @@ test("number custom intervals", () => {
 
   expect(histIntervals.length).toBe(5);
   expect(histValues).toMatchObject([
-    "childhood",
-    "adolescence",
-    "youth",
-    "adult",
-    "old age"
+    70,
+    19,
+    14,
+    7,
+    0,
   ]);
-  expect(histData).toMatchObject([[12,
+  expect(histData).toMatchObject([[
+    1,
     11,
     5,
     11,
-    1]]);
+    12]
+  ]);
 });
 
 test("number custom intervals for small result sets", () => {
@@ -219,13 +235,13 @@ test("number custom intervals for small result sets", () => {
 
   expect(histIntervals.length).toBe(5);
   expect(histValues).toMatchObject([
-    "childhood",
-    "adolescence",
-    "youth",
-    "adult",
-    "old age"
+    70,
+    19,
+    14,
+    7,
+    0,
   ]);
-  expect(histData).toMatchObject([[0, 0, 3, 5, 0]]);
+  expect(histData).toMatchObject([[0, 5, 3, 0, 0]]);
 });
 
 test("histogram series default algorithm data", () => {
@@ -443,4 +459,38 @@ test("histogram original data keep number original values", () => {
   const selectedItem = number.getSelectedItemByText("5");
   expect(selectedItem.value).toBe(5);
   expect(selectedItem.text).toBe("5");
+});
+
+test("histogram should use rate values", () => {
+  const json = {
+    questions: [
+      { "type": "rating", "name": "question1", "rateValues": [{ "value": 1, "text": "15 minutes" }, { "value": 2, "text": "30 minutes" }, { "value": 3, "text": "1 hour" }] }
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const rating = new HistogramModel(survey.getAllQuestions()[0], [{ "question1": 3 }]);
+  expect(rating.intervals).toEqual([
+    {
+      "end": 4,
+      "label": "1 hour",
+      "start": 3,
+    },
+    {
+      "end": 3,
+      "label": "30 minutes",
+      "start": 2,
+    },
+    {
+      "end": 2,
+      "label": "15 minutes",
+      "start": 1,
+    },
+  ]);
+  expect(rating.getValues()).toEqual([3, 2, 1]);
+  expect(rating.getLabels()).toEqual(["1 hour", "30 minutes", "15 minutes"]);
+  expect(rating.getData()).toEqual([[
+    1,
+    0,
+    0,
+  ]]);
 });
