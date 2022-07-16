@@ -1,4 +1,4 @@
-import { ItemValue, MatrixRowModel, Question, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, settings } from "survey-core";
+import { Base, ItemValue, MatrixRowModel, Question, QuestionCompositeModel, QuestionCustomModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, settings } from "survey-core";
 import { createImagesContainer, createLinksContainer } from "../utils";
 import { ICellData, IColumn, ColumnDataType, QuestionLocation, IColumnData } from "./config";
 import { ITableOptions, Table } from "./table";
@@ -49,24 +49,28 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
   protected getDisplayValueCore(data: any) {
     return data[this.name];
   }
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
-    let displayValue = this.getDisplayValueCore(data);
-    const question = this.question;
+
+  protected setupReadyChangedCallback(table: Table, question: Question) {
     const onReadyChangedCallback = (sender, options) => {
       if(options.isReady) {
         table.refresh(true);
         sender.onReadyChanged.remove(onReadyChangedCallback);
       }
     };
+    if(!question.isReady) {
+      question.onReadyChanged.add(onReadyChangedCallback);
+    }
+  }
+
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
+    let displayValue = this.getDisplayValueCore(data);
+    const question = this.question;
+
     if (!!question) {
       if (options.useValuesAsLabels) {
         displayValue = question.value;
       } else {
-        if(question.isReady) {
-          displayValue = question.displayValue;
-        } else {
-          question.onReadyChanged.add(onReadyChangedCallback);
-        }
+        displayValue = question.displayValue;
       }
     }
     return displayValue;
@@ -79,6 +83,7 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
 
   public getCellData(table: Table, data: any): ICellData {
     const displayValue = this.getDisplayValue(data, table, table.options);
+    this.setupReadyChangedCallback(table, this.question);
     return { question: this.question, displayValue: this.formatDisplayValue(displayValue) };
   }
   public toJSON(): IColumnData {
@@ -204,5 +209,23 @@ export class MatrixDropdownColumn extends BaseColumn<QuestionMatrixDropdownModel
       displayValue = (displayValue[rowId] && displayValue[rowId][colId]) || "";
     }
     return displayValue;
+  }
+}
+
+export class CustomQuestionColumn extends BaseColumn<QuestionCustomModel> {
+  public getCellData(table: Table, data: any): ICellData {
+    this.setupReadyChangedCallback(table, this.question.contentQuestion);
+    return super.getCellData(table, data);
+  }
+}
+
+export class CompositeQuestionColumn extends BaseColumn<QuestionCompositeModel> {
+  public getCellData(table: Table, data: any): ICellData {
+    const questionList: Question[] = [];
+    this.question.contentPanel.addQuestionsToList(questionList);
+    questionList.forEach((question: Question) => {
+      this.setupReadyChangedCallback(table, question);
+    });
+    return super.getCellData(table, data);
   }
 }

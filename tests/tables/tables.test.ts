@@ -1,4 +1,4 @@
-import { SurveyModel, QuestionTextModel } from "survey-core";
+import { SurveyModel, QuestionTextModel, ComponentCollection, QuestionCustomModel, QuestionCompositeModel } from "survey-core";
 import { Table } from "../../src/tables/table";
 import { ColumnDataType, ITableState, QuestionLocation } from "../../src/tables/config";
 const json = {
@@ -405,6 +405,77 @@ test("check question which is not ready", () => {
   data[0].text = "test_text";
   question.onReadyChanged.fire(question, { isReady: true });
   expect(table["tableData"][0]["text"]).toEqual("test_text");
+});
+
+test("check custom question with question which is not ready", () => {
+  ComponentCollection
+    .Instance
+    .add({
+      name: "customQuestion",
+      questionJSON: {
+        type: "text",
+        name: "innerQuestion"
+      }
+    });
+  const json = {
+    elements: [
+      {
+        type: "customQuestion",
+        name: "customQuestion"
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const question = <QuestionCustomModel>survey.getAllQuestions()[0];
+  const data = [{ "customQuestion": "test_value" }];
+  question.contentQuestion["isReadyValue"] = false;
+  const table = new TableTest(survey, data, []);
+  expect(table["tableData"][0]["customQuestion"]).toEqual("test_value");
+  question.contentQuestion["isReadyValue"] = true;
+  data[0]["customQuestion"] = "test_text";
+  question.contentQuestion.onReadyChanged.fire(question.contentQuestion, { isReady: true });
+  expect(table["tableData"][0]["customQuestion"]).toEqual("test_text");
+});
+
+test("check composite question with questions which is not ready", () => {
+  ComponentCollection
+    .Instance
+    .add({
+      name: "compositeQuestion",
+      elementsJSON: [
+        {
+          type: "text",
+          name: "innerQuestion"
+        },
+        {
+          type: "text",
+          name: "innerQuestion2"
+        },
+      ]
+    });
+  const json = {
+    elements: [
+      {
+        type: "compositeQuestion",
+        name: "compositeQuestion"
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const question = <QuestionCompositeModel>survey.getAllQuestions()[0];
+  const data = [{ "compositeQuestion": { "innerQuestion": "test_value1", "innerQuestion2": "test_value2" } }];
+  question.contentPanel.elements[0]["isReadyValue"] = false;
+  question.contentPanel.elements[1]["isReadyValue"] = false;
+  const table = new TableTest(survey, data, []);
+  expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_value1\",\"innerQuestion2\":\"test_value2\"}");
+  question.contentPanel.elements[0]["isReadyValue"] = true;
+  data[0]["compositeQuestion"]["innerQuestion"] = "test_text1";
+  question.contentPanel.elements[0].onReadyChanged.fire(question.contentPanel.elements[0], { isReady: true });
+  expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_text1\",\"innerQuestion2\":\"test_value2\"}");
+  question.contentPanel.elements[1]["isReadyValue"] = true;
+  data[0]["compositeQuestion"]["innerQuestion2"] = "test_text2";
+  question.contentPanel.elements[1].onReadyChanged.fire(question.contentPanel.elements[1], { isReady: true });
+  expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_text1\",\"innerQuestion2\":\"test_text2\"}");
 });
 
 test("Generate columns for question matrix", () => {
