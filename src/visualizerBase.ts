@@ -5,7 +5,7 @@ import { DocumentHelper } from "./utils";
 import { localization } from "./localizationManager";
 import { Event } from "survey-core";
 
-import "./visualizerBase.scss";
+var styles = require("./visualizerBase.scss");
 
 /**
  * VisualizerBase is a base object for all visuzlizers. It responsible for the rendering and destroying visualizer.

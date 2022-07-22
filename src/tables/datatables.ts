@@ -3,7 +3,7 @@ import { SurveyModel, Event } from "survey-core";
 import { ColumnDataType, IColumn, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
 
-import "./datatables.scss";
+var styles = require("./datatables.scss");
 
 if (!!document) {
   var svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");

@@ -2,9 +2,9 @@ import { Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 import { localization } from "./localizationManager";
-
-import "./text.scss";
 import { DocumentHelper } from "./utils";
+
+var styles = require("./text.scss");
 
 export class TextTableAdapter {
   constructor(private model: Text) {}

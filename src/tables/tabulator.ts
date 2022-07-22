@@ -1,12 +1,12 @@
 import { ITableOptions, Table, TableRow } from "./table";
 import { SurveyModel } from "survey-core";
 import { ColumnDataType, IColumnData, QuestionLocation } from "./config";
-
-import "./tabulator.scss";
 import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
 import TabulatorTables from "tabulator-tables";
 import { ARIAL_FONT } from "./custom_jspdf_font";
+
+var styles = require("./tabulator.scss");
 
 if (!!document) {
   const svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");

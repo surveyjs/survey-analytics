@@ -2,9 +2,9 @@ import { Question } from "survey-core";
 import { SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
 import { localization } from "./localizationManager";
-
-import "./choices-table.scss";
 import { DocumentHelper } from "./utils";
+
+var styles = require("./choices-table.scss");
 
 export class ChoicesTableAdapter {
   constructor(private model: ChoicesTable) {}
