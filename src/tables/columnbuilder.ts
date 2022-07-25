@@ -1,5 +1,5 @@
-import { Question, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
-import { BaseColumn, CommentColumn, FileColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn } from "./columns";
+import { Question, QuestionCompositeModel, QuestionCustomModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
+import { BaseColumn, CommentColumn, CompositeQuestionColumn, CustomQuestionColumn, FileColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn } from "./columns";
 import { IColumn } from "./config";
 import { Table } from "./table";
 
@@ -83,3 +83,17 @@ export class MatrixDropdownColumnBuilder extends DefaultColumnsBuilder {
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("matrixdropdown", new MatrixDropdownColumnBuilder());
+
+export class CustomColumnsBuilder extends DefaultColumnsBuilder<QuestionCustomModel> {
+  protected createColumn(question: QuestionCustomModel, table: Table): CustomQuestionColumn {
+    return new CustomQuestionColumn(question, table);
+  }
+}
+ColumnsBuilderFactory.Instance.registerBuilderColumn("custom", new CustomColumnsBuilder());
+
+export class CompositeColumnsBuilder extends DefaultColumnsBuilder<QuestionCompositeModel> {
+  protected createColumn(question: QuestionCompositeModel, table: Table): CompositeQuestionColumn {
+    return new CompositeQuestionColumn(question, table);
+  }
+}
+ColumnsBuilderFactory.Instance.registerBuilderColumn("composite", new CompositeColumnsBuilder());

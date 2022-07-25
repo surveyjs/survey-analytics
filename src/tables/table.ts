@@ -160,7 +160,7 @@ export abstract class Table {
   protected buildColumns = (survey: SurveyModel) => {
     let columns: Array<IColumn> = [];
     this._survey.getAllQuestions().forEach((question: Question) => {
-      const builder = ColumnsBuilderFactory.Instance.getColumnsBuilder(question.getType());
+      const builder = ColumnsBuilderFactory.Instance.getColumnsBuilder(question.getTemplate());
       columns = columns.concat(builder.buildColumns(question, this));
     });
     return columns;
