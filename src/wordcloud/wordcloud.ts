@@ -1,4 +1,4 @@
-import { Question } from "survey-core";
+import { Question, Event } from "survey-core";
 import { VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
 import { textHelper } from "./stopwords/index";
@@ -13,6 +13,11 @@ export class WordCloudAdapter {
   public static shrinkToFit = true;
   public static abortThreshold: any = undefined;
   public static weightFactor = 20;
+
+  public static onWordcloudCreating = new Event<
+      (sender: WordCloud, options: any) => any,
+      any
+    >();
 
   constructor(private model: WordCloud) {}
 
@@ -56,7 +61,12 @@ export class WordCloudAdapter {
       },
     };
 
-    this._wordcloud = WordCloudLib(canvasNode, config);
+    const options = {
+      canvas: canvasNode,
+      config
+    };
+    WordCloudAdapter.onWordcloudCreating.fire(this.model, options);
+    this._wordcloud = WordCloudLib(options.canvas, options.config);
     return this._wordcloud;
   }
 
