@@ -78,7 +78,7 @@ export interface IVisualizationPanelOptions {
    *
    * Default value: `true`
    *
-   * [View the "Disable the Layout Engine" example](https://surveyjs.io/Examples/Analytics?id=custom-layout)
+   * [View the "Disable the Layout Engine" example](https://surveyjs.io/Examples/Analytics?id=custom-layout (linkStyle))
    *
    * @see layoutEngine
    */
