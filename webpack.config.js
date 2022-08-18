@@ -94,6 +94,7 @@ module.exports = function (options) {
         fs.createReadStream("./README.md").pipe(
           fs.createWriteStream(packagePath + "README.md")
         );
+        packageJson.dependencies["survey-core"] = packageJson.version;
         fs.writeFileSync(
           packagePath + "package.json",
           JSON.stringify(packageJson, null, 2),
