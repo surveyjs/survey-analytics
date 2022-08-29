@@ -45,7 +45,7 @@ The following code shows how to reference these libraries:
     <!-- SurveyJS Library resources -->
     <script type="text/javascript" src="https://unpkg.com/survey-core/survey.core.min.js"></script>
     <!-- Uncomment the following lines if you also display the survey on the page -->
-    <!-- <link href="https://unpkg.com/survey-core/modern.min.css" type="text/css" rel="stylesheet"> -->
+    <!-- <link href="https://unpkg.com/survey-core/defaultV2.min.css" type="text/css" rel="stylesheet"> -->
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-knockout-ui/survey-knockout-ui.min.js"></script> -->
 
     <!-- Third-party visualization libraries -->
@@ -177,7 +177,7 @@ const vizPanel = new SurveyAnalytics.VisualizationPanel(
 
     <script type="text/javascript" src="https://unpkg.com/survey-core/survey.core.min.js"></script>
     <!-- Uncomment the following lines if you also display the survey on the page -->
-    <!-- <link href="https://unpkg.com/survey-core/modern.min.css" type="text/css" rel="stylesheet"> -->
+    <!-- <link href="https://unpkg.com/survey-core/defaultV2.min.css" type="text/css" rel="stylesheet"> -->
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-knockout-ui/survey-knockout-ui.min.js"></script> -->
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -197,7 +197,7 @@ const vizPanel = new SurveyAnalytics.VisualizationPanel(
 
 ```js
 // Uncomment the following line if you also display the survey on the page
-// Survey.StylesManager.applyTheme("modern");
+// Survey.StylesManager.applyTheme("defaultV2");
 
 const surveyJson = {
     elements: [{
@@ -285,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     <script type="text/javascript" src="https://unpkg.com/survey-core/survey.core.min.js"></script>
     <!-- Uncomment the following lines if you also display the survey on the page -->
-    <!-- <link href="https://unpkg.com/survey-core/modern.min.css" type="text/css" rel="stylesheet"> -->
+    <!-- <link href="https://unpkg.com/survey-core/defaultV2.min.css" type="text/css" rel="stylesheet"> -->
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-knockout-ui/survey-knockout-ui.min.js"></script> -->
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -305,7 +305,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 ```js
 // Uncomment the following line if you also display the survey on the page
-// Survey.StylesManager.applyTheme("modern");
+// Survey.StylesManager.applyTheme("defaultV2");
 
 const surveyJson = {
     elements: [{
