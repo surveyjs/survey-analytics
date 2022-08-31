@@ -10,6 +10,7 @@ import { VisualizationManager } from "../src/visualizationManager";
 VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
 VisualizationManager.registerVisualizer("checkbox", SelectBase);
+VisualizationManager.registerVisualizer("radiogroup", SelectBase);
 VisualizationManager.registerAlternativesVisualizer(AlternativeVisualizersWrapper);
 
 test("allowDynamicLayout option", () => {
@@ -566,3 +567,53 @@ test("set state for non-existing questions", () => {
 
 });
 
+test("updateData should be called in order to update data - #269", () => {
+  const json = {
+    elements: [{
+      name: "satisfaction-score",
+      title: "How would you describe your experience with our product?",
+      type: "radiogroup",
+      choices: [
+        { value: 5, text: "Fully satisfying" },
+        { value: 4, text: "Generally satisfying" },
+        { value: 3, text: "Neutral" },
+        { value: 2, text: "Rather unsatisfying" },
+        { value: 1, text: "Not satisfying at all" }
+      ]
+    }, {
+      name: "nps-score",
+      title: "On a scale of zero to ten, how likely are you to recommend our product to a friend or colleague?",
+      type: "rating",
+      rateMin: 0,
+      rateMax: 10,
+    }]
+  };
+  const data = [{
+    "satisfaction-score": 5,
+    "nps-score": 10
+  }, {
+    "satisfaction-score": 5,
+    "nps-score": 9
+  }, {
+    "satisfaction-score": 3,
+    "nps-score": 6
+  }, {
+    "satisfaction-score": 3,
+    "nps-score": 6
+  }, {
+    "satisfaction-score": 2,
+    "nps-score": 3
+  }];
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
+
+  const questionVisualizer = visPanel.visualizers[0];
+  expect(questionVisualizer.getData()).toEqual([[0, 1, 2, 0, 2]]);
+
+  const newAnswer = { "satisfaction-score": 4, "nps-score": 9 };
+  data.push(newAnswer);
+  expect(questionVisualizer.getData()).toEqual([[0, 1, 2, 0, 2]]);
+
+  visPanel.updateData(data);
+  expect(questionVisualizer.getData()).toEqual([[0, 1, 2, 1, 2]]);
+});
