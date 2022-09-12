@@ -26,10 +26,12 @@
   "files": [
     "survey.analytics.d.ts",
     "survey.analytics.datatables.js",
+    "survey.analytics.datatables.d.ts",
     "survey.analytics.datatables.min.js",
     "survey.analytics.datatables.css",
     "survey.analytics.datatables.min.css",
     "survey.analytics.tabulator.js",
+    "survey.analytics.tabulator.d.ts",
     "survey.analytics.tabulator.min.js",
     "survey.analytics.tabulator.css",
     "survey.analytics.tabulator.min.css",
