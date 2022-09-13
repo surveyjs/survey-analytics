@@ -41,7 +41,7 @@ const defaultDownloadOptions = {
         styles: {
           font: "custom_helvetica",
           fontStyle: "normal",
-          columnWidth: 1,
+          cellWidth: 1,
         },
         margin: { top: 10, right: 10, bottom: 10, left: 10 },
       };
