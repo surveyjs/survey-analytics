@@ -30,7 +30,7 @@ interface ITabulatorOptions extends ITableOptions {
   };
 }
 
-const defaultDownloadOptions = {
+export const defaultDownloadOptions = {
   fileName: "results",
   pdf: {
     orientation: "landscape",
@@ -51,11 +51,11 @@ const defaultDownloadOptions = {
   xlsx: { sheetName: "results" },
 };
 
-const defaultOptions: ITabulatorOptions = {
+export const defaultOptions: ITabulatorOptions = {
   tabulatorOptions: {},
   actionsColumnWidth: 60,
   downloadHiddenColumns: false,
-  downloadButtons: ["pdf", "xlsx", "csv"],
+  downloadButtons: ["csv"],
   downloadOptions: defaultDownloadOptions,
   onDownloadCallbacks: {
     pdf: (tabulator: Tabulator, options) => {
@@ -71,6 +71,13 @@ const defaultOptions: ITabulatorOptions = {
     },
   },
 };
+
+if(!!window && window["XLSX"] !== undefined && defaultOptions.downloadButtons.indexOf("xlsx") === -1) {
+  defaultOptions.downloadButtons.unshift("xlsx");
+}
+if(!!window && window["jsPDF"] !== undefined && defaultOptions.downloadButtons.indexOf("pdf") === -1) {
+  defaultOptions.downloadButtons.unshift("pdf");
+}
 
 const escapeCellFormula = (field: string) => {
   const formulaPrefix = ["=", "+", "-", "@", String.fromCharCode(0x09), String.fromCharCode(0x0d)];
