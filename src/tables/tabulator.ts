@@ -96,7 +96,7 @@ export class Tabulator extends Table {
   constructor(
     survey: SurveyModel,
     data: Array<Object>,
-    options: ITabulatorOptions,
+    options?: ITabulatorOptions,
     _columnsData: Array<IColumnData> = []
   ) {
     super(survey, data, options, _columnsData);

@@ -54,7 +54,7 @@ export class DataTables extends Table {
   constructor(
     survey: SurveyModel,
     data: Array<Object>,
-    options: DataTablesOptions,
+    options?: DataTablesOptions,
     _columnsData: Array<IColumnData> = []
   ) {
     super(survey, data, options, _columnsData);
