@@ -27,7 +27,7 @@ export class VisualizerBase implements IDataInfo {
   private _showHeader = true;
   private _footerVisualizer: VisualizerBase = undefined;
   private _dataProvider: DataProvider = undefined;
-  protected labelTruncateLength: number = 27;
+  public labelTruncateLength: number = 27;
   protected renderResult: HTMLElement = undefined;
   protected toolbarContainer: HTMLElement = undefined;
   protected contentContainer: HTMLElement = undefined;

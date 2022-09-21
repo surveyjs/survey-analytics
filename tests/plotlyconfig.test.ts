@@ -59,8 +59,8 @@ test("check bar config with showPercentages", () => {
 
 test("check bar config tick labels", () => {
   (<any>selectBase)._showPercentages = true;
-  const labelTruncateLength = selectBase.options.labelTruncateLength;
-  selectBase.options.labelTruncateLength = 5;
+  const labelTruncateLength = selectBase.labelTruncateLength;
+  selectBase.labelTruncateLength = 5;
   const config = PlotlySetup.setupBar(selectBase);
 
   const fullTexts = [
@@ -93,7 +93,7 @@ test("check bar config tick labels", () => {
   expect(config.layout.yaxis.ticktext).toEqual(truncatedTexts);
   expect(config.traces[0].hovertext).toEqual(hoverTexts);
 
-  selectBase.options.labelTruncateLength = labelTruncateLength;
+  selectBase.labelTruncateLength = labelTruncateLength;
 });
 
 test("check matrix config hovertexts", () => {

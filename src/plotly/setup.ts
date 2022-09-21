@@ -69,7 +69,7 @@ export class PlotlySetup {
       text: (hasSeries ? seriesLabels : labels).map((label: string) => {
         return PlotlySetup.getTruncatedLabel(
           label,
-          model.options.labelTruncateLength
+          model.labelTruncateLength
         );
       }),
       hoverinfo: "x+y",
@@ -214,7 +214,7 @@ export class PlotlySetup {
         ticktext: yFullTexts.map((label: string) => {
           return PlotlySetup.getTruncatedLabel(
             label,
-            model.options.labelTruncateLength
+            model.labelTruncateLength
           ) + "  ";
         }),
       },
@@ -357,7 +357,7 @@ export class PlotlySetup {
       y: (hasSeries ? seriesLabels : labels).map((label: string) => {
         return PlotlySetup.getTruncatedLabel(
           label,
-          model.options.labelTruncateLength
+          model.labelTruncateLength
         );
       }),
       customdata: hasSeries ? seriesLabels : labels,
