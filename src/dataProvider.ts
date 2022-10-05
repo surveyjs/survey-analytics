@@ -68,6 +68,10 @@ export class DataProvider {
               const filterValue = this.filterValues[key];
               const filterValueType = typeof filterValue;
               const questionValue = item[key];
+              if (Array.isArray(questionValue)) {
+                if (filterValueType !== "object")
+                  return questionValue.indexOf(filterValue) == -1;
+              }
               if (typeof questionValue === "object") {
                 if (filterValueType !== "object")
                   return true;

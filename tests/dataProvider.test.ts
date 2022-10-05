@@ -26,7 +26,7 @@ const testData = [
   {
     q1: 1,
     q2: "item2",
-    q3: ["item1", "item3"],
+    q3: ["item1", "item2"],
     q4: { innerq1: "item1", innerq2: "item1" },
   },
 ];
@@ -60,6 +60,16 @@ test("ctor/setFilter/reset/onDataChanged", () => {
 
   dataProvider.reset();
   expect(callCount).toEqual(2);
+
+  dataProvider.setFilter("q2", undefined);
+  expect(callCount).toEqual(2);
+  expect(dataProvider.getData(q1testDataInfo)).toEqual([[2, 2, 0, 0]]);
+  expect(callCount).toEqual(2);
+
+  dataProvider.setFilter("q3", "item2");
+  expect(callCount).toEqual(3);
+  expect(dataProvider.getData(q1testDataInfo)).toEqual([[0, 1, 0, 0]]);
+  expect(callCount).toEqual(3);
 });
 
 test("getData for boolean question values - mock", () => {
