@@ -7,6 +7,7 @@ export class HistogramModel extends SelectBase {
   private _cachedValues: Array<{ original: any, continious: number }> = undefined;
   private _continiousData: { [series: string]: Array<number> } = undefined;
   private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
+  private _intervalPrecision: number = 2;
   protected chartTypes: string[];
   public chartType: string;
 
@@ -20,6 +21,9 @@ export class HistogramModel extends SelectBase {
     name?: string
   ) {
     super(question, data, options, name || "histogram");
+    if (this.options.intervalPrecision !== undefined) {
+      this._intervalPrecision = this.options.intervalPrecision;
+    }
     const questionType = question.getType();
     if (questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
       this.valueType = "date";
@@ -46,6 +50,11 @@ export class HistogramModel extends SelectBase {
       return new Date(value).toLocaleDateString();
     }
     return "" + value;
+  }
+
+  private toPrecision(value: number) {
+    const base = Math.pow(10, this._intervalPrecision);
+    return Math.round(base * value) / base;
   }
 
   public getSelectedItemByText(itemText: string) {
@@ -141,16 +150,18 @@ export class HistogramModel extends SelectBase {
       const continiousValues = this.getContiniousValues();
       this._cachedIntervals = [];
       if (continiousValues.length) {
-        let start = continiousValues[0].continious - 1;
-        const end = continiousValues[continiousValues.length - 1].continious + 1;
+        let start = continiousValues[0].continious;
+        const end = continiousValues[continiousValues.length - 1].continious;
         const intervalsCount = HistogramModel.IntervalsCount;
         const delta = (end - start) / intervalsCount;
         for (let i = 0; i < intervalsCount; ++i) {
           const next = start + delta;
+          const istart = this.toPrecision(start)
+          const inext = this.toPrecision(next)
           this._cachedIntervals.push({
-            start: start,
-            end: next,
-            label: "" + this.getString(start) + "-" + this.getString(next)
+            start: istart,
+            end: inext,
+            label: "" + this.getString(istart) + "-" + this.getString(inext)
           });
           start = next;
         }
@@ -174,7 +185,7 @@ export class HistogramModel extends SelectBase {
       statistics.push(intervals.map(i => 0));
       this._continiousData[series[i]].forEach(dataValue => {
         for (let j = 0; j < intervals.length; ++j) {
-          if (intervals[j].start <= dataValue && dataValue < intervals[j].end) {
+          if (intervals[j].start <= dataValue && (dataValue < intervals[j].end || j == intervals.length - 1)) {
             statistics[i][j]++;
             break;
           }

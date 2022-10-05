@@ -98,31 +98,30 @@ test("date default intervals", () => {
 
   expect(histIntervals.length).toBe(10);
   expect(histValues).toMatchObject([
-    1577836799999,
-    1578095999999.2,
-    1578355199999.4,
-    1578614399999.5999,
-    1578873599999.7998,
-    1579132799999.9998,
-    1579392000000.1997,
-    1579651200000.3997,
-    1579910400000.5996,
-    1580169600000.7996,
-
+    1577826000000,
+    1578085200000,
+    1578344400000,
+    1578603600000,
+    1578862800000,
+    1579122000000,
+    1579381200000,
+    1579640400000,
+    1579899600000,
+    1580158800000,
   ]);
   expect(histLabels).toMatchObject([
-    "12/31/2019-1/3/2020",
-    "1/3/2020-1/6/2020",
-    "1/6/2020-1/9/2020",
-    "1/9/2020-1/12/2020",
-    "1/12/2020-1/15/2020",
-    "1/15/2020-1/19/2020",
+    "1/1/2020-1/4/2020",
+    "1/4/2020-1/7/2020",
+    "1/7/2020-1/10/2020",
+    "1/10/2020-1/13/2020",
+    "1/13/2020-1/16/2020",
+    "1/16/2020-1/19/2020",
     "1/19/2020-1/22/2020",
     "1/22/2020-1/25/2020",
     "1/25/2020-1/28/2020",
     "1/28/2020-1/31/2020",
   ]);
-  expect(histData).toMatchObject([[3, 3, 3, 3, 3, 4, 3, 3, 3, 3]]);
+  expect(histData).toMatchObject([[3, 3, 3, 3, 3, 3, 3, 3, 3, 4]]);
 });
 
 test("date empty data", () => {
@@ -387,18 +386,6 @@ test("histogram series intervals data", () => {
       0,
     ],
     [
-      0,
-      1,
-      0,
-      0,
-      1,
-      0,
-      0,
-      1,
-      0,
-      0,
-    ],
-    [
       1,
       0,
       0,
@@ -411,12 +398,12 @@ test("histogram series intervals data", () => {
       0,
     ],
     [
+      1,
+      0,
       0,
       0,
       1,
       0,
-      0,
-      1,
       0,
       0,
       1,
@@ -430,6 +417,18 @@ test("histogram series intervals data", () => {
       0,
       1,
       0,
+      0,
+      1,
+      0,
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
       0,
       0,
       2,
@@ -494,4 +493,124 @@ test("histogram should use rate values", () => {
     0,
     0,
   ]]);
+});
+
+test("histogram intervals alignment and rounding", () => {
+  var data = [
+    {
+      nps_score: 1,
+      date: "2021-10-13",
+      age: 17
+    },
+    {
+      nps_score: 1,
+      date: "2021-10-13",
+      age: 17
+    },
+    {
+      nps_score: 5,
+      date: "2021-10-13",
+      age: 17
+    },
+    {
+      nps_score: 10,
+      date: "2011-10-13",
+      age: 30
+    },
+    {
+      nps_score: 5,
+      date: "2011-10-13",
+      age: 30
+    },
+    {
+      nps_score: 5,
+      date: "2004-10-13",
+      age: 40
+    },
+    {
+      nps_score: 5,
+      date: "2004-10-13",
+      age: 40
+    },
+    {
+      nps_score: 5,
+      date: "2016-10-13",
+      age: 25
+    },
+    {
+      nps_score: 6,
+      date: "2017-10-13",
+      age: 25
+    },
+    {
+      date: "2018-10-13",
+      age: 25
+    },
+    {
+      date: "2019-10-13",
+      age: 25
+    },
+    {
+      date: "2020-10-13",
+      age: 25
+    },
+    {
+      date: "2021-10-13",
+      age: 25
+    },
+    {
+      nps_score: 7,
+      date: "2022-10-13",
+      age: 25
+    },
+    {
+      nps_score: 8,
+      date: "2023-10-13",
+      age: 25
+    },
+    {
+      nps_score: 9,
+      date: "2024-10-13",
+      age: 25
+    },
+    {
+      nps_score: 2,
+      date: "2025-10-13",
+      age: 25
+    },
+    {
+      nps_score: 2,
+      date: "2026-10-13",
+      age: 25
+    },
+    {
+      nps_score: 3,
+      date: "2027-10-13",
+      age: 25
+    },
+    {
+      nps_score: 4,
+      date: "2028-10-13",
+      age: 25
+    },
+    {
+      nps_score: 4,
+      date: "2029-10-13",
+      age: 25
+    },
+    {
+      nps_score: 0,
+      date: "2030-10-13",
+      age: 25
+    },
+    { "question1": 3 }
+  ];  
+  const question: any = {
+    getType: () => "rating",
+    type: "rating",
+    name: "nps_score",
+  };
+  const number = new HistogramModel(question, data);
+  expect(number.getValues()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  expect(number.getLabels()).toEqual(["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9", "9-10"]);
 });
