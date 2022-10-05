@@ -72,7 +72,6 @@ export const defaultOptions: ITabulatorOptions = {
   },
 };
 
-
 const escapeCellFormula = (field: string) => {
   const formulaPrefix = ["=", "+", "-", "@", String.fromCharCode(0x09), String.fromCharCode(0x0d)];
   if (formulaPrefix.some(prefix => field.startsWith(prefix))) {

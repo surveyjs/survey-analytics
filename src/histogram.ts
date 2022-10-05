@@ -156,8 +156,8 @@ export class HistogramModel extends SelectBase {
         const delta = (end - start) / intervalsCount;
         for (let i = 0; i < intervalsCount; ++i) {
           const next = start + delta;
-          const istart = this.toPrecision(start)
-          const inext = this.toPrecision(next)
+          const istart = this.toPrecision(start);
+          const inext = this.toPrecision(next);
           this._cachedIntervals.push({
             start: istart,
             end: inext,
