@@ -1,5 +1,4 @@
-# SurveyJS Analytics
-
+# SurveyJS Dashboard
 [![Build Status](https://dev.azure.com/SurveyJS/SurveyJS%20Integration%20Tests/_apis/build/status/SurveyJS%20Library?branchName=master)](https://dev.azure.com/SurveyJS/SurveyJS%20Integration%20Tests/_build/latest?definitionId=7&branchName=master)
 <a href="https://github.com/DevExpress/testcafe">
 <img alt="Tested with TestCafe" src="https://img.shields.io/badge/tested%20with-TestCafe-2fa4cf.svg">
@@ -11,24 +10,25 @@
 <img alt="Closed issues" title="Closed issues" src="https://img.shields.io/github/issues-closed/surveyjs/survey-analytics.svg">
 </a>
 
-SurveyJS Analytics visualizes survey results and allows users to analyze them.
+The SurveyJS Dashboard library lets you build survey data dashboards and simplify survey data analysis with interactive and customizable charts and tables. Visualize your insights and analyze survey results in one view.
 
 ![SurveyJS Analytics](docs/images/survey-analytics-overview.png)
 
 ## Features
 
-- Supported chart types:
-  - Bar
-  - Pie
-  - Line
-  - Gauge
-  - Bullet
-  - Scatter
+- Supported chart and graph types:
+  - Bar chart
+  - Donut graph
+  - Pie chart
+  - Line chart (also known as line graph or curve chart)
+  - Gauge chart
+  - Bullet graph
+  - Scatter plot
   - Word cloud
-- Interactive filtering
+- Interactive value filtering ordering
 - Customizable colors
 - Dynamic layout
-- Chart reordering via drag and drop
+- Drag-and-drop chart reordering
 
 ## Get Started
 
@@ -84,4 +84,4 @@ Make sure that you have Node.js v6.0.0 or later and npm v2.7.0 or later installe
 
 ## Licensing
 
-SurveyJS Analytics is **not available for free commercial usage**. If you want to integrate it into your application, you must purchase a [commercial license](/Licenses#SurveyCreator).
+SurveyJS Analytics is **not available for free commercial usage**. If you want to integrate it into your application, you must purchase a [commercial license(s)](https://surveyjs.io/licensing) for software developer(s) who will be working with the SurveyJS product's APIs and implementing their integration.
