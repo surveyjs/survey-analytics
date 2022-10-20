@@ -92,7 +92,7 @@ TableExtensions.registerExtension({
   render: function (table: Table): HTMLElement {
     function getEntriesDropdown(table: Table): HTMLElement {
       const el = <HTMLSelectElement>DocumentHelper.createElement("select");
-      var optionsValues = ["1", "5", "10", "25", "50", "75", "100"];
+      var optionsValues = table.paginationSizeSelector || ["1", "5", "10", "25", "50", "75", "100"];
       optionsValues.forEach(function (val) {
         var option = DocumentHelper.createElement("option", "", {
           value: val,

@@ -73,6 +73,11 @@ export abstract class Table {
   protected _rows: TableRow[] = [];
   protected isColumnReorderEnabled: boolean;
 
+  /**
+   * Sets pagination selector content.
+   */
+  public paginationSizeSelector: number[] = [1, 5, 10, 25, 50, 100];
+
   public onColumnsVisibilityChanged: Event<
     (sender: Table, options: any) => any,
     any
@@ -133,10 +138,16 @@ export abstract class Table {
     this.currentPageNumber = value;
   }
 
+  /**
+   * Returns current page size.
+   */
   public getPageSize(): number {
     return this.currentPageSize;
   }
 
+  /**
+   * Sets current page size.
+   */
   public setPageSize(value: number): void {
     this.currentPageSize = value;
     this.onStateChanged.fire(this, this.state);
