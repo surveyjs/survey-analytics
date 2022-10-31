@@ -67,6 +67,7 @@ export var englishStrings = {
   showPerValues: "Per Values",
   showPerColumns: "Per Columns",
   answer: "Answer",
+  correctAnswer: "Correct answer: ",
   percent: "Percent",
   responses: "Responses"
 };

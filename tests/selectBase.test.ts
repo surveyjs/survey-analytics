@@ -1,4 +1,4 @@
-import { QuestionDropdownModel, ItemValue, QuestionImagePickerModel } from "survey-core";
+import { QuestionDropdownModel, ItemValue, QuestionImagePickerModel, SurveyModel } from "survey-core";
 import { SelectBase } from "../src/selectBase";
 
 let selectBase: SelectBase;
@@ -263,4 +263,48 @@ test("valueName used for getData https://surveyjs.answerdesk.io/internal/ticket/
   ];
   selectBase = new SelectBase(question, data, {});
   expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
+});
+
+test("hasHeader and correct answer text", () => {
+  var survey = new SurveyModel({
+    "pages": [
+      {
+        "name": "page1",
+        "elements": [
+          {
+            type: "radiogroup",
+            name: "organization_type",
+            title:
+              "Which of the following best describes you or your organization?",
+            hasOther: true,
+            choices: [
+              {
+                value: "ISV",
+                text: "ISV (building commercial/shrink wrapped software)",
+              },
+              {
+                value: "Consulting",
+                text:
+                  "Software consulting firm (provide development services to other organizations)",
+              },
+              {
+                value: "Custom",
+                text: "Custom software development (as a freelancer/contractor)",
+              },
+              { value: "In-house", text: "In-house software development" },
+              {
+                value: "Hobbyist",
+                text: "Hobbyist (develop apps for personal use)",
+              },
+            ],
+            colCount: 2,
+            correctAnswer: "Hobbyist",
+          },
+        ]
+      }
+    ]
+  });
+  selectBase = new SelectBase(survey.getQuestionByName("organization_type"), [], { showCorrectAnswers: true });
+  expect(selectBase.hasHeader).toBeTruthy();
+  expect(selectBase["getCorrectAnswerText"]()).toEqual("Hobbyist (develop apps for personal use)");
 });

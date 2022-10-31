@@ -255,6 +255,13 @@ export class SelectBase
     }
   }
 
+  protected getCorrectAnswerText(): string {
+    const correctAnswerValue = super.getCorrectAnswerText();
+    const resultValues = Array.isArray(correctAnswerValue) ? correctAnswerValue : [correctAnswerValue];
+    const selectBaseQuestion = this.question as QuestionSelectBase;
+    return resultValues.map((value: any) => ItemValue.getTextOrHtmlByValue(selectBaseQuestion.choices, value)).join(", ");
+  }
+
   public getSelectedItemByText(itemText: string) {
     const selBase = <QuestionSelectBase>this.question;
     if (this.question.hasOther && itemText == selBase.otherText) {

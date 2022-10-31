@@ -60,6 +60,7 @@ var json = {
           valueName: "boolValue",
           title: "Please answer the question",
           label: "Are you 21 or older?",
+          correctAnswer: true,
           //"valueTrue": "true",
           //"valueFalse": "false",
           labelTrue: "Label True",
@@ -92,6 +93,7 @@ var json = {
             },
           ],
           colCount: 2,
+          correctAnswer: "Hobbyist",
         },
         {
           type: "radiogroup",

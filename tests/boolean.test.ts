@@ -3,8 +3,8 @@ import { BooleanModel } from "../src/boolean";
 
 let boolean: BooleanModel;
 
-const values = [ true, false ];
-const labels = [ "Yes", "No" ];
+const values = [true, false];
+const labels = ["Yes", "No"];
 
 beforeEach(() => {
   var question = new QuestionBooleanModel("q1");
@@ -61,4 +61,27 @@ test("getData localized", () => {
   var test = [firstResult, secondResult];
   boolean = new BooleanModel(survey.getQuestionByName("bool"), test);
   expect(boolean.getData()).toEqual([[1, 1]]);
+});
+
+test("hasHeader and correct answer text", () => {
+  var survey = new SurveyModel({
+    "pages": [
+      {
+        "name": "page1",
+        "elements": [
+          {
+            type: "boolean",
+            name: "bool",
+            valueName: "boolValue",
+            correctAnswer: true,
+            labelTrue: "Label True",
+            labelFalse: "Label False",
+          },
+        ]
+      }
+    ]
+  });
+  boolean = new BooleanModel(survey.getQuestionByName("bool"), [], { showCorrectAnswers: true });
+  expect(boolean.hasHeader).toBeTruthy();
+  expect(boolean["getCorrectAnswerText"]()).toEqual("Label True");
 });

@@ -30,6 +30,7 @@ export class VisualizerBase implements IDataInfo {
   public labelTruncateLength: number = 27;
   protected renderResult: HTMLElement = undefined;
   protected toolbarContainer: HTMLElement = undefined;
+  protected headerContainer: HTMLElement = undefined;
   protected contentContainer: HTMLElement = undefined;
   protected footerContainer: HTMLElement = undefined;
   protected _supportSelection: boolean = false;
@@ -84,20 +85,30 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
+   * Indicates whether visualizer has header. Usually it is true then a question has correct answer.
+   */
+  get hasHeader(): boolean {
+    if (!this.options || !this.options.showCorrectAnswers) {
+      return false;
+    }
+    return !!this.question && !!this.question.correctAnswer;
+  }
+
+  /**
    * Indicates whether visualizer has footer. Usually it is true then a question has comment or choices question has other item.
    */
-  get hasFooter() {
+  get hasFooter(): boolean {
     return (
       !!this.question && (this.question.hasComment || this.question.hasOther)
     );
   }
 
-  protected createVisualizer(question: Question) {
+  protected createVisualizer<T = VisualizerBase>(question: Question): T {
     let options = Object.assign({}, this.options);
     if (options.dataProvider === undefined) {
       options.dataProvider = this.dataProvider;
     }
-    return VisualizerFactory.createVisualizer(question, this.data, options);
+    return VisualizerFactory.createVisualizer(question, this.data, options) as T;
   }
 
   /**
@@ -250,6 +261,10 @@ export class VisualizerBase implements IDataInfo {
     });
   }
 
+  protected getCorrectAnswerText(): string {
+    return !!this.question ? this.question.correctAnswer : "";
+  }
+
   /**
    * Destroys visualizer toolbar.
    */
@@ -271,6 +286,18 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
+   * Destroys visualizer header.
+   * Usually overriden in descendants.
+   */
+  protected destroyHeader(container: HTMLElement) {
+    if (!!this.options && typeof this.options.destroyHeader === "function") {
+      this.options.destroyHeader(container, this);
+    } else {
+      container.innerHTML = "";
+    }
+  }
+
+  /**
    * Destroys visualizer content.
    * Usually overriden in descendants.
    */
@@ -283,6 +310,24 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
+   * Renders visualizer header.
+   * Usually overriden in descendants.
+   */
+  protected renderHeader(container: HTMLElement) {
+    if (!!this.options && typeof this.options.renderHeader === "function") {
+      this.options.renderHeader(container, this);
+    } else {
+      const correctAnswerElement = DocumentHelper.createElement(
+        "div",
+        "sa-visualizer__correct-answer"
+      );
+      correctAnswerElement.innerText = localization.getString("correctAnswer") + this.getCorrectAnswerText();
+      container.appendChild(correctAnswerElement);
+    }
+    this.afterRender(container);
+  }
+
+  /**
    * Renders visualizer content.
    * Usually overriden in descendants.
    */
@@ -292,7 +337,6 @@ export class VisualizerBase implements IDataInfo {
     } else {
       container.innerText = localization.getString("noVisualizerForQuestion");
     }
-    this.afterRender(container);
   }
 
   /**
@@ -359,6 +403,15 @@ export class VisualizerBase implements IDataInfo {
     targetElement.appendChild(this.toolbarContainer);
     this.renderToolbar(this.toolbarContainer);
 
+    if (this.hasHeader) {
+      this.headerContainer = DocumentHelper.createElement(
+        "div",
+        "sa-visualizer__header"
+      );
+      targetElement.appendChild(this.headerContainer);
+      this.renderHeader(this.headerContainer);
+    }
+
     this.contentContainer = DocumentHelper.createElement(
       "div",
       "sa-visualizer__content"
@@ -378,6 +431,13 @@ export class VisualizerBase implements IDataInfo {
    * Redraws visualizer and all inner content.
    */
   public refresh() {
+    if (!!this.headerContainer) {
+      setTimeout(() => {
+        this.destroyHeader(this.headerContainer);
+        this.renderHeader(this.headerContainer);
+        this.invokeOnUpdate();
+      });
+    }
     if (!!this.contentContainer) {
       setTimeout(() => {
         this.destroyContent(this.contentContainer);

@@ -17,6 +17,17 @@ export class BooleanModel extends SelectBase {
     super(question, data, options, name || "boolean");
   }
 
+  protected getCorrectAnswerText(): string {
+    const correctAnswerValue = this.booleanQuestion.correctAnswer;
+    if (this.booleanQuestion.valueTrue !== undefined && this.booleanQuestion.valueTrue === correctAnswerValue || !!correctAnswerValue) {
+      return this.booleanQuestion.locLabelTrue.textOrHtml;
+    }
+    if (this.booleanQuestion.valueFalse !== undefined && this.booleanQuestion.valueFalse === correctAnswerValue || !correctAnswerValue) {
+      return this.booleanQuestion.locLabelFalse.textOrHtml;
+    }
+    return correctAnswerValue;
+  }
+
   public get booleanQuestion() {
     return <QuestionBooleanModel>this.question;
   }

@@ -56,7 +56,8 @@ var options = {
   // answersOrder: "desc"
   // allowHideEmptyAnswers: true,
   // hideEmptyAnswers: true,
-  // allowTopNAnswers: true
+  // allowTopNAnswers: true,
+  // showCorrectAnswers: true
 };
 
 // SurveyAnalytics.WordCloudAdapter.drawOutOfBound = false;
