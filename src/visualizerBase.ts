@@ -324,7 +324,6 @@ export class VisualizerBase implements IDataInfo {
       correctAnswerElement.innerText = localization.getString("correctAnswer") + this.getCorrectAnswerText();
       container.appendChild(correctAnswerElement);
     }
-    this.afterRender(container);
   }
 
   /**
@@ -337,6 +336,7 @@ export class VisualizerBase implements IDataInfo {
     } else {
       container.innerText = localization.getString("noVisualizerForQuestion");
     }
+    this.afterRender(container);
   }
 
   /**
