@@ -167,6 +167,7 @@
     border-bottom: 2px solid $text-color;
     transform: rotate(45deg);
     box-sizing: content-box;
+    pointer-events: none;
   }
 }
 // EO custom select
