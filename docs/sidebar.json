@@ -2,11 +2,11 @@
   "Categories": [
     {
       "Name": "overview",
-      "Title": "SurveyJS Analytics Overview"
+      "Title": "Overview"
     },
     {
       "Name": "get-started",
-      "Title": "Get Started with Survey Analytics",
+      "Title": "Get Started",
       "Items": [
         {
           "Name": "get-started-angular",
