@@ -94,10 +94,10 @@ steps:
       Write-Host "##vso[task.setvariable variable=SurveyJSVersion;]$version"
     displayName: 'setup SurveyJSVersion variable from SurveyJSVersionFile'
 
-  - powershell: |
-      cd $(Build.SourcesDirectory)/survey-analytics
-      npm run release -- --release-as $(SurveyJSVersion)
-    displayName: 'npm run release specific version'
+  # - powershell: |
+  #     cd $(Build.SourcesDirectory)/survey-analytics
+  #     npm run release -- --release-as $(SurveyJSVersion)
+  #   displayName: 'npm run release specific version'
 #####################################################
   
   - script: |
