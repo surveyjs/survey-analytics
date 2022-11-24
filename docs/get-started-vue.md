@@ -1,6 +1,6 @@
-# Add Survey Analytics to a Vue Application
+# Add SurveyJS Dashboard to a Vue Application
 
-This step-by-step tutorial will help you get started with Survey Analytics in a Vue application. To add Survey Analytics to your application, follow the steps below:
+This step-by-step tutorial will help you get started with SurveyJS Dashboard in a Vue application. To add SurveyJS Dashboard to your application, follow the steps below:
 
 - [Install the `survey-analytics` npm Package](#install-the-survey-analytics-npm-package)
 - [Configure Styles](#configure-styles)
@@ -21,17 +21,17 @@ You can find the full code for this tutorial in the following GitHub repository:
 
 ## Install the `survey-analytics` npm Package
 
-Survey Analytics is distributed as a <a href="https://www.npmjs.com/package/survey-analytics" target="_blank">survey-analytics</a> npm package. Run the following command to install it:
+SurveyJS Dashboard is distributed as a <a href="https://www.npmjs.com/package/survey-analytics" target="_blank">survey-analytics</a> npm package. Run the following command to install it:
 
 ```cmd
 npm install survey-analytics --save
 ```
 
-Survey Analytics depends on the <a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a> and <a href="https://github.com/timdream/wordcloud2.js#readme" target="_blank">Wordcloud</a> libraries. Wordcloud is used to visualize the Text, Multiple Text, and Comment question types. Plotly.js is used to visualize the rest of the question types. The command above installs both these libraries as dependencies.
+SurveyJS Dashboard depends on the <a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a> and <a href="https://github.com/timdream/wordcloud2.js#readme" target="_blank">Wordcloud</a> libraries. Wordcloud is used to visualize the Text, Multiple Text, and Comment question types. Plotly.js is used to visualize the rest of the question types. The command above installs both these libraries as dependencies.
 
 ## Configure Styles
 
-Import the Survey Analytics style sheet as shown below:
+Import the SurveyJS Dashboard style sheet as shown below:
 
 ```js
 <script>
