@@ -12,13 +12,12 @@ As a result, you will create the following dashboard:
 
 <iframe src="https://codesandbox.io/embed/cool-bush-kilzdy?fontsize=14&hidenavigation=1&module=%2Fsrc%2Fapp%2Fapp.component.ts&theme=dark"
   style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-  title="Add SurveyJS Analytics to an Angular Application"
+  title="Add SurveyJS Dashboard to an Angular Application"
   allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
 
-You can find the full code for this tutorial in the following GitHub repository: <a href="https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/angular" target="_blank">Get Started with SurveyJS Analytics - Angular</a>.
-
+[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/angular (linkStyle))
 
 ## Install the `survey-analytics` npm Package
 
@@ -201,7 +200,7 @@ export class AppComponent implements AfterViewInit {
 ```
 
 <details>
-    <summary>View full code</summary>
+    <summary>View Full Code</summary>
 
 ```js
 import { AfterViewInit, Component } from '@angular/core';
@@ -259,7 +258,7 @@ const vizPanelOptions = {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
-  title = 'SurveyJS Analytics for Angular';
+  title = 'SurveyJS Dashboard for Angular';
 
   ngAfterViewInit(): void {
     const survey = new Model(surveyJson);
@@ -301,7 +300,7 @@ export class AppComponent implements AfterViewInit {
 To view the application, run `ng serve` in a command line and open [http://localhost:4200/](http://localhost:4200/) in your browser.
 
 <details>
-    <summary>View full code</summary>
+    <summary>View Full Code</summary>
 
 ```html
 <div id="surveyVizPanel"></div>
@@ -363,7 +362,7 @@ const vizPanelOptions = {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
-  title = 'SurveyJS Analytics for Angular';
+  title = 'SurveyJS Dashboard for Angular';
 
   ngAfterViewInit(): void {
     const survey = new Model(surveyJson);
@@ -378,7 +377,7 @@ export class AppComponent implements AfterViewInit {
 ```
 </details>
 
-<a href="https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/angular" target="_blank">View full code on GitHub</a>
+[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/angular (linkStyle))
 
 ## Further Reading
 

@@ -18,21 +18,21 @@ As a result, you will create the following dashboard:
 
 SurveyJS Dashboard is powered by Knockout and does not have an individual implementation for jQuery. However, you can integrate the version for Knockout into your jQuery application by following the same instructions.
 
-You can find the full code for this tutorial in the following GitHub repository: <a href="https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/knockout" target="_blank">Get Started with SurveyJS Analytics - Knockout</a>.
+[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/knockout (linkStyle))
 
 ## Link Resources
 
 SurveyJS Dashboard depends on other JavaScript libraries. Reference them on your page in the following order:
 
-- **Knockout**
+1. Knockout
 
-- **Survey Core**       
+1. Survey Core       
 A platform-independent part of the SurveyJS Library that works with the survey model. SurveyJS Dashboard requires only this part, but if you also display the survey on the page, reference [the rest of the SurveyJS Library resources](/Documentation/Library?id=get-started-knockout#link-surveyjs-resources) as well.
 
-- **<a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a> and <a href="https://github.com/timdream/wordcloud2.js#readme" target="_blank">Wordcloud</a>**       
+1. <a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a> and <a href="https://github.com/timdream/wordcloud2.js#readme" target="_blank">Wordcloud</a>       
 Wordcloud (optional) is used to visualize the Text, Multiple Text, and Comment question types. Plotly.js (required) is used to visualize the rest of the question types.
 
-- **SurveyJS Dashboard**      
+1. SurveyJS Dashboard      
 A library that integrates Survey Core with Plotly.js and Wordcloud.
 
 The following code shows how to reference these libraries:
@@ -165,13 +165,13 @@ const vizPanel = new SurveyAnalytics.VisualizationPanel(
 ```
 
 <details>
-    <summary>View full code</summary>
+    <summary>View Full Code</summary>
 
 ```html
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SurveyJS Analytics for Knockout</title>
+    <title>SurveyJS Dashboard for Knockout</title>
     <meta charset="utf-8">
     <script type="text/javascript" src="https://unpkg.com/knockout/build/output/knockout-latest.js"></script>
 
@@ -273,13 +273,13 @@ document.addEventListener("DOMContentLoaded", function() {
 ```
 
 <details>
-    <summary>View full code</summary>
+    <summary>View Full Code</summary>
 
 ```html
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SurveyJS Analytics for Knockout</title>
+    <title>SurveyJS Dashboard for Knockout</title>
     <meta charset="utf-8">
     <script type="text/javascript" src="https://unpkg.com/knockout/build/output/knockout-latest.js"></script>
 
@@ -366,7 +366,7 @@ document.addEventListener("DOMContentLoaded", function() {
 ```
 </details>
 
-<a href="https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/knockout" target="_blank">View full code on GitHub</a>
+[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/knockout (linkStyle))
 
 
 ## Further Reading

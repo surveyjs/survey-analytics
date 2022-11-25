@@ -12,12 +12,12 @@ As a result, you will create the following dashboard:
 
 <iframe src="https://codesandbox.io/embed/purple-darkness-i3tozi?fontsize=14&hidenavigation=1&module=%2Fsrc%2FApp.js&theme=dark"
     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-    title="Add SurveyJS Analytics to a React Application"
+    title="Add SurveyJS Dashboard to a React Application"
     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
 
-You can find the full code for this tutorial in the following GitHub repository: <a href="https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/react" target="_blank">Get Started with SurveyJS Analytics - React</a>.
+[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/react (linkStyle))
 
 ## Install the `survey-analytics` npm Package
 
@@ -171,7 +171,7 @@ export default function App() {
 ```
 
 <details>
-    <summary>View full code</summary>
+    <summary>View Full Code</summary>
 
 ```js
 import { useState } from 'react';
@@ -284,7 +284,7 @@ export default function App() {
 To view the application, run `npm run start` in a command line and open [http://localhost:3000/](http://localhost:3000/) in your browser.
 
 <details>
-    <summary>View full code</summary>
+    <summary>View Full Code</summary>
 
 ```js
 import { useState, useEffect } from 'react';
@@ -369,7 +369,7 @@ export default function App() {
 ```
 </details>
 
-<a href="https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/react" target="_blank">View full code on GitHub</a>
+[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/react (linkStyle))
 
 ## Further Reading
 

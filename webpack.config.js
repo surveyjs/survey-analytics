@@ -48,7 +48,7 @@ const today = new Date();
 const year = today.getFullYear();
 
 var banner = [
-  "surveyjs - SurveyJS Analytics library v" + packageJson.version,
+  "surveyjs - SurveyJS Dashboard library v" + packageJson.version,
   "Copyright (c) 2015-" + year + " Devsoft Baltic OÜ  - http://surveyjs.io/",
   "License: MIT (http://www.opensource.org/licenses/mit-license.php)",
 ].join("\n");

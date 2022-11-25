@@ -78,7 +78,7 @@ export interface IVisualizationPanelOptions {
    *
    * Default value: `true`
    *
-   * [View the "Disable the Layout Engine" example](https://surveyjs.io/Examples/Analytics?id=custom-layout (linkStyle))
+   * [View Demo](https://surveyjs.io/Examples/Analytics?id=custom-layout (linkStyle))
    *
    * @see layoutEngine
    */
@@ -86,7 +86,7 @@ export interface IVisualizationPanelOptions {
   /**
    * A layout engine used to arrange charts on the Visualization Panel.
    *
-   * You can use this property to integrate a third-party layout engine with SurveyJS Analytics.
+   * You can use this property to integrate a third-party layout engine with SurveyJS Dashboard.
    *
    * @see allowDynamicLayout
    */
@@ -142,7 +142,7 @@ export interface IVisualizationPanelOptions {
    *
    * Default value: `false`
    *
-   * **IMPORTANT**: You can enable this property only if you have a SurveyJS Analytics commercial license. It is illegal to enable this property without a license.
+   * > You can enable this property only if you have a SurveyJS Dashboard commercial license. It is illegal to enable this property without a license.
    */
   haveCommercialLicense?: boolean;
   /**

@@ -17,7 +17,7 @@ As a result, you will create the following dashboard:
     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
 
-You can find the full code for this tutorial in the following GitHub repository: <a href="https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/vue" target="_blank">Get Started with SurveyJS Analytics - Vue</a>.
+[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/vue (linkStyle))
 
 ## Install the `survey-analytics` npm Package
 
@@ -161,7 +161,7 @@ export default {
 ```
 
 <details>
-    <summary>View full code</summary>
+    <summary>View Full Code</summary>
 
 ```js
 <template>
@@ -261,7 +261,7 @@ export default {
 To view the application, run `npm run serve` in a command line and open [http://localhost:8080/](http://localhost:8080/) in your browser.
 
 <details>
-    <summary>View full code</summary>
+    <summary>View Full Code</summary>
 
 ```js
 <template>
@@ -335,7 +335,7 @@ export default {
 ```
 </details>
 
-<a href="https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/vue" target="_blank">View full code on GitHub</a>
+[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/vue (linkStyle))
 
 ## Further Reading
 

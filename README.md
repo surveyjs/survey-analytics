@@ -12,7 +12,7 @@
 
 The SurveyJS Dashboard library lets you build survey data dashboards and simplify survey data analysis with interactive and customizable charts and tables. Visualize your insights and analyze survey results in one view.
 
-![SurveyJS Analytics](docs/images/survey-analytics-overview.png)
+![SurveyJS Dashboard](docs/images/survey-analytics-overview.png)
 
 ## Features
 
@@ -44,7 +44,7 @@ The SurveyJS Dashboard library lets you build survey data dashboards and simplif
 - [Live Examples](https://surveyjs.io/Examples/Analytics)
 - [What's New](https://surveyjs.io/WhatsNew)
 
-## Build SurveyJS Analytics from Sources
+## Build SurveyJS Dashboard from Sources
 
 1. **Clone the repo**
 
@@ -84,4 +84,4 @@ Make sure that you have Node.js v6.0.0 or later and npm v2.7.0 or later installe
 
 ## Licensing
 
-SurveyJS Analytics is **not available for free commercial usage**. If you want to integrate it into your application, you must purchase a [commercial license(s)](https://surveyjs.io/licensing) for software developer(s) who will be working with the SurveyJS product's APIs and implementing their integration.
+SurveyJS Dashboard is **not available for free commercial usage**. If you want to integrate it into your application, you must purchase a [commercial license(s)](https://surveyjs.io/licensing) for software developer(s) who will be working with the SurveyJS product's APIs and implementing their integration.

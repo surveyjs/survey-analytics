@@ -1,8 +1,8 @@
-# SurveyJS Analytics Overview
+# SurveyJS Dashboard Overview
 
-SurveyJS Analytics visualizes survey results and allows users to analyze them.
+SurveyJS Dashboard visualizes survey results and allows users to analyze them.
 
-![SurveyJS Analytics](images/survey-analytics-overview.png)
+![SurveyJS Dashboard](images/survey-analytics-overview.png)
 
 ## Features
 
@@ -34,4 +34,4 @@ Visit our [What's New page](/WhatsNew) for information on new features, recent b
 
 ## Licensing
 
-SurveyJS Analytics is **not available for free commercial usage**. If you want to integrate it into your application, you must purchase a [commercial license](/Licenses#SurveyCreator).
+SurveyJS Dashboard is **not available for free commercial usage**. If you want to integrate it into your application, you must purchase a [commercial license](/Licenses#SurveyCreator).
