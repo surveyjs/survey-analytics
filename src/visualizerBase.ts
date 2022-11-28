@@ -61,7 +61,7 @@ export class VisualizerBase implements IDataInfo {
     this._dataProvider.onDataChanged.add(() => this.onDataChanged());
 
     if (typeof options.labelTruncateLength !== "undefined") {
-      this.labelTruncateLength = options.labelTruncateLengt;
+      this.labelTruncateLength = options.labelTruncateLength;
     }
   }
 
