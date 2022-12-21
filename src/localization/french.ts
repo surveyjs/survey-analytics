@@ -10,6 +10,10 @@ export var frenchStrings = {
   makePublicColumn: "Rendre la colonne public",
   moveToDetail: "Déplacer vers détails",
   showAsColumn: "Afficher en colonne",
+  filterPlaceholder: "Rechercher...",
+  removeRows: "Supprimer colonne",
+  showLabel: "Afficher",
+  entriesLabel: "entrées",
   visualizer_text: "Textes en table",
   visualizer_wordcloud: "Nuages de mots",
   chartType_bar: "Barres",
@@ -21,6 +25,10 @@ export var frenchStrings = {
   chartType_bullet: "Bulles",
   filter: "Filtre",
   hideButton: "Masquer",
+  saveDiagramAsPNG: "Sauver en png",
+  makePrivateButton: "Rendre privé",
+  makePublicButton: "Rendre publique",
+  showButton: "Afficher",
   resetFilter: "Rafraichir Filtres",
   clearButton: "Rafraichir",
   addElement: "Choisir la question à afficher...",
@@ -30,7 +38,13 @@ export var frenchStrings = {
   showMinorColumns: "Afficher les colonnes mineures",
   otherCommentTitle: "Autre élément et commentaires",
   noVisualizerForQuestion: "Ce type de question n'est pas encore visualisé",
-  noResults: "Il n'y a pas encore de résultats"
+  noResults: "Il n'y a pas encore de résultats",
+  showPerValues: "Par valeur",
+  showPerColumns: "Par colonne",
+  answer: "Réponse",
+  correctAnswer: "Réponse correcte: ",
+  percent: "Pourcentage",
+  responses: "Réponses"
 };
 
 localization.locales["fr"] = frenchStrings;
