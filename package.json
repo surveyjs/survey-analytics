@@ -72,7 +72,7 @@
     "muuri": "^0.8.0",
     "plotly.js-dist-min": "^2.11.1",
     "survey-core": "^1.9.52",
-    "tabulator-tables": "4.8.4",
+    "tabulator-tables": "5.4.0",
     "wordcloud": "^1.2.2"
   },
   "devDependencies": {

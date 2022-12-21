@@ -5,6 +5,15 @@ jest.mock("tabulator-tables", () => {
   return { default: jest.requireActual("tabulator-tables") };
 });
 
+const trueTimeout = window.setTimeout;
+
+function mockTimeout() {
+  window.setTimeout = (callback) => { callback(); };
+}
+function restoreTimeout() {
+  window.setTimeout = trueTimeout;
+}
+
 const json = {
   questions: [
     {
@@ -38,8 +47,8 @@ test("getColumns method", () => {
 
   const columns = <any>tabulator["getColumns"]();
 
-  expect(JSON.stringify(columns)).toBe(
-    '[{"field":"","title":"","download":false,"resizable":false,"minWidth":60,"width":60},{"field":"car","title":"What car are you driving?","widthShrink":1,"visible":true,"headerSort":false,"formatter":"plaintext"},{"field":"photo","title":"photo","widthShrink":1,"visible":true,"headerSort":false,"formatter":"html"}]'
+  expect(JSON.parse(JSON.stringify(columns))).toEqual(
+    [{ "field": "", "title": "", "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "car", "title": "What car are you driving?", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 248, "formatter": "plaintext" }, { "field": "photo", "title": "photo", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 248, "formatter": "html" }]
   );
 });
 
@@ -66,11 +75,14 @@ test("move column callback", () => {
   };
   const survey = new SurveyModel(json);
   const tabulator = new Tabulator(survey, [], null);
-  tabulator.render(document.createElement("table"));
-  (<any>tabulator).tabulatorTables.moveColumn("q1", "q3", true);
-  var trueOrder = ["q2", "q3", "q1", "q4"];
-  var order = tabulator.columns.map((column) => column.name);
+  const tableContainer = document.createElement("div");
+  mockTimeout();
+  tabulator.render(tableContainer);
+  tabulator["tabulatorTables"].moveColumn("q1", "q3", true);
+  const trueOrder = ["q2", "q3", "q1", "q4"];
+  const order = tabulator.columns.map((column) => column.name);
   expect(order).toEqual(trueOrder);
+  restoreTimeout();
 });
 
 test("check that tabulator takes into account column's width", () => {
@@ -113,13 +125,15 @@ test("check that tabulator take into account column's width after layout (check 
       location: 0,
     },
   ];
+  mockTimeout();
   tabulator.render(document.createElement("table"));
-  var columnDefinitions = tabulator.tabulatorTables.getColumnDefinitions();
+  const columnDefinitions = tabulator.tabulatorTables.getColumnDefinitions();
   expect(columnDefinitions[1].width).toBe(undefined);
   expect(columnDefinitions[1].widthShrink).toBe(1);
   tabulator.setColumnWidth("q1", 150);
   expect(columnDefinitions[1].width).toBe(150);
   expect(columnDefinitions[1].widthShrink).toBe(0);
+  restoreTimeout();
 });
 
 test("check that tabulator take into account downloadRowRange option", () => {
@@ -143,21 +157,21 @@ test("check that tabulator take into account downloadHiddenColumns option", () =
       location: 0,
     },
   ];
-
+  mockTimeout();
   tabulator.render(document.createElement("table"));
-  expect(tabulator.tabulatorTables.getColumnDefinitions()[1].download).toBe(
-    undefined
-  );
-
+  expect(tabulator.tabulatorTables.getColumnDefinitions()[1].download).toBe(undefined);
   (<any>tabulator).options.downloadHiddenColumns = true;
   tabulator.render(document.createElement("table"));
+
   expect(tabulator.tabulatorTables.getColumnDefinitions()[1].download).toBe(
     true
   );
+  restoreTimeout();
 });
 
 test("check that action column doesn't export", () => {
   const tabulator = new Tabulator(new SurveyModel(null), [], null);
+  mockTimeout();
   tabulator.render(document.createElement("table"));
   expect(tabulator.tabulatorTables.getColumnDefinitions()[0].download).toBe(
     false
@@ -167,6 +181,7 @@ test("check that action column doesn't export", () => {
   expect(tabulator.tabulatorTables.getColumnDefinitions()[0].download).toBe(
     false
   );
+  restoreTimeout();
 });
 
 test("useNamesAsTitles option", () => {
@@ -183,14 +198,14 @@ test("useNamesAsTitles option", () => {
 
   let tabulator = new Tabulator(survey, [], null);
   let columns = <any>tabulator.getColumns();
-  expect(JSON.stringify(columns)).toBe(
-    "[{\"field\":\"\",\"title\":\"\",\"download\":false,\"resizable\":false,\"minWidth\":60,\"width\":60},{\"field\":\"str\",\"title\":\"String\",\"widthShrink\":1,\"visible\":true,\"headerSort\":false,\"formatter\":\"plaintext\"}]"
+  expect(JSON.parse(JSON.stringify(columns))).toEqual(
+    [{ "field": "", "title": "", "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "str", "title": "String", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 248 }]
   );
 
   tabulator = new Tabulator(survey, [], <any>{ useNamesAsTitles: true });
   columns = <any>tabulator.getColumns();
-  expect(JSON.stringify(columns)).toBe(
-    "[{\"field\":\"\",\"title\":\"\",\"download\":false,\"resizable\":false,\"minWidth\":60,\"width\":60},{\"field\":\"str\",\"title\":\"str\",\"widthShrink\":1,\"visible\":true,\"headerSort\":false,\"formatter\":\"plaintext\"}]"
+  expect(JSON.parse(JSON.stringify(columns))).toEqual(
+    [{ "field": "", "title": "", "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "str", "title": "str", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 248 }]
   );
 });
 
@@ -225,6 +240,7 @@ test("check pdf options before download", () => {
   };
   const survey = new SurveyModel(surveyJson);
   const tabulator = new Tabulator(survey, [], null);
+  mockTimeout();
   tabulator.render(document.createElement("div"));
   let options = tabulator["getDownloadOptions"]("pdf");
   expect(options.jsPDF.format).toEqual([595.28, 1120.32]);
@@ -237,6 +253,7 @@ test("check pdf options before download", () => {
   tabulator.setColumnVisibility("question 3", false);
   options = tabulator["getDownloadOptions"]("pdf");
   expect(options.jsPDF).toEqual(undefined); //a4 default format
+  restoreTimeout();
 });
 
 test("image and file export formatter", () => {
@@ -256,7 +273,6 @@ test("image and file export formatter", () => {
     ],
   };
   const survey = new SurveyModel(surveyJson);
-
   const data = [{
     signature: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAA",
     "image": [
@@ -268,9 +284,9 @@ test("image and file export formatter", () => {
   const columns = <any>tabulator.getColumns();
   const accessorDownload: any = columns[1].accessorDownload;
 
-  const fileCell = accessorDownload(undefined, undefined, undefined, undefined, { getDefinition: () => ({ field: "image" }) }, { getPosition: () => 0 });
+  const fileCell = accessorDownload(undefined, undefined, undefined, undefined, { getDefinition: () => ({ field: "image" }) }, { getData: () => { return { "tabulator_row_index": 0 }; } });
   expect(fileCell).toBe("file1.png, file2.png");
 
-  const imageCell = accessorDownload(undefined, undefined, undefined, undefined, { getDefinition: () => ({ field: "signature" }) }, { getPosition: () => 0 });
+  const imageCell = accessorDownload(undefined, data[0], undefined, undefined, { getDefinition: () => ({ field: "signature" }) }, { getData: () => { return { "tabulator_row_index": 0 }; } });
   expect(imageCell).toBe("signature");
 });

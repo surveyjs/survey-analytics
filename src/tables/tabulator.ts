@@ -16,10 +16,12 @@ if (!!document) {
   document.head.appendChild(templateHolder);
 }
 
+const TABULATOR_ROW_INDEX_FIELD = "tabulator_row_index";
 interface ITabulatorOptions extends ITableOptions {
   tabulatorOptions?: any;
   downloadHiddenColumns?: boolean;
   actionsColumnWidth?: number;
+  columnMinWidth: number;
   downloadButtons: Array<string>;
   downloadOptions?: { [type: string]: any };
   /*
@@ -41,7 +43,7 @@ export const defaultDownloadOptions = {
         styles: {
           font: "custom_helvetica",
           fontStyle: "normal",
-          cellWidth: 1,
+          minCellWidth: 100,
         },
         margin: { top: 10, right: 10, bottom: 10, left: 10 },
       };
@@ -56,6 +58,7 @@ export const defaultOptions: ITabulatorOptions = {
   actionsColumnWidth: 60,
   downloadHiddenColumns: false,
   downloadButtons: ["csv"],
+  columnMinWidth: 248,
   downloadOptions: defaultDownloadOptions,
   onDownloadCallbacks: {
     pdf: (tabulator: Tabulator, options) => {
@@ -96,7 +99,7 @@ export class Tabulator extends Table {
     if(!!window && window["XLSX"] !== undefined && defaultOptions.downloadButtons.indexOf("xlsx") === -1) {
       defaultOptions.downloadButtons.unshift("xlsx");
     }
-    if(!!window && window["jsPDF"] !== undefined && defaultOptions.downloadButtons.indexOf("pdf") === -1) {
+    if(!!window && window["jspdf"] !== undefined && defaultOptions.downloadButtons.indexOf("pdf") === -1) {
       defaultOptions.downloadButtons.unshift("pdf");
     }
     this._options = Object.assign({}, defaultOptions, options);
@@ -140,19 +143,24 @@ export class Tabulator extends Table {
         columns,
         rowFormatter: this.rowFormatter,
         paginationElement: paginationElement,
-        columnMoved: this.columnMovedCallback,
-        columnResized: this.columnResizedCallback,
         tooltipsHeader: true,
-        tooltips: (cell: any) => cell.getValue(),
         downloadRowRange: "all",
-        columnMinWidth: 248,
         paginationButtonCount: 3,
         nestedFieldSeparator: false,
+        columnDefaults: {
+          tooltip: (_: MouseEvent, cell: any) => {
+            const span = document.createElement("span");
+            span.innerText = cell.getValue();
+            return span.innerHTML;
+          }
+        }
       },
       this._options.tabulatorOptions
     );
 
     this.tabulatorTables = new TabulatorTables(this.tableContainer, config);
+    this.tabulatorTables.on("columnResized", this.columnResizedCallback);
+    this.tabulatorTables.on("columnMoved", this.columnMovedCallback);
 
     const extensionsContainer = DocumentHelper.createElement(
       "div",
@@ -228,13 +236,12 @@ export class Tabulator extends Table {
 
     this._rows.push(tableRow);
   };
-  private accessorDownload = (cellData: any, rowData: any, reason: string, _: any, columnComponent: any, rowComponent: any) => {
+  private accessorDownload = (cellData: any, _rowData: any, _reason: string, _: any, columnComponent: any, rowComponent: any) => {
     const columnDefinition = columnComponent.getDefinition();
     const questionName = columnDefinition.field;
     const column = this.columns.filter(col => col.name === questionName)[0];
     if (!!column && rowComponent) {
-      const dataRow = this.data[rowComponent.getPosition()];
-      const dataCell = dataRow[questionName];
+      const dataCell = this.data[rowComponent.getData()[TABULATOR_ROW_INDEX_FIELD]][questionName];
       if (column.dataType === ColumnDataType.Image) {
         return questionName;
       }
@@ -300,6 +307,7 @@ export class Tabulator extends Table {
         widthShrink: !column.width ? 1 : 0,
         visible: this.isColumnVisible(column),
         headerSort: false,
+        minWidth: this._options.columnMinWidth,
         download: this._options.downloadHiddenColumns ? true : undefined,
         formatter,
         accessorDownload: this.accessorDownload,
@@ -427,6 +435,12 @@ export class Tabulator extends Table {
   public layout(hard: boolean = false): void {
     this.tabulatorTables.redraw(hard);
   }
+
+  protected initTableDataRow(item: any, index: number) {
+    const dataItem = super.initTableDataRow(item, index);
+    dataItem[TABULATOR_ROW_INDEX_FIELD] = index;
+    return dataItem;
+  }
 }
 
 export class TabulatorRow extends TableRow {
@@ -448,7 +462,7 @@ export class TabulatorRow extends TableRow {
   }
 
   public getDataPosition(): number {
-    return this.innerRow.getPosition();
+    return this.innerRow.getData(TABULATOR_ROW_INDEX_FIELD);
   }
 
   public remove(): void {

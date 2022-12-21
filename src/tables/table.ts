@@ -192,20 +192,20 @@ export abstract class Table {
     this.onStateChanged.fire(this, this.state);
   }
 
-  protected initTableData(data: Array<any>) {
-    this.tableData = (data || []).map((item) => {
-      var dataItem: any = {};
-      this._survey.data = item;
-      this._columns.forEach((column) => {
-        const opt = column.getCellData(this, item);
-        if (typeof this._options.onGetQuestionValue === "function") {
-          this._options.onGetQuestionValue(opt);
-        }
-        dataItem[column.name] = opt.displayValue;
-      });
-
-      return dataItem;
+  protected initTableData(data: Array<any>): void {
+    this.tableData = (data || []).map((item, index) => this.initTableDataRow(item, index));
+  }
+  protected initTableDataRow(item: any, index: number): void {
+    var dataItem: any = {};
+    this._survey.data = item;
+    this._columns.forEach((column) => {
+      const opt = column.getCellData(this, item);
+      if (typeof this._options.onGetQuestionValue === "function") {
+        this._options.onGetQuestionValue(opt);
+      }
+      dataItem[column.name] = opt.displayValue;
     });
+    return dataItem;
   }
 
   public moveColumn(from: number, to: number) {
