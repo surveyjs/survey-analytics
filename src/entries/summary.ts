@@ -9,6 +9,7 @@ import "../localization/russian";
 import "../localization/dutch";
 import "../localization/spanish";
 import "../localization/italian";
+import "../localization/arabic";
 
 export * from "../dataProvider";
 
