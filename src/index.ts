@@ -7,6 +7,7 @@ import "./localization/norwegian";
 import "./localization/portuguese";
 import "./localization/russian";
 import "./localization/dutch";
+import "./localization/arabic";
 
 export * from "./dataProvider";
 
