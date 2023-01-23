@@ -15,8 +15,6 @@ if (!!document) {
   templateHolder.innerHTML = svgTemplate;
   document.head.appendChild(templateHolder);
 }
-
-const TABULATOR_ROW_INDEX_FIELD = "tabulator_row_index";
 interface ITabulatorOptions extends ITableOptions {
   tabulatorOptions?: any;
   downloadHiddenColumns?: boolean;
@@ -222,18 +220,20 @@ export class Tabulator extends Table {
   };
 
   private rowFormatter = (row: any): void => {
-    var tableRow = new TabulatorRow(
+    const originalData = this.data[this.tableData.indexOf(row.getData())];
+
+    const tableRow = new TabulatorRow(
       this,
       row.getCells()[0].getElement(),
       row.getElement(),
-      row
+      row,
+      originalData
     );
     tableRow.onToggleDetails.add(() => {
       row.normalizeHeight();
       this.layout();
     });
     tableRow.render();
-
     this._rows.push(tableRow);
   };
   private accessorDownload = (cellData: any, _rowData: any, _reason: string, _: any, columnComponent: any, rowComponent: any) => {
@@ -241,7 +241,8 @@ export class Tabulator extends Table {
     const questionName = columnDefinition.field;
     const column = this.columns.filter(col => col.name === questionName)[0];
     if (!!column && rowComponent) {
-      const dataCell = this.data[rowComponent.getData()[TABULATOR_ROW_INDEX_FIELD]][questionName];
+      const originalData = rowComponent.getData().surveyOriginalData;
+      const dataCell = originalData[questionName];
       if (column.dataType === ColumnDataType.Image) {
         return questionName;
       }
@@ -435,10 +436,9 @@ export class Tabulator extends Table {
   public layout(hard: boolean = false): void {
     this.tabulatorTables.redraw(hard);
   }
-
   protected initTableDataRow(item: any, index: number) {
     const dataItem = super.initTableDataRow(item, index);
-    dataItem[TABULATOR_ROW_INDEX_FIELD] = index;
+    dataItem["surveyOriginalData"] = this.data[index];
     return dataItem;
   }
 }
@@ -448,7 +448,8 @@ export class TabulatorRow extends TableRow {
     protected table: Table,
     protected extensionsContainer: HTMLElement,
     protected detailsContainer: HTMLElement,
-    protected innerRow: any
+    protected innerRow: any,
+    protected originalData: any
   ) {
     super(table, extensionsContainer, detailsContainer);
   }
@@ -462,7 +463,7 @@ export class TabulatorRow extends TableRow {
   }
 
   public getDataPosition(): number {
-    return this.innerRow.getData(TABULATOR_ROW_INDEX_FIELD);
+    return this.table.getData().indexOf(this.innerRow.getData().surveyOriginalData);
   }
 
   public remove(): void {

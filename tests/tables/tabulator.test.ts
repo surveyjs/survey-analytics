@@ -284,9 +284,41 @@ test("image and file export formatter", () => {
   const columns = <any>tabulator.getColumns();
   const accessorDownload: any = columns[1].accessorDownload;
 
-  const fileCell = accessorDownload(undefined, undefined, undefined, undefined, { getDefinition: () => ({ field: "image" }) }, { getData: () => { return { "tabulator_row_index": 0 }; } });
+  const fileCell = accessorDownload(undefined, undefined, undefined, undefined, { getDefinition: () => ({ field: "image" }) }, { getData: () => { return { "surveyOriginalData": data[0] }; } });
   expect(fileCell).toBe("file1.png, file2.png");
 
-  const imageCell = accessorDownload(undefined, data[0], undefined, undefined, { getDefinition: () => ({ field: "signature" }) }, { getData: () => { return { "tabulator_row_index": 0 }; } });
+  const imageCell = accessorDownload(undefined, data[0], undefined, undefined, { getDefinition: () => ({ field: "signature" }) }, { getData: () => { return { "surveyOriginalData": data[0] }; } });
   expect(imageCell).toBe("signature");
+});
+test("check getDataPosition returns correct index", () => {
+  const surveyJson = {
+    questions: [
+      {
+        type: "text",
+        name: "question1",
+      },
+    ],
+  };
+  const survey = new SurveyModel(surveyJson);
+  const tabulator = new Tabulator(survey, [
+    {
+      question1: "test1"
+    },
+    {
+      question1: "test2"
+    },
+    {
+      question1: "test3"
+    }
+  ], null);
+  mockTimeout();
+  tabulator.render(document.createElement("div"));
+  tabulator.tabulatorTables.rowManager.activeRows.forEach(row => tabulator["rowFormatter"](row));
+  const rows = tabulator.getCreatedRows();
+  expect(rows[2].getDataPosition()).toBe(2);
+  tabulator["data"].splice(0, 1);
+  expect(rows[2].getDataPosition()).toBe(1);
+  tabulator["data"].splice(0, 1);
+  expect(rows[2].getDataPosition()).toBe(0);
+  restoreTimeout();
 });
