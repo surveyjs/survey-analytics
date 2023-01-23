@@ -196,9 +196,6 @@ const vizPanel = new SurveyAnalytics.VisualizationPanel(
 ```
 
 ```js
-// Uncomment the following line if you also display the survey on the page
-// Survey.StylesManager.applyTheme("defaultV2");
-
 const surveyJson = {
     elements: [{
         name: "satisfaction-score",
@@ -304,9 +301,6 @@ document.addEventListener("DOMContentLoaded", function() {
 ```
 
 ```js
-// Uncomment the following line if you also display the survey on the page
-// Survey.StylesManager.applyTheme("defaultV2");
-
 const surveyJson = {
     elements: [{
         name: "satisfaction-score",
