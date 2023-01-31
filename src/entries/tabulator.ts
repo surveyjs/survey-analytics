@@ -1,13 +1,13 @@
 export * from "../localizationManager";
 
 //localization
-import "../localization/farsi";
-import "../localization/french";
-import "../localization/norwegian";
-import "../localization/portuguese";
-import "../localization/russian";
-import "../localization/dutch";
-import "../localization/arabic";
+import "../analytics-localization/farsi";
+import "../analytics-localization/french";
+import "../analytics-localization/norwegian";
+import "../analytics-localization/portuguese";
+import "../analytics-localization/russian";
+import "../analytics-localization/dutch";
+import "../analytics-localization/arabic";
 
 //extensions
 import "../tables/extensions/rowextensions";
