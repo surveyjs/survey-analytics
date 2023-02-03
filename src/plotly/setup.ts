@@ -1,5 +1,6 @@
 import { Event } from "survey-core";
 import { SelectBase } from "../selectBase";
+import { VisualizerBase } from "../visualizerBase";
 
 export interface PlotlyOptions {
   traces: Array<any>;
@@ -14,6 +15,7 @@ export class PlotlySetup {
    */
   public static onImageSaving = new Event<
     (sender: SelectBase, options: any) => any,
+    SelectBase,
     any
   >();
 
@@ -22,7 +24,8 @@ export class PlotlySetup {
    * Options is an object with the following fields: traces, layout and config of the plot.
    */
   public static onPlotCreating = new Event<
-    (sender: SelectBase, options: any) => any,
+    (sender: VisualizerBase, options: any) => any,
+    VisualizerBase,
     any
   >();
 
