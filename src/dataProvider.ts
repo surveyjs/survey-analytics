@@ -207,6 +207,7 @@ export class DataProvider {
    */
   public onDataChanged = new Event<
     (sender: DataProvider, options: any) => any,
+    DataProvider,
     any
   >();
 

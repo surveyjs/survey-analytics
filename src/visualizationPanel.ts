@@ -690,7 +690,7 @@ export class VisualizationPanel extends VisualizerBase {
    * reason - reason (string) why event fired: "ADDED", "MOVED" or "REMOVED"
    */
   public onVisibleElementsChanged = new Event<
-    (sender: VisualizationPanel, options: any) => any,
+    (sender: VisualizationPanel, options: any) => any, VisualizationPanel,
     any
   >();
 
@@ -716,6 +716,7 @@ export class VisualizationPanel extends VisualizerBase {
    */
   public onStateChanged = new Event<
     (sender: VisualizationPanel, state: IState) => any,
+    VisualizationPanel,
     any
   >();
 

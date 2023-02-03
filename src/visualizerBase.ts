@@ -42,8 +42,9 @@ export class VisualizerBase implements IDataInfo {
    **/
   public onAfterRender: Event<
     (sender: VisualizerBase, options: any) => any,
+    VisualizerBase,
     any
-  > = new Event<(sender: VisualizerBase, options: any) => any, any>();
+  > = new Event<(sender: VisualizerBase, options: any) => any, VisualizerBase, any>();
 
   protected afterRender(contentContainer: HTMLElement) {
     this.onAfterRender.fire(this, { htmlElement: contentContainer });

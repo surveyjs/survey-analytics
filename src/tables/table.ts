@@ -1,4 +1,4 @@
-import { SurveyModel, Question, Event, settings, QuestionSelectBase, QuestionMatrixModel, ItemValue, JsonError } from "survey-core";
+import { SurveyModel, Question, Event, settings, QuestionSelectBase, QuestionMatrixModel, ItemValue, JsonError, EventBase } from "survey-core";
 import {
   IPermission,
   QuestionLocation,
@@ -31,6 +31,8 @@ export interface ITableOptions {
     displayValue: any,
   }) => void;
 }
+
+export class TableEvent extends EventBase<Table> {}
 
 export abstract class Table {
   public static showFilesAsImages = false;
@@ -78,20 +80,11 @@ export abstract class Table {
    */
   public paginationSizeSelector: number[] = [1, 5, 10, 25, 50, 100];
 
-  public onColumnsVisibilityChanged: Event<
-    (sender: Table, options: any) => any,
-    any
-  > = new Event<(sender: Table, options: any) => any, any>();
+  public onColumnsVisibilityChanged = new TableEvent();
 
-  public onColumnsLocationChanged: Event<
-    (sender: Table, options: any) => any,
-    any
-  > = new Event<(sender: Table, options: any) => any, any>();
+  public onColumnsLocationChanged = new TableEvent();
 
-  public onRowRemoved: Event<
-    (sender: Table, options: any) => any,
-    any
-  > = new Event<(sender: Table, options: any) => any, any>();
+  public onRowRemoved =new TableEvent();
 
   public renderDetailActions: (
     container: HTMLElement,
@@ -348,10 +341,7 @@ export abstract class Table {
   /**
    * Fires when table state changed.
    */
-  public onStateChanged = new Event<
-    (sender: Table, options: any) => any,
-    any
-  >();
+  public onStateChanged = new TableEvent();
 
   /**
    * Gets table permissions.
@@ -403,8 +393,9 @@ export abstract class TableRow {
   private isDetailsExpanded = false;
   public onToggleDetails: Event<
     (sender: TableRow, options: any) => any,
+    TableRow,
     any
-  > = new Event<(sender: TableRow, options: any) => any, any>();
+  > = new Event<(sender: TableRow, options: any) => any, TableRow, any>();
 
   /**
    * Returns row's html element

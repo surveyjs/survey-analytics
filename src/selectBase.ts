@@ -490,6 +490,7 @@ export class SelectBase
    */
   public onAnswersDataReady = new Event<
     (sender: SelectBase, options: any) => any,
+    SelectBase,
     any
   >();
 

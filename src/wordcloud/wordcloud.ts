@@ -16,6 +16,7 @@ export class WordCloudAdapter {
 
   public static onWordcloudCreating = new Event<
       (sender: WordCloud, options: any) => any,
+      WordCloud,
       any
     >();
 
