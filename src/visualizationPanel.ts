@@ -270,7 +270,7 @@ export class VisualizationPanel extends VisualizerBase {
   constructor(
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
-    options: IVisualizationPanelOptions = { },
+    options: IVisualizationPanelOptions = {},
     private _elements: Array<IVisualizerPanelRenderedElement> = undefined
   ) {
     super(null, data, options, "panel");
@@ -358,7 +358,7 @@ export class VisualizationPanel extends VisualizerBase {
       }
       return undefined;
     });
-    if (this.locales.length > 1) {
+    if (!this.options.disableLocaleSwitch && this.locales.length > 1) {
       const localeChoices = this.locales.map((element) => {
         return {
           value: element,
@@ -534,40 +534,19 @@ export class VisualizationPanel extends VisualizerBase {
     this.visualizers = [];
   }
 
-  /**
-   * Returns current locale of the visualization panel.
-   * If locales more than one, the language selection dropdown will be added in the toolbar
-   * In order to use survey locales the survey instance object should be passed as 'survey' option for visualizer
-   */
-  public get locale() {
-    var survey = this.options.survey;
-    if (!!survey) {
-      return survey.locale;
-    }
-    return localization.currentLocale;
-  }
-
-  /**
-   * Sets locale for visualization panel.
-   */
-  public set locale(newLocale: string) {
-    this.setLocale(newLocale);
-    this.refresh();
+  protected setLocale(newLocale: string) {
+    super.setLocale(newLocale);
+    (this.questions || []).forEach((question) => {
+      const element = this.getElement(question.name);
+      if (!!element) {
+        element.displayName = this.processText(question.title);
+      }
+    });
+    this.visualizers.forEach(v => {
+      v.options.seriesLabels = this.options.seriesLabels;
+      v.locale = newLocale;
+    });
     this.onStateChanged.fire(this, this.state);
-  }
-
-  private setLocale(newLocale: string) {
-    var survey = this.options.survey;
-    if (!!survey) {
-      survey.locale = newLocale;
-      (this.questions || []).forEach((question) => {
-        const element = this.getElement(question.name);
-        if (!!element) {
-          element.displayName = this.processText(question.title);
-        }
-      });
-    }
-    localization.currentLocale = newLocale;
   }
 
   /**
@@ -830,7 +809,7 @@ export class VisualizationPanel extends VisualizerBase {
       elements: [].concat(this._elements.map(element => {
         const visualizer = this.getVisualizer(element.name);
         const elementState = { ...element, ...visualizer?.getState() };
-        if(elementState.renderedElement !== undefined) {
+        if (elementState.renderedElement !== undefined) {
           delete elementState.renderedElement;
         }
         return elementState;
@@ -852,7 +831,7 @@ export class VisualizationPanel extends VisualizerBase {
 
     this._elements.forEach(elementState => {
       const visualizer = this.getVisualizer(elementState.name);
-      if(visualizer !== undefined) {
+      if (visualizer !== undefined) {
         visualizer.setState(elementState);
       }
     });

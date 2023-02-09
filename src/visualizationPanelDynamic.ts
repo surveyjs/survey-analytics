@@ -24,6 +24,11 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     this.updateData(data);
   }
 
+  protected setLocale(newLocale: string) {
+    super.setLocale(newLocale);
+    this._panelVisualizer.locale = newLocale;
+  }
+
   private onAfterRenderPanelCallback = () => {
     this.afterRender(this.contentContainer);
   };

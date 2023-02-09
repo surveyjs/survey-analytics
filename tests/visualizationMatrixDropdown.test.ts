@@ -2,6 +2,10 @@ import { SurveyModel } from "survey-core";
 import { VisualizationMatrixDropdown } from "../src/visualizationMatrixDropdown";
 import { DataProvider } from "../src/dataProvider";
 import { VisualizationPanel } from "../src/visualizationPanel";
+import { SelectBase } from "../src/selectBase";
+import { VisualizationManager } from "../src/visualizationManager";
+
+VisualizationManager.registerVisualizer("dropdown", SelectBase);
 
 const json = {
   questions: [
@@ -378,5 +382,105 @@ test("update inner matrixDropdownVisualizer data if filter has been changed", ()
         "1",
       ],
     },
+  ]);
+});
+
+test("update locale for inner visualizers", () => {
+  var jsonLoc = {
+    locale: "fr",
+    questions: [
+      {
+        "type": "matrixdropdown",
+        "name": "question1",
+        title: {
+          "default": "question1",
+          "fr": "question1 FR"
+        },
+        "columns": [
+          {
+            "name": "Column 1", title: {
+              "default": "Column 1 text",
+              "fr": "Column 1 text FR"
+            }
+          },
+          {
+            name: "Column 2", title: {
+              "default": "Column 2 text",
+              "fr": "Column 2 text FR"
+            }
+          },
+          {
+            "name": "Column 3"
+          }
+        ],
+        "choices": [
+          {
+            value: 1, text: {
+              "default": "Choice 1 text",
+              "fr": "Choice 1 text FR"
+            }
+          },
+          2,
+          3,
+          4,
+          5
+        ],
+        "rows": [
+          {
+            value: "Row 1",
+            text: {
+              "default": "Row 1 text",
+              "fr": "Row 1 text FR"
+            }
+          },
+          "Row 2"
+        ]
+      }
+    ],
+  };
+
+  var surveyLoc = new SurveyModel(jsonLoc);
+
+  var options = {
+    survey: surveyLoc,
+  };
+
+  const rootVisualizer = new VisualizationPanel(
+    surveyLoc.getAllQuestions(),
+    [],
+    options
+  );
+  const mdVisualizer = rootVisualizer.visualizers[0] as VisualizationMatrixDropdown;
+  const innerPanelVisualizer = mdVisualizer["_matrixDropdownVisualizer"] as VisualizationPanel;
+  const firstChart = innerPanelVisualizer.visualizers[0] as SelectBase;
+
+  expect(rootVisualizer.getElements()[0].displayName).toBe("question1 FR");
+  expect(innerPanelVisualizer.getElements()[0].displayName).toBe("Column 1 text FR");
+  expect(firstChart.getSeriesLabels()).toEqual([
+    "Row 1 text FR",
+    "Row 2",
+  ]);
+  expect(firstChart.getLabels()).toEqual([
+    "5",
+    "4",
+    "3",
+    "2",
+    "Choice 1 text FR",
+  ]);
+
+  rootVisualizer.locale = "en";
+
+  expect(rootVisualizer.getElements()[0].displayName).toBe("question1");
+  expect(innerPanelVisualizer.getElements()[0].displayName).toBe("Column 1 text");
+  expect(firstChart.getSeriesLabels()).toEqual([
+    "Row 1 text",
+    "Row 2",
+  ]);
+  expect(firstChart.getLabels()).toEqual([
+    "5",
+    "4",
+    "3",
+    "2",
+    "Choice 1 text",
   ]);
 });

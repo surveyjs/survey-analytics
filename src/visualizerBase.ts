@@ -50,6 +50,17 @@ export class VisualizerBase implements IDataInfo {
     this.onAfterRender.fire(this, { htmlElement: contentContainer });
   }
 
+  /**
+   * Fires when visualizer locale changed.
+   * sender - this visualizer
+   * locale - new locale of the visualizer
+   */
+  public onLocaleChanged = new Event<
+    (sender: VisualizerBase, options: { locale: string }) => any,
+    VisualizerBase,
+    any
+  >();
+
   protected toolbarItemCreators: { [name: string]: (toolbar?: HTMLDivElement) => HTMLElement } = {};
 
   constructor(
@@ -537,4 +548,35 @@ export class VisualizerBase implements IDataInfo {
   }
   public setState(state: any): void {
   }
+
+  /**
+   * Returns current locale of the visualizer.
+   * If locales more than one, the language selection dropdown will be added in the toolbar
+   * In order to use survey locales the survey instance object should be passed as 'survey' option for visualizer
+   */
+  public get locale() {
+    var survey = this.options.survey;
+    if (!!survey) {
+      return survey.locale;
+    }
+    return localization.currentLocale;
+  }
+
+  /**
+   * Sets locale for visualization panel.
+   */
+  public set locale(newLocale: string) {
+    this.setLocale(newLocale);
+    this.onLocaleChanged.fire(this, { locale: newLocale });
+    this.refresh();
+  }
+
+  protected setLocale(newLocale: string) {
+    localization.currentLocale = newLocale;
+    var survey = this.options.survey;
+    if (!!survey && survey.locale !== newLocale) {
+      survey.locale = newLocale;
+    }
+  }
+
 }

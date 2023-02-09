@@ -197,11 +197,12 @@ test("getState, setState, onStateChanged", () => {
   });
 
   expect(visPanel.state).toEqual(initialState);
-  visPanel.state = null;
+  visPanel.state = null as any;
+  expect(count).toBe(0);
 
   visPanel.state = newState;
   expect(visPanel.state).toEqual(newState);
-  expect(count).toBe(0);
+  expect(count).toBe(1);
 
   const visualizer = visPanel.visualizers[0] as SelectBase;
   expect(visualizer.chartType).toBe("scatter");
@@ -210,7 +211,7 @@ test("getState, setState, onStateChanged", () => {
   expect(visualizer.topN).toBe(10);
 
   visPanel.locale = "ru";
-  expect(count).toBe(1);
+  expect(count).toBe(2);
   expect(visPanel.state.locale).toEqual("ru");
 });
 
