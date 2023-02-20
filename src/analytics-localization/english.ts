@@ -1,5 +1,5 @@
-//Uncomment this line on creating a translation file
-//import { localization } from "../localizationManager";
+// Uncomment the line below if you create a custom dictionary
+// import { localization } from "../localizationManager";
 
 export var englishStrings = {
   groupButton: "Group By Me",
@@ -72,6 +72,8 @@ export var englishStrings = {
   responses: "Responses"
 };
 
-//Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.
-//localization.locales["en"] = englishStrings;
-//localization.localeNames["en"] = "English";
+// Uncomment the lines below if you create a custom dictionary.
+// Replace "en" with a custom locale code (for example, "fr" or "de"),
+// Replace `englishStrings` with the name of the variable that contains the custom dictionary.
+// localization.locales["en"] = englishStrings;
+// localization.localeNames["en"] = "English";
