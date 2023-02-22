@@ -31,7 +31,11 @@ export interface IVisualizerPanelRenderedElement
  * Visualization Panel configuration. Pass it as the third argument to the `VisualizationPanel` constructor:
  *
  * ```js
- * const vizPanel = new SurveyAnalytics.VisualizationPanel(surveyQuestions, surveyResults, vizPanelOptions);
+ * const vizPanel = new SurveyAnalytics.VisualizationPanel(
+ *   surveyQuestions,
+ *   surveyResults,
+ *   vizPanelOptions
+ * );
  * ```
  */
 export interface IVisualizationPanelOptions {

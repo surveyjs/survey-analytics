@@ -38,7 +38,18 @@ export class VisualizerBase implements IDataInfo {
   public static otherCommentCollapsed = true;
 
   /**
-   * The event is fired right after a visualizer's content is rendered in DOM.
+   * An event that is raised after the visualizer's content is rendered.
+   * 
+   * Parameters:
+   * 
+   * - `sender`: `VisualizerBase`\
+   * A `VisualizerBase` instance that raised the event.
+   * 
+   * - `options.htmlElement`: `HTMLElement`\
+   * A page element with the visualizer's content.
+   * @see render
+   * @see renderContent
+   * @see refresh
    **/
   public onAfterRender: Event<
     (sender: VisualizerBase, options: any) => any,
@@ -51,9 +62,16 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Fires when visualizer locale changed.
-   * sender - this visualizer
-   * locale - new locale of the visualizer
+   * An event that is raised after a new locale is set.
+   * 
+   * Parameters:
+   * 
+   * - `sender`: `VisualizerBase`\
+   * A `VisualizerBase` instance that raised the event.
+   * 
+   * - `options.locale`: `String`\
+   * The indentifier of a new locale (for example, "en").
+   * @see locale
    */
   public onLocaleChanged = new Event<
     (sender: VisualizerBase, options: { locale: string }) => any,
@@ -81,23 +99,17 @@ export class VisualizerBase implements IDataInfo {
     return this.options[this.question.name];
   }
 
-  /**
-   * This method is called then data has been changed for some reason, e.g. filter was set.
-   * This method should be overriden if descendant computes own statistics or process data somehow.
-   */
   protected onDataChanged() {
     this.refresh();
   }
 
-  /**
-   * Name of the data field of data object from the data array.
-   */
   get dataName(): string | Array<string> {
     return this.question.valueName || this.question.name;
   }
 
   /**
-   * Indicates whether visualizer has header. Usually it is true then a question has correct answer.
+   * Indicates whether the visualizer displays a header. This property is `true` when a visualized question has a correct answer.
+   * @see hasFooter
    */
   get hasHeader(): boolean {
     if (!this.options || !this.options.showCorrectAnswers) {
@@ -107,7 +119,8 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Indicates whether visualizer has footer. Usually it is true then a question has comment or choices question has other item.
+   * Indicates whether the visualizer displays a footer. This property is `true` when a visualized question has a comment.
+   * @see hasHeader
    */
   get hasFooter(): boolean {
     return (
@@ -124,7 +137,8 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Footer visualizer getter.
+   * Allows you to access the footer visualizer. Returns `undefined` if the footer is absent.
+   * @see hasFooter
    */
   get footerVisualizer() {
     if (!this.hasFooter) {
@@ -143,7 +157,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Indicates whether visualizer supports selection. Visualizers of questions with choices allow to select choice by clicking on the diagram bar and filter other data for the selected item.
+   * Indicates whether users can select series points to cross-filter charts. To allow or disallow selection, set the `allowSelection` property of the `options` object in the constructor.
    */
   public get supportSelection(): boolean {
     return (
@@ -153,30 +167,18 @@ export class VisualizerBase implements IDataInfo {
     );
   }
 
-  /**
-   * Series values getter. Some questions (used in matrices) should be grouped by matrix rows. This groups are called series.
-   */
   getSeriesValues(): Array<string> {
     return this.options.seriesValues || [];
   }
 
-  /**
-   * Series labels getter. Some questions (used in matrices) should be grouped by matrix rows. This groups are called series.
-   */
   getSeriesLabels(): Array<string> {
     return this.options.seriesLabels || this.getSeriesValues();
   }
 
-  /**
-   * Available values of question answers (available choices).
-   */
   getValues(): Array<any> {
     throw new Error("Method not implemented.");
   }
 
-  /**
-   * Available labels of question answers (human readable representation of available choices).
-   */
   getLabels(): Array<string> {
     return this.getValues();
   }
@@ -192,28 +194,32 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * The name of the visaulizer.
+   * Returns the visualizer's name.
    */
   public get name() {
     return this._name || "visualizer";
   }
 
   /**
-   * The actual data of the visaulizer.
+   * Returns an array of survey results used to calculate values for visualization. If a user applies a filter, the array is also filtered.
+   * 
+   * To get an array of calculated and visualized values, call the `getData()` method.
+   * @see getData
    */
   protected get data() {
     return this.dataProvider.filteredData;
   }
 
   /**
-   * The data provider is used by the visaulizer.
+   * Allows you to access a data provider used by the visualizer.
    */
   protected get dataProvider(): DataProvider {
     return this._dataProvider;
   }
 
   /**
-   * Updates visualizer data.
+   * Updates the visualized data.
+   * @param data A data array with survey results to be visualized. 
    */
   updateData(data: Array<{ [index: string]: any }>) {
     if (!this.options.dataProvider) {
@@ -231,7 +237,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Destroys visualizer.
+   * Removes the visualizer and all its elements from the DOM.
    */
   destroy() {
     if (!!this.renderResult) {
@@ -250,7 +256,9 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Method for clearing all rendered elements from outside.
+   * Empties the toolbar, footer, and content containers.
+   * 
+   * TODO: Why not header?
    */
   public clear() {
     if (!!this.toolbarContainer) {
@@ -285,7 +293,8 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Renderss visualizer toolbar.
+   * Renders the toolbar in a specified container.
+   * @param container An `HTMLElement` in which you want to render the toolbar.
    */
   protected renderToolbar(container: HTMLElement) {
     if (this.showHeader) {
@@ -322,8 +331,9 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Renders visualizer header.
-   * Usually overriden in descendants.
+   * Renders the header in a specified container.
+   * @param container An `HTMLElement` in which you want to render the header.
+   * @see hasHeader
    */
   protected renderHeader(container: HTMLElement) {
     if (!!this.options && typeof this.options.renderHeader === "function") {
@@ -339,8 +349,8 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Renders visualizer content.
-   * Usually overriden in descendants.
+   * Renders the visualizer's content in a specified container.
+   * @param container An `HTMLElement` in which you want to render the content.
    */
   protected renderContent(container: HTMLElement) {
     if (!!this.options && typeof this.options.renderContent === "function") {
@@ -359,7 +369,9 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Renders visualizer footer.
+   * Renders the footer in a specified container.
+   * @param container An `HTMLElement` in which you want to render the footer.
+   * @see hasFooter
    */
   protected renderFooter(container: HTMLElement) {
     container.innerHTML = "";
@@ -400,7 +412,8 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Renders visualizer in the given container.
+   * Renders the visualizer in a specified container.
+   * @param targetElement An `HTMLElement` or an `id` of a page element in which you want to render the visualizer.
    */
   render(targetElement: HTMLElement | string) {
     if (typeof targetElement === "string") {
@@ -440,7 +453,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Redraws visualizer and all inner content.
+   * Re-renders the visualizer and its content.
    */
   public refresh() {
     if (!!this.headerContainer) {
@@ -537,7 +550,10 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Returns data to be used in the visualizer.
+   * Returns an array of calculated and visualized values. If a user applies a filter, the array is also filtered.
+   * 
+   * To get an array of source survey results, use the `data` property.
+   * @see data
    */
   getData(): any {
     return this.dataProvider.getData(this);
@@ -550,9 +566,12 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Returns current locale of the visualizer.
-   * If locales more than one, the language selection dropdown will be added in the toolbar
-   * In order to use survey locales the survey instance object should be passed as 'survey' option for visualizer
+   * Get or sets the current locale.
+   * 
+   * If you want to inherit the locale from the visualized survey, assign a `SurveyModel` instance to the `survey` property of the `options` object in the constructor.
+   * 
+   * If the survey is [translated to more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the toolbar displays a language selection drop-down menu.
+   * @see onLocaleChanged
    */
   public get locale() {
     var survey = this.options.survey;
@@ -562,9 +581,6 @@ export class VisualizerBase implements IDataInfo {
     return localization.currentLocale;
   }
 
-  /**
-   * Sets locale for visualization panel.
-   */
   public set locale(newLocale: string) {
     this.setLocale(newLocale);
     this.onLocaleChanged.fire(this, { locale: newLocale });
