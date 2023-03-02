@@ -159,9 +159,9 @@ export class Tabulator extends Table {
       "sa-table__header-extensions"
     );
     header.appendChild(this.createDownloadsBar());
-    header.appendChild(extensionsContainer);
+    this.extensions.render(header, "header");
+    // header.appendChild(extensionsContainer);
     header.appendChild(paginationElement);
-    this.extensions.render(extensionsContainer, "header");
     this.renderResult = targetNode;
   }
 

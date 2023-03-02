@@ -45,10 +45,27 @@ $root-font-size: 14px;
   padding: 20px 13px;
   background-color: $background-gray;
   overflow: auto;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: wrap;
+
   &:after {
     content: "";
     clear: both;
     display: block;
+  }
+
+  .sa-table__header-space {
+    display: flex;
+    flex-grow: 1;
+  }
+
+  .sa-table__entries {
+    float: none;
+    line-height: 34px;
+    display: flex;
+    flex-grow: 1;
   }
 }
 
