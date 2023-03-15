@@ -161,7 +161,13 @@ export class SelectBase
   }
 
   protected chartTypes: string[] = [];
-  public chartType: string = "bar";
+  protected _chartType: string = "bar";
+  /**
+   * Chart type - current chart type.
+   */
+  public get chartType(): string {
+    return this._chartType;
+  }
 
   private updateEmptyAnswersBtn() {
     if (!!this.emptyAnswersBtn) {
@@ -247,9 +253,9 @@ export class SelectBase
   protected setChartType(chartType: string) {
     if (
       this.chartTypes.indexOf(chartType) !== -1 &&
-      this.chartType !== chartType
+      this._chartType !== chartType
     ) {
-      this.chartType = chartType;
+      this._chartType = chartType;
       this.onChartTypeChanged();
       this.refreshContent();
     }

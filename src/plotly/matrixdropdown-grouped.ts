@@ -16,7 +16,7 @@ export class MatrixDropdownGroupedPlotly extends MatrixDropdownGrouped {
   ) {
     super(question, data, options, name);
     this.chartTypes = MatrixDropdownGroupedPlotly.types;
-    this.chartType = this.chartTypes[0];
+    this._chartType = this.chartTypes[0];
     this._chartAdapter = new PlotlyChartAdapter(this);
   }
 
