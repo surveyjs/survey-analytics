@@ -704,9 +704,6 @@ export class VisualizationPanel extends VisualizerBase {
    */
   public onPermissionsChangedCallback: any;
 
-  /**
-   * Renders given panel element.
-   */
   protected renderPanelElement(
     element: IVisualizerPanelRenderedElement,
     container: HTMLElement
@@ -767,9 +764,6 @@ export class VisualizationPanel extends VisualizerBase {
     // !!window && window.dispatchEvent(new UIEvent("resize"));
   }
 
-  /**
-   * Destroys visualizer and all inner content.
-   */
   protected destroyContent(container: HTMLElement) {
     this.layoutEngine.stop();
     super.destroyContent(container);
