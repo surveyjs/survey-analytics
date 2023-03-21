@@ -19,7 +19,7 @@
     "lint": "eslint ./src --quiet",
     "pre-push-check": "npm run lint && npm run test"
   },
-  "version": "1.9.78",
+  "version": "1.9.79",
   "name": "survey-analytics",
   "description": "SurveyJS analytics Library.",
   "main": "survey.analytics.js",
