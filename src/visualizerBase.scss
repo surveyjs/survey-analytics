@@ -5,7 +5,7 @@
 
 .sa-visualizer__header {
   font-family: Raleway;
-  font-size: 14px;
+  font-size: $root-font-size;
 }
 
 .sa-visualizer__content {
@@ -22,7 +22,7 @@
 .sa-visualizer__footer-title {
   display: inline-block;
   font-family: Raleway;
-  font-size: 14px;
+  font-size: $root-font-size;
   color: #404040;
   line-height: 34px;
   vertical-align: middle;

@@ -62,7 +62,7 @@
 
 .sa-toolbar {
   font-family: SegoeUI, Arial, sans-serif;
-  font-size: 14px;
+  font-size: $root-font-size;
   color: $text-color;
   line-height: 34px;
   margin-bottom: 25px;
@@ -73,7 +73,7 @@
 
 .sa-toolbar__button {
   font-family: SegoeUI, Arial, sans-serif;
-  font-size: 14px;
+  font-size: $root-font-size;
   padding: 8px;
   vertical-align: middle;
   cursor: pointer;
