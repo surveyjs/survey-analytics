@@ -4,12 +4,12 @@
 }
 
 .sa-visualizer__header {
-  font-family: Raleway;
+  font-family: $font-family-secondary;
   font-size: $root-font-size;
 }
 
 .sa-visualizer__content {
-  font-family: SegoeUI, Arial, sans-serif;
+  font-family: $font-family;
   display: inline-block;
   overflow: hidden;
   width: 100%;
@@ -21,7 +21,7 @@
 
 .sa-visualizer__footer-title {
   display: inline-block;
-  font-family: Raleway;
+  font-family: $font-family-secondary;
   font-size: $root-font-size;
   color: #404040;
   line-height: 34px;
