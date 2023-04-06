@@ -70,7 +70,7 @@ test("check onAfterRender", () => {
   });
   alternativeVisualizersWrapper.render(document.createElement("div"));
   expect(count).toEqual(1);
-  (<any>alternativeVisualizersWrapper).setVisualizer(
+  alternativeVisualizersWrapper.setVisualizer(
     (<any>alternativeVisualizersWrapper).visualizers[1].name
   );
   expect(count).toEqual(1);
