@@ -392,6 +392,22 @@ export class VisualizationPanel extends VisualizerBase {
     }
   };
 
+  /**
+   * The event is fired right after AlternativeVisualizersWrapper content type has been changed.
+   **/
+  public onAlternativeVisualizerChanged: Event<
+    (sender: AlternativeVisualizersWrapper, options: any) => any,
+    AlternativeVisualizersWrapper,
+    any
+  > = new Event<(sender: AlternativeVisualizersWrapper, options: any) => any, AlternativeVisualizersWrapper, any>();
+
+  private onAlternativeVisualizerChangedCallback = (
+    sender: AlternativeVisualizersWrapper,
+    options: { visualizer: VisualizerBase }
+  ) => {
+    this.onAlternativeVisualizerChanged.fire(sender, options);
+  };
+
   protected showElement(elementName: string) {
     const element = this.getElement(elementName);
     const elementIndex = this._elements.indexOf(element);
@@ -518,6 +534,11 @@ export class VisualizationPanel extends VisualizerBase {
 
       visualizer.onUpdate = () => this.layout();
       visualizer.onAfterRender.add(this.onAfterRenderQuestionCallback);
+
+      if (visualizer instanceof AlternativeVisualizersWrapper) {
+        visualizer.onVisualizerChanged.add(this.onAlternativeVisualizerChangedCallback);
+      }
+
       this.visualizers.push(visualizer);
     });
   }
@@ -527,6 +548,9 @@ export class VisualizationPanel extends VisualizerBase {
       visualizer.onUpdate = undefined;
       if (visualizer instanceof SelectBase) {
         visualizer.onDataItemSelected = undefined;
+      }
+      if (visualizer instanceof AlternativeVisualizersWrapper) {
+        visualizer.onVisualizerChanged.remove(this.onAlternativeVisualizerChangedCallback);
       }
       visualizer.onAfterRender.remove(this.onAfterRenderQuestionCallback);
       visualizer.destroy();

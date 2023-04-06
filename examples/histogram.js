@@ -175,4 +175,11 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
   }
 );
 visPanel.showHeader = true;
+visPanel.onAlternativeVisualizerChanged.add(function(sender, options) {
+  visPanel.visualizers.forEach(visualizer => {
+    if(typeof visualizer.setVisualizer === "function") {
+      visualizer.setVisualizer(options.visualizer.name, true);
+    }
+  });
+});
 visPanel.render(document.getElementById("summaryContainer"));

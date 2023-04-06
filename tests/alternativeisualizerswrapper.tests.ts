@@ -27,8 +27,8 @@ beforeEach(() => {
       q1: "sister",
     },
   ];
-  selectBase = new SelectBase(question, data, {});
-  anotherSelectBase = new SelectBase(question, data, {});
+  selectBase = new SelectBase(question, data, {}, "sb1");
+  anotherSelectBase = new SelectBase(question, data, {}, "sb2");
   alternativeVisualizersWrapper = new AlternativeVisualizersWrapper(
     [selectBase, anotherSelectBase],
     question,
@@ -37,7 +37,7 @@ beforeEach(() => {
 });
 
 test("onDataItemSelected", () => {
-  var onDataItemSelected = () => {};
+  var onDataItemSelected = () => { };
   alternativeVisualizersWrapper.onDataItemSelected = onDataItemSelected;
 
   //alternativeVisualizersWrapper doesn't need in onDataItemSelected
@@ -78,4 +78,23 @@ test("check onAfterRender", () => {
     (<any>alternativeVisualizersWrapper).contentContainer
   );
   expect(count).toEqual(2);
+});
+
+test("check onVisualizerChanged and setVisualizer", () => {
+  let log = "";
+  alternativeVisualizersWrapper.onVisualizerChanged.add((s, o) => {
+    log += "->" + o.visualizer.name;
+  });
+  alternativeVisualizersWrapper.setVisualizer(
+    (<any>alternativeVisualizersWrapper).visualizers[1].name
+  );
+  expect(log).toEqual("->sb2");
+  alternativeVisualizersWrapper.setVisualizer(
+    (<any>alternativeVisualizersWrapper).visualizers[1].name
+  );
+  expect(log).toEqual("->sb2");
+  alternativeVisualizersWrapper.setVisualizer(
+    (<any>alternativeVisualizersWrapper).visualizers[0].name
+  );
+  expect(log).toEqual("->sb2->sb1");
 });
