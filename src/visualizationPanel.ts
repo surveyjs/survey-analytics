@@ -393,7 +393,15 @@ export class VisualizationPanel extends VisualizerBase {
   };
 
   /**
-   * The event is fired right after AlternativeVisualizersWrapper content type has been changed.
+   * An event that is raised when a user selects a different visualizer type from the Type drop-down menu.
+   * 
+   * Parameters:
+   * 
+   * - `sender`: `AlternativeVisualizersWrapper`\
+   * An object that controls altenative visualizers.
+   * 
+   * - `options.visualizer`: `VisualizerBase`\
+   * An applied visualizer.
    **/
   public onAlternativeVisualizerChanged: Event<
     (sender: AlternativeVisualizersWrapper, options: any) => any,
