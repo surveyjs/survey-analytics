@@ -13,6 +13,7 @@
     "watch:dev": "webpack --env.buildType dev --watch",
     "build:dev": "webpack --env.buildType dev",
     "build:prod": "npm run build:dev && webpack --env.buildType prod",
+    "build": "npm run build:prod",
     "build:types:summary": "tsc --p tsconfig.summary.json && echo \"declare module 'survey-analytics' { import main = require('entries/summary'); export = main; }\" >> packages/survey.analytics.d.ts",
     "build:types:datatables": "tsc --p tsconfig.datatables.json && echo \"declare module 'survey-analytics/survey.analytics.datatables' { import main = require('entries/datatables'); export = main; }\" >> packages/survey.analytics.datatables.d.ts",
     "build:types:tabulator": "tsc --p tsconfig.tabulator.json && echo \"declare module 'survey-analytics/survey.analytics.tabulator' { import main = require('entries/tabulator'); export = main; }\" >> packages/survey.analytics.tabulator.d.ts",

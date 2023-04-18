@@ -9,7 +9,6 @@ export class HistogramModel extends SelectBase {
   private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
   private _intervalPrecision: number = 2;
   protected chartTypes: string[];
-  public chartType: string;
 
   public static IntervalsCount = 10;
   public static UseIntervalsFrom = 10;

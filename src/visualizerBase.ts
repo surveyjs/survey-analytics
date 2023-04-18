@@ -81,10 +81,6 @@ export class VisualizerBase implements IDataInfo {
     return this.options[this.question.name];
   }
 
-  /**
-   * This method is called then data has been changed for some reason, e.g. filter was set.
-   * This method should be overriden if descendant computes own statistics or process data somehow.
-   */
   protected onDataChanged() {
     this.refresh();
   }
@@ -205,9 +201,6 @@ export class VisualizerBase implements IDataInfo {
     return this.dataProvider.filteredData;
   }
 
-  /**
-   * The data provider is used by the visaulizer.
-   */
   protected get dataProvider(): DataProvider {
     return this._dataProvider;
   }
@@ -277,16 +270,10 @@ export class VisualizerBase implements IDataInfo {
     return !!this.question ? this.question.correctAnswer : "";
   }
 
-  /**
-   * Destroys visualizer toolbar.
-   */
   protected destroyToolbar(container: HTMLElement) {
     container.innerHTML = "";
   }
 
-  /**
-   * Renderss visualizer toolbar.
-   */
   protected renderToolbar(container: HTMLElement) {
     if (this.showHeader) {
       const toolbar = <HTMLDivElement>(
@@ -297,10 +284,6 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
-  /**
-   * Destroys visualizer header.
-   * Usually overriden in descendants.
-   */
   protected destroyHeader(container: HTMLElement) {
     if (!!this.options && typeof this.options.destroyHeader === "function") {
       this.options.destroyHeader(container, this);
@@ -309,10 +292,6 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
-  /**
-   * Destroys visualizer content.
-   * Usually overriden in descendants.
-   */
   protected destroyContent(container: HTMLElement) {
     if (!!this.options && typeof this.options.destroyContent === "function") {
       this.options.destroyContent(container, this);
@@ -321,10 +300,6 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
-  /**
-   * Renders visualizer header.
-   * Usually overriden in descendants.
-   */
   protected renderHeader(container: HTMLElement) {
     if (!!this.options && typeof this.options.renderHeader === "function") {
       this.options.renderHeader(container, this);
@@ -338,10 +313,6 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
-  /**
-   * Renders visualizer content.
-   * Usually overriden in descendants.
-   */
   protected renderContent(container: HTMLElement) {
     if (!!this.options && typeof this.options.renderContent === "function") {
       this.options.renderContent(container, this);
@@ -351,16 +322,10 @@ export class VisualizerBase implements IDataInfo {
     this.afterRender(container);
   }
 
-  /**
-   * Destroys visualizer footer.
-   */
   protected destroyFooter(container: HTMLElement) {
     container.innerHTML = "";
   }
 
-  /**
-   * Renders visualizer footer.
-   */
   protected renderFooter(container: HTMLElement) {
     container.innerHTML = "";
     if (this.hasFooter) {
@@ -523,9 +488,15 @@ export class VisualizerBase implements IDataInfo {
     return manyColors;
   }
 
+  /**
+   * Returns whether the visualizer renders it header.
+   */
   get showHeader() {
     return this._showHeader;
   }
+  /**
+   * Sets whether the visualizer renders it header.
+   */
   set showHeader(newValue: boolean) {
     if (newValue != this._showHeader) {
       this._showHeader = newValue;
@@ -543,9 +514,17 @@ export class VisualizerBase implements IDataInfo {
     return this.dataProvider.getData(this);
   }
 
+  /**
+   * Returns visualizer state - options control visualizer behavior and rendering.
+   * Overriden in descendants
+   */
   public getState(): any {
     return {};
   }
+  /**
+   * Sets visualizer state - options control visualizer behavior and rendering.
+   * Overriden in descendants
+   */
   public setState(state: any): void {
   }
 

@@ -16,7 +16,7 @@ export class HistogramPlotly extends HistogramModel {
   ) {
     super(question, data, options, name);
     this.chartTypes = HistogramPlotly.types;
-    this.chartType = this.chartTypes[0];
+    this._chartType = this.chartTypes[0];
     this._chartAdapter = new PlotlyChartAdapter(this);
   }
 

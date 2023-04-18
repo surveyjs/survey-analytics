@@ -48,7 +48,7 @@ export class BooleanPlotly extends BooleanModel {
   ) {
     super(question, data, options, name);
     this.chartTypes = BooleanPlotly.types;
-    this.chartType = this.chartTypes[0];
+    this._chartType = this.chartTypes[0];
     this._chartAdapter = new PlotlyBoolChartAdapter(this);
   }
 
