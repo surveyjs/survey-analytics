@@ -396,6 +396,30 @@ export class VisualizationPanel extends VisualizerBase {
     }
   };
 
+  /**
+   * An event that is raised when a user selects a different visualizer type from the Type drop-down menu.
+   * 
+   * Parameters:
+   * 
+   * - `sender`: `AlternativeVisualizersWrapper`\
+   * An object that controls altenative visualizers.
+   * 
+   * - `options.visualizer`: `VisualizerBase`\
+   * An applied visualizer.
+   **/
+  public onAlternativeVisualizerChanged: Event<
+    (sender: AlternativeVisualizersWrapper, options: any) => any,
+    AlternativeVisualizersWrapper,
+    any
+  > = new Event<(sender: AlternativeVisualizersWrapper, options: any) => any, AlternativeVisualizersWrapper, any>();
+
+  private onAlternativeVisualizerChangedCallback = (
+    sender: AlternativeVisualizersWrapper,
+    options: { visualizer: VisualizerBase }
+  ) => {
+    this.onAlternativeVisualizerChanged.fire(sender, options);
+  };
+
   protected showElement(elementName: string) {
     const element = this.getElement(elementName);
     const elementIndex = this._elements.indexOf(element);
@@ -522,6 +546,11 @@ export class VisualizationPanel extends VisualizerBase {
 
       visualizer.onUpdate = () => this.layout();
       visualizer.onAfterRender.add(this.onAfterRenderQuestionCallback);
+
+      if (visualizer instanceof AlternativeVisualizersWrapper) {
+        visualizer.onVisualizerChanged.add(this.onAlternativeVisualizerChangedCallback);
+      }
+
       this.visualizers.push(visualizer);
     });
   }
@@ -531,6 +560,9 @@ export class VisualizationPanel extends VisualizerBase {
       visualizer.onUpdate = undefined;
       if (visualizer instanceof SelectBase) {
         visualizer.onDataItemSelected = undefined;
+      }
+      if (visualizer instanceof AlternativeVisualizersWrapper) {
+        visualizer.onVisualizerChanged.remove(this.onAlternativeVisualizerChangedCallback);
       }
       visualizer.onAfterRender.remove(this.onAfterRenderQuestionCallback);
       visualizer.destroy();
@@ -708,9 +740,6 @@ export class VisualizationPanel extends VisualizerBase {
    */
   public onPermissionsChangedCallback: any;
 
-  /**
-   * Renders given panel element.
-   */
   protected renderPanelElement(
     element: IVisualizerPanelRenderedElement,
     container: HTMLElement
@@ -771,9 +800,6 @@ export class VisualizationPanel extends VisualizerBase {
     // !!window && window.dispatchEvent(new UIEvent("resize"));
   }
 
-  /**
-   * Destroys visualizer and all inner content.
-   */
   protected destroyContent(container: HTMLElement) {
     this.layoutEngine.stop();
     super.destroyContent(container);

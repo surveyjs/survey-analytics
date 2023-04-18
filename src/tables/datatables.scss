@@ -1,17 +1,14 @@
-$main-color: #1ab394;
-$background-color: #ffffff;
+@import "../globals";
 
-$text-color: #404040;
-$text-color-inverse: #ffffff;
-$text-gray: #a0a0a0;
-$dark-gray: #9b9b9b;
-$border-color: #d4d4d4;
-$scroll-color: #e2e2e2;
-$svg-color: rgba(#9f9f9f, 0.4);
-$svg-hover-color: #9f9f9f;
-$root-font-size: 14px;
-$background-gray: #f7f7f7;
-$detail-color: $background-gray;
+$background-color: $text-color-inverse;
+$background-gray: $background-color;
+$detail-color: $background-color;
+
+$text-gray: var(--text-gray, #a0a0a0);
+$dark-gray: var(--dark-gray, #9b9b9b);
+$border-color: var(--border-color, #d4d4d4);
+$scroll-color: var(--scroll-color, #e2e2e2);
+
 
 @import "./table.scss";
 

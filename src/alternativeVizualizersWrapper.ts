@@ -4,10 +4,22 @@ import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 import { IVisualizerWithSelection } from "./selectBase";
+import { Event } from "survey-core";
 
 export class AlternativeVisualizersWrapper
   extends VisualizerBase
   implements IVisualizerWithSelection {
+
+  private visualizerSelector: HTMLDivElement;
+
+  private updateVisualizerSelector() {
+    if (!!this.visualizerSelector) {
+      this.visualizerSelector.getElementsByTagName(
+        "select"
+      )[0].value = this.visualizer.name;
+    }
+  }
+
   constructor(
     private visualizers: Array<VisualizerBase>,
     question: Question,
@@ -31,7 +43,7 @@ export class AlternativeVisualizersWrapper
     });
 
     this.registerToolbarItem("changeVisualizer", () =>
-      DocumentHelper.createSelector(
+      this.visualizerSelector = DocumentHelper.createSelector(
         this.visualizers.map((visualizer) => {
           return {
             value: visualizer.name,
@@ -64,16 +76,40 @@ export class AlternativeVisualizersWrapper
     this.afterRender(this.contentContainer);
   };
 
-  private setVisualizer(name: string) {
-    if (!!this.visualizer) {
-      this.visualizer.onAfterRender.remove(
-        this.onAfterVisualizerRenderCallback
-      );
-      this.visualizer.destroy();
+  /**
+   * The event is fired right after AlternativeVisualizersWrapper content type has been changed.
+   **/
+  public onVisualizerChanged: Event<
+    (sender: AlternativeVisualizersWrapper, options: any) => any,
+    AlternativeVisualizersWrapper,
+    any
+  > = new Event<(sender: AlternativeVisualizersWrapper, options: any) => any, AlternativeVisualizersWrapper, any>();
+
+  /**
+   * This method selects visualizer to show by it name.
+  *
+  * parameters:
+  * name - the name of visualizer to show,
+  * quiet - set it to true if you don't want to rise a notification event
+  *
+  **/
+  public setVisualizer(name: string, quiet = false): void {
+    const visualizerCandidate = this.visualizers.filter((v) => v.name === name)[0];
+    if (!!visualizerCandidate && visualizerCandidate !== this.visualizer) {
+      if (!!this.visualizer) {
+        this.visualizer.onAfterRender.remove(
+          this.onAfterVisualizerRenderCallback
+        );
+        this.visualizer.destroy();
+      }
+      this.visualizer = visualizerCandidate;
+      this.refresh();
+      this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
+      if (!quiet) {
+        this.onVisualizerChanged.fire(this, { visualizer: this.visualizer });
+      }
+      this.updateVisualizerSelector();
     }
-    this.visualizer = this.visualizers.filter((v) => v.name === name)[0];
-    this.refresh();
-    this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
   }
 
   updateData(data: Array<{ [index: string]: any }>) {

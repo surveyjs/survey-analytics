@@ -9,7 +9,7 @@ import Plotly from "plotly.js-dist-min";
 export class PlotlyGaugeAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
 
-  constructor(private model: GaugePlotly) {}
+  constructor(private model: GaugePlotly) { }
 
   public get chart() {
     return this._chart;
@@ -53,7 +53,7 @@ export class PlotlyGaugeAdapter {
       },
     ];
 
-    var layout:any = {
+    var layout: any = {
       plot_bgcolor: this.model.backgroundColor,
       paper_bgcolor: this.model.backgroundColor,
     };
@@ -64,11 +64,33 @@ export class PlotlyGaugeAdapter {
     }
 
     const config = {
-      displayModeBar: false,
-      staticPlot: true,
+      displayModeBar: true,
       locale: localization.currentLocale,
-      responsive: true
+      responsive: true,
+      displaylogo: false,
+      modeBarButtonsToRemove: ["toImage"],
+      modeBarButtonsToAdd: [
+        {
+          name: "toImageSjs",
+          title: localization.getString("saveDiagramAsPNG"),
+          icon: (<any>Plotly).Icons.camera,
+          click: (gd: any) => {
+            let options = {
+              format: PlotlySetup.imageExportFormat,
+              // width: 800,
+              // height: 600,
+              filename: this.model.question.name,
+            };
+            PlotlySetup.onImageSaving.fire(this.model as any, options);
+            (<any>Plotly).downloadImage(gd, options);
+          },
+        },
+      ],
+
     };
+    if (GaugePlotly.displayModeBar !== undefined) {
+      config.displayModeBar = GaugePlotly.displayModeBar;
+    }
 
     let options = {
       data: data,
@@ -94,6 +116,7 @@ export class PlotlyGaugeAdapter {
 export class GaugePlotly extends NumberModel {
   private _chartAdapter: PlotlyGaugeAdapter;
 
+  public static displayModeBar: any = undefined;
   public static types = ["gauge", "bullet"];
 
   constructor(

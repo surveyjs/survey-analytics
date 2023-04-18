@@ -1,34 +1,47 @@
 const Muuri = require("muuri");
 
+/**
+ * LayoutEngine controls visualizer layoput in a visualization panel.
+ * You can create a descendant of this class in order to override layout.
+ */
 export class LayoutEngine {
-  constructor(protected _allowed: boolean) {}
+  constructor(protected _allowed: boolean) { }
 
-  protected startCore(container: HTMLElement) {}
-  protected stopCore() {}
-  protected updateCore() {}
+  protected startCore(container: HTMLElement) { }
+  protected stopCore() { }
+  protected updateCore() { }
 
   get allowed() {
     return this._allowed;
   }
 
+  /**
+   * Initilizes layout engine in the given HTML element.
+   */
   start(container: HTMLElement) {
     if (this._allowed) {
       this.startCore(container);
     }
   }
+  /**
+   * Deactivates layouting: stops elements auto-positioning
+   */
   stop() {
     if (this._allowed) {
       this.stopCore();
     }
   }
+  /**
+   * Updates layout: performs elements auto-positioning
+   */
   update() {
     if (this._allowed) {
       this.updateCore();
     }
   }
 
-  add(elements: Array<HTMLElement>, options?: any) {}
-  remove(elements: Array<HTMLElement>, options?: any) {}
+  add(elements: Array<HTMLElement>, options?: any) { }
+  remove(elements: Array<HTMLElement>, options?: any) { }
 
   onMoveCallback: (fromIndex: number, toIndex: number) => void;
 

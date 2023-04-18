@@ -112,6 +112,7 @@ TableExtensions.registerExtension({
       "div",
       "sa-table__entries"
     );
+    const spaceSpan = DocumentHelper.createElement("span", "sa-table__header-space");
     const showSpan = DocumentHelper.createElement(
       "span",
       "sa-table__entries-label sa-table__entries-label--right",
@@ -127,6 +128,7 @@ TableExtensions.registerExtension({
       }
     );
 
+    selectorContainer.appendChild(spaceSpan);
     selectorContainer.appendChild(showSpan);
     selectorContainer.appendChild(getEntriesDropdown(table));
     selectorContainer.appendChild(entriesSpan);

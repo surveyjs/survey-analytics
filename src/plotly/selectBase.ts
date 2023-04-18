@@ -143,9 +143,9 @@ export class SelectBasePlotly extends SelectBase {
     if(options.allowExperimentalFeatures) {
       this.chartTypes.splice(1, 0, "vbar");
     }
-    this.chartType = this.chartTypes[0];
-    if(this.chartTypes.indexOf(options.defaultChartType) !== -1) {
-      this.chartType = options.defaultChartType;
+    this._chartType = this.chartTypes[0];
+    if (this.chartTypes.indexOf(options.defaultChartType) !== -1) {
+      this._chartType = options.defaultChartType;
     }
     this._chartAdapter = new PlotlyChartAdapter(this);
   }

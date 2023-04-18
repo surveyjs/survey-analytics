@@ -9,8 +9,8 @@
 
 .sa-choices-table {
   width: 100%;
-  font-family: SegoeUI, Arial, sans-serif;
-  font-size: 14px;
+  font-family: $font-family;
+  font-size: $root-font-size;
   color: $text-color;
 	// border-collapse: collapse;
   background-color: $background-color;

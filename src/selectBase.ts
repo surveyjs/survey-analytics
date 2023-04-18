@@ -161,7 +161,13 @@ export class SelectBase
   }
 
   protected chartTypes: string[] = [];
-  public chartType: string = "bar";
+  protected _chartType: string = "bar";
+  /**
+   * Chart type - current chart type.
+   */
+  public get chartType(): string {
+    return this._chartType;
+  }
 
   private updateEmptyAnswersBtn() {
     if (!!this.emptyAnswersBtn) {
@@ -247,9 +253,9 @@ export class SelectBase
   protected setChartType(chartType: string) {
     if (
       this.chartTypes.indexOf(chartType) !== -1 &&
-      this.chartType !== chartType
+      this._chartType !== chartType
     ) {
-      this.chartType = chartType;
+      this._chartType = chartType;
       this.onChartTypeChanged();
       this.refreshContent();
     }
@@ -288,6 +294,9 @@ export class SelectBase
     return this.selectedItem;
   }
 
+  /**
+   * Gets and sets whether chart should show percentages only.
+   */
   public get showOnlyPercentages(): boolean {
     return this._showOnlyPercentages;
   }
@@ -297,6 +306,9 @@ export class SelectBase
     this.refreshContent();
   }
 
+  /**
+   * Gets and sets whether chart should show values and percentages.
+   */
   public get showPercentages(): boolean {
     return this._showPercentages;
   }
@@ -307,6 +319,9 @@ export class SelectBase
     this.refreshContent();
   }
 
+  /**
+   * Gets and sets chart elements order.
+   */
   public get answersOrder() {
     return this._answersOrder;
   }
@@ -317,6 +332,9 @@ export class SelectBase
     this.refreshContent();
   }
 
+  /**
+   * Set to true if need to hide empty chart elements (e.g. bars vith zero value).
+   */
   public get hideEmptyAnswers() {
     return this._hideEmptyAnswers;
   }
@@ -337,6 +355,9 @@ export class SelectBase
     this.refreshContent();
   }
 
+  /**
+   * Set to some value if need to show top N chart elements.
+   */
   public get topN(): number {
     return this._topN;
   }
@@ -352,6 +373,9 @@ export class SelectBase
     return true;
   }
 
+  /**
+   * Set to true if you want to see chart elements for missing answers (e.g. radiogroup items never been selected by surveyee).
+   */
   public get showMissingAnswers() {
     return this._showMissingAnswers;
   }
