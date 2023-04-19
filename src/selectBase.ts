@@ -168,6 +168,9 @@ export class SelectBase
   public get chartType(): string {
     return this._chartType;
   }
+  public set chartType(newChartType: string) {
+    this.setChartType(newChartType);
+  }
 
   private updateEmptyAnswersBtn() {
     if (!!this.emptyAnswersBtn) {

@@ -157,6 +157,10 @@ test("getState, setState, onStateChanged", () => {
   ];
   const survey = new SurveyModel(json);
   let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
+  let chartVisuzlizer = visPanel.getVisualizer("question1") as SelectBase;
+
+  expect(chartVisuzlizer["chartTypes"]).toStrictEqual([]);
+  chartVisuzlizer["chartTypes"] = ["bar", "scatter"];
 
   let initialState: IState = {
     locale: "",

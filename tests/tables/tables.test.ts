@@ -19,10 +19,10 @@ const json = {
 };
 
 class TableTest extends Table {
-  applyColumnFilter() {}
-  applyFilter() {}
-  render() {}
-  sortByColumn() {}
+  applyColumnFilter() { }
+  applyFilter() { }
+  render() { }
+  sortByColumn() { }
 }
 
 test("buildColumns method", () => {
@@ -470,11 +470,11 @@ test("check composite question with questions which is not ready", () => {
   expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_value1\",\"innerQuestion2\":\"test_value2\"}");
   question.contentPanel.elements[0]["isReadyValue"] = true;
   data[0]["compositeQuestion"]["innerQuestion"] = "test_text1";
-  question.contentPanel.elements[0].onReadyChanged.fire(question.contentPanel.elements[0], { isReady: true });
+  (question.contentPanel.elements[0] as any).onReadyChanged.fire(question.contentPanel.elements[0], { isReady: true });
   expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_text1\",\"innerQuestion2\":\"test_value2\"}");
   question.contentPanel.elements[1]["isReadyValue"] = true;
   data[0]["compositeQuestion"]["innerQuestion2"] = "test_text2";
-  question.contentPanel.elements[1].onReadyChanged.fire(question.contentPanel.elements[1], { isReady: true });
+  (question.contentPanel.elements[1] as any).onReadyChanged.fire(question.contentPanel.elements[1], { isReady: true });
   expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_text1\",\"innerQuestion2\":\"test_text2\"}");
 });
 
