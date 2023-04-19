@@ -394,12 +394,12 @@ export class VisualizationPanel extends VisualizerBase {
 
   /**
    * An event that is raised when a user selects a different visualizer type from the Type drop-down menu.
-   * 
+   *
    * Parameters:
-   * 
+   *
    * - `sender`: `AlternativeVisualizersWrapper`\
    * An object that controls altenative visualizers.
-   * 
+   *
    * - `options.visualizer`: `VisualizerBase`\
    * An applied visualizer.
    **/
