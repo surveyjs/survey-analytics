@@ -8,20 +8,28 @@ import { Event } from "survey-core";
 var styles = require("./visualizerBase.scss");
 
 /**
- * VisualizerBase is a base object for all visuzlizers. It responsible for the rendering and destroying visualizer.
+ * A base object for all visualizers. Use it to implement a custom visualizer.
  *
- * constructor parameters:
- * question - a survey question to visualize,
- * data - an array of answers in format of survey result,
- * options - object with the following options,
- * name - visualizer name
- *
- * options:
- * seriesValues - an array of series values in data to group data by series,
- * seriesLabels - labels for series to display, if not passed the seriesValues are used as labels,
- * survey - pass survey instance to use localses from the survey JSON,
- * dataProvider - dataProvider for this visualizer,
- *
+ * Constructor parameters:
+ * 
+ * - `question`: [`Question`](https://surveyjs.io/form-library/documentation/api-reference/question)\
+ * A survey question to visualize.
+ * - `data`: `Array<any>`\
+ * Survey results.
+ * - `options`\
+ * An object with the following properties:
+ *    - `seriesValues`: `Array<String>`\
+ *    Series values used to group data.
+ *    - `seriesLabels`: `Array<String>`\
+ *    Series labels to display. If this property is not set, `seriesValues` are used as labels.
+ *    - `survey`: [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model)\
+ *    Pass a `SurveyModel` instance if you want to use locales from the survey JSON schema.
+ *    - `dataProvider`: `DataProvider`\
+ *    A data provider for this visualizer.
+ * - `name`: `String`\
+ * *(Optional)* The visualizer's name.
+ * 
+ * [View Demo](https://surveyjs.io/dashboard/examples/how-to-plot-survey-data-in-custom-bar-chart/ (linkStyle))
  */
 export class VisualizerBase implements IDataInfo {
   private _showHeader = true;
@@ -48,7 +56,6 @@ export class VisualizerBase implements IDataInfo {
    * - `options.htmlElement`: `HTMLElement`\
    * A page element with the visualizer's content.
    * @see render
-   * @see renderContent
    * @see refresh
    **/
   public onAfterRender: Event<
@@ -184,7 +191,9 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Registers creator of visualizer toolbar item.
+   * Registers a function used to create a toolbar item for this visualizer.
+   * @param name A custom name for the toolbar item.
+   * @param creator A function that accepts the toolbar and should return an `HTMLElement` with the toolbar item.
    */
   public registerToolbarItem(
     name: string,
@@ -203,8 +212,7 @@ export class VisualizerBase implements IDataInfo {
   /**
    * Returns an array of survey results used to calculate values for visualization. If a user applies a filter, the array is also filtered.
    * 
-   * To get an array of calculated and visualized values, call the `getData()` method.
-   * @see getData
+   * To get an array of calculated and visualized values, call the [`getData()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#getData) method.
    */
   protected get data() {
     return this.dataProvider.filteredData;
@@ -234,7 +242,8 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Removes the visualizer and all its elements from the DOM.
+   * Deletes the visualizer and all its elements from the DOM.
+   * @see clear
    */
   destroy() {
     if (!!this.renderResult) {
@@ -255,7 +264,7 @@ export class VisualizerBase implements IDataInfo {
   /**
    * Empties the toolbar, footer, and content containers.
    * 
-   * TODO: Why not header?
+   * If you want to empty and delete the visualizer and all its elements from the DOM, call the [`destroy()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#destroy) method instead.
    */
   public clear() {
     if (!!this.toolbarContainer) {
@@ -502,14 +511,13 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Returns whether the visualizer renders it header.
+   * Gets or sets the visibility of the visualizer's toolbar.
+   * 
+   * Default value: `true`
    */
   get showHeader() {
     return this._showHeader;
   }
-  /**
-   * Sets whether the visualizer renders it header.
-   */
   set showHeader(newValue: boolean) {
     if (newValue != this._showHeader) {
       this._showHeader = newValue;
@@ -523,31 +531,34 @@ export class VisualizerBase implements IDataInfo {
   /**
    * Returns an array of calculated and visualized values. If a user applies a filter, the array is also filtered.
    * 
-   * To get an array of source survey results, use the `data` property.
-   * @see data
+   * To get an array of source survey results, use the [`data`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#data) property.
    */
   getData(): any {
     return this.dataProvider.getData(this);
   }
 
   /**
-   * Returns visualizer state - options control visualizer behavior and rendering.
-   * Overriden in descendants
+   * Returns an object with properties that describe a current visualizer state. The properties are different for each individual visualizer.
+   * 
+   * > This method is overriden in descendant classes.
+   * @see setState
    */
   public getState(): any {
     return {};
   }
   /**
-   * Sets visualizer state - options control visualizer behavior and rendering.
-   * Overriden in descendants
+   * Sets the visualizer's state.
+   * 
+   * > This method is overriden in descendant classes.
+   * @see getState
    */
   public setState(state: any): void {
   }
 
   /**
-   * Get or sets the current locale.
+   * Gets or sets the current locale.
    * 
-   * If you want to inherit the locale from the visualized survey, assign a `SurveyModel` instance to the `survey` property of the `options` object in the constructor.
+   * If you want to inherit the locale from a visualized survey, assign a `SurveyModel` instance to the `survey` property of the `options` object in the constructor.
    * 
    * If the survey is [translated to more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the toolbar displays a language selection drop-down menu.
    * @see onLocaleChanged
