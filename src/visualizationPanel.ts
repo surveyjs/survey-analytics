@@ -623,7 +623,6 @@ export class VisualizationPanel extends VisualizerBase {
         displayName: this.processText(question.title),
         isVisible: true,
         isPublic: true,
-        type: undefined,
       };
     });
   }
@@ -639,7 +638,6 @@ export class VisualizationPanel extends VisualizerBase {
         displayName: element.displayName,
         isVisible: element.isVisible,
         isPublic: element.isPublic,
-        type: element.type,
       };
     });
   }

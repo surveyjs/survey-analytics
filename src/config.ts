@@ -3,7 +3,6 @@ export interface IVisualizerPanelElement {
   displayName: string;
   isVisible: boolean;
   isPublic: boolean;
-  type?: string;
   chartType?: string;
   answersOrder?: string;
   hideEmptyAnswers?: boolean;

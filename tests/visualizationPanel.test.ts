@@ -168,7 +168,6 @@ test("getState, setState, onStateChanged", () => {
       {
         displayName: "question1",
         name: "question1",
-        type: undefined,
         isVisible: true,
         isPublic: true,
         chartType: "bar",
@@ -184,7 +183,6 @@ test("getState, setState, onStateChanged", () => {
       {
         displayName: "question1",
         name: "question1",
-        type: "bar",
         isVisible: false,
         isPublic: true,
         chartType: "scatter",
