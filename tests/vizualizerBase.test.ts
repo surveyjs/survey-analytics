@@ -87,3 +87,16 @@ test("options.labelTruncateLength", () => {
 
   expect(visualizer.labelTruncateLength).toEqual(3);
 });
+
+test("clear header", () => {
+  var question = new QuestionDropdownModel("q1");
+  question.correctAnswer = "1";
+  let visualizer = new VisualizerBase(question, [], { showCorrectAnswers: true });
+  expect(visualizer["headerContainer"]).toBeUndefined();
+  visualizer.render(document.createElement("div"));
+  expect(visualizer["headerContainer"]).toBeDefined();
+  expect(visualizer["headerContainer"].innerHTML).toBe("<div class=\"sa-visualizer__correct-answer\"></div>");
+  visualizer.clear();
+  expect(visualizer["headerContainer"]).toBeDefined();
+  expect(visualizer["headerContainer"].innerHTML).toBe("");
+});

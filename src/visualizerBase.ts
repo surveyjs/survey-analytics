@@ -230,6 +230,7 @@ export class VisualizerBase implements IDataInfo {
     if (!!this.renderResult) {
       this.clear();
       this.toolbarContainer = undefined;
+      this.headerContainer = undefined;
       this.contentContainer = undefined;
       this.footerContainer = undefined;
       this.renderResult.innerHTML = "";
@@ -248,6 +249,9 @@ export class VisualizerBase implements IDataInfo {
   public clear() {
     if (!!this.toolbarContainer) {
       this.destroyToolbar(this.toolbarContainer);
+    }
+    if (!!this.headerContainer) {
+      this.destroyHeader(this.headerContainer);
     }
     if (!!this.contentContainer) {
       this.destroyContent(this.contentContainer);
