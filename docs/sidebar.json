@@ -28,27 +28,27 @@
     },
     {
       "Name": "api",
-      "Title": "Analytics API",
+      "Title": "Dashboard API",
       "Items": [
         {
-          "Name": "visualizerbase",
-          "Title": "Base Visualization Element"
-        },
-        {
           "Name": "visualizationpanel",
-          "Title": "Visualization Panel"
+          "Title": "VisualizationPanel"
         },
         {
           "Name": "IVisualizationPanelOptions",
           "Title": "IVisualizationPanelOptions"
         },
         {
+          "Name": "visualizerbase",
+          "Title": "VisualizerBase"
+        },
+        {
           "Name": "visualizationmanager",
-          "Title": "Visualizers Repository"
+          "Title": "VisualizationManager"
         },
         {
           "Name": "visualizerfactory",
-          "Title": "Visualizer Factory"
+          "Title": "VisualizerFactory"
         }
       ]
     }

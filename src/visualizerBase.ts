@@ -8,20 +8,28 @@ import { Event } from "survey-core";
 var styles = require("./visualizerBase.scss");
 
 /**
- * VisualizerBase is a base object for all visuzlizers. It responsible for the rendering and destroying visualizer.
+ * A base object for all visualizers. Use it to implement a custom visualizer.
  *
- * constructor parameters:
- * question - a survey question to visualize,
- * data - an array of answers in format of survey result,
- * options - object with the following options,
- * name - visualizer name
- *
- * options:
- * seriesValues - an array of series values in data to group data by series,
- * seriesLabels - labels for series to display, if not passed the seriesValues are used as labels,
- * survey - pass survey instance to use localses from the survey JSON,
- * dataProvider - dataProvider for this visualizer,
- *
+ * Constructor parameters:
+ * 
+ * - `question`: [`Question`](https://surveyjs.io/form-library/documentation/api-reference/question)\
+ * A survey question to visualize.
+ * - `data`: `Array<any>`\
+ * Survey results.
+ * - `options`\
+ * An object with the following properties:
+ *    - `seriesValues`: `Array<String>`\
+ *    Series values used to group data.
+ *    - `seriesLabels`: `Array<String>`\
+ *    Series labels to display. If this property is not set, `seriesValues` are used as labels.
+ *    - `survey`: [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model)\
+ *    Pass a `SurveyModel` instance if you want to use locales from the survey JSON schema.
+ *    - `dataProvider`: `DataProvider`\
+ *    A data provider for this visualizer.
+ * - `name`: `String`\
+ * *(Optional)* The visualizer's name.
+ * 
+ * [View Demo](https://surveyjs.io/dashboard/examples/how-to-plot-survey-data-in-custom-bar-chart/ (linkStyle))
  */
 export class VisualizerBase implements IDataInfo {
   private _showHeader = true;
@@ -38,7 +46,17 @@ export class VisualizerBase implements IDataInfo {
   public static otherCommentCollapsed = true;
 
   /**
-   * The event is fired right after a visualizer's content is rendered in DOM.
+   * An event that is raised after the visualizer's content is rendered.
+   * 
+   * Parameters:
+   * 
+   * - `sender`: `VisualizerBase`\
+   * A `VisualizerBase` instance that raised the event.
+   * 
+   * - `options.htmlElement`: `HTMLElement`\
+   * A page element with the visualizer's content.
+   * @see render
+   * @see refresh
    **/
   public onAfterRender: Event<
     (sender: VisualizerBase, options: any) => any,
@@ -51,9 +69,16 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Fires when visualizer locale changed.
-   * sender - this visualizer
-   * locale - new locale of the visualizer
+   * An event that is raised after a new locale is set.
+   * 
+   * Parameters:
+   * 
+   * - `sender`: `VisualizerBase`\
+   * A `VisualizerBase` instance that raised the event.
+   * 
+   * - `options.locale`: `String`\
+   * The indentifier of a new locale (for example, "en").
+   * @see locale
    */
   public onLocaleChanged = new Event<
     (sender: VisualizerBase, options: { locale: string }) => any,
@@ -85,15 +110,13 @@ export class VisualizerBase implements IDataInfo {
     this.refresh();
   }
 
-  /**
-   * Name of the data field of data object from the data array.
-   */
   get dataName(): string | Array<string> {
     return this.question.valueName || this.question.name;
   }
 
   /**
-   * Indicates whether visualizer has header. Usually it is true then a question has correct answer.
+   * Indicates whether the visualizer displays a header. This property is `true` when a visualized question has a correct answer.
+   * @see hasFooter
    */
   get hasHeader(): boolean {
     if (!this.options || !this.options.showCorrectAnswers) {
@@ -103,7 +126,8 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Indicates whether visualizer has footer. Usually it is true then a question has comment or choices question has other item.
+   * Indicates whether the visualizer displays a footer. This property is `true` when a visualized question has a comment.
+   * @see hasHeader
    */
   get hasFooter(): boolean {
     return (
@@ -120,7 +144,8 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Footer visualizer getter.
+   * Allows you to access the footer visualizer. Returns `undefined` if the footer is absent.
+   * @see hasFooter
    */
   get footerVisualizer() {
     if (!this.hasFooter) {
@@ -139,7 +164,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Indicates whether visualizer supports selection. Visualizers of questions with choices allow to select choice by clicking on the diagram bar and filter other data for the selected item.
+   * Indicates whether users can select series points to cross-filter charts. To allow or disallow selection, set the `allowSelection` property of the `options` object in the constructor.
    */
   public get supportSelection(): boolean {
     return (
@@ -149,36 +174,26 @@ export class VisualizerBase implements IDataInfo {
     );
   }
 
-  /**
-   * Series values getter. Some questions (used in matrices) should be grouped by matrix rows. This groups are called series.
-   */
   getSeriesValues(): Array<string> {
     return this.options.seriesValues || [];
   }
 
-  /**
-   * Series labels getter. Some questions (used in matrices) should be grouped by matrix rows. This groups are called series.
-   */
   getSeriesLabels(): Array<string> {
     return this.options.seriesLabels || this.getSeriesValues();
   }
 
-  /**
-   * Available values of question answers (available choices).
-   */
   getValues(): Array<any> {
     throw new Error("Method not implemented.");
   }
 
-  /**
-   * Available labels of question answers (human readable representation of available choices).
-   */
   getLabels(): Array<string> {
     return this.getValues();
   }
 
   /**
-   * Registers creator of visualizer toolbar item.
+   * Registers a function used to create a toolbar item for this visualizer.
+   * @param name A custom name for the toolbar item.
+   * @param creator A function that accepts the toolbar and should return an `HTMLElement` with the toolbar item.
    */
   public registerToolbarItem(
     name: string,
@@ -188,14 +203,16 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * The name of the visaulizer.
+   * Returns the visualizer's name.
    */
   public get name() {
     return this._name || "visualizer";
   }
 
   /**
-   * The actual data of the visaulizer.
+   * Returns an array of survey results used to calculate values for visualization. If a user applies a filter, the array is also filtered.
+   * 
+   * To get an array of calculated and visualized values, call the [`getData()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#getData) method.
    */
   protected get data() {
     return this.dataProvider.filteredData;
@@ -206,7 +223,8 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Updates visualizer data.
+   * Updates visualized data.
+   * @param data A data array with survey results to be visualized. 
    */
   updateData(data: Array<{ [index: string]: any }>) {
     if (!this.options.dataProvider) {
@@ -224,7 +242,8 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Destroys visualizer.
+   * Deletes the visualizer and all its elements from the DOM.
+   * @see clear
    */
   destroy() {
     if (!!this.renderResult) {
@@ -244,7 +263,9 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Method for clearing all rendered elements from outside.
+   * Empties the toolbar, footer, and content containers.
+   * 
+   * If you want to empty and delete the visualizer and all its elements from the DOM, call the [`destroy()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#destroy) method instead.
    */
   public clear() {
     if (!!this.toolbarContainer) {
@@ -369,7 +390,8 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Renders visualizer in the given container.
+   * Renders the visualizer in a specified container.
+   * @param targetElement An `HTMLElement` or an `id` of a page element in which you want to render the visualizer.
    */
   render(targetElement: HTMLElement | string) {
     if (typeof targetElement === "string") {
@@ -409,7 +431,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Redraws visualizer and all inner content.
+   * Re-renders the visualizer and its content.
    */
   public refresh() {
     if (!!this.headerContainer) {
@@ -493,14 +515,13 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Returns whether the visualizer renders it header.
+   * Gets or sets the visibility of the visualizer's toolbar.
+   * 
+   * Default value: `true`
    */
   get showHeader() {
     return this._showHeader;
   }
-  /**
-   * Sets whether the visualizer renders it header.
-   */
   set showHeader(newValue: boolean) {
     if (newValue != this._showHeader) {
       this._showHeader = newValue;
@@ -512,30 +533,39 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Returns data to be used in the visualizer.
+   * Returns an array of calculated and visualized values. If a user applies a filter, the array is also filtered.
+   * 
+   * To get an array of source survey results, use the [`data`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#data) property.
    */
   getData(): any {
     return this.dataProvider.getData(this);
   }
 
   /**
-   * Returns visualizer state - options control visualizer behavior and rendering.
-   * Overriden in descendants
+   * Returns an object with properties that describe a current visualizer state. The properties are different for each individual visualizer.
+   * 
+   * > This method is overriden in descendant classes.
+   * @see setState
    */
   public getState(): any {
     return {};
   }
   /**
-   * Sets visualizer state - options control visualizer behavior and rendering.
-   * Overriden in descendants
+   * Sets the visualizer's state.
+   * 
+   * > This method is overriden in descendant classes.
+   * @see getState
    */
   public setState(state: any): void {
   }
 
   /**
-   * Returns current locale of the visualizer.
-   * If locales more than one, the language selection dropdown will be added in the toolbar
-   * In order to use survey locales the survey instance object should be passed as 'survey' option for visualizer
+   * Gets or sets the current locale.
+   * 
+   * If you want to inherit the locale from a visualized survey, assign a `SurveyModel` instance to the `survey` property of the `options` object in the constructor.
+   * 
+   * If the survey is [translated into more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the toolbar displays a language selection drop-down menu.
+   * @see onLocaleChanged
    */
   public get locale() {
     var survey = this.options.survey;
@@ -545,9 +575,6 @@ export class VisualizerBase implements IDataInfo {
     return localization.currentLocale;
   }
 
-  /**
-   * Sets locale for visualization panel.
-   */
   public set locale(newLocale: string) {
     this.setLocale(newLocale);
     this.onLocaleChanged.fire(this, { locale: newLocale });
