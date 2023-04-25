@@ -223,7 +223,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Updates the visualized data.
+   * Updates visualized data.
    * @param data A data array with survey results to be visualized. 
    */
   updateData(data: Array<{ [index: string]: any }>) {
@@ -560,7 +560,7 @@ export class VisualizerBase implements IDataInfo {
    * 
    * If you want to inherit the locale from a visualized survey, assign a `SurveyModel` instance to the `survey` property of the `options` object in the constructor.
    * 
-   * If the survey is [translated to more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the toolbar displays a language selection drop-down menu.
+   * If the survey is [translated into more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the toolbar displays a language selection drop-down menu.
    * @see onLocaleChanged
    */
   public get locale() {
