@@ -110,7 +110,7 @@ export class VisualizerBase implements IDataInfo {
     this.refresh();
   }
 
-  get dataName(): string | Array<string> {
+  get name(): string | Array<string> {
     return this.question.valueName || this.question.name;
   }
 

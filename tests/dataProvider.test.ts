@@ -32,7 +32,7 @@ const testData = [
 ];
 
 const q1testDataInfo = {
-  dataName: "q1",
+  name: "q1",
   getValues: () => [0, 1, 2, 3],
   getLabels: () => ["a0", "a1", "a2", "a3"],
   getSeriesValues: () => [],
@@ -93,7 +93,7 @@ test("getData for boolean question values - mock", () => {
   const dataProvider = new DataProvider(data);
   expect(
     dataProvider.getData({
-      dataName: "q1",
+      name: "q1",
       getValues: () => [true, false],
       getLabels: () => ["true", "false"],
       getSeriesValues: () => [],
@@ -121,7 +121,7 @@ test("getData for select base question values", () => {
   const dataProvider = new DataProvider(data);
   expect(
     dataProvider.getData({
-      dataName: "q1",
+      name: "q1",
       getValues: () => choices,
       getLabels: () => choices,
       getSeriesValues: () => [],
@@ -145,7 +145,7 @@ test("getData for matrix question values", () => {
   const dataProvider = new DataProvider(data);
   expect(
     dataProvider.getData({
-      dataName: "question1",
+      name: "question1",
       getValues: () => [
         "Excellent",
         "Very Good",
@@ -183,7 +183,7 @@ test("getData for matrix dropdown question values - pre-processed data", () => {
   const dataProvider = new DataProvider(data);
   expect(
     dataProvider.getData({
-      dataName: "Column 1",
+      name: "Column 1",
       getValues: () => ["High Quality", "Natural", "Trustworthy"],
       getLabels: () => ["High Quality", "Natural", "Trustworthy"],
       getSeriesValues: () => ["Lizol", "Harpic"],
@@ -195,7 +195,7 @@ test("getData for matrix dropdown question values - pre-processed data", () => {
   ]);
   expect(
     dataProvider.getData({
-      dataName: "Column 2",
+      name: "Column 2",
       getValues: () => [1, 2, 3, 4, 5],
       getLabels: () => ["1", "2", "3", "4", "5"],
       getSeriesValues: () => ["Lizol", "Harpic"],
@@ -313,7 +313,7 @@ test("getData for matrix dropdown grouped", () => {
   const columns = ["1st Most Difficult", "2nd Most Difficult", "3rd Most Difficult"];
   expect(
     dataProvider.getData({
-      dataName: columns,
+      name: columns,
       getValues: () => choices,
       getLabels: () => choices,
       getSeriesValues: () => rows,
@@ -352,7 +352,7 @@ test("filter data by matrix value", () => {
   const dataProvider = new DataProvider(data);
   const values = ["Custom", "Consulting", "ISV"];
   const dataInfo = {
-    dataName: "organization_type",
+    name: "organization_type",
     getValues: () => values,
     getLabels: () => values,
     getSeriesValues: () => [],
@@ -427,7 +427,7 @@ test("filter data by matrix value - number and string", () => {
   const dataProvider = new DataProvider(data);
   const values = ["Custom", "Consulting", "ISV"];
   const dataInfo = {
-    dataName: "organization_type",
+    name: "organization_type",
     getValues: () => values,
     getLabels: () => values,
     getSeriesValues: () => [],
@@ -469,7 +469,7 @@ test("filter data for matrix dropdown question column values - pre-processed dat
   dataProvider.setFilter("Column 1", { "Lizol": "Natural" });
   expect(
     dataProvider.getData({
-      dataName: "Column 1",
+      name: "Column 1",
       getValues: () => ["High Quality", "Natural", "Trustworthy"],
       getLabels: () => ["High Quality", "Natural", "Trustworthy"],
       getSeriesValues: () => ["Lizol", "Harpic"],
@@ -481,7 +481,7 @@ test("filter data for matrix dropdown question column values - pre-processed dat
   ]);
   expect(
     dataProvider.getData({
-      dataName: "Column 2",
+      name: "Column 2",
       getValues: () => [1, 2, 3, 4, 5],
       getLabels: () => ["1", "2", "3", "4", "5"],
       getSeriesValues: () => ["Lizol", "Harpic"],
@@ -553,7 +553,7 @@ test("getData for boolean question values + missing answers", () => {
   const dataProvider = new DataProvider(data);
   expect(
     dataProvider.getData({
-      dataName: "q1",
+      name: "q1",
       getValues: () => [true, false, undefined],
       getLabels: () => ["true", "false", "missing"],
       getSeriesValues: () => [],
@@ -584,7 +584,7 @@ test("getData for select base question values + missing answers", () => {
   const dataProvider = new DataProvider(data);
   expect(
     dataProvider.getData({
-      dataName: "q1",
+      name: "q1",
       getValues: () => choices.concat([undefined]),
       getLabels: () => choices.concat(["missing"]),
       getSeriesValues: () => [],
