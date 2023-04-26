@@ -117,5 +117,5 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
   survey.getAllQuestions(),
   data
 );
-visPanel.showHeader = true;
+visPanel.showToolbar = true;
 visPanel.render(document.getElementById("rankingContainer"));

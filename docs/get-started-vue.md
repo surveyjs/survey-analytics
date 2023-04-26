@@ -327,7 +327,7 @@ export default {
       surveyResults,
       vizPanelOptions
     );
-    vizPanel.showHeader = false;
+    vizPanel.showToolbar = false;
     vizPanel.render("surveyVizPanel");
   }
 }

@@ -174,7 +174,7 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
     }
   }
 );
-visPanel.showHeader = true;
+visPanel.showToolbar = true;
 visPanel.onAlternativeVisualizerChanged.add(function(sender, options) {
   visPanel.visualizers.forEach(visualizer => {
     if(typeof visualizer.setVisualizer === "function") {

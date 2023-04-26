@@ -29,7 +29,7 @@ var survey = new Survey.SurveyModel(json);
 //     survey.getAllQuestions(),
 //     data
 //   );
-//   visPanel.showHeader = true;
+//   visPanel.showToolbar = true;
 //   visPanel.render(document.getElementById("summaryContainer"));
 // };
 // xhr.send();
@@ -70,5 +70,5 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
   data,
   options
 );
-visPanel.showHeader = true;
+visPanel.showToolbar = true;
 visPanel.render(document.getElementById("summaryContainer"));

@@ -29,7 +29,7 @@ var survey = new Survey.SurveyModel(json);
 //     survey.getAllQuestions(),
 //     data
 //   );
-//   visPanel.showHeader = true;
+//   visPanel.showToolbar = true;
 //   visPanel.render(document.getElementById("summaryContainer"));
 // };
 // xhr.send();
@@ -59,7 +59,7 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
   options,
   elements
 );
-visPanel.showHeader = true;
+visPanel.showToolbar = true;
 
 visPanel.onStateChanged.add(function () {
   window.localStorage.setItem("saPanelState", JSON.stringify(visPanel.state));

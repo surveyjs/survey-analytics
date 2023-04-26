@@ -11,7 +11,7 @@ var styles = require("./visualizerBase.scss");
  * A base object for all visualizers. Use it to implement a custom visualizer.
  *
  * Constructor parameters:
- * 
+ *
  * - `question`: [`Question`](https://surveyjs.io/form-library/documentation/api-reference/question)\
  * A survey question to visualize.
  * - `data`: `Array<any>`\
@@ -28,11 +28,11 @@ var styles = require("./visualizerBase.scss");
  *    A data provider for this visualizer.
  * - `name`: `String`\
  * *(Optional)* The visualizer's name.
- * 
+ *
  * [View Demo](https://surveyjs.io/dashboard/examples/how-to-plot-survey-data-in-custom-bar-chart/ (linkStyle))
  */
 export class VisualizerBase implements IDataInfo {
-  private _showHeader = true;
+  private _showToolbar = true;
   private _footerVisualizer: VisualizerBase = undefined;
   private _dataProvider: DataProvider = undefined;
   public labelTruncateLength: number = 27;
@@ -47,12 +47,12 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * An event that is raised after the visualizer's content is rendered.
-   * 
+   *
    * Parameters:
-   * 
+   *
    * - `sender`: `VisualizerBase`\
    * A `VisualizerBase` instance that raised the event.
-   * 
+   *
    * - `options.htmlElement`: `HTMLElement`\
    * A page element with the visualizer's content.
    * @see render
@@ -70,12 +70,12 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * An event that is raised after a new locale is set.
-   * 
+   *
    * Parameters:
-   * 
+   *
    * - `sender`: `VisualizerBase`\
    * A `VisualizerBase` instance that raised the event.
-   * 
+   *
    * - `options.locale`: `String`\
    * The indentifier of a new locale (for example, "en").
    * @see locale
@@ -211,7 +211,7 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * Returns an array of survey results used to calculate values for visualization. If a user applies a filter, the array is also filtered.
-   * 
+   *
    * To get an array of calculated and visualized values, call the [`getData()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#getData) method.
    */
   protected get data() {
@@ -224,7 +224,7 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * Updates visualized data.
-   * @param data A data array with survey results to be visualized. 
+   * @param data A data array with survey results to be visualized.
    */
   updateData(data: Array<{ [index: string]: any }>) {
     if (!this.options.dataProvider) {
@@ -264,7 +264,7 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * Empties the toolbar, footer, and content containers.
-   * 
+   *
    * If you want to empty and delete the visualizer and all its elements from the DOM, call the [`destroy()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#destroy) method instead.
    */
   public clear() {
@@ -300,7 +300,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected renderToolbar(container: HTMLElement) {
-    if (this.showHeader) {
+    if (this.showToolbar) {
       const toolbar = <HTMLDivElement>(
         DocumentHelper.createElement("div", "sa-toolbar")
       );
@@ -516,15 +516,15 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * Gets or sets the visibility of the visualizer's toolbar.
-   * 
+   *
    * Default value: `true`
    */
-  get showHeader() {
-    return this._showHeader;
+  get showToolbar() {
+    return this._showToolbar;
   }
-  set showHeader(newValue: boolean) {
-    if (newValue != this._showHeader) {
-      this._showHeader = newValue;
+  set showToolbar(newValue: boolean) {
+    if (newValue != this._showToolbar) {
+      this._showToolbar = newValue;
       if (!!this.toolbarContainer) {
         this.destroyToolbar(this.toolbarContainer);
         this.renderToolbar(this.toolbarContainer);
@@ -534,7 +534,7 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * Returns an array of calculated and visualized values. If a user applies a filter, the array is also filtered.
-   * 
+   *
    * To get an array of source survey results, use the [`data`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#data) property.
    */
   getData(): any {
@@ -543,7 +543,7 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * Returns an object with properties that describe a current visualizer state. The properties are different for each individual visualizer.
-   * 
+   *
    * > This method is overriden in descendant classes.
    * @see setState
    */
@@ -552,7 +552,7 @@ export class VisualizerBase implements IDataInfo {
   }
   /**
    * Sets the visualizer's state.
-   * 
+   *
    * > This method is overriden in descendant classes.
    * @see getState
    */
@@ -561,9 +561,9 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * Gets or sets the current locale.
-   * 
+   *
    * If you want to inherit the locale from a visualized survey, assign a `SurveyModel` instance to the `survey` property of the `options` object in the constructor.
-   * 
+   *
    * If the survey is [translated into more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the toolbar displays a language selection drop-down menu.
    * @see onLocaleChanged
    */

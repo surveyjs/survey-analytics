@@ -238,7 +238,7 @@ export default function App() {
       surveyResults,
       vizPanelOptions
     );
-    vizPanel.showHeader = false;
+    vizPanel.showToolbar = false;
     setVizPanel(vizPanel);
   }
 
@@ -351,7 +351,7 @@ export default function App() {
       surveyResults,
       vizPanelOptions
     );
-    vizPanel.showHeader = false;
+    vizPanel.showToolbar = false;
     setVizPanel(vizPanel);
   }
 

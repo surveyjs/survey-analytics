@@ -130,5 +130,5 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
   data,
   {}
 );
-visPanel.showHeader = true;
+visPanel.showToolbar = true;
 visPanel.render(document.getElementById("summaryContainer"));
