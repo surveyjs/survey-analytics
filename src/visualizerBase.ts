@@ -92,7 +92,7 @@ export class VisualizerBase implements IDataInfo {
     public question: Question,
     data: Array<{ [index: string]: any }>,
     public options: { [index: string]: any } = {},
-    private _name?: string
+    private _type?: string
   ) {
     this._dataProvider = options.dataProvider || new DataProvider(data);
     this._dataProvider.onDataChanged.add(() => this.onDataChanged());
@@ -205,8 +205,8 @@ export class VisualizerBase implements IDataInfo {
   /**
    * Returns the visualizer's name.
    */
-  public get name() {
-    return this._name || "visualizer";
+  public get type() {
+    return this._type || "visualizer";
   }
 
   /**

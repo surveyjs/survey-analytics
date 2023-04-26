@@ -71,7 +71,7 @@ test("check onAfterRender", () => {
   alternativeVisualizersWrapper.render(document.createElement("div"));
   expect(count).toEqual(1);
   alternativeVisualizersWrapper.setVisualizer(
-    (<any>alternativeVisualizersWrapper).visualizers[1].name
+    (<any>alternativeVisualizersWrapper).visualizers[1].type
   );
   expect(count).toEqual(1);
   (<any>alternativeVisualizersWrapper).renderContent(
@@ -83,18 +83,18 @@ test("check onAfterRender", () => {
 test("check onVisualizerChanged and setVisualizer", () => {
   let log = "";
   alternativeVisualizersWrapper.onVisualizerChanged.add((s, o) => {
-    log += "->" + o.visualizer.name;
+    log += "->" + o.visualizer.type;
   });
   alternativeVisualizersWrapper.setVisualizer(
-    (<any>alternativeVisualizersWrapper).visualizers[1].name
+    (<any>alternativeVisualizersWrapper).visualizers[1].type
   );
   expect(log).toEqual("->sb2");
   alternativeVisualizersWrapper.setVisualizer(
-    (<any>alternativeVisualizersWrapper).visualizers[1].name
+    (<any>alternativeVisualizersWrapper).visualizers[1].type
   );
   expect(log).toEqual("->sb2");
   alternativeVisualizersWrapper.setVisualizer(
-    (<any>alternativeVisualizersWrapper).visualizers[0].name
+    (<any>alternativeVisualizersWrapper).visualizers[0].type
   );
   expect(log).toEqual("->sb2->sb1");
 });

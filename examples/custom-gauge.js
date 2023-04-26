@@ -27,7 +27,7 @@ function generateText(maxValue, minValue, stepsCount) {
 
 function getCustomData(model, level, arrowColor) {
   const question = model.question;
-  const name = model.name;
+  const name = model.type;
 
   const maxValue = question.rateMax;
   const minValue = question.rateMin;

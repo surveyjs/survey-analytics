@@ -33,7 +33,7 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     this.afterRender(this.contentContainer);
   };
 
-  public get name() {
+  public get type() {
     return "panelDynamic";
   }
 
