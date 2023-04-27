@@ -2,14 +2,14 @@ import { Event } from "survey-core";
 
 /**
  * Describes data info:
- * dataName - question name, used as a key to obtain question data
+ * name - question name, used as a key to obtain question data
  * getValues - function returning an array of all possible values
  * getLabels - function returning an array of human-friendly descriptions for values
  * getSeriesValues - function returning an array of all possible series values
  * getSeriesLabels - function returning an array of human-friendly descriptions for series values
  */
 export interface IDataInfo {
-  dataName: string | Array<string>;
+  name: string | Array<string>;
   getValues(): Array<any>;
   getLabels(): Array<string>;
   getSeriesValues(): Array<string>;
@@ -24,17 +24,17 @@ export class DataProvider {
   protected filterValues: { [index: string]: any } = {};
 
   private getStatisticsCacheKey(dataInfo: IDataInfo): string {
-    if (Array.isArray(dataInfo.dataName)) {
-      return dataInfo.dataName.join("-");
+    if (Array.isArray(dataInfo.name)) {
+      return dataInfo.name.join("-");
     }
-    return dataInfo.dataName;
+    return dataInfo.name;
   }
 
   constructor(private _data: Array<any> = [], private _getDataCore: (dataInfo: IDataInfo) => number[][] = undefined) { }
 
   public reset(dataInfo?: IDataInfo) {
-    if(!!dataInfo) {
-      if(this._statisticsCache !== undefined) {
+    if (!!dataInfo) {
+      if (this._statisticsCache !== undefined) {
         const cacheKey = this.getStatisticsCacheKey(dataInfo);
         delete this._statisticsCache[cacheKey];
       }
@@ -124,7 +124,7 @@ export class DataProvider {
       return this._getDataCore(dataInfo);
     }
 
-    const dataNames = Array.isArray(dataInfo.dataName) ? dataInfo.dataName : [dataInfo.dataName];
+    const dataNames = Array.isArray(dataInfo.name) ? dataInfo.name : [dataInfo.name];
     const statistics: Array<Array<Array<number>>> = [];
 
     const values = dataInfo.getValues();
@@ -182,7 +182,7 @@ export class DataProvider {
       });
     });
 
-    return Array.isArray(dataInfo.dataName) ? statistics : statistics[0];
+    return Array.isArray(dataInfo.name) ? statistics : statistics[0];
   }
 
   /**

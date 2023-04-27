@@ -691,8 +691,8 @@ export class VisualizationPanel extends VisualizerBase {
   /**
    * Returns panel element visualizer by the question name.
    */
-  public getVisualizer(visualizerName: string) {
-    return this.visualizers.filter((v) => v.question.name === visualizerName)[0];
+  public getVisualizer(questionName: string) {
+    return this.visualizers.filter((v) => v.question.name === questionName)[0];
   }
 
   /**

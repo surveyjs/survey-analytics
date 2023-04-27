@@ -178,7 +178,7 @@ visPanel.showToolbar = true;
 visPanel.onAlternativeVisualizerChanged.add(function(sender, options) {
   visPanel.visualizers.forEach(visualizer => {
     if(typeof visualizer.setVisualizer === "function") {
-      visualizer.setVisualizer(options.visualizer.name, true);
+      visualizer.setVisualizer(options.visualizer.type, true);
     }
   });
 });

@@ -75,10 +75,10 @@ test("Use valueName for data https://surveyjs.answerdesk.io/internal/ticket/deta
   var question = new QuestionDropdownModel("q1");
   let visualizer = new VisualizerBase(question, []);
 
-  expect(visualizer.dataName).toEqual("q1");
+  expect(visualizer.name).toEqual("q1");
 
   question.valueName = "q1value";
-  expect(visualizer.dataName).toEqual("q1value");
+  expect(visualizer.name).toEqual("q1value");
 });
 
 test("options.labelTruncateLength", () => {

@@ -64,7 +64,7 @@ function CustomMinVisualizer(question, data) {
     var result = Number.MAX_VALUE;
 
     visualizerBase.data.forEach(function (row) {
-      var rowValue = row[visualizerBase.dataName];
+      var rowValue = row[visualizerBase.name];
       if (!!rowValue) {
         if (rowValue.min < result) {
           result = rowValue.min;

@@ -16,7 +16,7 @@ export class AlternativeVisualizersWrapper
     if (!!this.visualizerSelector) {
       this.visualizerSelector.getElementsByTagName(
         "select"
-      )[0].value = this.visualizer.name;
+      )[0].value = this.visualizer.type;
     }
   }
 
@@ -46,11 +46,11 @@ export class AlternativeVisualizersWrapper
       this.visualizerSelector = DocumentHelper.createSelector(
         this.visualizers.map((visualizer) => {
           return {
-            value: visualizer.name,
-            text: localization.getString("visualizer_" + visualizer.name),
+            value: visualizer.type,
+            text: localization.getString("visualizer_" + visualizer.type),
           };
         }),
-        (option: any) => this.visualizer.name === option.value,
+        (option: any) => this.visualizer.type === option.value,
         (e: any) => this.setVisualizer(e.target.value)
       )
     );
@@ -93,8 +93,8 @@ export class AlternativeVisualizersWrapper
   * quiet - set it to true if you don't want to rise a notification event
   *
   **/
-  public setVisualizer(name: string, quiet = false): void {
-    const visualizerCandidate = this.visualizers.filter((v) => v.name === name)[0];
+  public setVisualizer(type: string, quiet = false): void {
+    const visualizerCandidate = this.visualizers.filter((v) => v.type === type)[0];
     if (!!visualizerCandidate && visualizerCandidate !== this.visualizer) {
       if (!!this.visualizer) {
         this.visualizer.onAfterRender.remove(

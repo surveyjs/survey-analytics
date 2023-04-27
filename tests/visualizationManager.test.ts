@@ -16,8 +16,8 @@ test("register and get", () => {
     VisualizationManager.getVisualizersByType("text")[1]
   ))();
 
-  expect(textVizualizer.name).toBe("text");
-  expect(wordCloudVizualizer.name).toBe("wordcloud");
+  expect(textVizualizer.type).toBe("text");
+  expect(wordCloudVizualizer.type).toBe("wordcloud");
   expect(VisualizationManager.vizualizers.text.length).toBe(2);
 });
 
