@@ -824,7 +824,7 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
-   * Filters visualized data based on passed question name and value. This method is called when a user clicks a chart point.
+   * Filters visualized data based on a specified question name and value. This method is called when a user clicks a chart point.
    * @param questionName A question [name](https://surveyjs.io/form-library/documentation/api-reference/question#name).
    * @param selectedValue
    * @see IVisualizationPanelOptions.allowSelection
