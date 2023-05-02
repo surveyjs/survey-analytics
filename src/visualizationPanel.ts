@@ -32,7 +32,7 @@ export interface IVisualizerPanelRenderedElement
  *
  * ```js
  * import { VisualizationPanel } from "survey-analytics";
- * 
+ *
  * const vizPanel = new VisualizationPanel(
  *   surveyQuestions,
  *   surveyResults,
@@ -260,9 +260,9 @@ export interface IVisualizationPanelOptions {
 
 /**
  * An object that visualizes survey results and allows users to analyze them.
- * 
+ *
  * Constructor parameters:
- * 
+ *
  * - `questions`: Array\<[`Question`](https://surveyjs.io/form-library/documentation/api-reference/question)\>\
  * Survey questions to visualize. Call `SurveyModel`'s [`getAllQuestions()`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#getQuestionByName) method to access all survey questions and pass its result as the `questions` parameter.
  * - `data`: `Array<any>`\
@@ -652,7 +652,7 @@ export class VisualizationPanel extends VisualizerBase {
 
   /**
    * Returns an array of [`IVisualizerPanelElement`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizerpanelelement) objects with information about currently visible visualization items.
-   * 
+   *
    * If you want to disallow users to hide visualization items, set the [`allowHideQuestions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions) property to `false`.
    * @see hiddenElements
    * @see getElements
@@ -663,7 +663,7 @@ export class VisualizationPanel extends VisualizerBase {
 
   /**
    * Returns an array of [`IVisualizerPanelElement`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizerpanelelement) objects with information about currently hidden visualization items.
-   * 
+   *
    * If you want to disallow users to hide visualization items, set the [`allowHideQuestions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions) property to `false`.
    * @see visibleElements
    * @see getElements
@@ -704,18 +704,18 @@ export class VisualizationPanel extends VisualizerBase {
 
   /**
    * An event that is raised when users [move a visualization item](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDynamicLayout) or [toggle its visibility](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions).
-   * 
+   *
    * Parameters:
-   * 
+   *
    * - `sender`: [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel)\
    * A `VisualizationPanel` that raised the event.
-   * 
+   *
    * - `options.elements`: Array\<[`IVisualizerPanelElement`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizerpanelelement)\>\
    * Information about visualization items rendered by this `VisualizationPanel`.
-   * 
+   *
    * - `options.changed`: [`IVisualizerPanelElement`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizerpanelelement)\
    * A visualization item that has been changed.
-   * 
+   *
    * - `options.reason`: `"ADDED"` | `"REMOVED"` | `"MOVED"`\
    * Indicates the reason why the event has been raised.
    */
