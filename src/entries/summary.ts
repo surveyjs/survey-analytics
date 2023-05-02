@@ -3,6 +3,7 @@ export * from "../localizationManager";
 //localization
 import "../analytics-localization/farsi";
 import "../analytics-localization/french";
+import "../analytics-localization/german";
 import "../analytics-localization/norwegian";
 import "../analytics-localization/portuguese";
 import "../analytics-localization/russian";
