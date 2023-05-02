@@ -264,7 +264,7 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * Empties the toolbar, header, footer, and content containers.
-   * 
+   *
    * If you want to empty and delete the visualizer and all its elements from the DOM, call the [`destroy()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#destroy) method instead.
    */
   public clear() {
