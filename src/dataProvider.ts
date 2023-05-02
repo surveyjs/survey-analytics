@@ -1,13 +1,5 @@
 import { Event } from "survey-core";
 
-/**
- * Describes data info:
- * name - question name, used as a key to obtain question data
- * getValues - function returning an array of all possible values
- * getLabels - function returning an array of human-friendly descriptions for values
- * getSeriesValues - function returning an array of all possible series values
- * getSeriesLabels - function returning an array of human-friendly descriptions for series values
- */
 export interface IDataInfo {
   name: string | Array<string>;
   getValues(): Array<any>;
