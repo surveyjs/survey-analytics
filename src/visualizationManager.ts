@@ -8,33 +8,43 @@ declare type VisualizerConstructor = new (
 ) => any;
 
 /**
- * Visualizers repository. You need to register a visualizer, link it to the question type name in order to visualize the question answers with the certain representation.
+ * An object with methods used to register and unregister visualizers for individual question types.
+ * 
+ * [View Demo](https://surveyjs.io/dashboard/examples/visualize-answers-from-text-entry-fields-with-charts/ (linkStyle))
  */
 export class VisualizationManager {
   static alternativesVisualizer: any = undefined;
   static vizualizers: { [index: string]: Array<VisualizerConstructor> } = {};
   /**
-   * Register visualizer (constructor) for question type.
+   * Registers a visualizer for a specified question type.
+   * 
+   * [View Demo](https://surveyjs.io/dashboard/examples/visualize-answers-from-text-entry-fields-with-charts/ (linkStyle))
+   * @param questionType A question [type](https://surveyjs.io/form-library/documentation/api-reference/question#getType).
+   * @param constructor A function that returns a visualizer constructor to register.
    */
   public static registerVisualizer(
-    typeName: string,
+    questionType: string,
     constructor: VisualizerConstructor
   ) {
-    let visualizers = VisualizationManager.vizualizers[typeName];
+    let visualizers = VisualizationManager.vizualizers[questionType];
     if (!visualizers) {
       visualizers = [];
-      VisualizationManager.vizualizers[typeName] = visualizers;
+      VisualizationManager.vizualizers[questionType] = visualizers;
     }
     visualizers.push(constructor);
   }
   /**
-   * Unregister visualizer (constructor) for question type.
+   * Unregisters a visualizer for a specified question type.
+   * 
+   * [View Demo](https://surveyjs.io/dashboard/examples/visualize-answers-from-text-entry-fields-with-charts/ (linkStyle))
+   * @param questionType A question [type](https://surveyjs.io/form-library/documentation/api-reference/question#getType).
+   * @param constructor A function that returns a visualizer constructor to unregister.
    */
   public static unregisterVisualizer(
-    typeName: string,
+    questionType: string,
     constructor: VisualizerConstructor
   ) {
-    let visualizers = VisualizationManager.vizualizers[typeName];
+    let visualizers = VisualizationManager.vizualizers[questionType];
     if (!!visualizers) {
       let index = visualizers.indexOf(constructor);
       if (index !== -1) {
@@ -43,7 +53,8 @@ export class VisualizationManager {
     }
   }
   /**
-   * Unregister visualizer (constructor) for all question types.
+   * Unregisters a visualizer for all question types.
+   * @param constructor A function that returns a visualizer constructor to unregister.
    */
   public static unregisterVisualizerForAll(constructor: VisualizerConstructor) {
     Object.keys(VisualizationManager.vizualizers).forEach((key) =>
@@ -51,25 +62,28 @@ export class VisualizationManager {
     );
   }
   /**
-   * Get visualizers (constructors) for question type.
+   * Returns all visualizer constructors for a specified question type.
+   * @param questionType A question [type](https://surveyjs.io/form-library/documentation/api-reference/question#getType).
    */
   public static getVisualizersByType(
-    typeName: string
+    questionType: string
   ): VisualizerConstructor[] {
-    let visualizers = VisualizationManager.vizualizers[typeName];
+    let visualizers = VisualizationManager.vizualizers[questionType];
     if (!visualizers) {
       return [VisualizerBase];
     }
     return visualizers;
   }
   /**
-   * Get visualizers (constructors) for question type.
+   * Returns a constructor for an alternative visualizer selector.
+   * @see registerAlternativesVisualizer
    */
   public static getAlternativesVisualizer() {
     return VisualizationManager.alternativesVisualizer || VisualizerBase;
   }
   /**
-   * Register visualizer (constructor) for question type.
+   * Registers an alternative visualizer selector.
+   * @param constructor A function that returns a constructor for an alternative visualizer selector.
    */
   public static registerAlternativesVisualizer(constructor: any) {
     VisualizationManager.alternativesVisualizer = constructor;

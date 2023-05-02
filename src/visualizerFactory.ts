@@ -3,12 +3,16 @@ import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 
 /**
- * Visualizers factory. Creates visualizer for the given question.
+ * An object that allows you to create individual visualizers without creating a [visualization panel](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel).
  */
 export class VisualizerFactory {
   /**
-   * Create visualizer by question. You can pass data and options to the created visualizer as well.
-   * If more then one visualizer are registered for the question, then they are combined using wrapper for showing alternative viaualizers.
+   * Creates a visualizer for a specified question.
+   * 
+   * If a question has more than one [registered](https://surveyjs.io/dashboard/documentation/api-reference/visualizationmanager#registerVisualizer) visualizer, users can switch between them using a drop-down menu.
+   * @param question A question for which to create a visualizer.
+   * @param data A data array with survey results to be visualized.
+   * @param options An object with any custom properties you need within the visualizer.
    */
   public static createVisualizer(
     question: Question,

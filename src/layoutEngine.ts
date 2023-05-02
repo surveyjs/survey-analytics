@@ -1,8 +1,7 @@
 const Muuri = require("muuri");
 
 /**
- * LayoutEngine controls visualizer layoput in a visualization panel.
- * You can create a descendant of this class in order to override layout.
+ * A base class used to implement custom layout engines or integrate third-party layout engines with SurveyJS Dashboard.
  */
 export class LayoutEngine {
   constructor(protected _allowed: boolean) { }
@@ -16,7 +15,9 @@ export class LayoutEngine {
   }
 
   /**
-   * Initilizes layout engine in the given HTML element.
+   * Enables the dynamic layout in a given HTML element.
+   * 
+   * This method should arrange visualization items based on the available screen space and allow users to reorder them via drag and drop.
    */
   start(container: HTMLElement) {
     if (this._allowed) {
@@ -24,7 +25,7 @@ export class LayoutEngine {
     }
   }
   /**
-   * Deactivates layouting: stops elements auto-positioning
+   * Disables the dynamic layout.
    */
   stop() {
     if (this._allowed) {
@@ -32,7 +33,7 @@ export class LayoutEngine {
     }
   }
   /**
-   * Updates layout: performs elements auto-positioning
+   * Updates the dynamic layout.
    */
   update() {
     if (this._allowed) {
