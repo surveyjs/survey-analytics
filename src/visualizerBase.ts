@@ -26,8 +26,8 @@ var styles = require("./visualizerBase.scss");
  *    Pass a `SurveyModel` instance if you want to use locales from the survey JSON schema.
  *    - `dataProvider`: `DataProvider`\
  *    A data provider for this visualizer.
- * - `name`: `String`\
- * *(Optional)* The visualizer's name.
+ * - `type`: `String`\
+ * *(Optional)* The visualizer's type.
  *
  * [View Demo](https://surveyjs.io/dashboard/examples/how-to-plot-survey-data-in-custom-bar-chart/ (linkStyle))
  */
@@ -110,6 +110,9 @@ export class VisualizerBase implements IDataInfo {
     this.refresh();
   }
 
+  /**
+   * Returns the identifier of a visualized question.
+   */
   get name(): string | Array<string> {
     return this.question.valueName || this.question.name;
   }
@@ -203,7 +206,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Returns the visualizer's name.
+   * Returns the visualizer's type.
    */
   public get type() {
     return this._type || "visualizer";
