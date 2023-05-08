@@ -27,7 +27,7 @@ SurveyJS Dashboard depends on other JavaScript libraries. Reference them on your
 1. Knockout
 
 1. Survey Core       
-A platform-independent part of the SurveyJS Library that works with the survey model. SurveyJS Dashboard requires only this part, but if you also display the survey on the page, reference [the rest of the SurveyJS Library resources](/Documentation/Library?id=get-started-knockout#link-surveyjs-resources) as well.
+A platform-independent part of the SurveyJS Form Library that works with the survey model. SurveyJS Dashboard requires only this part, but if you also display the survey on the page, reference [the rest of the SurveyJS Form Library resources](/Documentation/Library?id=get-started-knockout#link-surveyjs-resources) as well.
 
 1. <a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a> and <a href="https://github.com/timdream/wordcloud2.js#readme" target="_blank">Wordcloud</a>       
 Wordcloud (optional) is used to visualize the Text, Multiple Text, and Comment question types. Plotly.js (required) is used to visualize the rest of the question types.
@@ -42,7 +42,7 @@ The following code shows how to reference these libraries:
     <!-- ... -->
     <script type="text/javascript" src="https://unpkg.com/knockout/build/output/knockout-latest.js"></script>
 
-    <!-- SurveyJS Library resources -->
+    <!-- SurveyJS Form Library resources -->
     <script type="text/javascript" src="https://unpkg.com/survey-core/survey.core.min.js"></script>
     <!-- Uncomment the following lines if you also display the survey on the page -->
     <!-- <link href="https://unpkg.com/survey-core/defaultV2.min.css" type="text/css" rel="stylesheet"> -->
