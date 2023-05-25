@@ -195,6 +195,44 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * Registers a function used to create a toolbar item for this visualizer.
+   * 
+   * The following code shows how to add a custom button and drop-down menu to the toolbar: 
+   * 
+   * ```js
+   * import { VisualizationPanel, DocumentHelper } from "survey-analytics";
+   * 
+   * const vizPanel = new VisualizationPanel( ... );
+   * 
+   * // Add a custom button to the toolbar
+   * visPanel.visualizers[0].registerToolbarItem("my-toolbar-button", () => {
+   *   return DocumentHelper.createButton(
+   *     // A button click event handler
+   *     () => {
+   *       alert("Custom toolbar button is clicked");
+   *     },
+   *     // Button caption
+   *     "Button"
+   *   );
+   * });
+   * 
+   * // Add a custom drop-down menu to the toolbar
+   * vizPanel.visualizers[0].registerToolbarItem("my-toolbar-dropdown", () => {
+   *   return DocumentHelper.createSelector(
+   *     // Menu items
+   *     [
+   *       { value: 1, text: "One" },
+   *       { value: 2, text: "Two" },
+   *       { value: 3, text: "Three" }
+   *     ],
+   *     // A function that specifies initial selection
+   *     (option) => false,
+   *     // An event handler that is executed when selection is changed
+   *     (e) => {
+   *       alert(e.target.value);
+   *     }
+   *   );
+   * });
+   * ```
    * @param name A custom name for the toolbar item.
    * @param creator A function that accepts the toolbar and should return an `HTMLElement` with the toolbar item.
    */
