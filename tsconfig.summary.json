@@ -17,7 +17,7 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "skipLibCheck": true,
-    "outFile": "packages/survey.analytics.d.ts"
+    "outDir": "packages/survey-analytics.types/"
   },
   "include": [
     "src/entries/summary.ts"

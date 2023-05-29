@@ -17,7 +17,7 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "skipLibCheck": true,
-    "outFile": "packages/survey.analytics.datatables.d.ts"
+    "outDir": "packages/survey-analytics-datatables.types/"
   },
   "include": [
     "src/entries/datatables.ts"
