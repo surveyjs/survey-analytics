@@ -195,14 +195,14 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * Registers a function used to create a toolbar item for this visualizer.
-   * 
-   * The following code shows how to add a custom button and drop-down menu to the toolbar: 
-   * 
+   *
+   * The following code shows how to add a custom button and drop-down menu to the toolbar:
+   *
    * ```js
    * import { VisualizationPanel, DocumentHelper } from "survey-analytics";
-   * 
+   *
    * const vizPanel = new VisualizationPanel( ... );
-   * 
+   *
    * // Add a custom button to the toolbar
    * visPanel.visualizers[0].registerToolbarItem("my-toolbar-button", () => {
    *   return DocumentHelper.createButton(
@@ -214,7 +214,7 @@ export class VisualizerBase implements IDataInfo {
    *     "Button"
    *   );
    * });
-   * 
+   *
    * // Add a custom drop-down menu to the toolbar
    * vizPanel.visualizers[0].registerToolbarItem("my-toolbar-dropdown", () => {
    *   return DocumentHelper.createSelector(

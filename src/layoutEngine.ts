@@ -16,7 +16,7 @@ export class LayoutEngine {
 
   /**
    * Enables the dynamic layout in a given HTML element.
-   * 
+   *
    * This method should arrange visualization items based on the available screen space and allow users to reorder them via drag and drop.
    */
   start(container: HTMLElement) {

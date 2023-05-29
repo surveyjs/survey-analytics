@@ -9,7 +9,7 @@ declare type VisualizerConstructor = new (
 
 /**
  * An object with methods used to register and unregister visualizers for individual question types.
- * 
+ *
  * [View Demo](https://surveyjs.io/dashboard/examples/visualize-answers-from-text-entry-fields-with-charts/ (linkStyle))
  */
 export class VisualizationManager {
@@ -17,7 +17,7 @@ export class VisualizationManager {
   static vizualizers: { [index: string]: Array<VisualizerConstructor> } = {};
   /**
    * Registers a visualizer for a specified question type.
-   * 
+   *
    * [View Demo](https://surveyjs.io/dashboard/examples/visualize-answers-from-text-entry-fields-with-charts/ (linkStyle))
    * @param questionType A question [type](https://surveyjs.io/form-library/documentation/api-reference/question#getType).
    * @param constructor A function that returns a visualizer constructor to register.
@@ -35,7 +35,7 @@ export class VisualizationManager {
   }
   /**
    * Unregisters a visualizer for a specified question type.
-   * 
+   *
    * [View Demo](https://surveyjs.io/dashboard/examples/visualize-answers-from-text-entry-fields-with-charts/ (linkStyle))
    * @param questionType A question [type](https://surveyjs.io/form-library/documentation/api-reference/question#getType).
    * @param constructor A function that returns a visualizer constructor to unregister.
