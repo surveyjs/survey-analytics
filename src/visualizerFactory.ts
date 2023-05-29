@@ -8,7 +8,7 @@ import { VisualizationManager } from "./visualizationManager";
 export class VisualizerFactory {
   /**
    * Creates a visualizer for a specified question.
-   * 
+   *
    * If a question has more than one [registered](https://surveyjs.io/dashboard/documentation/api-reference/visualizationmanager#registerVisualizer) visualizer, users can switch between them using a drop-down menu.
    * @param question A question for which to create a visualizer.
    * @param data A data array with survey results to be visualized.
