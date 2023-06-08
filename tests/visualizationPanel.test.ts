@@ -6,6 +6,7 @@ import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrap
 import { VisualizationPanel } from "../src/visualizationPanel";
 import { IState } from "../src/config";
 import { VisualizationManager } from "../src/visualizationManager";
+import { LayoutEngine } from "../src/layoutEngine";
 
 VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
@@ -619,4 +620,64 @@ test("updateData should be called in order to update data - #269", () => {
 
   visPanel.updateData(data);
   expect(questionVisualizer.getData()).toEqual([[0, 1, 2, 1, 2]]);
+});
+
+test("hide/show all elements", () => {
+  const json = {
+    elements: [
+      {
+        type: "text",
+        name: "question1",
+      },
+      {
+        type: "text",
+        name: "question2",
+      }
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { layoutEngine: new LayoutEngine(true) });
+  let changesCount = 0;
+  visPanel.onVisibleElementsChanged.add(() => {
+    changesCount++;
+  });
+
+  expect(changesCount).toBe(0);
+  expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([true, true]);
+  visPanel.hideAllElements();
+  expect(changesCount).toBe(1);
+  expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([false, false]);
+  visPanel.showAllElements();
+  expect(changesCount).toBe(2);
+  expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([true, true]);
+});
+
+test("hide/show element", () => {
+  const json = {
+    elements: [
+      {
+        type: "text",
+        name: "question1",
+      },
+      {
+        type: "text",
+        name: "question2",
+      }
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { layoutEngine: new LayoutEngine(true) });
+  let changesCount = 0;
+  visPanel.onVisibleElementsChanged.add(() => {
+    changesCount++;
+  });
+
+  expect(changesCount).toBe(0);
+  expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([true, true]);
+  visPanel.hideElement("question1");
+  expect(changesCount).toBe(1);
+  expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([false, true]);
+  visPanel.showElement("question1");
+  expect(changesCount).toBe(2);
+  expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([true, true]);
 });
