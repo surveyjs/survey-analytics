@@ -13,6 +13,7 @@ import "../analytics-localization/italian";
 import "../analytics-localization/arabic";
 
 export * from "../dataProvider";
+export * from "../visualizerFactory";
 
 export * from "../number";
 export * from "../selectBase";
