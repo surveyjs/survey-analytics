@@ -426,27 +426,67 @@ export class VisualizationPanel extends VisualizerBase {
     this.onAlternativeVisualizerChanged.fire(sender, options);
   };
 
-  protected showElement(elementName: string) {
-    const element = this.getElement(elementName);
-    const elementIndex = this._elements.indexOf(element);
+  protected showElementCore(element: IVisualizerPanelRenderedElement, elementIndex = -1): void {
     element.isVisible = true;
     const questionElement = this.renderPanelElement(
       element,
       this.contentContainer
     );
-    this.layoutEngine.add([questionElement], { index: elementIndex });
+    let options = undefined;
+    if(elementIndex >= 0) {
+      options = { index: elementIndex };
+    }
+    this.layoutEngine.add([questionElement], options);
+  }
+
+  public showElement(elementName: string) {
+    const element = this.getElement(elementName);
+    const elementIndex = this._elements.indexOf(element);
+    this.showElementCore(element, elementIndex);
     this.visibleElementsChanged(element, "ADDED");
   }
 
-  protected hideElement(elementName: string) {
-    const element = this.getElement(elementName);
+  protected hideElementCore(element: IVisualizerPanelRenderedElement) {
     element.isVisible = false;
     if (!!element.renderedElement) {
       this.layoutEngine.remove([element.renderedElement]);
       this.contentContainer.removeChild(element.renderedElement);
       element.renderedElement = undefined;
     }
+  }
+
+  public hideElement(elementName: string) {
+    const element = this.getElement(elementName);
+    this.hideElementCore(element);
     this.visibleElementsChanged(element, "REMOVED");
+  }
+
+  /**
+   * Hides all elements in the panel.
+   */
+  public hideAllElements(): void {
+    const affectedElements = [];
+    this._elements.forEach(element => {
+      if(element.isVisible) {
+        this.hideElementCore(element);
+        affectedElements.push(element);
+      }
+    });
+    this.visibleElementsChanged(undefined, "REMOVEDALL");
+  }
+
+  /**
+   * Shows all elements in the panel.
+   */
+  public showAllElements() {
+    const affectedElements = [];
+    this._elements.forEach(element => {
+      if(!element.isVisible) {
+        this.showElementCore(element);
+        affectedElements.push(element);
+      }
+    });
+    this.visibleElementsChanged(undefined, "ADDEDDALL");
   }
 
   protected makeElementPrivate(element: IVisualizerPanelElement) {
@@ -727,7 +767,7 @@ export class VisualizationPanel extends VisualizerBase {
   protected visibleElementsChanged(
     element: IVisualizerPanelElement,
     reason: string
-  ) {
+  ): void {
     if (!this.onVisibleElementsChanged.isEmpty) {
       this.onVisibleElementsChanged.fire(this, {
         elements: this._elements,
@@ -755,7 +795,7 @@ export class VisualizationPanel extends VisualizerBase {
 
     const questionElement = DocumentHelper.createElement("div");
 
-    container.appendChild(questionElement);
+    !!container && container.appendChild(questionElement);
 
     const questionContent = DocumentHelper.createElement("div");
     const titleElement = DocumentHelper.createElement("h3");

@@ -405,7 +405,10 @@ export class SelectBase
   }
 
   valuesSource(): Array<ItemValue> {
-    const question = <QuestionSelectBase>this.question;
+    let question = <QuestionSelectBase>this.question;
+    if(!!question.choicesFromQuestion && !!question.survey) {
+      question = <QuestionSelectBase>question.survey.getQuestionByName(question.choicesFromQuestion);
+    }
     return question["activeChoices"];
   }
 
