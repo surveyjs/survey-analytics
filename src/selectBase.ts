@@ -437,6 +437,9 @@ export class SelectBase
       ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value)
     );
     const selBase = <QuestionSelectBase>this.question;
+    if (selBase.hasNone) {
+      labels.push(selBase.noneText);
+    }
     if (selBase.hasOther) {
       labels.push(selBase.otherText);
     }

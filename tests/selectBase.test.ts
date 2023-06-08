@@ -318,6 +318,7 @@ test("has none item", () => {
             type: "checkbox",
             name: "q1",
             choices: ["Item 1", "Item 2", "Item 3"],
+            noneText: "None Item",
             showNoneItem: true
           },
         ]
@@ -326,4 +327,5 @@ test("has none item", () => {
   });
   const selectBase1 = new SelectBase(survey.getQuestionByName("q1"), []);
   expect(selectBase1.getValues()).toStrictEqual(["none", "Item 3", "Item 2", "Item 1"]);
+  expect(selectBase1.getLabels()).toStrictEqual(["None Item", "Item 3", "Item 2", "Item 1"]);
 });
