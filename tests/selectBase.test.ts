@@ -309,6 +309,27 @@ test("hasHeader and correct answer text", () => {
   expect(selectBase["getCorrectAnswerText"]()).toEqual("Hobbyist (develop apps for personal use)");
 });
 
+test("has none item", () => {
+  var survey = new SurveyModel({
+    pages: [
+      {
+        elements: [
+          {
+            type: "checkbox",
+            name: "q1",
+            choices: ["Item 1", "Item 2", "Item 3"],
+            noneText: "None Item",
+            showNoneItem: true
+          },
+        ]
+      }
+    ]
+  });
+  const selectBase1 = new SelectBase(survey.getQuestionByName("q1"), []);
+  expect(selectBase1.getValues()).toStrictEqual(["none", "Item 3", "Item 2", "Item 1"]);
+  expect(selectBase1.getLabels()).toStrictEqual(["None Item", "Item 3", "Item 2", "Item 1"]);
+});
+
 test("choicesFromQuestion", () => {
   var survey = new SurveyModel({
     pages: [
@@ -331,7 +352,7 @@ test("choicesFromQuestion", () => {
     ]
   });
   const selectBase1 = new SelectBase(survey.getQuestionByName("q1"), []);
-  expect(selectBase1.getValues()).toStrictEqual(["Item 3", "Item 2", "Item 1"]);
+  expect(selectBase1.getValues()).toStrictEqual(["none", "Item 3", "Item 2", "Item 1"]);
   const selectBase2 = new SelectBase(survey.getQuestionByName("q2"), []);
   expect(selectBase2.getValues()).toStrictEqual(["Item 3", "Item 2", "Item 1"]);
 });

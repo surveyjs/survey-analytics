@@ -417,6 +417,9 @@ export class SelectBase
       (choice) => choice.value
     );
 
+    if ((<QuestionSelectBase>this.question).hasNone) {
+      values.push((<QuestionSelectBase>this.question).noneItem.value);
+    }
     if (this.question.hasOther) {
       values.push("other");
     }
@@ -437,6 +440,9 @@ export class SelectBase
       ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value)
     );
     const selBase = <QuestionSelectBase>this.question;
+    if (selBase.hasNone) {
+      labels.push(selBase.noneText);
+    }
     if (selBase.hasOther) {
       labels.push(selBase.otherText);
     }
