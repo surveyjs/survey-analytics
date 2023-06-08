@@ -414,6 +414,9 @@ export class SelectBase
       (choice) => choice.value
     );
 
+    if ((<QuestionSelectBase>this.question).hasNone) {
+      values.push((<QuestionSelectBase>this.question).noneItem.value);
+    }
     if (this.question.hasOther) {
       values.push("other");
     }
