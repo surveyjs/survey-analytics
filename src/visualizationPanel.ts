@@ -462,7 +462,9 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
-   * Hides all elements in the panel.
+   * Hides all panel elements. Users can select the elements they want to show from a drop-down menu.
+   * @see showAllElements
+   * @see allowHideQuestions
    */
   public hideAllElements(): void {
     const affectedElements = [];
@@ -476,7 +478,9 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
-   * Shows all elements in the panel.
+   * Shows all panel elements if they are hidden to a drop-down menu.
+   * @see hideAllElements
+   * @see allowHideQuestions
    */
   public showAllElements() {
     const affectedElements = [];
