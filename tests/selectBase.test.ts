@@ -356,3 +356,19 @@ test("choicesFromQuestion", () => {
   const selectBase2 = new SelectBase(survey.getQuestionByName("q2"), []);
   expect(selectBase2.getValues()).toStrictEqual(["Item 3", "Item 2", "Item 1"]);
 });
+
+test("save selection in state", () => {
+  selectBase.setSelection(new ItemValue(1, "One"));
+
+  let state = selectBase.getState();
+  expect(state).toStrictEqual({
+    "answersOrder": "default",
+    "chartType": "bar",
+    "filter": 1,
+    "hideEmptyAnswers": false,
+    "topN": -1,
+  });
+  state.filter = "father";
+  selectBase.setState(state);
+  expect(selectBase.selection.value).toEqual("father");
+});
