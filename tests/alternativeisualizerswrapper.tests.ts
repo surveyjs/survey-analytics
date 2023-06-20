@@ -1,6 +1,7 @@
 import { QuestionDropdownModel, ItemValue } from "survey-core";
 import { SelectBase } from "../src/selectBase";
 import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrapper";
+
 let selectBase: SelectBase;
 let anotherSelectBase: SelectBase;
 let alternativeVisualizersWrapper: AlternativeVisualizersWrapper;
@@ -28,7 +29,9 @@ beforeEach(() => {
     },
   ];
   selectBase = new SelectBase(question, data, {}, "sb1");
+  selectBase["chartTypes"] = ["bar", "pie"];
   anotherSelectBase = new SelectBase(question, data, {}, "sb2");
+  anotherSelectBase["chartTypes"] = ["bar", "pie"];
   alternativeVisualizersWrapper = new AlternativeVisualizersWrapper(
     [selectBase, anotherSelectBase],
     question,
@@ -97,4 +100,27 @@ test("check onVisualizerChanged and setVisualizer", () => {
     (<any>alternativeVisualizersWrapper).visualizers[0].type
   );
   expect(log).toEqual("->sb2->sb1");
+});
+
+test("get/set state", () => {
+  const initialState = {
+    "visualizer": "sb1",
+    "state": {
+      "answersOrder": "default",
+      "chartType": "bar",
+      "hideEmptyAnswers": false,
+      "topN": -1,
+    },
+  };
+  let state = alternativeVisualizersWrapper.getState();
+  expect(state).toStrictEqual(initialState);
+
+  state.visualizer = "sb2";
+  state.state.chartType = "pie";
+  alternativeVisualizersWrapper.setState(state);
+
+  state = alternativeVisualizersWrapper.getState();
+  const currentVisualizer = alternativeVisualizersWrapper["visualizer"];
+  expect(currentVisualizer.type).toEqual("sb2");
+  expect(currentVisualizer["chartType"]).toEqual("pie");
 });

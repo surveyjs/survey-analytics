@@ -595,6 +595,9 @@ export class SelectBase
     SelectBase._stateProperties.forEach(propertyName => {
       state[propertyName] = (<any>this)[propertyName];
     });
+    if(!!this.selectedItem) {
+      state.filter = this.selectedItem.value;
+    }
     return state;
   }
   public setState(state: any): void {
@@ -603,5 +606,7 @@ export class SelectBase
         (<any>this)[propertyName] = state[propertyName];
       }
     });
+    const selectedItem = ItemValue.getItemByValue((this.question as QuestionSelectBase).visibleChoices, state.filter);
+    this.setSelection(selectedItem ?? undefined);
   }
 }
