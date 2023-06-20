@@ -606,9 +606,7 @@ export class SelectBase
         (<any>this)[propertyName] = state[propertyName];
       }
     });
-    if(!!state.filter) {
-      const selectedItem = ItemValue.getItemByValue((this.question as QuestionSelectBase).visibleChoices, state.filter);
-      this.setSelection(selectedItem);
-    }
+    const selectedItem = ItemValue.getItemByValue((this.question as QuestionSelectBase).visibleChoices, state.filter);
+    this.setSelection(selectedItem ?? undefined);
   }
 }
