@@ -163,6 +163,7 @@ export interface IVisualizationPanelOptions {
   allowChangeAnswersOrder?: boolean;
   /**
    * Specifies how to sort answers in bar and scatter charts.
+   * 
    * Accepted values:
    *
    * - `"default"` (default) - Do not sort answers.
@@ -877,6 +878,9 @@ export class VisualizationPanel extends VisualizerBase {
     this.dataProvider.setFilter(questionName, selectedValue);
   }
 
+  /**
+   * The state of `VisualizationPanel`. Includes information about the visualized elements and current locale.
+   */
   public get state(): IState {
     return {
       locale: this.locale,
@@ -890,10 +894,7 @@ export class VisualizationPanel extends VisualizerBase {
       })),
     };
   }
-  /**
-   * Sets vizualization panel state.
-   */
-  public set state(newState: IState) {
+  public set state(newState: IState) { 
     if (!newState) return;
 
     if (Array.isArray(newState.elements)) {
