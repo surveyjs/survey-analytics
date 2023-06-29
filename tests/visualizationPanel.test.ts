@@ -12,7 +12,7 @@ VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
 VisualizationManager.registerVisualizer("checkbox", SelectBase);
 VisualizationManager.registerVisualizer("radiogroup", SelectBase);
-VisualizationManager.registerAlternativesVisualizer(AlternativeVisualizersWrapper);
+VisualizationManager.registerAltVisualizerSelector(AlternativeVisualizersWrapper);
 
 test("allowDynamicLayout option", () => {
   const json = {

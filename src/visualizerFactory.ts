@@ -32,7 +32,7 @@ export class VisualizerFactory {
       (creator) => new creator(question, data, options)
     );
     if (visualizers.length > 1) {
-      const alternativesVisualizerConstructor = VisualizationManager.getAlternativesVisualizer();
+      const alternativesVisualizerConstructor = VisualizationManager.getAltVisualizerSelector();
       let visualizer = new alternativesVisualizerConstructor(
         visualizers,
         question,

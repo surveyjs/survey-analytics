@@ -40,26 +40,27 @@ export class VisualizationManager {
    * @param questionType A question [type](https://surveyjs.io/form-library/documentation/api-reference/question#getType).
    * @param constructor A function that returns a visualizer constructor to unregister.
    */
-  public static unregisterVisualizer(
-    questionType: string,
-    constructor: VisualizerConstructor
-  ) {
-    let visualizers = VisualizationManager.vizualizers[questionType];
-    if (!!visualizers) {
-      let index = visualizers.indexOf(constructor);
-      if (index !== -1) {
-        visualizers.splice(index, 1);
-      }
+  public static unregisterVisualizer(questionType: string | undefined, constructor: VisualizerConstructor): void {
+    let questionTypes = [questionType];
+    if(!questionType) {
+      questionTypes = Object.keys(VisualizationManager.vizualizers);
     }
+    questionTypes.forEach(qType => {
+      let visualizers = VisualizationManager.vizualizers[qType];
+      if (!!visualizers) {
+        let index = visualizers.indexOf(constructor);
+        if (index !== -1) {
+          visualizers.splice(index, 1);
+        }
+      }
+    });
   }
   /**
-   * Unregisters a visualizer for all question types.
+   * Obsolete. Pass `undefined` to the [`unregisterVisualizer`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationmanager#unregisterVisualizer) method instead.
    * @param constructor A function that returns a visualizer constructor to unregister.
    */
-  public static unregisterVisualizerForAll(constructor: VisualizerConstructor) {
-    Object.keys(VisualizationManager.vizualizers).forEach((key) =>
-      VisualizationManager.unregisterVisualizer(key, constructor)
-    );
+  public static unregisterVisualizerForAll(constructor: VisualizerConstructor): void {
+    VisualizationManager.unregisterVisualizer(undefined, constructor);
   }
   /**
    * Returns all visualizer constructors for a specified question type.
@@ -76,16 +77,16 @@ export class VisualizationManager {
   }
   /**
    * Returns a constructor for an alternative visualizer selector.
-   * @see registerAlternativesVisualizer
+   * @see registerAltVisualizerSelector
    */
-  public static getAlternativesVisualizer() {
+  public static getAltVisualizerSelector() {
     return VisualizationManager.alternativesVisualizer || VisualizerBase;
   }
   /**
    * Registers an alternative visualizer selector.
    * @param constructor A function that returns a constructor for an alternative visualizer selector.
    */
-  public static registerAlternativesVisualizer(constructor: any) {
+  public static registerAltVisualizerSelector(constructor: any) {
     VisualizationManager.alternativesVisualizer = constructor;
   }
 }
