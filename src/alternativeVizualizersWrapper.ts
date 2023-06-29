@@ -188,6 +188,6 @@ export class AlternativeVisualizersWrapper
   }
 }
 
-VisualizationManager.registerAlternativesVisualizer(
+VisualizationManager.registerAltVisualizerSelector(
   AlternativeVisualizersWrapper
 );
