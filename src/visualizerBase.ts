@@ -259,6 +259,15 @@ export class VisualizerBase implements IDataInfo {
     return this.dataProvider.filteredData;
   }
 
+  /**
+   * Returns an array of survey results used to calculate values for visualization. If a user applies a filter, the array is also filtered.
+   *
+   * To get an array of calculated and visualized values, call the [`getCalculatedValues()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#getCalculatedValues) method.
+   */
+  protected get surveyData() {
+    return this.dataProvider.filteredData;
+  }
+
   protected get dataProvider(): DataProvider {
     return this._dataProvider;
   }
@@ -579,6 +588,15 @@ export class VisualizerBase implements IDataInfo {
    * To get an array of source survey results, use the [`data`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#data) property.
    */
   getData(): any {
+    return this.dataProvider.getData(this);
+  }
+
+  /**
+   * Returns an array of calculated and visualized values. If a user applies a filter, the array is also filtered.
+   *
+   * To get an array of source survey results, use the [`surveyData`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#surveyData) property.
+   */
+  getCalculatedValues(): any {
     return this.dataProvider.getData(this);
   }
 

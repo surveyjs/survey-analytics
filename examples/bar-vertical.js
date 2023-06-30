@@ -16,7 +16,7 @@ var options = {
   showOnlyPercentages: true,
   // useValuesAsLabels: false
   // haveCommercialLicense: false,
-  allowChangeAnswersOrder: true,
+  allowSortAnswers: true,
   // answersOrder: "desc"
   allowHideEmptyAnswers: true,
   // hideEmptyAnswers: true,

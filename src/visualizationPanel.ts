@@ -160,19 +160,19 @@ export interface IVisualizationPanelOptions {
    *
    * @see answersOrder
    */
-  allowChangeAnswersOrder?: boolean;
+  allowSortAnswers?: boolean;
   /**
    * Specifies how to sort answers in bar and scatter charts.
-   * 
+   *
    * Accepted values:
    *
    * - `"default"` (default) - Do not sort answers.
    * - `"asc"` - Sort answers by ascending answer count.
    * - `"desc"` - Sort answers by descending answer count.
    *
-   * Users can change this property value if you enable the `allowChangeAnswersOrder` property.
+   * Users can change this property value if you enable the `allowSortAnswers` property.
    *
-   * @see allowChangeAnswersOrder
+   * @see allowSortAnswers
    */
   answersOrder?: "default" | "asc" | "desc";
   /**
@@ -684,15 +684,19 @@ export class VisualizationPanel extends VisualizerBase {
    * @see visibleElements
    * @see hiddenElements
    */
-  public getElements(): IVisualizerPanelElement[] {
-    return (this._elements || []).map((element) => {
-      return {
-        name: element.name,
-        displayName: element.displayName,
-        isVisible: element.isVisible,
-        isPublic: element.isPublic,
-      };
+  public getElements(elementNames?: Array<string>): IVisualizerPanelElement[] {
+    const result = [];
+    (this._elements || []).forEach((element) => {
+      if(!elementNames || elementNames.indexOf(element.name) !== -1) {
+        result.push({
+          name: element.name,
+          displayName: element.displayName,
+          isVisible: element.isVisible,
+          isPublic: element.isPublic,
+        });
+      }
     });
+    return result;
   }
 
   /**
@@ -769,10 +773,86 @@ export class VisualizationPanel extends VisualizerBase {
     any
   >();
 
+  /**
+   * An event that is raised when users [show a visualization item](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions).
+   *
+   * Parameters:
+   *
+   * - `sender`: [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel)\
+   * A `VisualizationPanel` that raised the event.
+   *
+   * - `options.elements`: Array\<[`IVisualizerPanelElement`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizerpanelelement)\>\
+   * Information about visualization items rendered by this `VisualizationPanel`.
+   *
+   * - `options.changed`: [`IVisualizerPanelElement`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizerpanelelement)\
+   * A visualization item that has been changed.
+   */
+  public onElementShown = new Event<
+    (sender: VisualizationPanel, options: any) => any, VisualizationPanel,
+    any
+  >();
+
+  /**
+   * An event that is raised when users [hide a visualization item](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions).
+   *
+   * Parameters:
+   *
+   * - `sender`: [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel)\
+   * A `VisualizationPanel` that raised the event.
+   *
+   * - `options.elements`: Array\<[`IVisualizerPanelElement`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizerpanelelement)\>\
+   * Information about visualization items rendered by this `VisualizationPanel`.
+   *
+   * - `options.changed`: [`IVisualizerPanelElement`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizerpanelelement)\
+   * A visualization item that has been changed.
+   */
+  public onElementHidden = new Event<
+    (sender: VisualizationPanel, options: any) => any, VisualizationPanel,
+    any
+  >();
+
+  /**
+   * An event that is raised when users [move a visualization item](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDynamicLayout).
+   *
+   * Parameters:
+   *
+   * - `sender`: [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel)\
+   * A `VisualizationPanel` that raised the event.
+   *
+   * - `options.elements`: Array\<[`IVisualizerPanelElement`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizerpanelelement)\>\
+   * Information about visualization items rendered by this `VisualizationPanel`.
+   *
+   * - `options.changed`: [`IVisualizerPanelElement`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizerpanelelement)\
+   * A visualization item that has been changed.
+   */
+  public onElementMoved = new Event<
+    (sender: VisualizationPanel, options: any) => any, VisualizationPanel,
+    any
+  >();
+
   protected visibleElementsChanged(
     element: IVisualizerPanelElement,
     reason: string
   ): void {
+    if (reason === "SHOWN" && !this.onElementShown.isEmpty) {
+      this.onElementShown.fire(this, {
+        elements: this._elements,
+        changed: element
+      });
+    }
+    if (reason === "REMOVED" && !this.onElementHidden.isEmpty) {
+      this.onElementHidden.fire(this, {
+        elements: this._elements,
+        changed: element
+      });
+    }
+    if (reason === "MOVED" && !this.onElementMoved.isEmpty) {
+      this.onElementMoved.fire(this, {
+        elements: this._elements,
+        changed: element
+      });
+    }
+
     if (!this.onVisibleElementsChanged.isEmpty) {
       this.onVisibleElementsChanged.fire(this, {
         elements: this._elements,
@@ -894,7 +974,7 @@ export class VisualizationPanel extends VisualizerBase {
       })),
     };
   }
-  public set state(newState: IState) { 
+  public set state(newState: IState) {
     if (!newState) return;
 
     if (Array.isArray(newState.elements)) {
