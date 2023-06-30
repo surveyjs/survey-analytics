@@ -160,7 +160,7 @@ export interface IVisualizationPanelOptions {
    *
    * @see answersOrder
    */
-  allowSortAnswers?: boolean;
+  allowChangeAnswersOrder?: boolean;
   /**
    * Specifies how to sort answers in bar and scatter charts.
    *
@@ -170,9 +170,9 @@ export interface IVisualizationPanelOptions {
    * - `"asc"` - Sort answers by ascending answer count.
    * - `"desc"` - Sort answers by descending answer count.
    *
-   * Users can change this property value if you enable the `allowSortAnswers` property.
+   * Users can change this property value if you enable the `allowChangeAnswersOrder` property.
    *
-   * @see allowSortAnswers
+   * @see allowChangeAnswersOrder
    */
   answersOrder?: "default" | "asc" | "desc";
   /**

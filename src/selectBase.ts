@@ -78,8 +78,8 @@ export class SelectBase
     });
     this.registerToolbarItem("changeAnswersOrder", () => {
       if (
-        (this.options.allowSortAnswers === undefined ||
-          this.options.allowSortAnswers) &&
+        (this.options.allowChangeAnswersOrder === undefined ||
+          this.options.allowChangeAnswersOrder) &&
         this.getSeriesValues().length === 0
       ) {
         this.choicesOrderSelector = DocumentHelper.createSelector(

@@ -158,7 +158,7 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
   data,
   {
     labelTruncateLength: 5,
-    allowSortAnswers: true,
+    allowChangeAnswersOrder: true,
     allowShowPercentages: true,
     allowHideEmptyAnswers: false,
     allowTransposeData: false,

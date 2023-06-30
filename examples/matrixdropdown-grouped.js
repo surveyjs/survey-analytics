@@ -72,7 +72,7 @@ var data = [
 var options = {
   // allowDynamicLayout: false,
   // allowHideQuestions: false,
-  allowSortAnswers: true,
+  allowChangeAnswersOrder: true,
   allowTransposeData: true
 };
 

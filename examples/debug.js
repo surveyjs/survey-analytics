@@ -9,7 +9,7 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
   survey.getAllQuestions(),
   data,
   {
-    allowSortAnswers: true,
+    allowChangeAnswersOrder: true,
     allowShowPercentages: true,
     allowHideEmptyAnswers: false,
     allowTransposeData: false,
