@@ -25,9 +25,9 @@ export interface IVisualizerPanelElement {
   isPublic: boolean;
   /**
    * Indicates the selected chart type.
-   * 
+   *
    * Possible values:
-   * 
+   *
    * - `"bar"`
    * - `"vbar"`
    * - `"stackedbar"`
@@ -40,7 +40,7 @@ export interface IVisualizerPanelElement {
   chartType?: string;
   /**
    * Indicates the answer order in bar and scatter charts.
-   * 
+   *
    * Possible values:
    *
    * - `"default"` - Answers retain the initial sort order.
