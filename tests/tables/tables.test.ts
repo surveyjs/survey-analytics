@@ -848,3 +848,38 @@ test("check matrix dropdown columns name with dots", () => {
   expect(expect(tableData["question.name.row 2.col 2"]).toEqual(""));
 });
 
+test("check set state with columns which not inside survey", () => {
+  const survey = new SurveyModel({
+    elements: [
+      {
+        name: "q1",
+        type: "text"
+      }
+    ]
+  });
+  let data = {
+    q1: "text1",
+    q2: "text2"
+  };
+  let table = new TableTest(survey, [data], {}, []);
+  table.state = {
+    elements: [
+      {
+        dataType: 0,
+        displayName: "q2",
+        isPublic: true,
+        isVisible: true,
+        location: 0,
+        name: "q2"
+      }
+    ]
+  };
+  table.refresh(true);
+  expect(table.columns[0].name).toBe("q1");
+  expect(table.columns[1].name).toBe("q2");
+  expect(table.columns[0].getCellData(table, data).displayValue).toEqual("text1");
+  expect(table.columns[0].getCellData(table, data).question).toBe(survey.getAllQuestions()[0]);
+  expect(table.columns[1].getCellData(table, data).displayValue).toEqual("text2");
+  expect(table.columns[1].getCellData(table, data).question).toBe(undefined);
+});
+
