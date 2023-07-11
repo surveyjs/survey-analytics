@@ -80,24 +80,18 @@ export interface IVisualizationPanelOptions {
   /**
    * Specifies whether to arrange charts based on the available screen space and allow users to reorder them via drag and drop.
    *
-   * If this property is disabled, charts are displayed one under the other and users cannot reorder them.
+   * If this property is disabled, charts are displayed one under another, and users cannot drag and drop them. If you want to disable only drag and drop, set the [`allowDragDrop`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDynamicLayout) property to `false`.
    *
    * Default value: `true`
    *
-   * [View Demo](https://surveyjs.io/Examples/Analytics?id=custom-layout (linkStyle))
-   *
+   * [View Demo](https://surveyjs.io/dashboard/examples/custom-layout/ (linkStyle))
    * @see layoutEngine
    */
   allowDynamicLayout?: boolean;
   /**
-   * Specifies whether to allow users to reorder charts via drag and drop.
-   *
-   * If this property is disabled, users cannot reorder charts.
+   * Specifies whether users can drag and drop charts. Applies only if [`allowDynamicLayout`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDynamicLayout) is `true`.
    *
    * Default value: `true`
-   *
-   * [View Demo](https://surveyjs.io/Examples/Analytics?id=custom-layout (linkStyle))
-   *
    * @see layoutEngine
    */
   allowDragDrop?: boolean;
