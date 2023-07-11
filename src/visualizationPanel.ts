@@ -90,6 +90,18 @@ export interface IVisualizationPanelOptions {
    */
   allowDynamicLayout?: boolean;
   /**
+   * Specifies whether to allow users to reorder charts via drag and drop.
+   *
+   * If this property is disabled, users cannot reorder charts.
+   *
+   * Default value: `true`
+   *
+   * [View Demo](https://surveyjs.io/Examples/Analytics?id=custom-layout (linkStyle))
+   *
+   * @see layoutEngine
+   */
+  allowReorderViaDrag?: boolean;
+  /**
    * A layout engine used to arrange charts on the Visualization Panel.
    *
    * You can use this property to integrate a third-party layout engine with SurveyJS Dashboard.
@@ -647,6 +659,16 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
+   * Returns the [`allowReorderViaDrag`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowReorderViaDrag) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
+   */
+  public get allowReorderViaDrag() {
+    return (
+      this.options.allowReorderViaDrag === undefined ||
+      this.options.allowReorderViaDrag === true
+    );
+  }
+
+  /**
    * Returns the [`allowHideQuestions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
    */
   public get allowHideQuestions() {
@@ -880,7 +902,7 @@ export class VisualizationPanel extends VisualizerBase {
       ? questionElementClassName + " " + questionLayoutedElementClassName
       : questionElementClassName;
     titleElement.className = questionElementClassName + "__title";
-    if (this.allowDynamicLayout) {
+    if (this.allowDynamicLayout && this.allowReorderViaDrag) {
       titleElement.className =
         titleElement.className +
         " " +
