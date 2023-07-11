@@ -100,7 +100,7 @@ export interface IVisualizationPanelOptions {
    *
    * @see layoutEngine
    */
-  allowReorderViaDrag?: boolean;
+  allowDragDrop?: boolean;
   /**
    * A layout engine used to arrange charts on the Visualization Panel.
    *
@@ -659,12 +659,12 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
-   * Returns the [`allowReorderViaDrag`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowReorderViaDrag) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
+   * Returns the [`allowDragDrop`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDragDrop) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
    */
-  public get allowReorderViaDrag() {
+  public get allowDragDrop() {
     return (
-      this.options.allowReorderViaDrag === undefined ||
-      this.options.allowReorderViaDrag === true
+      this.options.allowDragDrop === undefined ||
+      this.options.allowDragDrop === true
     );
   }
 
@@ -902,7 +902,7 @@ export class VisualizationPanel extends VisualizerBase {
       ? questionElementClassName + " " + questionLayoutedElementClassName
       : questionElementClassName;
     titleElement.className = questionElementClassName + "__title";
-    if (this.allowDynamicLayout && this.allowReorderViaDrag) {
+    if (this.allowDynamicLayout && this.allowDragDrop) {
       titleElement.className =
         titleElement.className +
         " " +
