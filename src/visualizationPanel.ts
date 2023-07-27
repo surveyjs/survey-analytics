@@ -80,15 +80,21 @@ export interface IVisualizationPanelOptions {
   /**
    * Specifies whether to arrange charts based on the available screen space and allow users to reorder them via drag and drop.
    *
-   * If this property is disabled, charts are displayed one under the other and users cannot reorder them.
+   * If this property is disabled, charts are displayed one under another, and users cannot drag and drop them. If you want to disable only drag and drop, set the [`allowDragDrop`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDynamicLayout) property to `false`.
    *
    * Default value: `true`
    *
-   * [View Demo](https://surveyjs.io/Examples/Analytics?id=custom-layout (linkStyle))
-   *
+   * [View Demo](https://surveyjs.io/dashboard/examples/custom-layout/ (linkStyle))
    * @see layoutEngine
    */
   allowDynamicLayout?: boolean;
+  /**
+   * Specifies whether users can drag and drop charts. Applies only if [`allowDynamicLayout`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDynamicLayout) is `true`.
+   *
+   * Default value: `true`
+   * @see layoutEngine
+   */
+  allowDragDrop?: boolean;
   /**
    * A layout engine used to arrange charts on the Visualization Panel.
    *
@@ -647,6 +653,16 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
+   * Returns the [`allowDragDrop`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDragDrop) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
+   */
+  public get allowDragDrop() {
+    return (
+      this.options.allowDragDrop === undefined ||
+      this.options.allowDragDrop === true
+    );
+  }
+
+  /**
    * Returns the [`allowHideQuestions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
    */
   public get allowHideQuestions() {
@@ -880,7 +896,7 @@ export class VisualizationPanel extends VisualizerBase {
       ? questionElementClassName + " " + questionLayoutedElementClassName
       : questionElementClassName;
     titleElement.className = questionElementClassName + "__title";
-    if (this.allowDynamicLayout) {
+    if (this.allowDynamicLayout && this.allowDragDrop) {
       titleElement.className =
         titleElement.className +
         " " +
