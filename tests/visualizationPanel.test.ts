@@ -12,7 +12,7 @@ VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
 VisualizationManager.registerVisualizer("checkbox", SelectBase);
 VisualizationManager.registerVisualizer("radiogroup", SelectBase);
-VisualizationManager.registerAlternativesVisualizer(AlternativeVisualizersWrapper);
+VisualizationManager.registerAltVisualizerSelector(AlternativeVisualizersWrapper);
 
 test("allowDynamicLayout option", () => {
   const json = {
@@ -528,6 +528,7 @@ test("set state for non-existing questions", () => {
         "isVisible": true,
         "name": "question1",
         "type": undefined,
+        "visualizer": "wordcloud"
       },
       {
         "displayName": "question2",
@@ -535,6 +536,7 @@ test("set state for non-existing questions", () => {
         "isVisible": true,
         "name": "question2",
         "type": undefined,
+        "visualizer": "wordcloud"
       },
     ],
     "locale": "ru",
@@ -564,6 +566,7 @@ test("set state for non-existing questions", () => {
         "isVisible": true,
         "name": "question1",
         "type": undefined,
+        "visualizer": "wordcloud"
       },
     ],
     "locale": "ru",

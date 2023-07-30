@@ -147,6 +147,37 @@ export class AlternativeVisualizersWrapper
     this.visualizers.forEach(visualizer => visualizer.backgroundColor = color);
   }
 
+  /**
+   * Returns an object with properties that describe a current visualizer state. The properties are different for each individual visualizer.
+   *
+   * > This method is overriden in descendant classes.
+   * @see setState
+   */
+  public getState(): any {
+    const currentVisualizerState = this.visualizer.getState();
+    const state: any = {
+      visualizer: this.visualizer.type,
+    };
+    if(Object.keys(currentVisualizerState).length > 0) {
+      state.state = currentVisualizerState;
+    }
+    return state;
+  }
+  /**
+   * Sets the visualizer's state.
+   *
+   * > This method is overriden in descendant classes.
+   * @see getState
+   */
+  public setState(state: any): void {
+    if(!!state.visualizer) {
+      this.setVisualizer(state.visualizer, true);
+    }
+    if(!!state.state) {
+      this.visualizer.setState(state.state);
+    }
+  }
+
   destroy() {
     this.visualizers.forEach((visualizer) => {
       visualizer.onAfterRender.remove(this.onAfterVisualizerRenderCallback);
@@ -157,6 +188,6 @@ export class AlternativeVisualizersWrapper
   }
 }
 
-VisualizationManager.registerAlternativesVisualizer(
+VisualizationManager.registerAltVisualizerSelector(
   AlternativeVisualizersWrapper
 );

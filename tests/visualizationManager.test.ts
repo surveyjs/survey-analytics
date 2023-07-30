@@ -65,7 +65,7 @@ test("unregister visualizer for all question types", () => {
   expect(multipletextVizualizers[0]).toBe(Text);
   expect(multipletextVizualizers[1]).toBe(WordCloud);
 
-  VisualizationManager.unregisterVisualizerForAll(WordCloud);
+  VisualizationManager.unregisterVisualizer(undefined, WordCloud);
 
   textVizualizers = VisualizationManager.getVisualizersByType("text");
   commentVizualizers = VisualizationManager.getVisualizersByType("comment");

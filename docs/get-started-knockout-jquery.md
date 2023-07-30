@@ -49,7 +49,7 @@ The following code shows how to reference these libraries:
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-knockout-ui/survey-knockout-ui.min.js"></script> -->
 
     <!-- Third-party visualization libraries -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://unpkg.com/plotly.js-dist-min/plotly.min.js"></script>
     <!-- Uncomment the following line if you use the Text, Multiple Text, or Comment question types in your surveys -->
     <!-- <script src="https://unpkg.com/wordcloud/src/wordcloud2.js"></script> -->
 
@@ -180,7 +180,7 @@ const vizPanel = new SurveyAnalytics.VisualizationPanel(
     <!-- <link href="https://unpkg.com/survey-core/defaultV2.min.css" type="text/css" rel="stylesheet"> -->
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-knockout-ui/survey-knockout-ui.min.js"></script> -->
 
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://unpkg.com/plotly.js-dist-min/plotly.min.js"></script>
     <!-- Uncomment the following line if you use the Text, Multiple Text, or Comment question types in your surveys -->
     <!-- <script src="https://unpkg.com/wordcloud/src/wordcloud2.js"></script> -->
 
@@ -285,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <!-- <link href="https://unpkg.com/survey-core/defaultV2.min.css" type="text/css" rel="stylesheet"> -->
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-knockout-ui/survey-knockout-ui.min.js"></script> -->
 
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://unpkg.com/plotly.js-dist-min/plotly.min.js"></script>
     <!-- Uncomment the following line if you use the Text, Multiple Text, or Comment question types in your surveys -->
     <!-- <script src="https://unpkg.com/wordcloud/src/wordcloud2.js"></script> -->
 
