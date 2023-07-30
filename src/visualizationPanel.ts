@@ -1,4 +1,5 @@
 import { Event, Question, SurveyModel } from "survey-core";
+import * as SurveyCore from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
@@ -302,8 +303,8 @@ export class VisualizationPanel extends VisualizerBase {
     if (_elements === undefined) {
       this._elements = this.buildElements(questions);
     }
-
-    this.haveCommercialLicense =
+    const f = (<any>SurveyCore).hasLicense;
+    this.haveCommercialLicense = (!!f && f(4)) ||
       VisualizationPanel.haveCommercialLicense ||
       (typeof options.haveCommercialLicense !== "undefined"
         ? options.haveCommercialLicense

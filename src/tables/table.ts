@@ -1,4 +1,5 @@
 import { SurveyModel, Question, Event, settings, QuestionSelectBase, QuestionMatrixModel, ItemValue, JsonError, EventBase } from "survey-core";
+import * as SurveyCore from "survey-core";
 import {
   IPermission,
   QuestionLocation,
@@ -61,8 +62,8 @@ export abstract class Table {
     }
 
     this.extensions = new TableExtensions(this);
-
-    this.haveCommercialLicense =
+    const f = (<any>SurveyCore).hasLicense;
+    this.haveCommercialLicense = (!!f && f(4)) ||
       Table.haveCommercialLicense ||
       (!!_options &&
         (typeof _options.haveCommercialLicense !== "undefined"
