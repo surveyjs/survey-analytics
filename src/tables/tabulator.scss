@@ -195,13 +195,13 @@ $root-font-size: var(--root-font-size, 14px);
       padding-right: 0;
     }
 
-    .tabulator-tableHolder::-webkit-scrollbar {
+    .tabulator-tableholder::-webkit-scrollbar {
       height: 10px;
       width: 10px;
       background-color: $scroll-color;
     }
 
-    .tabulator-tableHolder::-webkit-scrollbar-thumb {
+    .tabulator-tableholder::-webkit-scrollbar-thumb {
       background: $main-color;
     }
   }
