@@ -10,7 +10,7 @@ This step-by-step tutorial will help you get started with SurveyJS Dashboard in 
 
 As a result, you will create the following dashboard:
 
-<iframe src="https://codesandbox.io/embed/trusting-varahamihira-rx7o0k?fontsize=14&hidenavigation=1&module=%2Fsrc%2Fcomponents%2FSurveyAnalytics.vue&theme=dark"
+<iframe src="https://codesandbox.io/s/add-surveyjs-analytics-to-a-vue-application-forked-jj6hgn"
     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
     title="trusting-varahamihira-rx7o0k"
     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
@@ -89,11 +89,11 @@ const surveyJson = {
     title: "How would you describe your experience with our product?",
     type: "radiogroup",
     choices: [
-      { value: 5, text: "Fully satisfying" },
-      { value: 4, text: "Generally satisfying" },
+      { value: 5, text: "Very Satisfied" },
+      { value: 4, text: "Satisfied" },
       { value: 3, text: "Neutral" },
-      { value: 2, text: "Rather unsatisfying" },
-      { value: 1, text: "Not satisfying at all" }
+      { value: 2, text: "Unsatisfied" },
+      { value: 1, text: "Very Unsatisfied" }
     ],
     isRequired: true
   }, {
@@ -179,11 +179,11 @@ const surveyJson = {
     title: "How would you describe your experience with our product?",
     type: "radiogroup",
     choices: [
-      { value: 5, text: "Fully satisfying" },
-      { value: 4, text: "Generally satisfying" },
+      { value: 5, text: "Very Satisfied" },
+      { value: 4, text: "Satisfied" },
       { value: 3, text: "Neutral" },
-      { value: 2, text: "Rather unsatisfying" },
-      { value: 1, text: "Not satisfying at all" }
+      { value: 2, text: "Unsatisfied" },
+      { value: 1, text: "Very Unsatisfied" }
     ],
     isRequired: true
   }, {
@@ -279,11 +279,11 @@ const surveyJson = {
     title: "How would you describe your experience with our product?",
     type: "radiogroup",
     choices: [
-      { value: 5, text: "Fully satisfying" },
-      { value: 4, text: "Generally satisfying" },
+      { value: 5, text: "Very Satisfied" },
+      { value: 4, text: "Satisfied" },
       { value: 3, text: "Neutral" },
-      { value: 2, text: "Rather unsatisfying" },
-      { value: 1, text: "Not satisfying at all" }
+      { value: 2, text: "Unsatisfied" },
+      { value: 1, text: "Very Unsatisfied" }
     ],
     isRequired: true
   }, {

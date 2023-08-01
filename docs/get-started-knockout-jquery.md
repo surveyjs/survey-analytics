@@ -9,12 +9,12 @@ This step-by-step tutorial will help you get started with SurveyJS Dashboard in 
 
 As a result, you will create the following dashboard:
 
-<p class="codepen" data-height="532.7999572753906" data-default-tab="js,result" data-slug-hash="vYdmvgz" data-user="romantsukanov" style="height: 532.7999572753906px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
-  <span>See the Pen <a href="https://codepen.io/romantsukanov/pen/vYdmvgz">
-  SurveyJS - Add SurveyJS Dashboard to a Knockout or jQuery Application</a> by RomanTsukanov (<a href="https://codepen.io/romantsukanov">@romantsukanov</a>)
-  on <a href="https://codepen.io">CodePen</a>.</span>
-</p>
-<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+<iframe src="https://codesandbox.io/s/morning-field-xq5pd7?file=/src/index.js"
+  style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+  title="SurveyJS - Add SurveyJS Dashboard to a Knockout or jQuery Application"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
 
 SurveyJS Dashboard is powered by Knockout and does not have an individual implementation for jQuery. However, you can integrate the version for Knockout into your jQuery application by following the same instructions.
 
@@ -102,11 +102,11 @@ const surveyJson = {
         title: "How would you describe your experience with our product?",
         type: "radiogroup",
         choices: [
-            { value: 5, text: "Fully satisfying" },
-            { value: 4, text: "Generally satisfying" },
+            { value: 5, text: "Very Satisfied" },
+            { value: 4, text: "Satisfied" },
             { value: 3, text: "Neutral" },
-            { value: 2, text: "Rather unsatisfying" },
-            { value: 1, text: "Not satisfying at all" }
+            { value: 2, text: "Unsatisfied" },
+            { value: 1, text: "Very Unsatisfied" }
         ],
         isRequired: true
     }, {
@@ -202,11 +202,11 @@ const surveyJson = {
         title: "How would you describe your experience with our product?",
         type: "radiogroup",
         choices: [
-            { value: 5, text: "Fully satisfying" },
-            { value: 4, text: "Generally satisfying" },
+            { value: 5, text: "Very Satisfied" },
+            { value: 4, text: "Satisfied" },
             { value: 3, text: "Neutral" },
-            { value: 2, text: "Rather unsatisfying" },
-            { value: 1, text: "Not satisfying at all" }
+            { value: 2, text: "Unsatisfied" },
+            { value: 1, text: "Very Unsatisfied" }
         ],
         isRequired: true
     }, {
@@ -307,11 +307,11 @@ const surveyJson = {
         title: "How would you describe your experience with our product?",
         type: "radiogroup",
         choices: [
-            { value: 5, text: "Fully satisfying" },
-            { value: 4, text: "Generally satisfying" },
+            { value: 5, text: "Very Satisfied" },
+            { value: 4, text: "Satisfied" },
             { value: 3, text: "Neutral" },
-            { value: 2, text: "Rather unsatisfying" },
-            { value: 1, text: "Not satisfying at all" }
+            { value: 2, text: "Unsatisfied" },
+            { value: 1, text: "Very Unsatisfied" }
         ],
         isRequired: true
     }, {
