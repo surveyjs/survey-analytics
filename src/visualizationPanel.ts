@@ -150,13 +150,6 @@ export interface IVisualizationPanelOptions {
    * @see showOnlyPercentages
    */
   percentagePrecision?: number;
-  /**
-   * Removes the Free Trial bar.
-   *
-   * Default value: `false`
-   *
-   * > You can enable this property only if you have a SurveyJS Dashboard commercial license. It is illegal to enable this property without a license.
-   */
   haveCommercialLicense?: boolean;
   /**
    * Allows users to sort answers by answer count. Applies only to bar and scatter charts.
