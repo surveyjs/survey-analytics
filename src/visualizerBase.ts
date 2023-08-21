@@ -239,8 +239,19 @@ export class VisualizerBase implements IDataInfo {
   public registerToolbarItem(
     name: string,
     creator: (toolbar?: HTMLDivElement) => HTMLElement
-  ) {
+  ): void {
     this.toolbarItemCreators[name] = creator;
+  }
+
+  public unregisterToolbarItem(
+    name: string
+  ): (toolbar?: HTMLDivElement) => HTMLElement {
+    if(this.toolbarItemCreators[name] !== undefined) {
+      const creator = this.toolbarItemCreators[name];
+      delete this.toolbarItemCreators[name];
+      return creator;
+    }
+    return undefined;
   }
 
   /**
