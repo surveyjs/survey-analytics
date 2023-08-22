@@ -204,7 +204,7 @@ export class VisualizerBase implements IDataInfo {
    * const vizPanel = new VisualizationPanel( ... );
    *
    * // Add a custom button to the toolbar
-   * visPanel.visualizers[0].registerToolbarItem("my-toolbar-button", () => {
+   * vizPanel.visualizers[0].registerToolbarItem("my-toolbar-button", () => {
    *   return DocumentHelper.createButton(
    *     // A button click event handler
    *     () => {
