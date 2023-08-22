@@ -204,7 +204,7 @@ export class VisualizerBase implements IDataInfo {
    * const vizPanel = new VisualizationPanel( ... );
    *
    * // Add a custom button to the toolbar
-   * visPanel.visualizers[0].registerToolbarItem("my-toolbar-button", () => {
+   * vizPanel.visualizers[0].registerToolbarItem("my-toolbar-button", () => {
    *   return DocumentHelper.createButton(
    *     // A button click event handler
    *     () => {
@@ -235,6 +235,7 @@ export class VisualizerBase implements IDataInfo {
    * ```
    * @param name A custom name for the toolbar item.
    * @param creator A function that accepts the toolbar and should return an `HTMLElement` with the toolbar item.
+   * @see unregisterToolbarItem
    */
   public registerToolbarItem(
     name: string,
@@ -243,6 +244,13 @@ export class VisualizerBase implements IDataInfo {
     this.toolbarItemCreators[name] = creator;
   }
 
+  /**
+   * 
+   * Unregisters a function used to create a toolbar item. Allows you to remove a toolbar item.
+   * @param name A toolbar item name.
+   * @returns A function previously used to [register](#registerToolbarItem) the removed toolbar item.
+   * @see registerToolbarItem
+   */
   public unregisterToolbarItem(
     name: string
   ): (toolbar?: HTMLDivElement) => HTMLElement {
