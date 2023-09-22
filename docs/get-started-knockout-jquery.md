@@ -1,3 +1,8 @@
+---
+title: Add SurveyJS Dashboard to Your Application | Step-by-Step Tutorial for Knockout and jQuery
+description: Learn how to add SurveyJS Dashboard to your Knockout and jQuery application with this comprehensive step-by-step tutorial. Enhance your self-hosted surveying tool with powerful survey analytics capabilities.
+---
+
 # Add SurveyJS Dashboard to a Knockout or jQuery Application
 
 This step-by-step tutorial will help you get started with SurveyJS Dashboard in a Knockout or jQuery application. To add SurveyJS Dashboard to your application, follow the steps below:

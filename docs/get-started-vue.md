@@ -1,3 +1,8 @@
+---
+title: Add SurveyJS Dashboard to Your Application | Step-by-Step Tutorial for Vue.js
+description: Learn how to add SurveyJS Dashboard to your Vue.js application with this comprehensive step-by-step tutorial. Enhance your self-hosted surveying tool with powerful survey analytics capabilities.
+---
+
 # Add SurveyJS Dashboard to a Vue Application
 
 This step-by-step tutorial will help you get started with SurveyJS Dashboard in a Vue application. To add SurveyJS Dashboard to your application, follow the steps below:
