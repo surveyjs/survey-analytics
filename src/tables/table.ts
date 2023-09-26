@@ -185,8 +185,10 @@ export abstract class Table {
     this.refresh(true);
     this.onStateChanged.fire(this, this.state);
   }
-
+  public get isInitTableDataProcessing(): boolean { return this.isInitTableDataProcessingValue; }
+  private isInitTableDataProcessingValue: boolean;
   protected initTableData(data: Array<any>) {
+    this.isInitTableDataProcessingValue = true;
     this.tableData = (data || []).map((item) => {
       var dataItem: any = {};
       this._survey.data = item;
@@ -200,6 +202,7 @@ export abstract class Table {
 
       return dataItem;
     });
+    this.isInitTableDataProcessingValue = false;
   }
 
   public moveColumn(from: number, to: number) {

@@ -54,7 +54,7 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
     if(!!question) {
       const onReadyChangedCallback = (sender, options) => {
         if(options.isReady) {
-          table.refresh(true);
+          table.refresh(!table.isInitTableDataProcessing);
           sender.onReadyChanged.remove(onReadyChangedCallback);
         }
       };
