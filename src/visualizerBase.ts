@@ -18,15 +18,15 @@ var styles = require("./visualizerBase.scss");
  * Survey results.
  * - `options`\
  * An object with the following properties:
- *    - `seriesValues`: `Array<String>`\
+ *    - `seriesValues`: `Array<string>`\
  *    Series values used to group data.
- *    - `seriesLabels`: `Array<String>`\
+ *    - `seriesLabels`: `Array<string>`\
  *    Series labels to display. If this property is not set, `seriesValues` are used as labels.
  *    - `survey`: [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model)\
  *    Pass a `SurveyModel` instance if you want to use locales from the survey JSON schema.
  *    - `dataProvider`: `DataProvider`\
  *    A data provider for this visualizer.
- * - `type`: `String`\
+ * - `type`: `string`\
  * *(Optional)* The visualizer's type.
  *
  * [View Demo](https://surveyjs.io/dashboard/examples/how-to-plot-survey-data-in-custom-bar-chart/ (linkStyle))
@@ -76,7 +76,7 @@ export class VisualizerBase implements IDataInfo {
    * - `sender`: `VisualizerBase`\
    * A `VisualizerBase` instance that raised the event.
    *
-   * - `options.locale`: `String`\
+   * - `options.locale`: `string`\
    * The indentifier of a new locale (for example, "en").
    * @see locale
    */
