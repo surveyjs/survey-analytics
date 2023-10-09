@@ -12,6 +12,7 @@ function CustomVisualizer(question, data) {
 
   function renderRows(table, visualizer) {
     var data = visualizer.getData();
+    var values = visualizer.getValues();
     visualizer.getSeriesLabels().forEach(function (label, rowIndex) {
       var tr = document.createElement("tr");
       var rowLabel = document.createElement("td");
@@ -21,12 +22,13 @@ function CustomVisualizer(question, data) {
       data.forEach(function (colRow) {
         sum += colRow[rowIndex];
       });
-      visualizer.valuesSource().forEach(function (_, columnIndex) {
+      visualizer.valuesSource().forEach(function (valueItem) {
         var cell = document.createElement("td");
+        var valueIndex = values.indexOf(valueItem.value);
         cell.innerHTML =
-          data[columnIndex][rowIndex] +
+          data[valueIndex][rowIndex] +
           "(" +
-          Math.round((data[columnIndex][rowIndex] / sum) * 100) +
+          Math.round((data[valueIndex][rowIndex] / sum) * 100) +
           "%)";
         tr.appendChild(cell);
       });
