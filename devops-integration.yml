@@ -125,6 +125,12 @@ steps:
       TESTCAFE_DASHBOARD_AUTHENTICATION_TOKEN: $(TESTCAFE_DASHBOARD_AUTHENTICATION_TOKEN)
       TESTCAFE_DASHBOARD_URL: $(TESTCAFE_DASHBOARD_URL)
 
+  - task: PublishCodeCoverageResults@1
+    inputs: 
+      codeCoverageTool: Cobertura # or JaCoCo
+      summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
+      reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
+
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm run doc_gen
