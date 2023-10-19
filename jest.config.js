@@ -5,6 +5,16 @@ module.exports = {
       tsconfig: "tsconfig.test.json"
     }
   },
+  reporters: [
+    "default",
+    [ "jest-junit", {
+    "suiteNameTemplate": "{filepath}",
+    "outputDirectory": ".",
+    "outputName": "junit.xml"
+    } ]
+  ],
+  collectCoverage: true,
+  coverageReporters: ["json", "lcov", "text", "html", "text-summary", "cobertura"],
   roots: ["tests"],
   transform: {
     "^.+\\.(ts|tsx)?$": "ts-jest"
