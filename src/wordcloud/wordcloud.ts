@@ -67,7 +67,7 @@ export class WordCloudAdapter {
       config
     };
     WordCloudAdapter.onWordcloudCreating.fire(this.model, options);
-    this._wordcloud = WordCloudLib(options.canvas, options.config);
+    this._wordcloud = WordCloudLib(options.canvas, options.config as any);
     return this._wordcloud;
   }
 
