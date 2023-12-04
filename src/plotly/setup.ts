@@ -64,7 +64,7 @@ export class PlotlySetup {
     } = model.getAnswersData();
 
     const traces: any = [];
-    const hasSeries = seriesLabels.length > 1;
+    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
     const traceConfig: any = {
       type: model.chartType,
@@ -156,7 +156,7 @@ export class PlotlySetup {
     } = model.getAnswersData();
 
     const traces: any = [];
-    const hasSeries = seriesLabels.length > 1;
+    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
     const yFullTexts = hasSeries ? seriesLabels : labels;
 
     const traceConfig: any = {
@@ -279,7 +279,7 @@ export class PlotlySetup {
     } = model.getAnswersData();
 
     const traces: any = [];
-    const hasSeries = seriesLabels.length > 1;
+    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
     const layout: any = {
       font: {
@@ -352,7 +352,7 @@ export class PlotlySetup {
       texts,
       seriesLabels,
     } = model.getAnswersData();
-    const hasSeries = seriesLabels.length > 1;
+    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
     const traces: any = [];
 
     const traceConfig: any = {

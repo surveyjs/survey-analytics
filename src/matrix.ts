@@ -108,16 +108,13 @@ export class Matrix extends SelectBase {
     const statistics = super.getData();
     const series = this.getSeriesValues();
     const values = this.getValues();
-    if (series.length > 1) {
-      const preparedData: Array<Array<number>> = [];
-      values.forEach((val, valueIndex) => {
-        const seriesData = series.map(
-          (seriesName, seriesIndex) => statistics[seriesIndex][valueIndex]
-        );
-        preparedData.push(seriesData);
-      });
-      return preparedData;
-    }
-    return statistics;
+    const preparedData: Array<Array<number>> = [];
+    values.forEach((val, valueIndex) => {
+      const seriesData = series.map(
+        (seriesName, seriesIndex) => statistics[seriesIndex][valueIndex]
+      );
+      preparedData.push(seriesData);
+    });
+    return preparedData;
   }
 }

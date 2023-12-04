@@ -3,6 +3,7 @@ jest.mock("plotly.js", () => { }, { virtual: true });
 
 import { PlotlySetup } from "../src/plotly/setup";
 import { SelectBasePlotly } from "../src/plotly/selectBase";
+import { MatrixPlotly } from "../src/plotly/matrix";
 import { QuestionDropdownModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
 import { Matrix } from "../src/matrix";
 
@@ -279,4 +280,45 @@ test("getTruncatedLabel method", () => {
 test("y axis type - https://github.com/surveyjs/survey-analytics/issues/241", () => {
   var config = PlotlySetup.setupBar(selectBase);
   expect(config.layout.yaxis.type).toEqual("category");
+});
+
+test("check hasSeries in stacked bar for matrix with single row", () => {
+  const matrixQuestion = new QuestionMatrixModel("question1");
+  matrixQuestion.fromJSON({
+    "name": "Quality",
+    "title": "Please indicate if you agree or disagree with the following statements",
+    "columns": [
+      {
+        "value": 1,
+        "text": "Strongly Disagree"
+      },
+      {
+        "value": 2,
+        "text": "Disagree"
+      },
+      {
+        "value": 3,
+        "text": "Neutral"
+      },
+      {
+        "value": 4,
+        "text": "Agree"
+      },
+      {
+        "value": 5,
+        "text": "Strongly Agree"
+      }
+    ],
+    "rows": [
+      {
+        "value": "affordable",
+        "text": "Product is affordable"
+      }
+    ]
+  });
+  const matrixVisualizer = new MatrixPlotly(matrixQuestion, []);
+  matrixVisualizer.chartType = "stackedbar";
+  let config = PlotlySetup.setupBar(matrixVisualizer);
+  expect(config.layout.barmode).toEqual("stack");
+  expect(config.layout.showlegend).toBeTruthy();
 });
