@@ -322,3 +322,66 @@ test("check hasSeries in stacked bar for matrix with single row", () => {
   expect(config.layout.barmode).toEqual("stack");
   expect(config.layout.showlegend).toBeTruthy();
 });
+
+test("left non-empty pies only and reduce chart area to fit them", () => {
+  const matrixQuestion = new QuestionMatrixModel("question1");
+  matrixQuestion.fromJSON({
+    "name": "Quality",
+    "title": "Please indicate if you agree or disagree with the following statements",
+    "columns": [
+      {
+        "value": 1,
+        "text": "Strongly Disagree"
+      },
+      {
+        "value": 2,
+        "text": "Disagree"
+      },
+      {
+        "value": 3,
+        "text": "Neutral"
+      },
+      {
+        "value": 4,
+        "text": "Agree"
+      },
+      {
+        "value": 5,
+        "text": "Strongly Agree"
+      }
+    ],
+    "rows": [
+      {
+        "value": "affordable",
+        "text": "Product is affordable"
+      }
+    ]
+  });
+  const matrixVisualizer = new MatrixPlotly(matrixQuestion, [
+    {
+      Quality: {
+        affordable: "3",
+      },
+    },
+    {
+      Quality: {
+        affordable: "3",
+      },
+    },
+    {
+      Quality: {
+        affordable: "5",
+      },
+    },
+  ]);
+  matrixVisualizer.chartType = "pie";
+  let config = PlotlySetup.setupPie(matrixVisualizer);
+  expect(config.traces.length).toEqual(2);
+  expect(config.traces[0].domain.row).toBe(0);
+  expect(config.traces[0].domain.column).toBe(0);
+  expect(config.traces[1].domain.row).toBe(0);
+  expect(config.traces[1].domain.column).toBe(1);
+  expect(config.layout.grid.rows).toBe(1);
+  expect(config.layout.grid.columns).toBe(2);
+  expect(config.layout.height).toBe(375);
+});

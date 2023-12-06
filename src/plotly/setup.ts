@@ -63,7 +63,7 @@ export class PlotlySetup {
       seriesLabels,
     } = model.getAnswersData();
 
-    const traces: any = [];
+    let traces: any = [];
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
     const traceConfig: any = {
@@ -127,18 +127,22 @@ export class PlotlySetup {
     };
 
     if (hasSeries) {
-      layout.grid = {
-        rows: Math.round(traces.length / 2),
-        columns: 2,
-      };
       layout.annotations = [];
       labels.forEach((label, index) => {
+        traces[index].title = { position: "bottom center", text: label };
+      });
+      traces = traces.filter(t => !(t.values.length === 1 && t.values[0] === 0));
+      traces.forEach((label, index) => {
         traces[index].domain = {
           column: index % 2,
           row: Math.floor(index / 2),
         };
-        traces[index].title = { position: "bottom center", text: label };
       });
+      layout.grid = {
+        rows: Math.round(traces.length / 2),
+        columns: 2,
+      };
+      layout.height = radius * Math.round(traces.length / 2) + 25;
     }
     return { traces, layout, hasSeries };
   }
