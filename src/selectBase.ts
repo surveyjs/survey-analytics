@@ -207,7 +207,7 @@ export class SelectBase
         ((this.chartType == "pie" || this.chartType == "doughnut") &&
           this.topN > 0)
       ) {
-        this.choicesOrderSelector.style.display = "inline-block";
+        this.choicesOrderSelector.style.display = "inline-flex";
       } else {
         this.choicesOrderSelector.style.display = "none";
       }
