@@ -55,7 +55,7 @@ export class MuuriLayoutEngine extends LayoutEngine {
   private _muuri: any = undefined;
   private _layoutingTimer: any = undefined;
 
-  constructor(allowed: boolean, private _selector: string) {
+  constructor(allowed: boolean, private _selector: string, private dragEnabled = true) {
     super(allowed);
   }
 
@@ -65,7 +65,7 @@ export class MuuriLayoutEngine extends LayoutEngine {
         handle: ".sa-question__title--draggable",
       },
       items: this._selector,
-      dragEnabled: true,
+      dragEnabled: this.dragEnabled,
     });
     this._muuri.on(
       "dragReleaseEnd",
