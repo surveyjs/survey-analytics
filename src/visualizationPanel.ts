@@ -290,7 +290,8 @@ export class VisualizationPanel extends VisualizerBase {
       options.layoutEngine ||
       new MuuriLayoutEngine(
         this.allowDynamicLayout,
-        "." + questionLayoutedElementClassName
+        "." + questionLayoutedElementClassName,
+        this.allowDragDrop
       );
     this._layoutEngine.onMoveCallback = (fromIndex: number, toIndex: number) =>
       this.moveVisibleElement(fromIndex, toIndex);
@@ -650,6 +651,9 @@ export class VisualizationPanel extends VisualizerBase {
    * Returns the [`allowDragDrop`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDragDrop) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
    */
   public get allowDragDrop() {
+    if(SurveyCore.IsTouch) {
+      return false;
+    }
     return (
       this.options.allowDragDrop === undefined ||
       this.options.allowDragDrop === true

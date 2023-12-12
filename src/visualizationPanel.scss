@@ -66,9 +66,14 @@
   color: $text-color;
   line-height: 34px;
   margin-bottom: 25px;
-  & > *:not(:first-child) {
-    margin-left: 10px;
-  }
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.sa-toolbar.sa-toolbar > * {
+  display: inline-flex;
+  line-height: 1em;
 }
 
 .sa-toolbar__button {
@@ -123,7 +128,7 @@
 .sa-question__select-wrapper {
   position: relative;
   display: inline-block;
-  min-width: 200px;
+  min-width: 100px;
   max-width: 300px;
 
   .sa-question__select {
@@ -180,6 +185,7 @@
 .sa-question__filter-text {
   vertical-align: middle;
   margin-top: 1px;
+  line-height: 32px;
 }
 
 .sa-commercial {
