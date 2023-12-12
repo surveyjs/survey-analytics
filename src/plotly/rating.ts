@@ -53,15 +53,19 @@ export class PlotlyGaugeAdapter {
       },
     ];
 
+    const chartMargin = this.model.chartType === "bullet" ? 60 : 30;
     var layout: any = {
+      height: 250,
+      margin: {
+        l: chartMargin,
+        r: chartMargin,
+        b: chartMargin,
+        t: chartMargin,
+        pad: 5
+      },
       plot_bgcolor: this.model.backgroundColor,
       paper_bgcolor: this.model.backgroundColor,
     };
-
-    if (this.model.chartType === "bullet") {
-      layout.height = 250;
-      layout.width = 600;
-    }
 
     const config = {
       displayModeBar: true,
