@@ -17,6 +17,67 @@ export interface IAnswersData {
   seriesLabels: Array<string>;
 }
 
+export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData {
+  const result = {
+    datasets: <Array<any>>[],
+    labels: <Array<string>>[],
+    colors: <Array<string>>[],
+    texts: <Array<any>>[],
+    seriesLabels: <Array<any>>[],
+  };
+  if(answersData.seriesLabels.length === 0) {
+    result.datasets.push([]);
+    result.texts.push([]);
+    for (var i = 0; i < answersData.datasets[0].length; i++) {
+      if (answersData.datasets[0][i] != 0) {
+        result.datasets[0].push(answersData.datasets[0][i]);
+        result.labels.push(answersData.labels[i]);
+        result.colors.push(answersData.colors[i]);
+        result.texts[0].push(answersData.texts[0][i]);
+      }
+    }
+    return result;
+  }
+  const seriesDataExistence = <Array<boolean>>[];
+  seriesDataExistence.length = answersData.seriesLabels.length;
+  const valuesDataExistence = <Array<boolean>>[];
+  valuesDataExistence.length = answersData.labels.length;
+  for (var valueIndex = 0; valueIndex < answersData.labels.length; valueIndex++) {
+    for (var seriesIndex = 0; seriesIndex < answersData.seriesLabels.length; seriesIndex++) {
+      if (answersData.datasets[valueIndex][seriesIndex] != 0) {
+        seriesDataExistence[seriesIndex] = true;
+        valuesDataExistence[valueIndex] = true;
+      }
+    }
+  }
+  for (var valueIndex = 0; valueIndex < valuesDataExistence.length; valueIndex++) {
+    if (valuesDataExistence[valueIndex]) {
+      result.labels.push(answersData.labels[valueIndex]);
+      result.colors.push(answersData.colors[valueIndex]);
+    }
+  }
+  for (var seriesIndex = 0; seriesIndex < answersData.seriesLabels.length; seriesIndex++) {
+    if (seriesDataExistence[seriesIndex]) {
+      result.seriesLabels.push(answersData.seriesLabels[seriesIndex]);
+    }
+  }
+  for (var valueIndex = 0; valueIndex < answersData.labels.length; valueIndex++) {
+    if (valuesDataExistence[valueIndex]) {
+      const dataset = [];
+      const texts = [];
+      for (var seriesIndex = 0; seriesIndex < answersData.datasets.length; seriesIndex++) {
+        if (seriesDataExistence[seriesIndex]) {
+          dataset.push(answersData.datasets[valueIndex][seriesIndex]);
+          texts.push(answersData.texts[valueIndex][seriesIndex]);
+        }
+      }
+      result.datasets.push(dataset);
+      result.texts.push(texts);
+    }
+  }
+  return result;
+}
+
 export class SelectBase
   extends VisualizerBase
   implements IVisualizerWithSelection {
@@ -484,29 +545,10 @@ export class SelectBase
     return percentages;
   }
 
-  protected hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData {
-    var result = {
-      datasets: <Array<any>>[[]],
-      labels: <Array<string>>[],
-      colors: <Array<string>>[],
-      texts: <Array<any>>[[]],
-      seriesLabels: answersData.seriesLabels,
-    };
-    for (var i = 0; i < answersData.datasets[0].length; i++) {
-      if (answersData.datasets[0][i] != 0) {
-        result.datasets[0].push(answersData.datasets[0][i]);
-        result.labels.push(answersData.labels[i]);
-        result.colors.push(answersData.colors[i]);
-        result.texts[0].push(answersData.texts[0][i]);
-      }
-    }
-    return result;
-  }
-
   protected answersDataReady(answersData: IAnswersData) {
     let result: any = {};
     if (this.hideEmptyAnswers) {
-      result = this.hideEmptyAnswersInData(answersData);
+      result = hideEmptyAnswersInData(answersData);
     } else {
       result = answersData;
     }
