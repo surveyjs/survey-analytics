@@ -404,6 +404,13 @@ export class VisualizationPanel extends VisualizerBase {
     }
   };
 
+  private onStateChangedCallback = (
+    sender: VisualizerBase,
+    options: any
+  ) => {
+    this.stateChanged(sender.question?.name, options);
+  };
+
   /**
    * An event that is raised when a user selects a different visualizer type from the Type drop-down menu.
    *
@@ -497,14 +504,14 @@ export class VisualizationPanel extends VisualizerBase {
 
   protected makeElementPrivate(element: IVisualizerPanelElement) {
     element.isPublic = false;
-    this.onStateChanged.fire(this, this.state);
+    this.stateChanged("isPublic", false);
     this.onPermissionsChangedCallback &&
       this.onPermissionsChangedCallback(this);
   }
 
   protected makeElementPublic(element: IVisualizerPanelElement) {
     element.isPublic = true;
-    this.onStateChanged.fire(this, this.state);
+    this.stateChanged("isPublic", true);
     this.onPermissionsChangedCallback &&
       this.onPermissionsChangedCallback(this);
   }
@@ -598,6 +605,7 @@ export class VisualizationPanel extends VisualizerBase {
 
       visualizer.onUpdate = () => this.layout();
       visualizer.onAfterRender.add(this.onAfterRenderQuestionCallback);
+      visualizer.onStateChanged.add(this.onStateChangedCallback);
 
       if (visualizer instanceof AlternativeVisualizersWrapper) {
         visualizer.onVisualizerChanged.add(this.onAlternativeVisualizerChangedCallback);
@@ -616,6 +624,7 @@ export class VisualizationPanel extends VisualizerBase {
       if (visualizer instanceof AlternativeVisualizersWrapper) {
         visualizer.onVisualizerChanged.remove(this.onAlternativeVisualizerChangedCallback);
       }
+      visualizer.onStateChanged.remove(this.onStateChangedCallback);
       visualizer.onAfterRender.remove(this.onAfterRenderQuestionCallback);
       visualizer.destroy();
     });
@@ -634,7 +643,7 @@ export class VisualizationPanel extends VisualizerBase {
       v.options.seriesLabels = this.options.seriesLabels;
       v.locale = newLocale;
     });
-    this.onStateChanged.fire(this, this.state);
+    this.stateChanged("locale", newLocale);
   }
 
   /**
@@ -862,15 +871,9 @@ export class VisualizationPanel extends VisualizerBase {
         reason: reason,
       });
     }
-    this.onStateChanged.fire(this, this.state);
+    this.stateChanged("visibleElements", reason);
     this.layout();
   }
-
-  public onStateChanged = new Event<
-    (sender: VisualizationPanel, state: IState) => any,
-    VisualizationPanel,
-    any
-  >();
 
   public onPermissionsChangedCallback: any;
 
@@ -960,10 +963,7 @@ export class VisualizationPanel extends VisualizerBase {
     this.dataProvider.setFilter(questionName, selectedValue);
   }
 
-  /**
-   * The state of `VisualizationPanel`. Includes information about the visualized elements and current locale.
-   */
-  public get state(): IState {
+  public getState(): IState {
     return {
       locale: this.locale,
       elements: [].concat(this._elements.map(element => {
@@ -976,23 +976,35 @@ export class VisualizationPanel extends VisualizerBase {
       })),
     };
   }
+
+  /**
+   * The state of `VisualizationPanel`. Includes information about the visualized elements and current locale.
+   */
+  public get state(): IState {
+    return this.getState();
+  }
   public set state(newState: IState) {
     if (!newState) return;
+    this._settingState = true;
+    try {
 
-    if (Array.isArray(newState.elements)) {
-      const questionNames = this.questions.map(q => q.name);
-      this._elements = [].concat(newState.elements.filter(e => (questionNames.indexOf(e.name) !== -1)));
-    }
-
-    if (typeof newState.locale !== "undefined") this.setLocale(newState.locale);
-
-    this._elements.forEach(elementState => {
-      const visualizer = this.getVisualizer(elementState.name);
-      if (visualizer !== undefined) {
-        visualizer.setState(elementState);
+      if (Array.isArray(newState.elements)) {
+        const questionNames = this.questions.map(q => q.name);
+        this._elements = [].concat(newState.elements.filter(e => (questionNames.indexOf(e.name) !== -1)));
       }
-    });
 
+      if (typeof newState.locale !== "undefined") this.setLocale(newState.locale);
+
+      this._elements.forEach(elementState => {
+        const visualizer = this.getVisualizer(elementState.name);
+        if (visualizer !== undefined) {
+          visualizer.setState(elementState);
+        }
+      });
+
+    } finally {
+      this._settingState = false;
+    }
     this.refresh();
   }
 

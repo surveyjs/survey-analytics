@@ -86,6 +86,24 @@ export class VisualizerBase implements IDataInfo {
     any
   >();
 
+  // public onStateChanged = new Event<
+  //   (sender: VisualizationPanel, state: IState) => any,
+  //   VisualizationPanel,
+  //   any
+  // >();
+  public onStateChanged: Event<
+    (sender: VisualizerBase, options: any) => any,
+    VisualizerBase,
+    any
+  > = new Event<(sender: VisualizerBase, options: any) => any, VisualizerBase, any>();
+
+  protected stateChanged(name: string, value: any): void {
+    if(this._settingState) {
+      return;
+    }
+    this.onStateChanged.fire(this, this.getState());
+  }
+
   protected toolbarItemCreators: { [name: string]: (toolbar?: HTMLDivElement) => HTMLElement } = {};
 
   constructor(
@@ -245,7 +263,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * 
+   *
    * Unregisters a function used to create a toolbar item. Allows you to remove a toolbar item.
    * @param name A toolbar item name.
    * @returns A function previously used to [register](#registerToolbarItem) the removed toolbar item.
@@ -614,6 +632,8 @@ export class VisualizerBase implements IDataInfo {
   getCalculatedValues(): any {
     return this.dataProvider.getData(this);
   }
+
+  protected _settingState = false;
 
   /**
    * Returns an object with properties that describe a current visualizer state. The properties are different for each individual visualizer.

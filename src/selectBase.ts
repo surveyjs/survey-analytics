@@ -312,6 +312,7 @@ export class SelectBase
     this.updateShowPercentageBtn();
     this.updateEmptyAnswersBtn();
     this.updateTopNSelector();
+    this.stateChanged("chartType", this._chartType);
   }
 
   protected setChartType(chartType: string) {
@@ -368,6 +369,7 @@ export class SelectBase
   public set showOnlyPercentages(val: boolean) {
     this._showOnlyPercentages = val;
     this.refreshContent();
+    this.stateChanged("showOnlyPercentages", val);
   }
 
   /**
@@ -381,6 +383,7 @@ export class SelectBase
     this._showPercentages = val;
     this.updateShowPercentageBtn();
     this.refreshContent();
+    this.stateChanged("showPercentages", val);
   }
 
   /**
@@ -394,6 +397,7 @@ export class SelectBase
     this._answersOrder = value;
     this.updateOrderSelector();
     this.refreshContent();
+    this.stateChanged("answersOrder", value);
   }
 
   /**
@@ -407,6 +411,7 @@ export class SelectBase
     this._hideEmptyAnswers = value;
     this.updateEmptyAnswersBtn();
     this.refreshContent();
+    this.stateChanged("hideEmptyAnswers", value);
   }
 
   public get transposeData(): boolean {
@@ -417,6 +422,7 @@ export class SelectBase
     this._transposeData = value;
     this.updateTransposeDataBtn();
     this.refreshContent();
+    this.stateChanged("transposeData", value);
   }
 
   /**
@@ -431,6 +437,7 @@ export class SelectBase
     this.updateTopNSelector();
     this.updateOrderSelector();
     this.refreshContent();
+    this.stateChanged("topN", value);
   }
 
   protected isSupportMissingAnswers(): boolean {
@@ -449,6 +456,7 @@ export class SelectBase
     this.updateMissingAnswersBtn();
     this.dataProvider.reset(this);
     this.refreshContent();
+    this.stateChanged("showMissingAnsewrs", value);
   }
 
   refreshContent() {
