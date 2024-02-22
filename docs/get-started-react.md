@@ -261,9 +261,15 @@ export default function App() {
 
 ## Render the Visualization Panel
 
-A Visualization Panel should be rendered in a page element. Add this element to the component markup:
+A Visualization Panel should be rendered in a page element. Add this element to the component markup, as shown below.
+
+> If you are using [Next.js](https://nextjs.org) or another framework that [has adopted React Server Components](https://react.dev/learn/start-a-new-react-project#bleeding-edge-react-frameworks), you need to explicitly mark the React component that renders a SurveyJS component as client code using the ['use client'](https://react.dev/reference/react/use-client) directive.
 
 ```js
+// Uncomment the following line if you are using Next.js:
+// 'use client'
+
+// ...
 export default function App() {
   // ...
   return (
@@ -297,6 +303,9 @@ To view the application, run `npm run start` in a command line and open [http://
     <summary>View Full Code</summary>
 
 ```js
+// Uncomment the following line if you are using Next.js:
+// 'use client'
+
 import { useState, useEffect } from 'react';
 import 'survey-analytics/survey.analytics.min.css';
 import { Model } from 'survey-core';
