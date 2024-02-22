@@ -124,3 +124,30 @@ test("get/set state", () => {
   expect(currentVisualizer.type).toEqual("sb2");
   expect(currentVisualizer["chartType"]).toEqual("pie");
 });
+
+test("onStateChanged", () => {
+  let count = 0;
+  alternativeVisualizersWrapper.onStateChanged.add(() => {
+    count++;
+  });
+  let currentVisualizer = alternativeVisualizersWrapper["visualizer"];
+  expect(currentVisualizer.type).toEqual("sb1");
+  expect(count).toBe(0);
+
+  alternativeVisualizersWrapper.getVisualizers()[0]["setChartType"]("pie");
+  expect(count).toBe(1);
+
+  alternativeVisualizersWrapper.getVisualizers()[1]["setChartType"]("pie");
+  expect(count).toBe(1);
+
+  alternativeVisualizersWrapper.setVisualizer("sb2");
+  currentVisualizer = alternativeVisualizersWrapper["visualizer"];
+  expect(currentVisualizer.type).toEqual("sb2");
+  expect(count).toBe(2);
+
+  alternativeVisualizersWrapper.getVisualizers()[0]["setChartType"]("bar");
+  expect(count).toBe(2);
+
+  alternativeVisualizersWrapper.getVisualizers()[1]["setChartType"]("bar");
+  expect(count).toBe(3);
+});
