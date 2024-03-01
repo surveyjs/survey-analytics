@@ -1,5 +1,5 @@
 import { ITableOptions, Table, TableRow } from "./table";
-import { SurveyModel } from "survey-core";
+import { Question, QuestionSignaturePadModel, SurveyModel } from "survey-core";
 import { ColumnDataType, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
@@ -44,6 +44,33 @@ export const defaultDownloadOptions = {
           cellWidth: 1,
         },
         margin: { top: 10, right: 10, bottom: 10, left: 10 },
+        didParseCell: function(data) {
+          if (data && data.cell.raw.content) {
+            const hasImagePrefix = (data.cell.raw.content || "").substring(0, 5) === "<img-";
+            if(hasImagePrefix) {
+              data.cell.height = 200;
+            }
+          }
+        },
+        willDrawCell: function(data) {
+          if (data && data.cell.raw.content) {
+            const hasImagePrefix = (data.cell.raw.content || "").substring(0, 5) === "<img-";
+            if(hasImagePrefix) {
+              const imagePreficIndex = data.cell.raw.content.indexOf(">");
+              const imageUrl = data.cell.raw.content.substring(imagePreficIndex+1);
+              if(!!imageUrl) {
+                const dims = data.cell.raw.content.substring(5, imagePreficIndex).split("-");
+                // var dim = data.cell.height - data.cell.padding("vertical");
+                doc.addImage(imageUrl, data.cell.x, data.cell.y, Number.parseInt(dims[0]), Number.parseInt(dims[1]));
+                data.cell.contentWidth = data.cell.width;
+                data.cell.contentHeight = Number.parseInt(dims[1]);
+                data.row.maxCellHeight = Object.keys(data.row.cells).reduce((a, key) => Math.max(a, data.row.cells[key].height), 0);
+                data.row.height = data.row.maxCellHeight;
+                return false;
+              }
+            }
+          }
+        }
       };
     },
   },
@@ -228,7 +255,7 @@ export class Tabulator extends Table {
 
     this._rows.push(tableRow);
   };
-  private accessorDownload = (cellData: any, rowData: any, reason: string, _: any, columnComponent: any, rowComponent: any) => {
+  private accessorDownload = (question: Question) => (cellData: any, rowData: any, reason: string, _: any, columnComponent: any, rowComponent: any) => {
     const columnDefinition = columnComponent.getDefinition();
     const questionName = columnDefinition.field;
     const column = this.columns.filter(col => col.name === questionName)[0];
@@ -236,6 +263,9 @@ export class Tabulator extends Table {
       const dataRow = this.data[rowComponent.getPosition()];
       const dataCell = dataRow[questionName];
       if (column.dataType === ColumnDataType.Image) {
+        if(question instanceof QuestionSignaturePadModel) {
+          return this.currentDownloadType === "pdf" && !!dataCell ? `<img-${question.signatureWidth}-${question.signatureHeight}>${dataCell}` : questionName;
+        }
         return questionName;
       }
       if (column.dataType === ColumnDataType.FileLink && Array.isArray(dataCell)) {
@@ -302,7 +332,7 @@ export class Tabulator extends Table {
         headerSort: false,
         download: this._options.downloadHiddenColumns ? true : undefined,
         formatter,
-        accessorDownload: this.accessorDownload,
+        accessorDownload: this.accessorDownload(question),
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(
             cell,
