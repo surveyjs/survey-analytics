@@ -2,9 +2,10 @@ import { Question, Event } from "survey-core";
 import { VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
 import { textHelper } from "./stopwords/index";
-import WordCloudLib from "wordcloud";
 import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
+// import WordCloudLib from "wordcloud";
+import { WordCloudWidget, defaultOptions } from "./widget";
 
 export class WordCloudAdapter {
   private _wordcloud: any;
@@ -22,11 +23,11 @@ export class WordCloudAdapter {
 
   constructor(private model: WordCloud) {}
 
-  public get wordcloud() {
+  public get wordcloud(): any {
     return this._wordcloud;
   }
 
-  public create(node: HTMLElement) {
+  private createWordCloud2(node: HTMLElement) {
     const data = this.model.getData();
     const colors = this.model.getColors();
     const canvasNode = <HTMLCanvasElement>(
@@ -67,11 +68,38 @@ export class WordCloudAdapter {
       config
     };
     WordCloudAdapter.onWordcloudCreating.fire(this.model, options);
-    this._wordcloud = WordCloudLib(options.canvas, options.config as any);
+    // this._wordcloud = WordCloudLib(options.canvas, options.config as any);
     return this._wordcloud;
   }
 
-  public destroy(node: HTMLElement) {
+  public create(node: HTMLElement): any {
+    const data = this.model.getData();
+    const colors = this.model.getColors();
+    const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
+      innerText: localization.getString("noResults"),
+    });
+
+    if (data.length === 0) {
+      node.appendChild(emptyTextNode);
+      return;
+    }
+
+    const config = JSON.parse(JSON.stringify(defaultOptions));
+    const options = {
+      config
+    };
+    WordCloudAdapter.onWordcloudCreating.fire(this.model, options);
+    this._wordcloud = new WordCloudWidget(config);
+    this._wordcloud.colors = this.model.getColors();
+    this._wordcloud.words = data;
+    this._wordcloud.render(node);
+    return this._wordcloud;
+  }
+
+  public destroy(node: HTMLElement): void {
+    if(this._wordcloud && typeof this._wordcloud.dispose === "function") {
+      this._wordcloud.dispose();
+    }
     this._wordcloud = undefined;
   }
 }
@@ -99,22 +127,22 @@ export class WordCloud extends VisualizerBase {
     } else {
       stopWords = textHelper.getStopWords();
     }
+    const clearWordRegexp = new RegExp("[^a-z0-9 \-]+", "ig");
 
-    let stopTheWord = (word: string) => {
+    const stopTheWord = (word: string) => {
       if (stopWords.indexOf(word) !== -1) {
         return "";
       }
       return word;
     };
 
-    let processString = (row: string) => {
+    const processString = (row: string) => {
       row = "" + row;
-
-      if (row.length > 15) row = row.substring(0, 14) + "...";
+      // if (row.length > 15) row = row.substring(0, 14) + "...";
 
       if (!!row) {
         row.split(" ").forEach((word) => {
-          word = stopTheWord(word.toLowerCase() || "");
+          word = stopTheWord(word.replace(clearWordRegexp, "").toLowerCase() || "");
           if (!!word) {
             if (!result[word]) {
               result[word] = 1;
