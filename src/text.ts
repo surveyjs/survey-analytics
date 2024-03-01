@@ -66,7 +66,7 @@ export class Text extends VisualizerBase {
 
     this.data.forEach((row) => {
       const rowValue: any = row[this.question.name];
-      const dataStrings: Array<string> = [];
+      let dataStrings: Array<string> = [];
       if (!!rowValue) {
         if (Array.isArray(rowValue)) {
           dataStrings = dataStrings.concat(rowValue);
