@@ -69,7 +69,7 @@ export class Text extends VisualizerBase {
       const dataStrings: Array<string> = [];
       if (!!rowValue) {
         if (Array.isArray(rowValue)) {
-          dataStrings.concat(rowValue);
+          dataStrings = dataStrings.concat(rowValue);
         } else {
           if (typeof rowValue === "object") {
             Object.keys(rowValue).forEach((key) =>
