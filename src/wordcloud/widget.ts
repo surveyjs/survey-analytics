@@ -13,27 +13,32 @@ export const defaultOptions = {
 export class WordCloudWidget {
   private _words: Array<Array<any>> = [];
   private _placedWords: Array<{element: HTMLDivElement, rect: DOMRect, left: number, top: number}> = [];
-  private minWeight;
-  private weight;
+  private _minWeight = 1;
+  private _weightFactor = 1;
+  private _renderedTarget: HTMLDivElement = undefined;
 
   constructor(private _options = defaultOptions) {
-
   }
+
   colors = ["black"];
   get words(): Array<Array<any>> {
     return this._words;
   }
   set words(w: Array<Array<any>>) {
-    this._words = [].concat(w);
-    this._words.sort((a, b) => -1 * (a[1] - b[1]));
-    this.minWeight = this._words[this._words.length - 1][1];
-    this.weight = (this._words[0][1] - this.minWeight + 1) / this._options.weightFactor;
+    this._words = [].concat(w || []);
+    this._minWeight = 1;
+    this._weightFactor = 1;
+    if(this._words.length > 0) {
+      this._words.sort((a, b) => -1 * (a[1] - b[1]));
+      this._minWeight = this._words[this._words.length - 1][1];
+      this._weightFactor = (this._words[0][1] - this._minWeight + 1) / this._options.weightFactor;
+    }
   }
 
   private createWordElement(text: string, weight: number, color: number) {
     var element = document.createElement("div");
     element.style.position = "absolute";
-    element.style.fontSize = (weight - this.minWeight + 1) / this.weight + "px";
+    element.style.fontSize = (weight - this._minWeight + 1) / this._weightFactor + "px";
     element.style.lineHeight = this._options.lineHeight + "em";
     if(this.colors.length > 0) {
       element.style.color = this.colors[color % this.colors.length];
@@ -42,7 +47,7 @@ export class WordCloudWidget {
     element.appendChild(document.createTextNode(text));
     return element;
   }
-  private isIntersectWithOthers(currentWordRect: DOMRect) {
+  private isIntersectWithPlaced(currentWordRect: DOMRect) {
     for(var i = 0; i < this._placedWords.length; i+=1) {
       var existingWordRect = this._placedWords[i].rect;
       if(!(currentWordRect.right + this._options.xWordPadding < existingWordRect.left - this._options.xWordPadding ||
@@ -54,7 +59,11 @@ export class WordCloudWidget {
     }
     return false;
   }
-  private arrangeWords(cloudElement: HTMLDivElement, startPoint, currentPoint) {
+  private arrangeWords(cloudElement: HTMLDivElement, startPoint) {
+    const currentPoint = {
+      x: 0,
+      y: 0
+    };
     let yMin = currentPoint.y;
     let yMax = currentPoint.y;
     const displayWordsCount = Math.min(this._options.topN, this.words.length);
@@ -70,7 +79,7 @@ export class WordCloudWidget {
         wordElement.style.left = left + "px";
         wordElement.style.top = top + "px";
         const wordRect = wordElement.getBoundingClientRect();
-        if (!this.isIntersectWithOthers(wordRect)) {
+        if (!this.isIntersectWithPlaced(wordRect)) {
           this._placedWords.push({
             element: wordElement,
             rect: wordRect,
@@ -89,7 +98,8 @@ export class WordCloudWidget {
     }
     return [yMin, yMax];
   }
-  render(target: HTMLDivElement): void {
+  public render(target: HTMLDivElement): void {
+    this._renderedTarget = target;
     target.style.position = "relative";
     if(this._options.maxHeight > 0) {
       target.style.height = this._options.maxHeight + "px";
@@ -99,16 +109,18 @@ export class WordCloudWidget {
       x: target.offsetWidth / 2,
       y: target.offsetHeight / 2
     };
-    const currentPoint = {
-      x: 0,
-      y: 0
-    };
-    const [yMin, yMax] = this.arrangeWords(target, startPoint, currentPoint);
+    const [yMin, yMax] = this.arrangeWords(target, startPoint);
     if(this._options.maxHeight == 0) {
       target.style.height = yMax - yMin + this._options.padding * 2 + "px";
     }
     this._placedWords.forEach(wordInfo => {
       wordInfo.element.style.top = wordInfo.top - yMin + this._options.padding + "px";
     });
+  }
+  public dispose(): void {
+    if(!!this._renderedTarget) {
+      this._renderedTarget.innerHTML = "";
+      this._renderedTarget = undefined;
+    }
   }
 }

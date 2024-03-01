@@ -103,7 +103,6 @@ export class WordCloudAdapter {
     this._wordcloud = undefined;
   }
 }
-
 export class WordCloud extends VisualizerBase {
   private _wordcloudAdapter: WordCloudAdapter;
 
@@ -142,12 +141,13 @@ export class WordCloud extends VisualizerBase {
 
       if (!!row) {
         row.split(" ").forEach((word) => {
-          word = stopTheWord(word.replace(clearWordRegexp, "").toLowerCase() || "");
-          if (!!word) {
-            if (!result[word]) {
-              result[word] = 1;
+          let clearedWord = (word || "").replace(clearWordRegexp, "").toLowerCase();
+          clearedWord = stopTheWord(clearedWord);
+          if (!!clearedWord) {
+            if (!result[clearedWord]) {
+              result[clearedWord] = 1;
             } else {
-              result[word]++;
+              result[clearedWord]++;
             }
           }
         });
