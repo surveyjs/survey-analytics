@@ -72,15 +72,15 @@ export class WordCloudAdapter {
     return this._wordcloud;
   }
 
-  public create(node: HTMLElement): any {
+  public create(element: HTMLElement): any {
     const data = this.model.getData();
     const colors = this.model.getColors();
-    const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
-      innerText: localization.getString("noResults"),
-    });
 
     if (data.length === 0) {
-      node.appendChild(emptyTextNode);
+      const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
+        innerText: localization.getString("noResults"),
+      });
+      element.appendChild(emptyTextNode);
       return;
     }
 
@@ -92,7 +92,7 @@ export class WordCloudAdapter {
     this._wordcloud = new WordCloudWidget(config);
     this._wordcloud.colors = this.model.getColors();
     this._wordcloud.words = data;
-    this._wordcloud.render(node);
+    this._wordcloud.render(element);
     return this._wordcloud;
   }
 
