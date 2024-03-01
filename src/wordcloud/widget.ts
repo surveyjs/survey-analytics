@@ -100,18 +100,22 @@ export class WordCloudWidget {
   }
   public render(target: HTMLDivElement): void {
     this._renderedTarget = target;
-    target.style.position = "relative";
+    var cloudElement = document.createElement("div");
+    cloudElement.className = "sa-visualizer-wordcloud";
+    cloudElement.style.position = "relative";
+    target.appendChild(cloudElement);
+
     if(this._options.maxHeight > 0) {
-      target.style.height = this._options.maxHeight + "px";
-      target.style.overflow = "auto";
+      cloudElement.style.height = this._options.maxHeight + "px";
+      cloudElement.style.overflow = "auto";
     }
     const startPoint = {
-      x: target.offsetWidth / 2,
-      y: target.offsetHeight / 2
+      x: cloudElement.offsetWidth / 2,
+      y: cloudElement.offsetHeight / 2
     };
-    const [yMin, yMax] = this.arrangeWords(target, startPoint);
+    const [yMin, yMax] = this.arrangeWords(cloudElement, startPoint);
     if(this._options.maxHeight == 0) {
-      target.style.height = yMax - yMin + this._options.padding * 2 + "px";
+      cloudElement.style.height = yMax - yMin + this._options.padding * 2 + "px";
     }
     this._placedWords.forEach(wordInfo => {
       wordInfo.element.style.top = wordInfo.top - yMin + this._options.padding + "px";
