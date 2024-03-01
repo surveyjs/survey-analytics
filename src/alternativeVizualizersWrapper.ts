@@ -57,6 +57,7 @@ export class AlternativeVisualizersWrapper
 
     this.visualizer = visualizers[0];
     this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
+    this.visualizer.onStateChanged.add(this.onVisualizerStateChangedCallback);
   }
 
   protected visualizerContainer: HTMLElement;
@@ -74,6 +75,9 @@ export class AlternativeVisualizersWrapper
 
   private onAfterVisualizerRenderCallback = () => {
     this.afterRender(this.contentContainer);
+  };
+  private onVisualizerStateChangedCallback = (s, options) => {
+    this.stateChanged("visualizer", options);
   };
 
   /**
@@ -97,16 +101,17 @@ export class AlternativeVisualizersWrapper
     const visualizerCandidate = this.visualizers.filter((v) => v.type === type)[0];
     if (!!visualizerCandidate && visualizerCandidate !== this.visualizer) {
       if (!!this.visualizer) {
-        this.visualizer.onAfterRender.remove(
-          this.onAfterVisualizerRenderCallback
-        );
+        this.visualizer.onStateChanged.remove(this.onVisualizerStateChangedCallback);
+        this.visualizer.onAfterRender.remove(this.onAfterVisualizerRenderCallback);
         this.visualizer.destroy();
       }
       this.visualizer = visualizerCandidate;
       this.refresh();
       this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
+      this.visualizer.onStateChanged.add(this.onVisualizerStateChangedCallback);
       if (!quiet) {
         this.onVisualizerChanged.fire(this, { visualizer: this.visualizer });
+        this.stateChanged("visualizer", type);
       }
       this.updateVisualizerSelector();
     }
@@ -181,6 +186,7 @@ export class AlternativeVisualizersWrapper
   destroy() {
     this.visualizers.forEach((visualizer) => {
       visualizer.onAfterRender.remove(this.onAfterVisualizerRenderCallback);
+      visualizer.onStateChanged.remove(this.onVisualizerStateChangedCallback);
       visualizer.onUpdate = undefined;
     });
     this.visualizer.destroy();

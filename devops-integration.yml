@@ -27,6 +27,7 @@ steps:
   - checkout: Service
     persistCredentials: true
     clean: true
+    fetchDepth: 1
 
   - task: NodeTool@0
     inputs:
@@ -70,12 +71,12 @@ steps:
       specificBuildWithTriggering: true
       buildVersionToDownload: 'latest'
       downloadType: 'single'
-      artifactName: 'SurveyJSLibraryBuild'
+      artifactName: 'SurveyJSLibraryBuildCoreAngularJquery'
       downloadPath: '$(System.ArtifactsDirectory)'
 
   - task: CopyFiles@2
     inputs:
-      SourceFolder: "$(System.ArtifactsDirectory)/SurveyJSLibraryBuild/packages/survey-core"
+      SourceFolder: "$(System.ArtifactsDirectory)/SurveyJSLibraryBuildCoreAngularJquery/packages/survey-core"
       Contents: "**"
       TargetFolder: "$(Build.SourcesDirectory)/survey-analytics/node_modules/survey-core"
       OverWrite: true
@@ -83,7 +84,7 @@ steps:
   # npm run release with version
   - task: CopyFiles@2
     inputs:
-      SourceFolder: '$(System.ArtifactsDirectory)/SurveyJSLibraryBuild/'
+      SourceFolder: '$(System.ArtifactsDirectory)/SurveyJSLibraryBuildCoreAngularJquery/'
       Contents: 'version.txt'
       TargetFolder: '$(Build.SourcesDirectory)/'
       OverWrite: true
@@ -148,9 +149,9 @@ steps:
   # https://stackoverflow.com/questions/58485585/azure-pipeline-powershell-and-git-on-windows-server-2019-gives-error-in-output
   - powershell: |
       cd $(Build.SourcesDirectory)/service
-      git checkout master
       git pull origin master
-      git fetch --tags --force
+      git fetch origin master --tags --force
+      git checkout master
       git add surveyjs.io/App_Data/DocsAnalytics
       git commit -m "updated survey-analytics docs"
       git pull origin master

@@ -1,4 +1,9 @@
 # SurveyJS Dashboard
+
+
+<video src="https://github.com/surveyjs/survey-analytics/assets/22315929/2ebc84e1-dc43-4873-8c72-a1b4125e8749"></video>
+
+
 [![Build Status](https://dev.azure.com/SurveyJS/SurveyJS%20Integration%20Tests/_apis/build/status/SurveyJS%20Library?branchName=master)](https://dev.azure.com/SurveyJS/SurveyJS%20Integration%20Tests/_build/latest?definitionId=7&branchName=master)
 <a href="https://github.com/DevExpress/testcafe">
 <img alt="Tested with TestCafe" src="https://img.shields.io/badge/tested%20with-TestCafe-2fa4cf.svg">
@@ -11,8 +16,6 @@
 </a>
 
 The SurveyJS Dashboard library lets you build survey data dashboards and simplify survey data analysis with interactive and customizable charts and tables. Visualize your insights and analyze survey results in one view.
-
-![SurveyJS Dashboard](docs/images/survey-analytics-overview.png)
 
 ## Features
 
@@ -29,6 +32,8 @@ The SurveyJS Dashboard library lets you build survey data dashboards and simplif
 - Customizable colors
 - Dynamic layout
 - Drag-and-drop chart reordering
+
+![SurveyJS Dashboard](docs/images/survey-analytics-overview.png)
 
 ## Get Started
 

@@ -1,5 +1,5 @@
 import { QuestionDropdownModel, ItemValue, QuestionImagePickerModel, SurveyModel } from "survey-core";
-import { SelectBase } from "../src/selectBase";
+import { SelectBase, hideEmptyAnswersInData } from "../src/selectBase";
 
 let selectBase: SelectBase;
 let choices = [
@@ -371,4 +371,36 @@ test("save selection in state", () => {
   state.filter = "father";
   selectBase.setState(state);
   expect(selectBase.selection.value).toEqual("father");
+});
+
+test("hideEmptyAnswersInData", () => {
+  const answersData = {
+    "datasets": [[1, 2], [2, 1]],
+    "labels": ["31-39", "40-50"],
+    "colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496"],
+    "texts": [[1, 2], [2, 1]],
+    "seriesLabels": ["Age Group", "Gender"]
+  };
+
+  let result = hideEmptyAnswersInData(answersData);
+  expect(result.datasets.length).toBe(2);
+  expect(result.datasets).toStrictEqual(answersData.datasets);
+
+  result = hideEmptyAnswersInData({
+    "datasets": [[0, 1], [0, 2]],
+    "labels": ["0-9", "11-20"],
+    "colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496"],
+    "texts": [[0, 1], [0, 2]],
+    "seriesLabels": ["Age Group", "Gender"]
+  });
+  expect(result).toStrictEqual({ "datasets": [[1], [2]], "labels": ["0-9", "11-20"], "colors": ["#86e1fb", "#3999fb"], "texts": [[1], [2]], "seriesLabels": ["Gender"] });
+
+  result = hideEmptyAnswersInData({
+    "datasets": [[0, 0], [3, 2]],
+    "labels": ["0-9", "11-20"],
+    "colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496"],
+    "texts": [[0, 0], [3, 2]],
+    "seriesLabels": ["Age Group", "Gender"]
+  });
+  expect(result).toStrictEqual({ "datasets": [[3, 2]], "labels": ["11-20"], "colors": ["#3999fb"], "texts": [[3, 2]], "seriesLabels": ["Age Group", "Gender"] });
 });

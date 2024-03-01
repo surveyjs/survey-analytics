@@ -158,10 +158,10 @@ test("getState, setState, onStateChanged", () => {
   ];
   const survey = new SurveyModel(json);
   let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
-  let chartVisuzlizer = visPanel.getVisualizer("question1") as SelectBase;
+  let chartVisualizer = visPanel.getVisualizer("question1") as SelectBase;
 
-  expect(chartVisuzlizer["chartTypes"]).toStrictEqual([]);
-  chartVisuzlizer["chartTypes"] = ["bar", "scatter"];
+  expect(chartVisualizer["chartTypes"]).toStrictEqual([]);
+  chartVisualizer["chartTypes"] = ["bar", "scatter"];
 
   let initialState: IState = {
     locale: "",
@@ -205,7 +205,7 @@ test("getState, setState, onStateChanged", () => {
 
   visPanel.state = newState;
   expect(visPanel.state).toEqual(newState);
-  expect(count).toBe(1);
+  expect(count).toBe(0);
 
   const visualizer = visPanel.visualizers[0] as SelectBase;
   expect(visualizer.chartType).toBe("scatter");
@@ -214,8 +214,24 @@ test("getState, setState, onStateChanged", () => {
   expect(visualizer.topN).toBe(10);
 
   visPanel.locale = "ru";
-  expect(count).toBe(2);
+  expect(count).toBe(1);
   expect(visPanel.state.locale).toEqual("ru");
+
+  visualizer.chartType = "bar";
+  expect(count).toBe(2);
+  expect(visPanel.state.elements![0].chartType).toEqual("bar");
+
+  visualizer.answersOrder = "desc";
+  expect(count).toBe(3);
+  expect(visPanel.state.elements![0].answersOrder).toEqual("desc");
+
+  visualizer.topN = 5;
+  expect(count).toBe(4);
+  expect(visPanel.state.elements![0].topN).toEqual(5);
+
+  visualizer.hideEmptyAnswers = false;
+  expect(count).toBe(5);
+  expect(visPanel.state.elements![0].hideEmptyAnswers).toEqual(false);
 });
 
 test("getState/setState and results order", () => {

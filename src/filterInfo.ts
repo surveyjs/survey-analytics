@@ -27,7 +27,7 @@ export class FilterInfo {
 
   public update(selection: { value: any, text: string }) {
     if (selection !== undefined && selection.value !== undefined) {
-      this._htmlElement.style.display = "inline-block";
+      this._htmlElement.style.display = "inline-flex";
       this.text.innerText = localization.getString("filter") + ": [" + selection.text + "]";
     } else {
       this._htmlElement.style.display = "none";
