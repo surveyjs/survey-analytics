@@ -171,6 +171,7 @@ module.exports = function (options) {
       library: "[pc-name]",
       libraryTarget: "umd",
       umdNamedDefine: true,
+      globalObject: 'this'
     },
     externals: {
       jquery: {
