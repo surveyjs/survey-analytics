@@ -115,7 +115,7 @@ test("check comment actions", async (t) => {
     .ok();
 
   //check that wordcloud exists
-  await t.expect(Selector(".sa-visualizer__footer-content canvas").exists).ok();
+  await t.expect(Selector(".sa-visualizer__footer-content .sa-visualizer-wordcloud").exists).ok();
 
   //check comment's table
   await t
