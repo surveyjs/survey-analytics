@@ -700,3 +700,70 @@ test("hide/show element", () => {
   expect(changesCount).toBe(2);
   expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([true, true]);
 });
+
+test("change language with different locales order", () => {
+  var json = {
+    locale: "fr",
+    questions: [
+      {
+        type: "dropdown",
+        name: "satisfaction",
+        title: {
+          fr: "Dans quelle mesure êtes-vous satisfait du produit ?",
+          default: "How satisfied are you with the Product?",
+          ru: "Насколько Вас устраивает наш продукт?",
+        },
+        choices: [
+          {
+            value: 0,
+            text: {
+              default: "Not Satisfied",
+              fr: "Pas satisfait",
+              ru: "Coвсем не устраивает",
+            },
+          },
+          {
+            value: 1,
+            text: {
+              default: "Satisfied",
+              fr: "Satisfait",
+              ru: "Устраивает",
+            },
+          },
+          {
+            value: 2,
+            text: {
+              default: "Completely satisfied",
+              fr: "Totalement satisfait",
+              ru: "Полностью устраивает",
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visualizationPanel = new VisualizationPanel(
+    survey.getAllQuestions(),
+    [],
+    { survey: survey }
+  );
+  const changeLocaleSelectorCreator = visualizationPanel["toolbarItemCreators"]["changeLocale"] as (el: HTMLElement) => HTMLSelectElement;
+  var element = visualizationPanel.getElement("satisfaction");
+  expect(visualizationPanel.locale).toEqual("fr");
+  expect(visualizationPanel["locales"]).toStrictEqual(["fr", "en", "ru"]);
+  expect(element.displayName).toEqual("Dans quelle mesure êtes-vous satisfait du produit ?");
+  let localeSelector = changeLocaleSelectorCreator(document.createElement("div"));
+
+  visualizationPanel.locale = "en";
+  expect(visualizationPanel.locale).toEqual("");
+  expect(visualizationPanel["locales"]).toStrictEqual(["fr", "en", "ru"]);
+  expect(element.displayName).toEqual("How satisfied are you with the Product?");
+  localeSelector = changeLocaleSelectorCreator(document.createElement("div"));
+
+  visualizationPanel.locale = "fr";
+  expect(visualizationPanel.locale).toEqual("fr");
+  expect(visualizationPanel["locales"]).toStrictEqual(["fr", "en", "ru"]);
+  expect(element.displayName).toEqual("Dans quelle mesure êtes-vous satisfait du produit ?");
+  localeSelector = changeLocaleSelectorCreator(document.createElement("div"));
+});

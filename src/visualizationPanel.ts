@@ -1,4 +1,4 @@
-import { Event, Question, SurveyModel } from "survey-core";
+import { Event, Question, SurveyModel, surveyLocalization } from "survey-core";
 import * as SurveyCore from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
@@ -383,7 +383,7 @@ export class VisualizationPanel extends VisualizerBase {
       // });
       this.registerToolbarItem("changeLocale", () => {
         return DocumentHelper.createSelector(localeChoices,
-          (option: any) => !!option.value && this.locale === option.value,
+          (option: any) => !!option.value && (this.locale || surveyLocalization.defaultLocale) === option.value,
           (e: any) => {
             var newLocale = e.target.value;
             this.locale = newLocale;
