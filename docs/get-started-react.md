@@ -24,6 +24,12 @@ As a result, you will create the following dashboard:
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/react (linkStyle))
 
+If you are looking for a quick-start application that includes all SurveyJS components, refer to the following GitHub repositories:
+
+- <a href="https://github.com/surveyjs/surveyjs_react_quickstart" target="_blank">SurveyJS + React Quickstart Template</a>
+- <a href="https://github.com/surveyjs/surveyjs-nextjs" target="_blank">SurveyJS + Next.js Quickstart Template</a>
+- <a href="https://github.com/surveyjs/surveyjs-remix" target="_blank">SurveyJS + Remix Quickstart Template</a>
+
 ## Install the `survey-analytics` npm Package
 
 SurveyJS Dashboard is distributed as a <a href="https://www.npmjs.com/package/survey-analytics" target="_blank">survey-analytics</a> npm package. Run the following command to install it:
@@ -256,9 +262,15 @@ export default function App() {
 
 ## Render the Visualization Panel
 
-A Visualization Panel should be rendered in a page element. Add this element to the component markup:
+A Visualization Panel should be rendered in a page element. Add this element to the component markup, as shown below.
+
+> If you are using [Next.js](https://nextjs.org) or another framework that [has adopted React Server Components](https://react.dev/learn/start-a-new-react-project#bleeding-edge-react-frameworks), you need to explicitly mark the React component that renders a SurveyJS component as client code using the ['use client'](https://react.dev/reference/react/use-client) directive.
 
 ```js
+// Uncomment the following line if you are using Next.js:
+// 'use client'
+
+// ...
 export default function App() {
   // ...
   return (
@@ -292,6 +304,9 @@ To view the application, run `npm run start` in a command line and open [http://
     <summary>View Full Code</summary>
 
 ```js
+// Uncomment the following line if you are using Next.js:
+// 'use client'
+
 import { useState, useEffect } from 'react';
 import 'survey-analytics/survey.analytics.min.css';
 import { Model } from 'survey-core';
