@@ -138,11 +138,7 @@ export class SelectBase
       return null;
     });
     this.registerToolbarItem("changeAnswersOrder", () => {
-      if (
-        (this.options.allowChangeAnswersOrder === undefined ||
-          this.options.allowChangeAnswersOrder) &&
-        this.getSeriesValues().length === 0
-      ) {
+      if (this.isSupportAnswersOrder()) {
         this.choicesOrderSelector = DocumentHelper.createSelector(
           [
             { text: localization.getString("defaultOrder"), value: "default" },
@@ -438,6 +434,12 @@ export class SelectBase
     this.updateOrderSelector();
     this.refreshContent();
     this.stateChanged("topN", value);
+  }
+
+  protected isSupportAnswersOrder(): boolean {
+    return (this.options.allowChangeAnswersOrder === undefined ||
+            this.options.allowChangeAnswersOrder) &&
+            this.getSeriesValues().length === 0;
   }
 
   protected isSupportMissingAnswers(): boolean {

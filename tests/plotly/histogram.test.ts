@@ -42,7 +42,9 @@ test("getData", () => {
   });
 
   const chartData = number.getData();
-  expect(chartData).toMatchObject([[1, 0, 1, 0, 0], [0, 1, 0, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1]]);
+  expect(chartData).toMatchObject([
+    [1, 0, 1, 0, 0], [0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 1],
+  ]);
 });
 
 test("getData - 2 rows", () => {
@@ -86,5 +88,5 @@ test("getData - 2 rows", () => {
   });
 
   const chartData = number.getData();
-  expect(chartData).toMatchObject([[2, 0], [0, 1], [0, 1], [1, 0]]);
+  expect(chartData).toMatchObject([[2, 0], [0, 0], [0, 1], [0, 0], [0, 0], [0, 0], [0, 0], [0, 1], [0, 0], [1, 0]]);
 });
