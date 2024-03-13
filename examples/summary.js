@@ -59,7 +59,7 @@ var options = {
   // hideEmptyAnswers: true,
   // allowTopNAnswers: true,
   // showCorrectAnswers: true
-  //  labelTruncateLength: 27,
+  // labelTruncateLength: 27,
 };
 
 // SurveyAnalytics.WordCloudAdapter.drawOutOfBound = false;
