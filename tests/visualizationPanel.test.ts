@@ -767,3 +767,27 @@ test("change language with different locales order", () => {
   expect(element.displayName).toEqual("Dans quelle mesure êtes-vous satisfait du produit ?");
   localeSelector = changeLocaleSelectorCreator(document.createElement("div"));
 });
+
+test("reorderVisibleElements", () => {
+  var json = {
+    questions: [
+      { type: "text", name: "q1", },
+      { type: "text", name: "q2", },
+      { type: "text", name: "q3", },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), []);
+  let stateChagedCounter = 0;
+  visPanel.onStateChanged.add((s, o) => {
+    stateChagedCounter++;
+  });
+
+  const state1 = visPanel.state;
+  expect(state1.elements?.map(el => el.name)).toStrictEqual(["q1", "q2", "q3"]);
+
+  visPanel.reorderVisibleElements(["q2", "q1", "q3"]);
+  const state2 = visPanel.state;
+  expect(state2.elements?.map(el => el.name)).toStrictEqual(["q2", "q1", "q3"]);
+  expect(stateChagedCounter).toBe(1);
+});

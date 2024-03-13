@@ -293,8 +293,8 @@ export class VisualizationPanel extends VisualizerBase {
         "." + questionLayoutedElementClassName,
         this.allowDragDrop
       );
-    this._layoutEngine.onMoveCallback = (fromIndex: number, toIndex: number) =>
-      this.moveVisibleElement(fromIndex, toIndex);
+    this._layoutEngine.onMoveCallback = (order: Array<string>) =>
+      this.reorderVisibleElements(order);
 
     this.showToolbar = true;
     if (this.options.survey) {
@@ -391,6 +391,14 @@ export class VisualizationPanel extends VisualizerBase {
         );
       });
     }
+  }
+  reorderVisibleElements(order: string[]): void {
+    const newElements = [];
+    order.forEach(name => {
+      newElements.push(this._elements.filter(el => el.name === name)[0]);
+    });
+    this._elements = newElements;
+    this.visibleElementsChanged(undefined, "REORDERED");
   }
 
   private onAfterRenderQuestionCallback = (
@@ -884,6 +892,7 @@ export class VisualizationPanel extends VisualizerBase {
     const visualizer = this.getVisualizer(element.name);
 
     const questionElement = DocumentHelper.createElement("div");
+    questionElement.dataset.question = element.name;
 
     !!container && container.appendChild(questionElement);
 

@@ -44,7 +44,7 @@ export class LayoutEngine {
   add(elements: Array<HTMLElement>, options?: any) { }
   remove(elements: Array<HTMLElement>, options?: any) { }
 
-  onMoveCallback: (fromIndex: number, toIndex: number) => void;
+  onMoveCallback: (order: Array<string>) => void;
 
   destroy() {
     this.stop();
@@ -69,8 +69,10 @@ export class MuuriLayoutEngine extends LayoutEngine {
     });
     this._muuri.on(
       "dragReleaseEnd",
-      (data: any) =>
-        this.onMoveCallback && this.onMoveCallback(data.fromIndex, data.toIndex)
+      (item: any) => {
+        const newOrder = item.getGrid().getItems().map(gridItem => gridItem.getElement().dataset.question);
+        this.onMoveCallback && this.onMoveCallback(newOrder);
+      }
     );
   }
   protected stopCore() {
