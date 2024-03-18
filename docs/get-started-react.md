@@ -15,7 +15,7 @@ This step-by-step tutorial will help you get started with SurveyJS Dashboard in 
 
 As a result, you will create the following dashboard:
 
-<iframe src="https://stackblitz.com/edit/react-n9pfn8"
+<iframe src="https://stackblitz.com/edit/react-n9pfn8?embed=1&view=preview"
     style="width:100%; height:500px; border:0; overflow:hidden;"
     title="Add SurveyJS Dashboard to a React Application"
 ></iframe>
