@@ -421,12 +421,26 @@ test("histogram original data keep number original values", () => {
     rateStep: 1
   };
   const number = new HistogramModel(question, [{ "question2": "Yes", "question1": 3 }, { "question2": "It is going so well!!!", "question1": 5 }, { "question2": false, "question1": 5 }, { "question2": true, "question1": 1 }, { "question2": false, "question1": 5 }, { "question3": "item2", "question2": false, "question1": 5 }]);
+  expect(number["valueType"]).toBe("number");
   expect(number.getValues()).toEqual([1, 2, 3, 4, 5]);
   expect(number.getLabels()).toEqual(["1", "2", "3", "4", "5"]);
 
   const selectedItem = number.getSelectedItemByText("5");
   expect(selectedItem.value).toBe(5);
   expect(selectedItem.text).toBe("5");
+});
+
+test("histogram rating should be numeric", () => {
+  const question: any = {
+    getType: () => "rating",
+    type: "rating",
+    name: "question1",
+    rateMin: 0,
+    rateMax: 10,
+    rateStep: 1
+  };
+  const number = new HistogramModel(question, []);
+  expect(number["valueType"]).toBe("number");
 });
 
 test("histogram should use rate values", () => {

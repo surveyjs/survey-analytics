@@ -341,6 +341,11 @@ export class PlotlySetup {
         tickcolor: "transparent",
       };
     }
+    if((model as any).getValueType() != "date") {
+      layout.xaxis = {
+        type: "category",
+      };
+    }
 
     return { traces, layout, hasSeries };
   }

@@ -51,6 +51,10 @@ export class HistogramPlotly extends HistogramModel {
     }
     return statistics;
   }
+
+  public getValueType(): "date" | "number" {
+    return this.valueType;
+  }
 }
 
 VisualizationManager.registerVisualizer("date", HistogramPlotly);
