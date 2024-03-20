@@ -52,7 +52,7 @@ export var englishStrings = {
   pdfDownloadCaption: "PDF",
   xlsxDownloadCaption: "Excel",
   csvDownloadCaption: "CSV",
-  saveDiagramAsPNG: "Download plot as a png",
+  saveDiagramAsPNG: "Download plot as a PNG file",
   hideEmptyAnswers: "Hide empty answers",
   showEmptyAnswers: "Show empty answers",
   "topNValueText-1": "All answers",

@@ -185,7 +185,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Indicates whether users can select series points to cross-filter charts. To allow or disallow selection, set the `allowSelection` property of the `options` object in the constructor.
+   * Indicates whether users can select series points to cross-filter charts. To allow or disallow selection, set the [`allowSelection`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowSelection) property of the `IVisualizationPanelOptions` object in the [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel) constructor.
    */
   public get supportSelection(): boolean {
     return (
@@ -656,7 +656,7 @@ export class VisualizerBase implements IDataInfo {
   /**
    * Gets or sets the current locale.
    *
-   * If you want to inherit the locale from a visualized survey, assign a `SurveyModel` instance to the `survey` property of the `options` object in the constructor.
+   * If you want to inherit the locale from a visualized survey, assign a [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model) instance to the [`survey`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#survey) property of the `IVisualizationPanelOptions` object in the [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel) constructor.
    *
    * If the survey is [translated into more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the toolbar displays a language selection drop-down menu.
    * @see onLocaleChanged
