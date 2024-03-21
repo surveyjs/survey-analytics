@@ -54,6 +54,10 @@ export var arabicStrings = {
   saveDiagramAsPNG: "تنزيل بصيغة png",
   hideEmptyAnswers: "إخفاء الإجابات الفارغة",
   showEmptyAnswers: "إظهار الإجابات الفارغة",
+  "topNValueText-1": "جميع الإجابات",
+  topNValueText5: "أهم 5 إجابات",
+  topNValueText10: "أفضل 10 إجابات",
+  topNValueText20: "أفضل 20 إجابة",
   hideMissingAnswers: "إخفاء الإجابات المفقودة",
   showMissingAnswers: "عرض الإجابات المفقودة",
   missingAnswersLabel: "أجوبة مفقودة",
@@ -64,8 +68,15 @@ export var arabicStrings = {
   answer: "إجب",
   correctAnswer: "الاجابة الصحيحة: ",
   percent: "النسبه المئويه",
-  responses: "الاستجابات",
+  responses: "الاستجابات"
 };
 
 localization.locales["ar"] = arabicStrings;
 localization.localeNames["ar"] = "Arabic";
+
+// The following strings have been translated by a machine translation service
+// Remove those strings that you have corrected manually
+// undefined.topNValueText-1: "All answers" => "جميع الإجابات"
+// undefined.topNValueText5: "Top 5 answers" => "أهم 5 إجابات"
+// undefined.topNValueText10: "Top 10 answers" => "أفضل 10 إجابات"
+// undefined.topNValueText20: "Top 20 answers" => "أفضل 20 إجابة"
