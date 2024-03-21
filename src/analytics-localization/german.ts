@@ -35,6 +35,10 @@ export var germanStrings = {
   filter: "Filter",
   resetFilter: "Filter zurücksetzen",
   changeLocale: "Lokalisierung ändern",
+  en: "Englisch",
+  fr: "Français",
+  ru: "Русский",
+  de: "English",
   clearButton: "Einstellungen löschen",
   addElement: "Wählen Sie eine Frage, um zu zeigen...",
   defaultOrder: "Standardreihenfolge",
@@ -51,9 +55,9 @@ export var germanStrings = {
   hideEmptyAnswers: "Leere Antworten ausblenden",
   showEmptyAnswers: "Leere Antworten anzeigen",
   "topNValueText-1": "Alle Antworten",
-  "topNValueText5": "Top 5 Antworten",
-  "topNValueText10": "Top 10 Antworten",
-  "topNValueText20": "Top 20 Antworten",
+  topNValueText5: "Top 5 Antworten",
+  topNValueText10: "Top 10 Antworten",
+  topNValueText20: "Top 20 Antworten",
   hideMissingAnswers: "Fehlende Antworten ausblenden",
   showMissingAnswers: "Fehlende Antworten anzeigen",
   missingAnswersLabel: "Fehlede Antworten",
@@ -68,3 +72,10 @@ export var germanStrings = {
 };
 localization.locales["de"] = germanStrings;
 localization.localeNames["de"] = "German";
+
+// The following strings have been translated by a machine translation service
+// Remove those strings that you have corrected manually
+// undefined.en: "English" => "Englisch"
+// undefined.fr: "Français" => "Français"
+// undefined.ru: "Русский" => "Русский"
+// undefined.de: "Deutsch" => "English"

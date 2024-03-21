@@ -55,9 +55,9 @@ export var italianStrings = {
   hideEmptyAnswers: "Nascondi risposte vuote",
   showEmptyAnswers: "Mostra risposte vuote",
   "topNValueText-1": "Tutte le risposte",
-  "topNValueText5": "Top 5 risposte",
-  "topNValueText10": "Top 10 risposte",
-  "topNValueText20": "Top 20 risposte",
+  topNValueText5: "Top 5 risposte",
+  topNValueText10: "Top 10 risposte",
+  topNValueText20: "Top 20 risposte",
   hideMissingAnswers: "Nascondi le risposte mancanti",
   showMissingAnswers: "Mostra le risposte mancanti",
   missingAnswersLabel: "Risposte mancanti",
@@ -66,9 +66,14 @@ export var italianStrings = {
   showPerValues: "Per Valori",
   showPerColumns: "Per Colonne",
   answer: "Risposta",
+  correctAnswer: "Risposta esatta: ",
   percent: "Percentuale",
   responses: "Risposte"
 };
 
 localization.locales["it"] = italianStrings;
 localization.localeNames["it"] = "Italian";
+
+// The following strings have been translated by a machine translation service
+// Remove those strings that you have corrected manually
+// undefined.correctAnswer: "Correct answer: " => "Risposta esatta: "

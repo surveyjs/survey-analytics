@@ -1,6 +1,5 @@
 .git/*
 node_modules/*
-src/**/*.js
 doc_generator/**/*.json
 docs/classes.json
 docs/pmes.json
