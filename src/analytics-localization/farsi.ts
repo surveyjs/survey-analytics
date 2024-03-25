@@ -68,7 +68,7 @@ export var farsiStrings = {
 };
 
 localization.locales["fa"] = farsiStrings;
-localization.localeNames["fa"] = "Farsi(Persian)";
+localization.localeNames["fa"] = "فارسی";
 
 // The following strings have been translated by a machine translation service
 // Remove those strings that you have corrected manually
