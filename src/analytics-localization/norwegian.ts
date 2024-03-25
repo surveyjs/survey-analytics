@@ -35,10 +35,6 @@ export var norwegianStrings = {
   filter: "Filter",
   resetFilter: "Nullstill filter",
   changeLocale: "Bytt språk",
-  en: "Engelsk",
-  fr: "Français",
-  ru: "Русский",
-  de: "Deutsch",
   clearButton: "Tøm",
   addElement: "Velg spørsmål...",
   defaultOrder: "Standard",
@@ -72,7 +68,7 @@ export var norwegianStrings = {
 };
 
 localization.locales["no"] = norwegianStrings;
-localization.localeNames["no"] = "Norwegian";
+localization.localeNames["no"] = "Norsk";
 
 // The following strings have been translated by a machine translation service
 // Remove those strings that you have corrected manually
@@ -82,10 +78,6 @@ localization.localeNames["no"] = "Norwegian";
 // undefined.visualizer_selectBase: "Chart" => "Sjøkart"
 // undefined.chartType_vbar: "Vertical Bar" => "Vertikal stolpe"
 // undefined.filter: "Filter" => "Filter"
-// undefined.en: "English" => "Engelsk"
-// undefined.fr: "Français" => "Français"
-// undefined.ru: "Русский" => "Русский"
-// undefined.de: "Deutsch" => "Deutsch"
 // undefined.pdfDownloadCaption: "PDF" => "PDF"
 // undefined.xlsxDownloadCaption: "Excel" => "Overgå"
 // undefined.csvDownloadCaption: "CSV" => "CSV"

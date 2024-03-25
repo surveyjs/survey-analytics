@@ -35,10 +35,6 @@ export var arabicStrings = {
   filter: "ترشح",
   resetFilter: "إعادة تعيين",
   changeLocale: "تغيير اللغة",
-  en: "اللغة الانجليزية",
-  fr: "اللغه الفرنسية",
-  ru: "اللغه الروسية",
-  de: "اللغه الانجليزية",
   clearButton: "مسح",
   addElement: "اختر سؤالاً للعرض ...",
   defaultOrder: "الترتيب الافتراضي",
@@ -72,7 +68,7 @@ export var arabicStrings = {
 };
 
 localization.locales["ar"] = arabicStrings;
-localization.localeNames["ar"] = "Arabic";
+localization.localeNames["ar"] = "العربية";
 
 // The following strings have been translated by a machine translation service
 // Remove those strings that you have corrected manually

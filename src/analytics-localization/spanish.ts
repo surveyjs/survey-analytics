@@ -35,10 +35,6 @@ export var spanishStrings = {
   filter: "Filtro",
   resetFilter: "Restablecer filtro",
   changeLocale: "Cambiar configuración regional",
-  en: "Inglés",
-  fr: "Français",
-  ru: "Русский",
-  de: "Deutsch",
   clearButton: "Borrar",
   addElement: "Elija la pregunta para mostrar ...",
   defaultOrder: "Orden predeterminado",
@@ -71,7 +67,7 @@ export var spanishStrings = {
   responses: "Respuestas"
 };
 localization.locales["es"] = spanishStrings;
-localization.localeNames["es"] = "Spanish";
+localization.localeNames["es"] = "Español";
 
 // The following strings have been translated by a machine translation service
 // Remove those strings that you have corrected manually
@@ -82,10 +78,6 @@ localization.localeNames["es"] = "Spanish";
 // undefined.visualizer_choices: "Table" => "Mesa"
 // undefined.visualizer_selectBase: "Chart" => "Gráfico"
 // undefined.chartType_vbar: "Vertical Bar" => "Barra vertical"
-// undefined.en: "English" => "Inglés"
-// undefined.fr: "Français" => "Français"
-// undefined.ru: "Русский" => "Русский"
-// undefined.de: "Deutsch" => "Deutsch"
 // undefined.hideMissingAnswers: "Hide missing answers" => "Ocultar las respuestas que faltan"
 // undefined.showMissingAnswers: "Show missing answers" => "Mostrar las respuestas que faltan"
 // undefined.missingAnswersLabel: "Missing answers" => "Respuestas faltantes"

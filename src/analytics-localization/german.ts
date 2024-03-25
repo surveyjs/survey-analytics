@@ -35,10 +35,6 @@ export var germanStrings = {
   filter: "Filter",
   resetFilter: "Filter zurücksetzen",
   changeLocale: "Lokalisierung ändern",
-  en: "Englisch",
-  fr: "Français",
-  ru: "Русский",
-  de: "English",
   clearButton: "Einstellungen löschen",
   addElement: "Wählen Sie eine Frage, um zu zeigen...",
   defaultOrder: "Standardreihenfolge",
@@ -71,11 +67,4 @@ export var germanStrings = {
   responses: "Antworten"
 };
 localization.locales["de"] = germanStrings;
-localization.localeNames["de"] = "German";
-
-// The following strings have been translated by a machine translation service
-// Remove those strings that you have corrected manually
-// undefined.en: "English" => "Englisch"
-// undefined.fr: "Français" => "Français"
-// undefined.ru: "Русский" => "Русский"
-// undefined.de: "Deutsch" => "English"
+localization.localeNames["de"] = "Deutsch";

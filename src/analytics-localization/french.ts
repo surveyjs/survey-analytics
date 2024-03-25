@@ -35,10 +35,6 @@ export var frenchStrings = {
   filter: "Filtre",
   resetFilter: "Rafraichir Filtres",
   changeLocale: "Changer les paramètres régionaux",
-  en: "Anglais",
-  fr: "Français",
-  ru: "Русский",
-  de: "Deutsch",
   clearButton: "Rafraichir",
   addElement: "Choisir la question à afficher...",
   defaultOrder: "Defaut",
@@ -72,7 +68,7 @@ export var frenchStrings = {
 };
 
 localization.locales["fr"] = frenchStrings;
-localization.localeNames["fr"] = "French";
+localization.localeNames["fr"] = "Français";
 
 // The following strings have been translated by a machine translation service
 // Remove those strings that you have corrected manually
@@ -82,10 +78,6 @@ localization.localeNames["fr"] = "French";
 // undefined.visualizer_selectBase: "Chart" => "Graphique"
 // undefined.chartType_vbar: "Vertical Bar" => "Barre verticale"
 // undefined.changeLocale: "Change Locale" => "Changer les paramètres régionaux"
-// undefined.en: "English" => "Anglais"
-// undefined.fr: "Français" => "Français"
-// undefined.ru: "Русский" => "Русский"
-// undefined.de: "Deutsch" => "Deutsch"
 // undefined.showPercentages: "Show percentages" => "Afficher les pourcentages"
 // undefined.hidePercentages: "Hide percentages" => "Masquer les pourcentages"
 // undefined.pdfDownloadCaption: "PDF" => "PDF"

@@ -35,10 +35,6 @@ export var italianStrings = {
   filter: "Filtro",
   resetFilter: "Cancella filtro",
   changeLocale: "Cambia lingua",
-  en: "Inglese",
-  fr: "Francese",
-  ru: "Russo",
-  de: "Tedesco",
   clearButton: "Cancella",
   addElement: "Scegli la domanda da mostrare...",
   defaultOrder: "Ordine di Default",
@@ -72,7 +68,7 @@ export var italianStrings = {
 };
 
 localization.locales["it"] = italianStrings;
-localization.localeNames["it"] = "Italian";
+localization.localeNames["it"] = "Italiano";
 
 // The following strings have been translated by a machine translation service
 // Remove those strings that you have corrected manually
