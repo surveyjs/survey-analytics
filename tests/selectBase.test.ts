@@ -51,8 +51,8 @@ test("getLabels method", () => {
   selectBase["options"].useValuesAsLabels = false;
 });
 
-test("getData method", () => {
-  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
+test("getCalculatedValues method", () => {
+  expect(selectBase.getCalculatedValues()).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
 });
 
 test("createToolbarItems", () => {
@@ -233,14 +233,14 @@ test("showMissingAnswers", () => {
   expect(selectBase.showMissingAnswers).toBeFalsy();
   expect(selectBase.getValues()).toEqual(["father", "mother", "brother", "sister", "son", "daughter"].reverse());
   expect(selectBase.getLabels()).toEqual(["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse());
-  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
+  expect(selectBase.getCalculatedValues()).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
   selectBase.showMissingAnswers = true;
   expect(selectBase.getValues()).toEqual([undefined, "father", "mother", "brother", "sister", "son", "daughter"].reverse());
   expect(selectBase.getLabels()).toEqual(["Missing answers", "father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse());
-  expect(selectBase.getData()).toEqual([[1, 2, 1, 0, 1, 0, 0].reverse()]);
+  expect(selectBase.getCalculatedValues()).toEqual([[1, 2, 1, 0, 1, 0, 0].reverse()]);
 });
 
-test("valueName used for getData https://surveyjs.answerdesk.io/internal/ticket/details/T9071", () => {
+test("valueName used for getCalculatedValues https://surveyjs.answerdesk.io/internal/ticket/details/T9071", () => {
   var question = new QuestionDropdownModel("q1");
   question.choices = choices;
   question.valueName = "q1value";
@@ -262,7 +262,7 @@ test("valueName used for getData https://surveyjs.answerdesk.io/internal/ticket/
     }
   ];
   selectBase = new SelectBase(question, data, {});
-  expect(selectBase.getData()).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
+  expect(selectBase.getCalculatedValues()).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
 });
 
 test("hasHeader and correct answer text", () => {

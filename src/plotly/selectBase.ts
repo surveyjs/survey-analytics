@@ -163,8 +163,8 @@ export class SelectBasePlotly extends SelectBase {
     });
   }
 
-  getData(): any[] {
-    const statistics = super.getData();
+  public getCalculatedValues(): any[] {
+    const statistics = super.getCalculatedValues();
     const series = this.getSeriesValues();
     const values = this.getValues();
     if (series.length > 1) {

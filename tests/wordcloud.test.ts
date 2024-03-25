@@ -7,7 +7,7 @@ test("remove stopwords and clean punktuation", () => {
     { q1: "The Thimes!" },
     { q1: "mega mega Super answer" },
   ]);
-  var data = wc.getData();
+  var data = wc.getCalculatedValues();
   expect(Object.keys(data).length).toEqual(4);
   expect(data.filter((d) => d[0] === "The").length).toEqual(0);
   expect(data.filter((d) => d[0] === "mega").length).toEqual(1);

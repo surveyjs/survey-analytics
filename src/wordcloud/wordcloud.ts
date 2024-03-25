@@ -28,7 +28,7 @@ export class WordCloudAdapter {
   }
 
   private createWordCloud2(node: HTMLElement) {
-    const data = this.model.getData();
+    const data = this.model.getCalculatedValues();
     const colors = this.model.getColors();
     const canvasNode = <HTMLCanvasElement>(
       DocumentHelper.createElement("canvas", "")
@@ -73,7 +73,7 @@ export class WordCloudAdapter {
   }
 
   public create(element: HTMLElement): any {
-    const data = this.model.getData();
+    const data = this.model.getCalculatedValues();
     const colors = this.model.getColors();
 
     if (data.length === 0) {
@@ -116,7 +116,7 @@ export class WordCloud extends VisualizerBase {
     this._wordcloudAdapter = new WordCloudAdapter(this);
   }
 
-  getData() {
+  public getCalculatedValues(): any {
     let result: { [key: string]: number } = {};
 
     let stopWords: string[] = [];

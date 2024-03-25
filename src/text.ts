@@ -10,7 +10,7 @@ export class TextTableAdapter {
   constructor(private model: Text) {}
 
   public create(container: HTMLElement) {
-    const { columnsCount, data } = this.model.getData();
+    const { columnsCount, data } = this.model.getCalculatedValues();
     const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
       innerText: localization.getString("noResults"),
     });
@@ -60,7 +60,7 @@ export class Text extends VisualizerBase {
     this._textTableAdapter = new TextTableAdapter(this);
   }
 
-  getData() {
+  public getCalculatedValues(): any {
     let result: Array<Array<string>> = [];
     let columnsCount = 0;
 

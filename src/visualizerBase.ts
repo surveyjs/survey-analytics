@@ -621,7 +621,7 @@ export class VisualizerBase implements IDataInfo {
    * Obsolete. Use [`getCalculatedValues()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#getCalculatedValues) instead.
    */
   getData(): any {
-    return this.dataProvider.getData(this);
+    return this.getCalculatedValues();
   }
 
   /**

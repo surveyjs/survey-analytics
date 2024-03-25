@@ -527,7 +527,7 @@ export class SelectBase
   }
 
   getPercentages(): Array<Array<number>> {
-    var data: Array<Array<number>> = this.getData();
+    var data: Array<Array<number>> = this.getCalculatedValues();
     var percentages: Array<Array<number>> = [];
     var percentagePrecision = this._percentagePrecision;
 
@@ -587,7 +587,7 @@ export class SelectBase
    */
   public getAnswersData(): IAnswersData {
     let seriesLabels = this.getSeriesLabels();
-    let datasets = this.getData();
+    let datasets = this.getCalculatedValues();
     let labels = this.getLabels();
     let colors = this.getColors();
     var texts = this.showPercentages ? this.getPercentages() : datasets;

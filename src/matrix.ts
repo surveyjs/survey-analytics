@@ -104,8 +104,8 @@ export class Matrix extends SelectBase {
     return result;
   }
 
-  getData(): any[] {
-    const statistics = super.getData();
+  public getCalculatedValues(): any[] {
+    const statistics = super.getCalculatedValues();
     const series = this.getSeriesValues();
     const values = this.getValues();
     const preparedData: Array<Array<number>> = [];
