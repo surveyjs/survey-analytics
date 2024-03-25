@@ -68,7 +68,7 @@ export var arabicStrings = {
 };
 
 localization.locales["ar"] = arabicStrings;
-localization.localeNames["ar"] = "Arabic";
+localization.localeNames["ar"] = "العربية";
 
 // The following strings have been translated by a machine translation service
 // Remove those strings that you have corrected manually
