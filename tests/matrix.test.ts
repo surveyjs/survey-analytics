@@ -56,8 +56,8 @@ test("getSeriesLabels method", () => {
   expect(matrix.getSeriesLabels()).toEqual(matrixJson.rows);
 });
 
-test("getData method", () => {
-  expect(matrix.getData()).toEqual([
+test("getCalculatedValues method", () => {
+  expect(matrix.getCalculatedValues()).toEqual([
     [1, 1],
     [2, 1],
     [0, 1],

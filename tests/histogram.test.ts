@@ -47,7 +47,7 @@ test("number default histogram", () => {
 
   const histValues = number.getValues();
   const histLabels = number.getLabels();
-  const histData = number.getData();
+  const histData = number.getCalculatedValues();
 
   expect(number["valueType"]).toBe("number");
   expect(histValues).toMatchObject([17, 19.3, 21.6, 23.9, 26.2, 28.5, 30.8, 33.1, 35.4, 37.7]);
@@ -69,7 +69,7 @@ test("date default histogram", () => {
 
   const histValues = date.getValues();
   const histLabels = date.getLabels();
-  const histData = date.getData();
+  const histData = date.getCalculatedValues();
 
   expect(date["valueType"]).toBe("date");
   expect(histValues).toMatchObject([1097625600000, 1151271360000, 1204917120000, 1258562880000, 1312208640000, 1365854400000, 1419500160000, 1473145920000, 1526791680000, 1580437440000]);
@@ -108,7 +108,7 @@ test("date default intervals", () => {
   const histValues = date.getValues();
   const histLabels = date.getLabels();
   const histIntervals = date.intervals;
-  const histData = date.getData();
+  const histData = date.getCalculatedValues();
 
   expect(histIntervals.length).toBe(10);
   expect(histValues).toMatchObject([
@@ -150,7 +150,7 @@ test("date empty data", () => {
 
   const histValues = date.getValues();
   const histIntervals = date.intervals;
-  const histData = date.getData();
+  const histData = date.getCalculatedValues();
 
   expect(histIntervals.length).toBe(0);
   expect(histValues).toMatchObject([]);
@@ -205,7 +205,7 @@ test("number custom intervals", () => {
 
   const histValues = date.getValues();
   const histIntervals = date.intervals;
-  const histData = date.getData();
+  const histData = date.getCalculatedValues();
 
   expect(histIntervals.length).toBe(5);
   expect(histValues).toMatchObject([
@@ -245,7 +245,7 @@ test("number custom intervals for small result sets", () => {
 
   const histValues = date.getValues();
   const histIntervals = date.intervals;
-  const histData = date.getData();
+  const histData = date.getCalculatedValues();
 
   expect(histIntervals.length).toBe(5);
   expect(histValues).toMatchObject([
@@ -302,7 +302,7 @@ test("histogram series default algorithm data", () => {
   expect(number.getSeriesValues()).toMatchObject(series);
   expect(number.getSeriesLabels()).toMatchObject(series);
 
-  const chartData = number.getData();
+  const chartData = number.getCalculatedValues();
   expect(chartData).toMatchObject([
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
@@ -391,7 +391,7 @@ test("histogram series intervals data", () => {
     seriesLabels: series,
   });
 
-  const chartData = number.getData();
+  const chartData = number.getCalculatedValues();
   expect(chartData).toMatchObject([
     [1, 0, 0, 1, 0, 0, 1, 0, 0, 0],
     [1, 0, 0, 0, 1, 0, 0, 1, 0, 0],
@@ -470,7 +470,7 @@ test("histogram should use rate values", () => {
   ]);
   expect(rating.getValues()).toEqual([1, 2, 3]);
   expect(rating.getLabels()).toEqual(["15 minutes", "30 minutes", "1 hour"]);
-  expect(rating.getData()).toEqual([[0, 0, 1]]);
+  expect(rating.getCalculatedValues()).toEqual([[0, 0, 1]]);
 });
 
 test("histogram intervals alignment and rounding", () => {
@@ -683,6 +683,6 @@ test("number histogram answers order", () => {
   expect(histValues).toMatchObject([11.14, 14.43, 17.71, 21, 24.29, 27.57, 30.86, 34.14, 37.43, 40.71]);
   expect(histLabels).toMatchObject(["11.14-14.43", "14.43-17.71", "17.71-21", "21-24.29", "24.29-27.57", "27.57-30.86", "30.86-34.14", "34.14-37.43", "37.43-40.71", "40.71-44"]);
 
-  const histData = number.getData();
+  const histData = number.getCalculatedValues();
   expect(histData).toMatchObject([[5, 3, 0, 0, 0, 0, 1, 0, 0, 1]]);
 });

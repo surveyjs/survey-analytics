@@ -76,8 +76,8 @@ test("name property", () => {
   expect(matrix.name).toEqual(columns);
 });
 
-test("getData method", () => {
-  expect(matrix.getData()).toEqual([
+test("getCalculatedValues method", () => {
+  expect(matrix.getCalculatedValues()).toEqual([
     [1, 1, 0],
     [1, 1, 0],
     [1, 1, 1],
