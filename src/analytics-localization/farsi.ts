@@ -35,10 +35,6 @@ export var farsiStrings = {
   filter: "فیلتر",
   resetFilter: "بازنشانی فیلترها",
   changeLocale: "تغییر محلی",
-  en: "انگلیسی",
-  fr: "فرانسه",
-  ru: "Русский",
-  de: "دویچ",
   clearButton: "پاک کردن",
   addElement: "انتخاب سوال برای نمایش...",
   defaultOrder: "ترتیب پیشفرض",
@@ -94,10 +90,6 @@ localization.localeNames["fa"] = "Farsi(Persian)";
 // undefined.showButton: "Show" => "نمایش"
 // undefined.filter: "Filter" => "فیلتر"
 // undefined.changeLocale: "Change Locale" => "تغییر محلی"
-// undefined.en: "English" => "انگلیسی"
-// undefined.fr: "Français" => "فرانسه"
-// undefined.ru: "Русский" => "Русский"
-// undefined.de: "Deutsch" => "دویچ"
 // undefined.defaultOrder: "Default Order" => "ترتیب پیشفرض"
 // undefined.ascOrder: "Ascending" => "صعودی"
 // undefined.descOrder: "Descending" => "نزولی"

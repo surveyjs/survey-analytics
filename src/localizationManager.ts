@@ -50,4 +50,4 @@ export var localization = {
 
 export var surveyStrings = englishStrings;
 (<any>localization).locales["en"] = englishStrings;
-(<any>localization).localeNames["en"] = "english";
+(<any>localization).localeNames["en"] = "English";

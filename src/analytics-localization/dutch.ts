@@ -35,10 +35,6 @@ export var dutchStrings = {
   filter: "Filter",
   resetFilter: "Filter resetten",
   changeLocale: "Wijzig de landinstelling",
-  en: "Engels",
-  fr: "Français",
-  ru: "Русский",
-  de: "Deutsch",
   clearButton: "Doorzichtig",
   addElement: "Kies een vraag om weer te geven ...",
   defaultOrder: "Standaardvolgorde",
@@ -83,10 +79,6 @@ localization.localeNames["nl"] = "Dutch";
 // undefined.visualizer_selectBase: "Chart" => "Zeekaart"
 // undefined.chartType_vbar: "Vertical Bar" => "Verticale balk"
 // undefined.filter: "Filter" => "Filter"
-// undefined.en: "English" => "Engels"
-// undefined.fr: "Français" => "Français"
-// undefined.ru: "Русский" => "Русский"
-// undefined.de: "Deutsch" => "Deutsch"
 // undefined.hideMissingAnswers: "Hide missing answers" => "Ontbrekende antwoorden verbergen"
 // undefined.showMissingAnswers: "Show missing answers" => "Ontbrekende antwoorden weergeven"
 // undefined.missingAnswersLabel: "Missing answers" => "Ontbrekende antwoorden"

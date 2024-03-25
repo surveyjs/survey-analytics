@@ -374,7 +374,7 @@ export class VisualizationPanel extends VisualizerBase {
       const localeChoices = this.locales.map((element) => {
         return {
           value: element,
-          text: localization.getString(element)
+          text: localization.localeNames[element] || localization.getString(element) || element
         };
       });
       // localeChoices.unshift({

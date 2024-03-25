@@ -44,10 +44,6 @@ export var russianStrings = {
   entriesLabel: "записей",
   makePrivateButton: "Сделать приватным",
   makePublicButton: "Сделать публичным",
-  en: "English",
-  fr: "Français",
-  ru: "Русский",
-  de: "Deutsch",
   showPercentages: "Показать проценты",
   hidePercentages: "Скрыть проценты",
   pdfDownloadCaption: "PDF",
@@ -72,4 +68,4 @@ export var russianStrings = {
 };
 
 localization.locales["ru"] = russianStrings;
-localization.localeNames["ru"] = "Russian";
+localization.localeNames["ru"] = "Русский";
