@@ -102,7 +102,7 @@
     "val-loader": "0.5.0",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "~3",
+    "webpack-dev-server": "~5",
     "webpack-svgstore-plugin": "^4.1.0"
   },
   "peerDependencies": {
