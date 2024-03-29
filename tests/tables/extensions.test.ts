@@ -6,6 +6,9 @@ import { TableRow } from "../../src/tables/table";
 import { DocumentHelper } from "../../src/utils";
 import { QuestionLocation } from "../../src/tables/config";
 
+export * from "../../src/tables/extensions/headerextensions";
+export * from "../../src/analytics-localization/german";
+
 const json = {
   questions: [
     {
@@ -152,4 +155,16 @@ test("render image in details", () => {
   const details = new Details(tabulator, tableRow, detailsTarget);
   details.open();
   expect(detailsTarget).toMatchSnapshot();
+});
+
+test("locale selector uses titles", () => {
+  const survey = new SurveyModel({ elements: [{ type: "signaturepad", name: "q1", title: { "default": "EnTitle", "de": "DeTitle" } }] });
+  const tabulator = new Tabulator(survey, []);
+  const changeLocaleHeaderExtension = TableExtensions.findExtension("header", "changelocale");
+  expect(changeLocaleHeaderExtension).toBeDefined();
+  const renderResult = changeLocaleHeaderExtension.render(tabulator, undefined) as HTMLSelectElement;
+  expect(renderResult.options.length).toBe(3);
+  expect(renderResult.options[0].text).toBe("Change Locale");
+  expect(renderResult.options[1].text).toBe("English");
+  expect(renderResult.options[2].text).toBe("Deutsch");
 });

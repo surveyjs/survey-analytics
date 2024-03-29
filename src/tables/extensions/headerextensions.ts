@@ -173,7 +173,7 @@ TableExtensions.registerExtension({
     optionsValues.forEach(function (val) {
       var option = DocumentHelper.createElement("option", "", {
         value: val,
-        text: val,
+        text: localization.localeNames[val] || localization.getString(val) || val,
       });
       el.appendChild(option);
     });
@@ -183,3 +183,5 @@ TableExtensions.registerExtension({
     return el;
   },
 });
+
+export var HeaderExtensions;
