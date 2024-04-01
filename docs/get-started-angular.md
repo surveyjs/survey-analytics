@@ -15,11 +15,8 @@ This step-by-step tutorial will help you get started with SurveyJS Dashboard in 
 
 As a result, you will create the following dashboard:
 
-<iframe src="https://codesandbox.io/p/sandbox/add-surveyjs-analytics-to-an-angular-application-forked-n2yt2m"
-  style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-  title="Add SurveyJS Dashboard to an Angular Application"
-  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+<iframe src="/proxy/github/code-examples/get-started-analytics/knockout/index.html"
+    style="width:100%; border:0; border-radius: 4px; overflow:hidden;"
 ></iframe>
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/angular (linkStyle))
