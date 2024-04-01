@@ -57,13 +57,14 @@ To load the survey results, send the survey ID to your server and return an arra
 ```js
 // ...
 import { useState } from 'react';
+import { Model } from 'survey-core';
 
 const SURVEY_ID = 1;
 
 export default function App() {
   const [vizPanel, setVizPanel] = useState(null);
 
-  if (!vizPanel && !!survey) {
+  if (!vizPanel) {
     loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
       .then((surveyResults) => {
         // ...
@@ -148,7 +149,7 @@ const vizPanelOptions = {
 }
 ```
 
-Pass the configuration object, survey questions, and results to the `VisualizationPanel` constructor as shown in the code below to instantiate the Visualization Panel. Assign the produced instance to a constant that will be used later to render the component:
+Pass the configuration object, survey questions, and results to the `VisualizationPanel` constructor as shown in the code below to instantiate the Visualization Panel. Save the produced instance in a state variable that will be used later to render the component:
 
 ```js
 // ...
@@ -391,6 +392,6 @@ export default function App() {
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/react (linkStyle))
 
-## Further Reading
+## See Also
 
-- [Analytics Demo Examples](/Examples/Analytics)
+[Dashboard Demo Examples](/dashboard/examples/ (linkStyle))

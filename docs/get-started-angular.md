@@ -285,6 +285,7 @@ export class AppComponent implements AfterViewInit {
 Switch to the component template. Add a page element that will serve as the Visualization Panel container:
 
 ```html
+<!-- app.component.html -->
 <div id="surveyVizPanel"></div>
 ```
 
@@ -292,7 +293,6 @@ To render the Visualization Panel in the page element, call the `render(containe
 
 ```js
 // ...
-
 @Component({
   // ...
 })
@@ -386,6 +386,6 @@ export class AppComponent implements AfterViewInit {
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/angular (linkStyle))
 
-## Further Reading
+## See Also
 
-- [Analytics Demo Examples](/Examples/Analytics)
+[Dashboard Demo Examples](/dashboard/examples/ (linkStyle))

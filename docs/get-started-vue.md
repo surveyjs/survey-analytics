@@ -337,7 +337,6 @@ export default {
       surveyResults,
       vizPanelOptions
     );
-    vizPanel.showToolbar = false;
     vizPanel.render("surveyVizPanel");
   }
 }
@@ -347,6 +346,6 @@ export default {
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/vue (linkStyle))
 
-## Further Reading
+## See Also
 
-- [Analytics Demo Examples](/Examples/Analytics)
+[Dashboard Demo Examples](/dashboard/examples/ (linkStyle))

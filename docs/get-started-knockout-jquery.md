@@ -258,7 +258,7 @@ const vizPanel = new SurveyAnalytics.VisualizationPanel(
 
 ## Render the Visualization Panel
 
-Switch to the component template. Add a page element that will serve as the Visualization Panel container:
+A Visualization Panel should be rendered in a page element. Add this element to the page markup:
 
 ```html
 <body>
@@ -368,6 +368,6 @@ document.addEventListener("DOMContentLoaded", function() {
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/knockout (linkStyle))
 
 
-## Further Reading
+## See Also
 
-- [Analytics Demo Examples](/Examples/Analytics)
+[Dashboard Demo Examples](/dashboard/examples/ (linkStyle))
