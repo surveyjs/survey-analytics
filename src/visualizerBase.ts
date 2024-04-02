@@ -18,14 +18,16 @@ var styles = require("./visualizerBase.scss");
  * Survey results.
  * - `options`\
  * An object with the following properties:
+ *    - `dataProvider`: `DataProvider`\
+ *    A data provider for this visualizer.
+ *    - `renderContent`: `(contentContainer: HTMLElement, visualizer: VisualizerBase) => void`\
+ *    A function that renders the visualizer's HTML markup. Append the markup to `contentContainer`.
+ *    - `survey`: [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model)\
+ *    Pass a `SurveyModel` instance if you want to use locales from the survey JSON schema.
  *    - `seriesValues`: `Array<string>`\
  *    Series values used to group data.
  *    - `seriesLabels`: `Array<string>`\
  *    Series labels to display. If this property is not set, `seriesValues` are used as labels.
- *    - `survey`: [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model)\
- *    Pass a `SurveyModel` instance if you want to use locales from the survey JSON schema.
- *    - `dataProvider`: `DataProvider`\
- *    A data provider for this visualizer.
  * - `type`: `string`\
  * *(Optional)* The visualizer's type.
  *

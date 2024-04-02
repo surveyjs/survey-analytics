@@ -14,12 +14,9 @@ This step-by-step tutorial will help you get started with SurveyJS Dashboard in 
 
 As a result, you will create the following dashboard:
 
-<p class="codepen" data-height="532.7999572753906" data-default-tab="js,result" data-slug-hash="vYdmvgz" data-user="romantsukanov" style="height: 532.7999572753906px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
-  <span>See the Pen <a href="https://codepen.io/romantsukanov/pen/vYdmvgz">
-  SurveyJS - Add SurveyJS Dashboard to a Knockout or jQuery Application</a> by RomanTsukanov (<a href="https://codepen.io/romantsukanov">@romantsukanov</a>)
-  on <a href="https://codepen.io">CodePen</a>.</span>
-</p>
-<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+<iframe src="/proxy/github/code-examples/get-started-analytics/knockout/index.html"
+    style="width:100%; border:0; border-radius: 4px; overflow:hidden;"
+></iframe>
 
 SurveyJS Dashboard is powered by Knockout and does not have an individual implementation for jQuery. However, you can integrate the version for Knockout into your jQuery application by following the same instructions.
 
@@ -258,7 +255,7 @@ const vizPanel = new SurveyAnalytics.VisualizationPanel(
 
 ## Render the Visualization Panel
 
-Switch to the component template. Add a page element that will serve as the Visualization Panel container:
+A Visualization Panel should be rendered in a page element. Add this element to the page markup:
 
 ```html
 <body>
@@ -368,6 +365,6 @@ document.addEventListener("DOMContentLoaded", function() {
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/knockout (linkStyle))
 
 
-## Further Reading
+## See Also
 
-- [Analytics Demo Examples](/Examples/Analytics)
+[Dashboard Demo Examples](/dashboard/examples/ (linkStyle))
