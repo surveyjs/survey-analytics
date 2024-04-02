@@ -1,6 +1,6 @@
 ---
-title: TODO
-description: TODO
+title: Export Survey Results to PDF or Excel | Open-Source JS Form Builder for Angular
+description: Convert your survey data to manageable table format  for easy filtering and analysis. Save survey results as PDF or Excel files to visualize or share with others. View free demo for Angular with a step-by-step setup guide.
 ---
 
 # Table View for Survey Results in an Angular Application
