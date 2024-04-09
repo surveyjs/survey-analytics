@@ -988,6 +988,7 @@ export class VisualizationPanel extends VisualizerBase {
 
   /**
    * The state of `VisualizationPanel`. Includes information about the visualized elements and current locale.
+   * @see onStateChanged
    */
   public get state(): IState {
     return this.getState();
