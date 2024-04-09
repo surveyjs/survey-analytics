@@ -93,6 +93,23 @@ export class VisualizerBase implements IDataInfo {
   //   VisualizationPanel,
   //   any
   // >();
+  /**
+   * An event that is raised when the visualizer's state has changed.
+   *
+   * The state includes selected chart types, chart layout, sorting, filtering, and other customizations that a user has made while using the dashboard. Handle the `onStateChanged` event to save these customizations, for example, in `localStorage` and restore them when the user reloads the page.
+   *
+   * Parameters:
+   *
+   * - `sender`: `VisualizerBase`\
+   * A `VisualizerBase` instance that raised the event.
+   *
+   * - `state`: `any`\
+   * A new state of the visualizer. Includes information about the visualized elements and current locale.
+   *
+   * [View Demo](/dashboard/examples/save-dashboard-state-to-local-storage/ (linkStyle))
+   * @see getState
+   * @see setState
+   */
   public onStateChanged: Event<
     (sender: VisualizerBase, options: any) => any,
     VisualizerBase,
@@ -640,8 +657,9 @@ export class VisualizerBase implements IDataInfo {
   /**
    * Returns an object with properties that describe a current visualizer state. The properties are different for each individual visualizer.
    *
-   * > This method is overriden in descendant classes.
+   * > This method is overriden in classes descendant from `VisualizerBase`.
    * @see setState
+   * @see onStateChanged
    */
   public getState(): any {
     return {};
@@ -649,8 +667,9 @@ export class VisualizerBase implements IDataInfo {
   /**
    * Sets the visualizer's state.
    *
-   * > This method is overriden in descendant classes.
+   * > This method is overriden in classes descendant from `VisualizerBase`.
    * @see getState
+   * @see onStateChanged
    */
   public setState(state: any): void {
   }
