@@ -15,11 +15,8 @@ This step-by-step tutorial will help you get started with SurveyJS Dashboard in 
 
 As a result, you will create the following dashboard:
 
-<iframe src="https://codesandbox.io/p/sandbox/add-surveyjs-analytics-to-a-react-application-forked-kj95pt"
-    style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-    title="Add SurveyJS Dashboard to a React Application"
-    allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+<iframe src="/proxy/github/code-examples/get-started-analytics/knockout/index.html"
+    style="width:100%; border:0; border-radius: 4px; overflow:hidden;"
 ></iframe>
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/react (linkStyle))
@@ -57,13 +54,14 @@ To load the survey results, send the survey ID to your server and return an arra
 ```js
 // ...
 import { useState } from 'react';
+import { Model } from 'survey-core';
 
 const SURVEY_ID = 1;
 
 export default function App() {
   const [vizPanel, setVizPanel] = useState(null);
 
-  if (!vizPanel && !!survey) {
+  if (!vizPanel) {
     loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
       .then((surveyResults) => {
         // ...
@@ -148,7 +146,7 @@ const vizPanelOptions = {
 }
 ```
 
-Pass the configuration object, survey questions, and results to the `VisualizationPanel` constructor as shown in the code below to instantiate the Visualization Panel. Assign the produced instance to a constant that will be used later to render the component:
+Pass the configuration object, survey questions, and results to the `VisualizationPanel` constructor as shown in the code below to instantiate the Visualization Panel. Save the produced instance in a state variable that will be used later to render the component:
 
 ```js
 // ...
@@ -391,6 +389,6 @@ export default function App() {
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/react (linkStyle))
 
-## Further Reading
+## See Also
 
-- [Analytics Demo Examples](/Examples/Analytics)
+[Dashboard Demo Examples](/dashboard/examples/ (linkStyle))

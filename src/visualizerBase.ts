@@ -18,14 +18,16 @@ var styles = require("./visualizerBase.scss");
  * Survey results.
  * - `options`\
  * An object with the following properties:
+ *    - `dataProvider`: `DataProvider`\
+ *    A data provider for this visualizer.
+ *    - `renderContent`: `(contentContainer: HTMLElement, visualizer: VisualizerBase) => void`\
+ *    A function that renders the visualizer's HTML markup. Append the markup to `contentContainer`.
+ *    - `survey`: [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model)\
+ *    Pass a `SurveyModel` instance if you want to use locales from the survey JSON schema.
  *    - `seriesValues`: `Array<string>`\
  *    Series values used to group data.
  *    - `seriesLabels`: `Array<string>`\
  *    Series labels to display. If this property is not set, `seriesValues` are used as labels.
- *    - `survey`: [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model)\
- *    Pass a `SurveyModel` instance if you want to use locales from the survey JSON schema.
- *    - `dataProvider`: `DataProvider`\
- *    A data provider for this visualizer.
  * - `type`: `string`\
  * *(Optional)* The visualizer's type.
  *
@@ -91,6 +93,23 @@ export class VisualizerBase implements IDataInfo {
   //   VisualizationPanel,
   //   any
   // >();
+  /**
+   * An event that is raised when the visualizer's state has changed.
+   *
+   * The state includes selected chart types, chart layout, sorting, filtering, and other customizations that a user has made while using the dashboard. Handle the `onStateChanged` event to save these customizations, for example, in `localStorage` and restore them when the user reloads the page.
+   *
+   * Parameters:
+   *
+   * - `sender`: `VisualizerBase`\
+   * A `VisualizerBase` instance that raised the event.
+   *
+   * - `state`: `any`\
+   * A new state of the visualizer. Includes information about the visualized elements and current locale.
+   *
+   * [View Demo](/dashboard/examples/save-dashboard-state-to-local-storage/ (linkStyle))
+   * @see getState
+   * @see setState
+   */
   public onStateChanged: Event<
     (sender: VisualizerBase, options: any) => any,
     VisualizerBase,
@@ -638,8 +657,9 @@ export class VisualizerBase implements IDataInfo {
   /**
    * Returns an object with properties that describe a current visualizer state. The properties are different for each individual visualizer.
    *
-   * > This method is overriden in descendant classes.
+   * > This method is overriden in classes descendant from `VisualizerBase`.
    * @see setState
+   * @see onStateChanged
    */
   public getState(): any {
     return {};
@@ -647,8 +667,9 @@ export class VisualizerBase implements IDataInfo {
   /**
    * Sets the visualizer's state.
    *
-   * > This method is overriden in descendant classes.
+   * > This method is overriden in classes descendant from `VisualizerBase`.
    * @see getState
+   * @see onStateChanged
    */
   public setState(state: any): void {
   }

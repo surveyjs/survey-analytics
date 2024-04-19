@@ -20,7 +20,7 @@
     "lint": "eslint ./src --quiet",
     "pre-push-check": "npm run lint && npm run test"
   },
-  "version": "1.9.136",
+  "version": "1.9.139",
   "name": "survey-analytics",
   "description": "SurveyJS analytics Library.",
   "main": "survey.analytics.js",
@@ -102,7 +102,7 @@
     "val-loader": "0.5.0",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "~3",
+    "webpack-dev-server": "~5",
     "webpack-svgstore-plugin": "^4.1.0"
   },
   "peerDependencies": {
