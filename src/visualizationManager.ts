@@ -21,6 +21,7 @@ export class VisualizationManager {
    * [View Demo](https://surveyjs.io/dashboard/examples/visualize-answers-from-text-entry-fields-with-charts/ (linkStyle))
    * @param questionType A question [type](https://surveyjs.io/form-library/documentation/api-reference/question#getType).
    * @param constructor A function that returns a visualizer constructor to register.
+   * @param index A zero-based index that specifies the visualizer's position in the visualizer list for the specified question type. Pass `0` to the insert the visualizer at the beginning of the list and use it by default. If `index` is not specified, the visualizer is added to the end of the list.
    */
   public static registerVisualizer(
     questionType: string,
