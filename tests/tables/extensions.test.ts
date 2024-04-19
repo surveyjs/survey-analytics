@@ -168,3 +168,19 @@ test("locale selector uses titles", () => {
   expect(renderResult.options[1].text).toBe("English");
   expect(renderResult.options[2].text).toBe("Deutsch");
 });
+
+test("changelocale respects disableLocaleSwitch", () => {
+  const survey = new SurveyModel({ elements: [{ type: "text", name: "q1", title: {
+    default: "Qd",
+    en: "Qe",
+    fr: "Qf",
+  } }] });
+  const tabulator = new Tabulator(survey, [], { disableLocaleSwitch: true } as any);
+  const changeLocaleExtension = TableExtensions.findExtension("header", "changelocale");
+
+  expect(changeLocaleExtension.render(tabulator, null)).toBe(null);
+
+  tabulator.options.disableLocaleSwitch = false;
+  expect(changeLocaleExtension.render(tabulator, null)).toBeDefined();
+  expect(changeLocaleExtension.render(tabulator, null).tagName).toBe("SELECT");
+});

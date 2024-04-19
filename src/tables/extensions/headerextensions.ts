@@ -163,7 +163,7 @@ TableExtensions.registerExtension({
   visibleIndex: 1,
   render: function (table) {
     var locales = table.getLocales();
-    if (locales.length < 2) return null;
+    if (table.options.disableLocaleSwitch || locales.length < 2) return null;
     const el = <HTMLSelectElement>(
       DocumentHelper.createElement("select", "sa-table__header-extension", {})
     );
