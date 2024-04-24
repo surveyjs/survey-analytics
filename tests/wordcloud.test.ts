@@ -5,7 +5,7 @@ import { WordCloudWidget } from "../src/wordcloud/widget";
 test("remove stopwords and clean punktuation", () => {
   var wc = new WordCloud(new QuestionCommentModel("q1"), [
     { q1: "The Thimes!" },
-    { q1: "mega mega Super answer" },
+    { q1: "mega, (mega) Super answer." },
   ]);
   var data = wc.getCalculatedValues();
   expect(Object.keys(data).length).toEqual(4);
@@ -49,4 +49,15 @@ test("WordCloudWidget render", () => {
   expect(renderTarget.innerHTML).toBe("<div class=\"sa-visualizer-wordcloud\" style=\"position: relative; height: 1649.9259536805148px;\"><div style=\"position: absolute; font-size: 40px; line-height: 0.8em; color: black; left: 1px; top: 10px;\" title=\"word2 (10)\">word2</div><div style=\"position: absolute; font-size: 4.444444444444445px; line-height: 0.8em; color: black; left: -763.7678872004664px; top: 1629.9259536805148px;\" title=\"word1 (2)\">word1</div></div>");
   wcw.dispose();
   expect(renderTarget.innerHTML).toBe("");
+});
+
+test("getCalculatedValues keeps umlauts", () => {
+  var wc = new WordCloud(new QuestionCommentModel("q1"), [
+    { q1: "Gro\u00DFmutter" },
+    { q1: "Gro\u00DFmutter" },
+  ]);
+  var data = wc.getCalculatedValues();
+  expect(Object.keys(data).length).toEqual(1);
+  expect(data[0][0]).toBe("gro\u00DFmutter");
+  expect(data[0][1]).toBe(2);
 });

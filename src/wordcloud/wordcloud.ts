@@ -126,7 +126,7 @@ export class WordCloud extends VisualizerBase {
     } else {
       stopWords = textHelper.getStopWords();
     }
-    const clearWordRegexp = new RegExp("[^a-z0-9 \-]+", "ig");
+    const clearWordRegexp = new RegExp("[.,\/#!$%\^\*;:{}=\-_`~()]", "g");
 
     const stopTheWord = (word: string) => {
       if (stopWords.indexOf(word) !== -1) {
@@ -141,7 +141,7 @@ export class WordCloud extends VisualizerBase {
 
       if (!!row) {
         row.split(" ").forEach((word) => {
-          let clearedWord = (word || "").replace(clearWordRegexp, "").toLowerCase();
+          let clearedWord = (word || "").toLowerCase().replace(clearWordRegexp, "");
           clearedWord = stopTheWord(clearedWord);
           if (!!clearedWord) {
             if (!result[clearedWord]) {
