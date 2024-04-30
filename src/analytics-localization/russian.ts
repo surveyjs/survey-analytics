@@ -1,5 +1,3 @@
-// This dictionary contains 1 untranslated or inherited localization strings.
-// These strings are commented out. Uncomment and edit them if you want to add your translations.
 import { localization } from "../localizationManager";
 
 export var russianStrings = {
@@ -22,7 +20,7 @@ export var russianStrings = {
   visualizer_number: "Среднее значение",
   visualizer_choices: "Таблица",
   visualizer_selectBase: "Диаграмма",
-  // visualizer_matrix: "Chart",
+  visualizer_matrix: "Диаграмма",
   chartType_bar: "Столбчатая диаграмма",
   chartType_vbar: "Вертикальная столбчатая диаграмма",
   chartType_stackedbar: "Столбчатая диаграмма с накоплением",
