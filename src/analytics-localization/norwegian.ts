@@ -1,3 +1,5 @@
+// This dictionary contains 1 untranslated or inherited localization strings.
+// These strings are commented out. Uncomment and edit them if you want to add your translations.
 import { localization } from "../localizationManager";
 
 export var norwegianStrings = {
@@ -20,6 +22,7 @@ export var norwegianStrings = {
   visualizer_number: "Gjennomsnitt",
   visualizer_choices: "Bord",
   visualizer_selectBase: "Sjøkart",
+  // visualizer_matrix: "Chart",
   chartType_bar: "Stolpediagram",
   chartType_vbar: "Vertikal stolpe",
   chartType_stackedbar: "Stablet stolpediagram",

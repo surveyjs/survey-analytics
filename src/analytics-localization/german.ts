@@ -1,3 +1,5 @@
+// This dictionary contains 1 untranslated or inherited localization strings.
+// These strings are commented out. Uncomment and edit them if you want to add your translations.
 import { localization } from "../localizationManager";
 
 export var germanStrings = {
@@ -20,6 +22,7 @@ export var germanStrings = {
   visualizer_number: "Durchschnitt",
   visualizer_choices: "Liste",
   visualizer_selectBase: "Diagrammtyp",
+  // visualizer_matrix: "Chart",
   chartType_bar: "Balkendiagramm",
   chartType_vbar: "Balkendiagramm vertikal",
   chartType_stackedbar: "Gestapeltes Balkendiagramm",
