@@ -1,3 +1,5 @@
+// This dictionary contains 1 untranslated or inherited localization strings.
+// These strings are commented out. Uncomment and edit them if you want to add your translations.
 import { localization } from "../localizationManager";
 
 export var portugueseStrings = {
@@ -20,6 +22,7 @@ export var portugueseStrings = {
   visualizer_number: "Média",
   visualizer_choices: "Tabela",
   visualizer_selectBase: "Gráfico",
+  // visualizer_matrix: "Chart",
   chartType_bar: "Barra",
   chartType_vbar: "Barra vertical",
   chartType_stackedbar: "Barra Empilhada",
@@ -51,9 +54,9 @@ export var portugueseStrings = {
   hideEmptyAnswers: "Esconder perguntas vazias",
   showEmptyAnswers: "Mostrar perguntas vazias",
   "topNValueText-1": "Todas as respostas",
-  "topNValueText5": "Primeiras 5 respostas",
-  "topNValueText10": "Primeiras 10 respostas",
-  "topNValueText20": "Primeiras 20 respostas",
+  topNValueText5: "Primeiras 5 respostas",
+  topNValueText10: "Primeiras 10 respostas",
+  topNValueText20: "Primeiras 20 respostas",
   hideMissingAnswers: "Ocultar perguntas não respondidas",
   showMissingAnswers: "Mostrar perguntas não respondidas",
   missingAnswersLabel: "Perguntas não respondidas",

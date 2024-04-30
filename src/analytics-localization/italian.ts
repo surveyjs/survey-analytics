@@ -1,3 +1,5 @@
+// This dictionary contains 1 untranslated or inherited localization strings.
+// These strings are commented out. Uncomment and edit them if you want to add your translations.
 import { localization } from "../localizationManager";
 
 export var italianStrings = {
@@ -20,6 +22,7 @@ export var italianStrings = {
   visualizer_number: "Media",
   visualizer_choices: "Tabella",
   visualizer_selectBase: "Grafico",
+  // visualizer_matrix: "Chart",
   chartType_bar: "Grafico a barre",
   chartType_vbar: "Grafico a barre verticali",
   chartType_stackedbar: "Grafico a barre sovrapposte",

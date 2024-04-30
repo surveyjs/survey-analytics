@@ -111,9 +111,6 @@ function addPropertiesIntoEnglishJSON(json) {
     });
   });
   for(let propName in propertiesHash) {
-    if(!json.pe[propName] && !json.p[propName]) {
-      json.p[propName] = propName;
-    }
     if(!!utils.alternativeNames[propName]) {
       delete utils.alternativeNames[propName];
     }

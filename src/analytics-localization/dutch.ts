@@ -1,3 +1,5 @@
+// This dictionary contains 1 untranslated or inherited localization strings.
+// These strings are commented out. Uncomment and edit them if you want to add your translations.
 import { localization } from "../localizationManager";
 
 export var dutchStrings = {
@@ -20,6 +22,7 @@ export var dutchStrings = {
   visualizer_number: "Gemiddeld",
   visualizer_choices: "Tafel",
   visualizer_selectBase: "Zeekaart",
+  // visualizer_matrix: "Chart",
   chartType_bar: "Bar",
   chartType_vbar: "Verticale balk",
   chartType_stackedbar: "Gestapelde Bar",
