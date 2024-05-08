@@ -413,7 +413,7 @@ var data = [
     nps_score: 8,
     favorite_functionality: "I like the flexibility of surveyJS",
     product_improvement:
-      "The product is super functional, but the UX is challenging. If one of your goals is to attract an audience to use your Survey Builder on your site, then I would revisit the usability of your UI. I was able to use it successfully, so don't take this input as negative. There was some trial and error for me in learning your UI and the survey logic the way it is presented today. I think you could make it way better and take on SurveyMonkey.",
+      "Gro\u00DFmutter Gro\u00DFmutter Gro\u00DFmutter Gro\u00DFmutter Gro\u00DFmutter Gro\u00DFmutter Gro\u00DFmutter Gro\u00DFmutter Gro\u00DFmutter The product is super functional, but the UX is challenging. If one of your goals is to attract an audience to use your Survey Builder on your site, then I would revisit the usability of your UI. I was able to use it successfully, so don't take this input as negative. There was some trial and error for me in learning your UI and the survey logic the way it is presented today. I think you could make it way better and take on SurveyMonkey.",
     "organization_type-Comment": "Start up",
     HappendAt: "2019-07-02T19:17:31.0318927",
     uselibraries: "",

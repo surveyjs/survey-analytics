@@ -18,7 +18,7 @@ var json = {
     { "type": "rating", "name": "question1", "rateValues": [{ "value": 1, "text": "15 minutes" }, { "value": 2, "text": "30 minutes" }, { "value": 3, "text": "1 hour" }] },
     {
       "type": "text",
-      "name": "question1",
+      "name": "question2",
       "inputType": "number"    
      }
   ]
@@ -132,24 +132,32 @@ var data = [
     date: "2030-10-13",
     age: 25
   },
-  { "question1": 3 }
+  { "question1": 3 },
+  { "question1": 1 },
+  { "question1": 3 },
 ];
 
 data = data.concat([
   {
-"question1": 15.1232432423
+    "question2": 15.1232432423
   }, {
-"question1": 32.1435232232
-  },
-  {
-"question1": 14.1232432423
+    "question2": 32.1435232
   }, {
-"question1": 13.1435232232
-  },
-  {
-"question1": 16.21000158
+    "question2": 14.1232432423
   }, {
-"question1": 11.1435232232
+    "question2": 13.1435232232
+  }, {
+    "question2": 16.21
+  }, {
+    "question2": 11.14352
+  }, {
+    "question2": 11.1435232232
+  }, {
+    "question2": 11.1435232232
+  }, {
+    "question2": 15
+  }, {
+    "question2": 44
   },
 ]);
 

@@ -15,14 +15,17 @@ This step-by-step tutorial will help you get started with SurveyJS Dashboard in 
 
 As a result, you will create the following dashboard:
 
-<iframe src="https://codesandbox.io/p/sandbox/add-surveyjs-analytics-to-a-react-application-forked-kj95pt"
-    style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-    title="Add SurveyJS Dashboard to a React Application"
-    allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+<iframe src="/proxy/github/code-examples/get-started-analytics/knockout/index.html"
+    style="width:100%; border:0; border-radius: 4px; overflow:hidden;"
 ></iframe>
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/react (linkStyle))
+
+If you are looking for a quick-start application that includes all SurveyJS components, refer to the following GitHub repositories:
+
+- <a href="https://github.com/surveyjs/surveyjs_react_quickstart" target="_blank">SurveyJS + React Quickstart Template</a>
+- <a href="https://github.com/surveyjs/surveyjs-nextjs" target="_blank">SurveyJS + Next.js Quickstart Template</a>
+- <a href="https://github.com/surveyjs/surveyjs-remix" target="_blank">SurveyJS + Remix Quickstart Template</a>
 
 ## Install the `survey-analytics` npm Package
 
@@ -51,13 +54,14 @@ To load the survey results, send the survey ID to your server and return an arra
 ```js
 // ...
 import { useState } from 'react';
+import { Model } from 'survey-core';
 
 const SURVEY_ID = 1;
 
 export default function App() {
   const [vizPanel, setVizPanel] = useState(null);
 
-  if (!vizPanel && !!survey) {
+  if (!vizPanel) {
     loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
       .then((surveyResults) => {
         // ...
@@ -142,7 +146,7 @@ const vizPanelOptions = {
 }
 ```
 
-Pass the configuration object, survey questions, and results to the `VisualizationPanel` constructor as shown in the code below to instantiate the Visualization Panel. Assign the produced instance to a constant that will be used later to render the component:
+Pass the configuration object, survey questions, and results to the `VisualizationPanel` constructor as shown in the code below to instantiate the Visualization Panel. Save the produced instance in a state variable that will be used later to render the component:
 
 ```js
 // ...
@@ -256,9 +260,15 @@ export default function App() {
 
 ## Render the Visualization Panel
 
-A Visualization Panel should be rendered in a page element. Add this element to the component markup:
+A Visualization Panel should be rendered in a page element. Add this element to the component markup, as shown below.
+
+> If you are using [Next.js](https://nextjs.org) or another framework that [has adopted React Server Components](https://react.dev/learn/start-a-new-react-project#bleeding-edge-react-frameworks), you need to explicitly mark the React component that renders a SurveyJS component as client code using the ['use client'](https://react.dev/reference/react/use-client) directive.
 
 ```js
+// Uncomment the following line if you are using Next.js:
+// 'use client'
+
+// ...
 export default function App() {
   // ...
   return (
@@ -292,6 +302,9 @@ To view the application, run `npm run start` in a command line and open [http://
     <summary>View Full Code</summary>
 
 ```js
+// Uncomment the following line if you are using Next.js:
+// 'use client'
+
 import { useState, useEffect } from 'react';
 import 'survey-analytics/survey.analytics.min.css';
 import { Model } from 'survey-core';
@@ -376,6 +389,6 @@ export default function App() {
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/react (linkStyle))
 
-## Further Reading
+## See Also
 
-- [Analytics Demo Examples](/Examples/Analytics)
+[Dashboard Demo Examples](/dashboard/examples/ (linkStyle))

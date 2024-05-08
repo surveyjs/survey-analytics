@@ -27,6 +27,28 @@
       ]
     },
     {
+      "Name": "set-up-table-view",
+      "Title": "Table View for Survey Results",
+      "Items": [
+        {
+          "Name": "set-up-table-view-angular",
+          "Title": "Angular"
+        },
+        {
+          "Name": "set-up-table-view-vue",
+          "Title": "Vue"
+        },
+        {
+          "Name": "set-up-table-view-react",
+          "Title": "React"
+        },
+        {
+          "Name": "set-up-table-view-knockout-jquery",
+          "Title": "Knockout / jQuery"
+        }
+      ]
+    },
+    {
       "Name": "api",
       "Title": "Dashboard API",
       "Items": [

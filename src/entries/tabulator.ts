@@ -9,6 +9,7 @@ import "../analytics-localization/portuguese";
 import "../analytics-localization/russian";
 import "../analytics-localization/dutch";
 import "../analytics-localization/arabic";
+import "../analytics-localization/japanese";
 
 //extensions
 import "../tables/extensions/rowextensions";

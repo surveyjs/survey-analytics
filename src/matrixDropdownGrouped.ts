@@ -42,7 +42,7 @@ export class MatrixDropdownGrouped extends SelectBase {
     return false;
   }
 
-  getData(): any[] {
+  public getCalculatedValues(): any[] {
     const values = this.getValues();
     const series = this.getSeriesValues();
     const rows = this.matrixQuestion.rows.map(row => row.value);

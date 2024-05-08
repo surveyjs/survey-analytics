@@ -14,24 +14,26 @@ declare type VisualizerConstructor = new (
  */
 export class VisualizationManager {
   static alternativesVisualizer: any = undefined;
-  static vizualizers: { [index: string]: Array<VisualizerConstructor> } = {};
+  static vizualizers: { [index: string]: Array<{ ctor: VisualizerConstructor, index: number }> } = {};
   /**
    * Registers a visualizer for a specified question type.
    *
    * [View Demo](https://surveyjs.io/dashboard/examples/visualize-answers-from-text-entry-fields-with-charts/ (linkStyle))
    * @param questionType A question [type](https://surveyjs.io/form-library/documentation/api-reference/question#getType).
    * @param constructor A function that returns a visualizer constructor to register.
+   * @param index A zero-based index that specifies the visualizer's position in the visualizer list for the specified question type. Pass `0` to insert the visualizer at the beginning of the list and use it by default. If `index` is not specified, the visualizer is added to the end of the list.
    */
   public static registerVisualizer(
     questionType: string,
-    constructor: VisualizerConstructor
+    constructor: VisualizerConstructor,
+    index = Number.MAX_VALUE
   ) {
     let visualizers = VisualizationManager.vizualizers[questionType];
     if (!visualizers) {
       visualizers = [];
       VisualizationManager.vizualizers[questionType] = visualizers;
     }
-    visualizers.push(constructor);
+    visualizers.push({ ctor: constructor, index });
   }
   /**
    * Unregisters a visualizer for a specified question type.
@@ -46,12 +48,19 @@ export class VisualizationManager {
       questionTypes = Object.keys(VisualizationManager.vizualizers);
     }
     questionTypes.forEach(qType => {
-      let visualizers = VisualizationManager.vizualizers[qType];
-      if (!!visualizers) {
-        let index = visualizers.indexOf(constructor);
-        if (index !== -1) {
-          visualizers.splice(index, 1);
+      if(constructor) {
+        let visualizers = VisualizationManager.vizualizers[qType];
+        if (!!visualizers) {
+          const vDescr = visualizers.filter(v => v.ctor === constructor)[0];
+          if(!!vDescr) {
+            let index = visualizers.indexOf(vDescr);
+            if (index !== -1) {
+              visualizers.splice(index, 1);
+            }
+          }
         }
+      } else {
+        VisualizationManager.vizualizers[qType] = [];
       }
     });
   }
@@ -69,11 +78,13 @@ export class VisualizationManager {
   public static getVisualizersByType(
     questionType: string
   ): VisualizerConstructor[] {
-    let visualizers = VisualizationManager.vizualizers[questionType];
-    if (!visualizers) {
+    let vDescrs = VisualizationManager.vizualizers[questionType];
+    if (!vDescrs) {
       return [VisualizerBase];
     }
-    return visualizers;
+    vDescrs = [].concat(vDescrs);
+    vDescrs.sort((v1, v2) => v1.index - v2.index);
+    return vDescrs.map(v => v.ctor);
   }
   /**
    * Returns a constructor for an alternative visualizer selector.

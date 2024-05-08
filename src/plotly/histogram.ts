@@ -35,8 +35,8 @@ export class HistogramPlotly extends HistogramModel {
     });
   }
 
-  getData(): any[] {
-    const statistics = super.getData();
+  public getCalculatedValues(): any[] {
+    const statistics = super.getCalculatedValues();
     const series = this.getSeriesValues();
     const values = this.getValues();
     if (series.length > 1) {
@@ -50,6 +50,10 @@ export class HistogramPlotly extends HistogramModel {
       return preparedData;
     }
     return statistics;
+  }
+
+  public getValueType(): "date" | "number" {
+    return this.valueType;
   }
 }
 

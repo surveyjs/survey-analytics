@@ -47,14 +47,15 @@ test("number default histogram", () => {
 
   const histValues = number.getValues();
   const histLabels = number.getLabels();
-  const histData = number.getData();
+  const histData = number.getCalculatedValues();
 
   expect(number["valueType"]).toBe("number");
-  expect(histValues).toMatchObject([17, 25, 30, 40]);
-  expect(histLabels).toMatchObject(["17", "25", "30", "40"]);
-  expect(histData).toMatchObject([[3, 1, 2, 2]]);
+  expect(histValues).toMatchObject([17, 19.3, 21.6, 23.9, 26.2, 28.5, 30.8, 33.1, 35.4, 37.7]);
+  expect(histLabels).toMatchObject(["17-19.3", "19.3-21.6", "21.6-23.9", "23.9-26.2", "26.2-28.5", "28.5-30.8", "30.8-33.1", "33.1-35.4", "35.4-37.7", "37.7-40"]);
+  expect(histData).toMatchObject([[3, 0, 0, 1, 0, 2, 0, 0, 0, 2]]);
 
   expect(number["isSupportMissingAnswers"]()).toBeFalsy();
+  expect(number["isSupportAnswersOrder"]()).toBeTruthy();
 });
 
 test("date default histogram", () => {
@@ -67,11 +68,24 @@ test("date default histogram", () => {
   const date = new HistogramModel(question, data);
 
   const histValues = date.getValues();
-  const histData = date.getData();
+  const histLabels = date.getLabels();
+  const histData = date.getCalculatedValues();
 
   expect(date["valueType"]).toBe("date");
-  expect(histValues).toMatchObject(["2004-10-13", "2011-10-13", "2016-10-13", "2021-10-13"]);
-  expect(histData).toMatchObject([[2, 2, 1, 3]]);
+  expect(histValues).toMatchObject([1097625600000, 1151271360000, 1204917120000, 1258562880000, 1312208640000, 1365854400000, 1419500160000, 1473145920000, 1526791680000, 1580437440000]);
+  expect(histLabels).toMatchObject([
+    "10/13/2004-6/25/2006",
+    "6/25/2006-3/7/2008",
+    "3/7/2008-11/18/2009",
+    "11/18/2009-8/1/2011",
+    "8/1/2011-4/13/2013",
+    "4/13/2013-12/25/2014",
+    "12/25/2014-9/6/2016",
+    "9/6/2016-5/20/2018",
+    "5/20/2018-1/31/2020",
+    "1/31/2020-10/13/2021",
+  ]);
+  expect(histData).toMatchObject([[2, 0, 0, 0, 2, 0, 0, 1, 0, 3]]);
 
   expect(date["isSupportMissingAnswers"]()).toBeFalsy();
 });
@@ -94,7 +108,7 @@ test("date default intervals", () => {
   const histValues = date.getValues();
   const histLabels = date.getLabels();
   const histIntervals = date.intervals;
-  const histData = date.getData();
+  const histData = date.getCalculatedValues();
 
   expect(histIntervals.length).toBe(10);
   expect(histValues).toMatchObject([
@@ -136,7 +150,7 @@ test("date empty data", () => {
 
   const histValues = date.getValues();
   const histIntervals = date.intervals;
-  const histData = date.getData();
+  const histData = date.getCalculatedValues();
 
   expect(histIntervals.length).toBe(0);
   expect(histValues).toMatchObject([]);
@@ -191,23 +205,23 @@ test("number custom intervals", () => {
 
   const histValues = date.getValues();
   const histIntervals = date.intervals;
-  const histData = date.getData();
+  const histData = date.getCalculatedValues();
 
   expect(histIntervals.length).toBe(5);
   expect(histValues).toMatchObject([
-    70,
-    19,
-    14,
-    7,
     0,
+    7,
+    14,
+    19,
+    70
   ]);
   expect(histData).toMatchObject([[
-    1,
+    12,
     11,
     5,
     11,
-    12]
-  ]);
+    1
+  ]]);
 });
 
 test("number custom intervals for small result sets", () => {
@@ -231,17 +245,17 @@ test("number custom intervals for small result sets", () => {
 
   const histValues = date.getValues();
   const histIntervals = date.intervals;
-  const histData = date.getData();
+  const histData = date.getCalculatedValues();
 
   expect(histIntervals.length).toBe(5);
   expect(histValues).toMatchObject([
-    70,
-    19,
-    14,
-    7,
     0,
+    7,
+    14,
+    19,
+    70
   ]);
-  expect(histData).toMatchObject([[0, 5, 3, 0, 0]]);
+  expect(histData).toMatchObject([[0, 0, 3, 5, 0]]);
 });
 
 test("histogram series default algorithm data", () => {
@@ -288,8 +302,14 @@ test("histogram series default algorithm data", () => {
   expect(number.getSeriesValues()).toMatchObject(series);
   expect(number.getSeriesLabels()).toMatchObject(series);
 
-  const chartData = number.getData();
-  expect(chartData).toMatchObject([[1, 0, 0, 0], [0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]);
+  const chartData = number.getCalculatedValues();
+  expect(chartData).toMatchObject([
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+  ]);
 });
 
 test("histogram series intervals data", () => {
@@ -371,68 +391,13 @@ test("histogram series intervals data", () => {
     seriesLabels: series,
   });
 
-  const chartData = number.getData();
+  const chartData = number.getCalculatedValues();
   expect(chartData).toMatchObject([
-    [
-      1,
-      0,
-      0,
-      1,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-    ],
-    [
-      1,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      1,
-      0,
-      0,
-    ],
-    [
-      1,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      1,
-      0,
-    ],
-    [
-      0,
-      0,
-      1,
-      0,
-      0,
-      1,
-      0,
-      0,
-      1,
-      0,
-    ],
-    [
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      2,
-    ],
+    [1, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+    [1, 0, 0, 0, 1, 0, 0, 1, 0, 0],
+    [1, 0, 0, 0, 1, 0, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 0, 1, 0, 0, 2],
   ]);
 });
 
@@ -451,14 +416,31 @@ test("histogram original data keep number original values", () => {
     getType: () => "rating",
     type: "rating",
     name: "question1",
+    rateMin: 1,
+    rateMax: 5,
+    rateStep: 1
   };
   const number = new HistogramModel(question, [{ "question2": "Yes", "question1": 3 }, { "question2": "It is going so well!!!", "question1": 5 }, { "question2": false, "question1": 5 }, { "question2": true, "question1": 1 }, { "question2": false, "question1": 5 }, { "question3": "item2", "question2": false, "question1": 5 }]);
-  expect(number.getValues()).toEqual([1, 3, 5]);
-  expect(number.getLabels()).toEqual(["1", "3", "5"]);
+  expect(number["valueType"]).toBe("number");
+  expect(number.getValues()).toEqual([1, 2, 3, 4, 5]);
+  expect(number.getLabels()).toEqual(["1", "2", "3", "4", "5"]);
 
   const selectedItem = number.getSelectedItemByText("5");
   expect(selectedItem.value).toBe(5);
   expect(selectedItem.text).toBe("5");
+});
+
+test("histogram rating should be numeric", () => {
+  const question: any = {
+    getType: () => "rating",
+    type: "rating",
+    name: "question1",
+    rateMin: 0,
+    rateMax: 10,
+    rateStep: 1
+  };
+  const number = new HistogramModel(question, []);
+  expect(number["valueType"]).toBe("number");
 });
 
 test("histogram should use rate values", () => {
@@ -471,9 +453,9 @@ test("histogram should use rate values", () => {
   const rating = new HistogramModel(survey.getAllQuestions()[0], [{ "question1": 3 }]);
   expect(rating.intervals).toEqual([
     {
-      "end": 4,
-      "label": "1 hour",
-      "start": 3,
+      "end": 2,
+      "label": "15 minutes",
+      "start": 1,
     },
     {
       "end": 3,
@@ -481,18 +463,14 @@ test("histogram should use rate values", () => {
       "start": 2,
     },
     {
-      "end": 2,
-      "label": "15 minutes",
-      "start": 1,
+      "end": 4,
+      "label": "1 hour",
+      "start": 3,
     },
   ]);
-  expect(rating.getValues()).toEqual([3, 2, 1]);
-  expect(rating.getLabels()).toEqual(["1 hour", "30 minutes", "15 minutes"]);
-  expect(rating.getData()).toEqual([[
-    1,
-    0,
-    0,
-  ]]);
+  expect(rating.getValues()).toEqual([1, 2, 3]);
+  expect(rating.getLabels()).toEqual(["15 minutes", "30 minutes", "1 hour"]);
+  expect(rating.getCalculatedValues()).toEqual([[0, 0, 1]]);
 });
 
 test("histogram intervals alignment and rounding", () => {
@@ -604,7 +582,7 @@ test("histogram intervals alignment and rounding", () => {
       age: 25
     },
     { "question1": 3 }
-  ];  
+  ];
   const question: any = {
     getType: () => "rating",
     type: "rating",
@@ -613,4 +591,98 @@ test("histogram intervals alignment and rounding", () => {
   const number = new HistogramModel(question, data);
   expect(number.getValues()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
   expect(number.getLabels()).toEqual(["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9", "9-10"]);
+});
+
+test("number histogram answers order", () => {
+  const question: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "number",
+    name: "question2",
+  };
+  const number = new HistogramModel(question, [
+    {
+      "question2": 15.1232432423
+    }, {
+      "question2": 32.1435232
+    }, {
+      "question2": 14.1232432423
+    }, {
+      "question2": 13.1435232232
+    }, {
+      "question2": 16.21
+    }, {
+      "question2": 11.14352
+    }, {
+      "question2": 11.1435232232
+    }, {
+      "question2": 11.1435232232
+    }, {
+      "question2": 15
+    }, {
+      "question2": 44
+    },
+  ] as Array<any>);
+
+  const histValues = number.getValues();
+  const histLabels = number.getLabels();
+
+  expect(number["valueType"]).toBe("number");
+  expect(number.intervals).toEqual([
+    {
+      "end": 14.43,
+      "label": "11.14-14.43",
+      "start": 11.14,
+    },
+    {
+      "end": 17.71,
+      "label": "14.43-17.71",
+      "start": 14.43,
+    },
+    {
+      "end": 21,
+      "label": "17.71-21",
+      "start": 17.71,
+    },
+    {
+      "end": 24.29,
+      "label": "21-24.29",
+      "start": 21,
+    },
+    {
+      "end": 27.57,
+      "label": "24.29-27.57",
+      "start": 24.29,
+    },
+    {
+      "end": 30.86,
+      "label": "27.57-30.86",
+      "start": 27.57,
+    },
+    {
+      "end": 34.14,
+      "label": "30.86-34.14",
+      "start": 30.86,
+    },
+    {
+      "end": 37.43,
+      "label": "34.14-37.43",
+      "start": 34.14,
+    },
+    {
+      "end": 40.71,
+      "label": "37.43-40.71",
+      "start": 37.43,
+    },
+    {
+      "end": 44.03285648,
+      "label": "40.71-44",
+      "start": 40.71,
+    },
+  ]);
+  expect(histValues).toMatchObject([11.14, 14.43, 17.71, 21, 24.29, 27.57, 30.86, 34.14, 37.43, 40.71]);
+  expect(histLabels).toMatchObject(["11.14-14.43", "14.43-17.71", "17.71-21", "21-24.29", "24.29-27.57", "27.57-30.86", "30.86-34.14", "34.14-37.43", "37.43-40.71", "40.71-44"]);
+
+  const histData = number.getCalculatedValues();
+  expect(histData).toMatchObject([[5, 3, 0, 0, 0, 0, 1, 0, 0, 1]]);
 });

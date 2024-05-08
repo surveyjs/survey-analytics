@@ -136,7 +136,7 @@ export class NumberModel extends VisualizerBase {
     return colors;
   }
 
-  getData() {
+  public getCalculatedValues(): any {
     if (
       this._resultAverage === undefined ||
       this._resultMin === undefined ||

@@ -1,7 +1,7 @@
 window.URL.createObjectURL = jest.fn();
 import { HistogramPlotly } from "../../src/plotly/histogram";
 
-test("getData", () => {
+test("getCalculatedValues", () => {
   const preparedData = [
     {
       "Column 1": 1,
@@ -41,11 +41,13 @@ test("getData", () => {
     seriesLabels: series,
   });
 
-  const chartData = number.getData();
-  expect(chartData).toMatchObject([[1, 0, 1, 0, 0], [0, 1, 0, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1]]);
+  const chartData = number.getCalculatedValues();
+  expect(chartData).toMatchObject([
+    [1, 0, 1, 0, 0], [0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 1],
+  ]);
 });
 
-test("getData - 2 rows", () => {
+test("getCalculatedValues - 2 rows", () => {
   const preparedData = [
     {
       "Column 1": 1,
@@ -85,6 +87,6 @@ test("getData - 2 rows", () => {
     seriesLabels: series,
   });
 
-  const chartData = number.getData();
-  expect(chartData).toMatchObject([[2, 0], [0, 1], [0, 1], [1, 0]]);
+  const chartData = number.getCalculatedValues();
+  expect(chartData).toMatchObject([[2, 0], [0, 0], [0, 1], [0, 0], [0, 0], [0, 0], [0, 0], [0, 1], [0, 0], [1, 0]]);
 });

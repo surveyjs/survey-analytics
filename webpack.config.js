@@ -94,7 +94,9 @@ module.exports = function (options) {
         fs.createReadStream("./README.md").pipe(
           fs.createWriteStream(packagePath + "README.md")
         );
-        packageJson.dependencies["survey-core"] = packageJson.version;
+        delete packageJson.dependencies["survey-core"];
+        if(!packageJson.peerDependencies) packageJson.peerDependencies = {};
+        packageJson.peerDependencies["survey-core"] = packageJson.version
         fs.writeFileSync(
           packagePath + "package.json",
           JSON.stringify(packageJson, null, 2),
@@ -171,6 +173,7 @@ module.exports = function (options) {
       library: "[pc-name]",
       libraryTarget: "umd",
       umdNamedDefine: true,
+      globalObject: 'this'
     },
     externals: {
       jquery: {

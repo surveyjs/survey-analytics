@@ -1,3 +1,5 @@
+// This dictionary contains 1 untranslated or inherited localization strings.
+// These strings are commented out. Uncomment and edit them if you want to add your translations.
 import { localization } from "../localizationManager";
 
 export var italianStrings = {
@@ -20,6 +22,7 @@ export var italianStrings = {
   visualizer_number: "Media",
   visualizer_choices: "Tabella",
   visualizer_selectBase: "Grafico",
+  // visualizer_matrix: "Chart",
   chartType_bar: "Grafico a barre",
   chartType_vbar: "Grafico a barre verticali",
   chartType_stackedbar: "Grafico a barre sovrapposte",
@@ -35,10 +38,6 @@ export var italianStrings = {
   filter: "Filtro",
   resetFilter: "Cancella filtro",
   changeLocale: "Cambia lingua",
-  en: "Inglese",
-  fr: "Francese",
-  ru: "Russo",
-  de: "Tedesco",
   clearButton: "Cancella",
   addElement: "Scegli la domanda da mostrare...",
   defaultOrder: "Ordine di Default",
@@ -55,9 +54,9 @@ export var italianStrings = {
   hideEmptyAnswers: "Nascondi risposte vuote",
   showEmptyAnswers: "Mostra risposte vuote",
   "topNValueText-1": "Tutte le risposte",
-  "topNValueText5": "Top 5 risposte",
-  "topNValueText10": "Top 10 risposte",
-  "topNValueText20": "Top 20 risposte",
+  topNValueText5: "Top 5 risposte",
+  topNValueText10: "Top 10 risposte",
+  topNValueText20: "Top 20 risposte",
   hideMissingAnswers: "Nascondi le risposte mancanti",
   showMissingAnswers: "Mostra le risposte mancanti",
   missingAnswersLabel: "Risposte mancanti",
@@ -66,9 +65,14 @@ export var italianStrings = {
   showPerValues: "Per Valori",
   showPerColumns: "Per Colonne",
   answer: "Risposta",
+  correctAnswer: "Risposta esatta: ",
   percent: "Percentuale",
   responses: "Risposte"
 };
 
 localization.locales["it"] = italianStrings;
-localization.localeNames["it"] = "Italian";
+localization.localeNames["it"] = "Italiano";
+
+// The following strings have been translated by a machine translation service
+// Remove those strings that you have corrected manually
+// undefined.correctAnswer: "Correct answer: " => "Risposta esatta: "

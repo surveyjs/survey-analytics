@@ -1,3 +1,5 @@
+// This dictionary contains 1 untranslated or inherited localization strings.
+// These strings are commented out. Uncomment and edit them if you want to add your translations.
 import { localization } from "../localizationManager";
 
 export var germanStrings = {
@@ -20,6 +22,7 @@ export var germanStrings = {
   visualizer_number: "Durchschnitt",
   visualizer_choices: "Liste",
   visualizer_selectBase: "Diagrammtyp",
+  // visualizer_matrix: "Chart",
   chartType_bar: "Balkendiagramm",
   chartType_vbar: "Balkendiagramm vertikal",
   chartType_stackedbar: "Gestapeltes Balkendiagramm",
@@ -51,9 +54,9 @@ export var germanStrings = {
   hideEmptyAnswers: "Leere Antworten ausblenden",
   showEmptyAnswers: "Leere Antworten anzeigen",
   "topNValueText-1": "Alle Antworten",
-  "topNValueText5": "Top 5 Antworten",
-  "topNValueText10": "Top 10 Antworten",
-  "topNValueText20": "Top 20 Antworten",
+  topNValueText5: "Top 5 Antworten",
+  topNValueText10: "Top 10 Antworten",
+  topNValueText20: "Top 20 Antworten",
   hideMissingAnswers: "Fehlende Antworten ausblenden",
   showMissingAnswers: "Fehlende Antworten anzeigen",
   missingAnswersLabel: "Fehlede Antworten",
@@ -67,4 +70,4 @@ export var germanStrings = {
   responses: "Antworten"
 };
 localization.locales["de"] = germanStrings;
-localization.localeNames["de"] = "German";
+localization.localeNames["de"] = "Deutsch";

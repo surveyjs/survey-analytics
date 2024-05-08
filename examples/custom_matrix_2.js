@@ -11,7 +11,7 @@ function CustomVisualizer(question, data) {
   }
 
   function renderRows(table, visualizer) {
-    var data = visualizer.getData();
+    var data = visualizer.getCalculatedValues();
     var values = visualizer.getValues();
     var series = visualizer.getSeriesValues();
     if(series.length > 1) {

@@ -1,4 +1,4 @@
-import { Event, Question, SurveyModel } from "survey-core";
+import { Event, Question, SurveyModel, surveyLocalization } from "survey-core";
 import * as SurveyCore from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
@@ -268,7 +268,7 @@ export interface IVisualizationPanelOptions {
  * Survey questions to visualize. Call `SurveyModel`'s [`getAllQuestions()`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#getQuestionByName) method to access all survey questions and pass its result as the `questions` parameter.
  * - `data`: `Array<any>`\
  * Survey results.
- * - `options`: [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions)\
+ * - `vizPanelOptions`: [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions)\
  * Visualization Panel configuration.
  *
  * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
@@ -293,8 +293,8 @@ export class VisualizationPanel extends VisualizerBase {
         "." + questionLayoutedElementClassName,
         this.allowDragDrop
       );
-    this._layoutEngine.onMoveCallback = (fromIndex: number, toIndex: number) =>
-      this.moveVisibleElement(fromIndex, toIndex);
+    this._layoutEngine.onMoveCallback = (order: Array<string>) =>
+      this.reorderVisibleElements(order);
 
     this.showToolbar = true;
     if (this.options.survey) {
@@ -374,7 +374,7 @@ export class VisualizationPanel extends VisualizerBase {
       const localeChoices = this.locales.map((element) => {
         return {
           value: element,
-          text: localization.getString(element)
+          text: localization.localeNames[element] || localization.getString(element) || element
         };
       });
       // localeChoices.unshift({
@@ -383,7 +383,7 @@ export class VisualizationPanel extends VisualizerBase {
       // });
       this.registerToolbarItem("changeLocale", () => {
         return DocumentHelper.createSelector(localeChoices,
-          (option: any) => !!option.value && this.locale === option.value,
+          (option: any) => !!option.value && (this.locale || surveyLocalization.defaultLocale) === option.value,
           (e: any) => {
             var newLocale = e.target.value;
             this.locale = newLocale;
@@ -391,6 +391,14 @@ export class VisualizationPanel extends VisualizerBase {
         );
       });
     }
+  }
+  reorderVisibleElements(order: string[]): void {
+    const newElements = [];
+    order.forEach(name => {
+      newElements.push(this._elements.filter(el => el.name === name)[0]);
+    });
+    this._elements = newElements;
+    this.visibleElementsChanged(undefined, "REORDERED");
   }
 
   private onAfterRenderQuestionCallback = (
@@ -884,6 +892,7 @@ export class VisualizationPanel extends VisualizerBase {
     const visualizer = this.getVisualizer(element.name);
 
     const questionElement = DocumentHelper.createElement("div");
+    questionElement.dataset.question = element.name;
 
     !!container && container.appendChild(questionElement);
 
@@ -979,6 +988,7 @@ export class VisualizationPanel extends VisualizerBase {
 
   /**
    * The state of `VisualizationPanel`. Includes information about the visualized elements and current locale.
+   * @see onStateChanged
    */
   public get state(): IState {
     return this.getState();

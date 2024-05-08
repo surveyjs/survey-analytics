@@ -138,11 +138,7 @@ export class SelectBase
       return null;
     });
     this.registerToolbarItem("changeAnswersOrder", () => {
-      if (
-        (this.options.allowChangeAnswersOrder === undefined ||
-          this.options.allowChangeAnswersOrder) &&
-        this.getSeriesValues().length === 0
-      ) {
+      if (this.isSupportAnswersOrder()) {
         this.choicesOrderSelector = DocumentHelper.createSelector(
           [
             { text: localization.getString("defaultOrder"), value: "default" },
@@ -440,6 +436,12 @@ export class SelectBase
     this.stateChanged("topN", value);
   }
 
+  protected isSupportAnswersOrder(): boolean {
+    return (this.options.allowChangeAnswersOrder === undefined ||
+            this.options.allowChangeAnswersOrder) &&
+            this.getSeriesValues().length === 0;
+  }
+
   protected isSupportMissingAnswers(): boolean {
     return true;
   }
@@ -525,7 +527,7 @@ export class SelectBase
   }
 
   getPercentages(): Array<Array<number>> {
-    var data: Array<Array<number>> = this.getData();
+    var data: Array<Array<number>> = this.getCalculatedValues();
     var percentages: Array<Array<number>> = [];
     var percentagePrecision = this._percentagePrecision;
 
@@ -585,7 +587,7 @@ export class SelectBase
    */
   public getAnswersData(): IAnswersData {
     let seriesLabels = this.getSeriesLabels();
-    let datasets = this.getData();
+    let datasets = this.getCalculatedValues();
     let labels = this.getLabels();
     let colors = this.getColors();
     var texts = this.showPercentages ? this.getPercentages() : datasets;

@@ -14,4 +14,9 @@
     // "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
     // "javascript.format.insertSpaceAfterKeywordsInControlFlowStatements": false,
     "editor.tabSize": 2,
+    "jest.outputConfig": {
+        "revealOn": "run",
+        "revealWithFocus": "test-results",
+        "clearOnRun": "none"
+    },
 }

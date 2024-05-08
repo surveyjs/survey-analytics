@@ -1,3 +1,5 @@
+// This dictionary contains 1 untranslated or inherited localization strings.
+// These strings are commented out. Uncomment and edit them if you want to add your translations.
 import { localization } from "../localizationManager";
 
 export var arabicStrings = {
@@ -20,6 +22,7 @@ export var arabicStrings = {
   visualizer_number: "متوسط",
   visualizer_choices: "جدول",
   visualizer_selectBase: "رسم بياني",
+  // visualizer_matrix: "Chart",
   chartType_bar: "شريط",
   chartType_vbar: "شريط عمودي",
   chartType_stackedbar: "شريط مكدس",
@@ -35,10 +38,6 @@ export var arabicStrings = {
   filter: "ترشح",
   resetFilter: "إعادة تعيين",
   changeLocale: "تغيير اللغة",
-  en: "اللغة الانجليزية",
-  fr: "اللغه الفرنسية",
-  ru: "اللغه الروسية",
-  de: "اللغه الانجليزية",
   clearButton: "مسح",
   addElement: "اختر سؤالاً للعرض ...",
   defaultOrder: "الترتيب الافتراضي",
@@ -54,6 +53,10 @@ export var arabicStrings = {
   saveDiagramAsPNG: "تنزيل بصيغة png",
   hideEmptyAnswers: "إخفاء الإجابات الفارغة",
   showEmptyAnswers: "إظهار الإجابات الفارغة",
+  "topNValueText-1": "جميع الإجابات",
+  topNValueText5: "أهم 5 إجابات",
+  topNValueText10: "أفضل 10 إجابات",
+  topNValueText20: "أفضل 20 إجابة",
   hideMissingAnswers: "إخفاء الإجابات المفقودة",
   showMissingAnswers: "عرض الإجابات المفقودة",
   missingAnswersLabel: "أجوبة مفقودة",
@@ -64,8 +67,15 @@ export var arabicStrings = {
   answer: "إجب",
   correctAnswer: "الاجابة الصحيحة: ",
   percent: "النسبه المئويه",
-  responses: "الاستجابات",
+  responses: "الاستجابات"
 };
 
 localization.locales["ar"] = arabicStrings;
-localization.localeNames["ar"] = "Arabic";
+localization.localeNames["ar"] = "العربية";
+
+// The following strings have been translated by a machine translation service
+// Remove those strings that you have corrected manually
+// undefined.topNValueText-1: "All answers" => "جميع الإجابات"
+// undefined.topNValueText5: "Top 5 answers" => "أهم 5 إجابات"
+// undefined.topNValueText10: "Top 10 answers" => "أفضل 10 إجابات"
+// undefined.topNValueText20: "Top 20 answers" => "أفضل 20 إجابة"

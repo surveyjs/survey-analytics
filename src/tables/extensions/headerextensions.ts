@@ -163,7 +163,7 @@ TableExtensions.registerExtension({
   visibleIndex: 1,
   render: function (table) {
     var locales = table.getLocales();
-    if (locales.length < 2) return null;
+    if (table.options.disableLocaleSwitch || locales.length < 2) return null;
     const el = <HTMLSelectElement>(
       DocumentHelper.createElement("select", "sa-table__header-extension", {})
     );
@@ -173,7 +173,7 @@ TableExtensions.registerExtension({
     optionsValues.forEach(function (val) {
       var option = DocumentHelper.createElement("option", "", {
         value: val,
-        text: val,
+        text: localization.localeNames[val] || localization.getString(val) || val,
       });
       el.appendChild(option);
     });
@@ -183,3 +183,5 @@ TableExtensions.registerExtension({
     return el;
   },
 });
+
+export var HeaderExtensions;
