@@ -1,4 +1,4 @@
-import { ITableOptions, Table, TableRow } from "./table";
+import { GetPaginatedDataFunction, ITableOptions, Table, TableRow } from "./table";
 import { SurveyModel } from "survey-core";
 import { ColumnDataType, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
@@ -88,7 +88,7 @@ export class Tabulator extends Table {
 
   constructor(
     survey: SurveyModel,
-    data: Array<Object>,
+    data: Array<Object> | GetPaginatedDataFunction,
     options?: ITabulatorOptions,
     _columnsData: Array<IColumnData> = []
   ) {
@@ -127,7 +127,7 @@ export class Tabulator extends Table {
     targetNode.appendChild(header);
     targetNode.appendChild(this.tableContainer);
 
-    var config = {};
+    var config: any = {};
     Object.assign(
       config,
       {
@@ -151,6 +151,26 @@ export class Tabulator extends Table {
       },
       this._options.tabulatorOptions
     );
+    if(data === undefined && typeof this.data === "function") {
+      delete config.data;
+      config.pagination = "remote";
+      config.ajaxURL = "function",
+      config.ajaxRequestFunc = (url, config, params) => {
+        return new Promise((resolve, reject) => {
+          (this.data as GetPaginatedDataFunction)({
+            offset: (params.page - 1) * params.size,
+            limit: params.size,
+            callback: (loadedData: { data: Array<Object>, total: number, error?: any }) => {
+              if(!loadedData.error && Array.isArray(loadedData.data)) {
+                resolve({ data: loadedData.data.map(item => this.processLoadedDataItem(item)), last_page: Math.ceil(loadedData.total / params.size) });
+              } else {
+                reject();
+              }
+            },
+          });
+        });
+      };
+    }
 
     this.tabulatorTables = new TabulatorTables(this.tableContainer, config);
 

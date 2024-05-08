@@ -33,6 +33,8 @@ export interface ITableOptions {
   }) => void;
 }
 
+export type GetPaginatedDataFunction = (params: { filter?: any, limit?: number, offset?: number, callback: (response: { data: Array<Object>, total: number, error?: any }) => void }) => void;
+
 export class TableEvent extends EventBase<Table> {}
 
 export abstract class Table {
@@ -44,7 +46,7 @@ export abstract class Table {
   protected _columns: Array<IColumn>;
   constructor(
     protected _survey: SurveyModel,
-    protected data: Array<Object>,
+    protected data: Array<Object> | GetPaginatedDataFunction,
     protected _options: ITableOptions = {},
     protected _columnsData: Array<IColumnData> = []
   ) {
@@ -187,21 +189,26 @@ export abstract class Table {
   }
   public get isInitTableDataProcessing(): boolean { return this.isInitTableDataProcessingValue; }
   private isInitTableDataProcessingValue: boolean;
-  protected initTableData(data: Array<any>) {
-    this.isInitTableDataProcessingValue = true;
-    this.tableData = (data || []).map((item) => {
-      var dataItem: any = {};
-      this._survey.data = item;
-      this._columns.forEach((column) => {
-        const opt = column.getCellData(this, item);
-        if (typeof this._options.onGetQuestionValue === "function") {
-          this._options.onGetQuestionValue(opt);
-        }
-        dataItem[column.name] = opt.displayValue;
-      });
-
-      return dataItem;
+  protected processLoadedDataItem(item: any): any {
+    var dataItem: any = {};
+    this._survey.data = item;
+    this._columns.forEach((column) => {
+      const opt = column.getCellData(this, item);
+      if (typeof this._options.onGetQuestionValue === "function") {
+        this._options.onGetQuestionValue(opt);
+      }
+      dataItem[column.name] = opt.displayValue;
     });
+
+    return dataItem;
+  }
+  protected initTableData(data: Array<any> | GetPaginatedDataFunction): void {
+    if(!Array.isArray(data)) {
+      this.tableData = undefined;
+      return;
+    }
+    this.isInitTableDataProcessingValue = true;
+    this.tableData = (data || []).map((item) => this.processLoadedDataItem(item));
     this.isInitTableDataProcessingValue = false;
   }
 
