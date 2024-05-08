@@ -121,13 +121,13 @@ test("visualizers set order", () => {
 });
 
 test("stub default visualizer and suppressVisulizerStubRendering setting", () => {
-  let testVizualizers = VisualizationManager.getVisualizersByType("test");
+  let testVizualizers = VisualizationManager.getVisualizersByType("signaturepad");
   expect(testVizualizers.length).toBe(1);
   expect(testVizualizers[0].name).toBe("VisualizerBase");
 
   try {
     VisualizerBase.suppressVisualizerStubRendering = true;
-    testVizualizers = VisualizationManager.getVisualizersByType("test");
+    testVizualizers = VisualizationManager.getVisualizersByType("signaturepad");
     expect(testVizualizers.length).toBe(0);
   } finally {
     VisualizerBase.suppressVisualizerStubRendering = false;
