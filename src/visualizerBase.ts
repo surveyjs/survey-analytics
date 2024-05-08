@@ -34,6 +34,8 @@ var styles = require("./visualizerBase.scss");
  * [View Demo](https://surveyjs.io/dashboard/examples/how-to-plot-survey-data-in-custom-bar-chart/ (linkStyle))
  */
 export class VisualizerBase implements IDataInfo {
+  public static suppressVisualizerStubRendering: boolean = false;
+
   private _showToolbar = true;
   private _footerVisualizer: VisualizerBase = undefined;
   private _dataProvider: DataProvider = undefined;
@@ -198,7 +200,9 @@ export class VisualizerBase implements IDataInfo {
       question.title = this.processText(this.question.title);
 
       this._footerVisualizer = this.createVisualizer(question);
-      this._footerVisualizer.onUpdate = () => this.invokeOnUpdate();
+      if(!!this._footerVisualizer) {
+        this._footerVisualizer.onUpdate = () => this.invokeOnUpdate();
+      }
     }
     return this._footerVisualizer;
   }
