@@ -1,3 +1,5 @@
+// This dictionary contains 1 untranslated or inherited localization strings.
+// These strings are commented out. Uncomment and edit them if you want to add your translations.
 import { localization } from "../localizationManager";
 
 export var farsiStrings = {
@@ -20,6 +22,7 @@ export var farsiStrings = {
   visualizer_number: "متوسط",
   visualizer_choices: "جدول",
   visualizer_selectBase: "نمودار",
+  // visualizer_matrix: "Chart",
   chartType_bar: "میله ای",
   chartType_vbar: "نوار عمودی",
   chartType_stackedbar: "نوار پشته",

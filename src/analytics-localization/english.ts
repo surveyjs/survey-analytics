@@ -21,6 +21,7 @@ export var englishStrings = {
   visualizer_number: "Average",
   visualizer_choices: "Table",
   visualizer_selectBase: "Chart",
+  visualizer_matrix: "Chart",
   chartType_bar: "Bar",
   chartType_vbar: "Vertical Bar",
   chartType_stackedbar: "Stacked Bar",

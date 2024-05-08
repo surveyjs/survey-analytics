@@ -1,3 +1,5 @@
+// This dictionary contains 1 untranslated or inherited localization strings.
+// These strings are commented out. Uncomment and edit them if you want to add your translations.
 import { localization } from "../localizationManager";
 
 export var arabicStrings = {
@@ -20,6 +22,7 @@ export var arabicStrings = {
   visualizer_number: "متوسط",
   visualizer_choices: "جدول",
   visualizer_selectBase: "رسم بياني",
+  // visualizer_matrix: "Chart",
   chartType_bar: "شريط",
   chartType_vbar: "شريط عمودي",
   chartType_stackedbar: "شريط مكدس",
