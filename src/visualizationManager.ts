@@ -80,6 +80,9 @@ export class VisualizationManager {
   ): VisualizerConstructor[] {
     let vDescrs = VisualizationManager.vizualizers[questionType];
     if (!vDescrs) {
+      if(VisualizerBase.suppressVisualizerStubRendering) {
+        return [];
+      }
       return [VisualizerBase];
     }
     vDescrs = [].concat(vDescrs);
