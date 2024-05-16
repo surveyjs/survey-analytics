@@ -154,20 +154,30 @@ export class Tabulator extends Table {
     if(data === undefined && typeof this.data === "function") {
       delete config.data;
       config.pagination = "remote";
+      config.ajaxFiltering = true; // Tabulator v4.8
+      config.filterMode = "remote"; // Tabulator v6.2
+      config.ajaxSorting = true; // Tabulator v4.8
+      config.sortMode = "remote"; // Tabulator v6.2
       config.ajaxURL = "function",
       config.ajaxRequestFunc = (url, config, params) => {
-        return new Promise((resolve, reject) => {
-          (this.data as GetPaginatedDataFunction)({
+        return new Promise<{ data: Array<Object>, last_page: number }>((resolve, reject) => {
+          const dataLoadingCallback = (loadedData: { data: Array<Object>, total: number, error?: any }) => {
+            if(!loadedData.error && Array.isArray(loadedData.data)) {
+              resolve({ data: loadedData.data.map(item => this.processLoadedDataItem(item)), last_page: Math.ceil(loadedData.total / params.size) });
+            } else {
+              reject();
+            }
+          };
+          const dataLoadingPromise = (this.data as GetPaginatedDataFunction)({
             offset: (params.page - 1) * params.size,
             limit: params.size,
-            callback: (loadedData: { data: Array<Object>, total: number, error?: any }) => {
-              if(!loadedData.error && Array.isArray(loadedData.data)) {
-                resolve({ data: loadedData.data.map(item => this.processLoadedDataItem(item)), last_page: Math.ceil(loadedData.total / params.size) });
-              } else {
-                reject();
-              }
-            },
+            filter: this.tabulatorTables?.getFilters(),
+            sorting: this.tabulatorTables?.getSorters().map(s => ({ field: s.field, dir: s.dir })),
+            callback: dataLoadingCallback
           });
+          if(dataLoadingPromise) {
+            dataLoadingPromise.then(dataLoadingCallback);
+          }
         });
       };
     }

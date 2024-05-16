@@ -33,7 +33,12 @@ export interface ITableOptions {
   }) => void;
 }
 
-export type GetPaginatedDataFunction = (params: { filter?: any, limit?: number, offset?: number, callback: (response: { data: Array<Object>, total: number, error?: any }) => void }) => void;
+export type TabulatorFilter = { field: string, type: string, value: any };
+export type TabulatorSorter = { field: string, dir: "" | "asc" | "desc" };
+export type GetPaginatedDataCallbackFunction = (params: { filter?: Array<TabulatorFilter>, sorting?: Array<TabulatorSorter>, limit?: number, offset?: number, callback?: (response: { data: Array<Object>, total: number, error?: any }) => void }) => void;
+export type GetPaginatedDataPromiseFunction = (params: { filter?: Array<TabulatorFilter>, sorting?: Array<TabulatorSorter>, limit?: number, offset?: number }) => Promise<{ data: Array<Object>, total: number, error?: any }>;
+export type GetPaginatedDataFunction = GetPaginatedDataCallbackFunction | GetPaginatedDataPromiseFunction;
+// export type GetPaginatedDataFunction = (params: { filter?: any, limit?: number, offset?: number, callback?: (response: { data: Array<Object>, total: number, error?: any }) => void }) => Promise<{ data: Array<Object>, total: number, error?: any }> | void;
 
 export class TableEvent extends EventBase<Table> {}
 
