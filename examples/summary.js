@@ -36,6 +36,8 @@ var survey = new Survey.SurveyModel(json);
 
 // SurveyAnalytics.SelectBasePlotly.displayModeBar = false;
 
+// SurveyAnalytics.VisualizerBase.suppressVisualizerStubRendering = true;
+
 SurveyAnalytics.PlotlySetup.onImageSaving.add(function (selectBaseVisualizer, options) {
   options.filename = "Exported " + selectBaseVisualizer.question.name;
 });

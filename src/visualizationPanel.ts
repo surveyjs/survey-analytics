@@ -286,6 +286,13 @@ export class VisualizationPanel extends VisualizerBase {
   ) {
     super(null, data, options, "panel");
 
+    const f = (<any>SurveyCore).hasLicense;
+    this.haveCommercialLicense = (!!f && f(4)) ||
+      VisualizationPanel.haveCommercialLicense ||
+      (typeof options.haveCommercialLicense !== "undefined"
+        ? options.haveCommercialLicense
+        : false);
+
     this._layoutEngine =
       options.layoutEngine ||
       new MuuriLayoutEngine(
@@ -304,14 +311,9 @@ export class VisualizationPanel extends VisualizerBase {
     if (_elements === undefined) {
       this._elements = this.buildElements(questions);
     }
-    const f = (<any>SurveyCore).hasLicense;
-    this.haveCommercialLicense = (!!f && f(4)) ||
-      VisualizationPanel.haveCommercialLicense ||
-      (typeof options.haveCommercialLicense !== "undefined"
-        ? options.haveCommercialLicense
-        : false);
 
     this.buildVisualizers(questions);
+
     if (!this.haveCommercialLicense) {
       this.registerToolbarItem("commercialLicense", () => {
         return createCommercialLicenseLink();
@@ -553,6 +555,9 @@ export class VisualizationPanel extends VisualizerBase {
   private buildVisualizers(questions: Array<Question>) {
     questions.forEach((question) => {
       const visualizer = this.createVisualizer(question);
+      if(!visualizer) {
+        return;
+      }
 
       if (this.allowHideQuestions) {
         visualizer.registerToolbarItem("removeQuestion", () => {
@@ -890,6 +895,9 @@ export class VisualizationPanel extends VisualizerBase {
     container: HTMLElement
   ) {
     const visualizer = this.getVisualizer(element.name);
+    if(!visualizer) {
+      return;
+    }
 
     const questionElement = DocumentHelper.createElement("div");
     questionElement.dataset.question = element.name;

@@ -1,6 +1,7 @@
 import { VisualizationManager } from "../src/visualizationManager";
 import { Text } from "../src/text";
 import { WordCloud } from "../src/wordcloud/wordcloud";
+import { VisualizerBase } from "../src/visualizerBase";
 
 test("register and get", () => {
   expect(VisualizationManager.vizualizers).toMatchObject({});
@@ -117,4 +118,18 @@ test("visualizers set order", () => {
   VisualizationManager.unregisterVisualizer("test", undefined as any);
   testVizualizers = VisualizationManager.getVisualizersByType("test");
   expect(testVizualizers.length).toBe(0);
+});
+
+test("stub default visualizer and suppressVisulizerStubRendering setting", () => {
+  let testVizualizers = VisualizationManager.getVisualizersByType("signaturepad");
+  expect(testVizualizers.length).toBe(1);
+  expect(testVizualizers[0].name).toBe("VisualizerBase");
+
+  try {
+    VisualizerBase.suppressVisualizerStubRendering = true;
+    testVizualizers = VisualizationManager.getVisualizersByType("signaturepad");
+    expect(testVizualizers.length).toBe(0);
+  } finally {
+    VisualizerBase.suppressVisualizerStubRendering = false;
+  }
 });

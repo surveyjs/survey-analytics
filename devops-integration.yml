@@ -145,6 +145,7 @@ steps:
         pmes.json
         surveyjs_definition.json
       TargetFolder: '$(Build.SourcesDirectory)/service/surveyjs.io/App_Data/DocsAnalytics'
+      OverWrite: true
       CleanTargetFolder: false
     displayName: 'copy generated docs to the local surveyjs/service repo'
 
