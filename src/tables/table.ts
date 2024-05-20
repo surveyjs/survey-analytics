@@ -34,7 +34,7 @@ export interface ITableOptions {
 }
 
 export type TabulatorFilter = { field: string, type: string, value: any };
-export type TabulatorSorter = { field: string, dir: "" | "asc" | "desc" };
+export type TabulatorSortOrder = { field: string, direction: undefined | "asc" | "desc" };
 export type GetPaginatedDataCallbackFunction = (params: { filter?: Array<TabulatorFilter>, sorting?: Array<TabulatorSorter>, limit?: number, offset?: number, callback?: (response: { data: Array<Object>, total: number, error?: any }) => void }) => void;
 export type GetPaginatedDataPromiseFunction = (params: { filter?: Array<TabulatorFilter>, sorting?: Array<TabulatorSorter>, limit?: number, offset?: number }) => Promise<{ data: Array<Object>, total: number, error?: any }>;
 export type GetPaginatedDataFunction = GetPaginatedDataCallbackFunction | GetPaginatedDataPromiseFunction;
