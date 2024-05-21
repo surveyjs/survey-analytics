@@ -1,4 +1,4 @@
-import { ITableOptions, Table, TableRow } from "./table";
+import { GetDataFn, ITableOptions, Table, TableRow } from "./table";
 import { SurveyModel } from "survey-core";
 import { ColumnDataType, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
@@ -88,7 +88,7 @@ export class Tabulator extends Table {
 
   constructor(
     survey: SurveyModel,
-    data: Array<Object>,
+    data: Array<Object> | GetDataFn,
     options?: ITabulatorOptions,
     _columnsData: Array<IColumnData> = []
   ) {
@@ -127,7 +127,7 @@ export class Tabulator extends Table {
     targetNode.appendChild(header);
     targetNode.appendChild(this.tableContainer);
 
-    var config = {};
+    var config: any = {};
     Object.assign(
       config,
       {
@@ -151,6 +151,36 @@ export class Tabulator extends Table {
       },
       this._options.tabulatorOptions
     );
+    if(data === undefined && typeof this.data === "function") {
+      delete config.data;
+      config.pagination = "remote";
+      config.ajaxFiltering = true; // Tabulator v4.8
+      config.filterMode = "remote"; // Tabulator v6.2
+      config.ajaxSorting = true; // Tabulator v4.8
+      config.sortMode = "remote"; // Tabulator v6.2
+      config.ajaxURL = "function",
+      config.ajaxRequestFunc = (url, config, params) => {
+        return new Promise<{ data: Array<Object>, last_page: number }>((resolve, reject) => {
+          const dataLoadingCallback = (loadedData: { data: Array<Object>, totalCount: number, error?: any }) => {
+            if(!loadedData.error && Array.isArray(loadedData.data)) {
+              resolve({ data: loadedData.data.map(item => this.processLoadedDataItem(item)), last_page: Math.ceil(loadedData.totalCount / params.size) });
+            } else {
+              reject();
+            }
+          };
+          const dataLoadingPromise = (this.data as GetDataFn)({
+            offset: (params.page - 1) * params.size,
+            limit: params.size,
+            filter: this.tabulatorTables?.getFilters(),
+            sort: this.tabulatorTables?.getSorters().map(s => ({ field: s.field, dir: s.dir })),
+            callback: dataLoadingCallback
+          });
+          if(dataLoadingPromise) {
+            dataLoadingPromise.then(dataLoadingCallback);
+          }
+        });
+      };
+    }
 
     this.tabulatorTables = new TabulatorTables(this.tableContainer, config);
 

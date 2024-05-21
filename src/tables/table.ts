@@ -33,6 +33,13 @@ export interface ITableOptions {
   }) => void;
 }
 
+export type TabulatorFilter = { field: string, type: string, value: any };
+export type TabulatorSortOrder = { field: string, direction: undefined | "asc" | "desc" };
+export type GetDataUsingCallbackFn = (params: { filter?: Array<TabulatorFilter>, sort?: Array<TabulatorSortOrder>, offset?: number, limit?: number, callback?: (response: { data: Array<Object>, totalCount: number, error?: any }) => void }) => void;
+export type GetDataUsingPromiseFn = (params: { filter?: Array<TabulatorFilter>, sort?: Array<TabulatorSortOrder>, offset?: number, limit?: number }) => Promise<{ data: Array<Object>, totalCount: number, error?: any }>;
+export type GetDataFn = GetDataUsingCallbackFn | GetDataUsingPromiseFn;
+// export type GetDataFn = (params: { filter?: any, limit?: number, offset?: number, callback?: (response: { data: Array<Object>, total: number, error?: any }) => void }) => Promise<{ data: Array<Object>, total: number, error?: any }> | void;
+
 export class TableEvent extends EventBase<Table> {}
 
 export abstract class Table {
@@ -44,7 +51,7 @@ export abstract class Table {
   protected _columns: Array<IColumn>;
   constructor(
     protected _survey: SurveyModel,
-    protected data: Array<Object>,
+    protected data: Array<Object> | GetDataFn,
     protected _options: ITableOptions = {},
     protected _columnsData: Array<IColumnData> = []
   ) {
@@ -187,21 +194,26 @@ export abstract class Table {
   }
   public get isInitTableDataProcessing(): boolean { return this.isInitTableDataProcessingValue; }
   private isInitTableDataProcessingValue: boolean;
-  protected initTableData(data: Array<any>) {
-    this.isInitTableDataProcessingValue = true;
-    this.tableData = (data || []).map((item) => {
-      var dataItem: any = {};
-      this._survey.data = item;
-      this._columns.forEach((column) => {
-        const opt = column.getCellData(this, item);
-        if (typeof this._options.onGetQuestionValue === "function") {
-          this._options.onGetQuestionValue(opt);
-        }
-        dataItem[column.name] = opt.displayValue;
-      });
-
-      return dataItem;
+  protected processLoadedDataItem(item: any): any {
+    var dataItem: any = {};
+    this._survey.data = item;
+    this._columns.forEach((column) => {
+      const opt = column.getCellData(this, item);
+      if (typeof this._options.onGetQuestionValue === "function") {
+        this._options.onGetQuestionValue(opt);
+      }
+      dataItem[column.name] = opt.displayValue;
     });
+
+    return dataItem;
+  }
+  protected initTableData(data: Array<any> | GetDataFn): void {
+    if(!Array.isArray(data)) {
+      this.tableData = undefined;
+      return;
+    }
+    this.isInitTableDataProcessingValue = true;
+    this.tableData = (data || []).map((item) => this.processLoadedDataItem(item));
     this.isInitTableDataProcessingValue = false;
   }
 
