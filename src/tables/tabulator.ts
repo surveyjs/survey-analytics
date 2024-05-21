@@ -1,4 +1,4 @@
-import { GetPaginatedDataFunction, ITableOptions, Table, TableRow } from "./table";
+import { GetDataFn, ITableOptions, Table, TableRow } from "./table";
 import { SurveyModel } from "survey-core";
 import { ColumnDataType, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
@@ -88,7 +88,7 @@ export class Tabulator extends Table {
 
   constructor(
     survey: SurveyModel,
-    data: Array<Object> | GetPaginatedDataFunction,
+    data: Array<Object> | GetDataFn,
     options?: ITabulatorOptions,
     _columnsData: Array<IColumnData> = []
   ) {
@@ -168,7 +168,7 @@ export class Tabulator extends Table {
               reject();
             }
           };
-          const dataLoadingPromise = (this.data as GetPaginatedDataFunction)({
+          const dataLoadingPromise = (this.data as GetDataFn)({
             offset: (params.page - 1) * params.size,
             limit: params.size,
             filter: this.tabulatorTables?.getFilters(),
