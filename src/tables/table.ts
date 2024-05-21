@@ -51,7 +51,7 @@ export abstract class Table {
   protected _columns: Array<IColumn>;
   constructor(
     protected _survey: SurveyModel,
-    protected data: Array<Object> | GetPaginatedDataFunction,
+    protected data: Array<Object> | GetDataFn,
     protected _options: ITableOptions = {},
     protected _columnsData: Array<IColumnData> = []
   ) {
