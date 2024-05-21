@@ -161,9 +161,9 @@ export class Tabulator extends Table {
       config.ajaxURL = "function",
       config.ajaxRequestFunc = (url, config, params) => {
         return new Promise<{ data: Array<Object>, last_page: number }>((resolve, reject) => {
-          const dataLoadingCallback = (loadedData: { data: Array<Object>, total: number, error?: any }) => {
+          const dataLoadingCallback = (loadedData: { data: Array<Object>, totalCount: number, error?: any }) => {
             if(!loadedData.error && Array.isArray(loadedData.data)) {
-              resolve({ data: loadedData.data.map(item => this.processLoadedDataItem(item)), last_page: Math.ceil(loadedData.total / params.size) });
+              resolve({ data: loadedData.data.map(item => this.processLoadedDataItem(item)), last_page: Math.ceil(loadedData.totalCount / params.size) });
             } else {
               reject();
             }
@@ -172,7 +172,7 @@ export class Tabulator extends Table {
             offset: (params.page - 1) * params.size,
             limit: params.size,
             filter: this.tabulatorTables?.getFilters(),
-            sorting: this.tabulatorTables?.getSorters().map(s => ({ field: s.field, dir: s.dir })),
+            sort: this.tabulatorTables?.getSorters().map(s => ({ field: s.field, dir: s.dir })),
             callback: dataLoadingCallback
           });
           if(dataLoadingPromise) {
