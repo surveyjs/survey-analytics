@@ -590,7 +590,7 @@ test("set state for non-existing questions", () => {
 
 });
 
-test("updateData should be called in order to update data - #269", () => {
+test("updateData should be called in order to update data - #269", async () => {
   const json = {
     elements: [{
       name: "satisfaction-score",
@@ -631,14 +631,14 @@ test("updateData should be called in order to update data - #269", () => {
   let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
 
   const questionVisualizer = visPanel.visualizers[0];
-  expect(questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 0, 2]]);
+  expect(await questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 0, 2]]);
 
   const newAnswer = { "satisfaction-score": 4, "nps-score": 9 };
   data.push(newAnswer);
-  expect(questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 0, 2]]);
+  expect(await questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 0, 2]]);
 
   visPanel.updateData(data);
-  expect(questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 1, 2]]);
+  expect(await questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 1, 2]]);
 });
 
 test("hide/show all elements", () => {

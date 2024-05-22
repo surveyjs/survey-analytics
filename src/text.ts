@@ -9,8 +9,8 @@ var styles = require("./text.scss");
 export class TextTableAdapter {
   constructor(private model: Text) {}
 
-  public create(container: HTMLElement) {
-    const { columnsCount, data } = this.model.getCalculatedValues();
+  public async create(container: HTMLElement): Promise<void> {
+    const { columnsCount, data } = (await this.model.getCalculatedValues()) as any;
     const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
       innerText: localization.getString("noResults"),
     });
@@ -60,7 +60,7 @@ export class Text extends VisualizerBase {
     this._textTableAdapter = new TextTableAdapter(this);
   }
 
-  public getCalculatedValues(): any {
+  protected getCalculatedValuesCore(): any {
     let result: Array<Array<string>> = [];
     let columnsCount = 0;
 

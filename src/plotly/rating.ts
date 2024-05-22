@@ -15,9 +15,9 @@ export class PlotlyGaugeAdapter {
     return this._chart;
   }
 
-  public create(chartNode: HTMLElement) {
+  public async create(chartNode: HTMLElement): Promise<any> {
     const question = this.model.question;
-    let [level, minValue, maxValue] = this.model.getCalculatedValues();
+    let [level, minValue, maxValue] = await this.model.getCalculatedValues() as any;
 
     if (question.getType() === "rating") {
       const rateValues = (<QuestionRatingModel>question).visibleRateValues;

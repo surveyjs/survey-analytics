@@ -33,11 +33,11 @@ test("getLabels method", () => {
   expect(boolean.getLabels()).toEqual(labels);
 });
 
-test("getCalculatedValues method", () => {
-  expect(boolean.getCalculatedValues()).toEqual([[3, 1]]);
+test("getCalculatedValues method", async () => {
+  expect(await boolean.getCalculatedValues()).toEqual([[3, 1]]);
 });
 
-test("getCalculatedValues localized", () => {
+test("getCalculatedValues localized", async () => {
   var survey = new SurveyModel({
     "pages": [
       {
@@ -60,7 +60,7 @@ test("getCalculatedValues localized", () => {
   var secondResult = { "bool": false, "organization_type": "In-house" };
   var test = [firstResult, secondResult];
   boolean = new BooleanModel(survey.getQuestionByName("bool"), test);
-  expect(boolean.getCalculatedValues()).toEqual([[1, 1]]);
+  expect(await boolean.getCalculatedValues()).toEqual([[1, 1]]);
 });
 
 test("hasHeader and correct answer text", () => {

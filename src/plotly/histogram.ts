@@ -35,8 +35,8 @@ export class HistogramPlotly extends HistogramModel {
     });
   }
 
-  public getCalculatedValues(): any[] {
-    const statistics = super.getCalculatedValues();
+  protected getCalculatedValuesCore(): Array<any> {
+    const statistics = super.getCalculatedValuesCore();
     const series = this.getSeriesValues();
     const values = this.getValues();
     if (series.length > 1) {

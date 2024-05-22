@@ -410,6 +410,7 @@ export class VisualizationPanel extends VisualizerBase {
     this.renderedQuestionsCount++;
     if (this.renderedQuestionsCount == this.questions.length) {
       this.renderedQuestionsCount = 0;
+      this.layoutEngine.update();
       this.afterRender(this.contentContainer);
     }
   };

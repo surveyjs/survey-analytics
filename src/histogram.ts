@@ -173,7 +173,7 @@ export class HistogramModel extends SelectBase {
     return this._cachedIntervals;
   }
 
-  public getCalculatedValues(): any {
+  protected getCalculatedValuesCore(): Array<any> {
     const continiousValues = this.getContiniousValues();
     const intervals = this.intervals;
     const statistics: Array<Array<number>> = [];

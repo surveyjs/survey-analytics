@@ -1,5 +1,5 @@
 import { Question, QuestionCommentModel, settings } from "survey-core";
-import { IDataInfo, DataProvider } from "./dataProvider";
+import { IDataInfo, DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { DocumentHelper } from "./utils";
 import { localization } from "./localizationManager";
@@ -129,7 +129,7 @@ export class VisualizerBase implements IDataInfo {
 
   constructor(
     public question: Question,
-    data: Array<{ [index: string]: any }>,
+    data: Array<{ [index: string]: any }> | GetDataFn,
     public options: { [index: string]: any } = {},
     private _type?: string
   ) {
@@ -644,7 +644,11 @@ export class VisualizerBase implements IDataInfo {
    * Obsolete. Use [`getCalculatedValues()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#getCalculatedValues) instead.
    */
   getData(): any {
-    return this.getCalculatedValues();
+    return this.getCalculatedValuesCore();
+  }
+
+  protected getCalculatedValuesCore(): Array<any> {
+    return this.dataProvider.getData(this);
   }
 
   /**
@@ -652,8 +656,30 @@ export class VisualizerBase implements IDataInfo {
    *
    * To get an array of source survey results, use the [`surveyData`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#surveyData) property.
    */
-  getCalculatedValues(): any {
-    return this.dataProvider.getData(this);
+  public getCalculatedValues(): Promise<Array<Object>> {
+    return new Promise<Array<Object>>((resolve, reject) => {
+      if(!!this.dataProvider.dataFn) {
+        const dataLoadingPromise = this.dataProvider.dataFn({
+          questionNames: Array.isArray(this.name) ? this.name : [this.name],
+          filter: this.dataProvider.getFilters(),
+          sort: this.dataProvider.getSorters(),
+          callback: (loadedData: { data: Array<Object>, error?: any }) => {
+            if(!loadedData.error && Array.isArray(loadedData.data)) {
+              resolve(loadedData.data);
+            } else {
+              reject();
+            }
+          }
+        });
+        if(dataLoadingPromise) {
+          dataLoadingPromise
+            .then(resolve)
+            .catch(reject);
+        }
+      } else {
+        resolve(this.getCalculatedValuesCore());
+      }
+    });
   }
 
   protected _settingState = false;
@@ -686,7 +712,7 @@ export class VisualizerBase implements IDataInfo {
    * If the survey is [translated into more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the toolbar displays a language selection drop-down menu.
    * @see onLocaleChanged
    */
-  public get locale() {
+  public get locale(): string {
     var survey = this.options.survey;
     if (!!survey) {
       return survey.locale;
@@ -700,7 +726,7 @@ export class VisualizerBase implements IDataInfo {
     this.refresh();
   }
 
-  protected setLocale(newLocale: string) {
+  protected setLocale(newLocale: string): void {
     localization.currentLocale = newLocale;
     var survey = this.options.survey;
     if (!!survey && survey.locale !== newLocale) {

@@ -22,8 +22,9 @@ export class PlotlyChartAdapter {
     return this._chart;
   }
 
-  public create(chartNode: HTMLElement) {
-    var plotlyOptions = PlotlySetup.setup(this.model.chartType, this.model);
+  public async create(chartNode: HTMLElement): Promise<any> {
+    const answersData = await this.model.getAnswersData();
+    var plotlyOptions = PlotlySetup.setup(this.model.chartType, this.model, answersData);
 
     let config: any = {
       displaylogo: false,
@@ -163,8 +164,8 @@ export class SelectBasePlotly extends SelectBase {
     });
   }
 
-  public getCalculatedValues(): any[] {
-    const statistics = super.getCalculatedValues();
+  protected getCalculatedValuesCore(): Array<any> {
+    const statistics = super.getCalculatedValuesCore();
     const series = this.getSeriesValues();
     const values = this.getValues();
     if (series.length > 1) {

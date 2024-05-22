@@ -27,8 +27,8 @@ export class WordCloudAdapter {
     return this._wordcloud;
   }
 
-  private createWordCloud2(node: HTMLElement) {
-    const data = this.model.getCalculatedValues();
+  private async createWordCloud2(node: HTMLElement) {
+    const data = await this.model.getCalculatedValues();
     const colors = this.model.getColors();
     const canvasNode = <HTMLCanvasElement>(
       DocumentHelper.createElement("canvas", "")
@@ -72,8 +72,8 @@ export class WordCloudAdapter {
     return this._wordcloud;
   }
 
-  public create(element: HTMLElement): any {
-    const data = this.model.getCalculatedValues();
+  public async create(element: HTMLElement): Promise<any> {
+    const data = await this.model.getCalculatedValues();
     const colors = this.model.getColors();
 
     if (data.length === 0) {
@@ -116,7 +116,7 @@ export class WordCloud extends VisualizerBase {
     this._wordcloudAdapter = new WordCloudAdapter(this);
   }
 
-  public getCalculatedValues(): any {
+  protected getCalculatedValuesCore(): Array<any> {
     let result: { [key: string]: number } = {};
 
     let stopWords: string[] = [];
@@ -182,8 +182,7 @@ export class WordCloud extends VisualizerBase {
   }
 
   protected renderContent(container: HTMLElement) {
-    this._wordcloudAdapter.create(container);
-    this.afterRender(this.contentContainer);
+    this._wordcloudAdapter.create(container).then(() => this.afterRender(this.contentContainer));
   }
 
   destroy() {

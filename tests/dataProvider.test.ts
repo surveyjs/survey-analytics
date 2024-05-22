@@ -208,7 +208,7 @@ test("getData for matrix dropdown question values - pre-processed data", () => {
 });
 
 VisualizationManager.registerVisualizer("dropdown", SelectBase);
-test("getData for matrix dropdown inner visualizers", () => {
+test("getData for matrix dropdown inner visualizers", async () => {
   const json = {
     questions: [
       {
@@ -256,11 +256,11 @@ test("getData for matrix dropdown inner visualizers", () => {
   let visualizer = new VisualizationMatrixDropdown(<any>question, data);
 
   const innerPanelVisualizer: any = visualizer["_matrixDropdownVisualizer"];
-  expect(innerPanelVisualizer["visualizers"][0].getCalculatedValues()).toEqual([
+  expect(await innerPanelVisualizer["visualizers"][0].getCalculatedValues()).toEqual([
     [0, 2, 1].reverse(),
     [1, 1, 1].reverse(),
   ]);
-  expect(innerPanelVisualizer["visualizers"][1].getCalculatedValues()).toEqual([
+  expect(await innerPanelVisualizer["visualizers"][1].getCalculatedValues()).toEqual([
     [1, 0, 2, 0, 0].reverse(),
     [0, 0, 0, 2, 1].reverse(),
   ]);

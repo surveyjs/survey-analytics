@@ -10,8 +10,7 @@ function CustomVisualizer(question, data) {
     table.appendChild(header);
   }
 
-  function renderRows(table, visualizer) {
-    var data = visualizer.getCalculatedValues();
+  function renderRows(table, visualizer, data) {
     var values = visualizer.getValues();
     var series = visualizer.getSeriesValues();
     if(series.length > 1) {
@@ -48,7 +47,7 @@ function CustomVisualizer(question, data) {
     var table = document.createElement("table");
     table.className = "sa__matrix-table";
     renderHeader(table, visualizer);
-    renderRows(table, visualizer);
+    visualizer.getCalculatedValues().then(data => renderRows(table, visualizer, data));
     contentContainer.appendChild(table);
   };
 

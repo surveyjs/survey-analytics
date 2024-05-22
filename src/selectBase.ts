@@ -526,8 +526,7 @@ export class SelectBase
     return labels;
   }
 
-  getPercentages(): Array<Array<number>> {
-    var data: Array<Array<number>> = this.getCalculatedValues();
+  getPercentages(data: Array<Array<number>>): Array<Array<number>> {
     var percentages: Array<Array<number>> = [];
     var percentagePrecision = this._percentagePrecision;
 
@@ -585,12 +584,12 @@ export class SelectBase
   /**
    * Returns object with all infotmation for data visualization: datasets, labels, colors, additional texts (percentage).
    */
-  public getAnswersData(): IAnswersData {
+  public async getAnswersData(): Promise<IAnswersData> {
     let seriesLabels = this.getSeriesLabels();
-    let datasets = this.getCalculatedValues();
+    let datasets = (await this.getCalculatedValues()) as number[][];
     let labels = this.getLabels();
     let colors = this.getColors();
-    var texts = this.showPercentages ? this.getPercentages() : datasets;
+    var texts = this.showPercentages ? this.getPercentages(datasets) : datasets;
 
     if (this.transposeData) {
       datasets = this.transpose(datasets);

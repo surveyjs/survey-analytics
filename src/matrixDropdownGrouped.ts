@@ -9,7 +9,7 @@ export class MatrixDropdownGrouped extends SelectBase {
     name?: string
   ) {
     super(question, data, options, name || "matrixDropdownGrouped");
-    this.getAnswersData();
+    // this.getAnswersData();
   }
 
   protected get matrixQuestion(): QuestionMatrixDropdownModel {
@@ -42,7 +42,7 @@ export class MatrixDropdownGrouped extends SelectBase {
     return false;
   }
 
-  public getCalculatedValues(): any[] {
+  protected getCalculatedValuesCore(): Array<any> {
     const values = this.getValues();
     const series = this.getSeriesValues();
     const rows = this.matrixQuestion.rows.map(row => row.value);

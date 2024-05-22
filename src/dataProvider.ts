@@ -8,6 +8,12 @@ export interface IDataInfo {
   getSeriesLabels(): Array<string>;
 }
 
+export type SummaryFilter = { field: string, type: string, value: any };
+export type SummarySortOrder = { field: string, direction: undefined | "asc" | "desc" };
+export type GetDataUsingCallbackFn = (params: { questionNames: string[], filter?: Array<SummaryFilter>, sort?: Array<SummarySortOrder>, callback?: (response: { data: Array<Object>, error?: any }) => void }) => void;
+export type GetDataUsingPromiseFn = (params: { questionNames: string[], filter?: Array<SummaryFilter>, sort?: Array<SummarySortOrder> }) => Promise<Array<Object>>;
+export type GetDataFn = GetDataUsingCallbackFn | GetDataUsingPromiseFn;
+
 export class DataProvider {
   public static seriesMarkerKey = "__sa_series_name";
 
@@ -22,14 +28,16 @@ export class DataProvider {
     return dataInfo.name;
   }
 
-  constructor(private _data: Array<any> = [], private _getDataCore: (dataInfo: IDataInfo) => number[][] = undefined) { }
+  constructor(private _data: Array<any> | GetDataFn = [], private _getDataCore: (dataInfo: IDataInfo) => number[][] = undefined) {
+  }
 
-  public reset(dataInfo?: IDataInfo) {
+  public reset(dataInfo?: IDataInfo): void {
     if (!!dataInfo) {
       if (this._statisticsCache !== undefined) {
         const cacheKey = this.getStatisticsCacheKey(dataInfo);
         delete this._statisticsCache[cacheKey];
       }
+      this.raiseDataChanged(dataInfo.name);
       return;
     }
     if (
@@ -42,15 +50,28 @@ export class DataProvider {
     }
   }
 
-  public get data() {
-    return this._data;
+  public get data(): Array<any> {
+    if(Array.isArray(this._data)) {
+      return this._data;
+    }
+    return undefined;
   }
-  public set data(data: Array<any>) {
-    this._data = [].concat(data);
+  public set data(data: Array<any> | GetDataFn) {
+    if(Array.isArray(data)) {
+      this._data = [].concat(data);
+    } else {
+      this._data = data;
+    }
     this.reset();
   }
+  public get dataFn(): GetDataFn {
+    if(typeof this._data === "function") {
+      return this._data;
+    }
+    return undefined;
+  }
 
-  public get filteredData() {
+  public get filteredData(): Array<any> {
     if (this._filteredData === undefined) {
       let filterKeys = Object.keys(this.filterValues);
       if (filterKeys.length > 0) {
@@ -97,7 +118,7 @@ export class DataProvider {
   /**
    * Sets filter by question name and value.
    */
-  public setFilter(questionName: string, selectedValue: any) {
+  public setFilter(questionName: string, selectedValue: any): void {
     var filterChanged = true;
     if (selectedValue !== undefined) {
       filterChanged = this.filterValues[questionName] !== selectedValue;
@@ -111,7 +132,7 @@ export class DataProvider {
     }
   }
 
-  protected getDataCore(dataInfo: IDataInfo) {
+  protected getDataCore(dataInfo: IDataInfo): number[][] {
     if (!!this._getDataCore) {
       return this._getDataCore(dataInfo);
     }
@@ -174,13 +195,13 @@ export class DataProvider {
       });
     });
 
-    return Array.isArray(dataInfo.name) ? statistics : statistics[0];
+    return Array.isArray(dataInfo.name) ? statistics : statistics[0] as any;
   }
 
   /**
    * Returns calculated statisctics for the IDataInfo object.
    */
-  getData(dataInfo: IDataInfo) {
+  getData(dataInfo: IDataInfo): Array<any> {
     const cacheKey = this.getStatisticsCacheKey(dataInfo);
     if (
       this._statisticsCache === undefined ||
@@ -203,11 +224,19 @@ export class DataProvider {
     any
   >();
 
-  protected raiseDataChanged() {
+  protected raiseDataChanged(questionNames?: string | Array<string>): void {
     if (!this.onDataChanged.isEmpty) {
-      this.onDataChanged.fire(this, {});
+      this.onDataChanged.fire(this, { questionNames: !questionNames ? undefined : (Array.isArray(questionNames) ? questionNames : [questionNames]) });
     }
   }
+
+  public getSorters(): SummarySortOrder[] {
+    return [];
+  }
+  public getFilters(): SummaryFilter[] {
+    return Object.keys(this.filterValues).map(key => ({ field: key, type: "=", value: this.filterValues[key] }));
+  }
+
 }
 
 function questionContainsValue(questionValue: any, filterValue: any) {

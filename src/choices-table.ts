@@ -9,14 +9,14 @@ var styles = require("./choices-table.scss");
 export class ChoicesTableAdapter {
   constructor(private model: ChoicesTable) {}
 
-  public create(container: HTMLElement) {
+  public async create(container: HTMLElement): Promise<void> {
     let {
       datasets,
       labels,
       colors,
       texts,
       seriesLabels,
-    } = this.model.getAnswersData();
+    } = await this.model.getAnswersData();
 
     const hasSeries = seriesLabels.length > 1;
 
@@ -111,8 +111,7 @@ export class ChoicesTable extends SelectBase {
   }
 
   protected renderContent(container: HTMLElement) {
-    this._choicesTableAdapter.create(container);
-    this.afterRender(this.contentContainer);
+    this._choicesTableAdapter.create(container).then(() => this.afterRender(this.contentContainer));
   }
 
   destroy() {
