@@ -125,15 +125,15 @@ test("setShowPercentages triggers renderContent and update", () => {
   expect(renderCallCount).toEqual(1);
 });
 
-test("change visible choices triggers dataProvider reset", () => {
-  var resetCallCount = 0;
-  var oldResetFunc = (<any>selectBase).dataProvider.reset;
-  (<any>selectBase).dataProvider.reset = () => {
-    resetCallCount++;
+test("change visible choices triggers dataProvider raiseDataChanged", () => {
+  var raiseDataChangedCallCount = 0;
+  var oldRaiseDataChangedFunc = (<any>selectBase).dataProvider.raiseDataChanged;
+  (<any>selectBase).dataProvider.raiseDataChanged = () => {
+    raiseDataChangedCallCount++;
   };
   selectBase.question["choices"] = ["add1"];
-  expect(resetCallCount).toEqual(1);
-  (<any>selectBase).dataProvider.reset = oldResetFunc;
+  expect(raiseDataChangedCallCount).toEqual(1);
+  (<any>selectBase).dataProvider.raiseDataChanged = oldRaiseDataChangedFunc;
   selectBase.question["choices"] = choices;
 });
 

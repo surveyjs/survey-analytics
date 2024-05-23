@@ -1,13 +1,5 @@
 import { Event } from "survey-core";
 
-export interface IDataInfo {
-  name: string | Array<string>;
-  getValues(): Array<any>;
-  getLabels(): Array<string>;
-  getSeriesValues(): Array<string>;
-  getSeriesLabels(): Array<string>;
-}
-
 export type SummaryFilter = { field: string, type: string, value: any };
 export type SummarySortOrder = { field: string, direction: undefined | "asc" | "desc" };
 export type GetDataUsingCallbackFn = (params: { questionNames: string[], filter?: Array<SummaryFilter>, sort?: Array<SummarySortOrder>, callback?: (response: { data: Array<Object>, error?: any }) => void }) => void;
@@ -18,36 +10,9 @@ export class DataProvider {
   public static seriesMarkerKey = "__sa_series_name";
 
   private _filteredData: Array<{ [index: string]: any }>;
-  private _statisticsCache: { [index: string]: Array<Array<number>> | Array<Array<Array<number>>> };
   protected filterValues: { [index: string]: any } = {};
 
-  private getStatisticsCacheKey(dataInfo: IDataInfo): string {
-    if (Array.isArray(dataInfo.name)) {
-      return dataInfo.name.join("-");
-    }
-    return dataInfo.name;
-  }
-
-  constructor(private _data: Array<any> | GetDataFn = [], private _getDataCore: (dataInfo: IDataInfo) => number[][] = undefined) {
-  }
-
-  public reset(dataInfo?: IDataInfo): void {
-    if (!!dataInfo) {
-      if (this._statisticsCache !== undefined) {
-        const cacheKey = this.getStatisticsCacheKey(dataInfo);
-        delete this._statisticsCache[cacheKey];
-      }
-      this.raiseDataChanged(dataInfo.name);
-      return;
-    }
-    if (
-      this._statisticsCache !== undefined ||
-      this._filteredData !== undefined
-    ) {
-      this._statisticsCache = undefined;
-      this._filteredData = undefined;
-      this.raiseDataChanged();
-    }
+  constructor(private _data: Array<any> | GetDataFn = []) {
   }
 
   public get data(): Array<any> {
@@ -62,7 +27,7 @@ export class DataProvider {
     } else {
       this._data = data;
     }
-    this.reset();
+    this.raiseDataChanged();
   }
   public get dataFn(): GetDataFn {
     if(typeof this._data === "function") {
@@ -128,91 +93,8 @@ export class DataProvider {
       delete this.filterValues[questionName];
     }
     if (filterChanged) {
-      this.reset();
+      this.raiseDataChanged();
     }
-  }
-
-  protected getDataCore(dataInfo: IDataInfo): number[][] {
-    if (!!this._getDataCore) {
-      return this._getDataCore(dataInfo);
-    }
-
-    const dataNames = Array.isArray(dataInfo.name) ? dataInfo.name : [dataInfo.name];
-    const statistics: Array<Array<Array<number>>> = [];
-
-    const values = dataInfo.getValues();
-    const valuesIndex: { [index: string]: number } = {};
-    values.forEach((val: any, index: number) => {
-      valuesIndex[val] = index;
-    });
-    const processMissingAnswers = values.indexOf(undefined) !== -1;
-
-    const series = dataInfo.getSeriesValues();
-    const seriesIndex: { [index: string]: number } = {};
-    series.forEach((val: any, index: number) => {
-      seriesIndex[val] = index;
-    });
-
-    const seriesLength = series.length || 1;
-    for (var i = 0; i < dataNames.length; ++i) {
-      const dataNameStatistics = new Array<Array<number>>();
-      for (var j = 0; j < seriesLength; ++j) {
-        dataNameStatistics.push(new Array<number>(values.length).fill(0));
-      }
-      statistics.push(dataNameStatistics);
-    }
-
-    this.filteredData.forEach((row: any) => {
-      dataNames.forEach((dataName, index) => {
-        const rowValue: any = row[dataName];
-        if (rowValue !== undefined || processMissingAnswers) {
-          const rowValues = Array.isArray(rowValue) ? rowValue : [rowValue];
-          if (series.length > 0) {
-            if (row[DataProvider.seriesMarkerKey] !== undefined) {
-              // Series are labelled by seriesMarkerKey in row data
-              const seriesNo =
-                seriesIndex[row[DataProvider.seriesMarkerKey]] || 0;
-              rowValues.forEach((val) => {
-                statistics[index][seriesNo][valuesIndex[val]]++;
-              });
-            } else {
-              // Series are the keys in question value (matrix question)
-              // TODO: think about the de-normalization and combine with the previous case
-              rowValues.forEach((val) => {
-                series.forEach((seriesName) => {
-                  if (val[seriesName] !== undefined) {
-                    const seriesNo = seriesIndex[seriesName] || 0;
-                    statistics[index][seriesNo][valuesIndex[val[seriesName]]]++;
-                  }
-                });
-              });
-            }
-          } else {
-            // No series
-            rowValues.forEach((val) => statistics[0][0][valuesIndex[val]]++);
-          }
-        }
-      });
-    });
-
-    return Array.isArray(dataInfo.name) ? statistics : statistics[0] as any;
-  }
-
-  /**
-   * Returns calculated statisctics for the IDataInfo object.
-   */
-  getData(dataInfo: IDataInfo): Array<any> {
-    const cacheKey = this.getStatisticsCacheKey(dataInfo);
-    if (
-      this._statisticsCache === undefined ||
-      this._statisticsCache[cacheKey] === undefined
-    ) {
-      if (this._statisticsCache === undefined) {
-        this._statisticsCache = {};
-      }
-      this._statisticsCache[cacheKey] = this.getDataCore(dataInfo);
-    }
-    return [].concat(this._statisticsCache[cacheKey]);
   }
 
   /**
@@ -224,7 +106,8 @@ export class DataProvider {
     any
   >();
 
-  protected raiseDataChanged(questionNames?: string | Array<string>): void {
+  public raiseDataChanged(questionNames?: string | Array<string>): void {
+    this._filteredData = undefined;
     if (!this.onDataChanged.isEmpty) {
       this.onDataChanged.fire(this, { questionNames: !questionNames ? undefined : (Array.isArray(questionNames) ? questionNames : [questionNames]) });
     }
@@ -251,4 +134,3 @@ function questionContainsValue(questionValue: any, filterValue: any) {
 
   return true;
 }
-

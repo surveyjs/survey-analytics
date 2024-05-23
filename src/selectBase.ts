@@ -108,7 +108,7 @@ export class SelectBase
   ) {
     super(question, data, options, name || "selectBase");
     (<any>question).visibleChoicesChangedCallback = () => {
-      this.dataProvider.reset();
+      this.dataProvider.raiseDataChanged();
     };
     this._showPercentages = this.options.showPercentages === true;
     this._showOnlyPercentages = this.options.showOnlyPercentages === true;
@@ -456,7 +456,7 @@ export class SelectBase
   public set showMissingAnswers(value: boolean) {
     this._showMissingAnswers = this.isSupportMissingAnswers() && value;
     this.updateMissingAnswersBtn();
-    this.dataProvider.reset(this);
+    this.dataProvider.raiseDataChanged(this.name);
     this.refreshContent();
     this.stateChanged("showMissingAnsewrs", value);
   }

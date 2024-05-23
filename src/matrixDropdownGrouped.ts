@@ -1,5 +1,6 @@
 import { ItemValue, QuestionMatrixDropdownModel, Question, MatrixDropdownColumn, MatrixDropdownRowModelBase } from "survey-core";
 import { IAnswersData, SelectBase } from "./selectBase";
+import { defaultStatisticsCalculator } from "./visualizerBase";
 
 export class MatrixDropdownGrouped extends SelectBase {
   constructor(
@@ -47,7 +48,7 @@ export class MatrixDropdownGrouped extends SelectBase {
     const series = this.getSeriesValues();
     const rows = this.matrixQuestion.rows.map(row => row.value);
 
-    const statistics = this.dataProvider.getData({
+    const statistics = defaultStatisticsCalculator(this.surveyData, {
       name: series,
       getValues: () => values,
       getLabels: () => values,

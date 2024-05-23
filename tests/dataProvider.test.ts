@@ -1,8 +1,9 @@
-import { DataProvider, IDataInfo } from "../src/dataProvider";
+import { DataProvider } from "../src/dataProvider";
 import { SurveyModel } from "survey-core";
 import { VisualizationMatrixDropdown } from "../src/visualizationMatrixDropdown";
 import { VisualizationManager } from "../src/visualizationManager";
 import { SelectBase } from "../src/selectBase";
+import { defaultStatisticsCalculator, IDataInfo } from "../src/visualizerBase";
 
 const testData = [
   {
@@ -47,29 +48,29 @@ test("ctor/setFilter/reset/onDataChanged", () => {
   expect(dataProvider.data).toEqual([]);
 
   dataProvider.data = testData;
-  expect(callCount).toEqual(0);
+  expect(callCount).toEqual(1);
   expect(dataProvider.data).toEqual(testData);
 
-  expect(dataProvider.getData(q1testDataInfo)).toEqual([[2, 2, 0, 0]]);
-  expect(callCount).toEqual(0);
+  expect(defaultStatisticsCalculator(dataProvider.filteredData, q1testDataInfo)).toEqual([[2, 2, 0, 0]]);
+  expect(callCount).toEqual(1);
 
   dataProvider.setFilter("q2", "item1");
-  expect(callCount).toEqual(1);
-  expect(dataProvider.getData(q1testDataInfo)).toEqual([[1, 1, 0, 0]]);
-  expect(callCount).toEqual(1);
-
-  dataProvider.reset();
   expect(callCount).toEqual(2);
+  expect(defaultStatisticsCalculator(dataProvider.filteredData, q1testDataInfo)).toEqual([[1, 1, 0, 0]]);
+  expect(callCount).toEqual(2);
+
+  dataProvider.raiseDataChanged();
+  expect(callCount).toEqual(3);
 
   dataProvider.setFilter("q2", undefined);
-  expect(callCount).toEqual(2);
-  expect(dataProvider.getData(q1testDataInfo)).toEqual([[2, 2, 0, 0]]);
-  expect(callCount).toEqual(2);
+  expect(callCount).toEqual(4);
+  expect(defaultStatisticsCalculator(dataProvider.filteredData, q1testDataInfo)).toEqual([[2, 2, 0, 0]]);
+  expect(callCount).toEqual(4);
 
   dataProvider.setFilter("q3", "item2");
-  expect(callCount).toEqual(3);
-  expect(dataProvider.getData(q1testDataInfo)).toEqual([[0, 1, 0, 0]]);
-  expect(callCount).toEqual(3);
+  expect(callCount).toEqual(5);
+  expect(defaultStatisticsCalculator(dataProvider.filteredData, q1testDataInfo)).toEqual([[0, 1, 0, 0]]);
+  expect(callCount).toEqual(5);
 });
 
 test("getData for boolean question values - mock", () => {
@@ -92,7 +93,7 @@ test("getData for boolean question values - mock", () => {
   ];
   const dataProvider = new DataProvider(data);
   expect(
-    dataProvider.getData({
+    defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "q1",
       getValues: () => [true, false],
       getLabels: () => ["true", "false"],
@@ -120,7 +121,7 @@ test("getData for select base question values", () => {
   ];
   const dataProvider = new DataProvider(data);
   expect(
-    dataProvider.getData({
+    defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "q1",
       getValues: () => choices,
       getLabels: () => choices,
@@ -144,7 +145,7 @@ test("getData for matrix question values", () => {
   ];
   const dataProvider = new DataProvider(data);
   expect(
-    dataProvider.getData({
+    defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "question1",
       getValues: () => [
         "Excellent",
@@ -182,7 +183,7 @@ test("getData for matrix dropdown question values - pre-processed data", () => {
   ];
   const dataProvider = new DataProvider(data);
   expect(
-    dataProvider.getData({
+    defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "Column 1",
       getValues: () => ["High Quality", "Natural", "Trustworthy"],
       getLabels: () => ["High Quality", "Natural", "Trustworthy"],
@@ -194,7 +195,7 @@ test("getData for matrix dropdown question values - pre-processed data", () => {
     [1, 1, 1],
   ]);
   expect(
-    dataProvider.getData({
+    defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "Column 2",
       getValues: () => [1, 2, 3, 4, 5],
       getLabels: () => ["1", "2", "3", "4", "5"],
@@ -267,23 +268,17 @@ test("getData for matrix dropdown inner visualizers", async () => {
 
   const dataProvider = new DataProvider(<any>innerPanelVisualizer["data"]);
   expect(
-    dataProvider.getData(<any>innerPanelVisualizer["visualizers"][0])
+    defaultStatisticsCalculator(dataProvider.filteredData, <any>innerPanelVisualizer["visualizers"][0])
   ).toEqual([
     [0, 2, 1].reverse(),
     [1, 1, 1].reverse(),
   ]);
   expect(
-    dataProvider.getData(<any>innerPanelVisualizer["visualizers"][1])
+    defaultStatisticsCalculator(dataProvider.filteredData, <any>innerPanelVisualizer["visualizers"][1])
   ).toEqual([
     [1, 0, 2, 0, 0].reverse(),
     [0, 0, 0, 2, 1].reverse(),
   ]);
-});
-
-test("custom getDataCore function", () => {
-  const statistics = [[1, 2]];
-  const dataProvider = new DataProvider(<any>[], (dataInfo: IDataInfo) => statistics);
-  expect(dataProvider.getData(<any>{})).toEqual(statistics);
 });
 
 test("getData for matrix dropdown grouped", () => {
@@ -312,7 +307,7 @@ test("getData for matrix dropdown grouped", () => {
   const choices = ["Process 1", "Process 2", "Process 3", "Process 4", "Process 5", "Process 6"];
   const columns = ["1st Most Difficult", "2nd Most Difficult", "3rd Most Difficult"];
   expect(
-    dataProvider.getData({
+    defaultStatisticsCalculator(dataProvider.filteredData, {
       name: columns,
       getValues: () => choices,
       getLabels: () => choices,
@@ -364,7 +359,7 @@ test("filter data by matrix value", () => {
     { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
   ]);
   expect(
-    dataProvider.getData(dataInfo)
+    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo)
   ).toEqual([
     [1, 1, 0],
   ]);
@@ -374,7 +369,7 @@ test("filter data by matrix value", () => {
     { "Quality": { "affordable": "1", "better then others": "1", "does what it claims": "1", "easy to use": "1" }, "developer_count": "3-5", "organization_type": "Custom" },
   ]);
   expect(
-    dataProvider.getData(dataInfo)
+    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo)
   ).toEqual([
     [1, 0, 0],
   ]);
@@ -385,7 +380,7 @@ test("filter data by matrix value", () => {
     { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
   ]);
   expect(
-    dataProvider.getData(dataInfo)
+    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo)
   ).toEqual([
     [1, 1, 0],
   ]);
@@ -395,7 +390,7 @@ test("filter data by matrix value", () => {
     { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
   ]);
   expect(
-    dataProvider.getData(dataInfo)
+    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo)
   ).toEqual([
     [0, 1, 0],
   ]);
@@ -439,7 +434,7 @@ test("filter data by matrix value - number and string", () => {
     { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
   ]);
   expect(
-    dataProvider.getData(dataInfo)
+    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo)
   ).toEqual([
     [1, 1, 0],
   ]);
@@ -449,7 +444,7 @@ test("filter data by matrix value - number and string", () => {
     { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
   ]);
   expect(
-    dataProvider.getData(dataInfo)
+    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo)
   ).toEqual([
     [0, 1, 0],
   ]);
@@ -468,7 +463,7 @@ test("filter data for matrix dropdown question column values - pre-processed dat
 
   dataProvider.setFilter("Column 1", { "Lizol": "Natural" });
   expect(
-    dataProvider.getData({
+    defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "Column 1",
       getValues: () => ["High Quality", "Natural", "Trustworthy"],
       getLabels: () => ["High Quality", "Natural", "Trustworthy"],
@@ -480,7 +475,7 @@ test("filter data for matrix dropdown question column values - pre-processed dat
     [0, 0, 0],
   ]);
   expect(
-    dataProvider.getData({
+    defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "Column 2",
       getValues: () => [1, 2, 3, 4, 5],
       getLabels: () => ["1", "2", "3", "4", "5"],
@@ -552,7 +547,7 @@ test("getData for boolean question values + missing answers", () => {
   ];
   const dataProvider = new DataProvider(data);
   expect(
-    dataProvider.getData({
+    defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "q1",
       getValues: () => [true, false, undefined],
       getLabels: () => ["true", "false", "missing"],
@@ -583,7 +578,7 @@ test("getData for select base question values + missing answers", () => {
   ];
   const dataProvider = new DataProvider(data);
   expect(
-    dataProvider.getData({
+    defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "q1",
       getValues: () => choices.concat([undefined]),
       getLabels: () => choices.concat(["missing"]),
