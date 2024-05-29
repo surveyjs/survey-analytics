@@ -12,6 +12,7 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     name?: string
   ) {
     super(question, data, options, name || "panelDynamic");
+    this.loadingData = false;
     var options = Object.assign({}, options);
     options.allowDynamicLayout = false;
     options.dataProvider = undefined;

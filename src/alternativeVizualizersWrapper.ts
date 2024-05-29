@@ -27,6 +27,7 @@ export class AlternativeVisualizersWrapper
     options?: Object
   ) {
     super(question, data, options);
+    this.loadingData = false;
     if (!visualizers || visualizers.length < 2) {
       throw new Error(
         "VisualizerArrayWrapper works with visualizers collection only."

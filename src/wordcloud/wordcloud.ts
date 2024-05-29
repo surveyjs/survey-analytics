@@ -154,7 +154,7 @@ export class WordCloud extends VisualizerBase {
       }
     };
 
-    this.data.forEach((row) => {
+    this.surveyData.forEach((row) => {
       const rowValue: any = row[this.question.name];
       if (!!rowValue) {
         if (Array.isArray(rowValue)) {
@@ -181,8 +181,13 @@ export class WordCloud extends VisualizerBase {
     super.destroyContent(container);
   }
 
-  protected renderContent(container: HTMLElement) {
-    this._wordcloudAdapter.create(container).then(() => this.afterRender(this.contentContainer));
+  protected async renderContentAsync(container: HTMLElement) {
+    const chartNode: HTMLElement = DocumentHelper.createElement("div");
+    container.appendChild(chartNode);
+    await this._wordcloudAdapter.create(chartNode);
+    container.innerHTML = "";
+    container.appendChild(chartNode);
+    return container;
   }
 
   destroy() {

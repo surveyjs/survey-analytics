@@ -1,7 +1,7 @@
 import { Question, QuestionCommentModel, settings } from "survey-core";
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
-import { DocumentHelper } from "./utils";
+import { DocumentHelper, createLoadingIndicator } from "./utils";
 import { localization } from "./localizationManager";
 import { Event } from "survey-core";
 
@@ -145,6 +145,7 @@ export class VisualizerBase implements IDataInfo {
     this._getDataCore = this.questionOptions?.getDataCore;
     this._dataProvider = options.dataProvider || new DataProvider(data);
     this._dataProvider.onDataChanged.add(() => this.onDataChanged());
+    this.loadingData = !!this._dataProvider.dataFn;
 
     if (typeof options.labelTruncateLength !== "undefined") {
       this.labelTruncateLength = options.labelTruncateLength;
@@ -157,6 +158,7 @@ export class VisualizerBase implements IDataInfo {
 
   protected onDataChanged(): void {
     this._calculationsCache = undefined;
+    this.loadingData = !!this._dataProvider.dataFn;
     this.refresh();
   }
 
@@ -457,13 +459,23 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  protected async renderContentAsync(container: HTMLElement) {
+    return new Promise<HTMLElement>((resolve, reject) => {
+      container.innerText = localization.getString("noVisualizerForQuestion");
+      resolve(container);
+    });
+  }
+
   protected renderContent(container: HTMLElement) {
     if (!!this.options && typeof this.options.renderContent === "function") {
       this.options.renderContent(container, this);
+      this.afterRender(container);
     } else {
-      container.innerText = localization.getString("noVisualizerForQuestion");
+      if(this.loadingData) {
+        this.renderLoadingIndicator(this.contentContainer);
+      }
+      this.renderContentAsync(container).then(el => this.afterRender(el));
     }
-    this.afterRender(container);
   }
 
   protected destroyFooter(container: HTMLElement) {
@@ -668,6 +680,12 @@ export class VisualizerBase implements IDataInfo {
     return defaultStatisticsCalculator(this.surveyData, this);
   }
 
+  protected loadingData: boolean = false;
+
+  public renderLoadingIndicator(contentContainer: HTMLElement): void {
+    contentContainer.appendChild(createLoadingIndicator());
+  }
+
   /**
    * Returns an array of calculated and visualized values. If a user applies a filter, the array is also filtered.
    *
@@ -679,11 +697,14 @@ export class VisualizerBase implements IDataInfo {
         resolve(this._calculationsCache);
       }
       if(!!this.dataProvider.dataFn) {
+        this.loadingData = true;
         const dataLoadingPromise = this.dataProvider.dataFn({
           questionNames: Array.isArray(this.name) ? this.name : [this.name],
+          visualizer: this,
           filter: this.dataProvider.getFilters(),
           sort: this.dataProvider.getSorters(),
           callback: (loadedData: { data: Array<Object>, error?: any }) => {
+            this.loadingData = false;
             if(!loadedData.error && Array.isArray(loadedData.data)) {
               this._calculationsCache = loadedData.data;
               resolve(loadedData.data);
@@ -695,10 +716,14 @@ export class VisualizerBase implements IDataInfo {
         if(dataLoadingPromise) {
           dataLoadingPromise
             .then(calculatedData => {
+              this.loadingData = false;
               this._calculationsCache = calculatedData;
               resolve(calculatedData);
             })
-            .catch(reject);
+            .catch(() => {
+              this.loadingData = false;
+              reject();
+            });
         }
       } else {
         this._calculationsCache = this.getCalculatedValuesCore();

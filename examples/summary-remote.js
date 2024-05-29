@@ -92,8 +92,8 @@ const summaryData = {
   // checkbox other texts for wordcloud
   "backend_language-Comment": [["php",5]],
   // tagbox - 7 + other
-  "backend_language_tag": [[0,0,0,0,0,0,0,0]],
-  "backend_language_tag-Comment": [],
+  "backend_language_tag": [[3,10,7,20,11,4,7,9]],
+  "backend_language_tag-Comment": [["ease",1],["creating",10]],
   // radiogroup - 2
   "useproduct": [[3,9]],
   // checkbox - 2
@@ -115,11 +115,15 @@ const summaryData = {
   // radiogroup - 2
   "product_recommend": [[2,10]],
   // rating - 0-10 (histogram)
-  "nps_score": [[0,0,0,1,0,0,2,0,6,1,2]],
+  "nps_score_histogram": [[0,0,0,1,0,0,2,0,6,1,2]],
+  // rating - 0-10 (number)
+  "nps_score_number": [6.5, 0, 10],
+  // comment (wordcloud)
+  "favorite_functionality_wordcloud": [["ease",1],["creating",1],["survey",2],["builder",1],["rendering",1],["html",1],["web",1],["browser",1],["flexibility",1],["surveyjs",1],["dgefd",1],["audio",1],["recordingnicely",1],["handle",1],["logical",1],["checks",1]],
+  // comment (text)
+  "favorite_functionality_text": { columnsCount: 2, data: [["aswdasdasd sadf asfda sd"], ["sdf sdf sdf sfdasdf ga"], ["word", "some text"]] },
   // comment
-  "favorite_functionality": [["ease",1],["creating",1],["survey",2],["builder",1],["rendering",1],["html",1],["web",1],["browser",1],["flexibility",1],["surveyjs",1],["dgefd",1],["audio",1],["recordingnicely",1],["handle",1],["logical",1],["checks",1]],
-  // comment
-  "product_improvement": [["native",1],["support",1],["mobile",1],["platform",1],["großmutter",9],["product",1],["super",1],["functional",1],["ux",1],["challenging",1],["goals",1],["attract",1],["audience",1],["survey",2],["builder",1],["site",1],["revisit",1],["usability",1],["ui",2],["able",1],["successfully",1],["don't",1],["input",1],["negative",1],["trial",1],["error",1],["learning",1],["logic",1],["surveymonkey",1],["dfgdfg",1],["fix",1],["rtl",1],["bugs\nsave",1],["\"not",1],["answered",1],["questions\"",1],["matrix",1],["survey's",1],["json",1],["lack",1],["accessibility",1],["huge",1],["disadvantage",1],["that's",1],["reason",1],["projects",1]],
+  "product_improvement": [["native",3],["support",7],["mobile",1],["platform",1],["großmutter",9],["product",1],["super",1],["functional",1],["ux",1],["challenging",1],["goals",1],["attract",1],["audience",3],["survey",2],["builder",5],["site",1],["revisit",1],["usability",1],["ui",2],["able",1],["successfully",1],["don't",1],["input",1],["negative",1],["trial",1],["error",1],["learning",1],["logic",1],["surveymonkey",1],["dfgdfg",1],["fix",1],["rtl",1],["bugs\nsave",1],["\"not",1],["answered",1],["questions\"",1],["matrix",1],["survey's",1],["json",1],["lack",1],["accessibility",1],["huge",1],["disadvantage",1],["that's",1],["reason",1],["projects",1]],
 }
 
 // function getSummaryData({ questionNames, filter, sort, callback }) {
@@ -136,13 +140,18 @@ const summaryData = {
 //   return fetch(url, { body: reqBody });
 // }
 
-function getSummaryData({ questionNames, filter, sort }) {
-  console.log(JSON.stringify(filter));
-  console.log(JSON.stringify(sort));
+function getSummaryData({ visualizer, questionNames, filter, sort }) {
+  console.log("Filter: " + JSON.stringify(filter));
+  console.log("Sort: " + JSON.stringify(sort));
   return new Promise((resolve, reject) => {
-    if(summaryData[questionNames[0]] !== undefined) {
+    let dataSetName = questionNames[0];
+    if(["histogram", "number", "wordcloud", "text"].indexOf(visualizer.type) != -1) {
+      dataSetName += "_" + visualizer.type;
+    }
+    const data = summaryData[dataSetName] || summaryData[questionNames[0]];
+    if(data !== undefined) {
       setTimeout(() => {
-        resolve(summaryData[questionNames[0]]);
+        resolve(data);
       }, 1000);
     } else {
       reject("Invalid question name " + questionNames[0]);
@@ -153,6 +162,7 @@ function getSummaryData({ questionNames, filter, sort }) {
 var visPanel = new SurveyAnalytics.VisualizationPanel(
   // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   survey.getAllQuestions(),
+  // data, 
   getSummaryData,
   options
 );

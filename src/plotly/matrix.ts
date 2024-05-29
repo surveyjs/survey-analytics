@@ -25,12 +25,12 @@ export class MatrixPlotly extends Matrix {
     super.destroyContent(container);
   }
 
-  protected renderContent(container: HTMLElement) {
+  protected async renderContentAsync(container: HTMLElement) {
     const chartNode: HTMLElement = DocumentHelper.createElement("div");
+    await this._chartAdapter.create(chartNode);
+    container.innerHTML = "";
     container.appendChild(chartNode);
-    this._chartAdapter.create(chartNode).then(() => {
-      this.afterRender(this.contentContainer);
-    });
+    return container;
   }
 }
 

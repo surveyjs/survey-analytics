@@ -64,7 +64,7 @@ export class Text extends VisualizerBase {
     let result: Array<Array<string>> = [];
     let columnsCount = 0;
 
-    this.data.forEach((row) => {
+    this.surveyData.forEach((row) => {
       const rowValue: any = row[this.question.name];
       let dataStrings: Array<string> = [];
       if (!!rowValue) {
@@ -94,9 +94,12 @@ export class Text extends VisualizerBase {
     super.destroyContent(container);
   }
 
-  protected renderContent(container: HTMLElement) {
-    this._textTableAdapter.create(container);
-    this.afterRender(this.contentContainer);
+  protected async renderContentAsync(container: HTMLElement) {
+    const tableNode: HTMLElement = DocumentHelper.createElement("div");
+    await this._textTableAdapter.create(tableNode);
+    container.innerHTML = "";
+    container.appendChild(tableNode);
+    return container;
   }
 
   destroy() {

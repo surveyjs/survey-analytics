@@ -110,8 +110,12 @@ export class ChoicesTable extends SelectBase {
     super.destroyContent(container);
   }
 
-  protected renderContent(container: HTMLElement) {
-    this._choicesTableAdapter.create(container).then(() => this.afterRender(this.contentContainer));
+  protected async renderContentAsync(container: HTMLElement) {
+    const tableNode: HTMLElement = DocumentHelper.createElement("div");
+    await this._choicesTableAdapter.create(tableNode);
+    container.innerHTML = "";
+    container.appendChild(tableNode);
+    return container;
   }
 
   destroy() {

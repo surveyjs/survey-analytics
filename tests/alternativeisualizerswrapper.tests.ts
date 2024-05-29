@@ -66,21 +66,25 @@ test("setSelection and getSelection", () => {
   expect(anotherSelectBase.selection.value).toEqual(3);
 });
 
-test("check onAfterRender", () => {
+test("check onAfterRender", done => {
   var count = 0;
+  var expectedCount = 1;
   alternativeVisualizersWrapper.onAfterRender.add(() => {
+    expect(expectedCount).toBeLessThanOrEqual(2);
     count++;
+    expect(count).toEqual(expectedCount);
+    if(expectedCount == 2) {
+      setTimeout(() => done(), 10);
+    }
+    expectedCount++;
   });
   alternativeVisualizersWrapper.render(document.createElement("div"));
-  expect(count).toEqual(1);
   alternativeVisualizersWrapper.setVisualizer(
     (<any>alternativeVisualizersWrapper).visualizers[1].type
   );
-  expect(count).toEqual(1);
   (<any>alternativeVisualizersWrapper).renderContent(
     (<any>alternativeVisualizersWrapper).contentContainer
   );
-  expect(count).toEqual(2);
 });
 
 test("check onVisualizerChanged and setVisualizer", () => {

@@ -58,7 +58,7 @@ test("footer visualizer data, updateData", () => {
   expect(visualizer.footerVisualizer["surveyData"]).toEqual(newData);
 });
 
-test("check onAfterRender", () => {
+test("check onAfterRender", (done) => {
   var question = new QuestionDropdownModel("q1");
   question.hasOther = true;
 
@@ -66,9 +66,10 @@ test("check onAfterRender", () => {
   let visualizer = new VisualizerBase(question, []);
   visualizer.onAfterRender.add(() => {
     count++;
+    expect(count).toEqual(1);
+    done();
   });
   (<any>visualizer).renderContent(document.createElement("div"));
-  expect(count).toEqual(1);
 });
 
 test("Use valueName for data https://surveyjs.answerdesk.io/internal/ticket/details/T9071", () => {
