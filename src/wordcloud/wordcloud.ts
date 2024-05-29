@@ -116,6 +116,14 @@ export class WordCloud extends VisualizerBase {
     this._wordcloudAdapter = new WordCloudAdapter(this);
   }
 
+  public convertFromExternalData(externalCalculatedData: any): any[] {
+    const innerCalculatedData = [];
+    Object.keys(externalCalculatedData || []).forEach(word => {
+      innerCalculatedData.push([word, externalCalculatedData[word]]);
+    });
+    return innerCalculatedData;
+  }
+
   protected getCalculatedValuesCore(): Array<any> {
     let result: { [key: string]: number } = {};
 

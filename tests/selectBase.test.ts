@@ -404,3 +404,39 @@ test("hideEmptyAnswersInData", () => {
   });
   expect(result).toStrictEqual({ "datasets": [[3, 2]], "labels": ["11-20"], "colors": ["#3999fb"], "texts": [[3, 2]], "seriesLabels": ["Age Group", "Gender"] });
 });
+
+test("convertFromExternalData", async () => {
+  var question = new QuestionDropdownModel("q1");
+  question.choices = choices;
+  question.valueName = "q1value";
+  const data = [
+    {
+      q1value: "father",
+    },
+    {
+      q1value: "father",
+    },
+    {
+      q1value: "mother",
+    },
+    {
+      q1value: "sister",
+    },
+    {
+
+    }
+  ];
+  const externalCalculatedData = {
+    "father": 2,
+    "mother": 1,
+    "brother": 0,
+    "sister": 1,
+    "son": 0,
+    "daughter": 0
+  };
+  selectBase = new SelectBase(question, data, {});
+
+  const calculatedData = (selectBase as any).getCalculatedValuesCore();
+  expect(calculatedData).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
+  expect(selectBase.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
+});

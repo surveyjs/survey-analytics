@@ -47,3 +47,17 @@ test("result average for strings", async () => {
   expect(minValue).toBe(2);
   expect(maxValue).toBe(4);
 });
+
+test("convertFromExternalData", () => {
+  const question: any = { type: "text", inputType: "number", name: "test" };
+  const data = [{ }, { test: 2 }, { test: 4 }];
+  const number = new NumberModel(question, data);
+  const externalCalculatedData = {
+    minValue: 2,
+    value: 3,
+    maxValue: 4,
+  };
+  const calculatedData = (number as any).getCalculatedValuesCore();
+  expect(calculatedData).toEqual([3, 2, 4]);
+  expect(number.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
+});

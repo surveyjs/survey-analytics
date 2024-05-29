@@ -85,3 +85,13 @@ test("hasHeader and correct answer text", () => {
   expect(boolean.hasHeader).toBeTruthy();
   expect(boolean["getCorrectAnswerText"]()).toEqual("Label True");
 });
+
+test("convertFromExternalData", () => {
+  const externalCalculatedData = {
+    true: 3,
+    false: 1
+  };
+  const calculatedData = (boolean as any).getCalculatedValuesCore();
+  expect(calculatedData).toEqual([[3, 1]]);
+  expect(boolean.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
+});

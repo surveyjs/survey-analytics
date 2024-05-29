@@ -686,3 +686,18 @@ test("number histogram answers order", async () => {
   const histData = await number.getCalculatedValues();
   expect(histData).toMatchObject([[5, 3, 0, 0, 0, 0, 1, 0, 0, 1]]);
 });
+
+test("convertFromExternalData", () => {
+  const question: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "number",
+    name: "age",
+  };
+  const histogram = new HistogramModel(question, data);
+
+  const externalCalculatedData = [3, 0, 0, 1, 0, 2, 0, 0, 0, 2];
+  const calculatedData = (histogram as any).getCalculatedValuesCore();
+  expect(calculatedData).toEqual([[3, 0, 0, 1, 0, 2, 0, 0, 0, 2]]);
+  expect(histogram.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
+});

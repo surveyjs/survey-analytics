@@ -220,3 +220,31 @@ test("SupportMissingAnswers", () => {
   expect(matrix["isSupportMissingAnswers"]()).toBeFalsy();
   expect(matrix.showMissingAnswers).toBeFalsy();
 });
+
+test("convertFromExternalData", async () => {
+  const externalCalculatedData = {
+    "Lizol": {
+      "Excellent": 1,
+      "Very Good": 2,
+      "Good": 0,
+      "Fair": 0,
+      "Neither Fair Nor Poor": 0,
+      "Poor": 0,
+    },
+    "Harpic": {
+      "Excellent": 1,
+      "Very Good": 1,
+      "Good": 1,
+    }
+  };
+  const calculatedData = (matrix as any).getCalculatedValuesCore();
+  expect(calculatedData).toEqual([
+    [1, 1],
+    [2, 1],
+    [0, 1],
+    [0, 0],
+    [0, 0],
+    [0, 0],
+  ].reverse());
+  expect(matrix.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
+});

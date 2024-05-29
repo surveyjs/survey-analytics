@@ -686,6 +686,10 @@ export class VisualizerBase implements IDataInfo {
     contentContainer.appendChild(createLoadingIndicator());
   }
 
+  public convertFromExternalData(externalCalculatedData: any): any[] {
+    return externalCalculatedData;
+  }
+
   /**
    * Returns an array of calculated and visualized values. If a user applies a filter, the array is also filtered.
    *
@@ -706,8 +710,8 @@ export class VisualizerBase implements IDataInfo {
           callback: (loadedData: { data: Array<Object>, error?: any }) => {
             this.loadingData = false;
             if(!loadedData.error && Array.isArray(loadedData.data)) {
-              this._calculationsCache = loadedData.data;
-              resolve(loadedData.data);
+              this._calculationsCache = this.convertFromExternalData(loadedData.data);
+              resolve(this._calculationsCache);
             } else {
               reject();
             }
@@ -717,8 +721,8 @@ export class VisualizerBase implements IDataInfo {
           dataLoadingPromise
             .then(calculatedData => {
               this.loadingData = false;
-              this._calculationsCache = calculatedData;
-              resolve(calculatedData);
+              this._calculationsCache = this.convertFromExternalData(calculatedData);
+              resolve(this._calculationsCache);
             })
             .catch(() => {
               this.loadingData = false;
