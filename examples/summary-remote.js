@@ -141,6 +141,7 @@ const summaryData = {
 // }
 
 function getSummaryData({ visualizer, questionNames, filter, sort }) {
+  console.log("Question: " + JSON.stringify(questionNames));
   console.log("Filter: " + JSON.stringify(filter));
   console.log("Sort: " + JSON.stringify(sort));
   return new Promise((resolve, reject) => {
