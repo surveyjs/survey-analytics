@@ -341,7 +341,7 @@ export class PlotlySetup {
         tickcolor: "transparent",
       };
     }
-    if((model as any).getValueType() != "date") {
+    if(!(model as any).getValueType || (model as any).getValueType() != "date") {
       layout.xaxis = {
         type: "category",
       };
