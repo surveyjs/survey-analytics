@@ -225,24 +225,22 @@ const summaryData = {
   "product_improvement": {"native": 3, "support": 7, "mobile": 1, "platform": 1, "großmutter": 9, "product": 1, "super": 1, "functional": 1, "ux": 1, "challenging": 1, "goals": 1, "attract": 1, "audience": 3, "survey": 2, "builder": 5, "site": 1, "revisit": 1, "usability": 1, "ui": 2, "able": 1, "successfully": 1, "don't": 1, "input": 1, "negative": 1, "trial": 1, "error": 1, "learning": 1, "logic": 1, "surveymonkey": 1, "dfgdfg": 1, "fix": 1, "rtl": 1, "bugs\nsave": 1, "\"not": 1, "answered": 1, "questions\"": 1, "matrix": 1, "survey's": 1, "json": 1, "lack": 1, "accessibility": 1, "huge": 1, "disadvantage": 1, "that's": 1, "reason": 1, "projects": 1},
 }
 
-// function getSummaryData({ questionNames, filter, sort, callback }) {
+// function getSummaryData({ visualizer, questionNames, filter, callback }) {
 //   console.log(JSON.stringify(filter));
-//   console.log(JSON.stringify(sort));
 //   setTimeout(() => {
 //     callback({ data: summaryData[questionNames[0]] });
 //   }, 1000);
 // }
 
-// function getSummaryData({ questionNames, filter, sort}) {
+// function getSummaryData({ visualizer, questionNames, filter }) {
 //   const url = "http://www.example.com/";
-//   const reqBody = { questionNames, filter, sort };
+//   const reqBody = { questionNames, filter };
 //   return fetch(url, { body: reqBody });
 // }
 
-function getSummaryData({ visualizer, questionNames, filter, sort }) {
+function getSummaryData({ visualizer, questionNames, filter }) {
   console.log("Question: " + JSON.stringify(questionNames));
   console.log("Filter: " + JSON.stringify(filter));
-  console.log("Sort: " + JSON.stringify(sort));
   return new Promise((resolve, reject) => {
     let dataSetName = questionNames[0];
     if(["histogram", "number", "wordcloud", "text"].indexOf(visualizer.type) != -1) {

@@ -706,7 +706,6 @@ export class VisualizerBase implements IDataInfo {
           questionNames: Array.isArray(this.name) ? this.name : [this.name],
           visualizer: this,
           filter: this.dataProvider.getFilters(),
-          sort: this.dataProvider.getSorters(),
           callback: (loadedData: { data: Array<Object>, error?: any }) => {
             this.loadingData = false;
             if(!loadedData.error && Array.isArray(loadedData.data)) {

@@ -1,9 +1,8 @@
 import { Event } from "survey-core";
 
 export type SummaryFilter = { field: string, type: string, value: any };
-export type SummarySortOrder = { field: string, direction: undefined | "asc" | "desc" };
-export type GetDataUsingCallbackFn = (params: { visualizer: any, questionNames: string[], filter?: Array<SummaryFilter>, sort?: Array<SummarySortOrder>, callback?: (response: { data: Array<Object>, error?: any }) => void }) => void;
-export type GetDataUsingPromiseFn = (params: { visualizer: any, questionNames: string[], filter?: Array<SummaryFilter>, sort?: Array<SummarySortOrder> }) => Promise<Array<Object>>;
+export type GetDataUsingCallbackFn = (params: { visualizer: any, questionNames: string[], filter?: Array<SummaryFilter>, callback?: (response: { data: Array<Object>, error?: any }) => void }) => void;
+export type GetDataUsingPromiseFn = (params: { visualizer: any, questionNames: string[], filter?: Array<SummaryFilter> }) => Promise<Array<Object>>;
 export type GetDataFn = GetDataUsingCallbackFn | GetDataUsingPromiseFn;
 
 export class DataProvider {
@@ -113,9 +112,6 @@ export class DataProvider {
     }
   }
 
-  public getSorters(): SummarySortOrder[] {
-    return [];
-  }
   public getFilters(): SummaryFilter[] {
     return Object.keys(this.filterValues).map(key => ({ field: key, type: "=", value: this.filterValues[key] }));
   }
