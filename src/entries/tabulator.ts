@@ -8,6 +8,8 @@ import "../analytics-localization/norwegian";
 import "../analytics-localization/portuguese";
 import "../analytics-localization/russian";
 import "../analytics-localization/dutch";
+import "../analytics-localization/spanish";
+import "../analytics-localization/italian";
 import "../analytics-localization/arabic";
 import "../analytics-localization/japanese";
 
