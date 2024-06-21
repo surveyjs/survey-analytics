@@ -66,7 +66,12 @@ export var englishStrings = {
   answer: "Answer",
   correctAnswer: "Correct answer: ",
   percent: "Percent",
-  responses: "Responses"
+  responses: "Responses",
+  visualizer_nps: "NPS Score",
+  npsScore: "NPS Score",
+  npsPromoters: "Promoters",
+  npsPassives: "Passives",
+  npsDetractors: "Detractors",
 };
 
 // Uncomment the lines below if you create a custom dictionary.
