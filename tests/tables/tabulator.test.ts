@@ -1,5 +1,7 @@
 import { SurveyModel } from "survey-core";
 import { Tabulator } from "../../src/tables/tabulator";
+import { TableExtensions } from "../../src/tables/extensions/tableextensions";
+import { Table } from "../../src/tables/table";
 
 jest.mock("tabulator-tables", () => {
   return { default: jest.requireActual("tabulator-tables") };
@@ -93,7 +95,7 @@ test("check that tabulator takes into account column's width", () => {
       isPublic: true,
       location: 0,
     },
-  ];
+  ] as any;
   var tabulatorColumns = tabulator.getColumns();
   expect(tabulatorColumns[1].width).toBe(50);
   expect(tabulatorColumns[1].widthShrink).toBe(0);
@@ -112,7 +114,7 @@ test("check that tabulator take into account column's width after layout (check 
       isPublic: true,
       location: 0,
     },
-  ];
+  ] as any;
   tabulator.render(document.createElement("table"));
   var columnDefinitions = tabulator.tabulatorTables.getColumnDefinitions();
   expect(columnDefinitions[1].width).toBe(undefined);
@@ -142,7 +144,7 @@ test("check that tabulator take into account downloadHiddenColumns option", () =
       isPublic: true,
       location: 0,
     },
-  ];
+  ] as any;
 
   tabulator.render(document.createElement("table"));
   expect(tabulator.tabulatorTables.getColumnDefinitions()[1].download).toBe(
@@ -273,4 +275,34 @@ test("image and file export formatter", () => {
 
   const imageCell = accessorDownload(undefined, undefined, undefined, undefined, { getDefinition: () => ({ field: "signature" }) }, { getPosition: () => 0 });
   expect(imageCell).toBe("signature");
+});
+
+test("Tabulator allowSorting option", () => {
+  TableExtensions.registerExtension({
+    location: "column",
+    name: "sort",
+    visibleIndex: 1,
+    render: function (table: Table, options: any) {
+      const ext = document.createElement("div");
+      ext.className = "sorting";
+      return ext;
+    },
+  } as any);
+  let tabulator = new Tabulator(new SurveyModel({ questions: [{ type: "text", name: "q1" }] }), [], undefined as any);
+  let tableExtensions = new TableExtensions(tabulator);
+
+  let tableNode = document.createElement("div");
+  tableExtensions.render(tableNode, "column");
+
+  expect(tableNode.innerHTML).toContain("sorting");
+
+  tabulator = new Tabulator(new SurveyModel({ questions: [{ type: "text", name: "q1" }] }), [], { allowSorting: false } as any);
+  tableExtensions = new TableExtensions(tabulator);
+
+  tableNode = document.createElement("div");
+  tableExtensions.render(tableNode, "column");
+
+  expect(tableNode.innerHTML.indexOf("sorting")).toBe(-1);
+
+  TableExtensions.unregisterExtension("column", "sort");
 });
