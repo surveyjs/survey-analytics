@@ -41,7 +41,7 @@ test("getColumns method", () => {
   const columns = <any>tabulator["getColumns"]();
 
   expect(JSON.stringify(columns)).toBe(
-    '[{"field":"","title":"","download":false,"resizable":false,"minWidth":60,"width":60},{"field":"car","title":"What car are you driving?","widthShrink":1,"visible":true,"headerSort":true,"formatter":"plaintext"},{"field":"photo","title":"photo","widthShrink":1,"visible":true,"headerSort":true,"formatter":"html"}]'
+    '[{"field":"","title":"","download":false,"resizable":false,"minWidth":60,"width":60},{"field":"car","title":"What car are you driving?","widthShrink":1,"visible":true,"headerSort":false,"formatter":"plaintext"},{"field":"photo","title":"photo","widthShrink":1,"visible":true,"headerSort":false,"formatter":"html"}]'
   );
 });
 
@@ -186,13 +186,13 @@ test("useNamesAsTitles option", () => {
   let tabulator = new Tabulator(survey, [], null);
   let columns = <any>tabulator.getColumns();
   expect(JSON.stringify(columns)).toBe(
-    "[{\"field\":\"\",\"title\":\"\",\"download\":false,\"resizable\":false,\"minWidth\":60,\"width\":60},{\"field\":\"str\",\"title\":\"String\",\"widthShrink\":1,\"visible\":true,\"headerSort\":true,\"formatter\":\"plaintext\"}]"
+    "[{\"field\":\"\",\"title\":\"\",\"download\":false,\"resizable\":false,\"minWidth\":60,\"width\":60},{\"field\":\"str\",\"title\":\"String\",\"widthShrink\":1,\"visible\":true,\"headerSort\":false,\"formatter\":\"plaintext\"}]"
   );
 
   tabulator = new Tabulator(survey, [], <any>{ useNamesAsTitles: true });
   columns = <any>tabulator.getColumns();
   expect(JSON.stringify(columns)).toBe(
-    "[{\"field\":\"\",\"title\":\"\",\"download\":false,\"resizable\":false,\"minWidth\":60,\"width\":60},{\"field\":\"str\",\"title\":\"str\",\"widthShrink\":1,\"visible\":true,\"headerSort\":true,\"formatter\":\"plaintext\"}]"
+    "[{\"field\":\"\",\"title\":\"\",\"download\":false,\"resizable\":false,\"minWidth\":60,\"width\":60},{\"field\":\"str\",\"title\":\"str\",\"widthShrink\":1,\"visible\":true,\"headerSort\":false,\"formatter\":\"plaintext\"}]"
   );
 });
 
