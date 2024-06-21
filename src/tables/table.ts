@@ -9,7 +9,7 @@ import {
 } from "./config";
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
-import { TableExtensions } from "./extensions/tableextensions";
+import { ITableExtension, TableExtensions } from "./extensions/tableextensions";
 import { createCommercialLicenseLink, createImagesContainer, createLinksContainer, DocumentHelper } from "../utils";
 import { ColumnsBuilderFactory } from "./columnbuilder";
 import { DefaultColumn } from "./columns";
@@ -391,6 +391,17 @@ export abstract class Table {
    * Fires when permissions changed
    */
   public onPermissionsChangedCallback: any;
+
+  protected get allowSorting(): boolean {
+    return this.options.allowSorting === undefined || this.options.allowSorting === true;
+  }
+
+  public allowExtension(extension: ITableExtension): boolean {
+    if(extension.location === "column" && extension.name === "sort") {
+      return this.allowSorting;
+    }
+    return true;
+  }
 }
 
 export abstract class TableRow {

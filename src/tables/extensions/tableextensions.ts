@@ -1,6 +1,6 @@
 import { Table } from "../table";
 
-interface ITableExtension {
+export interface ITableExtension {
   location: string;
   name: string;
   visibleIndex: number;
@@ -18,7 +18,7 @@ export class TableExtensions {
     if (!!extensions) {
       extensions = this.sortExtensions(extensions);
       extensions.forEach((extension) => {
-        if (!!extension.render) {
+        if (!!extension.render && this.table.allowExtension(extension)) {
           var action = extension.render(this.table, options);
           if (!!action) {
             targetNode.appendChild(action);

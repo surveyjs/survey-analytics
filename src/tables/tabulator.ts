@@ -330,7 +330,7 @@ export class Tabulator extends Table {
         widthShrink: !column.width ? 1 : 0,
         visible: this.isColumnVisible(column),
         headerSort: false,
-        download: this._options.downloadHiddenColumns ? true : undefined,
+        download: this.options.downloadHiddenColumns ? true : undefined,
         formatter,
         accessorDownload: this.accessorDownload,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
