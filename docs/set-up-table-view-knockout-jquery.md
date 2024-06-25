@@ -5,7 +5,7 @@ description: Convert your survey data to manageable table format  for easy filte
 
 # Table View for Survey Results in a Knockout or jQuery Application
 
-This step-by-step tutorial will help you set up a table view for survey results using SurveyJS Dashboard in a Knockout or jQuery application. To add the table view to your application, follow the steps below:
+This step-by-step tutorial will help you set up a Table View for survey results using SurveyJS Dashboard in a Knockout or jQuery application. To add the Table View to your application, follow the steps below:
 
 - [Link Resources](#link-resources)
 - [Load Survey Results](#load-survey-results)
@@ -73,9 +73,21 @@ The following code shows how to reference these libraries:
 
 ## Load Survey Results
 
-You can access survey results as a JSON object within the `SurveyModel`'s `onComplete` event handler. Send the results to your server and store them with a specific survey ID. Refer to the [Handle Survey Completion](/Documentation/Library?id=get-started-knockout#handle-survey-completion) help topic for more information.  
+When a respondent completes a survey, a JSON object with their answers is passed to the `SurveyModel`'s [`onComplete`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#onComplete) event handler. You should send this object to your server and store it with a specific survey ID (see [Handle Survey Completion](/form-library/documentation/get-started-knockout#handle-survey-completion)). A collection of such JSON objects is a data source for the Table View. This collection can be processed (sorted, filtered, paginated) on the server or on the client.
 
-To load the survey results, send the survey ID to your server and return an array of JSON objects:
+### Server-Side Data Processing
+
+Server-side data processing enables the Table View to load survey results in small batches on demand and delegate sorting and filtering to the server. For this feature to work, the server must support these data operations. Refer to the following demo example on GitHub for information on how to configure the server and the client for this usage scenario:
+
+[SurveyJS Dashboard: Table View - Server-Side Data Processing Demo Example](https://github.com/surveyjs/surveyjs-dashboard-table-view-nodejs-mongodb (linkStyle))
+
+> The Table View allows users to save survey results as CSV, PDF, and XLSX documents. With server-side data processing, these documents contain only currently loaded data records. To export full datasets, you need to generate the documents on the server.
+
+### Client-Side Data Processing
+
+When data is processed on the client, the Table View loads the entire dataset at startup and applies sorting and filtering in a user's browser. This demands faster web connection and higher computing power but works smoother with small datasets.
+
+To load survey results to the client, send the survey ID to your server and return an array of JSON objects with survey results:
 
 ```js
 const SURVEY_ID = 1;
@@ -83,7 +95,7 @@ const SURVEY_ID = 1;
 loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
     .then((surveyResults) => {
         // ...
-        // Configure and render the table view here
+        // Configure and render the Table View here
         // Refer to the help topics below
         // ...
     });
@@ -151,7 +163,7 @@ function generateData() {
 
 ## Render the Table
 
-The table view is rendered by the `Tabulator` component. Pass the survey model and results to its constructor to instantiate it. Assign the produced instance to a constant that will be used later to render the component:
+The Table View is rendered by the `Tabulator` component. Pass the survey model and results to its constructor to instantiate it. Assign the produced instance to a constant that will be used later to render the component:
 
 ```js
 const surveyJson = { /* ... */ };
@@ -165,7 +177,7 @@ const surveyDataTable = new SurveyAnalyticsTabulator.Tabulator(
 );
 ```
 
-The table view should be rendered in a page element. Add this element to the page markup:
+The Table View should be rendered in a page element. Add this element to the page markup:
 
 ```html
 <body>
@@ -173,7 +185,7 @@ The table view should be rendered in a page element. Add this element to the pag
 </body>
 ```
 
-To render the table view in the page element, call the `render(containerId)` method on the Tabulator instance you created previously:
+To render the Table View in the page element, call the `render(containerId)` method on the Tabulator instance you created previously:
 
 ```js
 document.addEventListener("DOMContentLoaded", function() {

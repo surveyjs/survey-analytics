@@ -5,7 +5,7 @@ description: Convert your survey data to manageable table format  for easy filte
 
 # Table View for Survey Results in a React Application
 
-This step-by-step tutorial will help you set up a table view for survey results using SurveyJS Dashboard in a React application. To add the table view to your application, follow the steps below:
+This step-by-step tutorial will help you set up a Table View for survey results using SurveyJS Dashboard in a React application. To add the Table View to your application, follow the steps below:
 
 - [Install the `survey-analytics` npm Package](#install-the-survey-analytics-npm-package)
 - [Configure Styles](#configure-styles)
@@ -35,11 +35,11 @@ SurveyJS Dashboard is distributed as a <a href="https://www.npmjs.com/package/su
 npm install survey-analytics --save
 ```
 
-The table view for SurveyJS Dashboard depends on the <a href="https://tabulator.info/" target="_blank">Tabulator</a> library. The command above automatically installs it as a dependency.
+The Table View for SurveyJS Dashboard depends on the <a href="https://tabulator.info/" target="_blank">Tabulator</a> library. The command above automatically installs it as a dependency.
 
 ## Configure Styles
 
-Import the Tabulator and table view style sheets in the component that will render the table view:
+Import the Tabulator and Table View style sheets in the component that will render the Table View:
 
 ```js
 import 'tabulator-tables/dist/css/tabulator.min.css';
@@ -48,9 +48,19 @@ import 'survey-analytics/survey.analytics.tabulator.min.css';
 
 ## Load Survey Results
 
-You can access survey results as a JSON object within the `SurveyModel`'s `onComplete` event handler. Send the results to your server and store them with a specific survey ID. Refer to the [Handle Survey Completion](/form-library/documentation/get-started-react#handle-survey-completion) help topic for more information.
+When a respondent completes a survey, a JSON object with their answers is passed to the `SurveyModel`'s [`onComplete`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#onComplete) event handler. You should send this object to your server and store it with a specific survey ID (see [Handle Survey Completion](/form-library/documentation/get-started-react#handle-survey-completion)). A collection of such JSON objects is a data source for the Table View. This collection can be processed (sorted, filtered, paginated) on the server or on the client.
 
-To load the survey results, send the survey ID to your server and return an array of JSON objects:
+### Server-Side Data Processing
+
+Server-side data processing enables the Table View to load survey results in small batches on demand and delegate sorting and filtering to the server. For this feature to work, the server must support these data operations. Refer to the following demo example on GitHub for information on how to configure the server and the client for this usage scenario:
+
+[SurveyJS Dashboard: Table View - Server-Side Data Processing Demo Example](https://github.com/surveyjs/surveyjs-dashboard-table-view-nodejs-mongodb (linkStyle))
+
+### Client-Side Data Processing
+
+When data is processed on the client, the Table View loads the entire dataset at startup and applies sorting and filtering in a user's browser. This demands faster web connection and higher computing power but works smoother with small datasets.
+
+To load survey results to the client, send the survey ID to your server and return an array of JSON objects with survey results:
 
 ```js
 // ...
@@ -65,7 +75,7 @@ export default function App() {
     loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
       .then((surveyResults) => {
         // ...
-        // Configure the table view here
+        // Configure the Table View here
         // Refer to the help topics below
         // ...
       });
@@ -137,7 +147,7 @@ function generateData() {
 
 ## Render the Table
 
-The table view is rendered by the `Tabulator` component. Import this component and pass the survey model and results to its constructor to instantiate it. Save the produced instance in a state variable that will be used later to render the component:
+The Table View is rendered by the `Tabulator` component. Import this component and pass the survey model and results to its constructor to instantiate it. Save the produced instance in a state variable that will be used later to render the component:
 
 ```js
 // ...
@@ -174,7 +184,7 @@ export default function App() {
 }
 ```
 
-The table view should be rendered in a page element. Add this element to the component markup, as shown below.
+The Table View should be rendered in a page element. Add this element to the component markup, as shown below.
 
 ```js
 // Uncomment the following line if you are using Next.js:
@@ -189,7 +199,7 @@ export default function App() {
 }
 ```
 
-To render the table view in the page element, call the `render(containerId)` method on the Tabulator instance you created previously:
+To render the Table View in the page element, call the `render(containerId)` method on the Tabulator instance you created previously:
 
 ```js
 import { ..., useEffect } from 'react';
@@ -297,7 +307,7 @@ export default function App() {
 
 ## Enable Export to PDF and Excel
 
-The table view for SurveyJS Dashboard allows users to save survey results as CSV, PDF, and XLSX documents. Export to CSV is supported out of the box. For export to PDF and XLSX, you need to reference the <a href="https://github.com/parallax/jsPDF#readme" target="_blank">jsPDF</a>, <a href="https://github.com/JonatanPe/jsPDF-AutoTable#readme" target="_blank">jsPDF-AutoTable</a>, and <a href="https://sheetjs.com/" target="_blank">SheetJS</a> libraries. Open the `index.html` file in your project and add the following links to the `<head>` element:
+The Table View for SurveyJS Dashboard allows users to save survey results as CSV, PDF, and XLSX documents. Export to CSV is supported out of the box. For export to PDF and XLSX, you need to reference the <a href="https://github.com/parallax/jsPDF#readme" target="_blank">jsPDF</a>, <a href="https://github.com/JonatanPe/jsPDF-AutoTable#readme" target="_blank">jsPDF-AutoTable</a>, and <a href="https://sheetjs.com/" target="_blank">SheetJS</a> libraries. Open the `index.html` file in your project and add the following links to the `<head>` element:
 
 ```html
 <!-- jsPDF for export to PDF -->
@@ -311,6 +321,8 @@ The table view for SurveyJS Dashboard allows users to save survey results as CSV
 To view the application, run `npm run start` in a command line and open [http://localhost:3000/](http://localhost:3000/) in your browser. If you do everything correctly, you should see the following result:
 
 ![SurveyJS Dashboard: Export survey data to PDF, XLSX, and CSV](../images/export-to-pdf-xlsx-csv.png)
+
+> With [server-side data processing](#server-side-data-processing), exported documents contain only currently loaded data records. To export full datasets, you need to generate the documents on the server.
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/dashboard-table-view/react (linkStyle))
 
