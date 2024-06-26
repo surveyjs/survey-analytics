@@ -1,7 +1,7 @@
 import { Question, Event } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
-import { DocumentHelper } from "./utils";
+import { DocumentHelper, toPrecision } from "./utils";
 import { localization } from "./localizationManager";
 
 import "./nps.scss";
@@ -32,11 +32,23 @@ export class NpsVizualizerWidget {
   public render(target: HTMLDivElement): void {
     this._renderedTarget = target;
     var npsElement = DocumentHelper.createElement("div", "sa-visualizer-nps");
-    npsElement.appendChild(this.renderScorePart("npsScore", ((this._data.promoters - this._data.detractors) / this._data.total) * 100));
-    npsElement.appendChild(this.renderScorePart("npsPromoters", this._data.promoters, this._data.promoters / this._data.total * 100));
-    npsElement.appendChild(this.renderScorePart("npsPassives", this._data.total - this._data.promoters - this._data.detractors, (this._data.total - this._data.promoters - this._data.detractors) / this._data.total * 100));
-    npsElement.appendChild(this.renderScorePart("npsDetractors", this._data.detractors, this._data.detractors / this._data.total * 100));
+    npsElement.appendChild(this.renderScorePart("npsScore", this.npsScore));
+    npsElement.appendChild(this.renderScorePart("npsPromoters", this._data.promoters, this.promotersPercent));
+    npsElement.appendChild(this.renderScorePart("npsPassives", this._data.total - this._data.promoters - this._data.detractors, this.passivePercent));
+    npsElement.appendChild(this.renderScorePart("npsDetractors", this._data.detractors, this.detractorsPercent));
     target.appendChild(npsElement);
+  }
+  public get npsScore(): number {
+    return toPrecision(((this._data.promoters - this._data.detractors) / this._data.total) * 100, this._model.precision);
+  }
+  public get promotersPercent(): number {
+    return toPrecision(this._data.promoters / this._data.total * 100, this._model.precision);
+  }
+  public get passivePercent(): number {
+    return toPrecision((this._data.total - this._data.promoters - this._data.detractors) / this._data.total * 100, this._model.precision);
+  }
+  public get detractorsPercent(): number {
+    return toPrecision(this._data.detractors / this._data.total * 100, this._model.precision);
   }
   public dispose(): void {
     if(!!this._renderedTarget) {
@@ -70,6 +82,9 @@ export class NpsAdapter {
   }
 }
 export class NpsVizualizer extends VisualizerBase {
+  public static DetractorScore = 6;
+  public static PromoterScore = 9;
+  public precision = 2;
   private _npsAdapter: NpsAdapter;
 
   constructor(
@@ -94,9 +109,9 @@ export class NpsVizualizer extends VisualizerBase {
       const rowValue: any = row[this.question.name];
       const scoreValue = parseInt(rowValue);
       if (!Number.isNaN(scoreValue)) {
-        if(scoreValue <= 6) {
+        if(scoreValue <= NpsVizualizer.DetractorScore) {
           result.detractors++;
-        } else if(scoreValue >= 9) {
+        } else if(scoreValue >= NpsVizualizer.PromoterScore) {
           result.promoters++;
         } else {
           result.passive++;
