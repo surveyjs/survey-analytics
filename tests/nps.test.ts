@@ -1,9 +1,9 @@
-import { NpsVizualizer, NpsVizualizerWidget } from "../src/nps";
+import { NpsVisualizer, NpsVisualizerWidget } from "../src/nps";
 
 test("result resultMin resultMax", () => {
   const question: any = { type: "rating", name: "test" };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
-  const nps = new NpsVizualizer(question, data);
+  const nps = new NpsVisualizer(question, data);
 
   let result = nps.getCalculatedValues();
 
@@ -16,9 +16,9 @@ test("result resultMin resultMax", () => {
 test("result precision is 2 digits", () => {
   const question: any = { type: "rating", name: "test" };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
-  const nps = new NpsVizualizer(question, data);
+  const nps = new NpsVisualizer(question, data);
   const calculations = nps.getCalculatedValues();
-  const widget = new NpsVizualizerWidget(nps, calculations);
+  const widget = new NpsVisualizerWidget(nps, calculations);
 
   expect(widget.npsScore).toBe(33.33);
   expect(widget.detractorsPercent).toBe(16.67);
