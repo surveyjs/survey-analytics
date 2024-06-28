@@ -144,6 +144,21 @@ var json = {
           name: "favorite_functionality",
           title: "[comment] What's your favorite functionality / add-on?",
         },
+        {
+          type: "ranking",
+          name: "smartphone-features",
+          title: "[ranking] Please rank the following smartphone features in order of importance:",
+          isRequired: true,
+          choices: [
+            "Battery life",
+            "Screen size",
+            "Storage space",
+            "Camera quality",
+            "Durability",
+            "Processor power",
+            "Price",
+          ],
+        }
       ],
     },
   ],
@@ -212,7 +227,7 @@ const summaryData = {
     "Hobbyist": 0,
     "other": 1
   },
-  "organization_type-Comment_wordcloud": {"start": 1},
+  "organization_type-Comment_wordcloud": { "start": 1 },
   // checkbox - 7 + other
   "backend_language": {
     "Java": 2,
@@ -225,7 +240,7 @@ const summaryData = {
     "other": 5
   },
   // checkbox other texts for wordcloud
-  "backend_language-Comment_wordcloud": {"php": 5},
+  "backend_language-Comment_wordcloud": { "php": 5 },
   // tagbox - 7 + other
   "backend_language_tag": {
     "Java": 2,
@@ -237,17 +252,30 @@ const summaryData = {
     "Ruby": 2,
     "other": 5
   },
-  "backend_language_tag-Comment_wordcloud": {"ease":1,"creating":10},
-  // text
-  "survey_cloud_platform": [],
+  "backend_language_tag-Comment_wordcloud": { "ease": 1, "creating": 10 },
+  "backend_language_tag-Comment_text": { columnsCount: 2, data: [["aswdasdasd sadf asfda sd"], ["sdf sdf sdf sfdasdf ga"], ["word", "some text"]] },
+  // text (text)
+  "survey_cloud_platform_text": { columnsCount: 1, data: [["aswdasdasd sadf asfda sd"], ["sdf sdf sdf sfdasdf ga"], ["some text"]] },
+  // text (wordcloud)
+  "survey_cloud_platform_wordcloud": { "ease": 9, "creating": 1, "survey": 2, "builder": 3, "rendering": 3, "html": 4, "web": 8, "browser": 1, },
   // rating - 0-10 (histogram)
   "nps_score_histogram": [0,0,0,1,0,0,2,0,6,1,2],
   // rating - 0-10 (number)
-  "nps_score_number": {value: 6.7, minValue: 1, maxValue: 10},
+  "nps_score_number": { value: 6.7, minValue: 1, maxValue: 10 },
   // comment (wordcloud)
-  "favorite_functionality_wordcloud": {"ease": 1, "creating": 1, "survey": 2, "builder": 1, "rendering": 1, "html": 1, "web": 1, "browser": 1, "flexibility": 1, "surveyjs": 1, "dgefd": 1, "audio": 1, "recordingnicely": 1, "handle": 1, "logical": 1, "checks": 1},
+  "favorite_functionality_wordcloud": { "ease": 1, "creating": 1, "survey": 2, "builder": 1, "rendering": 1, "html": 1, "web": 1, "browser": 1, "flexibility": 1, "surveyjs": 1, "dgefd": 1, "audio": 1, "recordingnicely": 1, "handle": 1, "logical": 1, "checks": 1 },
   // comment (text)
   "favorite_functionality_text": { columnsCount: 2, data: [["aswdasdasd sadf asfda sd"], ["sdf sdf sdf sfdasdf ga"], ["word", "some text"]] },
+  // ranking
+  "smartphone-features": {
+    "Battery life": 12,
+    "Screen size": 15,
+    "Storage space": 8,
+    "Camera quality": 5,
+    "Durability": 0,
+    "Processor power": 6,
+    "Price": 15,
+  }
 }
 
 // function getSummaryData({ visualizer, filter, callback }) {
