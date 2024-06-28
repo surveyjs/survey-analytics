@@ -1,15 +1,15 @@
 import { Question, Event } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
-import { DocumentHelper } from "./utils";
+import { DocumentHelper, toPrecision } from "./utils";
 import { localization } from "./localizationManager";
 
 import "./nps.scss";
 
-export class NpsVizualizerWidget {
+export class NpsVisualizerWidget {
   private _renderedTarget: HTMLDivElement = undefined;
 
-  constructor(private _model: NpsVizualizer, private _data: { detractors: number, passive: number, promoters: number, total: number }) {
+  constructor(private _model: NpsVisualizer, private _data: { detractors: number, passive: number, promoters: number, total: number }) {
   }
 
   private renderScorePart(partId: string, value: number, percent?: number) {
@@ -32,11 +32,23 @@ export class NpsVizualizerWidget {
   public render(target: HTMLDivElement): void {
     this._renderedTarget = target;
     var npsElement = DocumentHelper.createElement("div", "sa-visualizer-nps");
-    npsElement.appendChild(this.renderScorePart("npsScore", ((this._data.promoters - this._data.detractors) / this._data.total) * 100));
-    npsElement.appendChild(this.renderScorePart("npsPromoters", this._data.promoters, this._data.promoters / this._data.total * 100));
-    npsElement.appendChild(this.renderScorePart("npsPassives", this._data.total - this._data.promoters - this._data.detractors, (this._data.total - this._data.promoters - this._data.detractors) / this._data.total * 100));
-    npsElement.appendChild(this.renderScorePart("npsDetractors", this._data.detractors, this._data.detractors / this._data.total * 100));
+    npsElement.appendChild(this.renderScorePart("npsScore", this.npsScore));
+    npsElement.appendChild(this.renderScorePart("npsPromoters", this._data.promoters, this.promotersPercent));
+    npsElement.appendChild(this.renderScorePart("npsPassives", this._data.total - this._data.promoters - this._data.detractors, this.passivePercent));
+    npsElement.appendChild(this.renderScorePart("npsDetractors", this._data.detractors, this.detractorsPercent));
     target.appendChild(npsElement);
+  }
+  public get npsScore(): number {
+    return toPrecision(((this._data.promoters - this._data.detractors) / this._data.total) * 100, this._model.precision);
+  }
+  public get promotersPercent(): number {
+    return toPrecision(this._data.promoters / this._data.total * 100, this._model.precision);
+  }
+  public get passivePercent(): number {
+    return toPrecision((this._data.total - this._data.promoters - this._data.detractors) / this._data.total * 100, this._model.precision);
+  }
+  public get detractorsPercent(): number {
+    return toPrecision(this._data.detractors / this._data.total * 100, this._model.precision);
   }
   public dispose(): void {
     if(!!this._renderedTarget) {
@@ -47,30 +59,32 @@ export class NpsVizualizerWidget {
 }
 
 export class NpsAdapter {
-  private _npsVizualizer: any;
+  private _npsVisualizer: any;
 
-  constructor(private model: NpsVizualizer) {}
+  constructor(private model: NpsVisualizer) {}
 
-  public get npsVizualizer(): any {
-    return this._npsVizualizer;
+  public get npsVisualizer(): any {
+    return this._npsVisualizer;
   }
 
   public async create(element: HTMLElement) {
     const data = await this.model.getCalculatedValues();
-    this._npsVizualizer = new NpsVizualizerWidget(this.model, data as any);
-    this._npsVizualizer.render(element);
-    return this._npsVizualizer;
+    this._npsVisualizer = new NpsVisualizerWidget(this.model, data as any);
+    this._npsVisualizer.render(element);
+    return this._npsVisualizer;
   }
 
   public destroy(node: HTMLElement): void {
-    if(this._npsVizualizer && typeof this._npsVizualizer.dispose === "function") {
-      this._npsVizualizer.dispose();
+    if(this._npsVisualizer && typeof this._npsVisualizer.dispose === "function") {
+      this._npsVisualizer.dispose();
     }
-    this._npsVizualizer = undefined;
+    this._npsVisualizer = undefined;
   }
 }
-
-export class NpsVizualizer extends VisualizerBase {
+export class NpsVisualizer extends VisualizerBase {
+  public static DetractorScore = 6;
+  public static PromoterScore = 9;
+  public precision = 2;
   private _npsAdapter: NpsAdapter;
 
   constructor(
@@ -95,9 +109,9 @@ export class NpsVizualizer extends VisualizerBase {
       const rowValue: any = row[this.question.name];
       const scoreValue = parseInt(rowValue);
       if (!Number.isNaN(scoreValue)) {
-        if(scoreValue <= 6) {
+        if(scoreValue <= NpsVisualizer.DetractorScore) {
           result.detractors++;
-        } else if(scoreValue >= 9) {
+        } else if(scoreValue >= NpsVisualizer.PromoterScore) {
           result.promoters++;
         } else {
           result.passive++;
@@ -129,4 +143,4 @@ export class NpsVizualizer extends VisualizerBase {
   }
 }
 
-// VisualizationManager.registerVisualizer("rating", NpsVizualizer);
+// VisualizationManager.registerVisualizer("rating", NpsVisualizer);
