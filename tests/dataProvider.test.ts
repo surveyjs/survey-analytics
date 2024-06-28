@@ -34,6 +34,7 @@ const testData = [
 
 const q1testDataInfo = {
   name: "q1",
+  dataNames: ["q1"],
   getValues: () => [0, 1, 2, 3],
   getLabels: () => ["a0", "a1", "a2", "a3"],
   getSeriesValues: () => [],
@@ -95,6 +96,7 @@ test("getData for boolean question values - mock", () => {
   expect(
     defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "q1",
+      dataNames: ["q1"],
       getValues: () => [true, false],
       getLabels: () => ["true", "false"],
       getSeriesValues: () => [],
@@ -123,6 +125,7 @@ test("getData for select base question values", () => {
   expect(
     defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "q1",
+      dataNames: ["q1"],
       getValues: () => choices,
       getLabels: () => choices,
       getSeriesValues: () => [],
@@ -147,6 +150,7 @@ test("getData for matrix question values", () => {
   expect(
     defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "question1",
+      dataNames: ["question1"],
       getValues: () => [
         "Excellent",
         "Very Good",
@@ -185,6 +189,7 @@ test("getData for matrix dropdown question values - pre-processed data", () => {
   expect(
     defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "Column 1",
+      dataNames: ["Column 1"],
       getValues: () => ["High Quality", "Natural", "Trustworthy"],
       getLabels: () => ["High Quality", "Natural", "Trustworthy"],
       getSeriesValues: () => ["Lizol", "Harpic"],
@@ -197,6 +202,7 @@ test("getData for matrix dropdown question values - pre-processed data", () => {
   expect(
     defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "Column 2",
+      dataNames: ["Column 2"],
       getValues: () => [1, 2, 3, 4, 5],
       getLabels: () => ["1", "2", "3", "4", "5"],
       getSeriesValues: () => ["Lizol", "Harpic"],
@@ -308,7 +314,8 @@ test("getData for matrix dropdown grouped", () => {
   const columns = ["1st Most Difficult", "2nd Most Difficult", "3rd Most Difficult"];
   expect(
     defaultStatisticsCalculator(dataProvider.filteredData, {
-      name: columns,
+      name: "q1",
+      dataNames: columns,
       getValues: () => choices,
       getLabels: () => choices,
       getSeriesValues: () => rows,
@@ -348,6 +355,7 @@ test("filter data by matrix value", () => {
   const values = ["Custom", "Consulting", "ISV"];
   const dataInfo = {
     name: "organization_type",
+    dataNames: ["organization_type"],
     getValues: () => values,
     getLabels: () => values,
     getSeriesValues: () => [],
@@ -423,6 +431,7 @@ test("filter data by matrix value - number and string", () => {
   const values = ["Custom", "Consulting", "ISV"];
   const dataInfo = {
     name: "organization_type",
+    dataNames: ["organization_type"],
     getValues: () => values,
     getLabels: () => values,
     getSeriesValues: () => [],
@@ -465,6 +474,7 @@ test("filter data for matrix dropdown question column values - pre-processed dat
   expect(
     defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "Column 1",
+      dataNames: ["Column 1"],
       getValues: () => ["High Quality", "Natural", "Trustworthy"],
       getLabels: () => ["High Quality", "Natural", "Trustworthy"],
       getSeriesValues: () => ["Lizol", "Harpic"],
@@ -477,6 +487,7 @@ test("filter data for matrix dropdown question column values - pre-processed dat
   expect(
     defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "Column 2",
+      dataNames: ["Column 2"],
       getValues: () => [1, 2, 3, 4, 5],
       getLabels: () => ["1", "2", "3", "4", "5"],
       getSeriesValues: () => ["Lizol", "Harpic"],
@@ -549,6 +560,7 @@ test("getData for boolean question values + missing answers", () => {
   expect(
     defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "q1",
+      dataNames: ["q1"],
       getValues: () => [true, false, undefined],
       getLabels: () => ["true", "false", "missing"],
       getSeriesValues: () => [],
@@ -580,6 +592,7 @@ test("getData for select base question values + missing answers", () => {
   expect(
     defaultStatisticsCalculator(dataProvider.filteredData, {
       name: "q1",
+      dataNames: ["q1"],
       getValues: () => choices.concat([undefined]),
       getLabels: () => choices.concat(["missing"]),
       getSeriesValues: () => [],

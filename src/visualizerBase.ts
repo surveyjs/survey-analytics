@@ -8,7 +8,8 @@ import { Event } from "survey-core";
 var styles = require("./visualizerBase.scss");
 
 export interface IDataInfo {
-  name: string | Array<string>;
+  name: string; // TODO - remove from this interface
+  dataNames: Array<string>;
   getValues(): Array<any>;
   getLabels(): Array<string>;
   getSeriesValues(): Array<string>;
@@ -165,8 +166,12 @@ export class VisualizerBase implements IDataInfo {
   /**
    * Returns the identifier of a visualized question.
    */
-  get name(): string | Array<string> {
+  get name(): string {
     return this.question.valueName || this.question.name;
+  }
+
+  get dataNames(): Array<string> {
+    return [this.name];
   }
 
   /**
@@ -703,7 +708,7 @@ export class VisualizerBase implements IDataInfo {
       if(!!this.dataProvider.dataFn) {
         this.loadingData = true;
         const dataLoadingPromise = this.dataProvider.dataFn({
-          questionNames: Array.isArray(this.name) ? this.name : [this.name],
+          questionName: this.name,
           visualizer: this,
           filter: this.dataProvider.getFilters(),
           callback: (loadedData: { data: Array<Object>, error?: any }) => {
@@ -790,7 +795,7 @@ export class VisualizerBase implements IDataInfo {
 }
 
 export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo): Array<any> {
-  const dataNames = Array.isArray(dataInfo.name) ? dataInfo.name : [dataInfo.name];
+  const dataNames = dataInfo.dataNames;
   const statistics: Array<Array<Array<number>>> = [];
 
   const values = dataInfo.getValues();
@@ -848,5 +853,5 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
     });
   });
 
-  return Array.isArray(dataInfo.name) ? statistics : statistics[0] as any;
+  return dataInfo.dataNames.length > 1 ? statistics : statistics[0] as any;
 }

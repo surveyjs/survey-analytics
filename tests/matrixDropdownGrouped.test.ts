@@ -72,8 +72,9 @@ test("getSeriesLabels method", () => {
   expect(matrix.getSeriesLabels()).toEqual(columns);
 });
 
-test("name property", () => {
-  expect(matrix.name).toEqual(columns);
+test("name and dataNames property", () => {
+  expect(matrix.name).toEqual("question1");
+  expect(matrix.dataNames).toEqual(columns);
 });
 
 test("getCalculatedValues method", async () => {
