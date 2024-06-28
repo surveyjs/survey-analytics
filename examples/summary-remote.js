@@ -1,13 +1,12 @@
 var json = {
   pages: [
     {
-      name: "page_info",
+      name: "page1",
       elements: [
         {
           type: "matrix",
           name: "Quality",
-          title:
-            "Please indicate if you agree or disagree with the following statements",
+          title: "[matrix] Please indicate if you agree or disagree with the following statements",
           columns: [
             {
               value: 1,
@@ -53,7 +52,7 @@ var json = {
           type: "boolean",
           name: "bool",
           valueName: "boolValue",
-          title: "Please answer the question",
+          title: "[boolean] Please answer the question",
           label: "Are you 21 or older?",
           correctAnswer: true,
           //"valueTrue": "true",
@@ -64,8 +63,7 @@ var json = {
         {
           type: "radiogroup",
           name: "organization_type",
-          title:
-            "Which of the following best describes you or your organization?",
+          title: "[radiogroup] Which of the following best describes you or your organization?",
           hasOther: true,
           choices: [
             {
@@ -90,15 +88,10 @@ var json = {
           colCount: 2,
           correctAnswer: "Hobbyist",
         },
-      ],
-    },
-    {
-      name: "page_libraries_usage",
-      elements: [
         {
           type: "checkbox",
           name: "backend_language",
-          title: "What Web Backend programming language do you use?",
+          title: "[checkbox] What Web Backend programming language do you use?",
           hasOther: true,
           choices: [
             "Java",
@@ -116,7 +109,7 @@ var json = {
         {
           type: "tagbox",
           name: "backend_language_tag",
-          title: "[TAG] What Web Backend programming language do you use?",
+          title: "[tagbox] What Web Backend programming language do you use?",
           hasOther: true,
           choices: [
             "Java",
@@ -131,26 +124,15 @@ var json = {
           otherText: "Other (Please name it)",
           colCount: 3,
         },
-      ],
-    },
-    {
-      name: "page_alternative",
-      elements: [
         {
           type: "text",
           name: "survey_cloud_platform",
-          title: "What Survey cloud platform would be your choice?",
+          title: "[text] What Survey cloud platform would be your choice?",
         },
-      ],
-    },
-    {
-      name: "page_recommend",
-      elements: [
         {
           type: "rating",
           name: "nps_score",
-          title:
-            "How likely are you to recommend SurveyJS to a friend or colleague?",
+          title: "[rating] How likely are you to recommend SurveyJS to a friend or colleague?",
           isRequired: true,
           rateMin: 0,
           rateMax: 10,
@@ -160,7 +142,7 @@ var json = {
         {
           type: "comment",
           name: "favorite_functionality",
-          title: "What's your favorite functionality / add-on?",
+          title: "[comment] What's your favorite functionality / add-on?",
         },
       ],
     },
