@@ -1,8 +1,8 @@
 import { Event } from "survey-core";
 
 export type SummaryFilter = { field: string, type: string, value: any };
-export type GetDataUsingCallbackFn = (params: { visualizer: any, questionName: string, filter?: Array<SummaryFilter>, callback?: (response: { data: Array<Object>, error?: any }) => void }) => void;
-export type GetDataUsingPromiseFn = (params: { visualizer: any, questionName: string, filter?: Array<SummaryFilter> }) => Promise<Array<Object>>;
+export type GetDataUsingCallbackFn = (params: { visualizer: any, filter?: Array<SummaryFilter>, callback?: (response: { data: Array<Object>, error?: any }) => void }) => void;
+export type GetDataUsingPromiseFn = (params: { visualizer: any, filter?: Array<SummaryFilter> }) => Promise<Array<Object>>;
 export type GetDataFn = GetDataUsingCallbackFn | GetDataUsingPromiseFn;
 
 export class DataProvider {

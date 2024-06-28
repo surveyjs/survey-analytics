@@ -250,34 +250,34 @@ const summaryData = {
   "favorite_functionality_text": { columnsCount: 2, data: [["aswdasdasd sadf asfda sd"], ["sdf sdf sdf sfdasdf ga"], ["word", "some text"]] },
 }
 
-// function getSummaryData({ visualizer, questionName, filter, callback }) {
+// function getSummaryData({ visualizer, filter, callback }) {
 //   console.log(JSON.stringify(filter));
 //   setTimeout(() => {
 //     callback({ data: summaryData[questionName + "_" + visualizer.type] });
 //   }, 1000);
 // }
 
-// function getSummaryData({ visualizer, questionName, filter }) {
+// function getSummaryData({ visualizer, filter }) {
 //   const url = "http://www.example.com/";
-//   const reqBody = { questionName, filter, type: visualizer.type };
+//   const reqBody = { visualizer.name, filter, type: visualizer.type };
 //   return fetch(url, { body: reqBody });
 // }
 
-function getSummaryData({ visualizer, questionName, filter }) {
-  console.log("Question: " + JSON.stringify(questionName));
+function getSummaryData({ visualizer, filter }) {
+  console.log("Question: " + JSON.stringify(visualizer.name));
   console.log("Filter: " + JSON.stringify(filter));
   return new Promise((resolve, reject) => {
-    let dataSetName = questionName;
+    let dataSetName = visualizer.name;
     if(["histogram", "number", "wordcloud", "text"].indexOf(visualizer.type) != -1) {
       dataSetName += "_" + visualizer.type;
     }
-    const data = summaryData[dataSetName] || summaryData[questionName];
+    const data = summaryData[dataSetName] || summaryData[visualizer.name];
     if(data !== undefined) {
       setTimeout(() => {
         resolve(data);
       }, 1000);
     } else {
-      reject("Invalid question name " + questionName);
+      reject("Haven't found data for " + visualizer.name);
     }
   });
 }

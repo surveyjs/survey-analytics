@@ -708,7 +708,6 @@ export class VisualizerBase implements IDataInfo {
       if(!!this.dataProvider.dataFn) {
         this.loadingData = true;
         const dataLoadingPromise = this.dataProvider.dataFn({
-          questionName: this.name,
           visualizer: this,
           filter: this.dataProvider.getFilters(),
           callback: (loadedData: { data: Array<Object>, error?: any }) => {
