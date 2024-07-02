@@ -10,7 +10,7 @@ export class TextTableAdapter {
   constructor(private model: Text) {}
 
   public async create(container: HTMLElement): Promise<void> {
-    const { columnsCount, data } = (await this.model.getCalculatedValues()) as any;
+    const { columnCount, data } = (await this.model.getCalculatedValues()) as any;
     const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
       innerText: localization.getString("noResults"),
     });
@@ -29,7 +29,7 @@ export class TextTableAdapter {
 
     data.forEach((rowData) => {
       var row = DocumentHelper.createElement("tr");
-      for (var i = 0; i < columnsCount; i++) {
+      for (var i = 0; i < columnCount; i++) {
         var td = DocumentHelper.createElement("td", "sa-text-table__cell", {
           textContent: rowData[i],
         });
@@ -62,7 +62,7 @@ export class Text extends VisualizerBase {
 
   protected getCalculatedValuesCore(): any {
     let result: Array<Array<string>> = [];
-    let columnsCount = 0;
+    let columnCount = 0;
 
     this.surveyData.forEach((row) => {
       const rowValue: any = row[this.question.name];
@@ -80,13 +80,13 @@ export class Text extends VisualizerBase {
           }
         }
         result.push(dataStrings);
-        if (dataStrings.length > columnsCount) {
-          columnsCount = dataStrings.length;
+        if (dataStrings.length > columnCount) {
+          columnCount = dataStrings.length;
         }
       }
     });
 
-    return { columnsCount, data: result };
+    return { columnCount: columnCount, data: result };
   }
 
   protected destroyContent(container: HTMLElement) {

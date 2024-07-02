@@ -253,9 +253,9 @@ const summaryData = {
     "other": 5
   },
   "backend_language_tag-Comment_wordcloud": { "ease": 1, "creating": 10 },
-  "backend_language_tag-Comment_text": { columnsCount: 2, data: [["aswdasdasd sadf asfda sd"], ["sdf sdf sdf sfdasdf ga"], ["word", "some text"]] },
+  "backend_language_tag-Comment_text": { columnCount: 2, data: [["aswdasdasd sadf asfda sd"], ["sdf sdf sdf sfdasdf ga"], ["word", "some text"]] },
   // text (text)
-  "survey_cloud_platform_text": { columnsCount: 1, data: [["aswdasdasd sadf asfda sd"], ["sdf sdf sdf sfdasdf ga"], ["some text"]] },
+  "survey_cloud_platform_text": { columnCount: 1, data: [["aswdasdasd sadf asfda sd"], ["sdf sdf sdf sfdasdf ga"], ["some text"]] },
   // text (wordcloud)
   "survey_cloud_platform_wordcloud": { "ease": 9, "creating": 1, "survey": 2, "builder": 3, "rendering": 3, "html": 4, "web": 8, "browser": 1, },
   // rating - 0-10 (histogram)
@@ -265,7 +265,7 @@ const summaryData = {
   // comment (wordcloud)
   "favorite_functionality_wordcloud": { "ease": 1, "creating": 1, "survey": 2, "builder": 1, "rendering": 1, "html": 1, "web": 1, "browser": 1, "flexibility": 1, "surveyjs": 1, "dgefd": 1, "audio": 1, "recordingnicely": 1, "handle": 1, "logical": 1, "checks": 1 },
   // comment (text)
-  "favorite_functionality_text": { columnsCount: 2, data: [["aswdasdasd sadf asfda sd"], ["sdf sdf sdf sfdasdf ga"], ["word", "some text"]] },
+  "favorite_functionality_text": { columnCount: 2, data: [["aswdasdasd sadf asfda sd"], ["sdf sdf sdf sfdasdf ga"], ["word", "some text"]] },
   // ranking
   "smartphone-features": {
     "Battery life": 12,
