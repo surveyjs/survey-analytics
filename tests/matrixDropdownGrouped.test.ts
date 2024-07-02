@@ -72,12 +72,13 @@ test("getSeriesLabels method", () => {
   expect(matrix.getSeriesLabels()).toEqual(columns);
 });
 
-test("name property", () => {
-  expect(matrix.name).toEqual(columns);
+test("name and dataNames property", () => {
+  expect(matrix.name).toEqual("question1");
+  expect(matrix.dataNames).toEqual(columns);
 });
 
-test("getCalculatedValues method", () => {
-  expect(matrix.getCalculatedValues()).toEqual([
+test("getCalculatedValues method", async () => {
+  expect(await matrix.getCalculatedValues()).toEqual([
     [1, 1, 0],
     [1, 1, 0],
     [1, 1, 1],
@@ -88,7 +89,14 @@ test("getCalculatedValues method", () => {
 });
 
 test("check getPercentages method", () => {
-  expect(matrix.getPercentages()).toEqual([
+  expect(matrix.getPercentages([
+    [1, 1, 0],
+    [1, 1, 0],
+    [1, 1, 1],
+    [0, 0, 1],
+    [0, 0, 1],
+    [0, 0, 0],
+  ].reverse())).toEqual([
     [33, 33, 0],
     [33, 33, 0],
     [33, 33, 33],

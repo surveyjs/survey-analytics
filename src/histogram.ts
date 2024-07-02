@@ -89,7 +89,7 @@ export class HistogramModel extends SelectBase {
       series.forEach(seriesValue => this._continiousData[seriesValue] = []);
       const hash = {};
       this.data.forEach(dataItem => {
-        const answerData = dataItem[this.name as string];
+        const answerData = dataItem[this.name];
         if (answerData !== undefined) {
           const seriesValue = dataItem[DataProvider.seriesMarkerKey] || "";
           // TODO: _continiousData should be sorted in order to speed-up statistics calculation in the getData function
@@ -173,7 +173,11 @@ export class HistogramModel extends SelectBase {
     return this._cachedIntervals;
   }
 
-  public getCalculatedValues(): any {
+  public convertFromExternalData(externalCalculatedData: any): any[] {
+    return [externalCalculatedData];
+  }
+
+  protected getCalculatedValuesCore(): Array<any> {
     const continiousValues = this.getContiniousValues();
     const intervals = this.intervals;
     const statistics: Array<Array<number>> = [];

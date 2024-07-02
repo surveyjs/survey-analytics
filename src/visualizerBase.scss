@@ -32,3 +32,27 @@
 .sa-visualizer__footer-content {
   margin-top: 10px;
 }
+
+.sa-data-loading-indicator-panel {
+  width: 100%;
+  min-height: 200px;
+  position: relative;
+}
+
+.sa-data-loading-indicator {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  left: calc((100% - 64px) / 2);
+  top: calc((100% - 64px) / 2);
+  animation: sa-data-loading-indicator-spinner 1s infinite linear;
+}
+
+@keyframes sa-data-loading-indicator-spinner {
+  from {
+      transform: rotate(0deg);
+  }
+  to {
+      transform: rotate(359deg);
+  }
+}

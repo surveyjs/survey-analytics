@@ -9,8 +9,8 @@ var styles = require("./text.scss");
 export class TextTableAdapter {
   constructor(private model: Text) {}
 
-  public create(container: HTMLElement) {
-    const { columnsCount, data } = this.model.getCalculatedValues();
+  public async create(container: HTMLElement): Promise<void> {
+    const { columnCount, data } = (await this.model.getCalculatedValues()) as any;
     const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
       innerText: localization.getString("noResults"),
     });
@@ -29,7 +29,7 @@ export class TextTableAdapter {
 
     data.forEach((rowData) => {
       var row = DocumentHelper.createElement("tr");
-      for (var i = 0; i < columnsCount; i++) {
+      for (var i = 0; i < columnCount; i++) {
         var td = DocumentHelper.createElement("td", "sa-text-table__cell", {
           textContent: rowData[i],
         });
@@ -60,11 +60,11 @@ export class Text extends VisualizerBase {
     this._textTableAdapter = new TextTableAdapter(this);
   }
 
-  public getCalculatedValues(): any {
+  protected getCalculatedValuesCore(): any {
     let result: Array<Array<string>> = [];
-    let columnsCount = 0;
+    let columnCount = 0;
 
-    this.data.forEach((row) => {
+    this.surveyData.forEach((row) => {
       const rowValue: any = row[this.question.name];
       let dataStrings: Array<string> = [];
       if (!!rowValue) {
@@ -80,13 +80,13 @@ export class Text extends VisualizerBase {
           }
         }
         result.push(dataStrings);
-        if (dataStrings.length > columnsCount) {
-          columnsCount = dataStrings.length;
+        if (dataStrings.length > columnCount) {
+          columnCount = dataStrings.length;
         }
       }
     });
 
-    return { columnsCount, data: result };
+    return { columnCount: columnCount, data: result };
   }
 
   protected destroyContent(container: HTMLElement) {
@@ -94,9 +94,12 @@ export class Text extends VisualizerBase {
     super.destroyContent(container);
   }
 
-  protected renderContent(container: HTMLElement) {
-    this._textTableAdapter.create(container);
-    this.afterRender(this.contentContainer);
+  protected async renderContentAsync(container: HTMLElement) {
+    const tableNode: HTMLElement = DocumentHelper.createElement("div");
+    await this._textTableAdapter.create(tableNode);
+    container.innerHTML = "";
+    container.appendChild(tableNode);
+    return container;
   }
 
   destroy() {

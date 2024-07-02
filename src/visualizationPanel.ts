@@ -285,6 +285,7 @@ export class VisualizationPanel extends VisualizerBase {
     private _elements: Array<IVisualizerPanelRenderedElement> = undefined
   ) {
     super(null, data, options, "panel");
+    this.loadingData = false;
 
     const f = (<any>SurveyCore).hasLicense;
     this.haveCommercialLicense = (!!f && f(4)) ||
@@ -410,6 +411,7 @@ export class VisualizationPanel extends VisualizerBase {
     this.renderedQuestionsCount++;
     if (this.renderedQuestionsCount == this.questions.length) {
       this.renderedQuestionsCount = 0;
+      this.layoutEngine.update();
       this.afterRender(this.contentContainer);
     }
   };

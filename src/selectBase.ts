@@ -108,7 +108,7 @@ export class SelectBase
   ) {
     super(question, data, options, name || "selectBase");
     (<any>question).visibleChoicesChangedCallback = () => {
-      this.dataProvider.reset();
+      this.dataProvider.raiseDataChanged();
     };
     this._showPercentages = this.options.showPercentages === true;
     this._showOnlyPercentages = this.options.showOnlyPercentages === true;
@@ -456,7 +456,7 @@ export class SelectBase
   public set showMissingAnswers(value: boolean) {
     this._showMissingAnswers = this.isSupportMissingAnswers() && value;
     this.updateMissingAnswersBtn();
-    this.dataProvider.reset(this);
+    this.dataProvider.raiseDataChanged(this.name);
     this.refreshContent();
     this.stateChanged("showMissingAnsewrs", value);
   }
@@ -526,8 +526,7 @@ export class SelectBase
     return labels;
   }
 
-  getPercentages(): Array<Array<number>> {
-    var data: Array<Array<number>> = this.getCalculatedValues();
+  getPercentages(data: Array<Array<number>>): Array<Array<number>> {
     var percentages: Array<Array<number>> = [];
     var percentagePrecision = this._percentagePrecision;
 
@@ -585,12 +584,12 @@ export class SelectBase
   /**
    * Returns object with all infotmation for data visualization: datasets, labels, colors, additional texts (percentage).
    */
-  public getAnswersData(): IAnswersData {
+  public async getAnswersData(): Promise<IAnswersData> {
     let seriesLabels = this.getSeriesLabels();
-    let datasets = this.getCalculatedValues();
+    let datasets = (await this.getCalculatedValues()) as number[][];
     let labels = this.getLabels();
     let colors = this.getColors();
-    var texts = this.showPercentages ? this.getPercentages() : datasets;
+    var texts = this.showPercentages ? this.getPercentages(datasets) : datasets;
 
     if (this.transposeData) {
       datasets = this.transpose(datasets);
@@ -628,6 +627,33 @@ export class SelectBase
 
     return answersData;
   }
+
+  public convertFromExternalData(externalCalculatedData: any): any[] {
+    const values = this.getValues();
+    const series = this.getSeriesValues();
+    const innerCalculatedData = [];
+    if(series.length > 0) {
+      for(let i=0; i<values.length; i++) {
+        const seriesData = [];
+        for(let j=0; j<series.length; j++) {
+          if(!!externalCalculatedData[series[j]]) {
+            seriesData.push(externalCalculatedData[series[j]][values[i]] || 0);
+          } else {
+            seriesData.push(0);
+          }
+        }
+        innerCalculatedData.push(seriesData);
+      }
+    } else {
+      const seriesData = [];
+      for(let i=0; i<values.length; i++) {
+        seriesData.push(externalCalculatedData[values[i]] || 0);
+      }
+      innerCalculatedData.push(seriesData);
+    }
+    return innerCalculatedData;
+  }
+
   protected transpose(data: Array<Array<number>>): Array<Array<number>> {
     const dim2 = data[0].length;
     const result = new Array<Array<number>>(dim2);

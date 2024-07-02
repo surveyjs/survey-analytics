@@ -5,7 +5,7 @@ import { SelectBasePlotly } from "../../src/plotly/selectBase";
 import { PlotlySetup } from "../../src/plotly/setup";
 import { VisualizationPanel } from "../../src/visualizationPanel";
 
-test("null ref #394", () => {
+test("null ref #394", async () => {
   var survey = new SurveyModel({
     "pages": [
       {
@@ -65,7 +65,7 @@ test("null ref #394", () => {
   const innerVisPanel = matrixVisualizer["_matrixDropdownVisualizer"] as VisualizationPanel;
   const selectBase = innerVisPanel.getVisualizer("Colonne 1") as SelectBasePlotly;
   try {
-    var plotlyOptions = PlotlySetup.setup("bar", selectBase);
+    var plotlyOptions = PlotlySetup.setup("bar", selectBase, await selectBase.getAnswersData());
     expect(plotlyOptions).toBeDefined();
   } catch (e) {
     expect(e).toBeUndefined();

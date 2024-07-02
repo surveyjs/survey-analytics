@@ -1,4 +1,4 @@
-import { VisualizerBase } from "../src/visualizerBase";
+import { VisualizerBase, IDataInfo } from "../src/visualizerBase";
 import { QuestionDropdownModel } from "survey-core";
 
 test("custom colors", () => {
@@ -49,16 +49,16 @@ test("footer visualizer data, updateData", () => {
 
   let visualizer = new VisualizerBase(question, []);
   expect(visualizer.hasFooter).toBeTruthy();
-  expect(visualizer["data"]).toEqual([]);
-  expect(visualizer.footerVisualizer["data"]).toEqual([]);
+  expect(visualizer["surveyData"]).toEqual([]);
+  expect(visualizer.footerVisualizer["surveyData"]).toEqual([]);
 
   const newData = [{ q1: 255 }];
   visualizer.updateData(newData);
-  expect(visualizer["data"]).toEqual(newData);
-  expect(visualizer["_footerVisualizer"]["data"]).toEqual(newData);
+  expect(visualizer["surveyData"]).toEqual(newData);
+  expect(visualizer.footerVisualizer["surveyData"]).toEqual(newData);
 });
 
-test("check onAfterRender", () => {
+test("check onAfterRender", (done) => {
   var question = new QuestionDropdownModel("q1");
   question.hasOther = true;
 
@@ -66,9 +66,10 @@ test("check onAfterRender", () => {
   let visualizer = new VisualizerBase(question, []);
   visualizer.onAfterRender.add(() => {
     count++;
+    expect(count).toEqual(1);
+    done();
   });
   (<any>visualizer).renderContent(document.createElement("div"));
-  expect(count).toEqual(1);
 });
 
 test("Use valueName for data https://surveyjs.answerdesk.io/internal/ticket/details/T9071", () => {
@@ -100,3 +101,10 @@ test("clear header", () => {
   expect(visualizer["headerContainer"]).toBeDefined();
   expect(visualizer["headerContainer"].innerHTML).toBe("");
 });
+
+test("custom getDataCore function", async () => {
+  const statistics = [[1, 2]];
+  let visualizer = new VisualizerBase({ name: "q1" } as any, [], { q1: { getDataCore: (dataInfo: IDataInfo) => statistics } });
+  expect(await visualizer.getCalculatedValues()).toEqual(statistics);
+});
+

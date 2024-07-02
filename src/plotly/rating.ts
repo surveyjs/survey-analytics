@@ -15,9 +15,9 @@ export class PlotlyGaugeAdapter {
     return this._chart;
   }
 
-  public create(chartNode: HTMLElement) {
+  public async create(chartNode: HTMLElement): Promise<any> {
     const question = this.model.question;
-    let [level, minValue, maxValue] = this.model.getCalculatedValues();
+    let [level, minValue, maxValue] = await this.model.getCalculatedValues() as any;
 
     if (question.getType() === "rating") {
       const rateValues = (<QuestionRatingModel>question).visibleRateValues;
@@ -140,12 +140,12 @@ export class GaugePlotly extends NumberModel {
     super.destroyContent(container);
   }
 
-  protected renderContent(container: HTMLElement) {
+  protected async renderContentAsync(container: HTMLElement) {
     const chartNode: HTMLElement = DocumentHelper.createElement("div");
+    await this._chartAdapter.create(chartNode);
+    container.innerHTML = "";
     container.appendChild(chartNode);
-    this._chartAdapter.create(chartNode).then(() => {
-      this.afterRender(this.contentContainer);
-    });
+    return container;
   }
 }
 

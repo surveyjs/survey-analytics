@@ -21,6 +21,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     name?: string
   ) {
     super(question, data, options, name || "matrixDropdown");
+    this.loadingData = false;
     this._childOptions = Object.assign({}, options);
     this._childOptions.disableLocaleSwitch = true;
     this._childOptions.dataProvider = undefined;

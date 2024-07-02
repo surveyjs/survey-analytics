@@ -2,12 +2,12 @@ import { QuestionCommentModel } from "survey-core";
 import { WordCloud } from "../src/wordcloud/wordcloud";
 import { WordCloudWidget } from "../src/wordcloud/widget";
 
-test("remove stopwords and clean punktuation", () => {
+test("remove stopwords and clean punktuation", async () => {
   var wc = new WordCloud(new QuestionCommentModel("q1"), [
     { q1: "The Thimes!" },
     { q1: "mega, (mega) Super answer." },
   ]);
-  var data = wc.getCalculatedValues();
+  var data = await wc.getCalculatedValues();
   expect(Object.keys(data).length).toEqual(4);
   expect(data.filter((d) => d[0] === "The").length).toEqual(0);
   expect(data.filter((d) => d[0] === "mega").length).toEqual(1);
@@ -51,13 +51,34 @@ test("WordCloudWidget render", () => {
   expect(renderTarget.innerHTML).toBe("");
 });
 
-test("getCalculatedValues keeps umlauts", () => {
+test("getCalculatedValues keeps umlauts", async () => {
   var wc = new WordCloud(new QuestionCommentModel("q1"), [
     { q1: "Gro\u00DFmutter" },
     { q1: "Gro\u00DFmutter" },
   ]);
-  var data = wc.getCalculatedValues();
+  var data = await wc.getCalculatedValues();
   expect(Object.keys(data).length).toEqual(1);
   expect(data[0][0]).toBe("gro\u00DFmutter");
   expect(data[0][1]).toBe(2);
+});
+
+test("convertFromExternalData", () => {
+  var wc = new WordCloud(new QuestionCommentModel("q1"), [
+    { q1: "Gro\u00DFmutter string one1" },
+    { q1: "Gro\u00DFmutter string two2" },
+  ]);
+  const externalCalculatedData = {
+    "gro\u00DFmutter": 2,
+    "string": 2,
+    "one1": 1,
+    "two2": 1,
+  };
+  const calculatedData = (wc as any).getCalculatedValuesCore();
+  expect(calculatedData).toEqual([
+    ["großmutter", 2],
+    ["string", 2],
+    ["one1", 1],
+    ["two2", 1],
+  ]);
+  expect(wc.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
 });

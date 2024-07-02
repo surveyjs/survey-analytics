@@ -9,7 +9,7 @@ export class Matrix extends SelectBase {
     name?: string
   ) {
     super(question, data, options, name || "matrix");
-    this.getAnswersData();
+    // this.getAnswersData();
   }
 
   protected get matrixQuestion(): QuestionMatrixModel {
@@ -104,8 +104,8 @@ export class Matrix extends SelectBase {
     return result;
   }
 
-  public getCalculatedValues(): any[] {
-    const statistics = super.getCalculatedValues();
+  protected getCalculatedValuesCore(): Array<any> {
+    const statistics = super.getCalculatedValuesCore();
     const series = this.getSeriesValues();
     const values = this.getValues();
     const preparedData: Array<Array<number>> = [];

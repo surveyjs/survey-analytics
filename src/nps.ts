@@ -67,9 +67,9 @@ export class NpsAdapter {
     return this._npsVisualizer;
   }
 
-  public create(element: HTMLElement): any {
-    const data = this.model.getCalculatedValues();
-    this._npsVisualizer = new NpsVisualizerWidget(this.model, data);
+  public async create(element: HTMLElement) {
+    const data = await this.model.getCalculatedValues();
+    this._npsVisualizer = new NpsVisualizerWidget(this.model, data as any);
     this._npsVisualizer.render(element);
     return this._npsVisualizer;
   }
@@ -97,7 +97,7 @@ export class NpsVisualizer extends VisualizerBase {
     this._npsAdapter = new NpsAdapter(this);
   }
 
-  public getCalculatedValues(): any {
+  protected getCalculatedValuesCore(): any {
     let result = {
       detractors: 0,
       passive: 0,
@@ -128,9 +128,13 @@ export class NpsVisualizer extends VisualizerBase {
     super.destroyContent(container);
   }
 
-  protected renderContent(container: HTMLElement) {
-    this._npsAdapter.create(container);
-    this.afterRender(this.contentContainer);
+  protected async renderContentAsync(container: HTMLElement) {
+    const npsNode: HTMLElement = DocumentHelper.createElement("div");
+    container.appendChild(npsNode);
+    await this._npsAdapter.create(npsNode);
+    container.innerHTML = "";
+    container.appendChild(npsNode);
+    return container;
   }
 
   destroy() {

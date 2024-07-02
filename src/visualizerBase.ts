@@ -1,11 +1,20 @@
 import { Question, QuestionCommentModel, settings } from "survey-core";
-import { IDataInfo, DataProvider } from "./dataProvider";
+import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
-import { DocumentHelper } from "./utils";
+import { DocumentHelper, createLoadingIndicator } from "./utils";
 import { localization } from "./localizationManager";
 import { Event } from "survey-core";
 
 var styles = require("./visualizerBase.scss");
+
+export interface IDataInfo {
+  name: string; // TODO - remove from this interface
+  dataNames: Array<string>;
+  getValues(): Array<any>;
+  getLabels(): Array<string>;
+  getSeriesValues(): Array<string>;
+  getSeriesLabels(): Array<string>;
+}
 
 /**
  * A base object for all visualizers. Use it to implement a custom visualizer.
@@ -39,6 +48,7 @@ export class VisualizerBase implements IDataInfo {
   private _showToolbar = true;
   private _footerVisualizer: VisualizerBase = undefined;
   private _dataProvider: DataProvider = undefined;
+  private _getDataCore: (dataInfo: IDataInfo) => number[][] = undefined
   public labelTruncateLength: number = 27;
   protected renderResult: HTMLElement = undefined;
   protected toolbarContainer: HTMLElement = undefined;
@@ -129,12 +139,14 @@ export class VisualizerBase implements IDataInfo {
 
   constructor(
     public question: Question,
-    data: Array<{ [index: string]: any }>,
+    data: Array<{ [index: string]: any }> | GetDataFn,
     public options: { [index: string]: any } = {},
     private _type?: string
   ) {
+    this._getDataCore = this.questionOptions?.getDataCore;
     this._dataProvider = options.dataProvider || new DataProvider(data);
     this._dataProvider.onDataChanged.add(() => this.onDataChanged());
+    this.loadingData = !!this._dataProvider.dataFn;
 
     if (typeof options.labelTruncateLength !== "undefined") {
       this.labelTruncateLength = options.labelTruncateLength;
@@ -142,18 +154,24 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected get questionOptions() {
-    return this.options[this.question.name];
+    return this.options[this.question?.name];
   }
 
-  protected onDataChanged() {
+  protected onDataChanged(): void {
+    this._calculationsCache = undefined;
+    this.loadingData = !!this._dataProvider.dataFn;
     this.refresh();
   }
 
   /**
    * Returns the identifier of a visualized question.
    */
-  get name(): string | Array<string> {
+  get name(): string {
     return this.question.valueName || this.question.name;
+  }
+
+  get dataNames(): Array<string> {
+    return [this.name];
   }
 
   /**
@@ -446,13 +464,23 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  protected async renderContentAsync(container: HTMLElement) {
+    return new Promise<HTMLElement>((resolve, reject) => {
+      container.innerText = localization.getString("noVisualizerForQuestion");
+      resolve(container);
+    });
+  }
+
   protected renderContent(container: HTMLElement) {
     if (!!this.options && typeof this.options.renderContent === "function") {
       this.options.renderContent(container, this);
+      this.afterRender(container);
     } else {
-      container.innerText = localization.getString("noVisualizerForQuestion");
+      if(this.loadingData) {
+        this.renderLoadingIndicator(this.contentContainer);
+      }
+      this.renderContentAsync(container).then(el => this.afterRender(el));
     }
-    this.afterRender(container);
   }
 
   protected destroyFooter(container: HTMLElement) {
@@ -644,7 +672,27 @@ export class VisualizerBase implements IDataInfo {
    * Obsolete. Use [`getCalculatedValues()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#getCalculatedValues) instead.
    */
   getData(): any {
-    return this.getCalculatedValues();
+    return this.getCalculatedValuesCore();
+  }
+
+  private _calculationsCache: Array<any> = undefined;
+
+  protected getCalculatedValuesCore(): Array<any> {
+    if (!!this._getDataCore) {
+      return this._getDataCore(this);
+    }
+
+    return defaultStatisticsCalculator(this.surveyData, this);
+  }
+
+  protected loadingData: boolean = false;
+
+  public renderLoadingIndicator(contentContainer: HTMLElement): void {
+    contentContainer.appendChild(createLoadingIndicator());
+  }
+
+  public convertFromExternalData(externalCalculatedData: any): any[] {
+    return externalCalculatedData;
   }
 
   /**
@@ -652,8 +700,43 @@ export class VisualizerBase implements IDataInfo {
    *
    * To get an array of source survey results, use the [`surveyData`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#surveyData) property.
    */
-  getCalculatedValues(): any {
-    return this.dataProvider.getData(this);
+  public getCalculatedValues(): Promise<Array<Object>> {
+    return new Promise<Array<Object>>((resolve, reject) => {
+      if(this._calculationsCache !== undefined) {
+        resolve(this._calculationsCache);
+      }
+      if(!!this.dataProvider.dataFn) {
+        this.loadingData = true;
+        const dataLoadingPromise = this.dataProvider.dataFn({
+          visualizer: this,
+          filter: this.dataProvider.getFilters(),
+          callback: (loadedData: { data: Array<Object>, error?: any }) => {
+            this.loadingData = false;
+            if(!loadedData.error && Array.isArray(loadedData.data)) {
+              this._calculationsCache = this.convertFromExternalData(loadedData.data);
+              resolve(this._calculationsCache);
+            } else {
+              reject();
+            }
+          }
+        });
+        if(dataLoadingPromise) {
+          dataLoadingPromise
+            .then(calculatedData => {
+              this.loadingData = false;
+              this._calculationsCache = this.convertFromExternalData(calculatedData);
+              resolve(this._calculationsCache);
+            })
+            .catch(() => {
+              this.loadingData = false;
+              reject();
+            });
+        }
+      } else {
+        this._calculationsCache = this.getCalculatedValuesCore();
+        resolve(this._calculationsCache);
+      }
+    });
   }
 
   protected _settingState = false;
@@ -686,7 +769,7 @@ export class VisualizerBase implements IDataInfo {
    * If the survey is [translated into more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the toolbar displays a language selection drop-down menu.
    * @see onLocaleChanged
    */
-  public get locale() {
+  public get locale(): string {
     var survey = this.options.survey;
     if (!!survey) {
       return survey.locale;
@@ -700,7 +783,7 @@ export class VisualizerBase implements IDataInfo {
     this.refresh();
   }
 
-  protected setLocale(newLocale: string) {
+  protected setLocale(newLocale: string): void {
     localization.currentLocale = newLocale;
     var survey = this.options.survey;
     if (!!survey && survey.locale !== newLocale) {
@@ -708,4 +791,66 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+}
+
+export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo): Array<any> {
+  const dataNames = dataInfo.dataNames;
+  const statistics: Array<Array<Array<number>>> = [];
+
+  const values = dataInfo.getValues();
+  const valuesIndex: { [index: string]: number } = {};
+  values.forEach((val: any, index: number) => {
+    valuesIndex[val] = index;
+  });
+  const processMissingAnswers = values.indexOf(undefined) !== -1;
+
+  const series = dataInfo.getSeriesValues();
+  const seriesIndex: { [index: string]: number } = {};
+  series.forEach((val: any, index: number) => {
+    seriesIndex[val] = index;
+  });
+
+  const seriesLength = series.length || 1;
+  for (var i = 0; i < dataNames.length; ++i) {
+    const dataNameStatistics = new Array<Array<number>>();
+    for (var j = 0; j < seriesLength; ++j) {
+      dataNameStatistics.push(new Array<number>(values.length).fill(0));
+    }
+    statistics.push(dataNameStatistics);
+  }
+
+  data.forEach((row: any) => {
+    dataNames.forEach((dataName, index) => {
+      const rowValue: any = row[dataName];
+      if (rowValue !== undefined || processMissingAnswers) {
+        const rowValues = Array.isArray(rowValue) ? rowValue : [rowValue];
+        if (series.length > 0) {
+          if (row[DataProvider.seriesMarkerKey] !== undefined) {
+            // Series are labelled by seriesMarkerKey in row data
+            const seriesNo =
+              seriesIndex[row[DataProvider.seriesMarkerKey]] || 0;
+            rowValues.forEach((val) => {
+              statistics[index][seriesNo][valuesIndex[val]]++;
+            });
+          } else {
+            // Series are the keys in question value (matrix question)
+            // TODO: think about the de-normalization and combine with the previous case
+            rowValues.forEach((val) => {
+              series.forEach((seriesName) => {
+                if (val[seriesName] !== undefined) {
+                  const seriesNo = seriesIndex[seriesName] || 0;
+                  statistics[index][seriesNo][valuesIndex[val[seriesName]]]++;
+                }
+              });
+            });
+          }
+        } else {
+          // No series
+          rowValues.forEach((val) => statistics[0][0][valuesIndex[val]]++);
+        }
+      }
+    });
+  });
+
+  return dataInfo.dataNames.length > 1 ? statistics : statistics[0] as any;
 }
