@@ -89,11 +89,13 @@ export class WordCloudWidget {
           break;
         }
       }
-      if(yMin > currentPoint.y) {
-        yMin = currentPoint.y;
+      const yMinProbe = currentPoint.y - wordElement.offsetHeight/2;
+      if(yMin > yMinProbe) {
+        yMin = yMinProbe;
       }
-      if(yMax < currentPoint.y) {
-        yMax = currentPoint.y;
+      const yMaxProbe = currentPoint.y + wordElement.offsetHeight/2;
+      if(yMax < yMaxProbe) {
+        yMax = yMaxProbe;
       }
     }
     return [yMin, yMax];
