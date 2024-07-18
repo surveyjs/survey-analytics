@@ -65,8 +65,8 @@
   }
 
   select {
-    @include dropdown();
     line-height: initial;
+    @include dropdown();
   }
 
   input {
