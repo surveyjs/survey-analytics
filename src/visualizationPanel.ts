@@ -16,10 +16,10 @@ const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
 
 if (!!document) {
-  const svgTemplate = require("html-loader?interpolate!val-loader!./svgbundle.html");
+  const svgTemplate = require("./svgbundle.html");
   const templateHolder = document.createElement("div");
   templateHolder.style.display = "none";
-  templateHolder.innerHTML = svgTemplate;
+  templateHolder.innerHTML = svgTemplate.default;
   document.head.appendChild(templateHolder);
 }
 

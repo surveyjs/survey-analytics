@@ -84,12 +84,12 @@
   cursor: pointer;
   border: 1px solid transparent;
   white-space: nowrap;
+  margin: 0 10px;
 
   &:hover {
     border-color: $border-color;
     background-blend-mode: darken;
   }
-  margin: 0 10px;
   &:first-child {
     margin-left: 0;
   }

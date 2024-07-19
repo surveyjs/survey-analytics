@@ -3,7 +3,6 @@
 var webpack = require("webpack");
 var path = require("path");
 var fs = require("fs");
-var rimraf = require("rimraf");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 var packageJson = require("./package.json");
@@ -132,13 +131,11 @@ module.exports = function (options) {
       rules: [
         {
           test: /\.(ts)$/,
-          use: {
-            loader: "ts-loader",
-          },
+          loader: "ts-loader",
         },
         {
           test: /\.scss$/,
-          loader: [
+          use: [
             MiniCssExtractPlugin.loader,
             {
               loader: "css-loader",
@@ -209,7 +206,7 @@ module.exports = function (options) {
     },
     plugins: [
       new PascalCaseNamePlugin(),
-      new webpack.WatchIgnorePlugin([/svgbundle\.html/]),
+      new webpack.WatchIgnorePlugin({ paths: [/svgbundle\.html/] }),
       new webpack.ProgressPlugin(percentage_handler),
       new webpack.DefinePlugin({
         "process.env.ENVIRONMENT": JSON.stringify(options.buildType),
@@ -222,14 +219,18 @@ module.exports = function (options) {
         banner: banner,
       }),
     ],
-    devtool: "inline-source-map",
+    devServer: {
+      static: {
+        directory: path.join(__dirname, '.'),
+      },
+    },    
   };
 
   if (isProductionBuild) {
     config.devtool = false;
     config.plugins = config.plugins.concat([]);
   } else {
-    config.devtool = "inline-source-map";
+    config.devtool = "source-map";
     config.plugins = config.plugins.concat([
       new webpack.LoaderOptionsPlugin({ debug: true }),
     ]);

@@ -6,10 +6,10 @@ import { DocumentHelper } from "../utils";
 var styles = require("./datatables.scss");
 
 if (!!document) {
-  var svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");
+  var svgTemplate = require("../svgbundle.html");
   var templateHolder = document.createElement("div");
   templateHolder.style.display = "none";
-  templateHolder.innerHTML = svgTemplate;
+  templateHolder.innerHTML = svgTemplate.default;
   document.head.appendChild(templateHolder);
 }
 
