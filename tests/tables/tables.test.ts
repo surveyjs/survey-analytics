@@ -274,6 +274,34 @@ test("check columns for question with comment", () => {
   expect(<any>table.columns[1].dataType).toEqual(ColumnDataType.Text);
 });
 
+test("do not create columns for html and image questions", () => {
+  const json = {
+    questions: [
+      {
+        type: "text",
+        name: "q1"
+      },
+      {
+        type: "html",
+        name: "q2"
+      },
+      {
+        type: "image",
+        name: "q3"
+      },
+      {
+        type: "text",
+        name: "q4"
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [], {}, []);
+  expect((<any>table).columns).toHaveLength(2);
+  expect((<any>table).columns[0].name).toEqual("q1");
+  expect((<any>table).columns[1].name).toEqual("q4");
+});
+
 test("check columns for question with other and storeOthersAsComment: true", () => {
   const json = {
     questions: [
