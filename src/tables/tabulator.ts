@@ -20,7 +20,7 @@ interface ITabulatorOptions extends ITableOptions {
   tabulatorOptions?: any;
   downloadHiddenColumns?: boolean;
   actionsColumnWidth?: number;
-  downloadButtons: Array<string>;
+  downloadButtons?: Array<string>;
   downloadOptions?: { [type: string]: any };
   /*
    *use  to change options dynamically
