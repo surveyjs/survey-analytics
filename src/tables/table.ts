@@ -1,4 +1,4 @@
-import { SurveyModel, Question, Event, settings, QuestionSelectBase, QuestionMatrixModel, ItemValue, JsonError, EventBase } from "survey-core";
+import { SurveyModel, Question, Event, Serializer, EventBase } from "survey-core";
 import * as SurveyCore from "survey-core";
 import {
   IPermission,
@@ -172,11 +172,16 @@ export abstract class Table {
   protected buildColumns = (survey: SurveyModel) => {
     let columns: Array<IColumn> = [];
     this._survey.getAllQuestions().forEach((question: Question) => {
-      const builder = ColumnsBuilderFactory.Instance.getColumnsBuilder(question.getTemplate());
-      columns = columns.concat(builder.buildColumns(question, this));
+      if(!this.isNonValueQuestion(question)) {
+        const builder = ColumnsBuilderFactory.Instance.getColumnsBuilder(question.getTemplate());
+        columns = columns.concat(builder.buildColumns(question, this));
+      }
     });
     return columns;
   };
+  private isNonValueQuestion(question: Question): boolean {
+    return Serializer.isDescendantOf(question.getType(), "nonvalue");
+  }
 
   public isColumnVisible(column: IColumn) {
     if (column.location !== QuestionLocation.Column) return false;
