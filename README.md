@@ -40,7 +40,7 @@ The SurveyJS Dashboard library lets you build survey data dashboards and simplif
 - [Angular](https://surveyjs.io/Documentation/Analytics?id=get-started-angular)
 - [Vue](https://surveyjs.io/Documentation/Analytics?id=get-started-vue)
 - [React](https://surveyjs.io/Documentation/Analytics?id=get-started-react)
-- [Knockout / jQuery](https://surveyjs.io/Documentation/Analytics?id=get-started-knockout-jquery)
+- [HTML/CSS/JavaScript](https://surveyjs.io/dashboard/documentation/get-started-html-css-javascript)
 
 ## Resources
 
