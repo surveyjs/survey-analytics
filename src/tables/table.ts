@@ -83,6 +83,9 @@ export abstract class Table {
   protected _rows: TableRow[] = [];
   protected isColumnReorderEnabled: boolean;
 
+  public getTableData(): Array<any> {
+    return [].concat(this.tableData || []);
+  }
   /**
    * Sets pagination selector content.
    */
