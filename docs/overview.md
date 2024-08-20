@@ -29,7 +29,7 @@ SurveyJS Dashboard visualizes survey results and allows users to analyze them.
 - [Angular](/Documentation/Analytics?id=get-started-angular)
 - [Vue](/Documentation/Analytics?id=get-started-vue)
 - [React](/Documentation/Analytics?id=get-started-react)
-- [Knockout / jQuery](/Documentation/Analytics?id=get-started-knockout-jquery)
+- [HTML/CSS/JavaScript](/dashboard/documentation/get-started-html-css-javascript)
 
 We also include multiple [demo examples](/Examples/Analytics) that allow you to edit and copy code.
 
