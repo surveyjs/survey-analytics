@@ -1,4 +1,5 @@
-import { SurveyModel, Question, Event, settings, QuestionSelectBase, QuestionMatrixModel, ItemValue, JsonError } from "survey-core";
+import { SurveyModel, Question, Event, Serializer, EventBase } from "survey-core";
+import * as SurveyCore from "survey-core";
 import {
   IPermission,
   QuestionLocation,
@@ -8,7 +9,7 @@ import {
 } from "./config";
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
-import { TableExtensions } from "./extensions/tableextensions";
+import { ITableExtension, TableExtensions } from "./extensions/tableextensions";
 import { createCommercialLicenseLink, createImagesContainer, createLinksContainer, DocumentHelper } from "../utils";
 import { ColumnsBuilderFactory } from "./columnbuilder";
 import { DefaultColumn } from "./columns";
@@ -32,6 +33,15 @@ export interface ITableOptions {
   }) => void;
 }
 
+export type TabulatorFilter = { field: string, type: string, value: any };
+export type TabulatorSortOrder = { field: string, direction: undefined | "asc" | "desc" };
+export type GetDataUsingCallbackFn = (params: { filter?: Array<TabulatorFilter>, sort?: Array<TabulatorSortOrder>, offset?: number, limit?: number, callback?: (response: { data: Array<Object>, totalCount: number, error?: any }) => void }) => void;
+export type GetDataUsingPromiseFn = (params: { filter?: Array<TabulatorFilter>, sort?: Array<TabulatorSortOrder>, offset?: number, limit?: number }) => Promise<{ data: Array<Object>, totalCount: number, error?: any }>;
+export type GetDataFn = GetDataUsingCallbackFn | GetDataUsingPromiseFn;
+// export type GetDataFn = (params: { filter?: any, limit?: number, offset?: number, callback?: (response: { data: Array<Object>, total: number, error?: any }) => void }) => Promise<{ data: Array<Object>, total: number, error?: any }> | void;
+
+export class TableEvent extends EventBase<Table> {}
+
 export abstract class Table {
   public static showFilesAsImages = false;
   public static haveCommercialLicense: boolean = false;
@@ -41,7 +51,7 @@ export abstract class Table {
   protected _columns: Array<IColumn>;
   constructor(
     protected _survey: SurveyModel,
-    protected data: Array<Object>,
+    protected data: Array<Object> | GetDataFn,
     protected _options: ITableOptions = {},
     protected _columnsData: Array<IColumnData> = []
   ) {
@@ -59,8 +69,8 @@ export abstract class Table {
     }
 
     this.extensions = new TableExtensions(this);
-
-    this.haveCommercialLicense =
+    const f = (<any>SurveyCore).hasLicense;
+    this.haveCommercialLicense = (!!f && f(4)) ||
       Table.haveCommercialLicense ||
       (!!_options &&
         (typeof _options.haveCommercialLicense !== "undefined"
@@ -73,25 +83,19 @@ export abstract class Table {
   protected _rows: TableRow[] = [];
   protected isColumnReorderEnabled: boolean;
 
+  public getTableData(): Array<any> {
+    return [].concat(this.tableData || []);
+  }
   /**
    * Sets pagination selector content.
    */
   public paginationSizeSelector: number[] = [1, 5, 10, 25, 50, 100];
 
-  public onColumnsVisibilityChanged: Event<
-    (sender: Table, options: any) => any,
-    any
-  > = new Event<(sender: Table, options: any) => any, any>();
+  public onColumnsVisibilityChanged = new TableEvent();
 
-  public onColumnsLocationChanged: Event<
-    (sender: Table, options: any) => any,
-    any
-  > = new Event<(sender: Table, options: any) => any, any>();
+  public onColumnsLocationChanged = new TableEvent();
 
-  public onRowRemoved: Event<
-    (sender: Table, options: any) => any,
-    any
-  > = new Event<(sender: Table, options: any) => any, any>();
+  public onRowRemoved =new TableEvent();
 
   public renderDetailActions: (
     container: HTMLElement,
@@ -171,11 +175,16 @@ export abstract class Table {
   protected buildColumns = (survey: SurveyModel) => {
     let columns: Array<IColumn> = [];
     this._survey.getAllQuestions().forEach((question: Question) => {
-      const builder = ColumnsBuilderFactory.Instance.getColumnsBuilder(question.getTemplate());
-      columns = columns.concat(builder.buildColumns(question, this));
+      if(!this.isNonValueQuestion(question)) {
+        const builder = ColumnsBuilderFactory.Instance.getColumnsBuilder(question.getTemplate());
+        columns = columns.concat(builder.buildColumns(question, this));
+      }
     });
     return columns;
   };
+  private isNonValueQuestion(question: Question): boolean {
+    return Serializer.isDescendantOf(question.getType(), "nonvalue");
+  }
 
   public isColumnVisible(column: IColumn) {
     if (column.location !== QuestionLocation.Column) return false;
@@ -192,10 +201,18 @@ export abstract class Table {
     this.onStateChanged.fire(this, this.state);
   }
 
+  private isInitTableDataProcessingValue: boolean;
+  public get isInitTableDataProcessing(): boolean { return this.isInitTableDataProcessingValue; }
   protected initTableData(data: Array<any>): void {
-    this.tableData = (data || []).map((item, index) => this.initTableDataRow(item, index));
+    if(!Array.isArray(data)) {
+      this.tableData = undefined;
+      return;
+    }
+    this.isInitTableDataProcessingValue = true;
+    this.tableData = (data || []).map((item) => this.processLoadedDataItem(item));
+    this.isInitTableDataProcessingValue = false;
   }
-  protected initTableDataRow(item: any, index: number): void {
+  protected processLoadedDataItem(item: any): any {
     var dataItem: any = {};
     this._survey.data = item;
     this._columns.forEach((column) => {
@@ -348,10 +365,7 @@ export abstract class Table {
   /**
    * Fires when table state changed.
    */
-  public onStateChanged = new Event<
-    (sender: Table, options: any) => any,
-    any
-  >();
+  public onStateChanged = new TableEvent();
 
   /**
    * Gets table permissions.
@@ -385,6 +399,17 @@ export abstract class Table {
    * Fires when permissions changed
    */
   public onPermissionsChangedCallback: any;
+
+  protected get allowSorting(): boolean {
+    return this.options.allowSorting === undefined || this.options.allowSorting === true;
+  }
+
+  public allowExtension(extension: ITableExtension): boolean {
+    if(extension.location === "column" && extension.name === "sort") {
+      return this.allowSorting;
+    }
+    return true;
+  }
 }
 
 export abstract class TableRow {
@@ -403,8 +428,9 @@ export abstract class TableRow {
   private isDetailsExpanded = false;
   public onToggleDetails: Event<
     (sender: TableRow, options: any) => any,
+    TableRow,
     any
-  > = new Event<(sender: TableRow, options: any) => any, any>();
+  > = new Event<(sender: TableRow, options: any) => any, TableRow, any>();
 
   /**
    * Returns row's html element

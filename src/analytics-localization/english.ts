@@ -1,5 +1,5 @@
-//Uncomment this line on creating a translation file
-//import { localization } from "../localizationManager";
+// Uncomment the line below if you create a custom dictionary
+// import { localization } from "../localizationManager";
 
 export var englishStrings = {
   groupButton: "Group By Me",
@@ -21,6 +21,7 @@ export var englishStrings = {
   visualizer_number: "Average",
   visualizer_choices: "Table",
   visualizer_selectBase: "Chart",
+  visualizer_matrix: "Chart",
   chartType_bar: "Bar",
   chartType_vbar: "Vertical Bar",
   chartType_stackedbar: "Stacked Bar",
@@ -36,10 +37,6 @@ export var englishStrings = {
   filter: "Filter",
   resetFilter: "Reset Filter",
   changeLocale: "Change Locale",
-  en: "English",
-  fr: "Français",
-  ru: "Русский",
-  de: "Deutsch",
   clearButton: "Clear",
   addElement: "Choose question to show...",
   defaultOrder: "Default Order",
@@ -52,7 +49,7 @@ export var englishStrings = {
   pdfDownloadCaption: "PDF",
   xlsxDownloadCaption: "Excel",
   csvDownloadCaption: "CSV",
-  saveDiagramAsPNG: "Download plot as a png",
+  saveDiagramAsPNG: "Download plot as a PNG file",
   hideEmptyAnswers: "Hide empty answers",
   showEmptyAnswers: "Show empty answers",
   "topNValueText-1": "All answers",
@@ -69,9 +66,16 @@ export var englishStrings = {
   answer: "Answer",
   correctAnswer: "Correct answer: ",
   percent: "Percent",
-  responses: "Responses"
+  responses: "Responses",
+  visualizer_nps: "NPS",
+  npsScore: "NPS",
+  npsPromoters: "Promoters",
+  npsPassives: "Passives",
+  npsDetractors: "Detractors",
 };
 
-//Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.
-//localization.locales["en"] = englishStrings;
-//localization.localeNames["en"] = "English";
+// Uncomment the lines below if you create a custom dictionary.
+// Replace "en" with a custom locale code (for example, "fr" or "de"),
+// Replace `englishStrings` with the name of the variable that contains the custom dictionary.
+// localization.locales["en"] = englishStrings;
+// localization.localeNames["en"] = "English";

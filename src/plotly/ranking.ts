@@ -17,7 +17,7 @@ export class RankingPlotly extends SelectBasePlotly {
     return data;
   }
 
-  getData(): any[] {
+  protected getCalculatedValuesCore(): Array<any> {
     const results = this.getQuestionResults();
     const choices = this.getValues();
 

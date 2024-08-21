@@ -1,3 +1,8 @@
+---
+title: Introduction to the Dashboard Library | SurveyJS
+description: Dashboard is an open-source JavaScript libtaty that simplifies survey data analysis with interactive and customizable charts and tables. Visualize your insights with the survey data dashboard and analyze survey results in one view.
+---
+
 # SurveyJS Dashboard Overview
 
 SurveyJS Dashboard visualizes survey results and allows users to analyze them.
@@ -24,7 +29,7 @@ SurveyJS Dashboard visualizes survey results and allows users to analyze them.
 - [Angular](/Documentation/Analytics?id=get-started-angular)
 - [Vue](/Documentation/Analytics?id=get-started-vue)
 - [React](/Documentation/Analytics?id=get-started-react)
-- [Knockout / jQuery](/Documentation/Analytics?id=get-started-knockout-jquery)
+- [HTML/CSS/JavaScript](/dashboard/documentation/get-started-html-css-javascript)
 
 We also include multiple [demo examples](/Examples/Analytics) that allow you to edit and copy code.
 

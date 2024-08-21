@@ -29,12 +29,14 @@ var survey = new Survey.SurveyModel(json);
 //     survey.getAllQuestions(),
 //     data
 //   );
-//   visPanel.showHeader = true;
+//   visPanel.showToolbar = true;
 //   visPanel.render(document.getElementById("summaryContainer"));
 // };
 // xhr.send();
 
 // SurveyAnalytics.SelectBasePlotly.displayModeBar = false;
+
+// SurveyAnalytics.VisualizerBase.suppressVisualizerStubRendering = true;
 
 SurveyAnalytics.PlotlySetup.onImageSaving.add(function (selectBaseVisualizer, options) {
   options.filename = "Exported " + selectBaseVisualizer.question.name;
@@ -46,6 +48,7 @@ SurveyAnalytics.PlotlySetup.onImageSaving.add(function (selectBaseVisualizer, op
 
 var options = {
   // allowDynamicLayout: false,
+  // allowDragDrop: false,
   // allowHideQuestions: false,
   // allowShowPercentages: true,
   // showPercentages: true,
@@ -58,6 +61,7 @@ var options = {
   // hideEmptyAnswers: true,
   // allowTopNAnswers: true,
   // showCorrectAnswers: true
+  // labelTruncateLength: 27,
 };
 
 // SurveyAnalytics.WordCloudAdapter.drawOutOfBound = false;
@@ -70,5 +74,5 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
   data,
   options
 );
-visPanel.showHeader = true;
+visPanel.showToolbar = true;
 visPanel.render(document.getElementById("summaryContainer"));

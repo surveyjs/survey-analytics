@@ -6,12 +6,13 @@ import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrap
 import { VisualizationPanel } from "../src/visualizationPanel";
 import { IState } from "../src/config";
 import { VisualizationManager } from "../src/visualizationManager";
+import { LayoutEngine } from "../src/layoutEngine";
 
 VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
 VisualizationManager.registerVisualizer("checkbox", SelectBase);
 VisualizationManager.registerVisualizer("radiogroup", SelectBase);
-VisualizationManager.registerAlternativesVisualizer(AlternativeVisualizersWrapper);
+VisualizationManager.registerAltVisualizerSelector(AlternativeVisualizersWrapper);
 
 test("allowDynamicLayout option", () => {
   const json = {
@@ -157,6 +158,10 @@ test("getState, setState, onStateChanged", () => {
   ];
   const survey = new SurveyModel(json);
   let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
+  let chartVisualizer = visPanel.getVisualizer("question1") as SelectBase;
+
+  expect(chartVisualizer["chartTypes"]).toStrictEqual([]);
+  chartVisualizer["chartTypes"] = ["bar", "scatter"];
 
   let initialState: IState = {
     locale: "",
@@ -164,7 +169,6 @@ test("getState, setState, onStateChanged", () => {
       {
         displayName: "question1",
         name: "question1",
-        type: undefined,
         isVisible: true,
         isPublic: true,
         chartType: "bar",
@@ -180,7 +184,6 @@ test("getState, setState, onStateChanged", () => {
       {
         displayName: "question1",
         name: "question1",
-        type: "bar",
         isVisible: false,
         isPublic: true,
         chartType: "scatter",
@@ -197,7 +200,8 @@ test("getState, setState, onStateChanged", () => {
   });
 
   expect(visPanel.state).toEqual(initialState);
-  visPanel.state = null;
+  visPanel.state = null as any;
+  expect(count).toBe(0);
 
   visPanel.state = newState;
   expect(visPanel.state).toEqual(newState);
@@ -212,6 +216,22 @@ test("getState, setState, onStateChanged", () => {
   visPanel.locale = "ru";
   expect(count).toBe(1);
   expect(visPanel.state.locale).toEqual("ru");
+
+  visualizer.chartType = "bar";
+  expect(count).toBe(2);
+  expect(visPanel.state.elements![0].chartType).toEqual("bar");
+
+  visualizer.answersOrder = "desc";
+  expect(count).toBe(3);
+  expect(visPanel.state.elements![0].answersOrder).toEqual("desc");
+
+  visualizer.topN = 5;
+  expect(count).toBe(4);
+  expect(visPanel.state.elements![0].topN).toEqual(5);
+
+  visualizer.hideEmptyAnswers = false;
+  expect(count).toBe(5);
+  expect(visPanel.state.elements![0].hideEmptyAnswers).toEqual(false);
 });
 
 test("getState/setState and results order", () => {
@@ -524,6 +544,7 @@ test("set state for non-existing questions", () => {
         "isVisible": true,
         "name": "question1",
         "type": undefined,
+        "visualizer": "wordcloud"
       },
       {
         "displayName": "question2",
@@ -531,6 +552,7 @@ test("set state for non-existing questions", () => {
         "isVisible": true,
         "name": "question2",
         "type": undefined,
+        "visualizer": "wordcloud"
       },
     ],
     "locale": "ru",
@@ -560,6 +582,7 @@ test("set state for non-existing questions", () => {
         "isVisible": true,
         "name": "question1",
         "type": undefined,
+        "visualizer": "wordcloud"
       },
     ],
     "locale": "ru",
@@ -567,7 +590,7 @@ test("set state for non-existing questions", () => {
 
 });
 
-test("updateData should be called in order to update data - #269", () => {
+test("updateData should be called in order to update data - #269", async () => {
   const json = {
     elements: [{
       name: "satisfaction-score",
@@ -608,12 +631,163 @@ test("updateData should be called in order to update data - #269", () => {
   let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
 
   const questionVisualizer = visPanel.visualizers[0];
-  expect(questionVisualizer.getData()).toEqual([[0, 1, 2, 0, 2]]);
+  expect(await questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 0, 2]]);
 
   const newAnswer = { "satisfaction-score": 4, "nps-score": 9 };
   data.push(newAnswer);
-  expect(questionVisualizer.getData()).toEqual([[0, 1, 2, 0, 2]]);
+  expect(await questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 0, 2]]);
 
   visPanel.updateData(data);
-  expect(questionVisualizer.getData()).toEqual([[0, 1, 2, 1, 2]]);
+  expect(await questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 1, 2]]);
+});
+
+test("hide/show all elements", () => {
+  const json = {
+    elements: [
+      {
+        type: "text",
+        name: "question1",
+      },
+      {
+        type: "text",
+        name: "question2",
+      }
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { layoutEngine: new LayoutEngine(true) });
+  let changesCount = 0;
+  visPanel.onVisibleElementsChanged.add(() => {
+    changesCount++;
+  });
+
+  expect(changesCount).toBe(0);
+  expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([true, true]);
+  visPanel.hideAllElements();
+  expect(changesCount).toBe(1);
+  expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([false, false]);
+  visPanel.showAllElements();
+  expect(changesCount).toBe(2);
+  expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([true, true]);
+});
+
+test("hide/show element", () => {
+  const json = {
+    elements: [
+      {
+        type: "text",
+        name: "question1",
+      },
+      {
+        type: "text",
+        name: "question2",
+      }
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { layoutEngine: new LayoutEngine(true) });
+  let changesCount = 0;
+  visPanel.onVisibleElementsChanged.add(() => {
+    changesCount++;
+  });
+
+  expect(changesCount).toBe(0);
+  expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([true, true]);
+  visPanel.hideElement("question1");
+  expect(changesCount).toBe(1);
+  expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([false, true]);
+  visPanel.showElement("question1");
+  expect(changesCount).toBe(2);
+  expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([true, true]);
+});
+
+test("change language with different locales order", () => {
+  var json = {
+    locale: "fr",
+    questions: [
+      {
+        type: "dropdown",
+        name: "satisfaction",
+        title: {
+          fr: "Dans quelle mesure êtes-vous satisfait du produit ?",
+          default: "How satisfied are you with the Product?",
+          ru: "Насколько Вас устраивает наш продукт?",
+        },
+        choices: [
+          {
+            value: 0,
+            text: {
+              default: "Not Satisfied",
+              fr: "Pas satisfait",
+              ru: "Coвсем не устраивает",
+            },
+          },
+          {
+            value: 1,
+            text: {
+              default: "Satisfied",
+              fr: "Satisfait",
+              ru: "Устраивает",
+            },
+          },
+          {
+            value: 2,
+            text: {
+              default: "Completely satisfied",
+              fr: "Totalement satisfait",
+              ru: "Полностью устраивает",
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visualizationPanel = new VisualizationPanel(
+    survey.getAllQuestions(),
+    [],
+    { survey: survey }
+  );
+  const changeLocaleSelectorCreator = visualizationPanel["toolbarItemCreators"]["changeLocale"] as (el: HTMLElement) => HTMLSelectElement;
+  var element = visualizationPanel.getElement("satisfaction");
+  expect(visualizationPanel.locale).toEqual("fr");
+  expect(visualizationPanel["locales"]).toStrictEqual(["fr", "en", "ru"]);
+  expect(element.displayName).toEqual("Dans quelle mesure êtes-vous satisfait du produit ?");
+  let localeSelector = changeLocaleSelectorCreator(document.createElement("div"));
+
+  visualizationPanel.locale = "en";
+  expect(visualizationPanel.locale).toEqual("");
+  expect(visualizationPanel["locales"]).toStrictEqual(["fr", "en", "ru"]);
+  expect(element.displayName).toEqual("How satisfied are you with the Product?");
+  localeSelector = changeLocaleSelectorCreator(document.createElement("div"));
+
+  visualizationPanel.locale = "fr";
+  expect(visualizationPanel.locale).toEqual("fr");
+  expect(visualizationPanel["locales"]).toStrictEqual(["fr", "en", "ru"]);
+  expect(element.displayName).toEqual("Dans quelle mesure êtes-vous satisfait du produit ?");
+  localeSelector = changeLocaleSelectorCreator(document.createElement("div"));
+});
+
+test("reorderVisibleElements", () => {
+  var json = {
+    questions: [
+      { type: "text", name: "q1", },
+      { type: "text", name: "q2", },
+      { type: "text", name: "q3", },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), []);
+  let stateChagedCounter = 0;
+  visPanel.onStateChanged.add((s, o) => {
+    stateChagedCounter++;
+  });
+
+  const state1 = visPanel.state;
+  expect(state1.elements?.map(el => el.name)).toStrictEqual(["q1", "q2", "q3"]);
+
+  visPanel.reorderVisibleElements(["q2", "q1", "q3"]);
+  const state2 = visPanel.state;
+  expect(state2.elements?.map(el => el.name)).toStrictEqual(["q2", "q1", "q3"]);
+  expect(stateChagedCounter).toBe(1);
 });

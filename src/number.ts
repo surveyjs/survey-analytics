@@ -136,7 +136,11 @@ export class NumberModel extends VisualizerBase {
     return colors;
   }
 
-  getData() {
+  public convertFromExternalData(externalCalculatedData: any): any[] {
+    return [externalCalculatedData.value || 0, externalCalculatedData.minValue || 0, externalCalculatedData.maxValue || 0];
+  }
+
+  protected getCalculatedValuesCore(): Array<any> {
     if (
       this._resultAverage === undefined ||
       this._resultMin === undefined ||

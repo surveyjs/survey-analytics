@@ -27,6 +27,7 @@ steps:
   - checkout: Service
     persistCredentials: true
     clean: true
+    fetchDepth: 1
 
   - task: NodeTool@0
     inputs:
@@ -70,12 +71,12 @@ steps:
       specificBuildWithTriggering: true
       buildVersionToDownload: 'latest'
       downloadType: 'single'
-      artifactName: 'SurveyJSLibraryBuild'
+      artifactName: 'SurveyJSLibraryBuildCoreAngularJquery'
       downloadPath: '$(System.ArtifactsDirectory)'
 
   - task: CopyFiles@2
     inputs:
-      SourceFolder: "$(System.ArtifactsDirectory)/SurveyJSLibraryBuild/packages/survey-core"
+      SourceFolder: "$(System.ArtifactsDirectory)/SurveyJSLibraryBuildCoreAngularJquery/packages/survey-core"
       Contents: "**"
       TargetFolder: "$(Build.SourcesDirectory)/survey-analytics/node_modules/survey-core"
       OverWrite: true
@@ -83,7 +84,7 @@ steps:
   # npm run release with version
   - task: CopyFiles@2
     inputs:
-      SourceFolder: '$(System.ArtifactsDirectory)/SurveyJSLibraryBuild/'
+      SourceFolder: '$(System.ArtifactsDirectory)/SurveyJSLibraryBuildCoreAngularJquery/'
       Contents: 'version.txt'
       TargetFolder: '$(Build.SourcesDirectory)/'
       OverWrite: true
@@ -125,6 +126,12 @@ steps:
       TESTCAFE_DASHBOARD_AUTHENTICATION_TOKEN: $(TESTCAFE_DASHBOARD_AUTHENTICATION_TOKEN)
       TESTCAFE_DASHBOARD_URL: $(TESTCAFE_DASHBOARD_URL)
 
+  - task: PublishCodeCoverageResults@1
+    inputs: 
+      codeCoverageTool: Cobertura # or JaCoCo
+      summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
+      reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
+
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm run doc_gen
@@ -133,8 +140,13 @@ steps:
   - task: CopyFiles@2
     inputs:
       SourceFolder: '$(Build.SourcesDirectory)/survey-analytics/docs'
+      Contents: |
+        classes.json
+        pmes.json
+        surveyjs_definition.json
       TargetFolder: '$(Build.SourcesDirectory)/service/surveyjs.io/App_Data/DocsAnalytics'
-      CleanTargetFolder: true
+      OverWrite: true
+      CleanTargetFolder: false
     displayName: 'copy generated docs to the local surveyjs/service repo'
 
   # read about the problem with git output ($env:GIT_REDIRECT_STDERR = '2>&1') :
@@ -142,9 +154,9 @@ steps:
   # https://stackoverflow.com/questions/58485585/azure-pipeline-powershell-and-git-on-windows-server-2019-gives-error-in-output
   - powershell: |
       cd $(Build.SourcesDirectory)/service
-      git checkout master
       git pull origin master
-      git fetch --tags --force
+      git fetch origin master --tags --force
+      git checkout master
       git add surveyjs.io/App_Data/DocsAnalytics
       git commit -m "updated survey-analytics docs"
       git pull origin master

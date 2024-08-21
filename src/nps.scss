@@ -1,0 +1,34 @@
+.sa-visualizer-nps {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  overflow-x: auto;
+}
+
+.sa-visualizer-nps__score-part {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+}
+
+.sa-visualizer-nps__score-part-title {
+  font-size: 32px;
+  text-align: center;
+  color: #909090;
+}
+
+.sa-visualizer-nps__score-part-values {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.sa-visualizer-nps__score-part-value {
+  font-size: 48px;
+}
+
+.sa-visualizer-nps__score-part-percent {
+  font-size: 24px;
+  color: #606060;
+}

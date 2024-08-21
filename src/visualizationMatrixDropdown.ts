@@ -12,6 +12,7 @@ import { DataProvider } from "./dataProvider";
 
 export class VisualizationMatrixDropdown extends VisualizerBase {
   protected _matrixDropdownVisualizer: VisualizerBase = undefined;
+  private readonly _childOptions;
 
   constructor(
     question: QuestionMatrixDropdownModel,
@@ -20,22 +21,30 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     name?: string
   ) {
     super(question, data, options, name || "matrixDropdown");
-    var options = Object.assign({}, options);
-    options.dataProvider = undefined;
-    options.allowDynamicLayout = false;
-    options.seriesValues = question.rows.map((row: ItemValue) => row.value);
-    options.seriesLabels = question.rows.map((row: ItemValue) => row.text);
+    this.loadingData = false;
+    this._childOptions = Object.assign({}, options);
+    this._childOptions.disableLocaleSwitch = true;
+    this._childOptions.dataProvider = undefined;
+    this._childOptions.allowDynamicLayout = false;
+    this._childOptions.seriesValues = question.rows.map((row: ItemValue) => row.value);
+    this._childOptions.seriesLabels = question.rows.map((row: ItemValue) => row.text);
 
     const innerQuestions = this.getQuestions();
-    const canGroupColumns = options.seriesValues.length == 1 && innerQuestions.every(innerQuestion => Helpers.isArraysEqual(innerQuestion.choices, (<QuestionSelectBase>this.question).choices));
+    const canGroupColumns = this._childOptions.seriesValues.length == 1 && innerQuestions.every(innerQuestion => Helpers.isArraysEqual(innerQuestion.choices, (<QuestionSelectBase>this.question).choices));
     if (canGroupColumns) {
       var creators = VisualizationManager.getVisualizersByType("matrixdropdown-grouped");
-      this._matrixDropdownVisualizer = new creators[0](this.question, [], options);
+      this._matrixDropdownVisualizer = new creators[0](this.question, [], this._childOptions);
     } else {
-      this._matrixDropdownVisualizer = new VisualizationPanel(innerQuestions, [], options);
+      this._matrixDropdownVisualizer = new VisualizationPanel(innerQuestions, [], this._childOptions);
     }
     this._matrixDropdownVisualizer.onAfterRender.add(this.onPanelAfterRenderCallback);
     this.updateData(data);
+  }
+
+  protected setLocale(newLocale: string) {
+    super.setLocale(newLocale);
+    this._childOptions.seriesLabels = this.question.rows.map((row: ItemValue) => row.text);
+    this._matrixDropdownVisualizer.locale = newLocale;
   }
 
   public get matrixDropdownVisualizer() {

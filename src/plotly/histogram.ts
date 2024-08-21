@@ -16,7 +16,7 @@ export class HistogramPlotly extends HistogramModel {
   ) {
     super(question, data, options, name);
     this.chartTypes = HistogramPlotly.types;
-    this.chartType = this.chartTypes[0];
+    this._chartType = this.chartTypes[0];
     this._chartAdapter = new PlotlyChartAdapter(this);
   }
 
@@ -25,18 +25,16 @@ export class HistogramPlotly extends HistogramModel {
     super.destroyContent(container);
   }
 
-  protected renderContent(container: HTMLElement) {
-    const chartNode: HTMLElement = <HTMLElement>(
-      DocumentHelper.createElement("div")
-    );
+  protected async renderContentAsync(container: HTMLElement) {
+    const chartNode: HTMLElement = DocumentHelper.createElement("div");
+    await this._chartAdapter.create(chartNode);
+    container.innerHTML = "";
     container.appendChild(chartNode);
-    this._chartAdapter.create(chartNode).then(() => {
-      this.afterRender(this.contentContainer);
-    });
+    return container;
   }
 
-  getData(): any[] {
-    const statistics = super.getData();
+  protected getCalculatedValuesCore(): Array<any> {
+    const statistics = super.getCalculatedValuesCore();
     const series = this.getSeriesValues();
     const values = this.getValues();
     if (series.length > 1) {
@@ -50,6 +48,10 @@ export class HistogramPlotly extends HistogramModel {
       return preparedData;
     }
     return statistics;
+  }
+
+  public getValueType(): "date" | "number" {
+    return this.valueType;
   }
 }
 

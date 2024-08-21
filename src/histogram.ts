@@ -9,7 +9,6 @@ export class HistogramModel extends SelectBase {
   private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
   private _intervalPrecision: number = 2;
   protected chartTypes: string[];
-  public chartType: string;
 
   public static IntervalsCount = 10;
   public static UseIntervalsFrom = 10;
@@ -90,7 +89,7 @@ export class HistogramModel extends SelectBase {
       series.forEach(seriesValue => this._continiousData[seriesValue] = []);
       const hash = {};
       this.data.forEach(dataItem => {
-        const answerData = dataItem[this.dataName as string];
+        const answerData = dataItem[this.name];
         if (answerData !== undefined) {
           const seriesValue = dataItem[DataProvider.seriesMarkerKey] || "";
           // TODO: _continiousData should be sorted in order to speed-up statistics calculation in the getData function
@@ -113,19 +112,11 @@ export class HistogramModel extends SelectBase {
   }
 
   public getValues(): Array<any> {
-    const continiousValues = this.getContiniousValues();
-    if (this.hasCustomIntervals || continiousValues.length > HistogramModel.UseIntervalsFrom || this.needUseRateValues) {
-      return this.intervals.map(interval => interval.start);
-    }
-    return continiousValues.map(value => value.original);
+    return this.intervals.map(interval => interval.start);
   }
 
   public getLabels(): Array<string> {
-    const continiousValues = this.getContiniousValues();
-    if (this.hasCustomIntervals || continiousValues.length > HistogramModel.UseIntervalsFrom || this.needUseRateValues) {
-      return this.intervals.map(interval => interval.label);
-    }
-    return continiousValues.map(value => "" + value.original);
+    return this.intervals.map(interval => interval.label);
   }
 
   public get hasCustomIntervals() {
@@ -134,16 +125,28 @@ export class HistogramModel extends SelectBase {
 
   public get intervals() {
     if (this.hasCustomIntervals) {
-      return this.questionOptions.intervals.reverse();
+      return this.questionOptions.intervals;
     }
 
-    if(this.needUseRateValues) {
-      const rateValues = this.question["rateValues"] as ItemValue[];
-      return rateValues.map((rateValue, i) => ({
-        start: rateValue.value,
-        end: i < rateValues.length - 1 ? rateValues[i + 1].value : rateValue.value + 1,
-        label: rateValue.text
-      })).reverse();
+    if(this.question.getType() == "rating") {
+      if (this.needUseRateValues) {
+        const rateValues = this.question["rateValues"] as ItemValue[];
+        return rateValues.map((rateValue, i) => ({
+          start: rateValue.value,
+          end: i < rateValues.length - 1 ? rateValues[i + 1].value : rateValue.value + 1,
+          label: rateValue.text
+        }));
+      } else {
+        const rateIntervals = [];
+        for(let i = (this.question["rateMin"] || 0); i <= (this.question["rateMax"] || (HistogramModel.IntervalsCount - 1)); i += (this.question["rateStep"] || 1)) {
+          rateIntervals.push({
+            start: i,
+            end: i + 1,
+            label: "" + (!!this.question["rateMin"] && !!this.question["rateMax"] ? i : (i + "-" + (i+1)))
+          });
+        }
+        return rateIntervals;
+      }
     }
 
     if (this._cachedIntervals === undefined) {
@@ -160,7 +163,7 @@ export class HistogramModel extends SelectBase {
           const inext = this.toPrecision(next);
           this._cachedIntervals.push({
             start: istart,
-            end: inext,
+            end: i < intervalsCount - 1 ? inext : inext + delta / 100,
             label: "" + this.getString(istart) + "-" + this.getString(inext)
           });
           start = next;
@@ -170,11 +173,12 @@ export class HistogramModel extends SelectBase {
     return this._cachedIntervals;
   }
 
-  public getData() {
+  public convertFromExternalData(externalCalculatedData: any): any[] {
+    return [externalCalculatedData];
+  }
+
+  protected getCalculatedValuesCore(): Array<any> {
     const continiousValues = this.getContiniousValues();
-    if (!this.hasCustomIntervals && continiousValues.length <= HistogramModel.UseIntervalsFrom) {
-      return super.getData();
-    }
     const intervals = this.intervals;
     const statistics: Array<Array<number>> = [];
     const series = this.getSeriesValues();

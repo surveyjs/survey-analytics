@@ -4,10 +4,22 @@ import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 import { IVisualizerWithSelection } from "./selectBase";
+import { Event } from "survey-core";
 
 export class AlternativeVisualizersWrapper
   extends VisualizerBase
   implements IVisualizerWithSelection {
+
+  private visualizerSelector: HTMLDivElement;
+
+  private updateVisualizerSelector() {
+    if (!!this.visualizerSelector) {
+      this.visualizerSelector.getElementsByTagName(
+        "select"
+      )[0].value = this.visualizer.type;
+    }
+  }
+
   constructor(
     private visualizers: Array<VisualizerBase>,
     question: Question,
@@ -15,6 +27,7 @@ export class AlternativeVisualizersWrapper
     options?: Object
   ) {
     super(question, data, options);
+    this.loadingData = false;
     if (!visualizers || visualizers.length < 2) {
       throw new Error(
         "VisualizerArrayWrapper works with visualizers collection only."
@@ -31,20 +44,21 @@ export class AlternativeVisualizersWrapper
     });
 
     this.registerToolbarItem("changeVisualizer", () =>
-      DocumentHelper.createSelector(
+      this.visualizerSelector = DocumentHelper.createSelector(
         this.visualizers.map((visualizer) => {
           return {
-            value: visualizer.name,
-            text: localization.getString("visualizer_" + visualizer.name),
+            value: visualizer.type,
+            text: localization.getString("visualizer_" + visualizer.type),
           };
         }),
-        (option: any) => this.visualizer.name === option.value,
+        (option: any) => this.visualizer.type === option.value,
         (e: any) => this.setVisualizer(e.target.value)
       )
     );
 
     this.visualizer = visualizers[0];
     this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
+    this.visualizer.onStateChanged.add(this.onVisualizerStateChangedCallback);
   }
 
   protected visualizerContainer: HTMLElement;
@@ -63,17 +77,45 @@ export class AlternativeVisualizersWrapper
   private onAfterVisualizerRenderCallback = () => {
     this.afterRender(this.contentContainer);
   };
+  private onVisualizerStateChangedCallback = (s, options) => {
+    this.stateChanged("visualizer", options);
+  };
 
-  private setVisualizer(name: string) {
-    if (!!this.visualizer) {
-      this.visualizer.onAfterRender.remove(
-        this.onAfterVisualizerRenderCallback
-      );
-      this.visualizer.destroy();
+  /**
+   * The event is fired right after AlternativeVisualizersWrapper content type has been changed.
+   **/
+  public onVisualizerChanged: Event<
+    (sender: AlternativeVisualizersWrapper, options: any) => any,
+    AlternativeVisualizersWrapper,
+    any
+  > = new Event<(sender: AlternativeVisualizersWrapper, options: any) => any, AlternativeVisualizersWrapper, any>();
+
+  /**
+   * This method selects visualizer to show by it name.
+  *
+  * parameters:
+  * name - the name of visualizer to show,
+  * quiet - set it to true if you don't want to rise a notification event
+  *
+  **/
+  public setVisualizer(type: string, quiet = false): void {
+    const visualizerCandidate = this.visualizers.filter((v) => v.type === type)[0];
+    if (!!visualizerCandidate && visualizerCandidate !== this.visualizer) {
+      if (!!this.visualizer) {
+        this.visualizer.onStateChanged.remove(this.onVisualizerStateChangedCallback);
+        this.visualizer.onAfterRender.remove(this.onAfterVisualizerRenderCallback);
+        this.visualizer.destroy();
+      }
+      this.visualizer = visualizerCandidate;
+      this.refresh();
+      this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
+      this.visualizer.onStateChanged.add(this.onVisualizerStateChangedCallback);
+      if (!quiet) {
+        this.onVisualizerChanged.fire(this, { visualizer: this.visualizer });
+        this.stateChanged("visualizer", type);
+      }
+      this.updateVisualizerSelector();
     }
-    this.visualizer = this.visualizers.filter((v) => v.name === name)[0];
-    this.refresh();
-    this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
   }
 
   updateData(data: Array<{ [index: string]: any }>) {
@@ -111,9 +153,41 @@ export class AlternativeVisualizersWrapper
     this.visualizers.forEach(visualizer => visualizer.backgroundColor = color);
   }
 
+  /**
+   * Returns an object with properties that describe a current visualizer state. The properties are different for each individual visualizer.
+   *
+   * > This method is overriden in descendant classes.
+   * @see setState
+   */
+  public getState(): any {
+    const currentVisualizerState = this.visualizer.getState();
+    const state: any = {
+      visualizer: this.visualizer.type,
+    };
+    if(Object.keys(currentVisualizerState).length > 0) {
+      state.state = currentVisualizerState;
+    }
+    return state;
+  }
+  /**
+   * Sets the visualizer's state.
+   *
+   * > This method is overriden in descendant classes.
+   * @see getState
+   */
+  public setState(state: any): void {
+    if(!!state.visualizer) {
+      this.setVisualizer(state.visualizer, true);
+    }
+    if(!!state.state) {
+      this.visualizer.setState(state.state);
+    }
+  }
+
   destroy() {
     this.visualizers.forEach((visualizer) => {
       visualizer.onAfterRender.remove(this.onAfterVisualizerRenderCallback);
+      visualizer.onStateChanged.remove(this.onVisualizerStateChangedCallback);
       visualizer.onUpdate = undefined;
     });
     this.visualizer.destroy();
@@ -121,6 +195,6 @@ export class AlternativeVisualizersWrapper
   }
 }
 
-VisualizationManager.registerAlternativesVisualizer(
+VisualizationManager.registerAltVisualizerSelector(
   AlternativeVisualizersWrapper
 );

@@ -1,4 +1,4 @@
-import { VisualizerBase } from "../src/visualizerBase";
+import { VisualizerBase, IDataInfo } from "../src/visualizerBase";
 import { QuestionDropdownModel } from "survey-core";
 
 test("custom colors", () => {
@@ -49,16 +49,16 @@ test("footer visualizer data, updateData", () => {
 
   let visualizer = new VisualizerBase(question, []);
   expect(visualizer.hasFooter).toBeTruthy();
-  expect(visualizer["data"]).toEqual([]);
-  expect(visualizer.footerVisualizer["data"]).toEqual([]);
+  expect(visualizer["surveyData"]).toEqual([]);
+  expect(visualizer.footerVisualizer["surveyData"]).toEqual([]);
 
   const newData = [{ q1: 255 }];
   visualizer.updateData(newData);
-  expect(visualizer["data"]).toEqual(newData);
-  expect(visualizer["_footerVisualizer"]["data"]).toEqual(newData);
+  expect(visualizer["surveyData"]).toEqual(newData);
+  expect(visualizer.footerVisualizer["surveyData"]).toEqual(newData);
 });
 
-test("check onAfterRender", () => {
+test("check onAfterRender", (done) => {
   var question = new QuestionDropdownModel("q1");
   question.hasOther = true;
 
@@ -66,19 +66,20 @@ test("check onAfterRender", () => {
   let visualizer = new VisualizerBase(question, []);
   visualizer.onAfterRender.add(() => {
     count++;
+    expect(count).toEqual(1);
+    done();
   });
   (<any>visualizer).renderContent(document.createElement("div"));
-  expect(count).toEqual(1);
 });
 
 test("Use valueName for data https://surveyjs.answerdesk.io/internal/ticket/details/T9071", () => {
   var question = new QuestionDropdownModel("q1");
   let visualizer = new VisualizerBase(question, []);
 
-  expect(visualizer.dataName).toEqual("q1");
+  expect(visualizer.name).toEqual("q1");
 
   question.valueName = "q1value";
-  expect(visualizer.dataName).toEqual("q1value");
+  expect(visualizer.name).toEqual("q1value");
 });
 
 test("options.labelTruncateLength", () => {
@@ -87,3 +88,23 @@ test("options.labelTruncateLength", () => {
 
   expect(visualizer.labelTruncateLength).toEqual(3);
 });
+
+test("clear header", () => {
+  var question = new QuestionDropdownModel("q1");
+  question.correctAnswer = "1";
+  let visualizer = new VisualizerBase(question, [], { showCorrectAnswers: true });
+  expect(visualizer["headerContainer"]).toBeUndefined();
+  visualizer.render(document.createElement("div"));
+  expect(visualizer["headerContainer"]).toBeDefined();
+  expect(visualizer["headerContainer"].innerHTML).toBe("<div class=\"sa-visualizer__correct-answer\"></div>");
+  visualizer.clear();
+  expect(visualizer["headerContainer"]).toBeDefined();
+  expect(visualizer["headerContainer"].innerHTML).toBe("");
+});
+
+test("custom getDataCore function", async () => {
+  const statistics = [[1, 2]];
+  let visualizer = new VisualizerBase({ name: "q1" } as any, [], { q1: { getDataCore: (dataInfo: IDataInfo) => statistics } });
+  expect(await visualizer.getCalculatedValues()).toEqual(statistics);
+});
+

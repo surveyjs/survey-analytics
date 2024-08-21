@@ -17,6 +17,67 @@ export interface IAnswersData {
   seriesLabels: Array<string>;
 }
 
+export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData {
+  const result = {
+    datasets: <Array<any>>[],
+    labels: <Array<string>>[],
+    colors: <Array<string>>[],
+    texts: <Array<any>>[],
+    seriesLabels: <Array<any>>[],
+  };
+  if(answersData.seriesLabels.length === 0) {
+    result.datasets.push([]);
+    result.texts.push([]);
+    for (var i = 0; i < answersData.datasets[0].length; i++) {
+      if (answersData.datasets[0][i] != 0) {
+        result.datasets[0].push(answersData.datasets[0][i]);
+        result.labels.push(answersData.labels[i]);
+        result.colors.push(answersData.colors[i]);
+        result.texts[0].push(answersData.texts[0][i]);
+      }
+    }
+    return result;
+  }
+  const seriesDataExistence = <Array<boolean>>[];
+  seriesDataExistence.length = answersData.seriesLabels.length;
+  const valuesDataExistence = <Array<boolean>>[];
+  valuesDataExistence.length = answersData.labels.length;
+  for (var valueIndex = 0; valueIndex < answersData.labels.length; valueIndex++) {
+    for (var seriesIndex = 0; seriesIndex < answersData.seriesLabels.length; seriesIndex++) {
+      if (answersData.datasets[valueIndex][seriesIndex] != 0) {
+        seriesDataExistence[seriesIndex] = true;
+        valuesDataExistence[valueIndex] = true;
+      }
+    }
+  }
+  for (var valueIndex = 0; valueIndex < valuesDataExistence.length; valueIndex++) {
+    if (valuesDataExistence[valueIndex]) {
+      result.labels.push(answersData.labels[valueIndex]);
+      result.colors.push(answersData.colors[valueIndex]);
+    }
+  }
+  for (var seriesIndex = 0; seriesIndex < answersData.seriesLabels.length; seriesIndex++) {
+    if (seriesDataExistence[seriesIndex]) {
+      result.seriesLabels.push(answersData.seriesLabels[seriesIndex]);
+    }
+  }
+  for (var valueIndex = 0; valueIndex < answersData.labels.length; valueIndex++) {
+    if (valuesDataExistence[valueIndex]) {
+      const dataset = [];
+      const texts = [];
+      for (var seriesIndex = 0; seriesIndex < answersData.datasets.length; seriesIndex++) {
+        if (seriesDataExistence[seriesIndex]) {
+          dataset.push(answersData.datasets[valueIndex][seriesIndex]);
+          texts.push(answersData.texts[valueIndex][seriesIndex]);
+        }
+      }
+      result.datasets.push(dataset);
+      result.texts.push(texts);
+    }
+  }
+  return result;
+}
+
 export class SelectBase
   extends VisualizerBase
   implements IVisualizerWithSelection {
@@ -47,7 +108,7 @@ export class SelectBase
   ) {
     super(question, data, options, name || "selectBase");
     (<any>question).visibleChoicesChangedCallback = () => {
-      this.dataProvider.reset();
+      this.dataProvider.raiseDataChanged();
     };
     this._showPercentages = this.options.showPercentages === true;
     this._showOnlyPercentages = this.options.showOnlyPercentages === true;
@@ -77,11 +138,7 @@ export class SelectBase
       return null;
     });
     this.registerToolbarItem("changeAnswersOrder", () => {
-      if (
-        (this.options.allowChangeAnswersOrder === undefined ||
-          this.options.allowChangeAnswersOrder) &&
-        this.getSeriesValues().length === 0
-      ) {
+      if (this.isSupportAnswersOrder()) {
         this.choicesOrderSelector = DocumentHelper.createSelector(
           [
             { text: localization.getString("defaultOrder"), value: "default" },
@@ -161,7 +218,16 @@ export class SelectBase
   }
 
   protected chartTypes: string[] = [];
-  public chartType: string = "bar";
+  protected _chartType: string = "bar";
+  /**
+   * Chart type - current chart type.
+   */
+  public get chartType(): string {
+    return this._chartType;
+  }
+  public set chartType(newChartType: string) {
+    this.setChartType(newChartType);
+  }
 
   private updateEmptyAnswersBtn() {
     if (!!this.emptyAnswersBtn) {
@@ -198,7 +264,7 @@ export class SelectBase
         ((this.chartType == "pie" || this.chartType == "doughnut") &&
           this.topN > 0)
       ) {
-        this.choicesOrderSelector.style.display = "inline-block";
+        this.choicesOrderSelector.style.display = "inline-flex";
       } else {
         this.choicesOrderSelector.style.display = "none";
       }
@@ -242,14 +308,15 @@ export class SelectBase
     this.updateShowPercentageBtn();
     this.updateEmptyAnswersBtn();
     this.updateTopNSelector();
+    this.stateChanged("chartType", this._chartType);
   }
 
   protected setChartType(chartType: string) {
     if (
       this.chartTypes.indexOf(chartType) !== -1 &&
-      this.chartType !== chartType
+      this._chartType !== chartType
     ) {
-      this.chartType = chartType;
+      this._chartType = chartType;
       this.onChartTypeChanged();
       this.refreshContent();
     }
@@ -288,6 +355,9 @@ export class SelectBase
     return this.selectedItem;
   }
 
+  /**
+   * Gets and sets whether chart should show percentages only.
+   */
   public get showOnlyPercentages(): boolean {
     return this._showOnlyPercentages;
   }
@@ -295,8 +365,12 @@ export class SelectBase
   public set showOnlyPercentages(val: boolean) {
     this._showOnlyPercentages = val;
     this.refreshContent();
+    this.stateChanged("showOnlyPercentages", val);
   }
 
+  /**
+   * Gets and sets whether chart should show values and percentages.
+   */
   public get showPercentages(): boolean {
     return this._showPercentages;
   }
@@ -305,8 +379,12 @@ export class SelectBase
     this._showPercentages = val;
     this.updateShowPercentageBtn();
     this.refreshContent();
+    this.stateChanged("showPercentages", val);
   }
 
+  /**
+   * Gets and sets chart elements order.
+   */
   public get answersOrder() {
     return this._answersOrder;
   }
@@ -315,8 +393,12 @@ export class SelectBase
     this._answersOrder = value;
     this.updateOrderSelector();
     this.refreshContent();
+    this.stateChanged("answersOrder", value);
   }
 
+  /**
+   * Set to true if need to hide empty chart elements (e.g. bars vith zero value).
+   */
   public get hideEmptyAnswers() {
     return this._hideEmptyAnswers;
   }
@@ -325,6 +407,7 @@ export class SelectBase
     this._hideEmptyAnswers = value;
     this.updateEmptyAnswersBtn();
     this.refreshContent();
+    this.stateChanged("hideEmptyAnswers", value);
   }
 
   public get transposeData(): boolean {
@@ -335,8 +418,12 @@ export class SelectBase
     this._transposeData = value;
     this.updateTransposeDataBtn();
     this.refreshContent();
+    this.stateChanged("transposeData", value);
   }
 
+  /**
+   * Set to some value if need to show top N chart elements.
+   */
   public get topN(): number {
     return this._topN;
   }
@@ -346,12 +433,22 @@ export class SelectBase
     this.updateTopNSelector();
     this.updateOrderSelector();
     this.refreshContent();
+    this.stateChanged("topN", value);
+  }
+
+  protected isSupportAnswersOrder(): boolean {
+    return (this.options.allowChangeAnswersOrder === undefined ||
+            this.options.allowChangeAnswersOrder) &&
+            this.getSeriesValues().length === 0;
   }
 
   protected isSupportMissingAnswers(): boolean {
     return true;
   }
 
+  /**
+   * Set to true if you want to see chart elements for missing answers (e.g. radiogroup items never been selected by surveyee).
+   */
   public get showMissingAnswers() {
     return this._showMissingAnswers;
   }
@@ -359,8 +456,9 @@ export class SelectBase
   public set showMissingAnswers(value: boolean) {
     this._showMissingAnswers = this.isSupportMissingAnswers() && value;
     this.updateMissingAnswersBtn();
-    this.dataProvider.reset(this);
+    this.dataProvider.raiseDataChanged(this.name);
     this.refreshContent();
+    this.stateChanged("showMissingAnsewrs", value);
   }
 
   refreshContent() {
@@ -378,7 +476,10 @@ export class SelectBase
   }
 
   valuesSource(): Array<ItemValue> {
-    const question = <QuestionSelectBase>this.question;
+    let question = <QuestionSelectBase>this.question;
+    if(!!question.choicesFromQuestion && !!question.survey) {
+      question = <QuestionSelectBase>question.survey.getQuestionByName(question.choicesFromQuestion);
+    }
     return question["activeChoices"];
   }
 
@@ -387,6 +488,9 @@ export class SelectBase
       (choice) => choice.value
     );
 
+    if ((<QuestionSelectBase>this.question).hasNone) {
+      values.push((<QuestionSelectBase>this.question).noneItem.value);
+    }
     if (this.question.hasOther) {
       values.push("other");
     }
@@ -407,6 +511,9 @@ export class SelectBase
       ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value)
     );
     const selBase = <QuestionSelectBase>this.question;
+    if (selBase.hasNone) {
+      labels.push(selBase.noneText);
+    }
     if (selBase.hasOther) {
       labels.push(selBase.otherText);
     }
@@ -419,8 +526,7 @@ export class SelectBase
     return labels;
   }
 
-  getPercentages(): Array<Array<number>> {
-    var data: Array<Array<number>> = this.getData();
+  getPercentages(data: Array<Array<number>>): Array<Array<number>> {
     var percentages: Array<Array<number>> = [];
     var percentagePrecision = this._percentagePrecision;
 
@@ -448,29 +554,10 @@ export class SelectBase
     return percentages;
   }
 
-  protected hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData {
-    var result = {
-      datasets: <Array<any>>[[]],
-      labels: <Array<string>>[],
-      colors: <Array<string>>[],
-      texts: <Array<any>>[[]],
-      seriesLabels: answersData.seriesLabels,
-    };
-    for (var i = 0; i < answersData.datasets[0].length; i++) {
-      if (answersData.datasets[0][i] != 0) {
-        result.datasets[0].push(answersData.datasets[0][i]);
-        result.labels.push(answersData.labels[i]);
-        result.colors.push(answersData.colors[i]);
-        result.texts[0].push(answersData.texts[0][i]);
-      }
-    }
-    return result;
-  }
-
   protected answersDataReady(answersData: IAnswersData) {
     let result: any = {};
     if (this.hideEmptyAnswers) {
-      result = this.hideEmptyAnswersInData(answersData);
+      result = hideEmptyAnswersInData(answersData);
     } else {
       result = answersData;
     }
@@ -490,18 +577,19 @@ export class SelectBase
    */
   public onAnswersDataReady = new Event<
     (sender: SelectBase, options: any) => any,
+    SelectBase,
     any
   >();
 
   /**
    * Returns object with all infotmation for data visualization: datasets, labels, colors, additional texts (percentage).
    */
-  public getAnswersData(): IAnswersData {
+  public async getAnswersData(): Promise<IAnswersData> {
     let seriesLabels = this.getSeriesLabels();
-    let datasets = this.getData();
+    let datasets = (await this.getCalculatedValues()) as number[][];
     let labels = this.getLabels();
     let colors = this.getColors();
-    var texts = this.showPercentages ? this.getPercentages() : datasets;
+    var texts = this.showPercentages ? this.getPercentages(datasets) : datasets;
 
     if (this.transposeData) {
       datasets = this.transpose(datasets);
@@ -539,6 +627,33 @@ export class SelectBase
 
     return answersData;
   }
+
+  public convertFromExternalData(externalCalculatedData: any): any[] {
+    const values = this.getValues();
+    const series = this.getSeriesValues();
+    const innerCalculatedData = [];
+    if(series.length > 0) {
+      for(let i=0; i<values.length; i++) {
+        const seriesData = [];
+        for(let j=0; j<series.length; j++) {
+          if(!!externalCalculatedData[series[j]]) {
+            seriesData.push(externalCalculatedData[series[j]][values[i]] || 0);
+          } else {
+            seriesData.push(0);
+          }
+        }
+        innerCalculatedData.push(seriesData);
+      }
+    } else {
+      const seriesData = [];
+      for(let i=0; i<values.length; i++) {
+        seriesData.push(externalCalculatedData[values[i]] || 0);
+      }
+      innerCalculatedData.push(seriesData);
+    }
+    return innerCalculatedData;
+  }
+
   protected transpose(data: Array<Array<number>>): Array<Array<number>> {
     const dim2 = data[0].length;
     const result = new Array<Array<number>>(dim2);
@@ -558,6 +673,9 @@ export class SelectBase
     SelectBase._stateProperties.forEach(propertyName => {
       state[propertyName] = (<any>this)[propertyName];
     });
+    if(!!this.selectedItem) {
+      state.filter = this.selectedItem.value;
+    }
     return state;
   }
   public setState(state: any): void {
@@ -566,5 +684,7 @@ export class SelectBase
         (<any>this)[propertyName] = state[propertyName];
       }
     });
+    const selectedItem = ItemValue.getItemByValue((this.question as QuestionSelectBase).visibleChoices, state.filter);
+    this.setSelection(selectedItem ?? undefined);
   }
 }

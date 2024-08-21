@@ -1,4 +1,4 @@
-import { ITableOptions, Table, TableRow } from "./table";
+import { GetDataFn, ITableOptions, Table, TableRow } from "./table";
 import { SurveyModel } from "survey-core";
 import { ColumnDataType, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
@@ -9,10 +9,10 @@ import { ARIAL_FONT } from "./custom_jspdf_font";
 var styles = require("./tabulator.scss");
 
 if (!!document) {
-  const svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");
+  const svgTemplate = require("../svgbundle.html");
   const templateHolder = document.createElement("div");
   templateHolder.style.display = "none";
-  templateHolder.innerHTML = svgTemplate;
+  templateHolder.innerHTML = svgTemplate.default;
   document.head.appendChild(templateHolder);
 }
 interface ITabulatorOptions extends ITableOptions {
@@ -20,7 +20,7 @@ interface ITabulatorOptions extends ITableOptions {
   downloadHiddenColumns?: boolean;
   actionsColumnWidth?: number;
   columnMinWidth: number;
-  downloadButtons: Array<string>;
+  downloadButtons?: Array<string>;
   downloadOptions?: { [type: string]: any };
   /*
    *use  to change options dynamically
@@ -89,7 +89,7 @@ export class Tabulator extends Table {
 
   constructor(
     survey: SurveyModel,
-    data: Array<Object>,
+    data: Array<Object> | GetDataFn,
     options?: ITabulatorOptions,
     _columnsData: Array<IColumnData> = []
   ) {
@@ -128,7 +128,7 @@ export class Tabulator extends Table {
     targetNode.appendChild(header);
     targetNode.appendChild(this.tableContainer);
 
-    var config = {};
+    var config: any = {};
     Object.assign(
       config,
       {
@@ -155,6 +155,36 @@ export class Tabulator extends Table {
       },
       this._options.tabulatorOptions
     );
+    if(data === undefined && typeof this.data === "function") {
+      delete config.data;
+      config.pagination = "remote";
+      config.ajaxFiltering = true; // Tabulator v4.8
+      config.filterMode = "remote"; // Tabulator v6.2
+      config.ajaxSorting = true; // Tabulator v4.8
+      config.sortMode = "remote"; // Tabulator v6.2
+      config.ajaxURL = "function",
+      config.ajaxRequestFunc = (url, config, params) => {
+        return new Promise<{ data: Array<Object>, last_page: number }>((resolve, reject) => {
+          const dataLoadingCallback = (loadedData: { data: Array<Object>, totalCount: number, error?: any }) => {
+            if(!loadedData.error && Array.isArray(loadedData.data)) {
+              resolve({ data: loadedData.data.map(item => this.processLoadedDataItem(item)), last_page: Math.ceil(loadedData.totalCount / params.size) });
+            } else {
+              reject();
+            }
+          };
+          const dataLoadingPromise = (this.data as GetDataFn)({
+            offset: (params.page - 1) * params.size,
+            limit: params.size,
+            filter: this.tabulatorTables?.getFilters(),
+            sort: this.tabulatorTables?.getSorters().map(s => ({ field: s.field, dir: s.dir })),
+            callback: dataLoadingCallback
+          });
+          if(dataLoadingPromise) {
+            dataLoadingPromise.then(dataLoadingCallback);
+          }
+        });
+      };
+    }
 
     this.tabulatorTables = new TabulatorTables(this.tableContainer, config);
     this.tabulatorTables.on("columnResized", this.columnResizedCallback);
@@ -165,9 +195,9 @@ export class Tabulator extends Table {
       "sa-table__header-extensions"
     );
     header.appendChild(this.createDownloadsBar());
-    header.appendChild(extensionsContainer);
+    this.extensions.render(header, "header");
+    // header.appendChild(extensionsContainer);
     header.appendChild(paginationElement);
-    this.extensions.render(extensionsContainer, "header");
     this.renderResult = targetNode;
   }
 
@@ -236,18 +266,20 @@ export class Tabulator extends Table {
     tableRow.render();
     this._rows.push(tableRow);
   };
-  private accessorDownload = (cellData: any, _rowData: any, _reason: string, _: any, columnComponent: any, rowComponent: any) => {
-    const columnDefinition = columnComponent.getDefinition();
-    const questionName = columnDefinition.field;
-    const column = this.columns.filter(col => col.name === questionName)[0];
-    if (!!column && rowComponent) {
-      const originalData = rowComponent.getData().surveyOriginalData;
-      const dataCell = originalData[questionName];
-      if (column.dataType === ColumnDataType.Image) {
-        return questionName;
-      }
-      if (column.dataType === ColumnDataType.FileLink && Array.isArray(dataCell)) {
-        return (dataCell || []).map(f => f.name).join(", ");
+  private accessorDownload = (cellData: any, rowData: any, reason: string, _: any, columnComponent: any, rowComponent: any) => {
+    if(Array.isArray(this.data)) {
+      const columnDefinition = columnComponent.getDefinition();
+      const questionName = columnDefinition.field;
+      const column = this.columns.filter(col => col.name === questionName)[0];
+      if (!!column && rowComponent) {
+        const dataRow = this.data[rowComponent.getPosition()];
+        const dataCell = dataRow[questionName];
+        if (column.dataType === ColumnDataType.Image) {
+          return questionName;
+        }
+        if (column.dataType === ColumnDataType.FileLink && Array.isArray(dataCell)) {
+          return (dataCell || []).map(f => f.name).join(", ");
+        }
       }
     }
     if (this.currentDownloadType === "csv" || this.currentDownloadType === "xlsx") {
@@ -309,7 +341,7 @@ export class Tabulator extends Table {
         visible: this.isColumnVisible(column),
         headerSort: false,
         minWidth: this._options.columnMinWidth,
-        download: this._options.downloadHiddenColumns ? true : undefined,
+        download: this.options.downloadHiddenColumns ? true : undefined,
         formatter,
         accessorDownload: this.accessorDownload,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
@@ -436,9 +468,9 @@ export class Tabulator extends Table {
   public layout(hard: boolean = false): void {
     this.tabulatorTables.redraw(hard);
   }
-  protected initTableDataRow(item: any, index: number) {
-    const dataItem = super.initTableDataRow(item, index);
-    dataItem["surveyOriginalData"] = this.data[index];
+  protected processLoadedDataItem(item: any) {
+    const dataItem = super.processLoadedDataItem(item);
+    dataItem["surveyOriginalData"] = item;
     return dataItem;
   }
 }

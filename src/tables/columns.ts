@@ -51,14 +51,16 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
   }
 
   protected setupReadyChangedCallback(table: Table, question: Question) {
-    const onReadyChangedCallback = (sender, options) => {
-      if(options.isReady) {
-        table.refresh(true);
-        sender.onReadyChanged.remove(onReadyChangedCallback);
+    if(!!question) {
+      const onReadyChangedCallback = (sender, options) => {
+        if(options.isReady) {
+          table.refresh(!table.isInitTableDataProcessing);
+          sender.onReadyChanged.remove(onReadyChangedCallback);
+        }
+      };
+      if(!question.isReady) {
+        question.onReadyChanged.add(onReadyChangedCallback);
       }
-    };
-    if(!question.isReady) {
-      question.onReadyChanged.add(onReadyChangedCallback);
     }
   }
 

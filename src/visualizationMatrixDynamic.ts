@@ -11,7 +11,7 @@ export class VisualizationMatrixDynamic extends VisualizationPanelDynamic {
     super(question, data, options);
   }
 
-  public get name() {
+  public get type() {
     return "matrixDynamic";
   }
 

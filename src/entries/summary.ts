@@ -1,16 +1,20 @@
 export * from "../localizationManager";
 
 //localization
-import "../localization/farsi";
-import "../localization/french";
-import "../localization/norwegian";
-import "../localization/portuguese";
-import "../localization/russian";
-import "../localization/dutch";
-import "../localization/spanish";
-import "../localization/italian";
+import "../analytics-localization/farsi";
+import "../analytics-localization/french";
+import "../analytics-localization/german";
+import "../analytics-localization/norwegian";
+import "../analytics-localization/portuguese";
+import "../analytics-localization/russian";
+import "../analytics-localization/dutch";
+import "../analytics-localization/spanish";
+import "../analytics-localization/italian";
+import "../analytics-localization/arabic";
+import "../analytics-localization/japanese";
 
 export * from "../dataProvider";
+export * from "../visualizerFactory";
 
 export * from "../number";
 export * from "../selectBase";
@@ -30,5 +34,6 @@ export * from "../wordcloud/wordcloud";
 export * from "../wordcloud/stopwords/index";
 export * from "../text";
 export * from "../choices-table";
+export * from "../nps";
 
 export { DocumentHelper } from "../utils/index";

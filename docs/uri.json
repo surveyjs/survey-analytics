@@ -1,7 +1,10 @@
 {
   "folders": [
+    "set-up-table-view"
   ],
   "rename": {
+    "get-started-knockout-jquery": "get-started-html-css-javascript",
+    "set-up-table-view-knockout-jquery": "set-up-table-view-html-css-javascript"
   },
   "classRename": {
   }

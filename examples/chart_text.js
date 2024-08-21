@@ -1,11 +1,17 @@
 function CustomVisualizer(question, data) {
   var values = [];
 
-  var dataProvider = new SurveyAnalytics.DataProvider(data);
-
-  dataProvider.getDataCore = function (visualizer) {
+  var visualizer = new SurveyAnalytics.SelectBasePlotly(
+    question,
+    data,
+    { },
+    "textChartVisualizer"
+  );
+  visualizer.getValues = function () { return values; };
+  visualizer.getLabels = function () { return values; };
+  visualizer.getCalculatedValuesCore = function () {
     var result = {};
-    this.filteredData.forEach(function (row) {
+    visualizer.surveyData.forEach(function (row) {
       var rowValue = row[visualizer.question.name];
       if (rowValue !== undefined) {
         if(result[rowValue] === undefined) {
@@ -19,17 +25,6 @@ function CustomVisualizer(question, data) {
     values.push.apply(values, Object.keys(result));
     return [values.map(function(value) { return result[value]; })];
   };
-
-  var visualizer = new SurveyAnalytics.SelectBasePlotly(
-    question,
-    data,
-    {
-      dataProvider: dataProvider
-    },
-    "textChartVisualizer"
-  );
-  visualizer.getValues = function () { return values; };
-  visualizer.getLabels = function () { return values; };
 
   return visualizer;
 }
@@ -72,5 +67,5 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
   survey.getAllQuestions(),
   data
 );
-visPanel.showHeader = true;
+visPanel.showToolbar = true;
 visPanel.render(document.getElementById("summaryContainer"));

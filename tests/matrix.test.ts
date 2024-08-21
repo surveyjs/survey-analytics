@@ -56,8 +56,8 @@ test("getSeriesLabels method", () => {
   expect(matrix.getSeriesLabels()).toEqual(matrixJson.rows);
 });
 
-test("getData method", () => {
-  expect(matrix.getData()).toEqual([
+test("getCalculatedValues method", async () => {
+  expect(await matrix.getCalculatedValues()).toEqual([
     [1, 1],
     [2, 1],
     [0, 1],
@@ -68,7 +68,14 @@ test("getData method", () => {
 });
 
 test("check getPercentages method", () => {
-  expect(matrix.getPercentages()).toEqual([
+  expect(matrix.getPercentages([
+    [1, 1],
+    [2, 1],
+    [0, 1],
+    [0, 0],
+    [0, 0],
+    [0, 0],
+  ].reverse())).toEqual([
     [33, 33],
     [67, 33],
     [0, 33],
@@ -78,7 +85,7 @@ test("check getPercentages method", () => {
   ].reverse());
 });
 
-test("getPercentages percentagePrecision option", () => {
+test("getPercentages percentagePrecision option", async () => {
   const json = {
     "type": "matrix",
     "name": "m1",
@@ -129,8 +136,9 @@ test("getPercentages percentagePrecision option", () => {
   matrix.fromJSON(json);
 
   let matrixVizualizer = new Matrix(matrix, data, {});
+  let datasets = (await matrixVizualizer.getAnswersData()).datasets;
 
-  let percentages = matrixVizualizer.getPercentages();
+  let percentages = matrixVizualizer.getPercentages(datasets);
   let result = 0;
 
   for (let index = 0; index < percentages.length; index++) {
@@ -140,8 +148,9 @@ test("getPercentages percentagePrecision option", () => {
   expect(result).toEqual(101);
 
   matrixVizualizer = new Matrix(matrix, data, { percentagePrecision: 2 });
+  datasets = (await matrixVizualizer.getAnswersData()).datasets;
 
-  percentages = matrixVizualizer.getPercentages();
+  percentages = matrixVizualizer.getPercentages(datasets);
   result = 0;
 
   for (let index = 0; index < percentages.length; index++) {
@@ -151,7 +160,7 @@ test("getPercentages percentagePrecision option", () => {
   expect(result).toEqual(100.01);
 });
 
-test("hide empty answers", () => {
+test("hide empty answers", async () => {
   const question = new QuestionMatrixModel("q1");
   question.columns = ["Morning", "Afternoon"];
   question.rows = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -171,7 +180,7 @@ test("hide empty answers", () => {
   ];
   var matrix = new Matrix(question, data);
   matrix.hideEmptyAnswers = true;
-  expect(matrix.getAnswersData()).toEqual({
+  expect(await matrix.getAnswersData()).toEqual({
     colors: ["#86e1fb", "#3999fb"],
     datasets: [
       [2, 0],
@@ -198,7 +207,7 @@ test("hide empty answers", () => {
   ];
   var matrix = new Matrix(question, data);
   matrix.hideEmptyAnswers = true;
-  expect(matrix.getAnswersData()).toEqual({
+  expect(await matrix.getAnswersData()).toEqual({
     colors: ["#86e1fb"],
     datasets: [[1, 1]],
     labels: ["Afternoon"],
@@ -210,4 +219,32 @@ test("hide empty answers", () => {
 test("SupportMissingAnswers", () => {
   expect(matrix["isSupportMissingAnswers"]()).toBeFalsy();
   expect(matrix.showMissingAnswers).toBeFalsy();
+});
+
+test("convertFromExternalData", async () => {
+  const externalCalculatedData = {
+    "Lizol": {
+      "Excellent": 1,
+      "Very Good": 2,
+      "Good": 0,
+      "Fair": 0,
+      "Neither Fair Nor Poor": 0,
+      "Poor": 0,
+    },
+    "Harpic": {
+      "Excellent": 1,
+      "Very Good": 1,
+      "Good": 1,
+    }
+  };
+  const calculatedData = (matrix as any).getCalculatedValuesCore();
+  expect(calculatedData).toEqual([
+    [1, 1],
+    [2, 1],
+    [0, 1],
+    [0, 0],
+    [0, 0],
+    [0, 0],
+  ].reverse());
+  expect(matrix.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
 });

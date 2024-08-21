@@ -9,7 +9,7 @@ export class Matrix extends SelectBase {
     name?: string
   ) {
     super(question, data, options, name || "matrix");
-    this.getAnswersData();
+    // this.getAnswersData();
   }
 
   protected get matrixQuestion(): QuestionMatrixModel {
@@ -104,20 +104,17 @@ export class Matrix extends SelectBase {
     return result;
   }
 
-  getData(): any[] {
-    const statistics = super.getData();
+  protected getCalculatedValuesCore(): Array<any> {
+    const statistics = super.getCalculatedValuesCore();
     const series = this.getSeriesValues();
     const values = this.getValues();
-    if (series.length > 1) {
-      const preparedData: Array<Array<number>> = [];
-      values.forEach((val, valueIndex) => {
-        const seriesData = series.map(
-          (seriesName, seriesIndex) => statistics[seriesIndex][valueIndex]
-        );
-        preparedData.push(seriesData);
-      });
-      return preparedData;
-    }
-    return statistics;
+    const preparedData: Array<Array<number>> = [];
+    values.forEach((val, valueIndex) => {
+      const seriesData = series.map(
+        (seriesName, seriesIndex) => statistics[seriesIndex][valueIndex]
+      );
+      preparedData.push(seriesData);
+    });
+    return preparedData;
   }
 }

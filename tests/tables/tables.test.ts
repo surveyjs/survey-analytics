@@ -19,10 +19,10 @@ const json = {
 };
 
 class TableTest extends Table {
-  applyColumnFilter() {}
-  applyFilter() {}
-  render() {}
-  sortByColumn() {}
+  applyColumnFilter() { }
+  applyFilter() { }
+  render() { }
+  sortByColumn() { }
 }
 
 test("buildColumns method", () => {
@@ -274,6 +274,34 @@ test("check columns for question with comment", () => {
   expect(<any>table.columns[1].dataType).toEqual(ColumnDataType.Text);
 });
 
+test("do not create columns for html and image questions", () => {
+  const json = {
+    questions: [
+      {
+        type: "text",
+        name: "q1"
+      },
+      {
+        type: "html",
+        name: "q2"
+      },
+      {
+        type: "image",
+        name: "q3"
+      },
+      {
+        type: "text",
+        name: "q4"
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [], {}, []);
+  expect((<any>table).columns).toHaveLength(2);
+  expect((<any>table).columns[0].name).toEqual("q1");
+  expect((<any>table).columns[1].name).toEqual("q4");
+});
+
 test("check columns for question with other and storeOthersAsComment: true", () => {
   const json = {
     questions: [
@@ -470,11 +498,11 @@ test("check composite question with questions which is not ready", () => {
   expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_value1\",\"innerQuestion2\":\"test_value2\"}");
   question.contentPanel.elements[0]["isReadyValue"] = true;
   data[0]["compositeQuestion"]["innerQuestion"] = "test_text1";
-  question.contentPanel.elements[0].onReadyChanged.fire(question.contentPanel.elements[0], { isReady: true });
+  (question.contentPanel.elements[0] as any).onReadyChanged.fire(question.contentPanel.elements[0], { isReady: true });
   expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_text1\",\"innerQuestion2\":\"test_value2\"}");
   question.contentPanel.elements[1]["isReadyValue"] = true;
   data[0]["compositeQuestion"]["innerQuestion2"] = "test_text2";
-  question.contentPanel.elements[1].onReadyChanged.fire(question.contentPanel.elements[1], { isReady: true });
+  (question.contentPanel.elements[1] as any).onReadyChanged.fire(question.contentPanel.elements[1], { isReady: true });
   expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_text1\",\"innerQuestion2\":\"test_text2\"}");
 });
 
@@ -846,5 +874,40 @@ test("check matrix dropdown columns name with dots", () => {
   expect(expect(tableData["question.name.row 1.col 2"]).toEqual(""));
   expect(expect(tableData["question.name.row 2.col 1"]).toEqual(""));
   expect(expect(tableData["question.name.row 2.col 2"]).toEqual(""));
+});
+
+test("check set state with columns which not inside survey", () => {
+  const survey = new SurveyModel({
+    elements: [
+      {
+        name: "q1",
+        type: "text"
+      }
+    ]
+  });
+  let data = {
+    q1: "text1",
+    q2: "text2"
+  };
+  let table = new TableTest(survey, [data], {}, []);
+  table.state = {
+    elements: [
+      {
+        dataType: 0,
+        displayName: "q2",
+        isPublic: true,
+        isVisible: true,
+        location: 0,
+        name: "q2"
+      }
+    ]
+  };
+  table.refresh(true);
+  expect(table.columns[0].name).toBe("q1");
+  expect(table.columns[1].name).toBe("q2");
+  expect(table.columns[0].getCellData(table, data).displayValue).toEqual("text1");
+  expect(table.columns[0].getCellData(table, data).question).toBe(survey.getAllQuestions()[0]);
+  expect(table.columns[1].getCellData(table, data).displayValue).toEqual("text2");
+  expect(table.columns[1].getCellData(table, data).question).toBe(undefined);
 });
 

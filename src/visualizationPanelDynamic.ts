@@ -12,6 +12,7 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     name?: string
   ) {
     super(question, data, options, name || "panelDynamic");
+    this.loadingData = false;
     var options = Object.assign({}, options);
     options.allowDynamicLayout = false;
     options.dataProvider = undefined;
@@ -24,11 +25,16 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     this.updateData(data);
   }
 
+  protected setLocale(newLocale: string) {
+    super.setLocale(newLocale);
+    this._panelVisualizer.locale = newLocale;
+  }
+
   private onAfterRenderPanelCallback = () => {
     this.afterRender(this.contentContainer);
   };
 
-  public get name() {
+  public get type() {
     return "panelDynamic";
   }
 

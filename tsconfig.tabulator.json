@@ -17,7 +17,7 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "skipLibCheck": true,
-    "outFile": "packages/survey.analytics.tabulator.d.ts"
+    "outDir": "packages/survey-analytics-tabulator.types/"
   },
   "include": [
     "src/entries/tabulator.ts"

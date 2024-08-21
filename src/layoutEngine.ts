@@ -1,36 +1,50 @@
 const Muuri = require("muuri");
 
+/**
+ * A base class used to implement custom layout engines or integrate third-party layout engines with SurveyJS Dashboard.
+ */
 export class LayoutEngine {
-  constructor(protected _allowed: boolean) {}
+  constructor(protected _allowed: boolean) { }
 
-  protected startCore(container: HTMLElement) {}
-  protected stopCore() {}
-  protected updateCore() {}
+  protected startCore(container: HTMLElement) { }
+  protected stopCore() { }
+  protected updateCore() { }
 
   get allowed() {
     return this._allowed;
   }
 
+  /**
+   * Enables the dynamic layout in a given HTML element.
+   *
+   * This method should arrange visualization items based on the available screen space and allow users to reorder them via drag and drop.
+   */
   start(container: HTMLElement) {
     if (this._allowed) {
       this.startCore(container);
     }
   }
+  /**
+   * Disables the dynamic layout.
+   */
   stop() {
     if (this._allowed) {
       this.stopCore();
     }
   }
+  /**
+   * Updates the dynamic layout.
+   */
   update() {
     if (this._allowed) {
       this.updateCore();
     }
   }
 
-  add(elements: Array<HTMLElement>, options?: any) {}
-  remove(elements: Array<HTMLElement>, options?: any) {}
+  add(elements: Array<HTMLElement>, options?: any) { }
+  remove(elements: Array<HTMLElement>, options?: any) { }
 
-  onMoveCallback: (fromIndex: number, toIndex: number) => void;
+  onMoveCallback: (order: Array<string>) => void;
 
   destroy() {
     this.stop();
@@ -41,7 +55,7 @@ export class MuuriLayoutEngine extends LayoutEngine {
   private _muuri: any = undefined;
   private _layoutingTimer: any = undefined;
 
-  constructor(allowed: boolean, private _selector: string) {
+  constructor(allowed: boolean, private _selector: string, private dragEnabled = true) {
     super(allowed);
   }
 
@@ -51,12 +65,14 @@ export class MuuriLayoutEngine extends LayoutEngine {
         handle: ".sa-question__title--draggable",
       },
       items: this._selector,
-      dragEnabled: true,
+      dragEnabled: this.dragEnabled,
     });
     this._muuri.on(
       "dragReleaseEnd",
-      (data: any) =>
-        this.onMoveCallback && this.onMoveCallback(data.fromIndex, data.toIndex)
+      (item: any) => {
+        const newOrder = item.getGrid().getItems().map(gridItem => gridItem.getElement().dataset.question);
+        this.onMoveCallback && this.onMoveCallback(newOrder);
+      }
     );
   }
   protected stopCore() {

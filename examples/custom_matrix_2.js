@@ -10,23 +10,32 @@ function CustomVisualizer(question, data) {
     table.appendChild(header);
   }
 
-  function renderRows(table, visualizer) {
-    var data = visualizer.getData();
+  function renderRows(table, visualizer, data) {
+    var values = visualizer.getValues();
+    var series = visualizer.getSeriesValues();
+    if(series.length > 1) {
+      var preparedData = [];
+      series.forEach((val, valueIndex) => {
+        const seriesData = values.map(
+          (seriesName, seriesIndex) => data[seriesIndex][valueIndex]
+        );
+        preparedData.push(seriesData);
+      });
+      data = preparedData;
+    }
     visualizer.getSeriesLabels().forEach(function (label, rowIndex) {
       var tr = document.createElement("tr");
       var rowLabel = document.createElement("td");
       rowLabel.innerHTML = label;
       tr.appendChild(rowLabel);
-      var sum = 0;
-      data.forEach(function (colRow) {
-        sum += colRow[rowIndex];
-      });
-      visualizer.valuesSource().forEach(function (_, columnIndex) {
+      var sum = data[rowIndex].reduce((a, b) => a + b, 0);
+      visualizer.valuesSource().forEach(function (valueItem) {
         var cell = document.createElement("td");
+        var valueIndex = values.indexOf(valueItem.value);
         cell.innerHTML =
-          data[columnIndex][rowIndex] +
+          data[rowIndex][valueIndex] +
           "(" +
-          Math.round((data[columnIndex][rowIndex] / sum) * 100) +
+          Math.round((data[rowIndex][valueIndex] / sum) * 100) +
           "%)";
         tr.appendChild(cell);
       });
@@ -38,7 +47,7 @@ function CustomVisualizer(question, data) {
     var table = document.createElement("table");
     table.className = "sa__matrix-table";
     renderHeader(table, visualizer);
-    renderRows(table, visualizer);
+    visualizer.getCalculatedValues().then(data => renderRows(table, visualizer, data));
     contentContainer.appendChild(table);
   };
 

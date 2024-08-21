@@ -1,5 +1,6 @@
 import { Event } from "survey-core";
-import { SelectBase } from "../selectBase";
+import { IAnswersData, SelectBase } from "../selectBase";
+import { VisualizerBase } from "../visualizerBase";
 
 export interface PlotlyOptions {
   traces: Array<any>;
@@ -14,6 +15,7 @@ export class PlotlySetup {
    */
   public static onImageSaving = new Event<
     (sender: SelectBase, options: any) => any,
+    SelectBase,
     any
   >();
 
@@ -22,11 +24,12 @@ export class PlotlySetup {
    * Options is an object with the following fields: traces, layout and config of the plot.
    */
   public static onPlotCreating = new Event<
-    (sender: SelectBase, options: any) => any,
+    (sender: VisualizerBase, options: any) => any,
+    VisualizerBase,
     any
   >();
 
-  static setups: { [type: string]: (model: SelectBase) => PlotlyOptions } = {
+  static setups: { [type: string]: (model: SelectBase, answersData: IAnswersData) => PlotlyOptions } = {
     bar: PlotlySetup.setupBar,
     vbar: PlotlySetup.setupVBar,
     stackedbar: PlotlySetup.setupBar,
@@ -35,8 +38,8 @@ export class PlotlySetup {
     scatter: PlotlySetup.setupScatter,
   };
 
-  static setup(charType: string, model: SelectBase): PlotlyOptions {
-    return this.setups[charType](model);
+  static setup(charType: string, model: SelectBase, answersData: IAnswersData): PlotlyOptions {
+    return this.setups[charType](model, answersData);
   }
 
   static getTruncatedLabel = (label: string, labelTruncateLength: number) => {
@@ -51,17 +54,17 @@ export class PlotlySetup {
     return label.substring(0, labelTruncateLength) + truncateSymbols;
   };
 
-  static setupPie(model: SelectBase): PlotlyOptions {
+  static setupPie(model: SelectBase, answersData: IAnswersData): PlotlyOptions {
     let {
       datasets,
       labels,
       colors,
       texts,
       seriesLabels,
-    } = model.getAnswersData();
+    } = answersData;
 
-    const traces: any = [];
-    const hasSeries = seriesLabels.length > 1;
+    let traces: any = [];
+    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
     const traceConfig: any = {
       type: model.chartType,
@@ -124,23 +127,27 @@ export class PlotlySetup {
     };
 
     if (hasSeries) {
-      layout.grid = {
-        rows: Math.round(traces.length / 2),
-        columns: 2,
-      };
       layout.annotations = [];
       labels.forEach((label, index) => {
+        traces[index].title = { position: "bottom center", text: label };
+      });
+      traces = traces.filter(t => !(t.values.length === 1 && t.values[0] === 0));
+      traces.forEach((label, index) => {
         traces[index].domain = {
           column: index % 2,
           row: Math.floor(index / 2),
         };
-        traces[index].title = { position: "bottom center", text: label };
       });
+      layout.grid = {
+        rows: Math.round(traces.length / 2),
+        columns: 2,
+      };
+      layout.height = radius * Math.round(traces.length / 2) + 25;
     }
     return { traces, layout, hasSeries };
   }
 
-  static setupBar(model: SelectBase): PlotlyOptions {
+  static setupBar(model: SelectBase, answersData: IAnswersData): PlotlyOptions {
     let lineHeight = 30;
     let topMargin = 30;
     let bottomMargin = 30;
@@ -150,10 +157,10 @@ export class PlotlySetup {
       colors,
       texts,
       seriesLabels,
-    } = model.getAnswersData();
+    } = answersData;
 
     const traces: any = [];
-    const hasSeries = seriesLabels.length > 1;
+    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
     const yFullTexts = hasSeries ? seriesLabels : labels;
 
     const traceConfig: any = {
@@ -264,7 +271,7 @@ export class PlotlySetup {
     return { traces, layout, hasSeries };
   }
 
-  static setupVBar(model: SelectBase): PlotlyOptions {
+  static setupVBar(model: SelectBase, answersData: IAnswersData): PlotlyOptions {
     let topMargin = 30;
     let bottomMargin = 30;
     let {
@@ -273,10 +280,10 @@ export class PlotlySetup {
       colors,
       texts,
       seriesLabels,
-    } = model.getAnswersData();
+    } = answersData;
 
     const traces: any = [];
-    const hasSeries = seriesLabels.length > 1;
+    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
     const layout: any = {
       font: {
@@ -334,11 +341,16 @@ export class PlotlySetup {
         tickcolor: "transparent",
       };
     }
+    if(!(model as any).getValueType || (model as any).getValueType() != "date") {
+      layout.xaxis = {
+        type: "category",
+      };
+    }
 
     return { traces, layout, hasSeries };
   }
 
-  static setupScatter(model: SelectBase): PlotlyOptions {
+  static setupScatter(model: SelectBase, answersData: IAnswersData): PlotlyOptions {
     let lineHeight = 30;
     let topMargin = 30;
     let bottomMargin = 30;
@@ -348,8 +360,8 @@ export class PlotlySetup {
       colors,
       texts,
       seriesLabels,
-    } = model.getAnswersData();
-    const hasSeries = seriesLabels.length > 1;
+    } = answersData;
+    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
     const traces: any = [];
 
     const traceConfig: any = {

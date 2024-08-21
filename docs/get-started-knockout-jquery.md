@@ -1,3 +1,8 @@
+---
+title: Add SurveyJS Dashboard to Your Application | Step-by-Step Tutorial for Knockout and jQuery
+description: Learn how to add SurveyJS Dashboard to your Knockout and jQuery application with this comprehensive step-by-step tutorial. Enhance your self-hosted surveying tool with powerful survey analytics capabilities.
+---
+
 # Add SurveyJS Dashboard to a Knockout or jQuery Application
 
 This step-by-step tutorial will help you get started with SurveyJS Dashboard in a Knockout or jQuery application. To add SurveyJS Dashboard to your application, follow the steps below:
@@ -9,12 +14,9 @@ This step-by-step tutorial will help you get started with SurveyJS Dashboard in 
 
 As a result, you will create the following dashboard:
 
-<p class="codepen" data-height="532.7999572753906" data-default-tab="js,result" data-slug-hash="vYdmvgz" data-user="romantsukanov" style="height: 532.7999572753906px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
-  <span>See the Pen <a href="https://codepen.io/romantsukanov/pen/vYdmvgz">
-  SurveyJS - Add SurveyJS Dashboard to a Knockout or jQuery Application</a> by RomanTsukanov (<a href="https://codepen.io/romantsukanov">@romantsukanov</a>)
-  on <a href="https://codepen.io">CodePen</a>.</span>
-</p>
-<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+<iframe src="/proxy/github/code-examples/get-started-analytics/knockout/index.html"
+    style="width:100%; border:0; border-radius: 4px; overflow:hidden;"
+></iframe>
 
 SurveyJS Dashboard is powered by Knockout and does not have an individual implementation for jQuery. However, you can integrate the version for Knockout into your jQuery application by following the same instructions.
 
@@ -27,7 +29,7 @@ SurveyJS Dashboard depends on other JavaScript libraries. Reference them on your
 1. Knockout
 
 1. Survey Core       
-A platform-independent part of the SurveyJS Library that works with the survey model. SurveyJS Dashboard requires only this part, but if you also display the survey on the page, reference [the rest of the SurveyJS Library resources](/Documentation/Library?id=get-started-knockout#link-surveyjs-resources) as well.
+A platform-independent part of the SurveyJS Form Library that works with the survey model. SurveyJS Dashboard requires only this part, but if you also display the survey on the page, reference [the rest of the SurveyJS Form Library resources](/Documentation/Library?id=get-started-knockout#link-surveyjs-resources) as well.
 
 1. <a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a> and <a href="https://github.com/timdream/wordcloud2.js#readme" target="_blank">Wordcloud</a>       
 Wordcloud (optional) is used to visualize the Text, Multiple Text, and Comment question types. Plotly.js (required) is used to visualize the rest of the question types.
@@ -42,14 +44,14 @@ The following code shows how to reference these libraries:
     <!-- ... -->
     <script type="text/javascript" src="https://unpkg.com/knockout/build/output/knockout-latest.js"></script>
 
-    <!-- SurveyJS Library resources -->
+    <!-- SurveyJS Form Library resources -->
     <script type="text/javascript" src="https://unpkg.com/survey-core/survey.core.min.js"></script>
     <!-- Uncomment the following lines if you also display the survey on the page -->
     <!-- <link href="https://unpkg.com/survey-core/defaultV2.min.css" type="text/css" rel="stylesheet"> -->
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-knockout-ui/survey-knockout-ui.min.js"></script> -->
 
     <!-- Third-party visualization libraries -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://unpkg.com/plotly.js-dist-min/plotly.min.js"></script>
     <!-- Uncomment the following line if you use the Text, Multiple Text, or Comment question types in your surveys -->
     <!-- <script src="https://unpkg.com/wordcloud/src/wordcloud2.js"></script> -->
 
@@ -180,7 +182,7 @@ const vizPanel = new SurveyAnalytics.VisualizationPanel(
     <!-- <link href="https://unpkg.com/survey-core/defaultV2.min.css" type="text/css" rel="stylesheet"> -->
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-knockout-ui/survey-knockout-ui.min.js"></script> -->
 
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://unpkg.com/plotly.js-dist-min/plotly.min.js"></script>
     <!-- Uncomment the following line if you use the Text, Multiple Text, or Comment question types in your surveys -->
     <!-- <script src="https://unpkg.com/wordcloud/src/wordcloud2.js"></script> -->
 
@@ -196,9 +198,6 @@ const vizPanel = new SurveyAnalytics.VisualizationPanel(
 ```
 
 ```js
-// Uncomment the following line if you also display the survey on the page
-// Survey.StylesManager.applyTheme("defaultV2");
-
 const surveyJson = {
     elements: [{
         name: "satisfaction-score",
@@ -256,7 +255,7 @@ const vizPanel = new SurveyAnalytics.VisualizationPanel(
 
 ## Render the Visualization Panel
 
-Switch to the component template. Add a page element that will serve as the Visualization Panel container:
+A Visualization Panel should be rendered in a page element. Add this element to the page markup:
 
 ```html
 <body>
@@ -288,7 +287,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <!-- <link href="https://unpkg.com/survey-core/defaultV2.min.css" type="text/css" rel="stylesheet"> -->
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-knockout-ui/survey-knockout-ui.min.js"></script> -->
 
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://unpkg.com/plotly.js-dist-min/plotly.min.js"></script>
     <!-- Uncomment the following line if you use the Text, Multiple Text, or Comment question types in your surveys -->
     <!-- <script src="https://unpkg.com/wordcloud/src/wordcloud2.js"></script> -->
 
@@ -304,9 +303,6 @@ document.addEventListener("DOMContentLoaded", function() {
 ```
 
 ```js
-// Uncomment the following line if you also display the survey on the page
-// Survey.StylesManager.applyTheme("defaultV2");
-
 const surveyJson = {
     elements: [{
         name: "satisfaction-score",
@@ -369,6 +365,6 @@ document.addEventListener("DOMContentLoaded", function() {
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/knockout (linkStyle))
 
 
-## Further Reading
+## See Also
 
-- [Analytics Demo Examples](/Examples/Analytics)
+[Dashboard Demo Examples](/dashboard/examples/ (linkStyle))

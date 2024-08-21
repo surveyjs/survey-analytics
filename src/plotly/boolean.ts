@@ -48,7 +48,7 @@ export class BooleanPlotly extends BooleanModel {
   ) {
     super(question, data, options, name);
     this.chartTypes = BooleanPlotly.types;
-    this.chartType = this.chartTypes[0];
+    this._chartType = this.chartTypes[0];
     this._chartAdapter = new PlotlyBoolChartAdapter(this);
   }
 
@@ -57,14 +57,12 @@ export class BooleanPlotly extends BooleanModel {
     super.destroyContent(container);
   }
 
-  protected renderContent(container: HTMLElement) {
-    const chartNode: HTMLElement = <HTMLElement>(
-      DocumentHelper.createElement("div")
-    );
+  protected async renderContentAsync(container: HTMLElement) {
+    const chartNode: HTMLElement = DocumentHelper.createElement("div");
+    await this._chartAdapter.create(chartNode);
+    container.innerHTML = "";
     container.appendChild(chartNode);
-    this._chartAdapter.create(chartNode).then(() => {
-      this.afterRender(this.contentContainer);
-    });
+    return container;
   }
 }
 

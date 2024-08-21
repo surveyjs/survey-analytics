@@ -9,15 +9,15 @@ import Plotly from "plotly.js-dist-min";
 export class PlotlyGaugeAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
 
-  constructor(private model: GaugePlotly) {}
+  constructor(private model: GaugePlotly) { }
 
   public get chart() {
     return this._chart;
   }
 
-  public create(chartNode: HTMLElement) {
+  public async create(chartNode: HTMLElement): Promise<any> {
     const question = this.model.question;
-    let [level, minValue, maxValue] = this.model.getData();
+    let [level, minValue, maxValue] = await this.model.getCalculatedValues() as any;
 
     if (question.getType() === "rating") {
       const rateValues = (<QuestionRatingModel>question).visibleRateValues;
@@ -53,22 +53,48 @@ export class PlotlyGaugeAdapter {
       },
     ];
 
-    var layout:any = {
+    const chartMargin = this.model.chartType === "bullet" ? 60 : 30;
+    var layout: any = {
+      height: 250,
+      margin: {
+        l: chartMargin,
+        r: chartMargin,
+        b: chartMargin,
+        t: chartMargin,
+        pad: 5
+      },
       plot_bgcolor: this.model.backgroundColor,
       paper_bgcolor: this.model.backgroundColor,
     };
 
-    if (this.model.chartType === "bullet") {
-      layout.height = 250;
-      layout.width = 600;
-    }
-
     const config = {
-      displayModeBar: false,
-      staticPlot: true,
+      displayModeBar: true,
       locale: localization.currentLocale,
-      responsive: true
+      responsive: true,
+      displaylogo: false,
+      modeBarButtonsToRemove: ["toImage"],
+      modeBarButtonsToAdd: [
+        {
+          name: "toImageSjs",
+          title: localization.getString("saveDiagramAsPNG"),
+          icon: (<any>Plotly).Icons.camera,
+          click: (gd: any) => {
+            let options = {
+              format: PlotlySetup.imageExportFormat,
+              // width: 800,
+              // height: 600,
+              filename: this.model.question.name,
+            };
+            PlotlySetup.onImageSaving.fire(this.model as any, options);
+            (<any>Plotly).downloadImage(gd, options);
+          },
+        },
+      ],
+
     };
+    if (GaugePlotly.displayModeBar !== undefined) {
+      config.displayModeBar = GaugePlotly.displayModeBar;
+    }
 
     let options = {
       data: data,
@@ -94,6 +120,7 @@ export class PlotlyGaugeAdapter {
 export class GaugePlotly extends NumberModel {
   private _chartAdapter: PlotlyGaugeAdapter;
 
+  public static displayModeBar: any = undefined;
   public static types = ["gauge", "bullet"];
 
   constructor(
@@ -113,12 +140,12 @@ export class GaugePlotly extends NumberModel {
     super.destroyContent(container);
   }
 
-  protected renderContent(container: HTMLElement) {
+  protected async renderContentAsync(container: HTMLElement) {
     const chartNode: HTMLElement = DocumentHelper.createElement("div");
+    await this._chartAdapter.create(chartNode);
+    container.innerHTML = "";
     container.appendChild(chartNode);
-    this._chartAdapter.create(chartNode).then(() => {
-      this.afterRender(this.contentContainer);
-    });
+    return container;
   }
 }
 

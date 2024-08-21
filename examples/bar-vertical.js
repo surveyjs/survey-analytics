@@ -32,5 +32,5 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
   data,
   options
 );
-visPanel.showHeader = true;
+visPanel.showToolbar = true;
 visPanel.render(document.getElementById("summaryContainer"));

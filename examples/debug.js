@@ -16,5 +16,5 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
     allowTopNAnswers: true,
   }
 );
-visPanel.showHeader = true;
+visPanel.showToolbar = true;
 visPanel.render(document.getElementById("summaryContainer"));

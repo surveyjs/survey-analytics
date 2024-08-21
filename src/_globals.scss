@@ -1,26 +1,30 @@
-$main-color: #1ab394;
-$auxiliary-color: #ff9814;
-$auxiliary-color-1: #666666;
-$auxiliary-color-2: #1948b3;
-$danger-color: #d9534f;
-$disabled-color: #b0b0b0;
+$main-color: var(--main-color, #1ab394);
+$auxiliary-color: var(--auxiliary-color, #ff9814);
+$auxiliary-color-1: var(--auxiliary-color-1, #666666);
+$auxiliary-color-2: var(--auxiliary-color-2, #1948b3);
+$danger-color: var(--danger-color, #d9534f);
+$disabled-color: var(--disabled-color, #b0b0b0);
 
-$blue-color: #394cff;
-$purple-color: #aa42d0;
-$green-color: #41c02c;
+$blue-color: var(--blue-color, #394cff);
+$purple-color: var(--purple-color, #aa42d0);
+$green-color: var(--green-color, #41c02c);
 
-$text-color-inverse: #fff;
-$text-color: #404040;
+$text-color-inverse: var(--text-color-inverse, #fff);
+$text-color: var(--text-color, #404040);
 
 $content-max-width: 1170px;
 
-$background-color: #f7f7f7;
-$background-color-dark: #eeeeee;
-$background-disabled-color: #b7b7b7;
+$background-color: var(--background-color, #f7f7f7);
+$background-color-dark: var(--background-color-dark, #eeeeee);
+$background-disabled-color: var(--background-disabled-color, #b7b7b7);
 
-$border-color: #e7e7e7;
+$border-color: var(--border-color, #e7e7e7);
 
 $form-element-height: 34px;
 
-$svg-color: rgba(#9f9f9f, 0.4);
-$svg-hover-color: #9f9f9f;
+$svg-color: var(--svg-color, rgba(#9f9f9f, 0.4));
+$svg-hover-color: var(--svg-hover-color, #9f9f9f);
+
+$font-family: var(--font-family, "Segoe UI", SegoeUI, Arial, sans-serif);
+$font-family-secondary: var(--font-family-secondary, Raleway, Arial, sans-serif);
+$root-font-size: var(--root-font-size, 14px);

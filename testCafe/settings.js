@@ -17,7 +17,7 @@ export const initSummary = ClientFunction(
       elements
     ));
     visPanel.state = state;
-    visPanel.showHeader = true;
+    visPanel.showToolbar = true;
     visPanel.render(document.getElementById("summaryContainer"));
   }
 );

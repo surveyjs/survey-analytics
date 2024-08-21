@@ -112,6 +112,7 @@ TableExtensions.registerExtension({
       "div",
       "sa-table__entries"
     );
+    const spaceSpan = DocumentHelper.createElement("span", "sa-table__header-space");
     const showSpan = DocumentHelper.createElement(
       "span",
       "sa-table__entries-label sa-table__entries-label--right",
@@ -127,6 +128,7 @@ TableExtensions.registerExtension({
       }
     );
 
+    selectorContainer.appendChild(spaceSpan);
     selectorContainer.appendChild(showSpan);
     selectorContainer.appendChild(getEntriesDropdown(table));
     selectorContainer.appendChild(entriesSpan);
@@ -161,7 +163,7 @@ TableExtensions.registerExtension({
   visibleIndex: 1,
   render: function (table) {
     var locales = table.getLocales();
-    if (locales.length < 2) return null;
+    if (table.options.disableLocaleSwitch || locales.length < 2) return null;
     const el = <HTMLSelectElement>(
       DocumentHelper.createElement("select", "sa-table__header-extension", {})
     );
@@ -171,7 +173,7 @@ TableExtensions.registerExtension({
     optionsValues.forEach(function (val) {
       var option = DocumentHelper.createElement("option", "", {
         value: val,
-        text: val,
+        text: localization.localeNames[val] || localization.getString(val) || val,
       });
       el.appendChild(option);
     });
@@ -181,3 +183,5 @@ TableExtensions.registerExtension({
     return el;
   },
 });
+
+export var HeaderExtensions;

@@ -6,10 +6,10 @@ import { DocumentHelper } from "../utils";
 var styles = require("./datatables.scss");
 
 if (!!document) {
-  var svgTemplate = require("html-loader?interpolate!val-loader!../svgbundle.html");
+  var svgTemplate = require("../svgbundle.html");
   var templateHolder = document.createElement("div");
   templateHolder.style.display = "none";
-  templateHolder.innerHTML = svgTemplate;
+  templateHolder.innerHTML = svgTemplate.default;
   document.head.appendChild(templateHolder);
 }
 
@@ -40,8 +40,9 @@ export class DataTables extends Table {
    */
   public onColumnsReorder: Event<
     (sender: DataTables, options: any) => any,
+    DataTables,
     any
-  > = new Event<(sender: DataTables, options: any) => any, any>();
+  > = new Event<(sender: DataTables, options: any) => any, DataTables, any>();
 
   public static initJQuery($: any) {
     jQuery = $;

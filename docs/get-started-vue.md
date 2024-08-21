@@ -1,3 +1,8 @@
+---
+title: Add SurveyJS Dashboard to Your Application | Step-by-Step Tutorial for Vue.js
+description: Learn how to add SurveyJS Dashboard to your Vue.js application with this comprehensive step-by-step tutorial. Enhance your self-hosted surveying tool with powerful survey analytics capabilities.
+---
+
 # Add SurveyJS Dashboard to a Vue Application
 
 This step-by-step tutorial will help you get started with SurveyJS Dashboard in a Vue application. To add SurveyJS Dashboard to your application, follow the steps below:
@@ -10,14 +15,16 @@ This step-by-step tutorial will help you get started with SurveyJS Dashboard in 
 
 As a result, you will create the following dashboard:
 
-<iframe src="https://codesandbox.io/embed/trusting-varahamihira-rx7o0k?fontsize=14&hidenavigation=1&module=%2Fsrc%2Fcomponents%2FSurveyAnalytics.vue&theme=dark"
-    style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-    title="trusting-varahamihira-rx7o0k"
-    allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+<iframe src="/proxy/github/code-examples/get-started-analytics/html-css-js/index.html"
+    style="width:100%; border:0; border-radius: 4px; overflow:hidden;"
 ></iframe>
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/vue (linkStyle))
+
+If you are looking for a quick-start application that includes all SurveyJS components, refer to the following GitHub repositories:
+
+- <a href="https://github.com/surveyjs/surveyjs_vue3_quickstart" target="_blank">SurveyJS + Vue 3 Quickstart Template</a>
+- <a href="https://github.com/surveyjs/surveyjs_vue_quickstart" target="_blank">SurveyJS + Vue 2 Quickstart Template</a>
 
 ## Install the `survey-analytics` npm Package
 
@@ -327,7 +334,6 @@ export default {
       surveyResults,
       vizPanelOptions
     );
-    vizPanel.showHeader = false;
     vizPanel.render("surveyVizPanel");
   }
 }
@@ -337,6 +343,6 @@ export default {
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/vue (linkStyle))
 
-## Further Reading
+## See Also
 
-- [Analytics Demo Examples](/Examples/Analytics)
+[Dashboard Demo Examples](/dashboard/examples/ (linkStyle))
