@@ -272,7 +272,7 @@ export class Tabulator extends Table {
       const questionName = columnDefinition.field;
       const column = this.columns.filter(col => col.name === questionName)[0];
       if (!!column && rowComponent) {
-        const dataRow = this.data[rowComponent.getPosition()];
+        const dataRow = rowComponent.getData().surveyOriginalData;
         const dataCell = dataRow[questionName];
         if (column.dataType === ColumnDataType.Image) {
           return questionName;
@@ -343,6 +343,7 @@ export class Tabulator extends Table {
         minWidth: this._options.columnMinWidth,
         download: this.options.downloadHiddenColumns ? true : undefined,
         formatter,
+        headerTooltip:true,
         accessorDownload: this.accessorDownload,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(
@@ -495,7 +496,11 @@ export class TabulatorRow extends TableRow {
   }
 
   public getDataPosition(): number {
-    return this.table.getData().indexOf(this.innerRow.getData().surveyOriginalData);
+    const data = this.table.getData();
+    if(Array.isArray(data)) {
+      return data.indexOf(this.innerRow.getData().surveyOriginalData);
+    }
+    return null;
   }
 
   public remove(): void {

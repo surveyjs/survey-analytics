@@ -70,7 +70,7 @@ test('Check show/hide actions', async t => {
   await t
     .expect(Selector('#tabulatorContainer div').withText('Question 1').visible).eql(true)
     .expect(getColumnsVisibilityArray()).eql([true, true, true])
-    .click('#tabulatorContainer .tabulator-col[title="Question 1"] button[title="Hide column"]')
+    .click('#tabulatorContainer .tabulator-col[tabulator-field="bool"] button[title="Hide column"]')
     .expect(Selector('#tabulatorContainer div').withText('Question 1').nth(3).visible).eql(false)
     .expect(getColumnsVisibilityArray()).eql([false, true, true])
     .click('#tabulatorContainer .sa-table__show-column.sa-table__header-extension')
@@ -85,18 +85,18 @@ test('Check move to details', async t => {
   });
 
   await t
-    .expect(Selector('#tabulatorContainer .tabulator-col[title="Question 1"] ').visible).eql(true)
+    .expect(Selector('#tabulatorContainer .tabulator-col[tabulator-field="bool"] ').visible).eql(true)
     .expect(getColumnsLocationsArray()).eql([0, 0, 0])
     .click('#tabulatorContainer .tabulator-row:nth-child(1) button[title="Show minor columns"]')
     .expect(Selector('#tabulatorContainer td').withText('Question 1').exists).eql(false)
-    .click('#tabulatorContainer .tabulator-col[title="Question 1"] button[title="Move to Detail"]')
-    .expect(Selector('#tabulatorContainer .tabulator-col[title="Question 1"] ').visible).eql(false)
+    .click('#tabulatorContainer .tabulator-col[tabulator-field="bool"] button[title="Move to Detail"]')
+    .expect(Selector('#tabulatorContainer .tabulator-col[tabulator-field="bool"] ').visible).eql(false)
     .click('#tabulatorContainer .tabulator-row:nth-child(1) button[title="Show minor columns"]')
     .expect(Selector('#tabulatorContainer td').withText('Question 1').visible).eql(true)
     .expect(Selector('#tabulatorContainer td').withText('Yes').visible).eql(true)
     .expect(getColumnsLocationsArray()).eql([1, 0, 0])
     .click(Selector('#tabulatorContainer button').withText('Show as Column'))
-    .expect(Selector('#tabulatorContainer .tabulator-col[title="Question 1"] ').visible).eql(true)
+    .expect(Selector('#tabulatorContainer .tabulator-col[tabulator-field="bool"] ').visible).eql(true)
     .expect(getColumnsLocationsArray()).eql([0, 0, 0])
     .click('#tabulatorContainer .tabulator-row:nth-child(1) button[title="Show minor columns"]')
     .expect(Selector('#tabulatorContainer td').withText('Question 1').exists).eql(false);
@@ -117,7 +117,7 @@ test('Check columns drag and drop', async t => {
   });
 
   await t
-    .drag('#tabulatorContainer div.tabulator-col[title="Question 1"] button.sa-table__drag-button', 1200, 120, {
+    .drag('#tabulatorContainer div.tabulator-col[tabulator-field="bool"] button.sa-table__drag-button', 1200, 120, {
       offsetX: 5,
       offsetY: 10,
       speed: 0.01
@@ -132,9 +132,9 @@ test('Check public/private actions', async t => {
   });
 
   await t
-    .click('#tabulatorContainer .tabulator-col[title="Question 2"] button.sa-table__svg-button[title="Make column private"]')
+    .click('#tabulatorContainer .tabulator-col[tabulator-field="bool2"] button.sa-table__svg-button[title="Make column private"]')
     .expect(getPublicitArrayInState()).eql([true, false, true])
-    .click('#tabulatorContainer .tabulator-col[title="Question 2"] button.sa-table__svg-button[title="Make column public"]')
+    .click('#tabulatorContainer .tabulator-col[tabulator-field="bool2"] button.sa-table__svg-button[title="Make column public"]')
     .expect(getPublicitArrayInState()).eql([true, true, true]);
 });
 

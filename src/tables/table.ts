@@ -203,7 +203,7 @@ export abstract class Table {
 
   private isInitTableDataProcessingValue: boolean;
   public get isInitTableDataProcessing(): boolean { return this.isInitTableDataProcessingValue; }
-  protected initTableData(data: Array<any>): void {
+  protected initTableData(data: Object[] | GetDataFn): void {
     if(!Array.isArray(data)) {
       this.tableData = undefined;
       return;
@@ -483,6 +483,7 @@ export abstract class TableRow {
 
   public remove(): void {
     this.table.removeRow(this);
+    this.destroy();
   }
 
   private onColumnLocationChangedCallback = () => {

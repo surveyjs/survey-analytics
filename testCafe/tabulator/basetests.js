@@ -21,13 +21,14 @@ fixture`basetests`.page`${url}`.beforeEach(async (t) => {
 test("check xss in header and cell", async (t) => {
   const xssText = `Which of the following best describes you or your organization?<button id='xyz' onclick='alert();'>hello</button><img src='dymmy' onerror='alert("xss");'>`;
   const headerSelector = Selector(
-    ".tabulator-headers div:nth-child(6) span"
+    ".tabulator-headers div:nth-of-type(6) span"
   );
   const cellSelector = Selector(
-    ".tabulator-row div:nth-child(6)"
+    ".tabulator-row div:nth-of-type(6)"
   );
 
   await t
+    .debug()
     .expect(headerSelector.innerText)
     .eql(xssText)
     .expect(cellSelector.innerText)
