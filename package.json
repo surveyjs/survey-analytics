@@ -103,7 +103,6 @@
     "webpack-svgstore-plugin": "^4.1.0"
   },
   "peerDependencies": {
-    "@types/datatables.net": "^1.10.21",
     "@types/plotly.js-dist-min": "^2.3.0"
   },
   "husky": {

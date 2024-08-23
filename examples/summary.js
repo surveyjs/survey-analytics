@@ -38,6 +38,8 @@ var survey = new Survey.SurveyModel(json);
 
 // SurveyAnalytics.VisualizerBase.suppressVisualizerStubRendering = true;
 
+// SurveyAnalytics.VisualizationManager.registerVisualizer("rating", SurveyAnalytics.NpsVisualizer);
+
 SurveyAnalytics.PlotlySetup.onImageSaving.add(function (selectBaseVisualizer, options) {
   options.filename = "Exported " + selectBaseVisualizer.question.name;
 });
