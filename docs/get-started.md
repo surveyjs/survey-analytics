@@ -10,4 +10,4 @@ Refer to one of the following tutorials to get started with SurveyJS Dashboard o
 - [Angular](/Documentation/Analytics?id=get-started-angular)
 - [Vue](/Documentation/Analytics?id=get-started-vue)
 - [React](/Documentation/Analytics?id=get-started-react)
-- [Knockout / jQuery](/Documentation/Analytics?id=get-started-knockout-jquery)
+- [HTML/CSS/JavaScript](/dashboard/documentation/get-started-html-css-javascript)

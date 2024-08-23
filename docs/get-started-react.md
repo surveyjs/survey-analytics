@@ -15,7 +15,7 @@ This step-by-step tutorial will help you get started with SurveyJS Dashboard in 
 
 As a result, you will create the following dashboard:
 
-<iframe src="/proxy/github/code-examples/get-started-analytics/knockout/index.html"
+<iframe src="/proxy/github/code-examples/get-started-analytics/html-css-js/index.html"
     style="width:100%; border:0; border-radius: 4px; overflow:hidden;"
 ></iframe>
 

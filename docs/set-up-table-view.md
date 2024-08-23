@@ -10,4 +10,4 @@ Refer to one of the following tutorials to set up Table View for SurveyJS Dashbo
 - [Angular](/dashboard/documentation/set-up-table-view/angular)
 - [Vue](/dashboard/documentation/set-up-table-view/vue)
 - [React](/dashboard/documentation/set-up-table-view/react)
-- [Knockout / jQuery](/dashboard/documentation/set-up-table-view/knockout-jquery)
+- [HTML/CSS/JavaScript](/dashboard/documentation/set-up-table-view/html-css-javascript)
