@@ -701,3 +701,66 @@ test("convertFromExternalData", () => {
   expect(calculatedData).toEqual([[3, 0, 0, 1, 0, 2, 0, 0, 0, 2]]);
   expect(histogram.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
 });
+
+test("rating with rateValues with wrong order", () => {
+  const question: any = {
+    getType: () => "rating",
+    type: "rating",
+    name: "q1",
+    "isRequired": true,
+    "autoGenerate": false,
+    "rateValues": [
+      {
+        "value": 7,
+        "text": "7 - Very ​satisfied​"
+      },
+      {
+        "value": 6,
+        "text": "6 - Quite ​satisfied"
+      },
+      {
+        "value": 5,
+        "text": "5 - Somewhat satisfied"
+      },
+      {
+        "value": 4,
+        "text": "4 - Neutral​"
+      },
+      {
+        "value": 3,
+        "text": "3 - Somewhat dissatisfied​"
+      },
+      {
+        "value": 2,
+        "text": "2 - Quite ​dissatisfied​"
+      },
+      {
+        "value": 1,
+        "text": "1 - Very dissatisfied"
+      }
+    ],
+  };
+  const retingData = [
+    {
+      "q1": 5
+    },
+    {
+      "q1": 4
+    },
+    {
+      "q1": 2,
+    },
+    {
+      "q1": 7,
+    },
+    {
+      "q1": 3,
+    }
+  ];
+  const histogram = new HistogramModel(question, retingData);
+
+  const externalCalculatedData = [0, 1, 1, 1, 1, 0, 1];
+  const calculatedData = (histogram as any).getCalculatedValuesCore();
+  expect(calculatedData).toEqual([externalCalculatedData]);
+  expect(histogram.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
+});
