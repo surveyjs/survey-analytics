@@ -4,7 +4,6 @@ import { VisualizationManager } from "../visualizationManager";
 import { textHelper } from "./stopwords/index";
 import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
-// import WordCloudLib from "wordcloud";
 import { WordCloudWidget, defaultOptions } from "./widget";
 
 export class WordCloudAdapter {
@@ -24,51 +23,6 @@ export class WordCloudAdapter {
   constructor(private model: WordCloud) {}
 
   public get wordcloud(): any {
-    return this._wordcloud;
-  }
-
-  private async createWordCloud2(node: HTMLElement) {
-    const data = await this.model.getCalculatedValues();
-    const colors = this.model.getColors();
-    const canvasNode = <HTMLCanvasElement>(
-      DocumentHelper.createElement("canvas", "")
-    );
-    const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
-      innerText: localization.getString("noResults"),
-    });
-
-    if (data.length === 0) {
-      node.appendChild(emptyTextNode);
-      return;
-    }
-
-    node.appendChild(canvasNode);
-
-    const config = {
-      list: data,
-      weightFactor: WordCloudAdapter.weightFactor,
-      abortThreshold: WordCloudAdapter.abortThreshold,
-      drawOutOfBound: WordCloudAdapter.drawOutOfBound,
-      shrinkToFit: WordCloudAdapter.shrinkToFit,
-      fontFamily: "Segoe UI Bold, sans-serif",
-      color: (word: string, weight: number) => {
-        return this.model.getRandomColor();
-      },
-      rotateRatio: 0.5,
-      rotationSteps: 2,
-      backgroundColor: this.model.backgroundColor,
-      click: function (item: any) {
-        // eslint-disable-next-line no-console
-        console.log(item[0] + ": " + item[1]);
-      },
-    };
-
-    const options = {
-      canvas: canvasNode,
-      config
-    };
-    WordCloudAdapter.onWordcloudCreating.fire(this.model, options);
-    // this._wordcloud = WordCloudLib(options.canvas, options.config as any);
     return this._wordcloud;
   }
 
