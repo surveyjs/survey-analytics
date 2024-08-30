@@ -30,6 +30,7 @@ export var englishStrings = {
   chartType_scatter: "Scatter",
   chartType_gauge: "Gauge",
   chartType_bullet: "Bullet",
+  chartType_line: "Line",
   hideButton: "Hide",
   makePrivateButton: "Make private",
   makePublicButton: "Make public",

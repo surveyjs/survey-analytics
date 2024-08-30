@@ -127,7 +127,7 @@ export class PlotlyChartAdapter {
 
 export class SelectBasePlotly extends SelectBase {
   private _chartAdapter: PlotlyChartAdapter;
-  public static types = ["bar", "pie", "doughnut", "scatter"];
+  public static types = ["bar", "vbar", "pie", "doughnut", "line"];
   public static displayModeBar: any = undefined;
 
   constructor(
@@ -142,7 +142,7 @@ export class SelectBasePlotly extends SelectBase {
       this.chartTypes.push("stackedbar");
     }
     if(options.allowExperimentalFeatures) {
-      this.chartTypes.splice(1, 0, "vbar");
+      // this.chartTypes.splice(1, 0, "vbar");
     }
     this._chartType = this.chartTypes[0];
     if (this.chartTypes.indexOf(options.defaultChartType) !== -1) {

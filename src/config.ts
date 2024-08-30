@@ -30,6 +30,7 @@ export interface IVisualizerPanelElement {
    *
    * - `"bar"`
    * - `"vbar"`
+   * - `"line"`
    * - `"stackedbar"`
    * - `"pie"`
    * - `"doughnut"`

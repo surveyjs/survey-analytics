@@ -220,7 +220,7 @@ export interface IVisualizationPanelOptions {
    * - Date, Number: `"bar"` | `"scatter"`
    * - Matrix: `"bar"` | `"pie"` | `"doughnut"` | `"stackedbar"`
    * - Rating: `"bar"` | `"scatter"` | `"gauge"` | `"bullet"`
-   * - Radiogroup, Checkbox, Dropdown, Image Picker: `"bar"` | `"pie"` | `"doughnut"` | `"scatter"`
+   * - Radiogroup, Checkbox, Dropdown, Image Picker: `"bar"` | `"pie"` | `"doughnut"` | `"scatter"` | `"line"`
    *
    * To set a type for an individual chart, access this chart in the `visualizers` array and set its `chartType` property to one of the values described above:
    *

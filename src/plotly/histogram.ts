@@ -6,7 +6,7 @@ import { DocumentHelper } from "../utils";
 
 export class HistogramPlotly extends HistogramModel {
   private _chartAdapter: PlotlyChartAdapter;
-  public static types = ["vbar", "bar", "scatter"];
+  public static types = ["vbar", "bar", "line"];
 
   constructor(
     question: Question,

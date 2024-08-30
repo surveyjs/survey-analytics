@@ -234,7 +234,7 @@ export class SelectBase
       this.emptyAnswersBtn.innerText = this._hideEmptyAnswers
         ? localization.getString("showEmptyAnswers")
         : localization.getString("hideEmptyAnswers");
-      if (this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "scatter") {
+      if (this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "line" || this.chartType == "scatter") {
         this.emptyAnswersBtn.style.display = "inline";
       } else {
         this.emptyAnswersBtn.style.display = "none";
@@ -260,6 +260,7 @@ export class SelectBase
       if (
         this.chartType == "bar" ||
         this.chartType == "vbar" ||
+        this.chartType == "line" ||
         this.chartType == "scatter" ||
         ((this.chartType == "pie" || this.chartType == "doughnut") &&
           this.topN > 0)
