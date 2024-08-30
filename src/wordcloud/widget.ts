@@ -103,25 +103,35 @@ export class WordCloudWidget {
   public render(target: HTMLDivElement): void {
     this._renderedTarget = target;
     var cloudElement = document.createElement("div");
-    cloudElement.className = "sa-visualizer-wordcloud";
-    cloudElement.style.position = "relative";
-    target.appendChild(cloudElement);
 
-    if(this._options.maxHeight > 0) {
-      cloudElement.style.height = this._options.maxHeight + "px";
-      cloudElement.style.overflow = "auto";
-    }
+    document.body.appendChild(cloudElement);
+    cloudElement.style.position = "fixed";
+    cloudElement.style.top = "-1000px";
+    cloudElement.style.width = "0";
+    cloudElement.style.height = "0";
+
     const startPoint = {
       x: cloudElement.offsetWidth / 2,
       y: cloudElement.offsetHeight / 2
     };
     const [yMin, yMax] = this.arrangeWords(cloudElement, startPoint);
-    if(this._options.maxHeight == 0) {
-      cloudElement.style.height = yMax - yMin + this._options.padding * 2 + "px";
-    }
     this._placedWords.forEach(wordInfo => {
       wordInfo.element.style.top = wordInfo.top - yMin + this._options.padding + "px";
     });
+
+    cloudElement.remove();
+    cloudElement.style.top = "auto";
+    cloudElement.style.left = "50%";
+    cloudElement.className = "sa-visualizer-wordcloud";
+    cloudElement.style.position = "relative";
+    if(this._options.maxHeight > 0) {
+      cloudElement.style.height = this._options.maxHeight + "px";
+      cloudElement.style.overflow = "auto";
+    }
+    if(this._options.maxHeight == 0) {
+      cloudElement.style.height = yMax - yMin + this._options.padding * 2 + "px";
+    }
+    target.appendChild(cloudElement);
   }
   public dispose(): void {
     if(!!this._renderedTarget) {
