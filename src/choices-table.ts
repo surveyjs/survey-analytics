@@ -56,7 +56,7 @@ export class ChoicesTableAdapter {
       headerRow.appendChild(valueCell);
       tableNode.appendChild(headerRow);
 
-      data.forEach((rowData, index) => {
+      for(let index = data.length - 1; index >= 0; index--) {
         var row = DocumentHelper.createElement("tr");
         var labelCell = DocumentHelper.createElement("td", "sa-choices-table__cell", {
           textContent: labels[index],
@@ -74,11 +74,11 @@ export class ChoicesTableAdapter {
         });
         row.appendChild(percentCell);
         var valueCell = DocumentHelper.createElement("td", "sa-choices-table__cell sa-choices-table__cell-value", {
-          textContent: rowData,
+          textContent: data[index],
         });
         row.appendChild(valueCell);
         tableNode.appendChild(row);
-      });
+      }
 
       container.className = "sa-choices-table__container";
       container.appendChild(tableNode);
@@ -101,7 +101,6 @@ export class ChoicesTable extends SelectBase {
   ) {
     super(question, data, options, name || "choices");
     this._choicesTableAdapter = new ChoicesTableAdapter(this);
-    this.answersOrder = "asc";
     this.showPercentages = true;
   }
 
