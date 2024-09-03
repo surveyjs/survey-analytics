@@ -43,11 +43,11 @@ export class StatisticsTableAdapter {
       });
       headerRow.appendChild(labelCell);
       var sparklineCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header", {
-        textContent: "",
+        textContent: localization.getString("statistics_chart"),
       });
       headerRow.appendChild(sparklineCell);
       var percentCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header", {
-        textContent: localization.getString("percent"),
+        textContent: localization.getString("percentage"),
       });
       headerRow.appendChild(percentCell);
       var valueCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header", {

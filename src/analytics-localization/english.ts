@@ -67,6 +67,8 @@ export var englishStrings = {
   answer: "Answer",
   correctAnswer: "Correct answer: ",
   percent: "Percent",
+  percentage: "Percentage",
+  statistics_chart: "Chart",
   responses: "Responses",
   visualizer_nps: "NPS",
   npsScore: "NPS",
