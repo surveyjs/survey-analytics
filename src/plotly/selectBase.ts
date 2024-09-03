@@ -127,7 +127,7 @@ export class PlotlyChartAdapter {
 
 export class SelectBasePlotly extends SelectBase {
   private _chartAdapter: PlotlyChartAdapter;
-  public static types = ["bar", "vbar", "pie", "doughnut", "line"];
+  public static types = ["bar", "vbar", "pie", "doughnut"];
   public static displayModeBar: any = undefined;
 
   constructor(
