@@ -4,10 +4,10 @@ import { VisualizationManager } from "./visualizationManager";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils";
 
-var styles = require("./choices-table.scss");
+var styles = require("./statistics-table.scss");
 
-export class ChoicesTableAdapter {
-  constructor(private model: ChoicesTable) {}
+export class StatisticsTableAdapter {
+  constructor(private model: StatisticsTable) {}
 
   public async create(container: HTMLElement): Promise<void> {
     let {
@@ -31,26 +31,26 @@ export class ChoicesTableAdapter {
 
     datasets.forEach((data, idx) => {
       const tableNode = <HTMLTableElement>(
-        DocumentHelper.createElement("table", "sa-choices-table")
+        DocumentHelper.createElement("table", "sa-statistics-table")
       );
 
       tableNode.style.backgroundColor = this.model.backgroundColor;
       container.appendChild(tableNode);
 
       var headerRow = DocumentHelper.createElement("tr");
-      var labelCell = DocumentHelper.createElement("th", "sa-choices-table__cell-header", {
+      var labelCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header", {
         textContent: localization.getString("answer"),
       });
       headerRow.appendChild(labelCell);
-      var sparklineCell = DocumentHelper.createElement("th", "sa-choices-table__cell-header", {
+      var sparklineCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header", {
         textContent: "",
       });
       headerRow.appendChild(sparklineCell);
-      var percentCell = DocumentHelper.createElement("th", "sa-choices-table__cell-header", {
+      var percentCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header", {
         textContent: localization.getString("percent"),
       });
       headerRow.appendChild(percentCell);
-      var valueCell = DocumentHelper.createElement("th", "sa-choices-table__cell-header", {
+      var valueCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header", {
         textContent: localization.getString("responses"),
       });
       headerRow.appendChild(valueCell);
@@ -58,29 +58,29 @@ export class ChoicesTableAdapter {
 
       for(let index = data.length - 1; index >= 0; index--) {
         var row = DocumentHelper.createElement("tr");
-        var labelCell = DocumentHelper.createElement("td", "sa-choices-table__cell", {
+        var labelCell = DocumentHelper.createElement("td", "sa-statistics-table__cell", {
           textContent: labels[index],
         });
         row.appendChild(labelCell);
-        var sparklineCell = DocumentHelper.createElement("td", "sa-choices-table__cell");
+        var sparklineCell = DocumentHelper.createElement("td", "sa-statistics-table__cell");
         var outerBar = DocumentHelper.createElement("div", "sa-choices-sparkline");
         var innerBar = DocumentHelper.createElement("div", "sa-choices-sparkline-value");
         innerBar.style.width = texts[idx][index] + "%";
         outerBar.appendChild(innerBar);
         sparklineCell.appendChild(outerBar);
         row.appendChild(sparklineCell);
-        var percentCell = DocumentHelper.createElement("td", "sa-choices-table__cell sa-choices-table__cell-value", {
+        var percentCell = DocumentHelper.createElement("td", "sa-statistics-table__cell sa-statistics-table__cell-value", {
           textContent: "" + texts[idx][index] + "%",
         });
         row.appendChild(percentCell);
-        var valueCell = DocumentHelper.createElement("td", "sa-choices-table__cell sa-choices-table__cell-value", {
+        var valueCell = DocumentHelper.createElement("td", "sa-statistics-table__cell sa-statistics-table__cell-value", {
           textContent: data[index],
         });
         row.appendChild(valueCell);
         tableNode.appendChild(row);
       }
 
-      container.className = "sa-choices-table__container";
+      container.className = "sa-statistics-table__container";
       container.appendChild(tableNode);
     });
   }
@@ -90,8 +90,8 @@ export class ChoicesTableAdapter {
   }
 }
 
-export class ChoicesTable extends SelectBase {
-  private _choicesTableAdapter: ChoicesTableAdapter;
+export class StatisticsTable extends SelectBase {
+  private _statisticsTableAdapter: StatisticsTableAdapter;
 
   constructor(
     question: Question,
@@ -100,29 +100,29 @@ export class ChoicesTable extends SelectBase {
     name?: string
   ) {
     super(question, data, options, name || "choices");
-    this._choicesTableAdapter = new ChoicesTableAdapter(this);
+    this._statisticsTableAdapter = new StatisticsTableAdapter(this);
     this.showPercentages = true;
   }
 
   protected destroyContent(container: HTMLElement) {
-    this._choicesTableAdapter.destroy(container);
+    this._statisticsTableAdapter.destroy(container);
     super.destroyContent(container);
   }
 
   protected async renderContentAsync(container: HTMLElement) {
     const tableNode: HTMLElement = DocumentHelper.createElement("div");
-    await this._choicesTableAdapter.create(tableNode);
+    await this._statisticsTableAdapter.create(tableNode);
     container.innerHTML = "";
     container.appendChild(tableNode);
     return container;
   }
 
   destroy() {
-    this._choicesTableAdapter.destroy(this.contentContainer);
+    this._statisticsTableAdapter.destroy(this.contentContainer);
     super.destroy();
   }
 }
 
-// VisualizationManager.registerVisualizer("radiogroup", ChoicesTable);
-// VisualizationManager.registerVisualizer("dropdown", ChoicesTable);
-// VisualizationManager.registerVisualizer("checkbox", ChoicesTable);
+VisualizationManager.registerVisualizer("radiogroup", StatisticsTable);
+VisualizationManager.registerVisualizer("dropdown", StatisticsTable);
+VisualizationManager.registerVisualizer("checkbox", StatisticsTable);
