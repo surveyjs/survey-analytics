@@ -27,9 +27,9 @@ export class HistogramPlotly extends HistogramModel {
 
   protected async renderContentAsync(container: HTMLElement) {
     const chartNode: HTMLElement = DocumentHelper.createElement("div");
-    await this._chartAdapter.create(chartNode);
     container.innerHTML = "";
     container.appendChild(chartNode);
+    await this._chartAdapter.create(chartNode);
     return container;
   }
 

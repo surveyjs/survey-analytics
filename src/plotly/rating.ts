@@ -103,12 +103,15 @@ export class PlotlyGaugeAdapter {
     };
     PlotlySetup.onPlotCreating.fire(this.model, options);
 
-    return (<any>Plotly).newPlot(
+    const plot = (<any>Plotly).newPlot(
       chartNode,
       options.data,
       options.layout,
       options.config
     );
+    // setTimeout(() => Plotly.Plots.resize(chartNode), 10);
+
+    return plot;
   }
 
   public destroy(node: HTMLElement) {
@@ -142,9 +145,9 @@ export class GaugePlotly extends NumberModel {
 
   protected async renderContentAsync(container: HTMLElement) {
     const chartNode: HTMLElement = DocumentHelper.createElement("div");
-    await this._chartAdapter.create(chartNode);
     container.innerHTML = "";
     container.appendChild(chartNode);
+    await this._chartAdapter.create(chartNode);
     return container;
   }
 }
