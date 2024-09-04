@@ -359,6 +359,7 @@ export class PlotlySetup {
     }
     if(!(model as any).getValueType || (model as any).getValueType() != "date") {
       layout.xaxis = {
+        automargin: true,
         type: "category",
       };
     }
