@@ -11,13 +11,11 @@ SurveyJS Dashboard visualizes survey results and allows users to analyze them.
 
 ## Features
 
-- Supported chart types:
+- [Supported chart types](/dashboard/documentation/chart-types):
   - Bar
   - Pie
-  - Line
   - Gauge
   - Bullet
-  - Scatter
   - Word cloud
 - Interactive filtering
 - Customizable colors

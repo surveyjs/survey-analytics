@@ -34,7 +34,7 @@ SurveyJS Dashboard is distributed as a <a href="https://www.npmjs.com/package/su
 npm install survey-analytics --save
 ```
 
-SurveyJS Dashboard depends on the <a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a> and <a href="https://github.com/timdream/wordcloud2.js#readme" target="_blank">Wordcloud</a> libraries. Wordcloud is used to visualize the Text, Multiple Text, and Comment question types. Plotly.js is used to visualize the rest of the question types. The command above installs both these libraries as dependencies.
+SurveyJS Dashboard depends on the <a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a> library. The command above installs this library as a dependency.
 
 ## Configure Styles
 

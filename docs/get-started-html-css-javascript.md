@@ -20,11 +20,11 @@ SurveyJS Dashboard depends on other JavaScript libraries. Reference them on your
 1. Survey Core       
 A platform-independent part of [SurveyJS Form Library](https://surveyjs.io/form-library/documentation/overview) that works with the survey model. SurveyJS Dashboard requires only this part, but if you also display the survey on the page, reference [the rest of the SurveyJS Form Library resources](/form-library/documentation/get-started-html-css-javascript#link-surveyjs-resources) as well.
 
-1. <a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a> and <a href="https://github.com/timdream/wordcloud2.js#readme" target="_blank">Wordcloud</a>       
-Wordcloud (optional) is used to visualize the Text, Multiple Text, and Comment question types. Plotly.js (required) is used to visualize the rest of the question types.
+1. <a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a>       
+A third-party library used to render charts.
 
 1. SurveyJS Dashboard      
-A library that integrates Survey Core with Plotly.js and Wordcloud.
+A library that integrates Survey Core with Plotly.js.
 
 The following code shows how to reference these libraries:
 
@@ -37,10 +37,8 @@ The following code shows how to reference these libraries:
     <!-- <link href="https://unpkg.com/survey-core/defaultV2.min.css" type="text/css" rel="stylesheet"> -->
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-js-ui/survey-js-ui.min.js"></script> -->
 
-    <!-- Third-party visualization libraries -->
+    <!-- Third-party data visualization library -->
     <script src="https://unpkg.com/plotly.js-dist-min/plotly.min.js"></script>
-    <!-- Uncomment the following line if you use the Text, Multiple Text, or Comment question types in your surveys -->
-    <!-- <script src="https://unpkg.com/wordcloud/src/wordcloud2.js"></script> -->
 
     <!-- SurveyJS Dashboard resources-->
     <link href="https://unpkg.com/survey-analytics/survey.analytics.min.css" rel="stylesheet">
@@ -168,8 +166,6 @@ const vizPanel = new SurveyAnalytics.VisualizationPanel(
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-js-ui/survey-js-ui.min.js"></script> -->
 
     <script src="https://unpkg.com/plotly.js-dist-min/plotly.min.js"></script>
-    <!-- Uncomment the following line if you use the Text, Multiple Text, or Comment question types in your surveys -->
-    <!-- <script src="https://unpkg.com/wordcloud/src/wordcloud2.js"></script> -->
 
     <link href="https://unpkg.com/survey-analytics/survey.analytics.min.css" rel="stylesheet">
     <script src="https://unpkg.com/survey-analytics/survey.analytics.min.js"></script>
@@ -271,8 +267,6 @@ document.addEventListener("DOMContentLoaded", function() {
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-js-ui/survey-js-ui.min.js"></script> -->
 
     <script src="https://unpkg.com/plotly.js-dist-min/plotly.min.js"></script>
-    <!-- Uncomment the following line if you use the Text, Multiple Text, or Comment question types in your surveys -->
-    <!-- <script src="https://unpkg.com/wordcloud/src/wordcloud2.js"></script> -->
 
     <link href="https://unpkg.com/survey-analytics/survey.analytics.min.css" rel="stylesheet">
     <script src="https://unpkg.com/survey-analytics/survey.analytics.min.js"></script>
