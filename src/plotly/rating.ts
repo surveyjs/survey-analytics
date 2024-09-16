@@ -115,7 +115,9 @@ export class PlotlyGaugeAdapter {
   }
 
   public destroy(node: HTMLElement) {
-    (<any>Plotly).purge(node);
+    if(!!node) {
+      (<any>Plotly).purge(node);
+    }
     this._chart = undefined;
   }
 }
