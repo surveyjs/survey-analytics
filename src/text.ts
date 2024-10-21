@@ -1,4 +1,4 @@
-import { Question } from "survey-core";
+import { Question, QuestionMultipleTextModel } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 import { localization } from "./localizationManager";
@@ -27,10 +27,22 @@ export class TextTableAdapter {
     tableNode.style.backgroundColor = this.model.backgroundColor;
     container.appendChild(tableNode);
 
+    if(this.model.columns) {
+      var row = DocumentHelper.createElement("tr");
+      this.model.columns.forEach(column => {
+        var td = DocumentHelper.createElement("th", "sa-text-table__cell", {
+          textContent: column.title,
+        });
+        row.appendChild(td);
+      });
+      tableNode.appendChild(row);
+    }
+
     data.forEach((rowData) => {
       var row = DocumentHelper.createElement("tr");
       for (var i = 0; i < columnCount; i++) {
-        var td = DocumentHelper.createElement("td", "sa-text-table__cell", {
+        const column = this.model.columns[i];
+        var td = DocumentHelper.createElement("td", "sa-text-table__cell" + (column?.type == "number" ? " sa-text-table__cell--number" : ""), {
           textContent: rowData[i],
         });
         row.appendChild(td);
@@ -58,6 +70,16 @@ export class Text extends VisualizerBase {
   ) {
     super(question, data, options, name || "text");
     this._textTableAdapter = new TextTableAdapter(this);
+  }
+
+  public get columns(): Array<{ name: string, title: string, type: string }> {
+    const columns = [];
+    if(this.question.getType() == "multipletext") {
+      (this.question as QuestionMultipleTextModel).items.forEach(item => {
+        columns.push({ name: item.name, title: item.title, type: item.inputType });
+      });
+    }
+    return columns;
   }
 
   protected getCalculatedValuesCore(): any {

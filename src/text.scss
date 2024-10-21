@@ -25,3 +25,11 @@
   background-color: $background-color;
   min-height: $form-element-height;
 }
+
+.sa-text-table__cell--number {
+  text-align: end;
+}
+
+th.sa-text-table__cell {
+  font-weight: 600;
+}
