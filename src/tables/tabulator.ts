@@ -387,6 +387,9 @@ export class Tabulator extends Table {
     if (this.isRendered) {
       const column = this.tabulatorTables.getColumn(columnName);
       if(!!column) {
+        const definition = column.getDefinition();
+        definition.width = width;
+        definition.widthShrink = !!width ? 0 : 1;
         column.setWidth(width);
       }
     }
