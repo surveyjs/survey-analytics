@@ -20,6 +20,7 @@ interface ITabulatorOptions extends ITableOptions {
   tabulatorOptions?: any;
   downloadHiddenColumns?: boolean;
   actionsColumnWidth?: number;
+  columnMinWidth?: number;
   downloadButtons?: Array<string>;
   downloadOptions?: { [type: string]: any };
   /*
@@ -54,6 +55,7 @@ export const defaultDownloadOptions = {
 export const defaultOptions: ITabulatorOptions = {
   tabulatorOptions: {},
   actionsColumnWidth: 60,
+  columnMinWidth: 248,
   downloadHiddenColumns: false,
   downloadButtons: ["csv"],
   downloadOptions: defaultDownloadOptions,
@@ -145,7 +147,7 @@ export class Tabulator extends Table {
         tooltipsHeader: true,
         tooltips: (cell: any) => cell.getValue(),
         downloadRowRange: "all",
-        columnMinWidth: 248,
+        columnMinWidth: (this.options as ITabulatorOptions).columnMinWidth,
         paginationButtonCount: 3,
         nestedFieldSeparator: false,
       },
@@ -383,12 +385,10 @@ export class Tabulator extends Table {
   public setColumnWidth(columnName: string, width: number | string): void {
     super.setColumnWidth(columnName, width);
     if (this.isRendered) {
-      var definition = this.tabulatorTables
-        .getColumn(columnName)
-        .getDefinition();
-      definition.width = width;
-      definition.widthShrink = 0;
-      this.layout();
+      const column = this.tabulatorTables.getColumn(columnName);
+      if(!!column) {
+        column.setWidth(width);
+      }
     }
   }
 
