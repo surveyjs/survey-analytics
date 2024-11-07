@@ -1,4 +1,5 @@
 function CustomVisualizer(question, data) {
+  var chartData = [];
   var values = [];
 
   var visualizer = new SurveyAnalytics.SelectBasePlotly(
@@ -7,8 +8,11 @@ function CustomVisualizer(question, data) {
     { },
     "textChartVisualizer"
   );
-  visualizer.getValues = function () { return values; };
+  visualizer.getValues = function () { return chartData; };
   visualizer.getLabels = function () { return values; };
+  visualizer.getCalculatedValuesCore = function () {
+    values = [];
+    chartData = [];
   visualizer.getCalculatedValuesCore = function () {
     var result = {};
     visualizer.surveyData.forEach(function (row) {
@@ -23,8 +27,9 @@ function CustomVisualizer(question, data) {
     });
 
     values.push.apply(values, Object.keys(result));
+    chartData = values.map(function(value) { return result[value]; });
+    return [chartData];
     return [values.map(function(value) { return result[value]; })];
-  };
 
   return visualizer;
 }
