@@ -91,6 +91,19 @@ test("setSelection", () => {
   expect(lastText).toEqual("True");
 });
 
+test("onStateChanged reised on setSelection", () => {
+  let log = "";
+  selectBase.onStateChanged.add((s, o) => {
+    log += "->" + o.filter;
+  });
+
+  selectBase.setSelection(new ItemValue(1, "One"));
+  expect(log).toEqual("->1");
+
+  selectBase.setSelection(undefined as any);
+  expect(log).toEqual("->1->undefined");
+});
+
 test("set answersOrder triggers renderContent and update", () => {
   selectBase.render(document.createElement("div"));
   let updateCallCount = 0;

@@ -350,6 +350,7 @@ export class SelectBase
           item !== undefined ? item.text : ""
         );
       }
+      this.stateChanged("filter", this.selectedItem?.value);
     }
   }
   get selection() {
