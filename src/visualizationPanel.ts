@@ -400,6 +400,11 @@ export class VisualizationPanel extends VisualizerBase {
     order.forEach(name => {
       newElements.push(this._elements.filter(el => el.name === name)[0]);
     });
+    this._elements.forEach(el => {
+      if(order.indexOf(el.name) == -1) {
+        newElements.push(el);
+      }
+    });
     this._elements = newElements;
     this.visibleElementsChanged(undefined, "REORDERED");
   }
