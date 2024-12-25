@@ -453,3 +453,19 @@ test("convertFromExternalData", async () => {
   expect(calculatedData).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
   expect(selectBase.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
 });
+
+test("isSupportAnswersOrder and allowSortAnswers or allowChangeAnswersOrder options", () => {
+  expect(selectBase["isSupportAnswersOrder"]()).toBeTruthy();
+
+  let sb = new SelectBase(new QuestionDropdownModel("q1"), [], { allowChangeAnswersOrder: false });
+  expect(sb["isSupportAnswersOrder"]()).toBeFalsy();
+
+  sb = new SelectBase(new QuestionDropdownModel("q1"), [], { allowSortAnswers: false });
+  expect(sb["isSupportAnswersOrder"]()).toBeFalsy();
+
+  sb = new SelectBase(new QuestionDropdownModel("q1"), [], { allowChangeAnswersOrder: true });
+  expect(sb["isSupportAnswersOrder"]()).toBeTruthy();
+
+  sb = new SelectBase(new QuestionDropdownModel("q1"), [], { allowSortAnswers: true });
+  expect(sb["isSupportAnswersOrder"]()).toBeTruthy();
+});

@@ -439,8 +439,8 @@ export class SelectBase
   }
 
   protected isSupportAnswersOrder(): boolean {
-    return (this.options.allowChangeAnswersOrder === undefined ||
-            this.options.allowChangeAnswersOrder) &&
+    return this.options.allowSortAnswers !== false &&
+            this.options.allowChangeAnswersOrder !== false &&
             this.getSeriesValues().length === 0;
   }
 
