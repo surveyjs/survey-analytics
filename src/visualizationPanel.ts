@@ -160,6 +160,7 @@ export interface IVisualizationPanelOptions {
    *
    * @see answersOrder
    */
+  allowSortAnswers?: boolean;
   allowChangeAnswersOrder?: boolean;
   /**
    * Specifies how to sort answers in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
@@ -170,9 +171,9 @@ export interface IVisualizationPanelOptions {
    * - `"asc"` - Sort answers by ascending answer count.
    * - `"desc"` - Sort answers by descending answer count.
    *
-   * Users can change this property value if you enable the `allowChangeAnswersOrder` property.
+   * Users can change this property value if you enable the `allowSortAnswers` property.
    *
-   * @see allowChangeAnswersOrder
+   * @see allowSortAnswers
    */
   answersOrder?: "default" | "asc" | "desc";
   /**
