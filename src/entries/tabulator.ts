@@ -12,6 +12,7 @@ import "../analytics-localization/spanish";
 import "../analytics-localization/italian";
 import "../analytics-localization/arabic";
 import "../analytics-localization/japanese";
+import "../analytics-localization/polish";
 
 //extensions
 import "../tables/extensions/rowextensions";

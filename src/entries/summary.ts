@@ -12,6 +12,7 @@ import "../analytics-localization/spanish";
 import "../analytics-localization/italian";
 import "../analytics-localization/arabic";
 import "../analytics-localization/japanese";
+import "../analytics-localization/polish";
 
 export * from "../dataProvider";
 export * from "../visualizerFactory";
