@@ -1,5 +1,5 @@
 import { Question, QuestionCompositeModel, QuestionCustomModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
-import { BaseColumn, CommentColumn, CompositeQuestionColumn, CustomQuestionColumn, FileColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn } from "./columns";
+import { BaseColumn, CommentColumn, CompositeQuestionColumn, CustomQuestionColumn, FileColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn, OtherColumn } from "./columns";
 import { IColumn } from "./config";
 import { Table } from "./table";
 
@@ -19,11 +19,11 @@ export class DefaultColumnsBuilder<T extends Question = Question> implements ICo
 
   public buildColumns(question: T, table: Table): Array<IColumn> {
     const columns = this.buildColumnsCore(question, table);
-    if (
-      question.hasComment ||
-      (question.hasOther && (<any>question as QuestionSelectBase)["getStoreOthersAsComment"]())
-    ) {
+    if(question.hasComment) {
       columns.push(new CommentColumn(question, table));
+    }
+    if(question.hasOther && (question as unknown as QuestionSelectBase)["getStoreOthersAsComment"]()) {
+      columns.push(new OtherColumn(question as unknown as QuestionSelectBase, table));
     }
     return columns;
   }
