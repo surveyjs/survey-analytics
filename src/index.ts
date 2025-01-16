@@ -20,7 +20,6 @@ export * from "./visualizationMatrixDynamic";
 export * from "./visualizationMatrixDropdown";
 export * from "./alternativeVizualizersWrapper";
 
-export * from "./tables/datatables";
 export * from "./tables/tabulator";
 
 export * from "./plotly/index";
