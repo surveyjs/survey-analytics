@@ -59,7 +59,7 @@
     "muuri": "^0.8.0",
     "plotly.js-dist-min": "^2.28.0",
     "survey-core": "latest",
-    "tabulator-tables": "6.2.5"
+    "tabulator-tables": "^6.2.5"
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
