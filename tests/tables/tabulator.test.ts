@@ -50,7 +50,7 @@ test("getColumns method", () => {
   const columns = <any>tabulator["getColumns"]();
 
   expect(JSON.parse(JSON.stringify(columns))).toEqual(
-    [{ "field": "", "title": "", "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "car", "title": "What car are you driving?", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 248, "formatter": "plaintext" }, { "field": "photo", "title": "photo", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 248, "formatter": "html" }]
+    [{ "field": "", "title": "", "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "car", "title": "What car are you driving?", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 248, "formatter": "plaintext", headerTooltip: true }, { "field": "photo", "title": "photo", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 248, "formatter": "html", headerTooltip: true }]
   );
 });
 
@@ -201,13 +201,13 @@ test("useNamesAsTitles option", () => {
   let tabulator = new Tabulator(survey, [], null);
   let columns = <any>tabulator.getColumns();
   expect(JSON.parse(JSON.stringify(columns))).toEqual(
-    [{ "field": "", "title": "", "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "str", "title": "String", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 248 }]
+    [{ "field": "", "title": "", "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "str", "title": "String", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 248, headerTooltip: true }]
   );
 
   tabulator = new Tabulator(survey, [], <any>{ useNamesAsTitles: true });
   columns = <any>tabulator.getColumns();
   expect(JSON.parse(JSON.stringify(columns))).toEqual(
-    [{ "field": "", "title": "", "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "str", "title": "str", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 248 }]
+    [{ "field": "", "title": "", "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "str", "title": "str", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 248, headerTooltip: true }]
   );
 });
 
