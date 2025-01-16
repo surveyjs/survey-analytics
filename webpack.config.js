@@ -185,12 +185,6 @@ module.exports = function (options) {
         commonjs: "survey-core",
         amd: "survey-core",
       },
-      wordcloud: {
-        root: "WordCloud",
-        commonjs2: "wordcloud",
-        commonjs: "wordcloud",
-        amd: "wordcloud",
-      },
       "plotly.js-dist-min": {
         root: "Plotly",
         commonjs2: "plotly.js-dist-min",

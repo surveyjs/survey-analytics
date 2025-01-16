@@ -38,6 +38,8 @@ var survey = new Survey.SurveyModel(json);
 
 // SurveyAnalytics.VisualizerBase.suppressVisualizerStubRendering = true;
 
+// SurveyAnalytics.VisualizationManager.registerVisualizer("rating", SurveyAnalytics.NpsVisualizer);
+
 SurveyAnalytics.PlotlySetup.onImageSaving.add(function (selectBaseVisualizer, options) {
   options.filename = "Exported " + selectBaseVisualizer.question.name;
 });
@@ -55,7 +57,7 @@ var options = {
   // showOnlyPercentages: true,
   // useValuesAsLabels: false
   // haveCommercialLicense: false,
-  // allowChangeAnswersOrder: true,
+  // allowSortAnswers: true,
   // answersOrder: "desc"
   // allowHideEmptyAnswers: true,
   // hideEmptyAnswers: true,

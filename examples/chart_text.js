@@ -11,6 +11,7 @@ function CustomVisualizer(question, data) {
   visualizer.getLabels = function () { return values; };
   visualizer.getCalculatedValuesCore = function () {
     var result = {};
+    values.length = 0;
     visualizer.surveyData.forEach(function (row) {
       var rowValue = row[visualizer.question.name];
       if (rowValue !== undefined) {

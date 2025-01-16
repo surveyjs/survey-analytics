@@ -6,7 +6,7 @@ import { DocumentHelper } from "../utils";
 
 export class HistogramPlotly extends HistogramModel {
   private _chartAdapter: PlotlyChartAdapter;
-  public static types = ["vbar", "bar", "scatter"];
+  public static types = ["vbar", "bar"];
 
   constructor(
     question: Question,
@@ -27,9 +27,9 @@ export class HistogramPlotly extends HistogramModel {
 
   protected async renderContentAsync(container: HTMLElement) {
     const chartNode: HTMLElement = DocumentHelper.createElement("div");
-    await this._chartAdapter.create(chartNode);
     container.innerHTML = "";
     container.appendChild(chartNode);
+    await this._chartAdapter.create(chartNode);
     return container;
   }
 

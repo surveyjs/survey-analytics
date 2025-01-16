@@ -115,19 +115,22 @@ export class PlotlyChartAdapter {
       dragLayer && (dragLayer.style.cursor = "");
     });
 
+    // setTimeout(() => Plotly.Plots.resize(chartNode), 10);
     this._chart = plot;
     return plot;
   }
 
   public destroy(node: HTMLElement) {
-    (<any>Plotly).purge(node);
+    if(!!node) {
+      (<any>Plotly).purge(node);
+    }
     this._chart = undefined;
   }
 }
 
 export class SelectBasePlotly extends SelectBase {
   private _chartAdapter: PlotlyChartAdapter;
-  public static types = ["bar", "pie", "doughnut", "scatter"];
+  public static types = ["bar", "vbar", "pie", "doughnut"];
   public static displayModeBar: any = undefined;
 
   constructor(
@@ -142,7 +145,7 @@ export class SelectBasePlotly extends SelectBase {
       this.chartTypes.push("stackedbar");
     }
     if(options.allowExperimentalFeatures) {
-      this.chartTypes.splice(1, 0, "vbar");
+      // this.chartTypes.splice(1, 0, "vbar");
     }
     this._chartType = this.chartTypes[0];
     if (this.chartTypes.indexOf(options.defaultChartType) !== -1) {
@@ -158,9 +161,9 @@ export class SelectBasePlotly extends SelectBase {
 
   protected async renderContentAsync(container: HTMLElement) {
     const chartNode: HTMLElement = DocumentHelper.createElement("div");
-    await this._chartAdapter.create(chartNode);
     container.innerHTML = "";
     container.appendChild(chartNode);
+    await this._chartAdapter.create(chartNode);
     return container;
   }
 

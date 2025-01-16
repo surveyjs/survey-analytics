@@ -33,13 +33,12 @@ export interface IVisualizerPanelElement {
    * - `"stackedbar"`
    * - `"pie"`
    * - `"doughnut"`
-   * - `"scatter"`
    * - `"gauge"`
    * - `"bullet"`
    */
   chartType?: string;
   /**
-   * Indicates the answer order in bar and scatter charts.
+   * Indicates the answer order in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
    *
    * Possible values:
    *
@@ -49,7 +48,7 @@ export interface IVisualizerPanelElement {
    */
   answersOrder?: string;
   /**
-   * Indicates whether answers with zero count are hidden in bar and scatter charts.
+   * Indicates whether answers with zero count are hidden in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
    */
   hideEmptyAnswers?: boolean;
   /**

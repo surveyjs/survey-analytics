@@ -473,8 +473,10 @@ export class VisualizerBase implements IDataInfo {
 
   protected renderContent(container: HTMLElement) {
     if (!!this.options && typeof this.options.renderContent === "function") {
-      this.options.renderContent(container, this);
-      this.afterRender(container);
+      const rendered = this.options.renderContent(container, this);
+      if(rendered !== false) {
+        this.afterRender(container);
+      }
     } else {
       if(this.loadingData) {
         this.renderLoadingIndicator(this.contentContainer);

@@ -31,10 +31,10 @@ SurveyJS Dashboard is distributed as a <a href="https://www.npmjs.com/package/su
 npm install survey-analytics --save
 ```
 
-SurveyJS Dashboard depends on the <a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a> and <a href="https://github.com/timdream/wordcloud2.js#readme" target="_blank">Wordcloud</a> libraries. Wordcloud is used to visualize the Text, Multiple Text, and Comment question types. Plotly.js is used to visualize the rest of the question types. Use the following commands to install type definitions for these libraries:
+SurveyJS Dashboard depends on the <a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a> library. Use the following commands to install type definitions for this library:
 
 ```cmd
-npm i @types/plotly.js-dist-min @types/wordcloud --save-dev
+npm i @types/plotly.js-dist-min --save-dev
 ```
 
 Due to the design of Plotly.js exports, you should also open the `tsconfig.json` file and set the `allowSyntheticDefaultImports` flag to `true`:

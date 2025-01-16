@@ -18,6 +18,7 @@ var surveyAnalyticsTabulator = new SurveyAnalyticsTabulator.Tabulator(
   normalizedData,
   {
     // useNamesAsTitles: true
+    // columnMinWidth: 50
   }
 );
 

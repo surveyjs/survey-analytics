@@ -46,7 +46,7 @@ test("WordCloudWidget render", () => {
   const renderTarget = document.createElement("div");
 
   wcw.render(renderTarget);
-  expect(renderTarget.innerHTML).toBe("<div class=\"sa-visualizer-wordcloud\" style=\"position: relative; height: 1649.9259536805148px;\"><div style=\"position: absolute; font-size: 40px; line-height: 0.8em; color: black; left: 1px; top: 10px;\" title=\"word2 (10)\">word2</div><div style=\"position: absolute; font-size: 4.444444444444445px; line-height: 0.8em; color: black; left: -763.7678872004664px; top: 1629.9259536805148px;\" title=\"word1 (2)\">word1</div></div>");
+  expect(renderTarget.innerHTML).toBe("<div style=\"position: relative; top: -1000px; width: 0px; height: 1649.9259536805148px; left: 50%;\" class=\"sa-visualizer-wordcloud\"><div style=\"position: absolute; font-size: 40px; line-height: 0.8em; color: black; left: 1px; top: 10px;\" title=\"word2 (10)\">word2</div><div style=\"position: absolute; font-size: 4.444444444444445px; line-height: 0.8em; color: black; left: -763.7678872004664px; top: 1629.9259536805148px;\" title=\"word1 (2)\">word1</div></div>");
   wcw.dispose();
   expect(renderTarget.innerHTML).toBe("");
 });

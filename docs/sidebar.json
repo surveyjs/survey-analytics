@@ -23,8 +23,16 @@
         {
           "Name": "get-started-html-css-javascript",
           "Title": "HTML/CSS/JavaScript"
+        },
+        {
+          "Name": "supported-browsers",
+          "Title": "Supported Browsers"
         }
       ]
+    },
+    {
+      "Name": "chart-types",
+      "Title": "Chart Types"
     },
     {
       "Name": "set-up-table-view",

@@ -152,17 +152,18 @@ export interface IVisualizationPanelOptions {
   percentagePrecision?: number;
   haveCommercialLicense?: boolean;
   /**
-   * Allows users to sort answers by answer count. Applies only to bar and scatter charts.
+   * Allows users to sort answers by answer count. Applies only to [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
    *
-   * This property adds a Sorting dropdown to each bar and scatter chart.
+   * This property adds a Sorting dropdown to each supported visualizer.
    *
    * Default value: `true`
    *
    * @see answersOrder
    */
+  allowSortAnswers?: boolean;
   allowChangeAnswersOrder?: boolean;
   /**
-   * Specifies how to sort answers in bar and scatter charts.
+   * Specifies how to sort answers in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
    *
    * Accepted values:
    *
@@ -170,21 +171,21 @@ export interface IVisualizationPanelOptions {
    * - `"asc"` - Sort answers by ascending answer count.
    * - `"desc"` - Sort answers by descending answer count.
    *
-   * Users can change this property value if you enable the `allowChangeAnswersOrder` property.
+   * Users can change this property value if you enable the `allowSortAnswers` property.
    *
-   * @see allowChangeAnswersOrder
+   * @see allowSortAnswers
    */
   answersOrder?: "default" | "asc" | "desc";
   /**
-   * Allows users to hide answers with zero count in bar and scatter charts.
+   * Allows users to hide answers with zero count in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
    *
-   * This property adds a Hide Empty Answers button to each bar and scatter chart.
+   * This property adds a Hide Empty Answers button to each supported visualizer.
    *
    * Default value: `false`
    */
   allowHideEmptyAnswers?: boolean;
   /**
-   * Hides answers with zero count in bar and scatter charts.
+   * Hides answers with zero count in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
    *
    * Users can change this property value if you enable the `allowHideEmptyAnswers` property.
    *
@@ -216,11 +217,11 @@ export interface IVisualizationPanelOptions {
    *
    * Accepted values depend on the question type as follows:
    *
-   * - Boolean: `"bar"` | `"pie"` | `"doughnut"`
-   * - Date, Number: `"bar"` | `"scatter"`
-   * - Matrix: `"bar"` | `"pie"` | `"doughnut"` | `"stackedbar"`
-   * - Rating: `"bar"` | `"scatter"` | `"gauge"` | `"bullet"`
-   * - Radiogroup, Checkbox, Dropdown, Image Picker: `"bar"` | `"pie"` | `"doughnut"` | `"scatter"`
+   * - Boolean: `"bar"` | `"vbar"` | `"pie"` | `"doughnut"`
+   * - Date, Number: `"bar"` | `"vbar"`
+   * - Matrix: `"bar"` | `"vbar"` | `"pie"` | `"doughnut"` | `"stackedbar"`
+   * - Rating: `"bar"` | `"vbar"` | `"gauge"` | `"bullet"`
+   * - Radiogroup, Checkbox, Dropdown, Image Picker: `"bar"` | `"vbar"` | `"pie"` | `"doughnut"`
    *
    * To set a type for an individual chart, access this chart in the `visualizers` array and set its `chartType` property to one of the values described above:
    *
@@ -399,6 +400,11 @@ export class VisualizationPanel extends VisualizerBase {
     const newElements = [];
     order.forEach(name => {
       newElements.push(this._elements.filter(el => el.name === name)[0]);
+    });
+    this._elements.forEach(el => {
+      if(order.indexOf(el.name) == -1) {
+        newElements.push(el);
+      }
     });
     this._elements = newElements;
     this.visibleElementsChanged(undefined, "REORDERED");

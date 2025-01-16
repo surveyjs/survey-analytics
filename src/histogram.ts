@@ -131,6 +131,7 @@ export class HistogramModel extends SelectBase {
     if(this.question.getType() == "rating") {
       if (this.needUseRateValues) {
         const rateValues = this.question["rateValues"] as ItemValue[];
+        rateValues.sort((iv1, iv2) => iv1.value - iv2.value);
         return rateValues.map((rateValue, i) => ({
           start: rateValue.value,
           end: i < rateValues.length - 1 ? rateValues[i + 1].value : rateValue.value + 1,

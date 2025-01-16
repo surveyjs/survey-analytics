@@ -32,6 +32,7 @@ export class PlotlySetup {
   static setups: { [type: string]: (model: SelectBase, answersData: IAnswersData) => PlotlyOptions } = {
     bar: PlotlySetup.setupBar,
     vbar: PlotlySetup.setupVBar,
+    line: PlotlySetup.setupVBar,
     stackedbar: PlotlySetup.setupBar,
     doughnut: PlotlySetup.setupPie,
     pie: PlotlySetup.setupPie,
@@ -282,6 +283,21 @@ export class PlotlySetup {
       seriesLabels,
     } = answersData;
 
+    if(model.type !== "histogram") {
+      labels = [].concat(labels).reverse();
+      colors = [].concat(colors.slice(0, labels.length)).reverse();
+      const ts = [];
+      texts.forEach(text => {
+        ts.push([].concat(text).reverse());
+      });
+      texts = ts;
+      const ds = [];
+      datasets.forEach(dataset => {
+        ds.push([].concat(dataset).reverse());
+      });
+      datasets = ds;
+    }
+
     const traces: any = [];
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
@@ -305,10 +321,10 @@ export class PlotlySetup {
     };
 
     const traceConfig: any = {
-      type: "bar",
+      type: model.chartType === "line" ? "line" : "bar",
       customdata: hasSeries ? seriesLabels : labels,
       hoverinfo: "x+y",
-      mode: "markers",
+      mode: model.chartType === "line" ? "lines+markers" : "markers",
       textposition: "none",
       width: 0.5,
       bargap: 0.5,
@@ -343,6 +359,7 @@ export class PlotlySetup {
     }
     if(!(model as any).getValueType || (model as any).getValueType() != "date") {
       layout.xaxis = {
+        automargin: true,
         type: "category",
       };
     }

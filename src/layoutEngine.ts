@@ -81,11 +81,13 @@ export class MuuriLayoutEngine extends LayoutEngine {
     this._muuri = undefined;
   }
   protected updateCore() {
+    if(!this._muuri) return;
     if (this._layoutingTimer !== undefined) {
       clearTimeout(this._layoutingTimer);
     }
     this._layoutingTimer = setTimeout(() => {
       this._layoutingTimer = undefined;
+      if(!this._muuri) return;
       this._muuri.refreshItems();
       this._muuri.layout();
     }, 10);
