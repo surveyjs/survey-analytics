@@ -57,7 +57,6 @@ export const defaultOptions: ITabulatorOptions = {
   columnMinWidth: 248,
   downloadHiddenColumns: false,
   downloadButtons: ["csv"],
-  columnMinWidth: 248,
   downloadOptions: defaultDownloadOptions,
   onDownloadCallbacks: {
     pdf: (tabulator: Tabulator, options) => {
@@ -345,7 +344,7 @@ export class Tabulator extends Table {
         minWidth: this._options.columnMinWidth,
         download: this.options.downloadHiddenColumns ? true : undefined,
         formatter,
-        headerTooltip:true,
+        headerTooltip: true,
         accessorDownload: this.accessorDownload,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(
