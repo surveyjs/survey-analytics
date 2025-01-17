@@ -1,4 +1,4 @@
-import { Base, ItemValue, MatrixRowModel, Question, QuestionCompositeModel, QuestionCustomModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, settings } from "survey-core";
+import { ItemValue, MatrixRowModel, Question, QuestionCompositeModel, QuestionCustomModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase, settings } from "survey-core";
 import { createImagesContainer, createLinksContainer } from "../utils";
 import { ICellData, IColumn, ColumnDataType, QuestionLocation, IColumnData } from "./config";
 import { ITableOptions, Table } from "./table";
@@ -111,17 +111,20 @@ export class DefaultColumn extends BaseColumn {
   }
 }
 
-export class CommentColumn extends BaseColumn {
+export class CommentColumn<T extends Question = Question> extends BaseColumn<T> {
   protected getName(): string {
     return `${this.question.name}${settings.commentPrefix}`;
   }
   protected getDisplayName(): string {
-    return this.question.hasOther
-      ? (<any>this.question).otherText
-      : this.question.commentText;
+    return this.question.commentText;
   }
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions) {
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
     return this.question.comment;
+  }
+}
+export class OtherColumn extends CommentColumn<QuestionSelectBase> {
+  protected getDisplayName(): string {
+    return this.question.otherText;
   }
 }
 

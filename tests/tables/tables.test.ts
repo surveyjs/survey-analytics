@@ -343,6 +343,29 @@ test("check columns for question with other and storeOthersAsComment: false", ()
   expect((<any>table).columns.length).toEqual(1);
 });
 
+test("check columns for question with other and comment", () => {
+  const json = {
+    questions: [
+      {
+        type: "radiogroup",
+        title: "Radio",
+        name: "radio",
+        choices: [{ value: "choiceValue", text: "choiceText" }],
+        otherText: "Other (Describe Radio)",
+        hasOther: true,
+        showCommentArea: true,
+        commentText: "Comment-Test"
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [], {}, []);
+  expect((<any>table).columns[0].name).toEqual("radio");
+  expect(<any>table.columns[1].name).toEqual("radio-Comment");
+  expect(<any>table.columns[1].displayName).toEqual("Comment-Test");
+  expect(<any>table.columns[1].dataType).toEqual(ColumnDataType.Text);
+});
+
 test("check data for question with comment", () => {
   const json = {
     questions: [
@@ -910,4 +933,3 @@ test("check set state with columns which not inside survey", () => {
   expect(table.columns[1].getCellData(table, data).displayValue).toEqual("text2");
   expect(table.columns[1].getCellData(table, data).question).toBe(undefined);
 });
-
