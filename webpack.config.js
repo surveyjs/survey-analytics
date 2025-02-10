@@ -77,8 +77,6 @@ module.exports = function (options) {
   const buildPath = __dirname + "/build/";
   const isProductionBuild = options.buildType === "prod";
   const emitNonSourceFiles = !!options.emitNonSourceFiles;
-
-
   const config = {
     mode: isProductionBuild ? "production" : "development",
     entry: {
