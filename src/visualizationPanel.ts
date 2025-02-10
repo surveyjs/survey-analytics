@@ -9,17 +9,16 @@ import { IVisualizerPanelElement, IState, IPermission } from "./config";
 import { FilterInfo } from "./filterInfo";
 import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
 import { DataProvider } from "./dataProvider";
-
-var styles = require("./visualizationPanel.scss");
+import { svgTemplate } from "./svgbundle";
+require("./visualizationPanel.scss");
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
 
 if (!!document) {
-  const svgTemplate = require("./svgbundle.html");
   const templateHolder = document.createElement("div");
   templateHolder.style.display = "none";
-  templateHolder.innerHTML = svgTemplate.default;
+  templateHolder.innerHTML = svgTemplate;
   document.head.appendChild(templateHolder);
 }
 
