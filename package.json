@@ -10,8 +10,8 @@
     "release": "standard-version --message \"Release: %s [azurepipelines skip]\" ",
     "doc_gen": "node doc_generator/lib_docgenerator.js src/index.ts",
     "doc_update": "chmod +x ./docupdate_npm.sh && ./docupdate_npm.sh",
-    "watch:dev": "webpack --env buildType=dev --watch",
-    "build": "webpack --env buildType=dev --env emitNonSourceFiles && webpack --env buildType=prod",
+    "watch:dev": "concurrently \"webpack --env buildType=dev\" \"webpack --config ./webpack.fesm.js --env buildType=prod --watch\" ",
+    "build": "webpack --env buildType=dev --env emitNonSourceFiles && webpack --env buildType=prod && webpack --config ./webpack.fesm.js --env buildType=prod",
     "build:types:summary": "tsc --p tsconfig.summary.json && echo \"export * from './survey-analytics.types/entries/summary';\" >> build/survey.analytics.d.ts",
     "build:types:tabulator": "tsc --p tsconfig.tabulator.json && echo \"export * from './survey-analytics-tabulator.types/entries/tabulator';\" >> build/survey.analytics.tabulator.d.ts",
     "lint": "eslint ./src --quiet",
@@ -77,7 +77,8 @@
     "typescript": "^5.7.0",
     "webpack": "^5.93.0",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4"
+    "webpack-dev-server": "^5.0.4",
+    "webpack-merge": "^5.8.0"
   },
   "peerDependencies": {
     "@types/plotly.js-dist-min": "^2.3.0"

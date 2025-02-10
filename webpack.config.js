@@ -62,6 +62,18 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
         delete packageJson.dependencies["survey-core"];
         if (!packageJson.peerDependencies) packageJson.peerDependencies = {};
         packageJson.peerDependencies["survey-core"] = packageJson.version
+        packageJson.exports = {
+          ".": {
+            "types": "./survey.analytics.d.ts",
+            "import": "./fesm/survey.pdf.js",
+            "require": "./survey.pdf.js"
+          },
+          "./survey.analytics.tabulator": {
+            "types": "./survey.analytics.tabulator.d.ts",
+            "import": "./fesm/survey.analytics.tabulator.js",
+            "require": "./survey.analytics.tabulator.js"
+          },
+        }
         fs.writeFileSync(
           buildPath + "package.json",
           JSON.stringify(packageJson, null, 2),
