@@ -469,3 +469,34 @@ test("isSupportAnswersOrder and allowSortAnswers or allowChangeAnswersOrder opti
   sb = new SelectBase(new QuestionDropdownModel("q1"), [], { allowSortAnswers: true });
   expect(sb["isSupportAnswersOrder"]()).toBeTruthy();
 });
+
+test("renderContent function shouldn't be passed to question footer visualizer", () => {
+  var survey = new SurveyModel({
+    "elements": [{
+      "type": "radiogroup",
+      "name": "q1",
+      "title": "Which of the following best describes you or your organization?",
+      "showOtherItem": true,
+      "choices": [{
+        "value": "ISV",
+        "text": "ISV (building commercial/shrink-wrapped software)"
+      }, {
+        "value": "Consulting",
+        "text": "Software consulting firm (providing development services to other organizations)"
+      }, {
+        "value": "Custom",
+        "text": "Custom software development (as a freelancer/contractor)"
+      }, {
+        "value": "In-house",
+        "text": "In-house software development"
+      }, {
+        "value": "Hobbyist",
+        "text": "Hobbyist (developing apps for personal use)"
+      }]
+    }]
+  });
+  const customRenderContent = () => {};
+  const selectBase = new SelectBase(survey.getQuestionByName("q1"), [], { renderContent: customRenderContent });
+  expect(selectBase.footerVisualizer).toBeDefined();
+  expect(selectBase.footerVisualizer.options.renderContent).toBeUndefined();
+});

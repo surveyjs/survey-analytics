@@ -195,19 +195,19 @@ export class VisualizerBase implements IDataInfo {
     );
   }
 
-  protected createVisualizer<T = VisualizerBase>(question: Question): T {
-    let options = Object.assign({}, this.options);
-    if (options.dataProvider === undefined) {
-      options.dataProvider = this.dataProvider;
+  protected createVisualizer<T = VisualizerBase>(question: Question, options?: { [index: string]: any }): T {
+    let visualizerOptions = Object.assign({}, options || this.options);
+    if (visualizerOptions.dataProvider === undefined) {
+      visualizerOptions.dataProvider = this.dataProvider;
     }
-    return VisualizerFactory.createVisualizer(question, this.data, options) as T;
+    return VisualizerFactory.createVisualizer(question, this.data, visualizerOptions) as T;
   }
 
   /**
    * Allows you to access the footer visualizer. Returns `undefined` if the footer is absent.
    * @see hasFooter
    */
-  get footerVisualizer() {
+  get footerVisualizer(): VisualizerBase {
     if (!this.hasFooter) {
       return undefined;
     }
@@ -217,7 +217,9 @@ export class VisualizerBase implements IDataInfo {
       );
       question.title = this.processText(this.question.title);
 
-      this._footerVisualizer = this.createVisualizer(question);
+      let visualizerOptions = Object.assign({}, this.options);
+      visualizerOptions.renderContent = undefined;
+      this._footerVisualizer = this.createVisualizer(question, visualizerOptions);
       if(!!this._footerVisualizer) {
         this._footerVisualizer.onUpdate = () => this.invokeOnUpdate();
       }
