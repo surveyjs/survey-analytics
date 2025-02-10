@@ -74,6 +74,7 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
             "require": "./survey.analytics.tabulator.js"
           },
         }
+        packageJson.module = "fesm/survey.analytics.js";
         fs.writeFileSync(
           buildPath + "package.json",
           JSON.stringify(packageJson, null, 2),
