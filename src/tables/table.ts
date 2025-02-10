@@ -200,8 +200,18 @@ export abstract class Table {
     this.refresh(true);
     this.onStateChanged.fire(this, this.state);
   }
-  public get isInitTableDataProcessing(): boolean { return this.isInitTableDataProcessingValue; }
+
   private isInitTableDataProcessingValue: boolean;
+  public get isInitTableDataProcessing(): boolean { return this.isInitTableDataProcessingValue; }
+  protected initTableData(data: Object[] | GetDataFn): void {
+    if(!Array.isArray(data)) {
+      this.tableData = undefined;
+      return;
+    }
+    this.isInitTableDataProcessingValue = true;
+    this.tableData = (data || []).map((item) => this.processLoadedDataItem(item));
+    this.isInitTableDataProcessingValue = false;
+  }
   protected processLoadedDataItem(item: any): any {
     var dataItem: any = {};
     this._survey.data = item;
@@ -212,17 +222,7 @@ export abstract class Table {
       }
       dataItem[column.name] = opt.displayValue;
     });
-
     return dataItem;
-  }
-  protected initTableData(data: Array<any> | GetDataFn): void {
-    if(!Array.isArray(data)) {
-      this.tableData = undefined;
-      return;
-    }
-    this.isInitTableDataProcessingValue = true;
-    this.tableData = (data || []).map((item) => this.processLoadedDataItem(item));
-    this.isInitTableDataProcessingValue = false;
   }
 
   public moveColumn(from: number, to: number) {
@@ -483,6 +483,7 @@ export abstract class TableRow {
 
   public remove(): void {
     this.table.removeRow(this);
+    this.destroy();
   }
 
   private onColumnLocationChangedCallback = () => {

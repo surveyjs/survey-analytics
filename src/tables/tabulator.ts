@@ -15,7 +15,6 @@ if (!!document) {
   templateHolder.innerHTML = svgTemplate.default;
   document.head.appendChild(templateHolder);
 }
-
 interface ITabulatorOptions extends ITableOptions {
   tabulatorOptions?: any;
   downloadHiddenColumns?: boolean;
@@ -42,7 +41,7 @@ export const defaultDownloadOptions = {
         styles: {
           font: "custom_helvetica",
           fontStyle: "normal",
-          cellWidth: 1,
+          minCellWidth: 100,
         },
         margin: { top: 10, right: 10, bottom: 10, left: 10 },
       };
@@ -98,7 +97,7 @@ export class Tabulator extends Table {
     if(!!window && window["XLSX"] !== undefined && defaultOptions.downloadButtons.indexOf("xlsx") === -1) {
       defaultOptions.downloadButtons.unshift("xlsx");
     }
-    if(!!window && window["jsPDF"] !== undefined && defaultOptions.downloadButtons.indexOf("pdf") === -1) {
+    if(!!window && window["jspdf"] !== undefined && defaultOptions.downloadButtons.indexOf("pdf") === -1) {
       defaultOptions.downloadButtons.unshift("pdf");
     }
     this._options = Object.assign({}, defaultOptions, options);
@@ -142,14 +141,18 @@ export class Tabulator extends Table {
         columns,
         rowFormatter: this.rowFormatter,
         paginationElement: paginationElement,
-        columnMoved: this.columnMovedCallback,
-        columnResized: this.columnResizedCallback,
         tooltipsHeader: true,
-        tooltips: (cell: any) => cell.getValue(),
         downloadRowRange: "all",
         columnMinWidth: (this.options as ITabulatorOptions).columnMinWidth,
         paginationButtonCount: 3,
         nestedFieldSeparator: false,
+        columnDefaults: {
+          tooltip: (_: MouseEvent, cell: any) => {
+            const span = document.createElement("span");
+            span.innerText = cell.getValue();
+            return span.innerHTML;
+          }
+        }
       },
       this._options.tabulatorOptions
     );
@@ -185,6 +188,8 @@ export class Tabulator extends Table {
     }
 
     this.tabulatorTables = new TabulatorTables(this.tableContainer, config);
+    this.tabulatorTables.on("columnResized", this.columnResizedCallback);
+    this.tabulatorTables.on("columnMoved", this.columnMovedCallback);
 
     const extensionsContainer = DocumentHelper.createElement(
       "div",
@@ -246,18 +251,20 @@ export class Tabulator extends Table {
   };
 
   private rowFormatter = (row: any): void => {
-    var tableRow = new TabulatorRow(
+    const originalData = this.data[this.tableData.indexOf(row.getData())];
+
+    const tableRow = new TabulatorRow(
       this,
       row.getCells()[0].getElement(),
       row.getElement(),
-      row
+      row,
+      originalData
     );
     tableRow.onToggleDetails.add(() => {
       row.normalizeHeight();
       this.layout();
     });
     tableRow.render();
-
     this._rows.push(tableRow);
   };
   private accessorDownload = (cellData: any, rowData: any, reason: string, _: any, columnComponent: any, rowComponent: any) => {
@@ -266,7 +273,7 @@ export class Tabulator extends Table {
       const questionName = columnDefinition.field;
       const column = this.columns.filter(col => col.name === questionName)[0];
       if (!!column && rowComponent) {
-        const dataRow = this.data[rowComponent.getPosition()];
+        const dataRow = rowComponent.getData().surveyOriginalData;
         const dataCell = dataRow[questionName];
         if (column.dataType === ColumnDataType.Image) {
           return questionName;
@@ -334,8 +341,10 @@ export class Tabulator extends Table {
         widthShrink: !column.width ? 1 : 0,
         visible: this.isColumnVisible(column),
         headerSort: false,
+        minWidth: this._options.columnMinWidth,
         download: this.options.downloadHiddenColumns ? true : undefined,
         formatter,
+        headerTooltip: true,
         accessorDownload: this.accessorDownload,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(
@@ -462,6 +471,11 @@ export class Tabulator extends Table {
   public layout(hard: boolean = false): void {
     this.tabulatorTables.redraw(hard);
   }
+  protected processLoadedDataItem(item: any) {
+    const dataItem = super.processLoadedDataItem(item);
+    dataItem["surveyOriginalData"] = item;
+    return dataItem;
+  }
 }
 
 export class TabulatorRow extends TableRow {
@@ -469,7 +483,8 @@ export class TabulatorRow extends TableRow {
     protected table: Table,
     protected extensionsContainer: HTMLElement,
     protected detailsContainer: HTMLElement,
-    protected innerRow: any
+    protected innerRow: any,
+    protected originalData: any
   ) {
     super(table, extensionsContainer, detailsContainer);
   }
@@ -483,7 +498,11 @@ export class TabulatorRow extends TableRow {
   }
 
   public getDataPosition(): number {
-    return this.innerRow.getPosition();
+    const data = this.table.getData();
+    if(Array.isArray(data)) {
+      return data.indexOf(this.innerRow.getData().surveyOriginalData);
+    }
+    return null;
   }
 
   public remove(): void {
