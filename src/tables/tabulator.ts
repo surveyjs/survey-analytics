@@ -5,14 +5,13 @@ import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
 import TabulatorTables from "tabulator-tables";
 import { ARIAL_FONT } from "./custom_jspdf_font";
-
-var styles = require("./tabulator.scss");
+import { svgTemplate } from "../svgbundle";
+require("./tabulator.scss");
 
 if (!!document) {
-  const svgTemplate = require("../svgbundle.html");
   const templateHolder = document.createElement("div");
   templateHolder.style.display = "none";
-  templateHolder.innerHTML = svgTemplate.default;
+  templateHolder.innerHTML = svgTemplate;
   document.head.appendChild(templateHolder);
 }
 interface ITabulatorOptions extends ITableOptions {

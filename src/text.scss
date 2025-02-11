@@ -1,4 +1,4 @@
-@import "globals";
+@use "globals" as *;
 
 .sa-text-table__container {
   width: 100%;
@@ -13,15 +13,15 @@
   font-size: $root-font-size;
   color: $text-color;
   border-width: 1px;
-	border-collapse: collapse;
+  border-collapse: collapse;
   background-color: $background-color;
 }
 
 .sa-text-table__cell {
-	border-width: 1px;
-	padding: 8px;
-	border-style: solid;
-	border-color: $border-color;
+  border-width: 1px;
+  padding: 8px;
+  border-style: solid;
+  border-color: $border-color;
   background-color: $background-color;
   min-height: $form-element-height;
 }

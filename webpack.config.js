@@ -38,11 +38,6 @@ PascalCaseNamePlugin.prototype.apply = function (compiler) {
   });
 };
 
-var svgStoreUtils = require(path.resolve(
-  __dirname,
-  "./node_modules/webpack-svgstore-plugin/src/helpers/utils.js"
-));
-
 const today = new Date();
 const year = today.getFullYear();
 
@@ -52,60 +47,50 @@ var banner = [
   "License: MIT (http://www.opensource.org/licenses/mit-license.php)",
 ].join("\n");
 
-function copyFileWithBanner(source, destination, banner) {
-  var writeStream = fs.createWriteStream(destination)
-  writeStream.write("/*\n" + banner + "*/\n\n");
-  fs.createReadStream(source).pipe(writeStream);
-}
-
-module.exports = function (options) {
-  var packagePath = __dirname + "/packages/";
-  var isProductionBuild = options.buildType === "prod";
-
-  function createSVGBundle() {
-    var options = {
-      fileName: path.resolve(__dirname, "./src/svgbundle.html"),
-      template: path.resolve(__dirname, "./svgbundle.pug"),
-      svgoOptions: {
-        plugins: [{ removeTitle: true }],
-      },
-      prefix: "sa-svg-",
-    };
-
-    svgStoreUtils.filesMap(path.join("./src/images/**/*.svg"), (files) => {
-      const fileContent = svgStoreUtils.createSprite(
-        svgStoreUtils.parseFiles(files, options),
-        options.template
-      );
-      fs.writeFileSync(options.fileName, fileContent);
-    });
-  }
-
-  var percentage_handler = function handler(percentage, msg) {
+function getPercentageHandler(emitNonSourceFiles, buildPath) {
+  return function (percentage, msg) {
     if (0 === percentage) {
       console.log("Build started... good luck!");
-      createSVGBundle();
     } else if (1 === percentage) {
-      if (options.buildType === "prod") {
+      if (emitNonSourceFiles) {
         fs.createReadStream("./LICENSE").pipe(
-          fs.createWriteStream(packagePath + "LICENSE")
+          fs.createWriteStream(buildPath + "LICENSE")
         );
         fs.createReadStream("./README.md").pipe(
-          fs.createWriteStream(packagePath + "README.md")
+          fs.createWriteStream(buildPath + "README.md")
         );
         delete packageJson.dependencies["survey-core"];
-        if(!packageJson.peerDependencies) packageJson.peerDependencies = {};
+        if (!packageJson.peerDependencies) packageJson.peerDependencies = {};
         packageJson.peerDependencies["survey-core"] = packageJson.version
+        packageJson.exports = {
+          ".": {
+            "types": "./survey.analytics.d.ts",
+            "import": "./fesm/survey.pdf.js",
+            "require": "./survey.pdf.js"
+          },
+          "./survey.analytics.tabulator": {
+            "types": "./survey.analytics.tabulator.d.ts",
+            "import": "./fesm/survey.analytics.tabulator.js",
+            "require": "./survey.analytics.tabulator.js"
+          },
+        }
+        packageJson.module = "fesm/survey.analytics.js";
         fs.writeFileSync(
-          packagePath + "package.json",
+          buildPath + "package.json",
           JSON.stringify(packageJson, null, 2),
           "utf8"
         );
       }
     }
   };
+}
 
-  var config = {
+
+module.exports = function (options) {
+  const buildPath = __dirname + "/build/";
+  const isProductionBuild = options.buildType === "prod";
+  const emitNonSourceFiles = !!options.emitNonSourceFiles;
+  const config = {
     mode: isProductionBuild ? "production" : "development",
     entry: {
       "survey.analytics.tabulator": path.resolve(
@@ -142,6 +127,7 @@ module.exports = function (options) {
             {
               loader: "sass-loader",
               options: {
+                api: "modern",
                 sourceMap: !isProductionBuild,
               },
             },
@@ -152,16 +138,13 @@ module.exports = function (options) {
           loader: "html-loader",
         },
         {
-          test: /\.(svg|png)$/,
-          use: {
-            loader: "url-loader",
-            options: {},
-          },
+          test: /\.svg$/,
+          loader: "svg-inline-loader",
         },
       ],
     },
     output: {
-      path: packagePath,
+      path: buildPath,
       filename: "[name]" + (options.buildType === "prod" ? ".min" : "") + ".js",
       library: "[pc-name]",
       libraryTarget: "umd",
@@ -197,7 +180,7 @@ module.exports = function (options) {
     plugins: [
       new PascalCaseNamePlugin(),
       new webpack.WatchIgnorePlugin({ paths: [/svgbundle\.html/] }),
-      new webpack.ProgressPlugin(percentage_handler),
+      new webpack.ProgressPlugin(getPercentageHandler(emitNonSourceFiles, buildPath)),
       new webpack.DefinePlugin({
         "process.env.ENVIRONMENT": JSON.stringify(options.buildType),
         "process.env.VERSION": JSON.stringify(packageJson.version),
@@ -213,7 +196,7 @@ module.exports = function (options) {
       static: {
         directory: path.join(__dirname, '.'),
       },
-    },    
+    },
   };
 
   if (isProductionBuild) {

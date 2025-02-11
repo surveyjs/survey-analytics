@@ -110,13 +110,12 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
-      npm run build:prod
+      npm run build
     displayName: "npm build"
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm run build:types:summary
-      npm run build:types:datatables
       npm run build:types:tabulator
     displayName: "npm build typings"
 
@@ -182,7 +181,7 @@ steps:
 
   - task: CopyFiles@2
     inputs:
-      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/packages"
+      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/build"
       targetFolder: $(Build.ArtifactStagingDirectory)/SurveyJSAnalyticsBuild/packages/survey-analytics
 
   - task: PublishBuildArtifacts@1
