@@ -90,6 +90,7 @@ module.exports = function (options) {
   const buildPath = __dirname + "/build/";
   const isProductionBuild = options.buildType === "prod";
   const emitNonSourceFiles = !!options.emitNonSourceFiles;
+  const emitStyles = !!options.emitStyles;
   const config = {
     mode: isProductionBuild ? "production" : "development",
     entry: {
@@ -117,7 +118,12 @@ module.exports = function (options) {
         {
           test: /\.scss$/,
           use: [
-            MiniCssExtractPlugin.loader,
+            {
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                emit: emitStyles,
+              }
+            },
             {
               loader: "css-loader",
               options: {
