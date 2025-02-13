@@ -33,6 +33,7 @@ function getConfig(options) {
 
 module.exports = function (options) {
   options.tsConfigFile = "tsconfig.fesm.json";
+  options.fixTabulatorImport = false;
   const config = webpackCommonConfigCreator(options);
   config.output = {};
   config.externals = {};

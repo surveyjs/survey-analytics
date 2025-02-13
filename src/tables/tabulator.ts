@@ -3,7 +3,7 @@ import { SurveyModel } from "survey-core";
 import { ColumnDataType, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
-import TabulatorTables from "tabulator-tables";
+import { TabulatorFull } from "tabulator-tables";
 import { ARIAL_FONT } from "./custom_jspdf_font";
 import { svgTemplate } from "../svgbundle";
 require("./tabulator.scss");
@@ -186,7 +186,7 @@ export class Tabulator extends Table {
       };
     }
 
-    this.tabulatorTables = new TabulatorTables(this.tableContainer, config);
+    this.tabulatorTables = new TabulatorFull(this.tableContainer, config);
     this.tabulatorTables.on("columnResized", this.columnResizedCallback);
     this.tabulatorTables.on("columnMoved", this.columnMovedCallback);
 

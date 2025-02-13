@@ -65,9 +65,10 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
         packageJson.exports = {
           ".": {
             "types": "./survey.analytics.d.ts",
-            "import": "./fesm/survey.pdf.js",
-            "require": "./survey.pdf.js"
+            "import": "./fesm/survey.analytics.js",
+            "require": "./survey.analytics.js"
           },
+          "./*.css": "./*.css",
           "./survey.analytics.tabulator": {
             "types": "./survey.analytics.tabulator.d.ts",
             "import": "./fesm/survey.analytics.tabulator.js",
@@ -114,6 +115,16 @@ module.exports = function (options) {
         {
           test: /\.(ts)$/,
           loader: "ts-loader",
+          options: {
+            configFile: options.tsConfigFile || "tsconfig.json",
+          }
+        },
+        {
+          test: /tabulator\.ts$/,
+          loader: path.resolve(__dirname, "./fix-tabulator-import.js"),
+          options: {
+            fixTabulatorImport: options.fixTabulatorImport || options.fixTabulatorImport === undefined
+          }
         },
         {
           test: /\.scss$/,
