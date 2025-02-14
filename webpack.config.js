@@ -97,7 +97,7 @@ module.exports = function (options) {
     entry: {
       "survey.analytics.tabulator": path.resolve(
         __dirname,
-        "./src/entries/tabulator"
+        "./src/entries/tabulator-umd"
       ),
       "survey.analytics": path.resolve(__dirname, "./src/entries/summary"),
     },
@@ -117,13 +117,6 @@ module.exports = function (options) {
           loader: "ts-loader",
           options: {
             configFile: options.tsConfigFile || "tsconfig.json",
-          }
-        },
-        {
-          test: /tabulator\.ts$/,
-          loader: path.resolve(__dirname, "./fix-tabulator-import.js"),
-          options: {
-            fixTabulatorImport: options.fixTabulatorImport || options.fixTabulatorImport === undefined
           }
         },
         {

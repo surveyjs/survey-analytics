@@ -1,11 +1,11 @@
-import { GetDataFn, ITableOptions, Table, TableRow } from "./table";
+import { GetDataFn, ITableOptions, Table, TableRow, TabulatorSortOrder } from "./table";
 import { SurveyModel } from "survey-core";
 import { ColumnDataType, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
-import { TabulatorFull } from "tabulator-tables";
 import { ARIAL_FONT } from "./custom_jspdf_font";
 import { svgTemplate } from "../svgbundle";
+import type { DownloadType, SortDirection, TabulatorFull } from "tabulator-tables";
 require("./tabulator.scss");
 
 if (!!document) {
@@ -81,7 +81,13 @@ const escapeCellFormula = (field: string) => {
   }
 };
 
+type TabulatorParameters = ConstructorParameters<typeof TabulatorFull>;
+type TabulatorConstuctor = { new (...args: TabulatorParameters): TabulatorFull };
 export class Tabulator extends Table {
+  private static tabulatorTablesConstructor: TabulatorConstuctor;
+  public static initTabulatorConstructor(tabulatorTablesConstructor: TabulatorConstuctor): void {
+    this.tabulatorTablesConstructor = tabulatorTablesConstructor;
+  }
   public static set haveCommercialLicense(val: boolean) {
     Table.haveCommercialLicense = val;
   }
@@ -103,7 +109,7 @@ export class Tabulator extends Table {
   }
 
   private readonly COLUMN_MIN_WIDTH = 155;
-  public tabulatorTables: any = null;
+  public tabulatorTables: TabulatorFull = null;
   private tableContainer: HTMLElement = null;
   private currentDownloadType: string = "";
 
@@ -175,8 +181,8 @@ export class Tabulator extends Table {
           const dataLoadingPromise = (this.data as GetDataFn)({
             offset: (params.page - 1) * params.size,
             limit: params.size,
-            filter: this.tabulatorTables?.getFilters(),
-            sort: this.tabulatorTables?.getSorters().map(s => ({ field: s.field, dir: s.dir })),
+            filter: this.tabulatorTables?.getFilters(false),
+            sort: this.tabulatorTables?.getSorters().map(s => ({ field: s.field, direction: s.dir })),
             callback: dataLoadingCallback
           });
           if(dataLoadingPromise) {
@@ -186,7 +192,7 @@ export class Tabulator extends Table {
       };
     }
 
-    this.tabulatorTables = new TabulatorFull(this.tableContainer, config);
+    this.tabulatorTables = new Tabulator.tabulatorTablesConstructor(this.tableContainer, config);
     this.tabulatorTables.on("columnResized", this.columnResizedCallback);
     this.tabulatorTables.on("columnMoved", this.columnMovedCallback);
 
@@ -202,7 +208,7 @@ export class Tabulator extends Table {
   }
 
   private createDownloadsBar(): HTMLElement {
-    var createDownloadButton = (type: string, caption: string): HTMLElement => {
+    var createDownloadButton = (type: DownloadType, caption: string): HTMLElement => {
       const btn = DocumentHelper.createElement(
         "button",
         "sa-table__btn sa-table__btn--small sa-table__btn--gray",
@@ -221,7 +227,7 @@ export class Tabulator extends Table {
       "sa-tabulator__downloads-bar"
     );
 
-    this._options.downloadButtons.forEach((type: string) => {
+    this._options.downloadButtons.forEach((type: DownloadType) => {
       container.appendChild(
         createDownloadButton(
           type,
@@ -390,7 +396,7 @@ export class Tabulator extends Table {
     }
   }
 
-  public setColumnWidth(columnName: string, width: number | string): void {
+  public setColumnWidth(columnName: string, width: number): void {
     super.setColumnWidth(columnName, width);
     if (this.isRendered) {
       const column = this.tabulatorTables.getColumn(columnName);
@@ -403,7 +409,7 @@ export class Tabulator extends Table {
     }
   }
 
-  public sortByColumn(columnName: string, direction: string): void {
+  public sortByColumn(columnName: string, direction: SortDirection): void {
     this.tabulatorTables.setSort(columnName, direction);
   }
 
@@ -431,7 +437,8 @@ export class Tabulator extends Table {
     if (!this.isRendered) {
       return 1;
     }
-    return this.tabulatorTables.getPage();
+    const pageNumber = this.tabulatorTables.getPage();
+    return pageNumber ? pageNumber : -1;
   }
 
   public setPageNumber(value: number): void {
@@ -458,7 +465,7 @@ export class Tabulator extends Table {
     return options;
   }
 
-  public download(type: string): void {
+  public download(type: DownloadType): void {
     this.currentDownloadType = type;
     this.tabulatorTables.download(
       type,

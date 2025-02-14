@@ -82,7 +82,8 @@
     "webpack-merge": "^5.8.0"
   },
   "peerDependencies": {
-    "@types/plotly.js-dist-min": "^2.3.0"
+    "@types/plotly.js-dist-min": "^2.3.0",
+    "@types/tabulator-tables": "^6.2.3"
   },
   "husky": {
     "hooks": {

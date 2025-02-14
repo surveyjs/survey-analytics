@@ -1,6 +1,7 @@
 "use strict";
 const webpackCommonConfigCreator = require("./webpack.config");
 const { merge } = require("webpack-merge");
+const path = require("path");
 
 function getConfig(options) {
   const buildPath = __dirname + "/build/fesm/";
@@ -38,5 +39,6 @@ module.exports = function (options) {
   config.output = {};
   config.externals = {};
   delete config.mode;
+  config.entry["survey.analytics.tabulator"] = path.resolve(__dirname, "./src/entries/tabulator-es");
   return merge(config, getConfig(options));
 };
