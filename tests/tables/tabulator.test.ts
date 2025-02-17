@@ -1,5 +1,5 @@
 import { SurveyModel } from "survey-core";
-import { Tabulator } from "../../src/tables/tabulator";
+import { Tabulator } from "../../src/entries/tabulator-umd";
 import { TableExtensions } from "../../src/tables/extensions/tableextensions";
 import { Table } from "../../src/tables/table";
 
