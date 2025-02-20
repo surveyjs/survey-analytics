@@ -331,7 +331,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Obsolete. Use [`surveyData`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#surveyData) instead.
+   * @deprecated Use [`surveyData`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#surveyData) instead.
    */
   protected get data() {
     return this.dataProvider.filteredData;
@@ -673,7 +673,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Obsolete. Use [`getCalculatedValues()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#getCalculatedValues) instead.
+   * @deprecated Use [`getCalculatedValues()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#getCalculatedValues) instead.
    */
   getData(): any {
     return this.getCalculatedValuesCore();
