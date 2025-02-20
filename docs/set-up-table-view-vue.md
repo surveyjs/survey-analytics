@@ -284,4 +284,4 @@ To view the application, run `npm run serve` in a command line and open [http://
 
 ## See Also
 
-[Dashboard Demo Examples](/dashboard/examples/ (linkStyle))
+[Table View Demo Example](/dashboard/examples/export-survey-results-to-csv-files/ (linkStyle))

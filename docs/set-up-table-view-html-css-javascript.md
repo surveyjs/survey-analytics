@@ -274,4 +274,4 @@ document.addEventListener("DOMContentLoaded", function() {
 
 ## See Also
 
-[Dashboard Demo Examples](/dashboard/examples/ (linkStyle))
+[Table View Demo Example](/dashboard/examples/export-survey-results-to-csv-files/ (linkStyle))

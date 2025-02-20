@@ -304,4 +304,4 @@ To view the application, run `ng serve` in a command line and open [http://local
 
 ## See Also
 
-[Dashboard Demo Examples](/dashboard/examples/ (linkStyle))
+[Table View Demo Example](/dashboard/examples/export-survey-results-to-csv-files/ (linkStyle))
