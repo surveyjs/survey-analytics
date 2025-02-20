@@ -160,6 +160,9 @@ export interface IVisualizationPanelOptions {
    * @see answersOrder
    */
   allowSortAnswers?: boolean;
+  /**
+   * @deprecated Use the [`allowSortAnswers`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowSortAnswers) property instead.
+   */
   allowChangeAnswersOrder?: boolean;
   /**
    * Specifies how to sort answers in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
@@ -797,7 +800,7 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   /**
-   * Obsolete. Use [`onElementShown`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#onElementShown), [`onElementHidden`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#onElementHidden), or [`onElementMoved`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#onElementMoved) instead.
+   * @deprecated Use [`onElementShown`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#onElementShown), [`onElementHidden`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#onElementHidden), or [`onElementMoved`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#onElementMoved) instead.
    */
   public onVisibleElementsChanged = new Event<
     (sender: VisualizationPanel, options: any) => any, VisualizationPanel,

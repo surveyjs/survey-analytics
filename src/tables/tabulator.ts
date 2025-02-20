@@ -163,7 +163,8 @@ export class Tabulator extends Table {
     );
     if(data === undefined && typeof this.data === "function") {
       delete config.data;
-      config.pagination = "remote";
+      config.pagination = true;
+      config.paginationMode = "remote";
       config.ajaxFiltering = true; // Tabulator v4.8
       config.filterMode = "remote"; // Tabulator v6.2
       config.ajaxSorting = true; // Tabulator v4.8
