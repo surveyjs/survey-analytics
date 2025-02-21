@@ -5,7 +5,7 @@ import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
 import { ARIAL_FONT } from "./custom_jspdf_font";
 import { svgTemplate } from "../svgbundle";
-import type { DownloadType, SortDirection, TabulatorFull } from "tabulator-tables";
+import type { DownloadType, SortDirection, TabulatorFull, RowComponent } from "tabulator-tables";
 require("./tabulator.scss");
 
 if (!!document) {
@@ -256,16 +256,12 @@ export class Tabulator extends Table {
     this.layout();
   };
 
-  private rowFormatter = (row: any): void => {
-    // const originalData = this.data[this.tableData.indexOf(row.getData())];
-    const originalData = row.getData();
-
+  private rowFormatter = (row: RowComponent): void => {
     const tableRow = new TabulatorRow(
       this,
       row.getCells()[0].getElement(),
       row.getElement(),
-      row,
-      originalData
+      row
     );
     tableRow.onToggleDetails.add(() => {
       row.normalizeHeight();
@@ -492,7 +488,6 @@ export class TabulatorRow extends TableRow {
     protected extensionsContainer: HTMLElement,
     protected detailsContainer: HTMLElement,
     protected innerRow: any,
-    protected originalData: any
   ) {
     super(table, extensionsContainer, detailsContainer);
   }
