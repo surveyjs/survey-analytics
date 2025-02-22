@@ -10,7 +10,7 @@ import { FilterInfo } from "./filterInfo";
 import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
 import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
-require("./visualizationPanel.scss");
+import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";

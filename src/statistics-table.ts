@@ -4,7 +4,7 @@ import { VisualizationManager } from "./visualizationManager";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils";
 
-var styles = require("./statistics-table.scss");
+import "./statistics-table.scss";
 
 export class StatisticsTableAdapter {
   constructor(private model: StatisticsTable) {}
