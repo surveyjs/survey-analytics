@@ -1,0 +1,94 @@
+const typescript = require("@rollup/plugin-typescript");
+const nodeResolve = require("@rollup/plugin-node-resolve");
+const commonjs = require("@rollup/plugin-commonjs");
+const replace = require("@rollup/plugin-replace");
+const bannerPlugin = require("rollup-plugin-license");
+
+const path = require("path");
+const glob = require("fast-glob").glob;
+const readFile = require("fs").readFileSync;
+const VERSION = require("./package.json").version;
+
+const banner = [
+  "surveyjs - SurveyJS Dashboard library v" + VERSION,
+  "Copyright (c) 2015-" + new Date().getFullYear() + " Devsoft Baltic OÜ  - http://surveyjs.io/",
+  "License: MIT (http://www.opensource.org/licenses/mit-license.php)",
+].join("\n");
+
+const input = { 
+  "survey.analytics": path.resolve(__dirname, "./src/entries/summary.ts"),
+  "survey.analytics.tabulator": path.resolve(__dirname, "./src/entries/tabulator-es.ts"),
+};
+module.exports = (options) => {
+  options = options ?? {};
+  if(!options.tsconfig) {
+    options.tsconfig = path.resolve(__dirname, "./tsconfig.fesm.json");
+  }
+  if(!options.dir) {
+    options.dir = path.resolve(__dirname, "./build/fesm");
+  }
+  return {
+    input,
+    context: "this",
+
+    plugins: [
+      {
+        name: "icons",
+        load: async (id) => {
+          if (id === path.resolve(__dirname, "./src/icons.ts")) {
+            const icons = {};
+            for (const iconPath of await glob( path.resolve(__dirname, "./src/images/*.svg"))) {
+              const [fname] = iconPath.split("/").slice(-1);
+              icons[fname.replace(/\.svg$/, "").toLocaleLowerCase()] = readFile(iconPath).toString();
+            }
+            return `export default ${JSON.stringify(icons, undefined, "\t")}`;
+          }
+        }
+      },
+      {
+        name: "remove-scss-imports",
+        load: (id) => {
+          if(id.match(/\.scss$/)) return "";
+        }
+      },
+      nodeResolve(),
+      commonjs(),
+      typescript({ tsconfig: options.tsconfig, compilerOptions: {
+        declaration: false,
+        declarationDir: null
+      } }),
+      replace({
+        preventAssignment: false,
+        values: {
+          "process.env.RELEASE_DATE": JSON.stringify(new Date().toISOString().slice(0, 10)),
+          "process.env.VERSION": JSON.stringify(VERSION),
+        }
+      }),
+      bannerPlugin({
+        banner: {
+          content: banner,
+          commentStyle: "ignored",
+        }
+      })
+    ],
+    external: [
+      "survey-core",
+      "plotly.js-dist-min",
+      "tabulator-tables"
+    ],
+    output: [
+      {
+        preserveModules: false,
+        dir: options.dir,
+        chunkFileNames: (chunkInfo) => {
+          if(!chunkInfo.isEntry) {
+            return "shared.js"
+          }
+        },
+        format: "esm",
+        exports: "named",
+        sourcemap: true,
+      },
+    ],
+  };
+};

@@ -1,5 +1,5 @@
 import { Event, Question, SurveyModel, surveyLocalization } from "survey-core";
-import * as SurveyCore from "survey-core";
+import { hasLicense, IsTouch } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
@@ -290,7 +290,7 @@ export class VisualizationPanel extends VisualizerBase {
     super(null, data, options, "panel");
     this.loadingData = false;
 
-    const f = (<any>SurveyCore).hasLicense;
+    const f = hasLicense;
     this.haveCommercialLicense = (!!f && f(4)) ||
       VisualizationPanel.haveCommercialLicense ||
       (typeof options.haveCommercialLicense !== "undefined"
@@ -683,7 +683,7 @@ export class VisualizationPanel extends VisualizerBase {
    * Returns the [`allowDragDrop`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDragDrop) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
    */
   public get allowDragDrop() {
-    if(SurveyCore.IsTouch) {
+    if(IsTouch) {
       return false;
     }
     return (
