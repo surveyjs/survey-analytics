@@ -1,4 +1,6 @@
-import iconsData from "./icons";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+import iconsData from "icons";
 
 const iconPrefix = "sa-svg-";
 function getIconSymbolTemplate(iconId: string, iconSvg: string): string {

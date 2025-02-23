@@ -30,12 +30,16 @@ module.exports = (options) => {
   return {
     input,
     context: "this",
-
     plugins: [
       {
         name: "icons",
+        resolveId: (id) => {
+          if (id === "icons") {
+            return id;
+          }
+        },
         load: async (id) => {
-          if (id === path.resolve(__dirname, "./src/icons.ts")) {
+          if (id === "icons") {
             const icons = {};
             for (const iconPath of await glob( path.resolve(__dirname, "./src/images/*.svg"))) {
               const [fname] = iconPath.split("/").slice(-1);
