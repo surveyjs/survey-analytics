@@ -42,8 +42,7 @@ module.exports = (options) => {
           if (id === "icons") {
             const icons = {};
             for (const iconPath of await glob( path.resolve(__dirname, "./src/images/*.svg"))) {
-              const [fname] = iconPath.split("/").slice(-1);
-              icons[fname.replace(/\.svg$/, "").toLocaleLowerCase()] = readFile(iconPath).toString();
+              icons[path.basename(iconPath).replace(/\.svg$/, "").toLocaleLowerCase()] = readFile(iconPath).toString();
             }
             return `export default ${JSON.stringify(icons, undefined, "\t")}`;
           }
