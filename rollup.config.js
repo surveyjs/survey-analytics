@@ -5,7 +5,7 @@ const replace = require("@rollup/plugin-replace");
 const bannerPlugin = require("rollup-plugin-license");
 
 const path = require("path");
-const glob = require("fast-glob").glob;
+const fg = require("fast-glob");
 const readFile = require("fs").readFileSync;
 const VERSION = require("./package.json").version;
 
@@ -41,7 +41,7 @@ module.exports = (options) => {
         load: async (id) => {
           if (id === "icons") {
             const icons = {};
-            for (const iconPath of await glob( path.resolve(__dirname, "./src/images/*.svg"))) {
+            for (const iconPath of await fg.glob(fg.convertPathToPattern(path.resolve(__dirname, "./src/images")) + "/*.svg")) {
               icons[path.basename(iconPath).replace(/\.svg$/, "").toLocaleLowerCase()] = readFile(iconPath).toString();
             }
             return `export default ${JSON.stringify(icons, undefined, "\t")}`;
