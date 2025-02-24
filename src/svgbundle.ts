@@ -1,10 +1,7 @@
-function getIconsData(path) {
-  const icons: { [index: string]: string } = {};
-  path.keys().forEach((key: string) => {
-    icons[key.substring(2, key.length - 4).toLowerCase()] = path(key);
-  });
-  return icons;
-}
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+import iconsData from "icons";
+
 const iconPrefix = "sa-svg-";
 function getIconSymbolTemplate(iconId: string, iconSvg: string): string {
   const startStr = "<svg ";
@@ -20,7 +17,7 @@ function getIconSymbolTemplate(iconId: string, iconSvg: string): string {
       "</symbol>";
   }
 }
-const iconsData = getIconsData((<any>require).context("./images", true, /\.svg$/));
+
 const iconsHtml = Object.keys(iconsData).map(iconId => getIconSymbolTemplate(iconId, iconsData[iconId]));
 const svgTemplate = `<svg style="display:none;">${iconsHtml}<svg>`;
 export { svgTemplate };

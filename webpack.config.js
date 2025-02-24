@@ -104,6 +104,7 @@ module.exports = function (options) {
     resolve: {
       extensions: [".ts", ".js"],
       alias: {
+        icons: path.resolve(__dirname, "./src/icons"),
         tslib: path.join(__dirname, "./src/utils/helpers.ts"),
       },
     },

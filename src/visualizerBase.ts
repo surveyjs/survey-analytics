@@ -5,7 +5,7 @@ import { DocumentHelper, createLoadingIndicator } from "./utils";
 import { localization } from "./localizationManager";
 import { Event } from "survey-core";
 
-var styles = require("./visualizerBase.scss");
+import "./visualizerBase.scss";
 
 export interface IDataInfo {
   name: string; // TODO - remove from this interface
