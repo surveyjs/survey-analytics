@@ -4,7 +4,7 @@ import { VisualizationManager } from "./visualizationManager";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils";
 
-var styles = require("./text.scss");
+import "./text.scss";
 
 export class TextTableAdapter {
   constructor(private model: Text) {}

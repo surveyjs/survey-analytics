@@ -1,4 +1,4 @@
-const Muuri = require("muuri");
+import Muuri from "muuri";
 
 /**
  * A base class used to implement custom layout engines or integrate third-party layout engines with SurveyJS Dashboard.

@@ -1,5 +1,5 @@
 import { SurveyModel, Question, Event, Serializer, EventBase } from "survey-core";
-import * as SurveyCore from "survey-core";
+import { hasLicense } from "survey-core";
 import {
   IPermission,
   QuestionLocation,
@@ -69,7 +69,7 @@ export abstract class Table {
     }
 
     this.extensions = new TableExtensions(this);
-    const f = (<any>SurveyCore).hasLicense;
+    const f = hasLicense;
     this.haveCommercialLicense = (!!f && f(4)) ||
       Table.haveCommercialLicense ||
       (!!_options &&

@@ -6,7 +6,7 @@ import { localization } from "../localizationManager";
 import { ARIAL_FONT } from "./custom_jspdf_font";
 import { svgTemplate } from "../svgbundle";
 import type { DownloadType, SortDirection, TabulatorFull, RowComponent } from "tabulator-tables";
-require("./tabulator.scss");
+import "./tabulator.scss";
 
 if (!!document) {
   const templateHolder = document.createElement("div");
