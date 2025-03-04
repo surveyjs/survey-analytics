@@ -3,8 +3,8 @@
 import { localization } from "../localizationManager";
 
 export var dutchStrings = {
-  groupButton: "Groep door mij",
-  ungroupButton: "Degroeperen bij mij",
+  groupButton: "Groeperen op",
+  ungroupButton: "Degroeper op",
   selectButton: "Selecteer mij",
   hideColumn: "Kolom verbergen",
   showColumn: "Toon kolom",
@@ -20,15 +20,15 @@ export var dutchStrings = {
   visualizer_wordcloud: "Wordcloud",
   visualizer_histogram: "Histogram",
   visualizer_number: "Gemiddeld",
-  visualizer_choices: "Tafel",
-  visualizer_selectBase: "Zeekaart",
+  visualizer_choices: "Tabel",
+  visualizer_selectBase: "Grafiek",
   // visualizer_matrix: "Chart",
   chartType_bar: "Bar",
-  chartType_vbar: "Verticale balk",
-  chartType_stackedbar: "Gestapelde Bar",
+  chartType_vbar: "Staafdiagram",
+  chartType_stackedbar: "Staafdiagram (gestapeld)",
   chartType_doughnut: "Donut",
-  chartType_pie: "Taart",
-  chartType_scatter: "Verstrooien",
+  chartType_pie: "Cirkeldiagram",
+  chartType_scatter: "Spreidingsdiagram",
   chartType_gauge: "Meter",
   chartType_bullet: "Kogel",
   hideButton: "Verbergen",
@@ -78,9 +78,6 @@ localization.localeNames["nl"] = "Nederlands";
 // Remove those strings that you have corrected manually
 // undefined.visualizer_histogram: "Histogram" => "Histogram"
 // undefined.visualizer_number: "Average" => "Gemiddeld"
-// undefined.visualizer_choices: "Table" => "Tafel"
-// undefined.visualizer_selectBase: "Chart" => "Zeekaart"
-// undefined.chartType_vbar: "Vertical Bar" => "Verticale balk"
 // undefined.filter: "Filter" => "Filter"
 // undefined.hideMissingAnswers: "Hide missing answers" => "Ontbrekende antwoorden verbergen"
 // undefined.showMissingAnswers: "Show missing answers" => "Ontbrekende antwoorden weergeven"
