@@ -21,10 +21,7 @@ As a result, you will create the following view:
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/dashboard-table-view/vue (linkStyle))
 
-If you are looking for a quick-start application that includes all SurveyJS components, refer to the following GitHub repositories:
-
-- <a href="https://github.com/surveyjs/surveyjs_vue3_quickstart" target="_blank">SurveyJS + Vue 3 Quickstart Template</a>
-- <a href="https://github.com/surveyjs/surveyjs_vue_quickstart" target="_blank">SurveyJS + Vue 2 Quickstart Template</a>
+If you are looking for a quick-start application that includes all SurveyJS components, refer to the following GitHub repository: <a href="https://github.com/surveyjs/surveyjs_vue3_quickstart" target="_blank">SurveyJS + Vue 3 Quickstart Template</a>.
 
 ## Install the `survey-analytics` npm Package
 
@@ -121,7 +118,6 @@ const surveyJson = {
     rateMin: 0,
     rateMax: 10,
   }],
-  showQuestionNumbers: "off",
   completedHtml: "Thank you for your feedback!",
 };
 
@@ -226,7 +222,6 @@ const surveyJson = {
     rateMin: 0,
     rateMax: 10,
   }],
-  showQuestionNumbers: "off",
   completedHtml: "Thank you for your feedback!",
 };
 

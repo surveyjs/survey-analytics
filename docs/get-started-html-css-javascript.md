@@ -34,7 +34,7 @@ The following code shows how to reference these libraries:
     <!-- SurveyJS Form Library resources -->
     <script type="text/javascript" src="https://unpkg.com/survey-core/survey.core.min.js"></script>
     <!-- Uncomment the following lines if you also display the survey on the page -->
-    <!-- <link href="https://unpkg.com/survey-core/defaultV2.min.css" type="text/css" rel="stylesheet"> -->
+    <!-- <link href="https://unpkg.com/survey-core/survey-core.min.css" type="text/css" rel="stylesheet"> -->
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-js-ui/survey-js-ui.min.js"></script> -->
 
     <!-- Third-party data visualization library -->
@@ -103,7 +103,6 @@ const surveyJson = {
         rateMin: 0,
         rateMax: 10,
     }],
-    showQuestionNumbers: "off",
     completedHtml: "Thank you for your feedback!",
 };
 
@@ -162,7 +161,7 @@ const vizPanel = new SurveyAnalytics.VisualizationPanel(
     <meta charset="utf-8">
     <script type="text/javascript" src="https://unpkg.com/survey-core/survey.core.min.js"></script>
     <!-- Uncomment the following lines if you also display the survey on the page -->
-    <!-- <link href="https://unpkg.com/survey-core/defaultV2.min.css" type="text/css" rel="stylesheet"> -->
+    <!-- <link href="https://unpkg.com/survey-core/survey-core.min.css" type="text/css" rel="stylesheet"> -->
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-js-ui/survey-js-ui.min.js"></script> -->
 
     <script src="https://unpkg.com/plotly.js-dist-min/plotly.min.js"></script>
@@ -199,7 +198,6 @@ const surveyJson = {
         rateMin: 0,
         rateMax: 10,
     }],
-    showQuestionNumbers: "off",
     completedHtml: "Thank you for your feedback!",
 };
 
@@ -263,7 +261,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <meta charset="utf-8">
     <script type="text/javascript" src="https://unpkg.com/survey-core/survey.core.min.js"></script>
     <!-- Uncomment the following lines if you also display the survey on the page -->
-    <!-- <link href="https://unpkg.com/survey-core/defaultV2.min.css" type="text/css" rel="stylesheet"> -->
+    <!-- <link href="https://unpkg.com/survey-core/survey-core.min.css" type="text/css" rel="stylesheet"> -->
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-js-ui/survey-js-ui.min.js"></script> -->
 
     <script src="https://unpkg.com/plotly.js-dist-min/plotly.min.js"></script>
@@ -300,7 +298,6 @@ const surveyJson = {
         rateMin: 0,
         rateMax: 10,
     }],
-    showQuestionNumbers: "off",
     completedHtml: "Thank you for your feedback!",
 };
 

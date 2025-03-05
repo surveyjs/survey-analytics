@@ -124,7 +124,6 @@ const surveyJson = {
     rateMin: 0,
     rateMax: 10,
   }],
-  showQuestionNumbers: "off",
   completedHtml: "Thank you for your feedback!",
 };
 
@@ -250,7 +249,6 @@ const surveyJson = {
     rateMin: 0,
     rateMax: 10,
   }],
-  showQuestionNumbers: "off",
   completedHtml: "Thank you for your feedback!",
 };
 
