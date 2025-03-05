@@ -27,6 +27,8 @@ interface ITabulatorOptions extends ITableOptions {
   onDownloadCallbacks?: {
     [type: string]: (tabulator: Tabulator, options: any) => void,
   };
+  xlsx?: any;
+  jspdf?: any;
 }
 
 export const defaultDownloadOptions = {
@@ -99,10 +101,10 @@ export class Tabulator extends Table {
     _columnsData: Array<IColumnData> = []
   ) {
     super(survey, data, options, _columnsData);
-    if(!!window && window["XLSX"] !== undefined && defaultOptions.downloadButtons.indexOf("xlsx") === -1) {
+    if(((options && options.xlsx) || (!!window && window["XLSX"] !== undefined)) && defaultOptions.downloadButtons.indexOf("xlsx") === -1) {
       defaultOptions.downloadButtons.unshift("xlsx");
     }
-    if(!!window && window["jspdf"] !== undefined && defaultOptions.downloadButtons.indexOf("pdf") === -1) {
+    if(((options && options.jspdf) || (!!window && window["jspdf"] !== undefined)) && defaultOptions.downloadButtons.indexOf("pdf") === -1) {
       defaultOptions.downloadButtons.unshift("pdf");
     }
     this._options = Object.assign({}, defaultOptions, options);
@@ -151,13 +153,17 @@ export class Tabulator extends Table {
         columnMinWidth: (this.options as ITabulatorOptions).columnMinWidth,
         paginationButtonCount: 3,
         nestedFieldSeparator: false,
+        dependencies: {
+          jspdf: this._options.jspdf,
+          XLSX: this._options.xlsx
+        },
         columnDefaults: {
           tooltip: (_: MouseEvent, cell: any) => {
             const span = document.createElement("span");
             span.innerText = cell.getValue();
             return span.innerHTML;
           }
-        }
+        },
       },
       this._options.tabulatorOptions
     );
