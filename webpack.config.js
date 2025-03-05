@@ -163,12 +163,6 @@ module.exports = function (options) {
       globalObject: 'this'
     },
     externals: {
-      jquery: {
-        root: "jQuery",
-        commonjs2: "jquery",
-        commonjs: "jquery",
-        amd: "jquery",
-      },
       "survey-core": {
         root: "Survey",
         commonjs2: "survey-core",
