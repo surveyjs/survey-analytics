@@ -41,15 +41,15 @@ The following code shows how to reference these libraries:
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-js-ui/survey-js-ui.min.js"></script> -->
 
     <!-- jsPDF for export to PDF -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.0.10/jspdf.plugin.autotable.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/jspdf-autotable@3.5.20/dist/jspdf.plugin.autotable.min.js"></script>
     
     <!-- SheetJS for export to Excel -->
     <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
 
     <!-- Tabulator -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.7.2/css/tabulator.min.css" rel="stylesheet">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.7.2/js/tabulator.min.js"></script>
+    <link href="https://unpkg.com/tabulator-tables@6.3.1/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min.js"></script>
 
     <!-- SurveyJS plugin for Tabulator -->
     <link href="https://unpkg.com/survey-analytics/survey.analytics.tabulator.min.css" rel="stylesheet">
@@ -192,15 +192,15 @@ document.addEventListener("DOMContentLoaded", function() {
     <script type="text/javascript" src="https://unpkg.com/survey-core/survey.core.min.js"></script>
 
     <!-- jsPDF for export to PDF -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.0.10/jspdf.plugin.autotable.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/jspdf-autotable@3.5.20/dist/jspdf.plugin.autotable.min.js"></script>
     
     <!-- SheetJS for export to Excel -->
     <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
 
     <!-- Tabulator -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.7.2/css/tabulator.min.css" rel="stylesheet">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.7.2/js/tabulator.min.js"></script>
+    <link href="https://unpkg.com/tabulator-tables@6.3.1/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min.js"></script>
 
     <!-- SurveyJS plugin for Tabulator -->
     <link href="https://unpkg.com/survey-analytics/survey.analytics.tabulator.min.css" rel="stylesheet">

@@ -258,15 +258,46 @@ export default {
 
 ## Enable Export to PDF and Excel
 
-The Table View for SurveyJS Dashboard allows users to save survey results as CSV, PDF, and XLSX documents. Export to CSV is supported out of the box. For export to PDF and XLSX, you need to reference the <a href="https://github.com/parallax/jsPDF#readme" target="_blank">jsPDF</a>, <a href="https://github.com/JonatanPe/jsPDF-AutoTable#readme" target="_blank">jsPDF-AutoTable</a>, and <a href="https://sheetjs.com/" target="_blank">SheetJS</a> libraries. Open the `index.html` file in your project and add the following links to the `<head>` element:
+The Table View for SurveyJS Dashboard allows users to save survey results as CSV, PDF, and XLSX documents. Export to CSV is supported out of the box. For export to PDF and XLSX, Table View needs the following third-party libraries:
+
+- <a href="https://github.com/parallax/jsPDF#readme" target="_blank">jsPDF</a> - 2.4.0 or later
+- <a href="https://github.com/JonatanPe/jsPDF-AutoTable#readme" target="_blank">jsPDF-AutoTable</a> - 3.5.20 or later
+- <a href="https://sheetjs.com/" target="_blank">SheetJS</a> - 0.18.5 or later
+
+Run the following commands to install them:
+
+```sh
+npm i jspdf@2.4.0 --save
+npm i jspdf-autotable@3.5.20 --save
+npm i xlsx@0.18.5 --save
+```
+
+To enable export to PDF and Excel, import a jsPDF instance and apply the jsPDF-AutoTable plugin to it, then import SheetJS, and pass both the jsPDF and SheetJS instances to the `Tabulator` constructor:
 
 ```html
-<!-- jsPDF for export to PDF -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.0.10/jspdf.plugin.autotable.min.js"></script>
+<script>
+// ...
+import jsPDF from "jspdf";
+import { applyPlugin } from "jspdf-autotable";
+applyPlugin(jsPDF);
 
-<!-- SheetJS for export to Excel -->
-<script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+import * as XLSX from "xlsx";
+
+const surveyJson = { /* ... */ };
+function generateData() { /* ... */ }
+
+export default {
+  name: 'survey-dashboard-table-view',
+  mounted() {
+    const survey = new Model(surveyJson);
+    const surveyDataTable = new Tabulator(
+      survey,
+      generateData(),
+      { jspdf: jsPDF, xlsx: XLSX }
+    );
+  }
+}
+</script>
 ```
 
 To view the application, run `npm run serve` in a command line and open [http://localhost:8080/](http://localhost:8080/) in your browser. If you do everything correctly, you should see the following result:
