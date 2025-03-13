@@ -144,7 +144,7 @@ export class Tabulator extends Table {
         pagination: "local",
         paginationSize: this.currentPageSize,
         movableColumns: true,
-        maxHeight: "100%",
+        // maxHeight: "100%",
         columns,
         rowFormatter: this.rowFormatter,
         paginationElement: paginationElement,
