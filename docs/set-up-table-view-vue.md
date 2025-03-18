@@ -19,7 +19,7 @@ As a result, you will create the following view:
     style="width:100%; border:0; border-radius: 4px; overflow:hidden;"
 ></iframe>
 
-[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/dashboard-table-view/vue (linkStyle))
+[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/dashboard-table-view/vue3 (linkStyle))
 
 If you are looking for a quick-start application that includes all SurveyJS components, refer to the following GitHub repository: <a href="https://github.com/surveyjs/surveyjs_vue3_quickstart" target="_blank">SurveyJS + Vue 3 Quickstart Template</a>.
 
@@ -38,10 +38,14 @@ The Table View for SurveyJS Dashboard depends on the <a href="https://tabulator.
 Import the Tabulator and Table View style sheets in the component that will render the Table View:
 
 ```html
-<script>
-import 'tabulator-tables/dist/css/tabulator.min.css';
-import 'survey-analytics/survey.analytics.tabulator.min.css';
+<script setup lang="ts">
+import 'tabulator-tables/dist/css/tabulator.css';
+import 'survey-analytics/survey.analytics.tabulator.css';
 </script>
+
+<template>
+  <!-- ... -->
+</template>
 ```
 
 ## Load Survey Results
@@ -61,21 +65,11 @@ When data is processed on the client, the Table View loads the entire dataset at
 To load survey results to the client, send the survey ID to your server and return an array of JSON objects with survey results:
 
 ```html
-<script>
+<script setup lang="ts">
 // ...
-const SURVEY_ID = 1;
+import { onMounted } from "vue"
 
-export default {
-  mounted() {
-    loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
-      .then((surveyResults) => {
-        // ...
-        // Configure and render the Table View here
-        // Refer to the help topics below
-        // ...
-      });
-  }
-}
+const SURVEY_ID = 1;
 
 function loadSurveyResults (url) {
   return new Promise((resolve, reject) => {
@@ -92,6 +86,16 @@ function loadSurveyResults (url) {
     request.send();
   });
 }
+
+onMounted(() => {
+  loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
+    .then((surveyResults) => {
+      // ...
+      // Configure and render the Table View here
+      // Refer to the section below
+      // ...
+    });
+});
 </script>
 ```
 
@@ -143,7 +147,7 @@ function generateData() {
 The Table View is rendered by the `Tabulator` component. Import this component and pass the survey model and results to its constructor to instantiate it. Assign the produced instance to a constant that will be used later to render the component:
 
 ```html
-<script>
+<script setup lang="ts">
 // ...
 // Stylesheets are imported here
 // ...
@@ -153,54 +157,42 @@ import { Tabulator } from 'survey-analytics/survey.analytics.tabulator';
 const surveyJson = { /* ... */ };
 function generateData() { /* ... */ }
 
-export default {
-  name: 'survey-dashboard-table-view',
-  mounted() {
-    const survey = new Model(surveyJson);
-    const surveyDataTable = new Tabulator(
-      survey,
-      generateData()
-    );
-  }
-}
+onMounted(() => {
+  const survey = new Model(surveyJson);
+  const surveyDataTable = new Tabulator(
+    survey,
+    generateData()
+  );
+});
 </script>
 ```
 
-Switch to the component template and add a page element that will serve as the Table View container:
+Switch to the component template and add a page element that will serve as the Table View container. To render the Table View in the page element, call the `render(containerId)` method on the Tabulator instance you created previously:
 
 ```html
+<script setup lang="ts">
+// ...
+onMounted(() => {
+  // ...
+  surveyDataTable.render("surveyDataTable");
+});
+</script>
+
 <template>
   <div id="surveyDataTable" />
 </template>
-```
-
-To render the Table View in the page element, call the `render(containerId)` method on the Tabulator instance you created previously:
-
-```html
-<script>
-// ...
-export default {
-  mounted() {
-    // ...
-    surveyDataTable.render("surveyDataTable");
-  }
-}
-</script>
 ```
 
 <details>
     <summary>View Full Code</summary>
 
 ```html
-<template>
-  <div id="surveyDataTable" />
-</template>
-
-<script>
-import 'tabulator-tables/dist/css/tabulator.min.css';
-import 'survey-analytics/survey.analytics.tabulator.min.css';
-import { Model } from 'survey-core';
-import { Tabulator } from 'survey-analytics/survey.analytics.tabulator';
+<script setup lang="ts">
+import 'tabulator-tables/dist/css/tabulator.css';
+import 'survey-analytics/survey.analytics.tabulator.css';
+import { Model } from 'survey-core'
+import { Tabulator } from 'survey-analytics/survey.analytics.tabulator'
+import { onMounted } from "vue"
 
 const surveyJson = {
   elements: [{
@@ -225,7 +217,7 @@ const surveyJson = {
   completedHtml: "Thank you for your feedback!",
 };
 
-function randomIntFromInterval(min, max) {
+function randomIntFromInterval(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 function generateData() {
@@ -241,17 +233,20 @@ function generateData() {
   return data;
 }
 
-export default {
-  name: 'survey-dashboard-table-view',
-  mounted() {
-    const survey = new Model(surveyJson);
-    const surveyDataTable = new Tabulator(
-      survey,
-      generateData()
-    );
-    surveyDataTable.render("surveyDataTable");
-  }
-}
+onMounted(() => {
+  const survey = new Model(surveyJson);
+  const surveyDataTable = new Tabulator(
+    survey,
+    generateData()
+  );
+  surveyDataTable.render("surveyDataTable");
+});
+</script>
+
+<template>
+  <div id="surveyDataTable" />
+</template>
+
 </script>
 ```
 </details>
@@ -272,10 +267,12 @@ npm i jspdf-autotable@3.5.20 --save
 npm i xlsx@0.18.5 --save
 ```
 
+> Review the third-party components' licenses to ensure that your project complies with the terms and conditions.
+
 To enable export to PDF and Excel, import a jsPDF instance and apply the jsPDF-AutoTable plugin to it, then import SheetJS, and pass both the jsPDF and SheetJS instances to the `Tabulator` constructor:
 
 ```html
-<script>
+<script setup lang="ts">
 // ...
 import jsPDF from "jspdf";
 import { applyPlugin } from "jspdf-autotable";
@@ -286,27 +283,25 @@ import * as XLSX from "xlsx";
 const surveyJson = { /* ... */ };
 function generateData() { /* ... */ }
 
-export default {
-  name: 'survey-dashboard-table-view',
-  mounted() {
-    const survey = new Model(surveyJson);
-    const surveyDataTable = new Tabulator(
-      survey,
-      generateData(),
-      { jspdf: jsPDF, xlsx: XLSX }
-    );
-  }
-}
+onMounted(() => {
+  const survey = new Model(surveyJson);
+  const surveyDataTable = new Tabulator(
+    survey,
+    generateData(),
+    { jspdf: jsPDF, xlsx: XLSX }
+  );
+  surveyDataTable.render("surveyDataTable");
+});
 </script>
 ```
 
-To view the application, run `npm run serve` in a command line and open [http://localhost:8080/](http://localhost:8080/) in your browser. If you do everything correctly, you should see the following result:
+> With [server-side data processing](#server-side-data-processing), exported documents contain only currently loaded data records. To export full datasets, you need to generate the documents on the server.
+
+To view the application, run `npm run dev` in a command line and open [http://localhost:5173/](http://localhost:5173/) in your browser. If you do everything correctly, you should see the following result:
 
 ![SurveyJS Dashboard: Export survey data to PDF, XLSX, and CSV](../images/export-to-pdf-xlsx-csv.png)
 
-> With [server-side data processing](#server-side-data-processing), exported documents contain only currently loaded data records. To export full datasets, you need to generate the documents on the server.
-
-[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/dashboard-table-view/vue (linkStyle))
+[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/dashboard-table-view/vue3 (linkStyle))
 
 ## See Also
 

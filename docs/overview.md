@@ -11,12 +11,18 @@ SurveyJS Dashboard visualizes survey results and allows users to analyze them.
 
 ## Features
 
-- [Supported chart types](/dashboard/documentation/chart-types):
-  - Bar
-  - Pie
-  - Gauge
-  - Bullet
-  - Word cloud
+- Supported chart types:
+  - [Bar](/dashboard/documentation/chart-types#bar-chart)
+  - [Pie](/dashboard/documentation/chart-types#pie-chart)
+  - [Doughnut](/dashboard/documentation/chart-types#doughnut-chart)
+  - [Histogram](/dashboard/documentation/chart-types#histogram)
+  - [Gauge](/dashboard/documentation/chart-types#gauge-chart)
+  - [Bullet](/dashboard/documentation/chart-types#bullet-chart)
+  - [Stacked bar](/dashboard/documentation/chart-types#stacked-bar-chart)
+  - [Word cloud](/dashboard/documentation/chart-types#word-cloud)
+  - [Text table](/dashboard/documentation/chart-types#text-table)
+  - [Statistics table](/dashboard/documentation/chart-types#statistics-table)
+  - [NPS visualizer](/dashboard/documentation/chart-types#nps-visualizer)
 - Interactive filtering
 - Customizable colors
 - Dynamic layout

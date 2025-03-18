@@ -23,7 +23,6 @@ As a result, you will create the following dashboard:
 
 If you are looking for a quick-start application that includes all SurveyJS components, refer to the following GitHub repositories:
 
-- <a href="https://github.com/surveyjs/surveyjs_react_quickstart" target="_blank">SurveyJS + React Quickstart Template</a>
 - <a href="https://github.com/surveyjs/surveyjs-nextjs" target="_blank">SurveyJS + Next.js Quickstart Template</a>
 - <a href="https://github.com/surveyjs/surveyjs-remix" target="_blank">SurveyJS + Remix Quickstart Template</a>
 
@@ -39,10 +38,11 @@ SurveyJS Dashboard depends on the <a href="https://github.com/plotly/plotly.js#r
 
 ## Configure Styles
 
-Import the SurveyJS Dashboard style sheet as shown below:
+Create a React component that will render your dashboard and import the SurveyJS Dashboard style sheet as shown below:
 
 ```js
-import 'survey-analytics/survey.analytics.min.css';
+// components/Dashboard.tsx
+import 'survey-analytics/survey.analytics.css';
 ```
 
 ## Load Survey Results
@@ -52,29 +52,30 @@ You can access survey results as a JSON object within the `SurveyModel`'s `onCom
 To load the survey results, send the survey ID to your server and return an array of JSON objects:
 
 ```js
+// components/Dashboard.tsx
 // ...
 import { useState } from 'react';
-import { Model } from 'survey-core';
+import { VisualizationPanel } from 'survey-analytics';
 
 const SURVEY_ID = 1;
 
-export default function App() {
-  const [vizPanel, setVizPanel] = useState(null);
+export default function DashboardComponent() {
+  const [vizPanel, setVizPanel] = useState<VisualizationPanel>();
 
   if (!vizPanel) {
     loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
-      .then((surveyResults) => {
+      .then((surveyResults: any) => {
         // ...
         // Configure the Visualization Panel here
-        // Refer to the help topics below
+        // Refer to the sections below
         // ...
       });
   }
 
-  return ();
+  return "...";
 }
 
-function loadSurveyResults (url) {
+function loadSurveyResults (url: string) {
   return new Promise((resolve, reject) => {
     const request = new XMLHttpRequest();
     request.open('GET', url);
@@ -94,6 +95,8 @@ function loadSurveyResults (url) {
 For demonstration purposes, this tutorial uses predefined survey results. The following code shows a survey model and the structure of the survey results array:
 
 ```js
+// components/Dashboard.tsx
+// ...
 const surveyJson = {
   elements: [{
     name: "satisfaction-score",
@@ -140,7 +143,9 @@ const surveyResults = [{
 Analytics charts are displayed in a Visualization Panel. Specify [its properties](/Documentation/Analytics?id=ivisualizationpaneloptions) in a configuration object. In this tutorial, the object enables the [`allowHideQuestions`](/Documentation/Analytics?id=ivisualizationpaneloptions#allowHideQuestions) property:
 
 ```js
-const vizPanelOptions = {
+import { IVisualizationPanelOptions } from 'survey-analytics';
+
+const vizPanelOptions: IVisualizationPanelOptions = {
   allowHideQuestions: false
 }
 ```
@@ -148,18 +153,19 @@ const vizPanelOptions = {
 Pass the configuration object, survey questions, and results to the `VisualizationPanel` constructor as shown in the code below to instantiate the Visualization Panel. Save the produced instance in a state variable that will be used later to render the component:
 
 ```js
+// components/Dashboard.tsx
 // ...
 import { useState } from 'react';
 import { Model } from 'survey-core';
-import { VisualizationPanel } from 'survey-analytics';
+import { IVisualizationPanelOptions, VisualizationPanel } from 'survey-analytics';
 
 const surveyJson = { /* ... */ };
 const surveyResults = [ /* ... */ ];
-const vizPanelOptions = { /* ... */ };
+const vizPanelOptions: IVisualizationPanelOptions = { /* ... */ };
 
-export default function App() {
-  const [survey, setSurvey] = useState(null);
-  const [vizPanel, setVizPanel] = useState(null);
+export default function DashboardComponent() {
+  const [survey, setSurvey] = useState<Model>();
+  const [vizPanel, setVizPanel] = useState<VisualizationPanel>();
   if (!survey) {
     const survey = new Model(surveyJson);
     setSurvey(survey);
@@ -174,7 +180,7 @@ export default function App() {
     setVizPanel(vizPanel);
   }
 
-  return ();
+  return "...";
 }
 ```
 
@@ -182,10 +188,11 @@ export default function App() {
     <summary>View Full Code</summary>
 
 ```js
+// components/Dashboard.tsx
+import 'survey-analytics/survey.analytics.css';
 import { useState } from 'react';
-import 'survey-analytics/survey.analytics.min.css';
 import { Model } from 'survey-core';
-import { VisualizationPanel } from 'survey-analytics';
+import { IVisualizationPanelOptions, VisualizationPanel } from 'survey-analytics';
 
 const surveyJson = {
   elements: [{
@@ -231,9 +238,9 @@ const vizPanelOptions = {
   allowHideQuestions: false
 }
 
-export default function App() {
-  const [survey, setSurvey] = useState(null);
-  const [vizPanel, setVizPanel] = useState(null);
+export default function DashboardComponent() {
+  const [survey, setSurvey] = useState<Model>();
+  const [vizPanel, setVizPanel] = useState<VisualizationPanel>();
   if (!survey) {
     const survey = new Model(surveyJson);
     setSurvey(survey);
@@ -245,68 +252,72 @@ export default function App() {
       surveyResults,
       vizPanelOptions
     );
-    vizPanel.showToolbar = false;
     setVizPanel(vizPanel);
   }
 
-  return ();
+  return "...";
 }
-</script>
 ```
 
 </details>
 
 ## Render the Visualization Panel
 
-A Visualization Panel should be rendered in a page element. Add this element to the component markup, as shown below.
+A Visualization Panel should be rendered in a page element. Add this element to the component markup. To render the Visualization Panel in the page element, call the `render(containerId)` method on the `VisualizationPanel` instance you created in the previous step, as shown below.
 
-> If you are using [Next.js](https://nextjs.org) or another framework that [has adopted React Server Components](https://react.dev/learn/start-a-new-react-project#bleeding-edge-react-frameworks), you need to explicitly mark the React component that renders a SurveyJS component as client code using the ['use client'](https://react.dev/reference/react/use-client) directive.
+SurveyJS components do not support server-side rendering (SSR). If you are using [Next.js](https://nextjs.org) or another framework that has adopted React Server Components, you need to explicitly mark the React component that renders a SurveyJS component as client code using the ['use client'](https://react.dev/reference/react/use-client) directive.
 
 ```js
-// Uncomment the following line if you are using Next.js:
-// 'use client'
-
+// components/Dashboard.tsx
+'use client'
 // ...
-export default function App() {
+import { useEffect } from 'react';
+
+export default function DashboardComponent() {
   // ...
+  useEffect(() => {
+    vizPanel?.render("surveyVizPanel");
+    return () => {
+      vizPanel?.clear();
+    }
+  }, [vizPanel]);
+
   return (
     <div id="surveyVizPanel" />
   );
 }
 ```
 
-To render the Visualization Panel in the page element, call the `render(containerId)` method on the Visualization Panel instance you created in the previous step:
+The lack of SSR support may cause hydration errors if a SurveyJS component is pre-rendered on the server. To ensure against those errors, use dynamic imports with `ssr: false` for React components that render SurveyJS components. The following code shows how to do this in Next.js:
 
 ```js
-import { ..., useEffect } from 'react';
+// dashboard/page.tsx
+import dynamic from "next/dynamic";
 
-export default function App() {
-  // ...
+const Dashboard = dynamic(() => import('@/components/Dashboard'), {
+  ssr: false,
+});
 
-  useEffect(() => {
-    vizPanel.render("surveyVizPanel");
-    return () => {
-      document.getElementById("surveyVizPanel").innerHTML = "";
-    }
-  }, [vizPanel]);
-
-  // ...
+export default function SurveyDashboard() {
+  return (
+    <Dashboard />
+  );
 }
 ```
 
-To view the application, run `npm run start` in a command line and open [http://localhost:3000/](http://localhost:3000/) in your browser.
+To view the application, run `npm run dev` in a command line and open [http://localhost:3000/](http://localhost:3000/) in your browser.
 
 <details>
     <summary>View Full Code</summary>
 
 ```js
-// Uncomment the following line if you are using Next.js:
-// 'use client'
+// components/Dashboard.tsx
+'use client'
 
 import { useState, useEffect } from 'react';
-import 'survey-analytics/survey.analytics.min.css';
+import 'survey-analytics/survey.analytics.css';
 import { Model } from 'survey-core';
-import { VisualizationPanel } from 'survey-analytics';
+import { IVisualizationPanelOptions, VisualizationPanel } from 'survey-analytics';
 
 const surveyJson = {
   elements: [{
@@ -348,13 +359,13 @@ const surveyResults = [{
   "nps-score": 3
 }];
 
-const vizPanelOptions = {
+const vizPanelOptions: IVisualizationPanelOptions = {
   allowHideQuestions: false
 }
 
-export default function App() {
-  const [survey, setSurvey] = useState(null);
-  const [vizPanel, setVizPanel] = useState(null);
+export default function DashboardComponent() {
+  const [survey, setSurvey] = useState<Model>();
+  const [vizPanel, setVizPanel] = useState<VisualizationPanel>();
   if (!survey) {
     const survey = new Model(surveyJson);
     setSurvey(survey);
@@ -366,14 +377,13 @@ export default function App() {
       surveyResults,
       vizPanelOptions
     );
-    vizPanel.showToolbar = false;
     setVizPanel(vizPanel);
   }
 
   useEffect(() => {
-    vizPanel.render("surveyVizPanel");
+    vizPanel?.render("surveyVizPanel");
     return () => {
-      document.getElementById("surveyVizPanel").innerHTML = "";
+      vizPanel?.clear();
     }
   }, [vizPanel]);
 
@@ -382,6 +392,22 @@ export default function App() {
   );
 }
 ```
+
+```js
+// dashboard/page.tsx
+import dynamic from "next/dynamic";
+
+const Dashboard = dynamic(() => import('@/components/Dashboard'), {
+  ssr: false,
+});
+
+export default function SurveyDashboard() {
+  return (
+    <Dashboard />
+  );
+}
+```
+
 </details>
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/react (linkStyle))

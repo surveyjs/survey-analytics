@@ -23,7 +23,6 @@ As a result, you will create the following view:
 
 If you are looking for a quick-start application that includes all SurveyJS components, refer to the following GitHub repositories:
 
-- <a href="https://github.com/surveyjs/surveyjs_react_quickstart" target="_blank">SurveyJS + React Quickstart Template</a>
 - <a href="https://github.com/surveyjs/surveyjs-nextjs" target="_blank">SurveyJS + Next.js Quickstart Template</a>
 - <a href="https://github.com/surveyjs/surveyjs-remix" target="_blank">SurveyJS + Remix Quickstart Template</a>
 
@@ -39,11 +38,12 @@ The Table View for SurveyJS Dashboard depends on the <a href="https://tabulator.
 
 ## Configure Styles
 
-Import the Tabulator and Table View style sheets in the component that will render the Table View:
+Create a React component that will render your table and import the Tabulator and Table View style sheets as shown below:
 
 ```js
-import 'tabulator-tables/dist/css/tabulator.min.css';
-import 'survey-analytics/survey.analytics.tabulator.min.css';
+// components/Tabulator.tsx
+import 'tabulator-tables/dist/css/tabulator.css';
+import 'survey-analytics/survey.analytics.tabulator.css';
 ```
 
 ## Load Survey Results
@@ -63,28 +63,29 @@ When data is processed on the client, the Table View loads the entire dataset at
 To load survey results to the client, send the survey ID to your server and return an array of JSON objects with survey results:
 
 ```js
+// components/Tabulator.tsx
 // ...
 import { useState } from 'react';
 
 const SURVEY_ID = 1;
 
-export default function App() {
-  const [surveyDataTable, setSurveyDataTable] = useState(null);
+export default function TableViewComponent() {
+  const [surveyDataTable, setSurveyDataTable] = useState<Tabulator>();
 
   if (!surveyDataTable) {
     loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
-      .then((surveyResults) => {
+      .then((surveyResults: any) => {
         // ...
         // Configure the Table View here
-        // Refer to the help topics below
+        // Refer to the sections below
         // ...
       });
   }
 
-  return ();
+  return "...";
 }
 
-function loadSurveyResults (url) {
+function loadSurveyResults (url: string) {
   return new Promise((resolve, reject) => {
     const request = new XMLHttpRequest();
     request.open('GET', url);
@@ -104,6 +105,8 @@ function loadSurveyResults (url) {
 For demonstration purposes, this tutorial uses auto-generated survey results. The following code shows a survey model and a function that generates the survey results array:
 
 ```js
+// components/Tabulator.tsx
+// ...
 const surveyJson = {
   elements: [{
     name: "satisfaction-score",
@@ -127,11 +130,17 @@ const surveyJson = {
   completedHtml: "Thank you for your feedback!",
 };
 
-function randomIntFromInterval(min: number, max: number): number {
+function randomIntFromInterval(min: number, max: number): number  {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-function generateData() {
-  const data = [];
+
+interface INpsDataObject {
+  "satisfaction-score": number;
+  "nps-score": number;
+}
+
+function generateData(): Array<INpsDataObject> {
+  const data: Array<INpsDataObject> = [];
   for (let index = 0; index < 100; index++) {
     const satisfactionScore = randomIntFromInterval(1, 5);
     const npsScore = satisfactionScore > 3 ? randomIntFromInterval(7, 10) : randomIntFromInterval(1, 6);
@@ -149,18 +158,20 @@ function generateData() {
 The Table View is rendered by the `Tabulator` component. Import this component and pass the survey model and results to its constructor to instantiate it. Save the produced instance in a state variable that will be used later to render the component:
 
 ```js
+// components/Tabulator.tsx
 // ...
 import { useState } from 'react';
 import { Model } from 'survey-core';
 import { Tabulator } from 'survey-analytics/survey.analytics.tabulator';
 
-const surveyJson = { /* ... */ };
-function generateData() { /* ... */ }
+const surveyJson = { /* ... */ }
+interface INpsDataObject { /* ... */ }
+function generateData(): Array<INpsDataObject> { /* ... */ }
 
-export default function App() {
-  const [survey, setSurvey] = useState(null);
-  const [surveyDataTable, setSurveyDataTable] = useState(null);
-  const [surveyResults, setSurveyResults] = useState(null);
+export default function TableViewComponent() {
+  const [survey, setSurvey] = useState<Model>();
+  const [surveyDataTable, setSurveyDataTable] = useState<Tabulator>();
+  const [surveyResults, setSurveyResults] = useState<Array<INpsDataObject>>(generateData());
 
   if (!survey) {
     const survey = new Model(surveyJson);
@@ -179,41 +190,50 @@ export default function App() {
     setSurveyDataTable(surveyDataTable);
   }
 
-  return ();
+  return "...";
 }
 ```
 
-The Table View should be rendered in a page element. Add this element to the component markup, as shown below.
+The Table View should be rendered in a page element. Add this element to the component markup. To render the Table View in the page element, call the `render(containerId)` method on the `Tabulator` instance you created previously, as shown below.
+
+SurveyJS components do not support server-side rendering (SSR). If you are using [Next.js](https://nextjs.org) or another framework that has adopted React Server Components, you need to explicitly mark the React component that renders a SurveyJS component as client code using the ['use client'](https://react.dev/reference/react/use-client) directive.
 
 ```js
-// Uncomment the following line if you are using Next.js:
-// 'use client'
-
+// components/Tabulator.tsx
+'use client'
 // ...
-export default function App() {
+import { useEffect } from 'react';
+
+export default function TableViewComponent() {
   // ...
+
+  useEffect(() => {
+    surveyDataTable?.render("surveyDataTable");
+    return () => {
+      document.getElementById("surveyDataTable")!.innerHTML = "";
+    }
+  }, [surveyDataTable]);
+
   return (
     <div id="surveyDataTable" />
   );
 }
 ```
 
-To render the Table View in the page element, call the `render(containerId)` method on the Tabulator instance you created previously:
+The lack of SSR support may cause hydration errors if a SurveyJS component is pre-rendered on the server. To ensure against those errors, use dynamic imports with `ssr: false` for React components that render SurveyJS components. The following code shows how to do this in Next.js:
 
 ```js
-import { ..., useEffect } from 'react';
+// tabulator/page.tsx
+import dynamic from "next/dynamic";
 
-export default function App() {
-  // ...
+const TableView = dynamic(() => import('@/components/Tabulator'), {
+  ssr: false,
+})
 
-  useEffect(() => {
-    surveyDataTable.render("surveyDataTable");
-    return () => {
-      document.getElementById("surveyDataTable").innerHTML = "";
-    }
-  }, [surveyDataTable]);
-
-  // ...
+export default function SurveyTabulator() {
+  return (
+    <TableView />
+  );
 }
 ```
 
@@ -221,11 +241,12 @@ export default function App() {
     <summary>View Full Code</summary>
 
 ```js
-import './App.css'
+// components/Tabulator.tsx
+'use client'
 
+import 'tabulator-tables/dist/css/tabulator.css';
+import 'survey-analytics/survey.analytics.tabulator.css';
 import { useState, useEffect } from 'react';
-import 'tabulator-tables/dist/css/tabulator.min.css';
-import 'survey-analytics/survey.analytics.tabulator.min.css';
 import { Model } from 'survey-core';
 import { Tabulator } from 'survey-analytics/survey.analytics.tabulator';
 
@@ -252,11 +273,17 @@ const surveyJson = {
   completedHtml: "Thank you for your feedback!",
 };
 
-function randomIntFromInterval(min, max) {
+function randomIntFromInterval(min: number, max: number): number  {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-function generateData() {
-  const data = [];
+
+interface INpsDataObject {
+  "satisfaction-score": number;
+  "nps-score": number;
+}
+
+function generateData(): Array<INpsDataObject> {
+  const data: Array<INpsDataObject> = [];
   for (let index = 0; index < 100; index++) {
     const satisfactionScore = randomIntFromInterval(1, 5);
     const npsScore = satisfactionScore > 3 ? randomIntFromInterval(7, 10) : randomIntFromInterval(1, 6);
@@ -268,10 +295,10 @@ function generateData() {
   return data;
 }
 
-export default function App() {
-  const [survey, setSurvey] = useState(null);
-  const [surveyDataTable, setSurveyDataTable] = useState(null);
-  const [surveyResults, setSurveyResults] = useState(null);
+export default function TableViewComponent() {
+  const [survey, setSurvey] = useState<Model>();
+  const [surveyDataTable, setSurveyDataTable] = useState<Tabulator>();
+  const [surveyResults, setSurveyResults] = useState<Array<INpsDataObject>>(generateData());
   if (!survey) {
     const survey = new Model(surveyJson);
     setSurvey(survey);
@@ -289,14 +316,29 @@ export default function App() {
   }
 
   useEffect(() => {
-    surveyDataTable.render("surveyDataTable");
+    surveyDataTable?.render("surveyDataTable");
     return () => {
-      document.getElementById("surveyDataTable").innerHTML = "";
+      document.getElementById("surveyDataTable")!.innerHTML = "";
     }
   }, [surveyDataTable]);
 
   return (
     <div id="surveyDataTable" />
+  );
+}
+```
+
+```js
+// tabulator/page.tsx
+import dynamic from "next/dynamic";
+
+const TableViewComponent = dynamic(() => import('@/components/Tabulator'), {
+  ssr: false,
+})
+
+export default function TableView() {
+  return (
+    <TableViewComponent />
   );
 }
 ```
@@ -319,20 +361,19 @@ npm i jspdf-autotable@3.5.20 --save
 npm i xlsx@0.18.5 --save
 ```
 
+> Review the third-party components' licenses to ensure that your project complies with the terms and conditions.
+
 To enable export to PDF and Excel, import a jsPDF instance and apply the jsPDF-AutoTable plugin to it, then import SheetJS, and pass both the jsPDF and SheetJS instances to the `Tabulator` constructor:
 
 ```js
+// components/Tabulator.tsx
 // ...
 import jsPDF from "jspdf";
 import { applyPlugin } from "jspdf-autotable";
 applyPlugin(jsPDF);
-
 import * as XLSX from "xlsx";
-
-const surveyJson = { /* ... */ };
-function generateData() { /* ... */ }
-
-export default function App() {
+// ...
+export default function TableViewComponent() {
   // ...
   if (!surveyDataTable && !!survey) {
     const surveyDataTable = new Tabulator(
@@ -346,11 +387,11 @@ export default function App() {
 }
 ```
 
-To view the application, run `npm run start` in a command line and open [http://localhost:3000/](http://localhost:3000/) in your browser. If you do everything correctly, you should see the following result:
+> With [server-side data processing](#server-side-data-processing), exported documents contain only currently loaded data records. To export full datasets, you need to generate the documents on the server.
+
+To view the application, run `npm run dev` in a command line and open [http://localhost:3000/](http://localhost:3000/) in your browser. If you do everything correctly, you should see the following result:
 
 ![SurveyJS Dashboard: Export survey data to PDF, XLSX, and CSV](../images/export-to-pdf-xlsx-csv.png)
-
-> With [server-side data processing](#server-side-data-processing), exported documents contain only currently loaded data records. To export full datasets, you need to generate the documents on the server.
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/dashboard-table-view/react (linkStyle))
 

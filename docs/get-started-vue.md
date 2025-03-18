@@ -19,7 +19,7 @@ As a result, you will create the following dashboard:
     style="width:100%; border:0; border-radius: 4px; overflow:hidden;"
 ></iframe>
 
-[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/vue (linkStyle))
+[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/vue3 (linkStyle))
 
 If you are looking for a quick-start application that includes all SurveyJS components, refer to the following GitHub repository: <a href="https://github.com/surveyjs/surveyjs_vue3_quickstart" target="_blank">SurveyJS + Vue 3 Quickstart Template</a>.
 
@@ -37,10 +37,14 @@ SurveyJS Dashboard depends on the <a href="https://github.com/plotly/plotly.js#r
 
 Import the SurveyJS Dashboard style sheet as shown below:
 
-```js
-<script>
-import 'survey-analytics/survey.analytics.min.css';
+```html
+<script setup lang="ts">
+import 'survey-analytics/survey.analytics.css'
 </script>
+
+<template>
+  <!-- ... -->
+</template>
 ```
 
 ## Load Survey Results
@@ -49,22 +53,12 @@ You can access survey results as a JSON object within the `SurveyModel`'s `onCom
 
 To load the survey results, send the survey ID to your server and return an array of JSON objects:
 
-```js
-<script>
+```html
+<script setup lang="ts">
 // ...
-const SURVEY_ID = 1;
+import { onMounted } from "vue"
 
-export default {
-  mounted() {
-    loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
-      .then((surveyResults) => {
-        // ...
-        // Configure and render the Visualization Panel here
-        // Refer to the help topics below
-        // ...
-      });
-  }
-}
+const SURVEY_ID = 1;
 
 function loadSurveyResults (url) {
   return new Promise((resolve, reject) => {
@@ -81,7 +75,21 @@ function loadSurveyResults (url) {
     request.send();
   });
 }
+
+onMounted(() => {
+  loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
+    .then((surveyResults) => {
+      // ...
+      // Configure and render the Visualization Panel here
+      // Refer to the section below
+      // ...
+    });
+});
 </script>
+
+<template>
+  <!-- ... -->
+</template>
 ```
 
 For demonstration purposes, this tutorial uses predefined survey results. The following code shows a survey model and the structure of the survey results array:
@@ -140,41 +148,36 @@ const vizPanelOptions = {
 
 Pass the configuration object, survey questions, and results to the `VisualizationPanel` constructor as shown in the code below to instantiate the Visualization Panel. Assign the produced instance to a constant that will be used later to render the component:
 
-```js
-<script>
+```html
+<script setup lang="ts">
 // ...
-import { Model } from 'survey-core';
-import { VisualizationPanel } from 'survey-analytics';
+import { Model } from 'survey-core'
+import { VisualizationPanel } from 'survey-analytics'
 
 const surveyJson = { /* ... */ };
 const surveyResults = [ /* ... */ ];
 const vizPanelOptions = { /* ... */ };
 
-export default {
-  mounted() {
-    const survey = new Model(surveyJson);
-    const vizPanel = new VisualizationPanel(
-      survey.getAllQuestions(),
-      surveyResults,
-      vizPanelOptions
-    );
-  }
-}
+onMounted(() => {
+  const survey = new Model(surveyJson);
+  const vizPanel = new VisualizationPanel(
+    survey.getAllQuestions(),
+    surveyResults,
+    vizPanelOptions
+  );
+});
 </script>
 ```
 
 <details>
     <summary>View Full Code</summary>
 
-```js
-<template>
-
-</template>
-
-<script>
-import 'survey-analytics/survey.analytics.min.css';
-import { Model } from 'survey-core';
-import { VisualizationPanel } from 'survey-analytics';
+```html
+<script setup lang="ts">
+import 'survey-analytics/survey.analytics.css'
+import { Model } from 'survey-core'
+import { VisualizationPanel } from 'survey-analytics'
+import { onMounted } from 'vue'
 
 const surveyJson = {
   elements: [{
@@ -220,60 +223,51 @@ const vizPanelOptions = {
   allowHideQuestions: false
 }
 
-export default {
-  name: 'survey-analytics',
-  mounted() {
-    const survey = new Model(surveyJson);
-    const vizPanel = new VisualizationPanel(
-      survey.getAllQuestions(),
-      surveyResults,
-      vizPanelOptions
-    );
-  }
-}
+onMounted(() => {
+  const survey = new Model(surveyJson);
+  const vizPanel = new VisualizationPanel(
+    survey.getAllQuestions(),
+    surveyResults,
+    vizPanelOptions
+  );
+});
 </script>
+
+<template>
+</template>
 ```
 
 </details>
 
 ## Render the Visualization Panel
 
-Switch to the component template. Add a page element that will serve as the Visualization Panel container:
+Switch to the component template. Add a page element that will serve as the Visualization Panel container. To render the Visualization Panel in the page element, call the `render(containerId)` method on the Visualization Panel instance you created in the previous step:
 
 ```html
+<script setup lang="ts">
+// ...
+onMounted(() => {
+  // ...
+  vizPanel.render("surveyVizPanel");
+});
+</script>
+
 <template>
   <div id="surveyVizPanel" />
 </template>
 ```
 
-To render the Visualization Panel in the page element, call the `render(containerId)` method on the Visualization Panel instance you created in the previous step:
-
-```js
-<script>
-// ...
-export default {
-  mounted() {
-    // ...
-    vizPanel.render("surveyVizPanel");
-  }
-}
-</script>
-```
-
-To view the application, run `npm run serve` in a command line and open [http://localhost:8080/](http://localhost:8080/) in your browser.
+To view the application, run `npm run dev` in a command line and open [http://localhost:5173/](http://localhost:5173/) in your browser.
 
 <details>
     <summary>View Full Code</summary>
 
-```js
-<template>
-  <div id="surveyVizPanel" />
-</template>
-
-<script>
-import 'survey-analytics/survey.analytics.min.css';
-import { Model } from 'survey-core';
-import { VisualizationPanel } from 'survey-analytics';
+```html
+<script setup lang="ts">
+import 'survey-analytics/survey.analytics.css'
+import { Model } from 'survey-core'
+import { VisualizationPanel } from 'survey-analytics'
+import { onMounted } from "vue"
 
 const surveyJson = {
   elements: [{
@@ -319,23 +313,24 @@ const vizPanelOptions = {
   allowHideQuestions: false
 }
 
-export default {
-  name: 'survey-analytics',
-  mounted() {
-    const survey = new Model(surveyJson);
-    const vizPanel = new VisualizationPanel(
-      survey.getAllQuestions(),
-      surveyResults,
-      vizPanelOptions
-    );
-    vizPanel.render("surveyVizPanel");
-  }
-}
+onMounted(() => {
+  const survey = new Model(surveyJson);
+  const vizPanel = new VisualizationPanel(
+    survey.getAllQuestions(),
+    surveyResults,
+    vizPanelOptions
+  );
+  vizPanel.render("surveyVizPanel");
+});
 </script>
+
+<template>
+  <div id="surveyVizPanel" />
+</template>
 ```
 </details>
 
-[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/vue (linkStyle))
+[View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/vue3 (linkStyle))
 
 ## See Also
 

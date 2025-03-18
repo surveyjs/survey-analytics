@@ -295,6 +295,8 @@ npm i jspdf-autotable@3.5.20 --save
 npm i xlsx@0.18.5 --save
 ```
 
+> Review the third-party components' licenses to ensure that your project complies with the terms and conditions.
+
 To enable export to PDF and Excel, import a jsPDF instance and apply the jsPDF-AutoTable plugin to it, then import SheetJS, and pass both the jsPDF and SheetJS instances to the `Tabulator` constructor:
 
 ```js
@@ -323,11 +325,11 @@ export class AppComponent implements AfterViewInit {
 }
 ```
 
+> With [server-side data processing](#server-side-data-processing), exported documents contain only currently loaded data records. To export full datasets, you need to generate the documents on the server.
+
 To view the application, run `ng serve` in a command line and open [http://localhost:4200/](http://localhost:4200/) in your browser. If you do everything correctly, you should see the following result:
 
 ![SurveyJS Dashboard: Export survey data to PDF, XLSX, and CSV](../images/export-to-pdf-xlsx-csv.png)
-
-> With [server-side data processing](#server-side-data-processing), exported documents contain only currently loaded data records. To export full datasets, you need to generate the documents on the server.
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/dashboard-table-view/angular (linkStyle))
 

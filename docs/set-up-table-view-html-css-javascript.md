@@ -59,6 +59,8 @@ The following code shows how to reference these libraries:
 </head>
 ```
 
+> Review the third-party components' licenses to ensure that your project complies with the terms and conditions.
+
 ## Load Survey Results
 
 When a respondent completes a survey, a JSON object with their answers is passed to the `SurveyModel`'s [`onComplete`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#onComplete) event handler. You should send this object to your server and store it with a specific survey ID (see [Handle Survey Completion](/form-library/documentation/get-started-html-css-javascript#handle-survey-completion)). A collection of such JSON objects is a data source for the Table View. This collection can be processed (sorted, filtered, paginated) on the server or on the client.
