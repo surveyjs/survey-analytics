@@ -965,6 +965,8 @@ export class VisualizationPanel extends VisualizerBase {
     super.destroyContent(container);
   }
 
+  public updateContent(): void { }
+
   /**
    * Redraws the `VisualizationPanel` and all its content.
    */
