@@ -7,6 +7,7 @@ import { VisualizationPanel } from "../src/visualizationPanel";
 import { IState } from "../src/config";
 import { VisualizationManager } from "../src/visualizationManager";
 import { LayoutEngine } from "../src/layoutEngine";
+import { PostponeHelper } from "../src/visualizerBase";
 
 VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
@@ -823,4 +824,40 @@ test("keep hidden element on reorder", () => {
   expect(visPanel.getElements().length).toEqual(3);
   expect(visPanel.getElements().map(el => el.isVisible)).toStrictEqual([true, true, false]);
   expect(visPanel.getElements().map(el => el.name)).toStrictEqual(["q3", "q2", "q1"]);
+});
+
+test("invoke updateContent for child visualizers on updateData", () => {
+  PostponeHelper.postponeFunction = ((callback: () => void) => callback()) as any;
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "question1",
+      },
+    ],
+  };
+  const data = [{ question1: "testValue", }];
+  const survey = new SurveyModel(json);
+  const vis = new VisualizationPanel(survey.getAllQuestions(), data, {
+    allowDynamicLayout: false,
+  });
+  const selectBaseVisualizer = vis.getVisualizer("question1") as Text;
+  selectBaseVisualizer.updateContent = () => {}; //
+  const updateContentSpy = jest.spyOn(selectBaseVisualizer, "updateContent");
+  const destroyContentSpy = jest.spyOn(selectBaseVisualizer, "destroyContent");
+  const renderContentSpy = jest.spyOn(selectBaseVisualizer, "renderContent");
+
+  expect(updateContentSpy).toHaveBeenCalledTimes(0);
+  expect(destroyContentSpy).toHaveBeenCalledTimes(0);
+  expect(renderContentSpy).toHaveBeenCalledTimes(0);
+
+  vis.render(document.createElement("div"));
+  expect(updateContentSpy).toHaveBeenCalledTimes(0);
+  expect(destroyContentSpy).toHaveBeenCalledTimes(0);
+  expect(renderContentSpy).toHaveBeenCalledTimes(1);
+
+  vis.updateData([]);
+  expect(updateContentSpy).toHaveBeenCalledTimes(1);
+  expect(destroyContentSpy).toHaveBeenCalledTimes(0);
+  expect(renderContentSpy).toHaveBeenCalledTimes(1);
 });

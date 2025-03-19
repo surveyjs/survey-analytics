@@ -23,56 +23,7 @@ export class PlotlyChartAdapter {
   }
 
   public async create(chartNode: HTMLElement): Promise<any> {
-    const answersData = await this.model.getAnswersData();
-    var plotlyOptions = PlotlySetup.setup(this.model.chartType, this.model, answersData);
-
-    let config: any = {
-      displaylogo: false,
-      responsive: true,
-      locale: localization.currentLocale,
-      modeBarButtonsToRemove: ["toImage"],
-      modeBarButtonsToAdd: [
-        {
-          name: "toImageSjs",
-          title: localization.getString("saveDiagramAsPNG"),
-          icon: (<any>Plotly).Icons.camera,
-          click: (gd: any) => {
-            let options = {
-              format: PlotlySetup.imageExportFormat,
-              // width: 800,
-              // height: 600,
-              filename: this.model.question.name,
-            };
-            PlotlySetup.onImageSaving.fire(this.model, options);
-            (<any>Plotly).downloadImage(gd, options);
-          },
-        },
-      ],
-    };
-    if (SelectBasePlotly.displayModeBar !== undefined) {
-      config.displayModeBar = SelectBasePlotly.displayModeBar;
-    }
-
-    this.patchConfigParameters(
-      chartNode,
-      plotlyOptions.traces,
-      plotlyOptions.layout,
-      config
-    );
-
-    let options = {
-      traces: plotlyOptions.traces,
-      layout: plotlyOptions.layout,
-      config: config,
-    };
-    PlotlySetup.onPlotCreating.fire(this.model, options);
-
-    const plot = (<any>Plotly).newPlot(
-      chartNode,
-      options.traces,
-      options.layout,
-      options.config
-    );
+    const [plot, plotlyOptions] = await this.update(chartNode);
 
     (<any>chartNode)["on"]("plotly_click", (data: any) => {
       if (data.points.length > 0) {
@@ -120,6 +71,61 @@ export class PlotlyChartAdapter {
     return plot;
   }
 
+  public async update(chartNode: HTMLElement): Promise<any> {
+    const answersData = await this.model.getAnswersData();
+    var plotlyOptions = PlotlySetup.setup(this.model.chartType, this.model, answersData);
+
+    let config: any = {
+      displaylogo: false,
+      responsive: true,
+      locale: localization.currentLocale,
+      modeBarButtonsToRemove: ["toImage"],
+      modeBarButtonsToAdd: [
+        {
+          name: "toImageSjs",
+          title: localization.getString("saveDiagramAsPNG"),
+          icon: (<any>Plotly).Icons.camera,
+          click: (gd: any) => {
+            let options = {
+              format: PlotlySetup.imageExportFormat,
+              // width: 800,
+              // height: 600,
+              filename: this.model.question.name,
+            };
+            PlotlySetup.onImageSaving.fire(this.model, options);
+            (<any>Plotly).downloadImage(gd, options);
+          },
+        },
+      ],
+    };
+    if (SelectBasePlotly.displayModeBar !== undefined) {
+      config.displayModeBar = SelectBasePlotly.displayModeBar;
+    }
+
+    this.patchConfigParameters(
+      chartNode,
+      plotlyOptions.traces,
+      plotlyOptions.layout,
+      config
+    );
+
+    let options = {
+      traces: plotlyOptions.traces,
+      layout: plotlyOptions.layout,
+      config: config,
+    };
+    PlotlySetup.onPlotCreating.fire(this.model, options);
+
+    const plot = (<any>Plotly).react(
+      chartNode,
+      options.traces,
+      options.layout,
+      options.config
+    );
+
+    return [plot, plotlyOptions];
+  }
+
   public destroy(node: HTMLElement) {
     if(!!node) {
       (<any>Plotly).purge(node);
@@ -165,6 +171,13 @@ export class SelectBasePlotly extends SelectBase {
     container.appendChild(chartNode);
     await this._chartAdapter.create(chartNode);
     return container;
+  }
+
+  public updateContent(): void {
+    const chartNode: HTMLElement = <HTMLElement>this.contentContainer?.children[0];
+    if(chartNode) {
+      this._chartAdapter.update(chartNode);
+    }
   }
 
   protected getCalculatedValuesCore(): Array<any> {

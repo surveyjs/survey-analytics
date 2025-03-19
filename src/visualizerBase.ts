@@ -16,6 +16,17 @@ export interface IDataInfo {
   getSeriesLabels(): Array<string>;
 }
 
+export class PostponeHelper {
+  public static postponeFunction: (fn: () => void, timeout?: number) => any;
+  public static postpone(fn: () => void, timeout?: number): any {
+    if(PostponeHelper.postponeFunction) {
+      return PostponeHelper.postponeFunction(fn, timeout);
+    } else {
+      return setTimeout(fn, timeout);
+    }
+  }
+}
+
 /**
  * A base object for all visualizers. Use it to implement a custom visualizer.
  *
@@ -570,26 +581,30 @@ export class VisualizerBase implements IDataInfo {
     this.renderFooter(this.footerContainer);
   }
 
+  public updateContent(): void {
+    this.destroyContent(this.contentContainer);
+    this.renderContent(this.contentContainer);
+  }
+
   /**
    * Re-renders the visualizer and its content.
    */
-  public refresh() {
+  public refresh(): void {
     if (!!this.headerContainer) {
-      setTimeout(() => {
+      PostponeHelper.postpone(() => {
         this.destroyHeader(this.headerContainer);
         this.renderHeader(this.headerContainer);
         this.invokeOnUpdate();
       });
     }
     if (!!this.contentContainer) {
-      setTimeout(() => {
-        this.destroyContent(this.contentContainer);
-        this.renderContent(this.contentContainer);
+      PostponeHelper.postpone(() => {
+        this.updateContent();
         this.invokeOnUpdate();
       });
     }
     if (!!this.footerContainer) {
-      setTimeout(() => {
+      PostponeHelper.postpone(() => {
         this.destroyFooter(this.footerContainer);
         this.renderFooter(this.footerContainer);
         this.invokeOnUpdate();
