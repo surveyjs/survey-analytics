@@ -455,6 +455,9 @@ export class VisualizationPanel extends VisualizerBase {
     this.onAlternativeVisualizerChanged.fire(sender, options);
   };
 
+  protected onDataChanged(): void {
+  }
+
   protected showElementCore(element: IVisualizerPanelRenderedElement, elementIndex = -1): void {
     element.isVisible = true;
     const questionElement = this.renderPanelElement(
@@ -964,8 +967,6 @@ export class VisualizationPanel extends VisualizerBase {
     this.layoutEngine.stop();
     super.destroyContent(container);
   }
-
-  public updateContent(): void { }
 
   /**
    * Redraws the `VisualizationPanel` and all its content.
