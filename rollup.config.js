@@ -84,9 +84,10 @@ module.exports = (options) => {
       {
         preserveModules: false,
         dir: options.dir,
+        entryFileNames: "[name].mjs",
         chunkFileNames: (chunkInfo) => {
           if(!chunkInfo.isEntry) {
-            return "shared.js"
+            return "shared.mjs"
           }
         },
         format: "esm",
