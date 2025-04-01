@@ -65,17 +65,17 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
         packageJson.exports = {
           ".": {
             "types": "./survey.analytics.d.ts",
-            "import": "./fesm/survey.analytics.js",
+            "import": "./fesm/survey.analytics.mjs",
             "require": "./survey.analytics.js"
           },
           "./*.css": "./*.css",
           "./survey.analytics.tabulator": {
             "types": "./survey.analytics.tabulator.d.ts",
-            "import": "./fesm/survey.analytics.tabulator.js",
+            "import": "./fesm/survey.analytics.tabulator.mjs",
             "require": "./survey.analytics.tabulator.js"
           },
         }
-        packageJson.module = "fesm/survey.analytics.js";
+        packageJson.module = "fesm/survey.analytics.mjs";
         fs.writeFileSync(
           buildPath + "package.json",
           JSON.stringify(packageJson, null, 2),
