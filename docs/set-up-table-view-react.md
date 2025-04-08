@@ -345,6 +345,20 @@ export default function TableView() {
 
 </details>
 
+## Activate a SurveyJS License
+
+SurveyJS Dashboard is not available for free commercial use. To integrate it into your application, you must purchase a [commercial license](https://surveyjs.io/licensing) for the software developer(s) who will be working with the Dashboard APIs and implementing the integration. If you use SurveyJS Dashboard without a license, an alert banner will appear at the top of the Table View interface:
+
+<img src="../images/alert-banner-table-view.png" alt="SurveyJS Dashboard: Alert banner" width="1544" height="658">
+
+After purchasing a license, follow the steps below to activate it and remove the alert banner:
+
+1. [Log in](https://surveyjs.io/login) to the SurveyJS website using your email address and password. If you've forgotten your password, [request a reset](https://surveyjs.io/reset-password) and check your inbox for the reset link.
+2. Open the following page: [How to Remove the Alert Banner](https://surveyjs.io/remove-alert-banner). You can also access it by clicking **Set up your license key** in the alert banner itself.
+3. Follow the instructions on that page.
+
+Once you've completed the setup correctly, the alert banner will no longer appear.
+
 ## Enable Export to PDF and Excel
 
 The Table View for SurveyJS Dashboard allows users to save survey results as CSV, PDF, and XLSX documents. Export to CSV is supported out of the box. For export to PDF and XLSX, Table View needs the following third-party libraries:
