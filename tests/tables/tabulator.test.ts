@@ -354,3 +354,84 @@ test("Tabulator allowSorting option", () => {
 
   TableExtensions.unregisterExtension("column", "sort");
 });
+test("setFilter", () => {
+  const surveyJson = {
+    questions: [
+      {
+        type: "signaturepad",
+        name: "signature",
+        title:
+          "Signature",
+      },
+      {
+        type: "file",
+        title: "Please upload your photo",
+        name: "image"
+      }
+    ],
+  };
+  const survey = new SurveyModel(surveyJson);
+  const data = [{
+    signature: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAA",
+    "image": [
+      { "name": "file1.png", "type": "image/png", "content": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAA" },
+      { "name": "file2.png", "type": "image/png", "content": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAA" }]
+  }];
+
+  const tabulator = new Tabulator(survey, data);
+  let results = [];
+  tabulator.tabulatorTables = {
+    setFilter: (customFilter, params) => {
+      results = [
+        {
+          signature: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAA",
+          "image": [
+            { "name": "file1.png", "type": "image/png", "content": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAA" },
+            { "name": "file2.png", "type": "image/png", "content": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAA" }],
+          surveyOriginalData: {
+            signature: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAA",
+            "image": [
+              { "name": "file1.png", "type": "image/png", "content": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAA" },
+              { "name": "file2.png", "type": "image/png", "content": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAA" }],
+          },
+        },
+        {},
+        {
+          kay: undefined
+        },
+        {
+          kay: "valid"
+        },
+        {
+          kay: null
+        },
+        {
+          kay: 0
+        },
+        {
+          kay: 1
+        },
+        {
+          kay: true
+        },
+        {
+          kay: NaN
+        }
+      ].map((row) => {
+        return customFilter(row, params);
+      }) as any;
+    },
+  } as any;
+  tabulator.applyFilter("data:image/png;base64,");
+  expect(results).toStrictEqual([
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
+});
