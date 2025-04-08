@@ -425,6 +425,8 @@ export class Tabulator extends Table {
     var customFilter = (data: any, filterParams: any) => {
       for (var key in data) {
         if (
+          data[key] &&
+          typeof data[key] === "string" &&
           data[key].toLowerCase().includes(filterParams.value.toLowerCase())
         ) {
           return true;
