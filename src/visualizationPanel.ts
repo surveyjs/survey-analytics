@@ -39,6 +39,8 @@ export interface IVisualizerPanelRenderedElement
  *   vizPanelOptions
  * );
  * ```
+ *
+ * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
  */
 export interface IVisualizationPanelOptions {
   // An object named after a question that it configures.
@@ -63,6 +65,8 @@ export interface IVisualizationPanelOptions {
 
   /**
    * Pass a survey instance to use survey locales in the Visualization Panel.
+   *
+   * [View Demo](https://surveyjs.io/dashboard/examples/localize-survey-data-dashboard-ui/ (linkStyle))
    */
   survey?: SurveyModel;
   /**
@@ -1009,6 +1013,8 @@ export class VisualizationPanel extends VisualizerBase {
 
   /**
    * The state of `VisualizationPanel`. Includes information about the visualized elements and current locale.
+   *
+   * [View Demo](https://surveyjs.io/dashboard/examples/save-dashboard-state-to-local-storage/ (linkStyle))
    * @see onStateChanged
    */
   public get state(): IState {

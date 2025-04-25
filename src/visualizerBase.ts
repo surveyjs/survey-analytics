@@ -129,7 +129,7 @@ export class VisualizerBase implements IDataInfo {
    * - `state`: `any`\
    * A new state of the visualizer. Includes information about the visualized elements and current locale.
    *
-   * [View Demo](/dashboard/examples/save-dashboard-state-to-local-storage/ (linkStyle))
+   * [View Demo](https://surveyjs.io/dashboard/examples/save-dashboard-state-to-local-storage/ (linkStyle))
    * @see getState
    * @see setState
    */
@@ -773,6 +773,8 @@ export class VisualizerBase implements IDataInfo {
   /**
    * Sets the visualizer's state.
    *
+   * [View Demo](https://surveyjs.io/dashboard/examples/save-dashboard-state-to-local-storage/ (linkStyle))
+   *
    * > This method is overriden in classes descendant from `VisualizerBase`.
    * @see getState
    * @see onStateChanged
@@ -786,6 +788,8 @@ export class VisualizerBase implements IDataInfo {
    * If you want to inherit the locale from a visualized survey, assign a [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model) instance to the [`survey`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#survey) property of the `IVisualizationPanelOptions` object in the [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel) constructor.
    *
    * If the survey is [translated into more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the toolbar displays a language selection drop-down menu.
+   *
+   * [View Demo](https://surveyjs.io/dashboard/examples/localize-survey-data-dashboard-ui/ (linkStyle))
    * @see onLocaleChanged
    */
   public get locale(): string {
