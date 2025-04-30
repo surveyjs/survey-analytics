@@ -1,5 +1,5 @@
 ---
-title: Export Survey Results to PDF or Excel | Open-Source JS Form Builder
+title: Export Survey Results to PDF or Excel | JS Form Builder
 description: Convert your survey data to manageable table format for easy filtering and analysis. Save survey results as PDF or Excel files to visualize or share with others. View free demo for JavaScript with a step-by-step setup guide.
 ---
 
