@@ -711,7 +711,7 @@ test("Check table get/set state for columns", () => {
   );
   table.state = state;
 
-  expect(JSON.stringify(table.columns)).toBe("[{\"name\":\"q2\",\"displayName\":\"q2\",\"dataType\":0,\"isVisible\":false,\"isPublic\":true,\"location\":0},{\"name\":\"q1\",\"displayName\":\"q1_changed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":1},{\"name\":\"q2-Comment\",\"displayName\":\"Other (describe)\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":0},{\"name\":\"q3\",\"displayName\":\"not currently existed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":false,\"location\":0}]");
+  expect(JSON.stringify(table.columns)).toBe("[{\"name\":\"q2\",\"displayName\":\"q2\",\"dataType\":0,\"isVisible\":false,\"isPublic\":true,\"location\":0},{\"name\":\"q1\",\"displayName\":\"q1_changed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":1},{\"name\":\"q2-Comment\",\"displayName\":\"Please leave a comment\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":0},{\"name\":\"q3\",\"displayName\":\"not currently existed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":false,\"location\":0}]");
 });
 
 test("check pass columns data via constructor", () => {
@@ -755,7 +755,7 @@ test("check pass columns data via constructor", () => {
     "q2-Comment": "r32r2r23r23r",
   }], {}, state.elements);
 
-  expect(JSON.stringify(table.columns)).toBe("[{\"name\":\"q2\",\"displayName\":\"q2\",\"dataType\":0,\"isVisible\":false,\"isPublic\":true,\"location\":0},{\"name\":\"q1\",\"displayName\":\"q1_changed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":1},{\"name\":\"q2-Comment\",\"displayName\":\"Other (describe)\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":0},{\"name\":\"q3\",\"displayName\":\"not currently existed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":false,\"location\":0}]");
+  expect(JSON.stringify(table.columns)).toBe("[{\"name\":\"q2\",\"displayName\":\"q2\",\"dataType\":0,\"isVisible\":false,\"isPublic\":true,\"location\":0},{\"name\":\"q1\",\"displayName\":\"q1_changed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":1},{\"name\":\"q2-Comment\",\"displayName\":\"Please leave a comment\",\"dataType\":0,\"isVisible\":true,\"isPublic\":true,\"location\":0},{\"name\":\"q3\",\"displayName\":\"not currently existed\",\"dataType\":0,\"isVisible\":true,\"isPublic\":false,\"location\":0}]");
 });
 
 const matrixDropdownJson = {
