@@ -60,6 +60,12 @@
   }
 }
 
+[dir="rtl"] .sa-question__title--draggable, [style*="direction: rtl"] .sa-question__title--draggable, [style*="direction:rtl"] .sa-question__title--draggable {
+  &:after {
+    float: left;
+  }
+}
+
 .sa-toolbar {
   font-family: $font-family;
   font-size: $root-font-size;
@@ -190,11 +196,12 @@
 
 .sa-commercial {
   font-size: 12px;
-  padding: 1em 0 0.5em 2em;
+  padding: 0.5em 0 0.5em 2em;
   svg {
     width: 20px;
     height: 20px;
     fill: $main-color;
+    vertical-align: middle;
   }
 }
 .sa-commercial__text {

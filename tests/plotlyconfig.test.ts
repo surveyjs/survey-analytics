@@ -6,6 +6,7 @@ import { SelectBasePlotly } from "../src/plotly/selectBase";
 import { MatrixPlotly } from "../src/plotly/matrix";
 import { QuestionDropdownModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
 import { Matrix } from "../src/matrix";
+import { localization } from "../src/localizationManager";
 
 let choices = [
   { value: "father", text: "father_text" },
@@ -384,4 +385,19 @@ test("left non-empty pies only and reduce chart area to fit them", async () => {
   expect(config.layout.grid.rows).toBe(1);
   expect(config.layout.grid.columns).toBe(2);
   expect(config.layout.height).toBe(375);
+});
+
+test("check bar axes RTL setup", async () => {
+  const prevLocale = localization.currentLocale;
+  localization.currentLocale = "ar";
+  var config = PlotlySetup.setupBar(matrix, await matrix.getAnswersData());
+
+  expect(config.layout.xaxis.autorange).toBe("reversed");
+  expect(config.layout.yaxis.side).toBe("right");
+  expect(config.layout.legend).toStrictEqual({
+    x: 0,
+    y: 1,
+    xanchor: "left",
+    yanchor: "top"
+  });
 });

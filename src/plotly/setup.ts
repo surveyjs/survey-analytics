@@ -1,6 +1,7 @@
 import { Event } from "survey-core";
 import { IAnswersData, SelectBase } from "../selectBase";
 import { VisualizerBase } from "../visualizerBase";
+import { localization } from "../localizationManager";
 
 export interface PlotlyOptions {
   traces: Array<any>;
@@ -267,6 +268,17 @@ export class PlotlySetup {
           traces[traceIndex].hovertext.push(`${trace.y[yFullTextIndex]} : ${trace.name}, ${trace.text[yFullTextIndex]}${percentString}`);
         });
       });
+    }
+
+    if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
+      layout.xaxis.autorange = "reversed";
+      layout.yaxis.side = "right";
+      layout.legend = {
+        x: 0,
+        y: 1,
+        xanchor: "left",
+        yanchor: "top"
+      };
     }
 
     return { traces, layout, hasSeries };
