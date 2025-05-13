@@ -1,3 +1,19 @@
+var customPlotlyLocale = {
+  moduleType:"locale",
+  name: "ar",
+  dictionary: {
+    "Zoom": "تكبير/تصغير",
+    "Pan": "تحريك",
+    "Box select": "تحديد مربع",
+    "Lasso select": "تحديد لاسو",
+    "Zoom in": "تكبير",
+    "Zoom out": "صغر",
+    "Autoscale": "تصغير تلقائي",
+    "Reset axes": "إعادة ضبط المحاور",
+  },
+};
+Plotly.register(customPlotlyLocale);
+
 var survey = new Survey.SurveyModel(json);
 
 var options = {
