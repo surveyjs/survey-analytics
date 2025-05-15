@@ -861,3 +861,63 @@ test("invoke updateContent for child visualizers on updateData", () => {
   expect(destroyContentSpy).toHaveBeenCalledTimes(0);
   expect(renderContentSpy).toHaveBeenCalledTimes(1);
 });
+
+test("create visualizer for grouped questions", async () => {
+  const json = {
+    "pages": [
+      {
+        "name": "page1",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "question1",
+            "choices": [
+              "female",
+              "male"
+            ]
+          },
+          {
+            "type": "radiogroup",
+            "name": "question2",
+            "choices": [
+              "Item 1",
+              "Item 2",
+              "Item 3"
+            ],
+          }
+        ]
+      }
+    ],
+  };
+  var survey = new SurveyModel(json);
+  var data = [
+    { question1: "male", question2: "Item 1" },
+    { question1: "male", question2: "Item 1" },
+    { question1: "male", question2: "Item 2" },
+    { question1: "male", question2: "Item 3" },
+    { question1: "female", question2: "Item 2" },
+    { question1: "female", question2: "Item 2" },
+    { question1: "female", question2: "Item 2" },
+    { question1: "female", question2: "Item 3" },
+    { question1: "female", question2: "Item 3" },
+    { question1: "female", question2: "Item 3" },
+    { question1: "female", question2: "Item 3" },
+    { question1: "female", question2: "Item 1" },
+  ];
+  const visPanel = new VisualizationPanel([[survey.getQuestionByName("question1"), survey.getQuestionByName("question2")]], data, {
+    allowDynamicLayout: false,
+  });
+
+  expect(visPanel.getElements().length).toEqual(1);
+  expect(visPanel.getElements()[0].name).toEqual("question1");
+  expect(visPanel.getElements()[0].isVisible).toEqual(true);
+
+  expect(visPanel.visualizers.length).toEqual(1);
+  const visualizer = visPanel.visualizers[0] as SelectBase;
+  expect(visualizer.type).toEqual("selectBase");
+  expect(visualizer.getSeriesValues()).toStrictEqual(["Item 3", "Item 2", "Item 1"]);
+  expect(visualizer.getSeriesLabels()).toStrictEqual(["Item 3", "Item 2", "Item 1"]);
+  expect(visualizer.getValues()).toStrictEqual(["male", "female"]);
+  expect(visualizer.getLabels()).toStrictEqual(["male", "female"]);
+  expect(await visualizer.getCalculatedValues()).toStrictEqual([[1, 4], [1, 3], [2, 1]]);
+});

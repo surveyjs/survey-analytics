@@ -206,12 +206,12 @@ export class VisualizerBase implements IDataInfo {
     );
   }
 
-  protected createVisualizer<T = VisualizerBase>(question: Question, options?: { [index: string]: any }): T {
+  protected createVisualizer<T = VisualizerBase>(question: Question, options?: { [index: string]: any }, data?: any[]): T {
     let visualizerOptions = Object.assign({}, options || this.options);
     if (visualizerOptions.dataProvider === undefined) {
       visualizerOptions.dataProvider = this.dataProvider;
     }
-    return VisualizerFactory.createVisualizer(question, this.data, visualizerOptions) as T;
+    return VisualizerFactory.createVisualizer(question, data || this.data, visualizerOptions) as T;
   }
 
   /**

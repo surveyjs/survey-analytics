@@ -184,6 +184,14 @@ export class AlternativeVisualizersWrapper
     }
   }
 
+  getValues(): Array<any> {
+    return this.visualizer.getValues();
+  }
+
+  getLabels(): Array<string> {
+    return this.visualizer.getLabels();
+  }
+
   destroy() {
     this.visualizers.forEach((visualizer) => {
       visualizer.onAfterRender.remove(this.onAfterVisualizerRenderCallback);
