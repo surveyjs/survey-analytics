@@ -1068,6 +1068,10 @@ export class VisualizationPanel extends VisualizerBase {
       this.onPermissionsChangedCallback(this);
   }
 
+  protected getCalculatedValuesCore(): Array<any> {
+    return [];
+  }
+
   destroy() {
     super.destroy();
     this.destroyVisualizers();

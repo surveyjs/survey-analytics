@@ -861,3 +861,21 @@ test("invoke updateContent for child visualizers on updateData", () => {
   expect(destroyContentSpy).toHaveBeenCalledTimes(0);
   expect(renderContentSpy).toHaveBeenCalledTimes(1);
 });
+
+test("getCalculatedValues should return empty array", async () => {
+  PostponeHelper.postponeFunction = ((callback: () => void) => callback()) as any;
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "question1",
+      },
+    ],
+  };
+  const data = [{ question1: "testValue", }];
+  const survey = new SurveyModel(json);
+  const vis = new VisualizationPanel(survey.getAllQuestions(), data, {
+    allowDynamicLayout: false,
+  });
+  expect(await vis.getCalculatedValues()).toStrictEqual([]);
+});
