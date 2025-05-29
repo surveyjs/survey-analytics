@@ -184,6 +184,10 @@ export class AlternativeVisualizersWrapper
     }
   }
 
+  public getCalculatedValues(): Promise<Array<Object>> {
+    return this.visualizer.getCalculatedValues();
+  }
+
   destroy() {
     this.visualizers.forEach((visualizer) => {
       visualizer.onAfterRender.remove(this.onAfterVisualizerRenderCallback);

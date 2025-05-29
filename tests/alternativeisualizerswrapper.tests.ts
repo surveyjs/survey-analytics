@@ -155,3 +155,8 @@ test("onStateChanged", () => {
   alternativeVisualizersWrapper.getVisualizers()[1]["setChartType"]("bar");
   expect(count).toBe(3);
 });
+
+test("getCalculatedValues", async () => {
+  expect((alternativeVisualizersWrapper as any).visualizer).toEqual(selectBase);
+  expect(await alternativeVisualizersWrapper.getCalculatedValues()).toEqual(await (alternativeVisualizersWrapper as any).visualizer.getCalculatedValues());
+});
