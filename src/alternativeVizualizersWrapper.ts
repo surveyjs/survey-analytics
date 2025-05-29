@@ -118,6 +118,10 @@ export class AlternativeVisualizersWrapper
     }
   }
 
+  public getVisualizer(): VisualizerBase {
+    return this.visualizer;
+  }
+
   updateData(data: Array<{ [index: string]: any }>) {
     super.updateData(data);
     this.visualizers.forEach((visualizer) => {

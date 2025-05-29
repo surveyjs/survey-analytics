@@ -157,6 +157,6 @@ test("onStateChanged", () => {
 });
 
 test("getCalculatedValues", async () => {
-  expect((alternativeVisualizersWrapper as any).visualizer).toEqual(selectBase);
-  expect(await alternativeVisualizersWrapper.getCalculatedValues()).toEqual(await (alternativeVisualizersWrapper as any).visualizer.getCalculatedValues());
+  expect(alternativeVisualizersWrapper.getVisualizer()).toEqual(selectBase);
+  expect(await alternativeVisualizersWrapper.getCalculatedValues()).toEqual(await alternativeVisualizersWrapper.getVisualizer().getCalculatedValues());
 });
