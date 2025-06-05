@@ -14,7 +14,7 @@ export var finnishStrings = {
   filterPlaceholder: "Etsi...",
   removeRows: "Poista rivejä",
   showLabel: "Näytä",
-  entriesLabel: "vastsuksia",
+  entriesLabel: "vastauksia",
   visualizer_text: "Tekstitaulukko",
   visualizer_wordcloud: "Sanapilvi",
   visualizer_histogram: "Histogrammi",
