@@ -4,9 +4,12 @@ jest.mock("plotly.js", () => { }, { virtual: true });
 import { PlotlySetup } from "../src/plotly/setup";
 import { SelectBasePlotly } from "../src/plotly/selectBase";
 import { MatrixPlotly } from "../src/plotly/matrix";
-import { QuestionDropdownModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
+import { QuestionDropdownModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
 import { Matrix } from "../src/matrix";
 import { localization } from "../src/localizationManager";
+import { VisualizationMatrixDropdown } from "../src/visualizationMatrixDropdown";
+import { VisualizationPanel } from "../src/visualizationPanel";
+import { SelectBase } from "../src/selectBase";
 
 let choices = [
   { value: "father", text: "father_text" },
@@ -400,4 +403,67 @@ test("check bar axes RTL setup", async () => {
     xanchor: "left",
     yanchor: "top"
   });
+});
+
+test("VisualizationMatrixDropdown stackedbar chart height", async () => {
+  const question = new QuestionMatrixDropdownModel("q1");
+  question.fromJSON({
+    type: "matrixdropdown",
+    name: "question1",
+    columns: [
+      {
+        name: "Column 1",
+        cellType: "checkbox",
+        choices: [
+          {
+            value: "s1",
+            text: "Status 1",
+          },
+          {
+            value: "s2",
+            text: "Status 2",
+          },
+          {
+            value: "s3",
+            text: "Status 3",
+          },
+          {
+            value: "s4",
+            text: "Status 4",
+          },
+        ],
+      },
+    ],
+    choices: [1, 2, 3, 4, 5],
+    rows: [
+      "Row 1",
+      "Row 2",
+      "Row 3",
+      "Row 4",
+      "Row 5",
+      "Row 6",
+      "Row 7",
+      "Row 8",
+      "Row 9",
+      "Row 10",
+      "Row 11",
+      "Row 12",
+      "Row 13",
+      "Row 14",
+      "Row 15",
+      "Row 16",
+      "Row 17",
+      "Row 18",
+      "Row 19",
+      "Row 20",
+      "Row 21",
+      "Row 22",
+      "Row 23",
+    ],
+  });
+  const visualizer = new VisualizationMatrixDropdown(question, []);
+  const selectBase = (visualizer["_matrixDropdownVisualizer"] as VisualizationPanel).visualizers[0] as SelectBase;
+  selectBase.chartType = "stackedbar";
+  const config = PlotlySetup.setupBar(selectBase, await selectBase.getAnswersData());
+  expect(config.layout.height).toEqual(780);
 });
