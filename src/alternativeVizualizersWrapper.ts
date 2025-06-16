@@ -118,6 +118,10 @@ export class AlternativeVisualizersWrapper
     }
   }
 
+  public getVisualizer(): VisualizerBase {
+    return this.visualizer;
+  }
+
   updateData(data: Array<{ [index: string]: any }>) {
     super.updateData(data);
     this.visualizers.forEach((visualizer) => {
@@ -190,6 +194,10 @@ export class AlternativeVisualizersWrapper
 
   getLabels(): Array<string> {
     return this.visualizer.getLabels();
+  }
+
+  public getCalculatedValues(): Promise<Array<Object>> {
+    return this.visualizer.getCalculatedValues();
   }
 
   destroy() {

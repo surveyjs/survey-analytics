@@ -66,10 +66,10 @@ Make sure that you have Node.js v6.0.0 or later and npm v2.7.0 or later installe
 1. **Build the library**
 
     ```
-    npm run build:prod
+    npm run build
     ```
 
-    You can find the built scripts and style sheets in the `packages` folder.
+    You can find the built scripts and style sheets in the `build` folder.
 
 1. **Run test examples**
 

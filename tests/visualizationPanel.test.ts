@@ -921,3 +921,21 @@ test("create visualizer for grouped questions", async () => {
   expect(visualizer.getLabels()).toStrictEqual(["male", "female"]);
   expect(await visualizer.getCalculatedValues()).toStrictEqual([[1, 4], [1, 3], [2, 1]]);
 });
+
+test("getCalculatedValues should return empty array", async () => {
+  PostponeHelper.postponeFunction = ((callback: () => void) => callback()) as any;
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "question1",
+      },
+    ],
+  };
+  const data = [{ question1: "testValue", }];
+  const survey = new SurveyModel(json);
+  const vis = new VisualizationPanel(survey.getAllQuestions(), data, {
+    allowDynamicLayout: false,
+  });
+  expect(await vis.getCalculatedValues()).toStrictEqual([]);
+});
