@@ -482,7 +482,7 @@ export class SelectBase
     if(!!question.choicesFromQuestion && !!question.survey) {
       question = <QuestionSelectBase>question.survey.getQuestionByName(question.choicesFromQuestion);
     }
-    return question["activeChoices"];
+    return question["activeChoices"] || question.visibleChoices || question.choices || [];
   }
 
   getValues(): Array<any> {

@@ -1,5 +1,6 @@
-import { QuestionDropdownModel, ItemValue, QuestionImagePickerModel, SurveyModel } from "survey-core";
+import { QuestionDropdownModel, ItemValue, QuestionImagePickerModel, SurveyModel, ComponentCollection } from "survey-core";
 import { SelectBase, hideEmptyAnswersInData } from "../src/selectBase";
+import { VisualizationManager } from "../src/visualizationManager";
 
 let selectBase: SelectBase;
 let choices = [
@@ -499,4 +500,33 @@ test("renderContent function shouldn't be passed to question footer visualizer",
   const selectBase = new SelectBase(survey.getQuestionByName("q1"), [], { renderContent: customRenderContent });
   expect(selectBase.footerVisualizer).toBeDefined();
   expect(selectBase.footerVisualizer.options.renderContent).toBeUndefined();
+});
+
+test("choices from composite question", () => {
+  ComponentCollection.Instance.add({
+    name: "custom_select",
+    inheritBaseProps: ["choices"],
+    questionJSON: {
+      type: "dropdown",
+      choices: [
+        { value: "FRA", text: "France" },
+        { value: "ATG", text: "Antigua and Barbuda" },
+        { value: "ALB", text: "Albania" },
+      ],
+    },
+  });
+  VisualizationManager.registerVisualizer("custom_select", SelectBase);
+
+  var survey = new SurveyModel({
+    pages: [
+      {
+        elements: [
+          { type: "custom_select", name: "q1", }
+        ]
+      }
+    ]
+  });
+  const selectBase1 = new SelectBase(survey.getQuestionByName("q1"), []);
+  expect(selectBase1.getValues()).toStrictEqual(["ALB", "ATG", "FRA"]);
+  expect(selectBase1.getLabels()).toStrictEqual(["Albania", "Antigua and Barbuda", "France"]);
 });
