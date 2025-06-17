@@ -147,7 +147,7 @@ export class AlternativeVisualizersWrapper
     return (<any>this.visualizer).selection || this.selectedItem;
   }
 
-  protected renderContent(container: HTMLElement) {
+  protected renderContent(container: HTMLElement): void {
     this.visualizerContainer = container;
     this.visualizer.render(this.visualizerContainer);
   }

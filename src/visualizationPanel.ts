@@ -982,7 +982,7 @@ export class VisualizationPanel extends VisualizerBase {
     super.renderToolbar(container);
   }
 
-  public renderContent(container: HTMLElement) {
+  public renderContent(container: HTMLElement): void {
     container.className += " sa-panel__content sa-grid";
 
     this.visibleElements.forEach((element) => {

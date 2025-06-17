@@ -98,7 +98,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     super.destroyContent(this.contentContainer);
   }
 
-  renderContent(container: HTMLElement) {
+  renderContent(container: HTMLElement): void {
     this._matrixDropdownVisualizer.render(container);
   }
 

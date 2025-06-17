@@ -477,14 +477,14 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
-  protected async renderContentAsync(container: HTMLElement) {
+  protected async renderContentAsync(container: HTMLElement): Promise<HTMLElement> {
     return new Promise<HTMLElement>((resolve, reject) => {
       container.innerText = localization.getString("noVisualizerForQuestion");
       resolve(container);
     });
   }
 
-  protected renderContent(container: HTMLElement) {
+  protected renderContent(container: HTMLElement): void {
     if (!!this.options && typeof this.options.renderContent === "function") {
       const rendered = this.options.renderContent(container, this);
       if(rendered !== false) {
