@@ -14,9 +14,9 @@ export class PivotModel extends SelectBase {
   protected chartTypes: string[];
 
   private axisXSelector: HTMLDivElement;
-  private axisXQuestionName: string;
+  public axisXQuestionName: string;
   private axisYSelector: HTMLDivElement;
-  private axisYQuestionName: string;
+  public axisYQuestionName: string;
   private questionsY: Array<VisualizerBase> = [];
 
   public static IntervalsCount = 10;
@@ -58,6 +58,15 @@ export class PivotModel extends SelectBase {
         (e: any) => { this.axisYQuestionName = e.target.value; this.setupPivot(); }
       )
     );
+    this.setupPivot();
+  }
+
+  public setAxisQuestions(...axisQuestionNames: string[]): void {
+    if(axisQuestionNames.length < 1) {
+      return;
+    }
+    this.axisXQuestionName = axisQuestionNames[0];
+    this.axisYQuestionName = axisQuestionNames.length > 1 ? axisQuestionNames[1] : undefined;
     this.setupPivot();
   }
 
@@ -173,7 +182,7 @@ export class PivotModel extends SelectBase {
     const seriesValues = [];
     this.questionsY.forEach(q => {
       if (this.getQuestionValueType(q.question) === "enum") {
-        seriesValues.push.call(seriesValues, q.getValues());
+        seriesValues.push.apply(seriesValues, q.getValues().reverse());
       } else {
         seriesValues.push(q.question.name);
       }
@@ -188,7 +197,7 @@ export class PivotModel extends SelectBase {
     const seriesLabels = [];
     this.questionsY.forEach(q => {
       if (this.getQuestionValueType(q.question) === "enum") {
-        seriesLabels.push.call(seriesLabels, q.getLabels());
+        seriesLabels.push.apply(seriesLabels, q.getLabels().reverse());
       } else {
         seriesLabels.push(q.question.title || q.question.name);
       }
@@ -269,54 +278,66 @@ export class PivotModel extends SelectBase {
     return [externalCalculatedData];
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
-    const continiousValues = this.getContiniousValues();
-    const statistics: Array<Array<number>> = [];
-    const series = this.getSeriesValues();
-    const seriesValueTypes = [];
-    if (series.length === 0) {
-      series.push("");
-      seriesValueTypes.push("enum");
-    }
+  getSeriesValueIndexes(): { [index: string]: number } {
+    const seriesValueIndexes = {};
+    let valueIndex = 0;
     for (var i = 0; i < this.questionsY.length; ++i) {
-      const getQuestionValueType = this.getQuestionValueType(this.questionsY[i].question);
-      if(getQuestionValueType === "enum") {
-        this.questionsY[i].getValues().forEach(() => {
-          seriesValueTypes.push("enum");
+      const questionValueType = this.getQuestionValueType(this.questionsY[i].question);
+      if(questionValueType === "enum") {
+        this.questionsY[i].getValues().reverse().forEach((value) => {
+          seriesValueIndexes[this.questionsY[i].name + "_" + value] = valueIndex++;
         });
       } else {
-        seriesValueTypes.push(getQuestionValueType);
+        seriesValueIndexes[this.questionsY[i].name] = i;
       }
     }
+    return seriesValueIndexes;
+  }
+
+  public updateStatisticsSeriesValue(statistics: Array<Array<number>>, dataRow: { [index: string]: any }, valueIndex: number, seriesValueIndexes: { [index: string]: number }): void {
+    for (let j = 0; j < this.questionsY.length; ++j) {
+      if (dataRow[this.questionsY[j].name] !== undefined) {
+        const questionValueType = this.getQuestionValueType(this.questionsY[j].question);
+        if (questionValueType === "enum" || questionValueType === "date") {
+          const seriesValueIndex = seriesValueIndexes[this.questionsY[j].name + "_" + dataRow[this.questionsY[j].name]];
+          statistics[seriesValueIndex][valueIndex]++;
+        } else {
+          const seriesValueIndex = seriesValueIndexes[this.questionsY[j].name];
+          statistics[seriesValueIndex][valueIndex] += parseFloat(dataRow[this.questionsY[j].name]);
+        }
+      }
+    }
+  }
+
+  protected getCalculatedValuesCore(): Array<any> {
+    const statistics: Array<Array<number>> = [];
+    const series = this.getSeriesValues();
+    if (series.length === 0) {
+      series.push("");
+    }
+    const seriesValueIndexes = this.getSeriesValueIndexes();
     if (this.valueType === "enum") {
       const values = this.getValues();
-      const valuesIndexes = {};
+      const valueIndexes = {};
       values.forEach((value, index) => {
-        valuesIndexes[value] = index;
+        valueIndexes[value] = index;
       });
       for (var i = 0; i < series.length; ++i) {
         statistics.push(values.map(i => 0));
       }
       this.data.forEach(dataRow => {
         const answerData = dataRow[this.name];
-        if (answerData !== undefined && valuesIndexes[answerData] !== undefined) {
-          const valueIndex = valuesIndexes[answerData];
+        if (answerData !== undefined && valueIndexes[answerData] !== undefined) {
+          const valueIndex = valueIndexes[answerData];
           if(this.questionsY.length === 0) {
             statistics[0][valueIndex]++;
           } else {
-            for (let j = 0; j < series.length; ++j) {
-              if (dataRow[series[j]] !== undefined) {
-                if (seriesValueTypes[j] === "enum" || seriesValueTypes[j] === "date") {
-                  statistics[j][valueIndex]++;
-                } else {
-                  statistics[j][valueIndex] += parseFloat(dataRow[series[j]]);
-                }
-              }
-            }
+            this.updateStatisticsSeriesValue(statistics, dataRow, valueIndex, seriesValueIndexes);
           }
         }
       });
     } else {
+      const continiousValues = this.getContiniousValues();
       const intervals = this.intervals;
       for (var i = 0; i < series.length; ++i) {
         statistics.push(intervals.map(i => 0));
@@ -327,15 +348,7 @@ export class PivotModel extends SelectBase {
             if(this.questionsY.length === 0) {
               statistics[0][valueIndex]++;
             } else {
-              for (let j = 0; j < series.length; ++j) {
-                if (dataValue.row[series[j]] !== undefined) {
-                  if (seriesValueTypes[j] === "enum" || seriesValueTypes[j] === "date") {
-                    statistics[j][valueIndex]++;
-                  } else {
-                    statistics[j][valueIndex] += parseFloat(dataValue.row[series[j]]);
-                  }
-                }
-              }
+              this.updateStatisticsSeriesValue(statistics, dataValue.row, valueIndex, seriesValueIndexes);
             }
             break;
           }

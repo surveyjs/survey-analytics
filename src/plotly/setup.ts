@@ -345,7 +345,7 @@ export class PlotlySetup {
       textposition: "none",
       orientation: "v",
     };
-    if (model.type === "histogram" || model.type === "pivot") {
+    if (model.type === "histogram" || (model.type === "pivot" && !hasSeries)) {
       traceConfig.width = 0.5;
       traceConfig.bargap = 0.5;
       traceConfig.mode = "markers",
@@ -354,9 +354,9 @@ export class PlotlySetup {
 
     datasets.forEach((dataset: Array<number>, index: number) => {
       var trace = Object.assign({}, traceConfig, {
-        x: hasSeries ? seriesLabels : labels,
+        x: labels,
         y: model.showPercentages ? texts[index].map(y => y / 100) : dataset,
-        name: hasSeries ? labels[index] : seriesLabels[index],
+        name: hasSeries ? seriesLabels[index] : labels[index],
         text: texts[index],
       });
       if (model.showPercentages) {

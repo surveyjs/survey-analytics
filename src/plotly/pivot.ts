@@ -32,23 +32,6 @@ export class PivotPlotly extends PivotModel {
     return container;
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
-    const statistics = super.getCalculatedValuesCore();
-    const series = this.getSeriesValues();
-    const values = this.getValues();
-    if (series.length > 1) {
-      const preparedData: Array<Array<number>> = [];
-      values.forEach((val, valueIndex) => {
-        const seriesData = series.map(
-          (seriesValue, seriesIndex) => statistics[seriesIndex][valueIndex]
-        );
-        preparedData.push(seriesData);
-      });
-      return preparedData;
-    }
-    return statistics;
-  }
-
   public getValueType(): "enum" | "date" | "number" {
     return this.valueType;
   }
