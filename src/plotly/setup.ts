@@ -299,8 +299,11 @@ export class PlotlySetup {
       seriesLabels,
     } = answersData;
 
-    if(model.type !== "histogram") {
+    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+
+    if (model.type !== "histogram" && model.type !== "pivot") {
       labels = [].concat(labels).reverse();
+      seriesLabels = [].concat(seriesLabels).reverse();
       colors = [].concat(colors.slice(0, labels.length)).reverse();
       const ts = [];
       texts.forEach(text => {
@@ -315,7 +318,6 @@ export class PlotlySetup {
     }
 
     const traces: any = [];
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
     const layout: any = {
       font: {
@@ -333,25 +335,28 @@ export class PlotlySetup {
       hovermode: "closest",
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
-      showlegend: false,
+      showlegend: hasSeries,
     };
 
     const traceConfig: any = {
-      type: model.chartType === "line" ? "line" : "bar",
+      type: "bar",
       customdata: hasSeries ? seriesLabels : labels,
-      hoverinfo: "x+y",
-      mode: model.chartType === "line" ? "lines+markers" : "markers",
+      hoverinfo: hasSeries ? undefined : "x+y",
       textposition: "none",
-      width: 0.5,
-      bargap: 0.5,
-      marker: <any>{},
+      orientation: "v",
     };
-    traceConfig.marker.color = colors;
+    if (model.type === "histogram" || model.type === "pivot") {
+      traceConfig.width = 0.5;
+      traceConfig.bargap = 0.5;
+      traceConfig.mode = "markers",
+      traceConfig.marker = { color: colors };
+    }
 
     datasets.forEach((dataset: Array<number>, index: number) => {
       var trace = Object.assign({}, traceConfig, {
-        x: labels,
+        x: hasSeries ? seriesLabels : labels,
         y: model.showPercentages ? texts[index].map(y => y / 100) : dataset,
+        name: hasSeries ? labels[index] : seriesLabels[index],
         text: texts[index],
       });
       if (model.showPercentages) {
