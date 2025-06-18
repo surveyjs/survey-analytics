@@ -249,19 +249,19 @@ export class VisualizerBase implements IDataInfo {
     );
   }
 
-  getSeriesValues(): Array<string> {
+  public getSeriesValues(): Array<string> {
     return this.options.seriesValues || [];
   }
 
-  getSeriesLabels(): Array<string> {
+  public getSeriesLabels(): Array<string> {
     return this.options.seriesLabels || this.getSeriesValues();
   }
 
-  getValues(): Array<any> {
+  public getValues(): Array<any> {
     throw new Error("Method not implemented.");
   }
 
-  getLabels(): Array<string> {
+  public getLabels(): Array<string> {
     return this.getValues();
   }
 

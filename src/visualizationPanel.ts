@@ -571,12 +571,12 @@ export class VisualizationPanel extends VisualizerBase {
 
   private buildVisualizers(questions: Array<Question>) {
     questions.forEach((question) => {
-      let visualizerOptions = undefined;
+      let visualizerOptions = Object.assign({}, this.options);
       let visualizerData = undefined;
       if(Array.isArray(question)) {
         const auxQuestionName = question[1].name;
         const auxVisualizer = this.createVisualizer(question[1]) as VisualizerBase;
-        visualizerOptions = Object.assign(this.options, {
+        visualizerOptions = Object.assign(visualizerOptions, {
           seriesValues: auxVisualizer.getValues(),
           seriesLabels: auxVisualizer.getLabels()
         });
