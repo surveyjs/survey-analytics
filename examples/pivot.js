@@ -3,7 +3,7 @@ var json = {
     {
       "type": "radiogroup",
       "name": "question1",
-      "title": "Sex",
+      "title": "Gender",
       "choices": [
         "female",
         "male"

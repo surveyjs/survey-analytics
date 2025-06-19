@@ -8,8 +8,8 @@ test.describe("Pivot chart", () => {
   });
 
   test("simple cases", async ({ page }) => {
-    const xAxisSelector = page.locator("div").filter({ hasText: /^X axis:SexItem kindBill amount$/ }).getByRole("combobox");
-    const yAxisSelector = page.locator("div").filter({ hasText: /^Y axis:Not selectedSexItem kindBill amount$/ }).getByRole("combobox");
+    const xAxisSelector = page.locator("div").filter({ hasText: /^X axis:GenderItem kindBill amount$/ }).getByRole("combobox");
+    const yAxisSelector = page.locator("div").filter({ hasText: /^Y axis:Not selectedGenderItem kindBill amount$/ }).getByRole("combobox");
     await expect(page.locator("#pivotContainer").getByText("X axis:")).toBeVisible();
     await expect(xAxisSelector).toBeVisible();
     await expect(page.locator("#pivotContainer").getByText("Y axis:")).toBeVisible();
