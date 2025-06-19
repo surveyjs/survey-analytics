@@ -5,7 +5,7 @@ import { DocumentHelper } from "../utils";
 
 export class PivotPlotly extends PivotModel {
   private _chartAdapter: PlotlyChartAdapter;
-  public static types = ["vbar", "bar"];
+  public static types = ["vbar"]; // ["vbar", "bar"];
 
   constructor(
     questions: Array<Question>,

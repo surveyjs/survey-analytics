@@ -37,6 +37,7 @@ var data = [
   { question1: "female", question2: "Item 2", question3: 100 },
   { question1: "female", question2: "Item 3", question3: 200 },
   { question1: "female", question2: "Item 3", question3: 300 },
+  { question1: "female", question2: "Item 3", question3: 300 },
   { question1: "female", question2: "Item 3", question3: 400 },
   { question1: "female", question2: "Item 3", question3: 150 },
   { question1: "female", question2: "Item 1", question3: 250 },
@@ -77,11 +78,11 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
 visPanel.showToolbar = true;
 visPanel.render(document.getElementById("summaryContainer"));
 
-var group_survey = new Survey.SurveyModel(group_json);
+var pivot_survey = new Survey.SurveyModel(pivot_json);
 
 var crossQuestion = new SurveyAnalytics.PivotPlotly(
-  group_survey.getAllQuestions(),
-  group_data,
+  pivot_survey.getAllQuestions(),
+  pivot_data,
   options
 );
 crossQuestion.render(document.getElementById("groupContainer"));

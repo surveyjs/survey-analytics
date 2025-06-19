@@ -51,7 +51,7 @@ test("default settings", async () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
 
   expect(pivot["isSupportMissingAnswers"]()).toBeFalsy();
-  expect(pivot["isSupportAnswersOrder"]()).toBeTruthy();
+  expect(pivot["isSupportAnswersOrder"]()).toBeFalsy();
 
   const values = pivot.getValues();
   const labels = pivot.getLabels();
@@ -138,4 +138,18 @@ test("getCalculatedValues", async () => {
   expect(values).toStrictEqual([100, 150, 200, 250, 300, 350, 400, 450, 500, 550]);
   expect(seriesValues).toStrictEqual(["female", "male"]);
   expect(await pivot.getCalculatedValues()).toStrictEqual([[1, 1, 1, 1, 1, 0, 1, 0, 1, 1], [1, 0, 1, 0, 1, 0, 1, 0, 0, 0]]);
+});
+
+test("getQuestionValueType", async () => {
+  const pivot = new PivotModel([], []);
+  expect(pivot.getQuestionValueType({ getType: () => "text" } as any)).toBe("number");
+  expect(pivot.getQuestionValueType({ getType: () => "text", inputType: "date" } as any)).toBe("date");
+  expect(pivot.getQuestionValueType({ getType: () => "text", inputType: "datetime" } as any)).toBe("date");
+  expect(pivot.getQuestionValueType({ getType: () => "rating" } as any)).toBe("number");
+  expect(pivot.getQuestionValueType({ getType: () => "expression" } as any)).toBe("number");
+  expect(pivot.getQuestionValueType({ getType: () => "range" } as any)).toBe("number");
+  expect(pivot.getQuestionValueType({ getType: () => "dropdown" } as any)).toBe("enum");
+  expect(pivot.getQuestionValueType({ getType: () => "radiogroup" } as any)).toBe("enum");
+  expect(pivot.getQuestionValueType({ getType: () => "boolean" } as any)).toBe("enum");
+  expect(pivot.getQuestionValueType({ getType: () => "checkbox" } as any)).toBe("enum");
 });

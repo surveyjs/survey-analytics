@@ -4,6 +4,7 @@ import { SelectBase } from "./selectBase";
 import { DocumentHelper } from "./utils";
 import { VisualizerBase } from "./visualizerBase";
 import { reverse } from "dns";
+import { localization } from "./localizationManager";
 
 export class PivotModel extends SelectBase {
   protected valueType: "enum" | "date" | "number" = "enum";
@@ -11,7 +12,6 @@ export class PivotModel extends SelectBase {
   private _continiousData: Array<{ continious: number, row: any }> = undefined;
   private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
   private _intervalPrecision: number = 2;
-  protected chartTypes: string[];
 
   private axisXSelector: HTMLDivElement;
   public axisXQuestionName: string;
@@ -29,6 +29,7 @@ export class PivotModel extends SelectBase {
     name?: string
   ) {
     super(null, data, options, name || "pivot");
+    this.questions = this.questions.filter((question) => ["matrixdropdown", "matrixdynamic", "matrix", "file", "signature", "multipletext", "comment", "html", "image"].indexOf(question.getType()) === -1);
     if (this.options.intervalPrecision !== undefined) {
       this._intervalPrecision = this.options.intervalPrecision;
     }
@@ -43,7 +44,8 @@ export class PivotModel extends SelectBase {
           };
         }),
         (option: any) => this.axisXQuestionName === option.value,
-        (e: any) => { this.axisXQuestionName = e.target.value; this.setupPivot(); }
+        (e: any) => { this.axisXQuestionName = e.target.value; this.setupPivot(); },
+        localization.getString("axisXSelectorTitle")
       )
     );
     this.registerToolbarItem("axisYSelector", () =>
@@ -55,7 +57,8 @@ export class PivotModel extends SelectBase {
           };
         })),
         (option: any) => this.axisYQuestionName === option.value,
-        (e: any) => { this.axisYQuestionName = e.target.value; this.setupPivot(); }
+        (e: any) => { this.axisYQuestionName = e.target.value; this.setupPivot(); },
+        localization.getString("axisYSelectorTitle")
       )
     );
     this.setupPivot();
@@ -70,11 +73,11 @@ export class PivotModel extends SelectBase {
     this.setupPivot();
   }
 
-  private getQuestionValueType(question: Question): "enum" | "date" | "number" {
+  public getQuestionValueType(question: Question): "enum" | "date" | "number" {
     const questionType = question.getType();
     if (questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
       return "date";
-    } else if(questionType === "text" || questionType === "rating" || questionType === "range") {
+    } else if(questionType === "text" || questionType === "rating" || questionType === "expression" || questionType === "range") {
       return "number";
     }
     return "enum";
@@ -165,6 +168,10 @@ export class PivotModel extends SelectBase {
       this._cachedValues.sort((a, b) => a.continious - b.continious);
     }
     return this._cachedValues;
+  }
+
+  protected isSupportAnswersOrder(): boolean {
+    return false;
   }
 
   protected isSupportMissingAnswers(): boolean {

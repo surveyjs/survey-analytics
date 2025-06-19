@@ -137,6 +137,13 @@
   min-width: 100px;
   max-width: 300px;
 
+  .sa-question__select-title {
+    white-space: nowrap;
+    display: inline-block;
+    line-height: 34px;
+    padding-right: 8px;
+  }
+
   .sa-question__select {
     width: 100%;
     display: block;
