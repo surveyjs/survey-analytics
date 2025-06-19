@@ -131,6 +131,11 @@ steps:
       TESTCAFE_DASHBOARD_AUTHENTICATION_TOKEN: $(TESTCAFE_DASHBOARD_AUTHENTICATION_TOKEN)
       TESTCAFE_DASHBOARD_URL: $(TESTCAFE_DASHBOARD_URL)
 
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm run e2e:ci
+    displayName: "e2e tests"
+
   - task: PublishCodeCoverageResults@1
     inputs:
       codeCoverageTool: Cobertura # or JaCoCo

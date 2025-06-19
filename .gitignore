@@ -31,3 +31,9 @@ Gemfile.lock
 *.env
 coverage/**/*
 junit.xml
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

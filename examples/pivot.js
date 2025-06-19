@@ -70,19 +70,19 @@ var pivotChart = new SurveyAnalytics.PivotPlotly(
 );
 pivotChart.render(document.getElementById("pivotContainer"));
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
-  [ [ survey.getQuestionByName("question2"), survey.getQuestionByName("question1") ], [ survey.getQuestionByName("question1"), survey.getQuestionByName("question2") ] ],
-  data,
-  options
-);
-visPanel.showToolbar = true;
-visPanel.render(document.getElementById("summaryContainer"));
+// var visPanel = new SurveyAnalytics.VisualizationPanel(
+//   [ [ survey.getQuestionByName("question2"), survey.getQuestionByName("question1") ], [ survey.getQuestionByName("question1"), survey.getQuestionByName("question2") ] ],
+//   data,
+//   options
+// );
+// visPanel.showToolbar = true;
+// visPanel.render(document.getElementById("summaryContainer"));
 
-var pivot_survey = new Survey.SurveyModel(pivot_json);
+// var pivot_survey = new Survey.SurveyModel(pivot_json);
 
-var crossQuestion = new SurveyAnalytics.PivotPlotly(
-  pivot_survey.getAllQuestions(),
-  pivot_data,
-  options
-);
-crossQuestion.render(document.getElementById("groupContainer"));
+// var crossQuestion = new SurveyAnalytics.PivotPlotly(
+//   pivot_survey.getAllQuestions(),
+//   pivot_data,
+//   options
+// );
+// crossQuestion.render(document.getElementById("groupContainer"));
