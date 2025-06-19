@@ -69,6 +69,11 @@ steps:
       npx puppeteer browsers install chrome
     displayName: "install chrome"
 
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-creator
+      npx playwright install chromium
+    displayName: "install chrome playwright"
+
   - task: DownloadBuildArtifacts@0
     inputs:
       buildType: "specific"
