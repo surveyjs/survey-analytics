@@ -147,6 +147,25 @@ steps:
       summaryFileLocation: "$(System.DefaultWorkingDirectory)/**/*coverage.xml"
       reportDirectory: "$(System.DefaultWorkingDirectory)/**/coverage"
 
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: "$(Build.SourcesDirectory)/survey-analytics/test-results"
+      ArtifactName: "e2e"
+      publishLocation: "Container"
+    condition: always()
+    displayName: "publish e2e artifacts"
+
+  - task: PublishTestResults@2
+    displayName: "Publish e2e test results"
+    inputs:
+      searchFolder: "$(Build.SourcesDirectory)/survey-analytics/test-results"
+      testResultsFormat: "JUnit"
+      testResultsFiles: "e2e-junit-results.xml"
+      mergeTestResults: true
+      failTaskOnFailedTests: true
+      testRunTitle: "E2E Tests"
+    condition: succeededOrFailed()
+
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm run doc_gen
