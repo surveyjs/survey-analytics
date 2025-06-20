@@ -1,5 +1,5 @@
 import { VisualizerBase, IDataInfo } from "../src/visualizerBase";
-import { QuestionDropdownModel } from "survey-core";
+import { QuestionDropdownModel, SurveyModel } from "survey-core";
 
 test("custom colors", () => {
   expect(new VisualizerBase(null, null).getColors(1)).toEqual([
@@ -108,3 +108,19 @@ test("custom getDataCore function", async () => {
   expect(await visualizer.getCalculatedValues()).toEqual(statistics);
 });
 
+test("ensure question is ready", async () => {
+  const json = { elements: [{ type: "dropdown", name: "q1", choicesLazyLoadEnabled: true, choicesLazyLoadPageSize: 40, }] };
+  const survey = new SurveyModel(json);
+  survey.onChoicesLazyLoad.add((_, options) => {
+    options.setItems([{ value: 1, text: "1" }], 1);
+  });
+  const q1 = survey.getAllQuestions()[0] as QuestionDropdownModel;
+
+  let visualizer = new VisualizerBase(q1, []);
+  expect(q1.choices.length).toBe(0);
+  await new Promise<void>(resolve => {
+    visualizer.onAfterRender.add(() => resolve());
+    visualizer.render(document.createElement("div"));
+  });
+  expect(q1.choices.length).toBe(1);
+});
