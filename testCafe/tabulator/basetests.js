@@ -28,7 +28,6 @@ test("check xss in header and cell", async (t) => {
   );
 
   await t
-    .debug()
     .expect(headerSelector.innerText)
     .eql(xssText)
     .expect(cellSelector.innerText)

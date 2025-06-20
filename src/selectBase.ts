@@ -107,9 +107,11 @@ export class SelectBase
     name?: string
   ) {
     super(question, data, options, name || "selectBase");
-    (<any>question).visibleChoicesChangedCallback = () => {
-      this.dataProvider.raiseDataChanged();
-    };
+    if (!!question) { // TODO: move somewhere else
+      (<any>question).visibleChoicesChangedCallback = () => {
+        this.dataProvider.raiseDataChanged();
+      };
+    }
     this._showPercentages = this.options.showPercentages === true;
     this._showOnlyPercentages = this.options.showOnlyPercentages === true;
 
