@@ -484,6 +484,16 @@ export class VisualizerBase implements IDataInfo {
     });
   }
 
+  protected ensureQuestionIsReady(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      if(this.question) {
+        this.question.waitForQuestionIsReady().then(() => resolve());
+      } else {
+        resolve();
+      }
+    });
+  }
+
   protected renderContent(container: HTMLElement): void {
     if (!!this.options && typeof this.options.renderContent === "function") {
       const rendered = this.options.renderContent(container, this);
@@ -494,7 +504,7 @@ export class VisualizerBase implements IDataInfo {
       if(this.loadingData) {
         this.renderLoadingIndicator(this.contentContainer);
       }
-      this.renderContentAsync(container).then(el => this.afterRender(el));
+      this.ensureQuestionIsReady().then(() => this.renderContentAsync(container).then(el => this.afterRender(el)));
     }
   }
 
