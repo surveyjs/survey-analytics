@@ -339,7 +339,7 @@ export class PlotlySetup {
     };
 
     const traceConfig: any = {
-      type: "bar",
+      type: model.chartType === "line" ? "line" : "bar",
       customdata: hasSeries ? seriesLabels : labels,
       hoverinfo: hasSeries ? undefined : "x+y",
       textposition: "none",
