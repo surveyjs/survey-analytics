@@ -126,7 +126,7 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
-      npm run testcafe_ci
+      npm run testcafe:ci
     displayName: "functional tests"
     env:
       TESTCAFE_DASHBOARD_AUTHENTICATION_TOKEN: $(TESTCAFE_DASHBOARD_AUTHENTICATION_TOKEN)
@@ -140,7 +140,7 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
-      npm run doc_gen
+      npm run doc:gen
     displayName: "generate docs"
 
   - task: CopyFiles@2
