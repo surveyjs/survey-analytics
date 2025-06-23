@@ -100,6 +100,7 @@ module.exports = function (options) {
         "./src/entries/tabulator-umd"
       ),
       "survey.analytics": path.resolve(__dirname, "./src/entries/summary"),
+      "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core"),
     },
     resolve: {
       extensions: [".ts", ".js"],

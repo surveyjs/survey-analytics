@@ -12,6 +12,7 @@
     "doc_update": "chmod +x ./docupdate_npm.sh && ./docupdate_npm.sh",
     "watch:dev": "concurrently \"webpack --env buildType=dev --env emitStyles\" \"rollup -c -w\" ",
     "build": "webpack --env buildType=dev --env emitNonSourceFiles --env emitStyles && webpack --env buildType=prod --env emitStyles && rollup -c",
+    "build:types:core": "tsc --p tsconfig.summary.core.json && echo \"export * from './survey-analytics.types/entries/summary.core';\" >> build/survey.analytics.core.d.ts",
     "build:types:summary": "tsc --p tsconfig.summary.json && echo \"export * from './survey-analytics.types/entries/summary';\" >> build/survey.analytics.d.ts",
     "build:types:tabulator": "tsc --p tsconfig.tabulator.json && echo \"export * from './survey-analytics-tabulator.types/entries/tabulator';\" >> build/survey.analytics.tabulator.d.ts",
     "lint": "eslint ./src --quiet",
