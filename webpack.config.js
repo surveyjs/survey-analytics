@@ -68,6 +68,11 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
             "import": "./fesm/survey.analytics.mjs",
             "require": "./survey.analytics.js"
           },
+          "./survey.analytics.core": {
+            "types": "./survey.analytics.core.d.ts",
+            "import": "./fesm/survey.analytics.core.mjs",
+            "require": "./survey.analytics.core.js"
+          },
           "./*.css": "./*.css",
           "./survey.analytics.tabulator": {
             "types": "./survey.analytics.tabulator.d.ts",
@@ -100,6 +105,7 @@ module.exports = function (options) {
         "./src/entries/tabulator-umd"
       ),
       "survey.analytics": path.resolve(__dirname, "./src/entries/summary"),
+      "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core"),
     },
     resolve: {
       extensions: [".ts", ".js"],
