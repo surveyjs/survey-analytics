@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "es2015",
+    "lib": [
+      "DOM",
+      "ES5",
+      "ES2015.Promise",
+      "es6"
+    ],
+    "sourceMap": false,
+    "noImplicitAny": false,
+    "importHelpers": false,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "skipLibCheck": true,
+    "outDir": "build/survey-analytics-apexcharts.types/"
+  },
+  "include": [
+    "src/entries/apexcharts.ts"
+  ]
+}
