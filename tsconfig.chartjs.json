@@ -17,9 +17,9 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "skipLibCheck": true,
-    "outDir": "build/survey-analytics-apexcharts.types/"
+    "outDir": "build/survey-analytics-chartjs.types/"
   },
   "include": [
-    "src/entries/apexcharts.ts"
+    "src/entries/chartjs.ts"
   ]
 }

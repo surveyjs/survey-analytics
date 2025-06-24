@@ -20,7 +20,7 @@ const input = {
   "survey.analytics": path.resolve(__dirname, "./src/entries/summary.ts"),
   "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core.ts"),
   "survey.analytics.tabulator": path.resolve(__dirname, "./src/entries/tabulator-es.ts"),
-  "survey.analytics.apexcharts": path.resolve(__dirname, "./src/entries/apexcharts.ts"),
+  "survey.analytics.chartjs": path.resolve(__dirname, "./src/entries/chartjs.ts"),
 };
 module.exports = (options) => {
   options = options ?? {};
@@ -81,7 +81,7 @@ module.exports = (options) => {
       "survey-core",
       "plotly.js-dist-min",
       "tabulator-tables",
-      "apexcharts"
+      "chartjs"
     ],
     output: [
       {

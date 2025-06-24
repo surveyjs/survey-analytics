@@ -79,10 +79,10 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
             "import": "./fesm/survey.analytics.tabulator.mjs",
             "require": "./survey.analytics.tabulator.js"
           },
-          "./survey.analytics.apexcharts": {
-            "types": "./survey.analytics.apexcharts.d.ts",
-            "import": "./fesm/survey.analytics.apexcharts.mjs",
-            "require": "./survey.analytics.apexcharts.js"
+          "./survey.analytics.chartjs": {
+            "types": "./survey.analytics.chartjs.d.ts",
+            "import": "./fesm/survey.analytics.chartjs.mjs",
+            "require": "./survey.analytics.chartjs.js"
           },
         }
         packageJson.module = "fesm/survey.analytics.mjs";
@@ -111,7 +111,7 @@ module.exports = function (options) {
       ),
       "survey.analytics": path.resolve(__dirname, "./src/entries/summary"),
       "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core"),
-      "survey.analytics.apexcharts": path.resolve(__dirname, "./src/entries/apexcharts"),
+      "survey.analytics.chartjs": path.resolve(__dirname, "./src/entries/chartjs"),
     },
     resolve: {
       extensions: [".ts", ".js"],
@@ -193,11 +193,11 @@ module.exports = function (options) {
         commonjs: "tabulator-tables",
         amd: "tabulator-tables",
       },
-      "apexcharts": {
-        root: "ApexCharts",
-        commonjs2: "apexcharts",
-        commonjs: "apexcharts",
-        amd: "apexcharts",
+      "chartjs": {
+        root: "ChartJs",
+        commonjs2: "chartjs",
+        commonjs: "chartjs",
+        amd: "chartjs",
       }
     },
     plugins: [
