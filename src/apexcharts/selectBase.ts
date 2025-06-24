@@ -155,7 +155,7 @@ export class ApexChartsAdapter {
 
 export class SelectBaseApexCharts extends SelectBase {
   private _chartAdapter: ApexChartsAdapter;
-  public static types = ["bar", "vbar", "pie", "doughnut"];
+  public static types = ["bar", "vbar", "pie", "doughnut", "line", "scatter", "stackedbar"];
   public static displayToolbar: any = undefined;
 
   constructor(
@@ -197,23 +197,6 @@ export class SelectBaseApexCharts extends SelectBase {
     if(chartNode) {
       this._chartAdapter.update(chartNode);
     }
-  }
-
-  protected getCalculatedValuesCore(): Array<any> {
-    const statistics = super.getCalculatedValuesCore();
-    const series = this.getSeriesValues();
-    const values = this.getValues();
-    if (series.length > 1) {
-      const preparedData: Array<Array<number>> = [];
-      values.forEach((val, valueIndex) => {
-        const seriesData = series.map(
-          (seriesValue, seriesIndex) => statistics[seriesIndex][valueIndex]
-        );
-        preparedData.push(seriesData);
-      });
-      return preparedData;
-    }
-    return statistics;
   }
 }
 

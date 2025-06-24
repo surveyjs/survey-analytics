@@ -21,7 +21,26 @@ var json = {
     //   "name": "question2",
     //   "inputType": "number"    
     //  }
+    {
+          type: "matrixdropdown",
+          name: "question2",
+          title: "What do you feel about these brands?",
+          isRequired: true,
+          columns: [
             {
+              name: "Column 1",
+              title: "My Opinion",
+              choices: ["High Quality", "Natural", "Trustworthy"],
+            },
+            {
+              name: "Column 2",
+              title: "Review Mark",
+              choices: [1, 2, 3, 4, 5],
+            },
+          ],
+          rows: ["Lizol", "Harpic"],
+        },
+        {
           type: "dropdown",
           name: "m0",
           choices: [
@@ -141,9 +160,110 @@ var data = [
     date: "2030-10-13",
     age: 25
   },
-  { "question1": 3 },
-  { "question1": 1 },
-  { "question1": 3 },
+  // { "question1": 3 },
+  // { "question1": 1 },
+  // { "question1": 3 },
+  
+  {
+    "hystogram-without-series-labels-rows": {
+      "Row 1": {
+        "Column 1": 1,
+        "Column 2": 1,
+      },
+      "Row 2": {
+        "Column 1": 2,
+        "Column 2": 2
+      },
+      // "Row 3": {
+      //   "Column 1": 3,
+      //   "Column 2": 1
+      // },
+      // "Row 4": {
+      //   "Column 1": 4,
+      //   "Column 2": 4
+      // },
+      // "Row 5": {
+      //   "Column 1": 5,
+      //   "Column 2": 5
+      // }
+    },
+    "hystogram-matrixdynamic": [
+      {
+        "Column 1": 1,
+        "Column 2": 1,
+      },
+      {
+        "Column 1": 2,
+        "Column 2": 2
+      },
+      {
+        "Column 1": 3,
+        "Column 2": 3
+      },
+      {
+        "Column 1": 4,
+        "Column 2": 4
+      },
+      {
+        "Column 1": 5,
+        "Column 2": 5
+      }
+    ],
+    question1: { Lizol: "Excellent", Harpic: "Excellent" },
+    question2: {
+      Lizol: { "Column 1": "Trustworthy", "Column 2": 3 },
+      Harpic: { "Column 1": "High Quality", "Column 2": 4 },
+    },
+  },
+  {
+    "hystogram-without-series-labels-rows": {
+      "Row 1": {
+        "Column 1": 5
+      },
+      "Row 2": {
+        "Column 1": 4
+      },
+      // "Row 3": {
+      //   "Column 1": 3
+      // },
+      // "Row 4": {
+      //   "Column 1": 2
+      // },
+      // "Row 5": {
+      //   "Column 1": 1
+      // }
+    },
+    question1: { Lizol: "Very Good", Harpic: "Very Good" },
+    question2: {
+      Lizol: { "Column 1": "Natural", "Column 2": 3 },
+      Harpic: { "Column 1": "Natural", "Column 2": 4 },
+    },
+  },
+  {
+    "hystogram-without-series-labels-rows": {
+      "Row 1": {
+        "Column 1": 1
+      },
+      "Row 2": {
+        "Column 1": 1
+      },
+      // "Row 3": {
+      //   "Column 1": 1
+      // },
+      // "Row 4": {
+      //   "Column 1": 1
+      // },
+      // "Row 5": {
+      //   "Column 1": 1
+      // }
+    },
+    question1: { Lizol: "Very Good", Harpic: "Good" },
+    question2: {
+      Lizol: { "Column 1": "Natural", "Column 2": 1 },
+      Harpic: { "Column 1": "Trustworthy", "Column 2": 5 },
+    },
+  },
+
 ];
 
 data = data.concat([
@@ -296,6 +416,24 @@ data = data.concat([
 // SurveyAnalyticsCore.VisualizationManager.registerVisualizer("rating", ApexChartsHistogramVisualizer);
 
 
+var options = {
+  // allowDynamicLayout: false,
+  // allowDragDrop: false,
+  // allowHideQuestions: false,
+  // allowShowPercentages: true,
+  // showPercentages: true,
+  // showOnlyPercentages: true,
+  // useValuesAsLabels: false
+  // haveCommercialLicense: false,
+  // allowSortAnswers: true,
+  // answersOrder: "desc"
+  // allowHideEmptyAnswers: true,
+  // hideEmptyAnswers: true,
+  // allowTopNAnswers: true,
+  // showCorrectAnswers: true
+  // labelTruncateLength: 27,
+};
+
 var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
   survey.getAllQuestions(),
   data,
@@ -303,8 +441,8 @@ var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
     labelTruncateLength: 5,
     allowSortAnswers: true,
     allowShowPercentages: true,
-    allowHideEmptyAnswers: false,
-    allowTransposeData: false,
+    allowHideEmptyAnswers: true,
+    allowTransposeData: true,
     allowTopNAnswers: true,
     age: {
       intervals: [
