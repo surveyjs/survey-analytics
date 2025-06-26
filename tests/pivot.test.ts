@@ -59,7 +59,7 @@ test("default settings", async () => {
   const seriesLabels = pivot.getSeriesLabels();
 
   expect(pivot.axisXQuestionName).toBe("question1");
-  expect(pivot.axisYQuestionName).toBe(undefined);
+  expect(pivot.axisYQuestionNames).toStrictEqual([]);
   expect(values).toStrictEqual(["female", "male"]);
   expect(labels).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual([]);
@@ -77,7 +77,7 @@ test("getSeriesValues and getSeriesLabels + values and labels", async () => {
   let seriesLabels = pivot.getSeriesLabels();
 
   expect(pivot.axisXQuestionName).toBe("question1");
-  expect(pivot.axisYQuestionName).toBe(undefined);
+  expect(pivot.axisYQuestionNames).toStrictEqual([]);
   expect(values).toStrictEqual(["female", "male"]);
   expect(labels).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual([]);
@@ -91,7 +91,7 @@ test("getSeriesValues and getSeriesLabels + values and labels", async () => {
   seriesLabels = pivot.getSeriesLabels();
 
   expect(pivot.axisXQuestionName).toBe("question2");
-  expect(pivot.axisYQuestionName).toBe("question1");
+  expect(pivot.axisYQuestionNames).toStrictEqual(["question1"]);
   expect(values).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(labels).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(seriesValues).toStrictEqual(["female", "male"]);
@@ -152,4 +152,17 @@ test("getQuestionValueType", async () => {
   expect(pivot.getQuestionValueType({ getType: () => "radiogroup" } as any)).toBe("enum");
   expect(pivot.getQuestionValueType({ getType: () => "boolean" } as any)).toBe("enum");
   expect(pivot.getQuestionValueType({ getType: () => "checkbox" } as any)).toBe("enum");
+});
+
+test("getCalculatedValues multi-Y-axes", async () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  let values = pivot.getValues();
+  let seriesValues = pivot.getSeriesValues();
+  expect(values).toStrictEqual(["female", "male"]);
+  expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3", "question3"]);
+  expect(pivot.getSeriesValueIndexes()).toStrictEqual({ "question2_Item 1": 0, "question2_Item 2": 1, "question2_Item 3": 2, "question3": 3 });
+  const calculatedValues = await pivot.getCalculatedValues();
+  expect(calculatedValues).toHaveLength(4);
+  expect(calculatedValues).toStrictEqual([[1, 2], [3, 1], [4, 1], [2500, 1000]]);
 });

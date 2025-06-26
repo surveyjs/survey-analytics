@@ -15,8 +15,8 @@ export class PivotModel extends SelectBase {
 
   private axisXSelector: HTMLDivElement;
   public axisXQuestionName: string;
-  private axisYSelector: HTMLDivElement;
-  public axisYQuestionName: string;
+  private axisYSelectors: Array<HTMLDivElement> = [];
+  public axisYQuestionNames: Array<string> = [];
   private questionsY: Array<VisualizerBase> = [];
 
   public static IntervalsCount = 10;
@@ -48,18 +48,11 @@ export class PivotModel extends SelectBase {
         localization.getString("axisXSelectorTitle")
       )
     );
-    this.registerToolbarItem("axisYSelector", () =>
-      this.axisYSelector = DocumentHelper.createSelector(
-        [{ value: undefined, text: "Not selected" }].concat(this.questions.map((question) => {
-          return {
-            value: question.name,
-            text: question.title || question.name,
-          };
-        })),
-        (option: any) => this.axisYQuestionName === option.value,
-        (e: any) => { this.axisYQuestionName = e.target.value; this.setupPivot(); },
-        localization.getString("axisYSelectorTitle")
-      )
+    this.registerToolbarItem("axisYSelector0", () => {
+      const selector = this.createAxisYSelector();
+      this.axisYSelectors.push(selector);
+      return selector;
+    }
     );
     this.setupPivot();
   }
@@ -69,8 +62,24 @@ export class PivotModel extends SelectBase {
       return;
     }
     this.axisXQuestionName = axisQuestionNames[0];
-    this.axisYQuestionName = axisQuestionNames.length > 1 ? axisQuestionNames[1] : undefined;
+    this.axisYQuestionNames = axisQuestionNames.splice(1);
     this.setupPivot();
+  }
+
+  private createAxisYSelector(): HTMLDivElement {
+    const selectorIndex = this.axisYSelectors.length;
+    const selector = DocumentHelper.createSelector(
+      [{ value: undefined, text: "Not selected" }].concat(this.questions.map((question) => {
+        return {
+          value: question.name,
+          text: question.title || question.name,
+        };
+      })),
+      (option: any) => this.axisYQuestionNames[selectorIndex] === option.value,
+      (e: any) => { this.axisYQuestionNames[selectorIndex] = e.target.value; this.setupPivot(); },
+      selectorIndex ? undefined : localization.getString("axisYSelectorTitle")
+    );
+    return selector;
   }
 
   public getQuestionValueType(question: Question): "enum" | "date" | "number" {
@@ -91,11 +100,12 @@ export class PivotModel extends SelectBase {
     this.question = questionX;
     this.valueType = this.getQuestionValueType(questionX);
 
-    this.questionsY = [];
-    const questionY = this.questions.filter((q) => q.name === this.axisYQuestionName)[0];
-    if(!!questionY) {
-      this.questionsY.push(this.getQuestionValueType(questionY) === "enum" ? new SelectBase(questionY, []) : new VisualizerBase(questionY, []));
-    }
+    this.questionsY = this.axisYQuestionNames.map((name) => {
+      const questionY = this.questions.filter((q) => q.name === name)[0];
+      if(!!questionY) {
+        return this.getQuestionValueType(questionY) === "enum" ? new SelectBase(questionY, []) : new VisualizerBase(questionY, []);
+      }
+    }).filter((q) => !!q);
 
     this.onDataChanged();
   }
@@ -295,7 +305,7 @@ export class PivotModel extends SelectBase {
           seriesValueIndexes[this.questionsY[i].name + "_" + value] = valueIndex++;
         });
       } else {
-        seriesValueIndexes[this.questionsY[i].name] = i;
+        seriesValueIndexes[this.questionsY[i].name] = valueIndex++;
       }
     }
     return seriesValueIndexes;
