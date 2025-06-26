@@ -591,6 +591,15 @@ export class VisualizerBase implements IDataInfo {
     this.renderFooter(this.footerContainer);
   }
 
+  public updateToolbar(): void {
+    if (!!this.toolbarContainer) {
+      PostponeHelper.postpone(() => {
+        this.destroyToolbar(this.toolbarContainer);
+        this.renderToolbar(this.toolbarContainer);
+      });
+    }
+  }
+
   public updateContent(): void {
     this.destroyContent(this.contentContainer);
     this.renderContent(this.contentContainer);

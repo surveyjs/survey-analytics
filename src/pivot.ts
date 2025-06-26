@@ -48,13 +48,20 @@ export class PivotModel extends SelectBase {
         localization.getString("axisXSelectorTitle")
       )
     );
-    this.registerToolbarItem("axisYSelector0", () => {
-      const selector = this.createAxisYSelector();
-      this.axisYSelectors.push(selector);
-      return selector;
-    }
-    );
+    this.registerToolbarItem("axisYSelector0", this.createYSelecterGenerator());
     this.setupPivot();
+  }
+
+  private createYSelecterGenerator(): () => HTMLDivElement {
+    const selectorIndex: number = this.axisYSelectors.length;
+    return () => {
+      let selector = this.axisYSelectors[selectorIndex];
+      if(!selector) {
+        selector = this.createAxisYSelector(selectorIndex);
+        this.axisYSelectors.push(selector);
+      }
+      return selector;
+    };
   }
 
   public setAxisQuestions(...axisQuestionNames: string[]): void {
@@ -66,17 +73,38 @@ export class PivotModel extends SelectBase {
     this.setupPivot();
   }
 
-  private createAxisYSelector(): HTMLDivElement {
-    const selectorIndex = this.axisYSelectors.length;
+  public onAxisYSelectorChanged(index: number, value: any): void {
+    this.axisYQuestionNames[index] = value;
+
+    if (index < this.axisYSelectors.length - 1) {
+      if(!value) {
+        for(let i = index + 1; i < this.axisYSelectors.length; ++i) {
+          this.unregisterToolbarItem("axisYSelector" + i);
+        }
+        this.axisYSelectors = this.axisYSelectors.slice(0, index + 1);
+        this.axisYQuestionNames = this.axisYQuestionNames.slice(0, index + 1);
+        this.updateToolbar();
+      }
+    } else {
+      if(!!value) {
+        this.registerToolbarItem("axisYSelector" + this.axisYSelectors.length, this.createYSelecterGenerator());
+        this.updateToolbar();
+      }
+    }
+
+    this.setupPivot();
+  }
+
+  private createAxisYSelector(selectorIndex: number): HTMLDivElement {
     const selector = DocumentHelper.createSelector(
-      [{ value: undefined, text: "Not selected" }].concat(this.questions.map((question) => {
+      [{ value: "", text: "Not selected" }].concat(this.questions.map((question) => {
         return {
           value: question.name,
           text: question.title || question.name,
         };
       })),
       (option: any) => this.axisYQuestionNames[selectorIndex] === option.value,
-      (e: any) => { this.axisYQuestionNames[selectorIndex] = e.target.value; this.setupPivot(); },
+      (e: any) => { this.onAxisYSelectorChanged(selectorIndex, e.target.value); },
       selectorIndex ? undefined : localization.getString("axisYSelectorTitle")
     );
     return selector;
