@@ -68,7 +68,7 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     super.destroyContent(this.contentContainer);
   }
 
-  renderContent(container: HTMLElement) {
+  renderContent(container: HTMLElement): void {
     this._panelVisualizer.render(container);
   }
 
