@@ -347,7 +347,7 @@ export class VisualizationPanel extends VisualizerBase {
         ) => {
           const hiddenElements = this.hiddenElements;
           if (hiddenElements.length > 0) {
-            const selectWrapper = DocumentHelper.createSelector(
+            const selectWrapper = DocumentHelper.createDropdown(
               [
                 <any>{
                   name: undefined,
@@ -363,8 +363,11 @@ export class VisualizationPanel extends VisualizerBase {
                 }),
               (option: any) => false,
               (e: any) => {
-                this.showElement(e.target.value);
-              }
+                if(!!e) {
+                  this.showElement(e);
+                }
+              },
+              localization.getString("addElement")
             );
             (addElementSelector &&
               toolbar.replaceChild(selectWrapper, addElementSelector)) ||
@@ -392,10 +395,10 @@ export class VisualizationPanel extends VisualizerBase {
       //   text: localization.getString("changeLocale"),
       // });
       this.registerToolbarItem("changeLocale", () => {
-        return DocumentHelper.createSelector(localeChoices,
+        return DocumentHelper.createDropdown(localeChoices,
           (option: any) => !!option.value && (this.locale || surveyLocalization.defaultLocale) === option.value,
           (e: any) => {
-            var newLocale = e.target.value;
+            var newLocale = e;
             this.locale = newLocale;
           }
         );
@@ -580,7 +583,7 @@ export class VisualizationPanel extends VisualizerBase {
         visualizer.registerToolbarItem("removeQuestion", () => {
           return DocumentHelper.createButton(() => {
             setTimeout(() => this.hideElement(question.name), 0);
-          }, localization.getString("hideButton"));
+          }, localization.getString("hideButton"), undefined, "invisible-24x24");
         });
       }
 
@@ -939,7 +942,7 @@ export class VisualizationPanel extends VisualizerBase {
         "__title--draggable";
     }
     questionContent.className = questionElementClassName + "__content";
-    questionContent.style.backgroundColor = this.backgroundColor;
+    // questionContent.style.backgroundColor = this.backgroundColor;
 
     questionContent.appendChild(titleElement);
     questionContent.appendChild(vizualizerElement);

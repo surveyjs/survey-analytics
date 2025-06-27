@@ -21,16 +21,221 @@ export class DocumentHelper {
     return selectWrapper;
   }
 
-  public static createButton(
-    handler: (e: any) => void,
-    text = "",
-    className = "sa-toolbar__button"
-  ) {
-    const button = DocumentHelper.createElement("span", className, {
-      innerText: text,
-      onclick: handler,
+  /**
+   * Creates a custom dropdown element with icon support
+   * @param {Array<{value: string, text: string, icon?: string}>} options - Array of options
+   * @param {(option: {value: string, text: string, icon?: string}) => boolean} isSelected - Function to check if option is selected
+   * @param {(value: string) => void} handler - Selection handler
+   * @param {string} placeholder - Placeholder text
+   * @returns {HTMLElement} - Created dropdown element
+   */
+  public static createDropdown(
+    options: Array<{value: string, text: string, icon?: string}>,
+    isSelected: (option: {value: string, text: string, icon?: string}) => boolean,
+    handler: (value: string) => void,
+    placeholder = "Select..."
+  ): HTMLDivElement {
+    // Create container
+    const dropdownContainer = document.createElement("div");
+    dropdownContainer.className = "dropdown-container";
+
+    // Create dropdown header
+    const dropdownHeader = document.createElement("div");
+    dropdownHeader.className = "dropdown-header";
+
+    // Find selected option (if any)
+    let selectedOption = options.find(option => isSelected(option));
+    const headerContent = document.createElement("div");
+    headerContent.className = "dropdown-header-content";
+
+    // Function to update header content
+    const updateHeader = () => {
+      headerContent.innerHTML = "";
+      // Add icon to header if selected option has one
+      if (selectedOption?.icon) {
+        const headerIcon = document.createElement("div");
+        headerIcon.className = "dropdown-header-icon";
+        headerIcon.innerHTML = selectedOption.icon;
+        headerContent.appendChild(headerIcon);
+      }
+
+      const headerText = document.createElement("span");
+      headerText.className = selectedOption ? "dropdown-header-text" : "dropdown-placeholder";
+      headerText.textContent = selectedOption ? selectedOption.text : placeholder;
+      headerContent.appendChild(headerText);
+    };
+
+    // Initial header update
+    updateHeader();
+    dropdownHeader.appendChild(headerContent);
+
+    // Add arrow icon
+    const arrowElement = document.createElement("div");
+    arrowElement.className = "dropdown-arrow";
+    arrowElement.appendChild(DocumentHelper.createSvgElement("chevrondown-24x24"));
+    dropdownHeader.appendChild(arrowElement);
+
+    // Create options list
+    const dropdownList = document.createElement("ul");
+    dropdownList.className = "dropdown-list";
+
+    // Add options
+    options.forEach(option => {
+      const dropdownItem = document.createElement("li");
+      dropdownItem.className = "dropdown-item";
+      dropdownItem.dataset.value = option.value;
+
+      // Add icon if exists
+      if (option.icon) {
+        const iconContainer = document.createElement("div");
+        iconContainer.className = "dropdown-icon";
+        iconContainer.innerHTML = option.icon;
+        dropdownItem.appendChild(iconContainer);
+      }
+
+      const textSpan = document.createElement("span");
+      textSpan.textContent = option.text;
+      dropdownItem.appendChild(textSpan);
+
+      if (isSelected(option)) {
+        dropdownItem.classList.add("selected");
+      }
+
+      dropdownItem.addEventListener("click", () => {
+        selectedOption = option;
+        handler(option.value);
+        updateHeader();
+
+        dropdownHeader.classList.remove("open");
+        dropdownList.classList.remove("open");
+
+        // Remove selection from all items and add to current
+        dropdownList.querySelectorAll(".dropdown-item").forEach(item => {
+          item.classList.remove("selected");
+        });
+        dropdownItem.classList.add("selected");
+      });
+
+      dropdownList.appendChild(dropdownItem);
     });
-    return button;
+
+    // Function to close dropdown when clicking outside
+    const handleClickOutside = (event) => {
+      if (!dropdownContainer.contains(event.target)) {
+        dropdownHeader.classList.remove("open");
+        dropdownList.classList.remove("open");
+      }
+    };
+
+    // Add open/close handler
+    dropdownHeader.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdownHeader.classList.toggle("open");
+      dropdownList.classList.toggle("open");
+    });
+
+    // Add click outside handler
+    document.addEventListener("click", handleClickOutside);
+
+    // Save handler reference for later removal
+    (dropdownContainer as any)._handleClickOutside = handleClickOutside;
+
+    // Method to set value programmatically
+    (dropdownContainer as any).setValue = (value) => {
+      const optionToSelect = options.find(opt => opt.value === value);
+      if (optionToSelect) {
+        selectedOption = optionToSelect;
+        updateHeader();
+
+        // Update selected state in list
+        dropdownList.querySelectorAll(".dropdown-item").forEach(item => {
+          item.classList.remove("selected");
+          if ((item as any)?.dataset?.value === value) {
+            item.classList.add("selected");
+          }
+        });
+
+        // Call handler
+        // handler(value);
+      } else if (value === null || value === undefined) {
+        // Reset to placeholder
+        selectedOption = null;
+        updateHeader();
+
+        // Remove all selections
+        dropdownList.querySelectorAll(".dropdown-item").forEach(item => {
+          item.classList.remove("selected");
+        });
+      }
+    };
+
+    // Method to get current value
+    (dropdownContainer as any).getValue = () => {
+      return selectedOption ? selectedOption.value : null;
+    };
+
+    // Assemble dropdown
+    dropdownContainer.appendChild(dropdownHeader);
+    dropdownContainer.appendChild(dropdownList);
+
+    return dropdownContainer;
+  }
+
+  /**
+   * Destroys dropdown and removes all event handlers
+   * @param {HTMLElement} dropdownElement - Root dropdown element
+   */
+  public static destroyDropdown(dropdownElement: any) {
+    if (dropdownElement && dropdownElement._handleClickOutside) {
+      document.removeEventListener("click", dropdownElement._handleClickOutside);
+      dropdownElement._handleClickOutside = null;
+    }
+    if (dropdownElement && dropdownElement.parentNode) {
+      dropdownElement.parentNode.removeChild(dropdownElement);
+    }
+  }
+
+  // public static createButton(
+  //   handler: (e: any) => void,
+  //   text = "",
+  //   className = "sa-toolbar__button"
+  // ) {
+  //   const button = DocumentHelper.createElement("span", className, {
+  //     innerText: text,
+  //     onclick: handler,
+  //   });
+  //   return button;
+  // }
+
+  public static createButton(
+    handler: (e:any) => void,
+    text = "",
+    className = "sa-toolbar__button",
+    icon?: string
+  ): HTMLDivElement {
+    const buttonElement = document.createElement("div");
+    buttonElement.className = className + (icon ? " " + className + "-with-icon" : "");
+
+    if (icon) {
+      const svgElement = document.createElement("div");
+      svgElement.className = className + "-icon";
+      svgElement.appendChild(DocumentHelper.createSvgElement(icon));
+      buttonElement.appendChild(svgElement);
+    }
+    const buttonText = document.createElement("span");
+    buttonText.className = className + "-text";
+    buttonText.textContent = text;
+    buttonElement.appendChild(buttonText);
+
+    (buttonElement as any).setText = function(newText) {
+      buttonText.textContent = newText;
+    };
+
+    buttonElement.addEventListener("click", function(e) {
+      handler(e);
+    });
+
+    return buttonElement;
   }
 
   public static createElement(
