@@ -12,6 +12,8 @@ export interface PlotlyOptions {
 export class PlotlySetup {
   public static imageExportFormat = "png";
 
+  static defaultFontFamily = "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif";
+
   static defaultModebarConfig = {
     bgcolor: "#FFF",
     activecolor: "rgba(25, 179, 148, 1)",
@@ -20,7 +22,7 @@ export class PlotlySetup {
 
   static defaultTextInsideFont = {
     color: "#FFF", // var(--dsb-bar-chart-series-label-text-color-inside, #FFF);
-    family: "Open Sans", // var(--ctr-font-family, "Open Sans");
+    family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
     size: 12, // font-size: var(--ctr-font-small-size, 12px);
     textcase: "normal",
     weight: 600,
@@ -28,15 +30,21 @@ export class PlotlySetup {
 
   static defaultTooltipFont = {
     color: "rgba(0, 0, 0, 0.9)", // var(--ctr-tooltip-text-color, rgba(0, 0, 0, 0.91));
-    family: "Open Sans", // var(--ctr-font-family, "Open Sans");
+    family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
     size: 12, // font-size: var(--ctr-font-small-size, 12px);
     textcase: "normal",
     weight: 600,
   };
 
+  static defaultTooltipConfig = {
+    bgcolor: "#FFF", // background: var(--ctr-tooltip-background-color, #FFF);
+    bordercolor: "rgba(0, 0, 0, 0.10)", // var(--ctr-tooltip-shadow-1-color, rgba(0, 0, 0, 0.10);
+    font: { ...PlotlySetup.defaultTooltipFont },
+  };
+
   static defaultPieTitleFont = {
     color: "rgba(0, 0, 0, 0.90)", //var(--dsb-legend-item-text-color, rgba(0, 0, 0, 0.90));
-    family: "Open Sans", // var(--ctr-font-family, "Open Sans");
+    family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
     size: 12, // font-size: var(--ctr-font-small-size, 12px);
     textcase: "normal",
     weight: 400,
@@ -49,7 +57,7 @@ export class PlotlySetup {
     itemwidth: 20, // var(--dsb-legend-item-swatch-width, 20px);
     font: {
       color: "rgba(0, 0, 0, 0.90)", //var(--dsb-legend-item-text-color, rgba(0, 0, 0, 0.90));
-      family: "Open Sans", // var(--ctr-font-family, "Open Sans");
+      family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
       size: 12, // font-size: var(--ctr-font-small-size, 12px);
       textcase: "normal",
       weight: 400,
@@ -62,7 +70,7 @@ export class PlotlySetup {
 
     tickfont: {
       color: "rgba(0, 0, 0, 0.90)", //var(--dsb-diagram-axis-label-color, rgba(0, 0, 0, 0.90));
-      family: "Open Sans", // var(--ctr-font-family, "Open Sans");
+      family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
       size: 12, // font-size: var(--ctr-font-small-size, 12px);
       textcase: "normal",
       weight: 400,
@@ -165,7 +173,7 @@ export class PlotlySetup {
       textposition: "inside",
       insidetextfont: { ...PlotlySetup.defaultTextInsideFont },
       hoverlabel: {
-        font: { ...PlotlySetup.defaultTooltipFont },
+        ...PlotlySetup.defaultTooltipConfig
       },
     };
 
@@ -259,7 +267,7 @@ export class PlotlySetup {
       insidetextanchor: "middle",
       insidetextfont: { ...PlotlySetup.defaultTextInsideFont },
       hoverlabel: {
-        font: { ...PlotlySetup.defaultTooltipFont },
+        ...PlotlySetup.defaultTooltipConfig
       },
       marker: {
         color: colors
@@ -429,7 +437,7 @@ export class PlotlySetup {
         color: colors
       },
       hoverlabel: {
-        font: { ...PlotlySetup.defaultTooltipFont },
+        ...PlotlySetup.defaultTooltipConfig
       },
     };
 
