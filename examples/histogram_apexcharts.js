@@ -289,7 +289,6 @@ data = data.concat([
   },
 ]);
 
-// Создаем кастомный визуализатор для ApexCharts
 // class ApexChartsHistogramVisualizer extends SurveyAnalyticsCore.VisualizerBase {
 //   constructor(question, data, options = {}) {
 //     super(question, data, options);
@@ -408,7 +407,6 @@ data = data.concat([
 //   }
 // }
 
-// // Регистрируем кастомный визуализатор
 // SurveyAnalyticsCore.VisualizationManager.registerVisualizer("apexcharts-histogram", ApexChartsHistogramVisualizer);
 
 // SurveyAnalyticsCore.VisualizationManager.registerVisualizer("date", ApexChartsHistogramVisualizer);
@@ -465,7 +463,6 @@ visPanel.onAlternativeVisualizerChanged.add(function(sender, options) {
   });
 });
 
-// Устанавливаем ApexCharts как визуализатор по умолчанию
 // visPanel.visualizers.forEach(visualizer => {
 //   if (visualizer.question.getType() === "rating" || visualizer.question.getType() === "text") {
 //     visualizer.setVisualizer("apexcharts-histogram", true);

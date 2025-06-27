@@ -76,32 +76,22 @@ export class ApexChartsSetup {
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
-    // Подготавливаем серии данных
+    // Prepare data series
     let series: Array<any> = [];
 
     if (hasSeries) {
-      // Для матричных вопросов или множественных серий
+      // For matrix questions or multiple series
       series = datasets.map((dataset: Array<number>, index: number) => {
-        // { series: [44, 55, 13], labels: ['A', 'B', 'C'], title: 'Chart 1' },
         dataset.map((dataset: number, valueIndex: number) => (
           { series: dataset, labels: labels, title: seriesLabels[valueIndex] }
         ));
-        // series.push({
-        //   name: labels[index],
-        //   data: seriesData
-        // });
       });
     } else {
-      // Для простых вопросов
-      // const seriesData = datasets[0].map((value: number, index: number) => ({
-      //   x: labels[index],
-      //   y: value,
-      //   text: texts[0][index]
-      // }));
+      // For simple questions
       series = datasets[0];
     }
 
-    // Настройки чарта
+    // Chart settings
     const chart: any = {
       type: model.chartType === "doughnut" ? "donut" : "pie",
       height: hasSeries ? series.length * 200 + 100 : 400,
@@ -121,7 +111,7 @@ export class ApexChartsSetup {
       background: model.backgroundColor
     };
 
-    // Настройки легенды
+    // Legend settings
     const legend: any = {
       show: !hasSeries,
       position: "bottom",
@@ -134,7 +124,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки подписей данных
+    // Data label settings
     const dataLabels: any = {
       enabled: true,
       formatter: function(val: number, opts: any) {
@@ -150,7 +140,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки опций графика
+    // Chart options settings
     const plotOptions: any = {
       pie: {
         donut: {
@@ -197,7 +187,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки всплывающих подсказок
+    // Tooltip settings
     const tooltip: any = {
       enabled: true,
       theme: "light",
@@ -215,7 +205,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки адаптивности
+    // Responsiveness settings
     const responsive: Array<any> = [
       {
         breakpoint: 480,
@@ -230,7 +220,7 @@ export class ApexChartsSetup {
       }
     ];
 
-    // Обработка RTL языков
+    // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       chart.direction = "rtl";
       legend.position = "bottom";
@@ -261,11 +251,11 @@ export class ApexChartsSetup {
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
-    // Подготавливаем серии данных
+    // Prepare data series
     let series: Array<any> = [];
 
     if (hasSeries) {
-      // Для матричных вопросов или множественных серий
+      // For matrix questions or multiple series
       datasets.forEach((dataset: Array<number>, index: number) => {
         series.push({
           name: seriesLabels[index],
@@ -273,14 +263,14 @@ export class ApexChartsSetup {
         });
       });
     } else {
-      // Для простых вопросов
+      // For simple questions
       series.push({
         name: "Values",
         data: datasets[0]
       });
     }
 
-    // Настройки чарта
+    // Chart settings
     const chart: any = {
       type: "bar",
       height: 400,
@@ -300,7 +290,7 @@ export class ApexChartsSetup {
       background: model.backgroundColor
     };
 
-    // Настройки осей
+    // Axis settings
     const xaxis: any = {
       categories: labels,
       labels: {
@@ -333,7 +323,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки легенды
+    // Legend settings
     const legend: any = {
       show: hasSeries,
       position: "top",
@@ -346,9 +336,8 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки подписей данных
+    // Data label settings
     const dataLabels: any = {
-      // enabled: model.showValues,
       style: {
         fontSize: "12px",
         fontFamily: "Segoe UI, sans-serif",
@@ -357,7 +346,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки опций графика
+    // Chart options settings
     const plotOptions: any = {
       bar: {
         horizontal: true,
@@ -368,7 +357,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки всплывающих подсказок
+    // Tooltip settings
     const tooltip: any = {
       enabled: true,
       theme: "light",
@@ -384,7 +373,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки адаптивности
+    // Responsiveness settings
     const responsive: Array<any> = [
       {
         breakpoint: 480,
@@ -401,7 +390,7 @@ export class ApexChartsSetup {
       }
     ];
 
-    // Обработка RTL языков
+    // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       chart.direction = "rtl";
     }
@@ -433,11 +422,11 @@ export class ApexChartsSetup {
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
-    // Подготавливаем серии данных
+    // Prepare data series
     let series: Array<any> = [];
 
     if (hasSeries) {
-      // Для матричных вопросов или множественных серий
+      // For matrix questions or multiple series
       datasets.forEach((dataset: Array<number>, index: number) => {
         series.push({
           name: seriesLabels[index],
@@ -445,14 +434,14 @@ export class ApexChartsSetup {
         });
       });
     } else {
-      // Для простых вопросов
+      // For simple questions
       series.push({
         name: "Values",
         data: datasets[0]
       });
     }
 
-    // Настройки чарта
+    // Chart settings
     const chart: any = {
       type: "bar",
       height: 400,
@@ -472,7 +461,7 @@ export class ApexChartsSetup {
       background: model.backgroundColor
     };
 
-    // Настройки осей
+    // Axis settings
     const xaxis: any = {
       categories: labels,
       labels: {
@@ -505,7 +494,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки легенды
+    // Legend settings
     const legend: any = {
       show: hasSeries,
       position: "top",
@@ -518,9 +507,8 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки подписей данных
+    // Data label settings
     const dataLabels: any = {
-      // // enabled: model.showValues,
       style: {
         fontSize: "12px",
         fontFamily: "Segoe UI, sans-serif",
@@ -529,7 +517,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки опций графика
+    // Chart options settings
     const plotOptions: any = {
       bar: {
         horizontal: false,
@@ -540,7 +528,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки всплывающих подсказок
+    // Tooltip settings
     const tooltip: any = {
       enabled: true,
       theme: "light",
@@ -556,7 +544,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки адаптивности
+    // Responsiveness settings
     const responsive: Array<any> = [
       {
         breakpoint: 480,
@@ -573,7 +561,7 @@ export class ApexChartsSetup {
       }
     ];
 
-    // Обработка RTL языков
+    // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       chart.direction = "rtl";
     }
@@ -605,11 +593,11 @@ export class ApexChartsSetup {
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
-    // Подготавливаем серии данных
+    // Prepare data series
     let series: Array<any> = [];
 
     if (hasSeries) {
-      // Для матричных вопросов или множественных серий
+      // For matrix questions or multiple series
       datasets.forEach((dataset: Array<number>, index: number) => {
         series.push({
           name: seriesLabels[index],
@@ -617,14 +605,14 @@ export class ApexChartsSetup {
         });
       });
     } else {
-      // Для простых вопросов
+      // For simple questions
       series.push({
         name: "Values",
         data: datasets[0]
       });
     }
 
-    // Настройки чарта
+    // Chart settings
     const chart: any = {
       type: "line",
       height: 400,
@@ -644,7 +632,7 @@ export class ApexChartsSetup {
       background: model.backgroundColor
     };
 
-    // Настройки осей
+    // Axis settings
     const xaxis: any = {
       categories: labels,
       labels: {
@@ -674,7 +662,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки легенды
+    // Legend settings
     const legend: any = {
       show: hasSeries,
       position: "top",
@@ -687,9 +675,8 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки подписей данных
+    // Data label settings
     const dataLabels: any = {
-      // enabled: model.showValues,
       style: {
         fontSize: "12px",
         fontFamily: "Segoe UI, sans-serif",
@@ -698,14 +685,14 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки опций графика
+    // Chart options settings
     const plotOptions: any = {
       line: {
         curve: "smooth"
       }
     };
 
-    // Настройки всплывающих подсказок
+    // Tooltip settings
     const tooltip: any = {
       enabled: true,
       theme: "light",
@@ -721,7 +708,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки адаптивности
+    // Responsiveness settings
     const responsive: Array<any> = [
       {
         breakpoint: 480,
@@ -733,7 +720,7 @@ export class ApexChartsSetup {
       }
     ];
 
-    // Обработка RTL языков
+    // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       chart.direction = "rtl";
     }
@@ -765,11 +752,11 @@ export class ApexChartsSetup {
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
-    // Подготавливаем серии данных
+    // Prepare data series
     let series: Array<any> = [];
 
     if (hasSeries) {
-      // Для матричных вопросов или множественных серий
+      // For matrix questions or multiple series
       datasets.forEach((dataset: Array<number>, index: number) => {
         series.push({
           name: seriesLabels[index],
@@ -777,14 +764,14 @@ export class ApexChartsSetup {
         });
       });
     } else {
-      // Для простых вопросов
+      // For simple questions
       series.push({
         name: "Values",
         data: datasets[0]
       });
     }
 
-    // Настройки чарта
+    // Chart settings
     const chart: any = {
       type: "bar",
       height: 400,
@@ -805,7 +792,7 @@ export class ApexChartsSetup {
       background: model.backgroundColor
     };
 
-    // Настройки осей
+    // Axis settings
     const xaxis: any = {
       categories: labels,
       labels: {
@@ -838,7 +825,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки легенды
+    // Legend settings
     const legend: any = {
       show: hasSeries,
       position: "top",
@@ -851,9 +838,8 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки подписей данных
+    // Data label settings
     const dataLabels: any = {
-      // enabled: model.showValues,
       style: {
         fontSize: "12px",
         fontFamily: "Segoe UI, sans-serif",
@@ -862,7 +848,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки опций графика
+    // Chart options settings
     const plotOptions: any = {
       bar: {
         horizontal: false,
@@ -873,7 +859,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки всплывающих подсказок
+    // Tooltip settings
     const tooltip: any = {
       enabled: true,
       theme: "light",
@@ -889,7 +875,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки адаптивности
+    // Responsiveness settings
     const responsive: Array<any> = [
       {
         breakpoint: 480,
@@ -906,7 +892,7 @@ export class ApexChartsSetup {
       }
     ];
 
-    // Обработка RTL языков
+    // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       chart.direction = "rtl";
     }
@@ -938,11 +924,11 @@ export class ApexChartsSetup {
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
-    // Подготавливаем серии данных
+    // Prepare data series
     let series: Array<any> = [];
 
     if (hasSeries) {
-      // Для матричных вопросов или множественных серий
+      // For matrix questions or multiple series
       datasets.forEach((dataset: Array<number>, index: number) => {
         const scatterData = dataset.map((value: number, valueIndex: number) => ({
           x: valueIndex,
@@ -954,7 +940,7 @@ export class ApexChartsSetup {
         });
       });
     } else {
-      // Для простых вопросов
+      // For simple questions
       const scatterData = datasets[0].map((value: number, index: number) => ({
         x: index,
         y: value
@@ -965,7 +951,7 @@ export class ApexChartsSetup {
       });
     }
 
-    // Настройки чарта
+    // Chart settings
     const chart: any = {
       type: "scatter",
       height: 400,
@@ -985,7 +971,7 @@ export class ApexChartsSetup {
       background: model.backgroundColor
     };
 
-    // Настройки осей
+    // Axis settings
     const xaxis: any = {
       type: "numeric",
       title: {
@@ -1023,7 +1009,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки легенды
+    // Legend settings
     const legend: any = {
       show: hasSeries,
       position: "top",
@@ -1036,19 +1022,19 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки подписей данных
+    // Data label settings
     const dataLabels: any = {
       enabled: false
     };
 
-    // Настройки опций графика
+    // Chart options settings
     const plotOptions: any = {
       scatter: {
         size: 6
       }
     };
 
-    // Настройки всплывающих подсказок
+    // Tooltip settings
     const tooltip: any = {
       enabled: true,
       theme: "light",
@@ -1065,7 +1051,7 @@ export class ApexChartsSetup {
       }
     };
 
-    // Настройки адаптивности
+    // Responsiveness settings
     const responsive: Array<any> = [
       {
         breakpoint: 480,
@@ -1077,7 +1063,7 @@ export class ApexChartsSetup {
       }
     ];
 
-    // Обработка RTL языков
+    // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       chart.direction = "rtl";
     }

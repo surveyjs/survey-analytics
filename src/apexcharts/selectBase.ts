@@ -23,7 +23,7 @@ export class ApexChartsAdapter {
   public async create(chartNode: HTMLElement): Promise<any> {
     const [chart, chartOptions] = await this.update(chartNode);
 
-    // Обработка кликов по графику
+    // Handle chart clicks
     chart.addEventListener("click", (event: any, chartContext: any, config: any) => {
       if (config.dataPointIndex !== undefined && config.dataPointIndex !== null) {
         let itemText = "";
@@ -44,7 +44,7 @@ export class ApexChartsAdapter {
       }
     });
 
-    // Изменение курсора при наведении
+    // Change cursor on hover
     chart.addEventListener("mouseenter", () => {
       chartNode.style.cursor = "pointer";
     });
