@@ -462,6 +462,35 @@ export class VisualizationPanel extends VisualizerBase {
     this.onAlternativeVisualizerChanged.fire(sender, options);
   };
 
+  private createHeaderElement(element: IVisualizerPanelRenderedElement) {
+    const headerElement = DocumentHelper.createElement("div");
+    headerElement.className = "sa-question__header";
+
+    const dragAreaElement = DocumentHelper.createElement("div");
+    dragAreaElement.className = "sa-question__drag-area sa-question__header--draggable";
+
+    const svgElement = document.createElement("div");
+    svgElement.className = "sa-question__drag-area-icon";
+    svgElement.appendChild(DocumentHelper.createSvgElement("draghorizontal-24x16"));
+    dragAreaElement.appendChild(svgElement);
+
+    const titleElement = DocumentHelper.createElement("h3");
+    titleElement.innerText = element.displayName;
+
+    titleElement.className = questionElementClassName + "__title";
+    if (this.allowDynamicLayout && this.allowDragDrop) {
+      titleElement.className =
+        titleElement.className +
+        " " +
+        questionElementClassName +
+        "__title--draggable";
+    }
+
+    headerElement.appendChild(dragAreaElement);
+    headerElement.appendChild(titleElement);
+    return headerElement;
+  }
+
   protected onDataChanged(): void {
   }
 
@@ -925,26 +954,16 @@ export class VisualizationPanel extends VisualizerBase {
     !!container && container.appendChild(questionElement);
 
     const questionContent = DocumentHelper.createElement("div");
-    const titleElement = DocumentHelper.createElement("h3");
     const vizualizerElement = DocumentHelper.createElement("div");
-
-    titleElement.innerText = element.displayName;
+    const headerElement = this.createHeaderElement(element);
 
     questionElement.className = this.allowDynamicLayout
       ? questionElementClassName + " " + questionLayoutedElementClassName
       : questionElementClassName;
-    titleElement.className = questionElementClassName + "__title";
-    if (this.allowDynamicLayout && this.allowDragDrop) {
-      titleElement.className =
-        titleElement.className +
-        " " +
-        questionElementClassName +
-        "__title--draggable";
-    }
     questionContent.className = questionElementClassName + "__content";
     // questionContent.style.backgroundColor = this.backgroundColor;
 
-    questionContent.appendChild(titleElement);
+    questionContent.appendChild(headerElement);
     questionContent.appendChild(vizualizerElement);
     questionElement.appendChild(questionContent);
 
