@@ -184,6 +184,7 @@ var data = [
 ];
 
 var options = {
+  allowTransposeData: true,
   // allowDynamicLayout: false,
   // allowHideQuestions: false
 };

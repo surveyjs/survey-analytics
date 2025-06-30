@@ -386,8 +386,11 @@ export class PlotlySetup {
       seriesLabels,
     } = answersData;
 
-    if(model.type !== "histogram") {
+    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+
+    if (model.type !== "histogram" && model.type !== "pivot") {
       labels = [].concat(labels).reverse();
+      seriesLabels = [].concat(seriesLabels).reverse();
       colors = [].concat(colors.slice(0, labels.length)).reverse();
       const ts = [];
       texts.forEach(text => {
@@ -402,7 +405,6 @@ export class PlotlySetup {
     }
 
     const traces: any = [];
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
     const layout: any = {
       bargap: 0.01,
@@ -422,15 +424,16 @@ export class PlotlySetup {
       hovermode: "closest",
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
-      showlegend: false,
+      showlegend: hasSeries,
     };
 
     const traceConfig: any = {
       type: model.chartType === "line" ? "line" : "bar",
       customdata: hasSeries ? seriesLabels : labels,
-      hoverinfo: "x+y",
+      hoverinfo: hasSeries ? undefined : "x+y",
+      textposition: "none",
+      orientation: "v",
       mode: model.chartType === "line" ? "lines+markers" : "markers",
-      textposition: "inside",
       insidetextanchor: "middle",
       insidetextfont: { ...PlotlySetup.defaultTextInsideFont },
       marker: {
@@ -441,10 +444,18 @@ export class PlotlySetup {
       },
     };
 
+    if (model.type === "histogram" || (model.type === "pivot" && !hasSeries)) {
+      traceConfig.width = 0.5;
+      traceConfig.bargap = 0.5;
+      traceConfig.mode = "markers",
+      traceConfig.marker = { color: colors };
+    }
+
     datasets.forEach((dataset: Array<number>, index: number) => {
       var trace = Object.assign({}, traceConfig, {
         x: labels,
         y: model.showPercentages ? texts[index].map(y => y / 100) : dataset,
+        name: hasSeries ? seriesLabels[index] : labels[index],
         text: texts[index],
       });
       if (model.showPercentages) {

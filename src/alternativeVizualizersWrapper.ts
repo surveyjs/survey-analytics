@@ -145,7 +145,7 @@ export class AlternativeVisualizersWrapper
     return (<any>this.visualizer).selection || this.selectedItem;
   }
 
-  protected renderContent(container: HTMLElement) {
+  protected renderContent(container: HTMLElement): void {
     this.visualizerContainer = container;
     this.visualizer.render(this.visualizerContainer);
   }
@@ -184,6 +184,14 @@ export class AlternativeVisualizersWrapper
     if(!!state.state) {
       this.visualizer.setState(state.state);
     }
+  }
+
+  getValues(): Array<any> {
+    return this.visualizer.getValues();
+  }
+
+  getLabels(): Array<string> {
+    return this.visualizer.getLabels();
   }
 
   public getCalculatedValues(): Promise<Array<Object>> {

@@ -2,10 +2,17 @@ export class DocumentHelper {
   public static createSelector(
     options: Array<{ value: string, text: string }>,
     isSelected: (option: { value: string, text: string }) => boolean,
-    handler: (e: any) => void
+    handler: (e: any) => void,
+    title?: string
   ) {
     const selectWrapper = document.createElement("div");
     selectWrapper.className = "sa-question__select-wrapper";
+    if (title) {
+      const titleElement = DocumentHelper.createElement("span", "sa-question__select-title", {
+        innerText: title,
+      });
+      selectWrapper.appendChild(titleElement);
+    }
     const select = document.createElement("select");
     select.className = "sa-question__select";
     options.forEach((option) => {
