@@ -571,7 +571,31 @@ export class VisualizationPanel extends VisualizerBase {
 
   private buildVisualizers(questions: Array<Question>) {
     questions.forEach((question) => {
-      const visualizer = this.createVisualizer(question);
+      let visualizerOptions = Object.assign({}, this.options);
+      let visualizerData = undefined;
+      if(Array.isArray(question)) {
+        const auxQuestionName = question[1].name;
+        const auxVisualizer = this.createVisualizer(question[1]) as VisualizerBase;
+        visualizerOptions = Object.assign(visualizerOptions, {
+          seriesValues: auxVisualizer.getValues(),
+          seriesLabels: auxVisualizer.getLabels()
+        });
+        question = question[0];
+        visualizerData = [];
+        this.data.forEach((dataItem) => {
+          let rawDataItemValue = dataItem[question.name];
+          if (rawDataItemValue !== undefined) {
+            visualizerData.push({
+              [question.name]: rawDataItemValue,
+              [auxQuestionName]: dataItem[auxQuestionName],
+              [DataProvider.seriesMarkerKey]: dataItem[auxQuestionName],
+            });
+          }
+        });
+        visualizerOptions.dataProvider = new DataProvider(visualizerData);
+      }
+
+      const visualizer = this.createVisualizer(question, visualizerOptions, visualizerData);
       if(!visualizer) {
         return;
       }
@@ -664,6 +688,7 @@ export class VisualizationPanel extends VisualizerBase {
   protected setLocale(newLocale: string) {
     super.setLocale(newLocale);
     (this.questions || []).forEach((question) => {
+      question = Array.isArray(question) ? question[0] : question;
       const element = this.getElement(question.name);
       if (!!element) {
         element.displayName = this.processText(question.title);
@@ -723,6 +748,7 @@ export class VisualizationPanel extends VisualizerBase {
 
   protected buildElements(questions: any[]): IVisualizerPanelElement[] {
     return (questions || []).map((question) => {
+      question = Array.isArray(question) ? question[0] : question;
       return {
         name: question.name,
         displayName: this.processText(question.title),
@@ -956,7 +982,7 @@ export class VisualizationPanel extends VisualizerBase {
     super.renderToolbar(container);
   }
 
-  public renderContent(container: HTMLElement) {
+  public renderContent(container: HTMLElement): void {
     container.className += " sa-panel__content sa-grid";
 
     this.visibleElements.forEach((element) => {
@@ -1026,7 +1052,7 @@ export class VisualizationPanel extends VisualizerBase {
     try {
 
       if (Array.isArray(newState.elements)) {
-        const questionNames = this.questions.map(q => q.name);
+        const questionNames = this.questions.map(q => Array.isArray(q) ? q[0].name : q.name);
         this._elements = [].concat(newState.elements.filter(e => (questionNames.indexOf(e.name) !== -1)));
       }
 

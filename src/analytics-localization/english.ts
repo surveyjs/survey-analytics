@@ -75,6 +75,8 @@ export var englishStrings = {
   npsPromoters: "Promoters",
   npsPassives: "Passives",
   npsDetractors: "Detractors",
+  axisXSelectorTitle: "X axis:",
+  axisYSelectorTitle: "Y axis:"
 };
 
 // Uncomment the lines below if you create a custom dictionary.

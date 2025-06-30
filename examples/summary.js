@@ -49,6 +49,7 @@ SurveyAnalytics.PlotlySetup.onImageSaving.add(function (selectBaseVisualizer, op
 // });
 
 var options = {
+  // allowTransposeData: true,
   // allowDynamicLayout: false,
   // allowDragDrop: false,
   // allowHideQuestions: false,

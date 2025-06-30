@@ -206,12 +206,12 @@ export class VisualizerBase implements IDataInfo {
     );
   }
 
-  protected createVisualizer<T = VisualizerBase>(question: Question, options?: { [index: string]: any }): T {
+  protected createVisualizer<T = VisualizerBase>(question: Question, options?: { [index: string]: any }, data?: any[]): T {
     let visualizerOptions = Object.assign({}, options || this.options);
     if (visualizerOptions.dataProvider === undefined) {
       visualizerOptions.dataProvider = this.dataProvider;
     }
-    return VisualizerFactory.createVisualizer(question, this.data, visualizerOptions) as T;
+    return VisualizerFactory.createVisualizer(question, data || this.data, visualizerOptions) as T;
   }
 
   /**
@@ -249,19 +249,19 @@ export class VisualizerBase implements IDataInfo {
     );
   }
 
-  getSeriesValues(): Array<string> {
+  public getSeriesValues(): Array<string> {
     return this.options.seriesValues || [];
   }
 
-  getSeriesLabels(): Array<string> {
+  public getSeriesLabels(): Array<string> {
     return this.options.seriesLabels || this.getSeriesValues();
   }
 
-  getValues(): Array<any> {
+  public getValues(): Array<any> {
     throw new Error("Method not implemented.");
   }
 
-  getLabels(): Array<string> {
+  public getLabels(): Array<string> {
     return this.getValues();
   }
 
@@ -477,7 +477,7 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
-  protected async renderContentAsync(container: HTMLElement) {
+  protected async renderContentAsync(container: HTMLElement): Promise<HTMLElement> {
     return new Promise<HTMLElement>((resolve, reject) => {
       container.innerText = localization.getString("noVisualizerForQuestion");
       resolve(container);
@@ -589,6 +589,15 @@ export class VisualizerBase implements IDataInfo {
     );
     targetElement.appendChild(this.footerContainer);
     this.renderFooter(this.footerContainer);
+  }
+
+  public updateToolbar(): void {
+    if (!!this.toolbarContainer) {
+      PostponeHelper.postpone(() => {
+        this.destroyToolbar(this.toolbarContainer);
+        this.renderToolbar(this.toolbarContainer);
+      });
+    }
   }
 
   public updateContent(): void {
