@@ -104,17 +104,17 @@ export class Matrix extends SelectBase {
     return result;
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
-    const statistics = super.getCalculatedValuesCore();
-    const series = this.getSeriesValues();
-    const values = this.getValues();
-    const preparedData: Array<Array<number>> = [];
-    values.forEach((val, valueIndex) => {
-      const seriesData = series.map(
-        (seriesName, seriesIndex) => statistics[seriesIndex][valueIndex]
-      );
-      preparedData.push(seriesData);
-    });
-    return preparedData;
-  }
+  // protected getCalculatedValuesCore(): Array<any> {
+  //   const statistics = super.getCalculatedValuesCore();
+  //   const series = this.getSeriesValues();
+  //   const values = this.getValues();
+  //   const preparedData: Array<Array<number>> = [];
+  //   values.forEach((val, valueIndex) => {
+  //     const seriesData = series.map(
+  //       (seriesName, seriesIndex) => statistics[seriesIndex][valueIndex]
+  //     );
+  //     preparedData.push(seriesData);
+  //   });
+  //   return preparedData;
+  // }
 }

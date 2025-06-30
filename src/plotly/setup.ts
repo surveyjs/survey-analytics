@@ -65,26 +65,22 @@ export class PlotlySetup {
       seriesLabels,
     } = answersData;
 
-    let traces: any = [];
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
+    let traces: any = [];
     const traceConfig: any = {
       type: model.chartType,
-      y: hasSeries ? seriesLabels : labels,
+      labels: labels,
+      customdata: labels,
       text: (hasSeries ? seriesLabels : labels).map((label: string) => {
         return PlotlySetup.getTruncatedLabel(
           label,
           model.labelTruncateLength
         );
       }),
-      hoverinfo: "x+y",
-      mode: "markers",
-      marker: <any>{},
+      hoverinfo: "label+value+percent",
+      textposition: "inside",
     };
-
-    traceConfig.hoverinfo = "label+value+percent";
-    traceConfig.marker.colors = colors;
-    traceConfig.textposition = "inside";
 
     if (model.chartType === "doughnut") {
       traceConfig.type = "pie";
@@ -92,6 +88,8 @@ export class PlotlySetup {
     }
 
     if (!hasSeries) {
+      traceConfig.mode = "markers",
+      traceConfig.marker = { color: colors };
       traceConfig.marker.symbol = "circle";
       traceConfig.marker.size = 16;
     }
@@ -100,13 +98,17 @@ export class PlotlySetup {
       traces.push(
         Object.assign({}, traceConfig, {
           values: dataset,
-          labels: hasSeries ? seriesLabels : labels,
-          customdata: hasSeries ? seriesLabels : labels,
+          domain: {
+            column: index % 2,
+            row: Math.floor(index / 2),
+          },
+          title: { position: "bottom center", text: seriesLabels[index] }
         })
       );
     });
     const radius = labels.length < 10 ? labels.length * 50 + 100 : 550;
     const height = radius * Math.round(traces.length / 2) + 25;
+
     const layout: any = {
       font: {
         family: "Segoe UI, sans-serif",
@@ -130,20 +132,7 @@ export class PlotlySetup {
 
     if (hasSeries) {
       layout.annotations = [];
-      labels.forEach((label, index) => {
-        traces[index].title = { position: "bottom center", text: label };
-      });
-      traces = traces.filter(t => !(t.values.length === 1 && t.values[0] === 0));
-      traces.forEach((label, index) => {
-        traces[index].domain = {
-          column: index % 2,
-          row: Math.floor(index / 2),
-        };
-      });
-      layout.grid = {
-        rows: Math.round(traces.length / 2),
-        columns: 2,
-      };
+      layout.grid = { rows: Math.round(traces.length / 2), columns: 2 };
       layout.height = radius * Math.round(traces.length / 2) + 25;
     }
     return { traces, layout, hasSeries };
@@ -161,28 +150,29 @@ export class PlotlySetup {
       seriesLabels,
     } = answersData;
 
-    const traces: any = [];
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
     const yFullTexts = hasSeries ? seriesLabels : labels;
 
+    const traces: any = [];
     const traceConfig: any = {
-      type: model.chartType,
-      y: yFullTexts,
-      text: yFullTexts,
+      type: model.chartType === "line" ? "line" : "bar",
+      y: labels,
       customdata: hasSeries ? seriesLabels : labels,
       hoverinfo: "text",
       orientation: "h",
-      mode: "markers",
       textposition: "none",
-      width: 0.5,
-      bargap: 0.5,
-      marker: <any>{},
     };
-    traceConfig.marker.color = colors;
+    if (!hasSeries) {
+      traceConfig.width = 0.5;
+      traceConfig.bargap = 0.5;
+      traceConfig.mode = "markers",
+      traceConfig.marker = { color: colors };
+    }
 
     datasets.forEach((dataset: Array<number>, index: number) => {
       var trace = Object.assign({}, traceConfig, {
-        x: dataset,
+        x: model.showPercentages ? texts[index].map(y => y / 100) : dataset,
+        name: hasSeries ? seriesLabels[index] : labels[index],
         text: texts[index],
         hovertext: yFullTexts.map((label: string, labelIndex: number) => {
           return `${texts[index][labelIndex]}, ${label}`;
@@ -192,7 +182,10 @@ export class PlotlySetup {
         let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
         trace.textposition = "inside";
         trace.texttemplate = texttemplate;
-        trace.bargap = 0.1;
+        if (!hasSeries) {
+          trace.width = 0.9;
+          trace.bargap = 0.1;
+        }
       }
       traces.push(trace);
     });
@@ -214,65 +207,56 @@ export class PlotlySetup {
       },
       colorway: colors,
       hovermode: "closest",
+      plot_bgcolor: model.backgroundColor,
+      paper_bgcolor: model.backgroundColor,
+      showlegend: hasSeries,
+      barmode: hasSeries && model.chartType == "stackedbar" ? "stack" : "group",
+      xaxis: {
+        rangemode: "nonnegative",
+        automargin: true,
+      },
       yaxis: {
         automargin: true,
         type: "category",
         orientation: "h",
         tickmode: "array",
-        tickvals: yFullTexts,
-        ticktext: yFullTexts.map((label: string) => {
+        tickvals: labels,
+        ticktext: labels.map((label: string) => {
           return PlotlySetup.getTruncatedLabel(
             label,
             model.labelTruncateLength
           ) + "  ";
         }),
       },
-      xaxis: {
-        rangemode: "nonnegative",
-        automargin: true,
-        // dtick: 1
-      },
-      plot_bgcolor: model.backgroundColor,
-      paper_bgcolor: model.backgroundColor,
-      showlegend: false,
     };
 
-    if (hasSeries) {
-      layout.showlegend = true;
-      if (model.chartType == "stackedbar") {
-        layout.barmode = "stack";
-        layout.height =
-          (seriesLabels.length + 1) * lineHeight +
+    if (hasSeries && model.chartType !== "stackedbar") {
+      layout.height =
+          (labels.length * seriesLabels.length + 1) * lineHeight +
           topMargin +
           bottomMargin;
-      } else {
-        layout.height =
-          (labels.length + 1) * lineHeight * seriesLabels.length +
-          topMargin +
-          bottomMargin;
-      }
-
-      labels.forEach((label, index) => {
-        traces[index].marker.color = undefined;
-        traces[index].name = label;
-
-        if (model.chartType === "stackedbar") {
-          traces[index].type = "bar";
-          traces[index].width = 0.5;
-        } else {
-          traces[index].width =
-            (model.showPercentages ? 0.7 : 0.5) / traces.length;
-        }
-      });
-
-      traces.forEach((trace, traceIndex) => {
-        const percentString = model.showPercentages ? "%" : "";
-        traces[traceIndex].hovertext = [];
-        yFullTexts.forEach((yFullText, yFullTextIndex) => {
-          traces[traceIndex].hovertext.push(`${trace.y[yFullTextIndex]} : ${trace.name}, ${trace.text[yFullTextIndex]}${percentString}`);
-        });
-      });
     }
+
+    // labels.forEach((label, index) => {
+    //   traces[index].marker.color = undefined;
+    //   traces[index].name = label;
+
+    //   if (model.chartType === "stackedbar") {
+    //     traces[index].type = "bar";
+    //     traces[index].width = 0.5;
+    //   } else {
+    //     traces[index].width =
+    //       (model.showPercentages ? 0.7 : 0.5) / traces.length;
+    //   }
+    // });
+
+    traces.forEach((trace, traceIndex) => {
+      const percentString = model.showPercentages ? "%" : "";
+      traces[traceIndex].hovertext = [];
+      yFullTexts.forEach((yFullText, yFullTextIndex) => {
+        traces[traceIndex].hovertext.push(`${trace.y[yFullTextIndex]} : ${trace.name}, ${trace.text[yFullTextIndex]}${percentString}`);
+      });
+    });
 
     if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       layout.xaxis.autorange = "reversed";
@@ -304,7 +288,7 @@ export class PlotlySetup {
     if (model.type !== "histogram" && model.type !== "pivot") {
       labels = [].concat(labels).reverse();
       seriesLabels = [].concat(seriesLabels).reverse();
-      colors = [].concat(colors.slice(0, labels.length)).reverse();
+      colors = [].concat(colors.slice(0, hasSeries ? seriesLabels.length : labels.length)).reverse();
       const ts = [];
       texts.forEach(text => {
         ts.push([].concat(text).reverse());
@@ -318,6 +302,38 @@ export class PlotlySetup {
     }
 
     const traces: any = [];
+    const traceConfig: any = {
+      type: model.chartType === "line" ? "line" : "bar",
+      x: labels,
+      customdata: hasSeries ? seriesLabels : labels,
+      hoverinfo: hasSeries ? undefined : "x+y",
+      orientation: "v",
+      textposition: "none",
+    };
+    if (model.type === "histogram" || !hasSeries) {
+      traceConfig.width = 0.5;
+      traceConfig.bargap = 0.5;
+      traceConfig.mode = "markers",
+      traceConfig.marker = { color: colors };
+    }
+
+    datasets.forEach((dataset: Array<number>, index: number) => {
+      var trace = Object.assign({}, traceConfig, {
+        y: model.showPercentages ? texts[index].map(y => y / 100) : dataset,
+        name: hasSeries ? seriesLabels[index] : labels[index],
+        text: texts[index],
+      });
+      if (model.showPercentages) {
+        let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
+        trace.textposition = "inside";
+        trace.texttemplate = texttemplate;
+        if (!hasSeries) {
+          trace.width = 0.9;
+          trace.bargap = 0.1;
+        }
+      }
+      traces.push(trace);
+    });
 
     const layout: any = {
       font: {
@@ -336,38 +352,23 @@ export class PlotlySetup {
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
       showlegend: hasSeries,
+      yaxis: {
+        rangemode: "nonnegative",
+        automargin: true,
+      },
+      xaxis: {
+        automargin: true,
+        type: "category",
+        tickmode: "array",
+        tickvals: labels,
+        ticktext: labels.map((label: string) => {
+          return PlotlySetup.getTruncatedLabel(
+            label,
+            model.labelTruncateLength
+          ) + "  ";
+        }),
+      },
     };
-
-    const traceConfig: any = {
-      type: model.chartType === "line" ? "line" : "bar",
-      customdata: hasSeries ? seriesLabels : labels,
-      hoverinfo: hasSeries ? undefined : "x+y",
-      textposition: "none",
-      orientation: "v",
-    };
-    if (model.type === "histogram" || (model.type === "pivot" && !hasSeries)) {
-      traceConfig.width = 0.5;
-      traceConfig.bargap = 0.5;
-      traceConfig.mode = "markers",
-      traceConfig.marker = { color: colors };
-    }
-
-    datasets.forEach((dataset: Array<number>, index: number) => {
-      var trace = Object.assign({}, traceConfig, {
-        x: labels,
-        y: model.showPercentages ? texts[index].map(y => y / 100) : dataset,
-        name: hasSeries ? seriesLabels[index] : labels[index],
-        text: texts[index],
-      });
-      if (model.showPercentages) {
-        let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
-        trace.textposition = "inside";
-        trace.texttemplate = texttemplate;
-        trace.width = 0.9;
-        trace.bargap = 0.1;
-      }
-      traces.push(trace);
-    });
 
     if (model.showPercentages && model.showOnlyPercentages) {
       layout.yaxis = {
