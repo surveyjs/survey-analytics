@@ -36,7 +36,7 @@ export class PivotModel extends SelectBase {
 
     this.axisXQuestionName = this.questions.length > 0 ? this.questions[0].name : undefined;
     this.registerToolbarItem("axisXSelector", () =>
-      this.axisXSelector = DocumentHelper.createSelector(
+      this.axisXSelector = DocumentHelper.createDropdown(
         this.questions.map((question) => {
           return {
             value: question.name,
@@ -44,7 +44,8 @@ export class PivotModel extends SelectBase {
           };
         }),
         (option: any) => this.axisXQuestionName === option.value,
-        (e: any) => { this.axisXQuestionName = e.target.value; this.setupPivot(); },
+        (e: any) => { this.axisXQuestionName = e; this.setupPivot(); },
+        undefined,
         localization.getString("axisXSelectorTitle")
       )
     );
@@ -96,7 +97,7 @@ export class PivotModel extends SelectBase {
   }
 
   private createAxisYSelector(selectorIndex: number): HTMLDivElement {
-    const selector = DocumentHelper.createSelector(
+    const selector = DocumentHelper.createDropdown(
       [{ value: "", text: "Not selected" }].concat(this.questions.map((question) => {
         return {
           value: question.name,
@@ -104,7 +105,8 @@ export class PivotModel extends SelectBase {
         };
       })),
       (option: any) => this.axisYQuestionNames[selectorIndex] === option.value,
-      (e: any) => { this.onAxisYSelectorChanged(selectorIndex, e.target.value); },
+      (e: any) => { this.onAxisYSelectorChanged(selectorIndex, e); },
+      undefined,
       selectorIndex ? undefined : localization.getString("axisYSelectorTitle")
     );
     return selector;

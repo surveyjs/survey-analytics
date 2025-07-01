@@ -13,7 +13,7 @@ test.describe("Summary common", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown-container").first();
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartTypeSelector).toBeVisible();
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
     await expect(chartContentSelector).toBeVisible();
@@ -40,7 +40,7 @@ test.describe("Summary common", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown-container").first();
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartTypeSelector).toBeVisible();
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
     await expect(chartContentSelector).toBeVisible();
@@ -63,11 +63,11 @@ test.describe("Summary common", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const visualizerSelector = questionVisualizerSelector.locator(".sa-dropdown-container").first();
+    const visualizerSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(visualizerSelector).toBeVisible();
     await expect(visualizerSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart");
 
-    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown-container").nth(1);
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
     await expect(chartTypeSelector).toBeVisible();
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").nth(1);
     await expect(chartContentSelector).toBeVisible();
@@ -100,13 +100,13 @@ test.describe("Summary common", () => {
     await expect(questionTitleSelector).toBeVisible();
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
-    await expect(questionVisualizerSelector.locator(".sa-dropdown-container")).toHaveCount(3);
+    await expect(questionVisualizerSelector.locator(".sa-dropdown")).toHaveCount(3);
 
-    const visualizerSelector = questionVisualizerSelector.locator(".sa-dropdown-container").first();
+    const visualizerSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(visualizerSelector).toBeVisible();
     await expect(visualizerSelector.locator(".sa-dropdown-header-text")).toHaveText("Histogram");
 
-    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown-container").nth(1);
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
     await expect(chartTypeSelector).toBeVisible();
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").nth(1);
     await expect(chartContentSelector).toBeVisible();
@@ -120,9 +120,9 @@ test.describe("Summary common", () => {
 
     await visualizerSelector.click();
     await page.getByRole("list").getByText("Average").click();
-    await expect(questionVisualizerSelector.locator(".sa-dropdown-container")).toHaveCount(2);
+    await expect(questionVisualizerSelector.locator(".sa-dropdown")).toHaveCount(2);
 
-    const gaugeTypeSelector = questionVisualizerSelector.locator(".sa-dropdown-container").nth(1);
+    const gaugeTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
     await expect(gaugeTypeSelector).toBeVisible();
     await expect(gaugeTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Gauge");
     await compareScreenshot(page, chartContentSelector, "number-simple-gauge.png");
@@ -138,7 +138,7 @@ test.describe("Summary common", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const visualizerTypeSelector = questionVisualizerSelector.locator(".sa-dropdown-container").first();
+    const visualizerTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(visualizerTypeSelector).toBeVisible();
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").nth(1);
     await expect(chartContentSelector).toBeVisible();

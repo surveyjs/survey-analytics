@@ -13,7 +13,7 @@ test.describe("Matrixes visualizer", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown-container").first();
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartTypeSelector).toBeVisible();
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
     await expect(chartContentSelector).toBeVisible();
@@ -66,7 +66,7 @@ test.describe("Matrixes visualizer", () => {
     const column1VisualizerSelector = column1TitleSelector.locator("..").locator("..");
     column1VisualizerSelector.scrollIntoViewIfNeeded();
 
-    const chartCol1TypeSelector = column1VisualizerSelector.locator(".sa-dropdown-container").nth(1);
+    const chartCol1TypeSelector = column1VisualizerSelector.locator(".sa-dropdown").nth(1);
     await expect(chartCol1TypeSelector).toBeVisible();
     const chartCol1ContentSelector = column1VisualizerSelector.locator(".sa-visualizer__content").nth(1);
     await expect(chartCol1ContentSelector).toBeVisible();

@@ -34,17 +34,26 @@ export class DocumentHelper {
    * @param {(option: {value: string, text: string, icon?: string}) => boolean} isSelected - Function to check if option is selected
    * @param {(value: string) => void} handler - Selection handler
    * @param {string} placeholder - Placeholder text
+   * @param {string} title - Title text
    * @returns {HTMLElement} - Created dropdown element
    */
   public static createDropdown(
     options: Array<{value: string, text: string, icon?: string}>,
     isSelected: (option: {value: string, text: string, icon?: string}) => boolean,
     handler: (value: string) => void,
-    placeholder = "Select..."
+    placeholder = "Select...",
+    title?: string
   ): HTMLDivElement {
     // Create container
-    const dropdownContainer = document.createElement("div");
-    dropdownContainer.className = "sa-dropdown-container";
+    const dropdownElement = document.createElement("div");
+    dropdownElement.className = "sa-dropdown";
+
+    if (title) {
+      const titleElement = DocumentHelper.createElement("span", "sa-dropdown__title", {
+        innerText: title,
+      });
+      dropdownElement.appendChild(titleElement);
+    }
 
     // Create dropdown header
     const dropdownHeader = document.createElement("div");
@@ -128,7 +137,7 @@ export class DocumentHelper {
 
     // Function to close dropdown when clicking outside
     const handleClickOutside = (event) => {
-      if (!dropdownContainer.contains(event.target)) {
+      if (!dropdownElement.contains(event.target)) {
         dropdownHeader.classList.remove("open");
         dropdownList.classList.remove("open");
       }
@@ -145,10 +154,10 @@ export class DocumentHelper {
     document.addEventListener("click", handleClickOutside);
 
     // Save handler reference for later removal
-    (dropdownContainer as any)._handleClickOutside = handleClickOutside;
+    (dropdownElement as any)._handleClickOutside = handleClickOutside;
 
     // Method to set value programmatically
-    (dropdownContainer as any).setValue = (value) => {
+    (dropdownElement as any).setValue = (value) => {
       const optionToSelect = options.find(opt => opt.value === value);
       if (optionToSelect) {
         selectedOption = optionToSelect;
@@ -177,15 +186,18 @@ export class DocumentHelper {
     };
 
     // Method to get current value
-    (dropdownContainer as any).getValue = () => {
+    (dropdownElement as any).getValue = () => {
       return selectedOption ? selectedOption.value : null;
     };
 
-    // Assemble dropdown
+    const dropdownContainer = document.createElement("div");
+    dropdownContainer.className = "sa-dropdown-container";
+
     dropdownContainer.appendChild(dropdownHeader);
     dropdownContainer.appendChild(dropdownList);
+    dropdownElement.appendChild(dropdownContainer);
 
-    return dropdownContainer;
+    return dropdownElement;
   }
 
   /**
