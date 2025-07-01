@@ -58,13 +58,9 @@ test("getSeriesLabels method", () => {
 
 test("getCalculatedValues method", async () => {
   expect(await matrix.getCalculatedValues()).toEqual([
-    [1, 1],
-    [2, 1],
-    [0, 1],
-    [0, 0],
-    [0, 0],
-    [0, 0],
-  ].reverse());
+    [0, 0, 0, 0, 2, 1],
+    [0, 0, 0, 1, 1, 1],
+  ]);
 });
 
 test("check getPercentages method", () => {
@@ -186,8 +182,8 @@ test("hide empty answers", async () => {
       [2, 0],
       [0, 2],
     ].reverse(),
-    labels: ["Morning", "Afternoon"].reverse(),
-    seriesLabels: ["Monday", "Tuesday"],
+    labels: ["Monday", "Tuesday"],
+    seriesLabels: ["Morning", "Afternoon"].reverse(),
     texts: [
       [2, 0],
       [0, 2],
@@ -208,10 +204,10 @@ test("hide empty answers", async () => {
   var matrix = new Matrix(question, data);
   matrix.hideEmptyAnswers = true;
   expect(await matrix.getAnswersData()).toEqual({
-    colors: ["#86e1fb"],
+    colors: ["#86e1fb", "#3999fb"],
     datasets: [[1, 1]],
-    labels: ["Afternoon"],
-    seriesLabels: ["Monday", "Tuesday"],
+    labels: ["Monday", "Tuesday"],
+    seriesLabels: ["Afternoon"],
     texts: [[1, 1]],
   });
 });
@@ -239,12 +235,8 @@ test("convertFromExternalData", async () => {
   };
   const calculatedData = (matrix as any).getCalculatedValuesCore();
   expect(calculatedData).toEqual([
-    [1, 1],
-    [2, 1],
-    [0, 1],
-    [0, 0],
-    [0, 0],
-    [0, 0],
-  ].reverse());
+    [0, 0, 0, 0, 2, 1],
+    [0, 0, 0, 1, 1, 1],
+  ]);
   expect(matrix.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
 });

@@ -42,9 +42,9 @@ export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData 
   seriesDataExistence.length = answersData.seriesLabels.length;
   const valuesDataExistence = <Array<boolean>>[];
   valuesDataExistence.length = answersData.labels.length;
-  for (var valueIndex = 0; valueIndex < answersData.labels.length; valueIndex++) {
-    for (var seriesIndex = 0; seriesIndex < answersData.seriesLabels.length; seriesIndex++) {
-      if (answersData.datasets[valueIndex][seriesIndex] != 0) {
+  for (var seriesIndex = 0; seriesIndex < answersData.seriesLabels.length; seriesIndex++) {
+    for (var valueIndex = 0; valueIndex < answersData.labels.length; valueIndex++) {
+      if (answersData.datasets[seriesIndex][valueIndex] != 0) {
         seriesDataExistence[seriesIndex] = true;
         valuesDataExistence[valueIndex] = true;
       }
@@ -61,14 +61,14 @@ export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData 
       result.seriesLabels.push(answersData.seriesLabels[seriesIndex]);
     }
   }
-  for (var valueIndex = 0; valueIndex < answersData.labels.length; valueIndex++) {
-    if (valuesDataExistence[valueIndex]) {
+  for (var seriesIndex = 0; seriesIndex < answersData.datasets.length; seriesIndex++) {
+    if (seriesDataExistence[seriesIndex]) {
       const dataset = [];
       const texts = [];
-      for (var seriesIndex = 0; seriesIndex < answersData.datasets.length; seriesIndex++) {
-        if (seriesDataExistence[seriesIndex]) {
-          dataset.push(answersData.datasets[valueIndex][seriesIndex]);
-          texts.push(answersData.texts[valueIndex][seriesIndex]);
+      for (var valueIndex = 0; valueIndex < answersData.labels.length; valueIndex++) {
+        if (valuesDataExistence[valueIndex]) {
+          dataset.push(answersData.datasets[seriesIndex][valueIndex]);
+          texts.push(answersData.texts[seriesIndex][valueIndex]);
         }
       }
       result.datasets.push(dataset);
@@ -96,7 +96,7 @@ export class SelectBase
   private _topN = -1;
   public static topNValuesDefaults = [-1, 5, 10, 20];
   public topNValues = [].concat(SelectBase.topNValuesDefaults);
-  private _transposeData: boolean = false;
+  protected _transposeData: boolean = false;
   private _showMissingAnswers: boolean = false;
   private missingAnswersBtn: HTMLElement = undefined;
 
@@ -117,6 +117,9 @@ export class SelectBase
 
     if (this.options.percentagePrecision) {
       this._percentagePrecision = this.options.percentagePrecision;
+    }
+    if (this.options.transposeData !== undefined) {
+      this._transposeData = this.options.transposeData;
     }
 
     this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
@@ -637,9 +640,9 @@ export class SelectBase
     const series = this.getSeriesValues();
     const innerCalculatedData = [];
     if(series.length > 0) {
-      for(let i=0; i<values.length; i++) {
+      for(let j=0; j<series.length; j++) {
         const seriesData = [];
-        for(let j=0; j<series.length; j++) {
+        for(let i=0; i<values.length; i++) {
           if(!!externalCalculatedData[series[j]]) {
             seriesData.push(externalCalculatedData[series[j]][values[i]] || 0);
           } else {

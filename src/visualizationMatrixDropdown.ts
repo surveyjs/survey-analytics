@@ -26,6 +26,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     this._childOptions.disableLocaleSwitch = true;
     this._childOptions.dataProvider = undefined;
     this._childOptions.allowDynamicLayout = false;
+    this._childOptions.transposeData = true;
     this._childOptions.seriesValues = question.rows.map((row: ItemValue) => row.value);
     this._childOptions.seriesLabels = question.rows.map((row: ItemValue) => row.text);
 
