@@ -2,6 +2,7 @@ import { Question } from "survey-core";
 import { PivotModel } from "../pivot";
 import { PlotlyChartAdapter } from "./selectBase";
 import { DocumentHelper } from "../utils";
+import { VisualizationManager } from "../visualizationManager";
 
 export class PivotPlotly extends PivotModel {
   private _chartAdapter: PlotlyChartAdapter;
@@ -36,3 +37,5 @@ export class PivotPlotly extends PivotModel {
     return this.valueType;
   }
 }
+
+VisualizationManager.registerPivotVisualizer(PivotPlotly);
