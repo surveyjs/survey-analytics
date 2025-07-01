@@ -433,18 +433,14 @@ export class PlotlySetup {
       hoverinfo: hasSeries ? undefined : "x+y",
       textposition: "none",
       orientation: "v",
-      mode: model.chartType === "line" ? "lines+markers" : "markers",
       insidetextanchor: "middle",
       insidetextfont: { ...PlotlySetup.defaultTextInsideFont },
-      marker: {
-        color: colors
-      },
       hoverlabel: {
         ...PlotlySetup.defaultTooltipConfig
       },
     };
 
-    if (model.type === "histogram" || (model.type === "pivot" && !hasSeries)) {
+    if (model.type === "histogram" || model.type === "pivot" || !hasSeries) {
       traceConfig.width = 0.5;
       traceConfig.bargap = 0.5;
       traceConfig.mode = "markers",
