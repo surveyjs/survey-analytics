@@ -176,7 +176,7 @@ export class PlotlySetup {
       const traceName = hasSeries ? seriesLabels[index] : labels[index];
       const percentString = model.showPercentages ? "%" : "";
       const trace = Object.assign({}, traceConfig, {
-        x: model.showPercentages ? texts[index] : dataset,
+        x: dataset,
         name: traceName,
         width: hasSeries && model.chartType !== "stackedbar" ? 0.5 / seriesLabels.length : 0.5,
         text: texts[index],
@@ -327,7 +327,7 @@ export class PlotlySetup {
 
     datasets.forEach((dataset: Array<number>, index: number) => {
       var trace = Object.assign({}, traceConfig, {
-        y: model.showPercentages ? texts[index].map(y => y / 100) : dataset,
+        y: dataset,
         name: hasSeries ? seriesLabels[index] : labels[index],
         text: texts[index],
       });

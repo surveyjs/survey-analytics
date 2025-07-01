@@ -176,14 +176,14 @@ test("check bar config with non default label ordering and enabled showPercentag
   var truePercentages = [0, 0, 0, 25, 25, 50];
   var trueX = [0, 0, 0, 1, 1, 2];
 
-  expect(config.traces[0].x).toEqual(truePercentages);
+  expect(config.traces[0].x).toEqual(trueX);
   expect(config.traces[0].y).toEqual(trueY);
   expect(config.traces[0].marker.color).toEqual(trueColors);
   expect(config.traces[0].text).toEqual(truePercentages);
 
   selectBase.answersOrder = "asc";
   var config = PlotlySetup.setupBar(selectBase, await selectBase.getAnswersData());
-  expect(config.traces[0].x).toEqual(truePercentages.reverse());
+  expect(config.traces[0].x).toEqual(trueX.reverse());
   expect(config.traces[0].y).toEqual([
     "father_text",
     "sister_text",
@@ -200,7 +200,7 @@ test("check bar config with non default label ordering and enabled showPercentag
     "#3999fb",
     "#1eb496",
   ]);
-  expect(config.traces[0].text).toEqual(truePercentages);
+  expect(config.traces[0].text).toEqual(truePercentages.reverse());
 
   selectBase.answersOrder = "default";
   selectBase.showPercentages = false;
