@@ -44,16 +44,16 @@ export class DocumentHelper {
   ): HTMLDivElement {
     // Create container
     const dropdownContainer = document.createElement("div");
-    dropdownContainer.className = "dropdown-container";
+    dropdownContainer.className = "sa-dropdown-container";
 
     // Create dropdown header
     const dropdownHeader = document.createElement("div");
-    dropdownHeader.className = "dropdown-header";
+    dropdownHeader.className = "sa-dropdown-header";
 
     // Find selected option (if any)
     let selectedOption = options.find(option => isSelected(option));
     const headerContent = document.createElement("div");
-    headerContent.className = "dropdown-header-content";
+    headerContent.className = "sa-dropdown-header-content";
 
     // Function to update header content
     const updateHeader = () => {
@@ -61,13 +61,13 @@ export class DocumentHelper {
       // Add icon to header if selected option has one
       if (selectedOption?.icon) {
         const headerIcon = document.createElement("div");
-        headerIcon.className = "dropdown-header-icon";
+        headerIcon.className = "sa-dropdown-header-icon";
         headerIcon.innerHTML = selectedOption.icon;
         headerContent.appendChild(headerIcon);
       }
 
       const headerText = document.createElement("span");
-      headerText.className = selectedOption ? "dropdown-header-text" : "dropdown-placeholder";
+      headerText.className = selectedOption ? "sa-dropdown-header-text" : "sa-dropdown-placeholder";
       headerText.textContent = selectedOption ? selectedOption.text : placeholder;
       headerContent.appendChild(headerText);
     };
@@ -78,24 +78,24 @@ export class DocumentHelper {
 
     // Add arrow icon
     const arrowElement = document.createElement("div");
-    arrowElement.className = "dropdown-arrow";
+    arrowElement.className = "sa-dropdown-arrow";
     arrowElement.appendChild(DocumentHelper.createSvgElement("chevrondown-24x24"));
     dropdownHeader.appendChild(arrowElement);
 
     // Create options list
     const dropdownList = document.createElement("ul");
-    dropdownList.className = "dropdown-list";
+    dropdownList.className = "sa-dropdown-list";
 
     // Add options
     options.forEach(option => {
       const dropdownItem = document.createElement("li");
-      dropdownItem.className = "dropdown-item";
+      dropdownItem.className = "sa-dropdown-item";
       dropdownItem.dataset.value = option.value;
 
       // Add icon if exists
       if (option.icon) {
         const iconContainer = document.createElement("div");
-        iconContainer.className = "dropdown-icon";
+        iconContainer.className = "sa-dropdown-icon";
         iconContainer.innerHTML = option.icon;
         dropdownItem.appendChild(iconContainer);
       }
@@ -117,7 +117,7 @@ export class DocumentHelper {
         dropdownList.classList.remove("open");
 
         // Remove selection from all items and add to current
-        dropdownList.querySelectorAll(".dropdown-item").forEach(item => {
+        dropdownList.querySelectorAll(".sa-dropdown-item").forEach(item => {
           item.classList.remove("selected");
         });
         dropdownItem.classList.add("selected");
@@ -155,7 +155,7 @@ export class DocumentHelper {
         updateHeader();
 
         // Update selected state in list
-        dropdownList.querySelectorAll(".dropdown-item").forEach(item => {
+        dropdownList.querySelectorAll(".sa-dropdown-item").forEach(item => {
           item.classList.remove("selected");
           if ((item as any)?.dataset?.value === value) {
             item.classList.add("selected");
@@ -170,7 +170,7 @@ export class DocumentHelper {
         updateHeader();
 
         // Remove all selections
-        dropdownList.querySelectorAll(".dropdown-item").forEach(item => {
+        dropdownList.querySelectorAll(".sa-dropdown-item").forEach(item => {
           item.classList.remove("selected");
         });
       }

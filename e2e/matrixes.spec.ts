@@ -13,21 +13,24 @@ test.describe("Matrixes visualizer", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const chartTypeSelector = questionVisualizerSelector.locator("select").filter({ hasText: /^BarStacked BarPieDoughnut$/ });
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown-container").first();
     await expect(chartTypeSelector).toBeVisible();
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
     await expect(chartContentSelector).toBeVisible();
 
-    await expect(chartTypeSelector).toHaveValue("bar");
+    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Bar");
     await compareScreenshot(page, chartContentSelector, "matrix-single-bar.png");
 
-    await chartTypeSelector.selectOption("stackedbar");
+    await chartTypeSelector.click();
+    await page.getByRole("list").getByText("Stacked Bar").click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-stackedbar.png");
 
-    await chartTypeSelector.selectOption("pie");
+    await chartTypeSelector.click();
+    await page.getByRole("list").getByText("Pie").click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-pie.png");
 
-    await chartTypeSelector.selectOption("doughnut");
+    await chartTypeSelector.click();
+    await page.getByRole("list").getByText("Doughnut").click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-doughnut.png");
 
     const transposeButtonSelector = questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Values$/ });
@@ -35,16 +38,20 @@ test.describe("Matrixes visualizer", () => {
     await transposeButtonSelector.click();
     await expect(questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ })).toBeVisible();
 
-    await chartTypeSelector.selectOption("bar");
+    await chartTypeSelector.click();
+    await page.getByRole("list").getByText("Bar", { exact: true }).click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-bar-per-values.png");
 
-    await chartTypeSelector.selectOption("stackedbar");
+    await chartTypeSelector.click();
+    await page.getByRole("list").getByText("Stacked bar").click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-stackedbar-per-values.png");
 
-    await chartTypeSelector.selectOption("pie");
+    await chartTypeSelector.click();
+    await page.getByRole("list").getByText("Pie").click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-pie-per-values.png");
 
-    await chartTypeSelector.selectOption("doughnut");
+    await chartTypeSelector.click();
+    await page.getByRole("list").getByText("Doughnut").click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-doughnut-per-values.png");
   });
 
@@ -59,24 +66,28 @@ test.describe("Matrixes visualizer", () => {
     const column1VisualizerSelector = column1TitleSelector.locator("..").locator("..");
     column1VisualizerSelector.scrollIntoViewIfNeeded();
 
-    const chartCol1TypeSelector = column1VisualizerSelector.locator("select").filter({ hasText: /^BarVertical BarPieDoughnutStacked Bar$/ });
+    const chartCol1TypeSelector = column1VisualizerSelector.locator(".sa-dropdown-container").nth(1);
     await expect(chartCol1TypeSelector).toBeVisible();
     const chartCol1ContentSelector = column1VisualizerSelector.locator(".sa-visualizer__content").nth(1);
     await expect(chartCol1ContentSelector).toBeVisible();
 
-    await expect(chartCol1TypeSelector).toHaveValue("bar");
+    await expect(chartCol1TypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Bar");
     await compareScreenshot(page, chartCol1ContentSelector, "matrixdropdown-simple-bar.png");
 
-    await chartCol1TypeSelector.selectOption("vbar");
+    await chartCol1TypeSelector.click();
+    await page.getByRole("list").getByText("Vertical Bar").click();
     await compareScreenshot(page, chartCol1ContentSelector, "matrixdropdown-simple-vbar.png");
 
-    await chartCol1TypeSelector.selectOption("pie");
+    await chartCol1TypeSelector.click();
+    await page.getByRole("list").getByText("Pie").click();
     await compareScreenshot(page, chartCol1ContentSelector, "matrixdropdown-simple-pie.png");
 
-    await chartCol1TypeSelector.selectOption("doughnut");
+    await chartCol1TypeSelector.click();
+    await page.getByRole("list").getByText("Doughnut").click();
     await compareScreenshot(page, chartCol1ContentSelector, "matrixdropdown-simple-doughnut.png");
 
-    await chartCol1TypeSelector.selectOption("stackedbar");
+    await chartCol1TypeSelector.click();
+    await page.getByRole("list").getByText("Stacked bar").click();
     await compareScreenshot(page, chartCol1ContentSelector, "matrixdropdown-simple-stackedbar.png");
 
     const transposeButtonSelector = column1VisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Values$/ });
@@ -84,19 +95,24 @@ test.describe("Matrixes visualizer", () => {
     await transposeButtonSelector.click();
     await expect(column1VisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ })).toBeVisible();
 
-    await chartCol1TypeSelector.selectOption("bar");
+    await chartCol1TypeSelector.click();
+    await page.getByRole("list").getByText("Bar", { exact: true }).click();
     await compareScreenshot(page, chartCol1ContentSelector, "matrixdropdown-simple-bar-per-values.png");
 
-    await chartCol1TypeSelector.selectOption("vbar");
+    await chartCol1TypeSelector.click();
+    await page.getByRole("list").getByText("Vertical Bar").click();
     await compareScreenshot(page, chartCol1ContentSelector, "matrixdropdown-simple-vbar-per-values.png");
 
-    await chartCol1TypeSelector.selectOption("pie");
+    await chartCol1TypeSelector.click();
+    await page.getByRole("list").getByText("Pie").click();
     await compareScreenshot(page, chartCol1ContentSelector, "matrixdropdown-simple-pie-per-values.png");
 
-    await chartCol1TypeSelector.selectOption("doughnut");
+    await chartCol1TypeSelector.click();
+    await page.getByRole("list").getByText("Doughnut").click();
     await compareScreenshot(page, chartCol1ContentSelector, "matrixdropdown-simple-doughnut-per-values.png");
 
-    await chartCol1TypeSelector.selectOption("stackedbar");
+    await chartCol1TypeSelector.click();
+    await page.getByRole("list").getByText("Stacked bar").click();
     await compareScreenshot(page, chartCol1ContentSelector, "matrixdropdown-simple-stackedbar-per-values.png");
   });
 
