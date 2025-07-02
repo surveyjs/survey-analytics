@@ -185,6 +185,7 @@ var data = [
 
 var options = {
   allowTransposeData: true,
+  allowShowPercentages: true,
   // allowDynamicLayout: false,
   // allowHideQuestions: false
 };

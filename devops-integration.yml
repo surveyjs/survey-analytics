@@ -53,7 +53,7 @@ steps:
       $env:GIT_REDIRECT_STDERR = '2>&1'
       git config --global user.email "surveyjs.org@gmail.com"
       git config --global user.name "surveyjsdeveloper"
-    displayName: "set up Git config"
+    displayName: "Set up Git config"
 
   - task: Npm@1
     displayName: "NPM install"
@@ -65,14 +65,9 @@ steps:
     condition: ne(variables.NPM_CACHE_RESTORED, 'true')
 
   - script: |
-      cd $(Build.SourcesDirectory)/survey-analytics
-      npx puppeteer browsers install chrome
-    displayName: "install chrome"
-
-  - script: |
       cd $(Build.SourcesDirectory)/survey-creator
       npx playwright install chromium
-    displayName: "install chrome playwright"
+    displayName: "Install chrome playwright"
 
   - task: DownloadBuildArtifacts@0
     inputs:
@@ -115,32 +110,24 @@ steps:
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm run build
-    displayName: "npm build"
+    displayName: "NPM build"
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm run build:types:summary:core
       npm run build:types:summary
       npm run build:types:tabulator
-    displayName: "npm build typings"
+    displayName: "NPM build typings"
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm test
-    displayName: "unit tests"
-
-  - script: |
-      cd $(Build.SourcesDirectory)/survey-analytics
-      npm run testcafe:ci
-    displayName: "functional tests"
-    env:
-      TESTCAFE_DASHBOARD_AUTHENTICATION_TOKEN: $(TESTCAFE_DASHBOARD_AUTHENTICATION_TOKEN)
-      TESTCAFE_DASHBOARD_URL: $(TESTCAFE_DASHBOARD_URL)
+    displayName: "Run unit tests"
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm run e2e:ci
-    displayName: "e2e tests"
+    displayName: "Run E2E tests"
 
   - task: PublishCodeCoverageResults@1
     inputs:
@@ -154,7 +141,7 @@ steps:
       ArtifactName: "e2e"
       publishLocation: "Container"
     condition: always()
-    displayName: "publish e2e artifacts"
+    displayName: "Publish E2E artifacts"
 
   - task: PublishTestResults@2
     displayName: "Publish e2e test results"
@@ -164,13 +151,13 @@ steps:
       testResultsFiles: "e2e-junit-results.xml"
       mergeTestResults: true
       failTaskOnFailedTests: true
-      testRunTitle: "E2E Tests"
+      testRunTitle: "Publish E2E test results"
     condition: succeededOrFailed()
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm run doc:gen
-    displayName: "generate docs"
+    displayName: "Generate docs"
 
   - task: CopyFiles@2
     inputs:
@@ -182,7 +169,7 @@ steps:
       TargetFolder: "$(Build.SourcesDirectory)/service/surveyjs.io/App_Data/DocsAnalytics"
       OverWrite: true
       CleanTargetFolder: false
-    displayName: "copy generated docs to the local surveyjs/service repo"
+    displayName: "Copy generated docs to the local surveyjs/service repo"
 
   # read about the problem with git output ($env:GIT_REDIRECT_STDERR = '2>&1') :
   # https://github.com/microsoft/azure-pipelines-yaml/issues/248
@@ -196,7 +183,7 @@ steps:
       git commit -m "updated survey-analytics docs [azurepipelines skip]"
       git pull origin master
       git push origin master
-    displayName: "git surveyjs/service push updated docs"
+    displayName: "Git surveyjs/service push updated docs"
   # - powershell: |
   #     cd $(Build.SourcesDirectory)/service
   #     git pull origin V2
