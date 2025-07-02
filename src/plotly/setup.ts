@@ -251,6 +251,7 @@ export class PlotlySetup {
       hoverinfo: "text",
       orientation: "h",
       textposition: "inside",
+      textangle: 0,
       insidetextanchor: "middle",
       insidetextfont: { ...PlotlySetup.defaultTextInsideFont },
       hoverlabel: {

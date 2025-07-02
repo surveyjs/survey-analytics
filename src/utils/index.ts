@@ -145,7 +145,6 @@ export class DocumentHelper {
 
     // Add open/close handler
     dropdownHeader.addEventListener("click", (e) => {
-      e.stopPropagation();
       dropdownHeader.classList.toggle("open");
       dropdownList.classList.toggle("open");
     });
