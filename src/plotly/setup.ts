@@ -259,8 +259,6 @@ export class PlotlySetup {
       },
     };
     if (!hasSeries) {
-      traceConfig.width = 0.5;
-      traceConfig.bargap = 0.5;
       traceConfig.mode = "markers",
       traceConfig.marker = { color: colors };
     }
@@ -271,7 +269,6 @@ export class PlotlySetup {
       const trace = Object.assign({}, traceConfig, {
         x: dataset,
         name: traceName,
-        width: hasSeries && model.chartType !== "stackedbar" ? 0.5 / seriesLabels.length : 0.5,
         text: texts[index],
         hovertext: labels.map((label: string, labelIndex: number) => {
           if(model.showOnlyPercentages) {
@@ -284,8 +281,6 @@ export class PlotlySetup {
       if (model.showPercentages) {
         let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
         trace.texttemplate = texttemplate;
-        trace.width = hasSeries && model.chartType !== "stackedbar" ? 0.7 / seriesLabels.length : 0.9;
-        trace.bargap = hasSeries && model.chartType !== "stackedbar" ? 0.3 / seriesLabels.length : 0.1;
       }
       traces.push(trace);
     });
@@ -333,27 +328,6 @@ export class PlotlySetup {
         layout.height = (labels.length * seriesLabels.length + 1) * lineHeight + topMargin + bottomMargin;
       }
     }
-
-    // labels.forEach((label, index) => {
-    //   traces[index].marker.color = undefined;
-    //   traces[index].name = label;
-
-    //   if (model.chartType === "stackedbar") {
-    //     traces[index].type = "bar";
-    //     traces[index].width = 0.5;
-    //   } else {
-    //     traces[index].width =
-    //       (model.showPercentages ? 0.7 : 0.5) / traces.length;
-    //   }
-    // });
-
-    // traces.forEach((trace, traceIndex) => {
-    //   const percentString = model.showPercentages ? "%" : "";
-    //   traces[traceIndex].hovertext = [];
-    //   yFullTexts.forEach((yFullText, yFullTextIndex) => {
-    //     traces[traceIndex].hovertext.push(`${trace.y[yFullTextIndex]} : ${trace.name}, ${trace.text[yFullTextIndex]}${percentString}`);
-    //   });
-    // });
 
     if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       layout.xaxis.autorange = "reversed";
@@ -414,8 +388,6 @@ export class PlotlySetup {
     };
 
     if (!hasSeries) {
-      traceConfig.width = 0.5;
-      traceConfig.bargap = 0.5;
       traceConfig.mode = "markers",
       traceConfig.marker = { color: colors };
     }
@@ -429,10 +401,6 @@ export class PlotlySetup {
       if (model.showPercentages) {
         let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
         trace.texttemplate = texttemplate;
-        if (!hasSeries) {
-          trace.width = 0.9;
-          trace.bargap = 0.1;
-        }
       }
       traces.push(trace);
     });
