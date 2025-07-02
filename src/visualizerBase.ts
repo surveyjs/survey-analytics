@@ -639,7 +639,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   getRandomColor() {
-    const colors = this.getColors();
+    const colors = VisualizerBase.getColors();
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
@@ -658,14 +658,14 @@ export class VisualizerBase implements IDataInfo {
 
   static customColors: string[] = [];
   private static colors = [
-    "rgba(229, 10, 62, 1)",
-    "rgba(25, 179, 148, 1)",
-    "rgba(67, 127, 217, 1)",
-    "rgba(255, 152, 20, 1)",
-    "rgba(79, 175, 36, 1)",
-    "rgba(166, 44, 236, 1)",
-    "rgba(110, 91, 209, 1)",
-    "rgba(175, 73, 107, 1)"
+    "#e50a3e",
+    "#19b394",
+    "#437fd9",
+    "#ff9814",
+    "#4faf24",
+    "#a62cec",
+    "#6e5bd1",
+    "#af496b"
     // "#86e1fb",
     // "#3999fb",
     // "#ff6771",
@@ -678,7 +678,7 @@ export class VisualizerBase implements IDataInfo {
     // "#4e6198",
   ];
 
-  getColors(count = 10) {
+  static getColors(count = 10) {
     const colors =
       Array.isArray(VisualizerBase.customColors) &&
         VisualizerBase.customColors.length > 0

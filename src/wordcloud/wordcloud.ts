@@ -28,7 +28,6 @@ export class WordCloudAdapter {
 
   public async create(element: HTMLElement): Promise<any> {
     const data = await this.model.getCalculatedValues();
-    const colors = this.model.getColors();
 
     if (data.length === 0) {
       const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
@@ -44,7 +43,7 @@ export class WordCloudAdapter {
     };
     WordCloudAdapter.onWordcloudCreating.fire(this.model, options);
     this._wordcloud = new WordCloudWidget(config);
-    this._wordcloud.colors = this.model.getColors();
+    this._wordcloud.colors = VisualizerBase.getColors();
     this._wordcloud.words = data;
     this._wordcloud.render(element);
     return this._wordcloud;

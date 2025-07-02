@@ -124,7 +124,7 @@ export class NumberModel extends VisualizerBase {
   }
 
   generateColors(maxValue: number, minValue: number, stepsCount: number) {
-    const palette = this.getColors();
+    const palette = VisualizerBase.getColors();
     const colors = [];
 
     for (let i = 0; i < stepsCount; i++) {

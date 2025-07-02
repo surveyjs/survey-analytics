@@ -10,6 +10,7 @@ import { localization } from "../src/localizationManager";
 import { VisualizationMatrixDropdown } from "../src/visualizationMatrixDropdown";
 import { VisualizationPanel } from "../src/visualizationPanel";
 import { SelectBase } from "../src/selectBase";
+import { VisualizerBase } from "../src/visualizerBase";
 
 let choices = [
   { value: "father", text: "father_text" },
@@ -129,15 +130,9 @@ test("check matrix config hovertexts", async () => {
 
 test("check bar config with non default label ordering", async () => {
   selectBase.answersOrder = "desc";
-  var config = PlotlySetup.setupBar(selectBase, await selectBase.getAnswersData());
-  var trueColors = [
-    "#86e1fb",
-    "#3999fb",
-    "#1eb496",
-    "#ff6771",
-    "#ffc152",
-    "#aba1ff",
-  ];
+  const data = await selectBase.getAnswersData();
+  var config = PlotlySetup.setupBar(selectBase, data);
+  var trueColors = ["#e50a3e", "#19b394", "#ff9814", "#437fd9", "#4faf24", "#a62cec"];
   var trueY = [
     "daughter_text",
     "son_text",
@@ -156,15 +151,9 @@ test("check bar config with non default label ordering", async () => {
 test("check bar config with non default label ordering and enabled showPercentages flag", async () => {
   selectBase.answersOrder = "desc";
   selectBase.showPercentages = true;
-  var config = PlotlySetup.setupBar(selectBase, await selectBase.getAnswersData());
-  var trueColors = [
-    "#86e1fb",
-    "#3999fb",
-    "#1eb496",
-    "#ff6771",
-    "#ffc152",
-    "#aba1ff",
-  ];
+  const data = await selectBase.getAnswersData();
+  var config = PlotlySetup.setupBar(selectBase, data);
+  var trueColors = ["#e50a3e", "#19b394", "#ff9814", "#437fd9", "#4faf24", "#a62cec"];
   var trueY = [
     "daughter_text",
     "son_text",
@@ -192,14 +181,7 @@ test("check bar config with non default label ordering and enabled showPercentag
     "son_text",
     "brother_text",
   ]);
-  expect(config.traces[0].marker.color).toEqual([
-    "#aba1ff",
-    "#ff6771",
-    "#ffc152",
-    "#86e1fb",
-    "#3999fb",
-    "#1eb496",
-  ]);
+  expect(config.traces[0].marker.color).toEqual(["#a62cec", "#437fd9", "#4faf24", "#e50a3e", "#19b394", "#ff9814"]);
   expect(config.traces[0].text).toEqual(truePercentages.reverse());
 
   selectBase.answersOrder = "default";
@@ -416,6 +398,17 @@ test("check bar axes RTL setup", async () => {
   expect(config.layout.xaxis.autorange).toBe("reversed");
   expect(config.layout.yaxis.side).toBe("right");
   expect(config.layout.legend).toStrictEqual({
+    "bgcolor": "#FFF",
+    "bordercolor": "#DCDCDC",
+    "borderwidth": 1,
+    "font": {
+      "color": "rgba(0, 0, 0, 0.90)",
+      "family": "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif",
+      "size": 12,
+      "textcase": "normal",
+      "weight": 400,
+    },
+    "itemwidth": 20,
     x: 0,
     y: 1,
     xanchor: "left",

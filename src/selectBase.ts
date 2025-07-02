@@ -583,7 +583,7 @@ export class SelectBase
     let seriesLabels = this.getSeriesLabels();
     let datasets = (await this.getCalculatedValues()) as number[][];
     let labels = this.getLabels();
-    let colors = this.getColors();
+    let colors = VisualizerBase.getColors();
     var texts = this.showPercentages ? this.getPercentages(datasets) : datasets;
 
     if (this.transposeData) {
