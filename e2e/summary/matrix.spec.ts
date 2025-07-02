@@ -86,7 +86,9 @@ test.describe("matrix", () => {
     };
 
     // check that percentages aren't shown
-    await expect(page.locator(".trace.bars .point text")).toHaveCount(0);
+    // await expect(page.locator(".trace.bars .point text")).toHaveCount(0);
+    await expect(await getValuesInsideBars(1)).toEqual(["2", "1"].reverse());
+    await expect(await getValuesInsideBars(2)).toEqual(["1", "2"].reverse());
 
     // check that percentages are shown when button is clicked
     await page.click("span:has-text('Show percentages')");
@@ -95,6 +97,8 @@ test.describe("matrix", () => {
 
     // check that percentage are hidden when button is double-clicked
     await page.click("span:has-text('Hide percentages')");
-    await expect(page.locator(".trace.bars .point text")).toHaveCount(0);
+    // await expect(page.locator(".trace.bars .point text")).toHaveCount(0);
+    await expect(await getValuesInsideBars(1)).toEqual(["2", "1"].reverse());
+    await expect(await getValuesInsideBars(2)).toEqual(["1", "2"].reverse());
   });
 });
