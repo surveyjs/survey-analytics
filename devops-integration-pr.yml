@@ -13,7 +13,7 @@ resources:
 trigger:
   batch: true
   branches:
-    include:
+    exclude:
       - master
   tags:
     exclude:
@@ -96,17 +96,6 @@ steps:
       OverWrite: true
     displayName: "Copy Build Artifact - SurveyJSVersion File"
 
-  - powershell: |
-      $version = Get-Content $(Build.SourcesDirectory)/version.txt
-      Write-Host "##vso[task.setvariable variable=SurveyJSVersion;]$version"
-    displayName: "setup SurveyJSVersion variable from SurveyJSVersionFile"
-
-  - powershell: |
-      cd $(Build.SourcesDirectory)/survey-analytics
-      npm run release -- --release-as $(SurveyJSVersion)
-    displayName: "npm run release specific version"
-  #####################################################
-
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm run build
@@ -153,55 +142,3 @@ steps:
       failTaskOnFailedTests: true
       testRunTitle: "Publish E2E test results"
     condition: succeededOrFailed()
-
-  - script: |
-      cd $(Build.SourcesDirectory)/survey-analytics
-      npm run doc:gen
-    displayName: "Generate docs"
-
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/docs"
-      Contents: |
-        classes.json
-        pmes.json
-        surveyjs_definition.json
-      TargetFolder: "$(Build.SourcesDirectory)/service/surveyjs.io/App_Data/DocsAnalytics"
-      OverWrite: true
-      CleanTargetFolder: false
-    displayName: "Copy generated docs to the local surveyjs/service repo"
-
-  # read about the problem with git output ($env:GIT_REDIRECT_STDERR = '2>&1') :
-  # https://github.com/microsoft/azure-pipelines-yaml/issues/248
-  # https://stackoverflow.com/questions/58485585/azure-pipeline-powershell-and-git-on-windows-server-2019-gives-error-in-output
-  - powershell: |
-      cd $(Build.SourcesDirectory)/service
-      git pull origin master
-      git fetch origin master --tags --force
-      git checkout master
-      git add surveyjs.io/App_Data/DocsAnalytics
-      git commit -m "updated survey-analytics docs [azurepipelines skip]"
-      git pull origin master
-      git push origin master
-    displayName: "Git surveyjs/service push updated docs"
-  # - powershell: |
-  #     cd $(Build.SourcesDirectory)/service
-  #     git pull origin V2
-  #     git fetch origin V2 --tags --force
-  #     git checkout V2
-  #     git add surveyjs.io/App_Data/DocsAnalytics
-  #     git commit -m "updated survey-analytics V2 docs [azurepipelines skip]"
-  #     git pull origin V2
-  #     git push origin V2
-  #   displayName: "git surveyjs/service push updated V2 docs"
-
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/build"
-      targetFolder: $(Build.ArtifactStagingDirectory)/SurveyJSAnalyticsBuild/packages/survey-analytics
-
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: "$(Build.ArtifactStagingDirectory)/SurveyJSAnalyticsBuild/"
-      ArtifactName: "SurveyJSAnalyticsBuild"
-      publishLocation: "Container"
