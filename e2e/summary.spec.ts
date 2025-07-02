@@ -105,7 +105,7 @@ test.describe("Summary common", () => {
     await expect(chartTypeSelector).toHaveValue("vbar");
     await compareScreenshot(page, chartContentSelector, "histogram-simple-vbar.png");
 
-    await chartTypeSelector.selectOption("vbar");
+    await chartTypeSelector.selectOption("bar");
     await compareScreenshot(page, chartContentSelector, "histogram-simple-bar.png");
 
     await visualizerSelector.selectOption("number");
