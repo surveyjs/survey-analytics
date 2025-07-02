@@ -1,0 +1,144 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+resources:
+  repositories:
+    - repository: Service # The name used to reference this repository in the checkout step
+      type: github
+      endpoint: github.com_surveyjsdeveloper
+      name: surveyjs/service
+
+trigger:
+  batch: true
+  branches:
+    exclude:
+      - master
+  tags:
+    exclude:
+      - v*.*.*
+
+pool:
+  vmImage: "Ubuntu-22.04"
+
+steps:
+  - checkout: self
+  - checkout: Service
+    persistCredentials: true
+    clean: true
+    fetchDepth: 1
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "16.x"
+    displayName: "Install Node.js"
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/"
+      Contents: "package.json"
+      TargetFolder: "$(Build.SourcesDirectory)/Temp/"
+      OverWrite: true
+    displayName: "Copy package.json for cache key"
+
+  - task: Cache@2
+    inputs:
+      key: "npm-cache-analytics | $(Build.SourcesDirectory)/Temp/package.json"
+      path: $(Build.SourcesDirectory)/survey-analytics/node_modules
+      cacheHitVar: NPM_CACHE_RESTORED
+    displayName: Cache NPM
+
+  - powershell: |
+      $env:GIT_REDIRECT_STDERR = '2>&1'
+      git config --global user.email "surveyjs.org@gmail.com"
+      git config --global user.name "surveyjsdeveloper"
+    displayName: "Set up Git config"
+
+  - task: Npm@1
+    displayName: "NPM install"
+    inputs:
+      command: custom
+      customCommand: install --legacy-peer-deps
+      verbose: false
+      workingDir: $(Build.SourcesDirectory)/survey-analytics
+    condition: ne(variables.NPM_CACHE_RESTORED, 'true')
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-creator
+      npx playwright install chromium
+    displayName: "Install chrome playwright"
+
+  - task: DownloadBuildArtifacts@0
+    inputs:
+      buildType: "specific"
+      project: "af2804d2-859a-4705-9ef5-cdf46d1d5d4f"
+      pipeline: "56"
+      specificBuildWithTriggering: true
+      buildVersionToDownload: "latest"
+      downloadType: "single"
+      artifactName: "SurveyJSLibraryBuildCore"
+      downloadPath: "$(System.ArtifactsDirectory)"
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(System.ArtifactsDirectory)/SurveyJSLibraryBuildCore/packages/survey-core"
+      Contents: "**"
+      TargetFolder: "$(Build.SourcesDirectory)/survey-analytics/node_modules/survey-core"
+      OverWrite: true
+
+  # npm run release with version
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(System.ArtifactsDirectory)/SurveyJSLibraryBuildCore/"
+      Contents: "version.txt"
+      TargetFolder: "$(Build.SourcesDirectory)/"
+      OverWrite: true
+    displayName: "Copy Build Artifact - SurveyJSVersion File"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm run build
+    displayName: "NPM build"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm run build:types:summary:core
+      npm run build:types:summary
+      npm run build:types:tabulator
+    displayName: "NPM build typings"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm test
+    displayName: "Run unit tests"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm run e2e:ci
+    displayName: "Run E2E tests"
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: Cobertura # or JaCoCo
+      summaryFileLocation: "$(System.DefaultWorkingDirectory)/**/*coverage.xml"
+      reportDirectory: "$(System.DefaultWorkingDirectory)/**/coverage"
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: "$(Build.SourcesDirectory)/survey-analytics/test-results"
+      ArtifactName: "e2e"
+      publishLocation: "Container"
+    condition: always()
+    displayName: "Publish E2E artifacts"
+
+  - task: PublishTestResults@2
+    displayName: "Publish e2e test results"
+    inputs:
+      searchFolder: "$(Build.SourcesDirectory)/survey-analytics/test-results"
+      testResultsFormat: "JUnit"
+      testResultsFiles: "e2e-junit-results.xml"
+      mergeTestResults: true
+      failTaskOnFailedTests: true
+      testRunTitle: "Publish E2E test results"
+    condition: succeededOrFailed()
