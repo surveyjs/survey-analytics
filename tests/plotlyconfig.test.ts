@@ -56,14 +56,15 @@ test("check bar config with showPercentages", async () => {
   (<any>selectBase)._showPercentages = true;
   var config = PlotlySetup.setupBar(selectBase, await selectBase.getAnswersData());
   expect([config.traces[0].text]).toEqual(selectBase.getPercentages((await selectBase.getAnswersData()).datasets));
-  expect(config.traces[0].width).toBe(0.5);
+  expect(config.traces[0].width).toBe(0.9);
   expect(config.traces[0].textposition).toBe("inside");
   expect(config.traces[0].texttemplate).toBe("%{value} (%{text}%)");
   (<any>selectBase)._showPercentages = false;
 });
 
 test("check bar config tick labels", async () => {
-  (<any>selectBase)._showPercentages = true;
+  selectBase.showPercentages = true;
+  // selectBase.showOnlyPercentages = true;
   const labelTruncateLength = selectBase.labelTruncateLength;
   selectBase.labelTruncateLength = 5;
   const config = PlotlySetup.setupBar(selectBase, await selectBase.getAnswersData());
@@ -85,12 +86,12 @@ test("check bar config tick labels", async () => {
     "daugh...  "
   ].reverse();
   const hoverTexts = [
-    "50, father_text",
-    "25, mother_text",
-    "0, brother_text",
-    "25, sister_text",
-    "0, son_text",
-    "0, daughter_text"
+    "50%, father_text",
+    "25%, mother_text",
+    "0%, brother_text",
+    "25%, sister_text",
+    "0%, son_text",
+    "0%, daughter_text"
   ].reverse();
 
   expect(config.traces[0].y).toEqual(fullTexts);
@@ -99,6 +100,7 @@ test("check bar config tick labels", async () => {
   expect(config.traces[0].hovertext).toEqual(hoverTexts);
 
   selectBase.labelTruncateLength = labelTruncateLength;
+  selectBase.showPercentages = false;
 });
 
 test("check matrix config hovertexts", async () => {
@@ -106,11 +108,23 @@ test("check matrix config hovertexts", async () => {
   matrixQuestion.fromJSON(matrixJson);
 
   let matrixVisualizer = new Matrix(matrixQuestion, matrixData, {});
+  matrixVisualizer.transposeData = false;
   var config = PlotlySetup.setupBar(matrixVisualizer, await matrixVisualizer.getAnswersData());
 
-  expect(config.traces[2].hovertext.length).toEqual(2);
-  expect(config.traces[2].hovertext[0]).toEqual("Lizol : Fair, 0");
-  expect(config.traces[2].hovertext[1]).toEqual("Harpic : Fair, 0");
+  expect(config.traces.length).toEqual(2);
+  expect(config.traces[0].hovertext.length).toEqual(6);
+  expect(config.traces[0].hovertext[0]).toEqual("Lizol : Poor, 0");
+  expect(config.traces[0].hovertext[1]).toEqual("Lizol : Neither Fair Nor Poor, 0");
+  expect(config.traces[0].hovertext[2]).toEqual("Lizol : Fair, 0");
+  expect(config.traces[0].hovertext[3]).toEqual("Lizol : Good, 0");
+  expect(config.traces[0].hovertext[4]).toEqual("Lizol : Very Good, 2");
+  expect(config.traces[0].hovertext[5]).toEqual("Lizol : Excellent, 1");
+  expect(config.traces[1].hovertext[0]).toEqual("Harpic : Poor, 0");
+  expect(config.traces[1].hovertext[1]).toEqual("Harpic : Neither Fair Nor Poor, 0");
+  expect(config.traces[1].hovertext[2]).toEqual("Harpic : Fair, 0");
+  expect(config.traces[1].hovertext[3]).toEqual("Harpic : Good, 1");
+  expect(config.traces[1].hovertext[4]).toEqual("Harpic : Very Good, 1");
+  expect(config.traces[1].hovertext[5]).toEqual("Harpic : Excellent, 1");
 });
 
 test("check bar config with non default label ordering", async () => {
@@ -166,8 +180,8 @@ test("check bar config with non default label ordering and enabled showPercentag
   expect(config.traces[0].y).toEqual(trueY);
   expect(config.traces[0].marker.color).toEqual(trueColors);
   expect(config.traces[0].text).toEqual(truePercentages);
-  selectBase.answersOrder = "asc";
 
+  selectBase.answersOrder = "asc";
   var config = PlotlySetup.setupBar(selectBase, await selectBase.getAnswersData());
   expect(config.traces[0].x).toEqual(trueX.reverse());
   expect(config.traces[0].y).toEqual([
@@ -224,7 +238,7 @@ let matrix = new Matrix(matrixQuestion, matrixData, {});
 
 test("check bar height with hasSeries equals true", async () => {
   var config = PlotlySetup.setupBar(matrix, await matrix.getAnswersData());
-  expect(config.layout.height).toEqual(480);
+  expect(config.layout.height).toEqual(450);
 
   //increase count of columns
   matrixJson.columns.push("add1");
@@ -232,7 +246,7 @@ test("check bar height with hasSeries equals true", async () => {
   moreColsMatrixQuestion.fromJSON(matrixJson);
   let moreColsMatrix = new Matrix(moreColsMatrixQuestion, matrixData, {});
   var config = PlotlySetup.setupBar(moreColsMatrix, await moreColsMatrix.getAnswersData());
-  expect(config.layout.height).toEqual(540);
+  expect(config.layout.height).toEqual(510);
   matrixJson.columns.pop();
 
   //increase count of rows
@@ -241,7 +255,7 @@ test("check bar height with hasSeries equals true", async () => {
   moreRowsMatrixQuestion.fromJSON(matrixJson);
   let moreRowsMatrix = new Matrix(moreRowsMatrixQuestion, matrixData, {});
   config = PlotlySetup.setupBar(moreRowsMatrix, await moreRowsMatrix.getAnswersData());
-  expect(config.layout.height).toEqual(690);
+  expect(config.layout.height).toEqual(630);
   matrixJson.rows.pop();
 });
 
@@ -379,14 +393,18 @@ test("left non-empty pies only and reduce chart area to fit them", async () => {
     },
   ]);
   matrixVisualizer.chartType = "pie";
+  matrixVisualizer.transposeData = true;
   let config = PlotlySetup.setupPie(matrixVisualizer, await matrixVisualizer.getAnswersData());
   expect(config.traces.length).toEqual(2);
-  expect(config.traces[0].domain.row).toBe(0);
-  expect(config.traces[0].domain.column).toBe(0);
-  expect(config.traces[1].domain.row).toBe(0);
-  expect(config.traces[1].domain.column).toBe(1);
-  expect(config.layout.grid.rows).toBe(1);
-  expect(config.layout.grid.columns).toBe(2);
+  expect(config.traces[0].domain).toStrictEqual({ "column": 0, "row": 0 });
+  expect(config.traces[1].domain).toStrictEqual({ "column": 1, "row": 0 });
+  expect(config.layout.grid).toStrictEqual({ "columns": 2, "rows": 1 });
+  expect(config.layout.height).toBe(175);
+  matrixVisualizer.transposeData = false;
+  config = PlotlySetup.setupPie(matrixVisualizer, await matrixVisualizer.getAnswersData());
+  expect(config.traces.length).toEqual(1);
+  expect(config.traces[0].domain).toStrictEqual({ "column": 0, "row": 0 });
+  expect(config.layout.grid).toStrictEqual({ "columns": 2, "rows": 1 });
   expect(config.layout.height).toBe(375);
 });
 

@@ -2,10 +2,11 @@ import { Question } from "survey-core";
 import { PivotModel } from "../pivot";
 import { PlotlyChartAdapter } from "./selectBase";
 import { DocumentHelper } from "../utils";
+import { VisualizationManager } from "../visualizationManager";
 
 export class PivotPlotly extends PivotModel {
   private _chartAdapter: PlotlyChartAdapter;
-  public static types = ["vbar"]; // ["vbar", "bar"];
+  public static types = ["vbar", "bar", "line", "stackedbar", "pie", "doughnut"]; // ["vbar", "bar"];
 
   constructor(
     questions: Array<Question>,
@@ -36,3 +37,5 @@ export class PivotPlotly extends PivotModel {
     return this.valueType;
   }
 }
+
+VisualizationManager.registerPivotVisualizer(PivotPlotly);

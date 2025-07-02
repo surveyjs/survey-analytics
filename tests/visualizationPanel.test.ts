@@ -8,12 +8,14 @@ import { IState } from "../src/config";
 import { VisualizationManager } from "../src/visualizationManager";
 import { LayoutEngine } from "../src/layoutEngine";
 import { PostponeHelper } from "../src/visualizerBase";
+import { PivotModel } from "../src/pivot";
 
 VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
 VisualizationManager.registerVisualizer("checkbox", SelectBase);
 VisualizationManager.registerVisualizer("radiogroup", SelectBase);
 VisualizationManager.registerAltVisualizerSelector(AlternativeVisualizersWrapper);
+VisualizationManager.registerPivotVisualizer(PivotModel);
 
 test("allowDynamicLayout option", () => {
   const json = {
@@ -880,9 +882,9 @@ test("create visualizer for grouped questions", async () => {
             "type": "radiogroup",
             "name": "question2",
             "choices": [
-              "Item 1",
-              "Item 2",
-              "Item 3"
+              { "value": "item1", "text": "Item 1" },
+              { "value": "item2", "text": "Item 2" },
+              { "value": "item3", "text": "Item 3" }
             ],
           }
         ]
@@ -891,18 +893,18 @@ test("create visualizer for grouped questions", async () => {
   };
   var survey = new SurveyModel(json);
   var data = [
-    { question1: "male", question2: "Item 1" },
-    { question1: "male", question2: "Item 1" },
-    { question1: "male", question2: "Item 2" },
-    { question1: "male", question2: "Item 3" },
-    { question1: "female", question2: "Item 2" },
-    { question1: "female", question2: "Item 2" },
-    { question1: "female", question2: "Item 2" },
-    { question1: "female", question2: "Item 3" },
-    { question1: "female", question2: "Item 3" },
-    { question1: "female", question2: "Item 3" },
-    { question1: "female", question2: "Item 3" },
-    { question1: "female", question2: "Item 1" },
+    { question1: "male", question2: "item1" },
+    { question1: "male", question2: "item1" },
+    { question1: "male", question2: "item2" },
+    { question1: "male", question2: "item3" },
+    { question1: "female", question2: "item2" },
+    { question1: "female", question2: "item2" },
+    { question1: "female", question2: "item2" },
+    { question1: "female", question2: "item3" },
+    { question1: "female", question2: "item3" },
+    { question1: "female", question2: "item3" },
+    { question1: "female", question2: "item3" },
+    { question1: "female", question2: "item1" },
   ];
   const visPanel = new VisualizationPanel([[survey.getQuestionByName("question1"), survey.getQuestionByName("question2")]], data, {
     allowDynamicLayout: false,
@@ -913,13 +915,20 @@ test("create visualizer for grouped questions", async () => {
   expect(visPanel.getElements()[0].isVisible).toEqual(true);
 
   expect(visPanel.visualizers.length).toEqual(1);
-  const visualizer = visPanel.visualizers[0] as SelectBase;
-  expect(visualizer.type).toEqual("selectBase");
-  expect(visualizer.getSeriesValues()).toStrictEqual(["Item 3", "Item 2", "Item 1"]);
-  expect(visualizer.getSeriesLabels()).toStrictEqual(["Item 3", "Item 2", "Item 1"]);
-  expect(visualizer.getValues()).toStrictEqual(["male", "female"]);
-  expect(visualizer.getLabels()).toStrictEqual(["male", "female"]);
-  expect(await visualizer.getCalculatedValues()).toStrictEqual([[1, 4], [1, 3], [2, 1]]);
+  const visualizer = visPanel.visualizers[0] as PivotModel;
+  expect(visualizer.type).toEqual("pivot");
+  expect(visualizer.getSeriesValues()).toStrictEqual([]);
+  expect(visualizer.getSeriesLabels()).toStrictEqual([]);
+  expect(visualizer.getValues()).toStrictEqual(["female", "male"]);
+  expect(visualizer.getLabels()).toStrictEqual(["female", "male"]);
+  expect(await visualizer.getCalculatedValues()).toStrictEqual([[8, 4]]);
+
+  visualizer.setAxisQuestions("question1", "question2");
+  expect(visualizer.getSeriesValues()).toStrictEqual(["item1", "item2", "item3"]);
+  expect(visualizer.getSeriesLabels()).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
+  expect(visualizer.getValues()).toStrictEqual(["female", "male"]);
+  expect(visualizer.getLabels()).toStrictEqual(["female", "male"]);
+  expect(await visualizer.getCalculatedValues()).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
 });
 
 test("getCalculatedValues should return empty array", async () => {

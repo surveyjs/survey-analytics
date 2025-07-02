@@ -43,7 +43,11 @@ test("getCalculatedValues", async () => {
 
   const chartData = await number.getCalculatedValues();
   expect(chartData).toMatchObject([
-    [1, 0, 1, 0, 0], [0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   ]);
 });
 
@@ -88,5 +92,8 @@ test("getCalculatedValues - 2 rows", async () => {
   });
 
   const chartData = await number.getCalculatedValues();
-  expect(chartData).toMatchObject([[2, 0], [0, 0], [0, 1], [0, 0], [0, 0], [0, 0], [0, 0], [0, 1], [0, 0], [1, 0]]);
+  expect(chartData).toMatchObject([
+    [2, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+  ]);
 });
