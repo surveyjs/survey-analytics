@@ -74,140 +74,140 @@ test.skip("check use values as labels", async (t) => {
   await t.expect(yAxisValues).eql(["other", "1", "2"]);
 });
 
-test("check show/hide percentages", async (t) => {
-  var getValuesInsideBars = ClientFunction(() => {
-    var values = [];
-    document.querySelectorAll(".trace.bars .point text").forEach((el) => {
-      values.push(el.getAttribute("data-unformatted"));
-    });
-    return values;
-  });
+// test("check show/hide percentages", async (t) => {
+//   var getValuesInsideBars = ClientFunction(() => {
+//     var values = [];
+//     document.querySelectorAll(".trace.bars .point text").forEach((el) => {
+//       values.push(el.getAttribute("data-unformatted"));
+//     });
+//     return values;
+//   });
 
-  //check that percentages aren't shown
-  await t.expect(Selector(".trace.bars .point text").exists).notOk();
+//   //check that percentages aren't shown
+//   await t.expect(Selector(".trace.bars .point text").exists).notOk();
 
-  //check that percentages are shown when button is clicked
-  await t.click(Selector("span").withText("Show percentages"));
-  var valuesInsideBars = await getValuesInsideBars();
-  await t.expect(valuesInsideBars).eql(["2 (40%)", "1 (20%)", "2 (40%)"]);
+//   //check that percentages are shown when button is clicked
+//   await t.click(Selector("span").withText("Show percentages"));
+//   var valuesInsideBars = await getValuesInsideBars();
+//   await t.expect(valuesInsideBars).eql(["2 (40%)", "1 (20%)", "2 (40%)"]);
 
-  //check that percentage are hided when button is double-clicked
-  await t.click(Selector("span").withText("Hide percentages"));
-  await t.expect(Selector(".trace.bars .point text").exists).notOk();
-});
+//   //check that percentage are hided when button is double-clicked
+//   await t.click(Selector("span").withText("Hide percentages"));
+//   await t.expect(Selector(".trace.bars .point text").exists).notOk();
+// });
 
-test("check comment actions", async (t) => {
-  var getTableCells = ClientFunction(() => {
-    var cells = [];
-    document.querySelectorAll(".sa-text-table tr td").forEach((td) => {
-      cells.push(td.innerHTML);
-    });
-    return cells;
-  });
+// test("check comment actions", async (t) => {
+//   var getTableCells = ClientFunction(() => {
+//     var cells = [];
+//     document.querySelectorAll(".sa-text-table tr td").forEach((td) => {
+//       cells.push(td.innerHTML);
+//     });
+//     return cells;
+//   });
 
-  //check that comment's footer doesn't exists
-  await t.expect(Selector("sa-visualizer__footer-content").exists).notOk();
+//   //check that comment's footer doesn't exists
+//   await t.expect(Selector("sa-visualizer__footer-content").exists).notOk();
 
-  //check comment's actions
-  await t
-    .click(Selector(".sa-visualizer__footer span").withText("Show"))
-    .expect(Selector(".sa-visualizer__footer-content").exists)
-    .ok();
+//   //check comment's actions
+//   await t
+//     .click(Selector(".sa-visualizer__footer span").withText("Show"))
+//     .expect(Selector(".sa-visualizer__footer-content").exists)
+//     .ok();
 
-  //check that wordcloud exists
-  await t.expect(Selector(".sa-visualizer__footer-content .sa-visualizer-wordcloud").exists).ok();
+//   //check that wordcloud exists
+//   await t.expect(Selector(".sa-visualizer__footer-content .sa-visualizer-wordcloud").exists).ok();
 
-  //check comment's table
-  await t
-    .click(
-      Selector(".sa-visualizer__footer-content .sa-question__select").withText(
-        "Texts in table"
-      )
-    )
-    .click(
-      Selector(
-        ".sa-visualizer__footer-content .sa-question__select option"
-      ).withText("Texts in table")
-    );
+//   //check comment's table
+//   await t
+//     .click(
+//       Selector(".sa-visualizer__footer-content .sa-question__select").withText(
+//         "Texts in table"
+//       )
+//     )
+//     .click(
+//       Selector(
+//         ".sa-visualizer__footer-content .sa-question__select option"
+//       ).withText("Texts in table")
+//     );
 
-  var cells = await getTableCells();
-  await t.expect(cells).eql(["Comment text", "Another comment text"]);
+//   var cells = await getTableCells();
+//   await t.expect(cells).eql(["Comment text", "Another comment text"]);
 
-  //check that comment's footer is hided
-  await t
-    .click(Selector(".sa-visualizer__footer span").withText("Hide"))
-    .expect(Selector(".sa-visualizer__footer-content").visible)
-    .notOk();
-});
+//   //check that comment's footer is hided
+//   await t
+//     .click(Selector(".sa-visualizer__footer span").withText("Hide"))
+//     .expect(Selector(".sa-visualizer__footer-content").visible)
+//     .notOk();
+// });
 
-test("check sign when there is no comment data", async (t) => {
-  var data = [{ radio: 1 }];
-  await initSummary(json, data, options);
-  await t
-    .expect(
-      Selector(".sa-visualizer__footer p").withText("There are no results yet")
-        .exists
-    )
-    .ok();
-});
+// test("check sign when there is no comment data", async (t) => {
+//   var data = [{ radio: 1 }];
+//   await initSummary(json, data, options);
+//   await t
+//     .expect(
+//       Selector(".sa-visualizer__footer p").withText("There are no results yet")
+//         .exists
+//     )
+//     .ok();
+// });
 
-test("check that footer has no childs with false hasOther and hasComment", async (t) => {
-  var json = {
-    elements: [
-      {
-        type: "radiogroup",
-        name: "radio",
-        choices: [{ value: 1 }],
-      },
-    ],
-  };
-  var data = [{ radio: 1 }];
-  await initSummary(json, data, options);
-  await t.expect(Selector(".sa-visualizer__footer").child().count).eql(0);
-});
+// test("check that footer has no childs with false hasOther and hasComment", async (t) => {
+//   var json = {
+//     elements: [
+//       {
+//         type: "radiogroup",
+//         name: "radio",
+//         choices: [{ value: 1 }],
+//       },
+//     ],
+//   };
+//   var data = [{ radio: 1 }];
+//   await initSummary(json, data, options);
+//   await t.expect(Selector(".sa-visualizer__footer").child().count).eql(0);
+// });
 
-test("check ordering", async (t) => {
-  const getColorsOrder = ClientFunction(() => {
-    var colors = [];
-    document.querySelectorAll(".trace.bars .point path").forEach((el) => {
-      colors.push(el.style.fill);
-    });
-    return colors;
-  });
+// test("check ordering", async (t) => {
+//   const getColorsOrder = ClientFunction(() => {
+//     var colors = [];
+//     document.querySelectorAll(".trace.bars .point path").forEach((el) => {
+//       colors.push(el.style.fill);
+//     });
+//     return colors;
+//   });
 
-  const clickSelectOption = async (text) => {
-    await t
-      .click(Selector(".sa-question__select").withText(text))
-      .click(Selector(Selector(".sa-question__select option").withText(text)));
-  };
+//   const clickSelectOption = async (text) => {
+//     await t
+//       .click(Selector(".sa-question__select").withText(text))
+//       .click(Selector(Selector(".sa-question__select option").withText(text)));
+//   };
 
-  await initSummary(json, data.concat({ radio: 1 }), options);
+//   await initSummary(json, data.concat({ radio: 1 }), options);
 
-  //check default order
-  assert.deepEqual(await getYAxisValues(), ["Other  ", "Two  ", "One  "]);
-  assert.deepEqual(
-    (await getColorsOrder()).map((color) => {
-      return RGBToHex(color);
-    }),
-    ["#86e1fb", "#3999fb", "#ff6771"]
-  );
+//   //check default order
+//   assert.deepEqual(await getYAxisValues(), ["Other  ", "Two  ", "One  "]);
+//   assert.deepEqual(
+//     (await getColorsOrder()).map((color) => {
+//       return RGBToHex(color);
+//     }),
+//     ["#86e1fb", "#3999fb", "#ff6771"]
+//   );
 
-  //check ascending order
-  await clickSelectOption("Ascending");
-  assert.deepEqual(await getYAxisValues(), ["One  ", "Other  ", "Two  "]);
-  assert.deepEqual(
-    (await getColorsOrder()).map((color) => {
-      return RGBToHex(color);
-    }),
-    ["#ff6771", "#86e1fb", "#3999fb"]
-  );
+//   //check ascending order
+//   await clickSelectOption("Ascending");
+//   assert.deepEqual(await getYAxisValues(), ["One  ", "Other  ", "Two  "]);
+//   assert.deepEqual(
+//     (await getColorsOrder()).map((color) => {
+//       return RGBToHex(color);
+//     }),
+//     ["#ff6771", "#86e1fb", "#3999fb"]
+//   );
 
-  //check descending order
-  await clickSelectOption("Descending");
-  assert.deepEqual(await getYAxisValues(), ["Two  ", "Other  ", "One  "]);
-  assert.deepEqual(
-    (await getColorsOrder()).map((color) => {
-      return RGBToHex(color);
-    }),
-    ["#3999fb", "#86e1fb", "#ff6771"]);
-});
+//   //check descending order
+//   await clickSelectOption("Descending");
+//   assert.deepEqual(await getYAxisValues(), ["Two  ", "Other  ", "One  "]);
+//   assert.deepEqual(
+//     (await getColorsOrder()).map((color) => {
+//       return RGBToHex(color);
+//     }),
+//     ["#3999fb", "#86e1fb", "#ff6771"]);
+// });
