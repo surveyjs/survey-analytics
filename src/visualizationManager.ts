@@ -14,6 +14,7 @@ declare type VisualizerConstructor = new (
  */
 export class VisualizationManager {
   static alternativesVisualizer: any = undefined;
+  static pivotVisualizer: any = undefined;
   static vizualizers: { [index: string]: Array<{ ctor: VisualizerConstructor, index: number }> } = {};
   /**
    * Registers a visualizer for a specified question type.
@@ -102,5 +103,11 @@ export class VisualizationManager {
    */
   public static registerAltVisualizerSelector(constructor: any) {
     VisualizationManager.alternativesVisualizer = constructor;
+  }
+  public static getPivotVisualizerConstructor() {
+    return VisualizationManager.pivotVisualizer || VisualizerBase;
+  }
+  public static registerPivotVisualizer(constructor: any) {
+    VisualizationManager.pivotVisualizer = constructor;
   }
 }

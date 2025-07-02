@@ -407,7 +407,7 @@ test("hideEmptyAnswersInData", () => {
     "texts": [[0, 1], [0, 2]],
     "seriesLabels": ["Age Group", "Gender"]
   });
-  expect(result).toStrictEqual({ "datasets": [[1], [2]], "labels": ["0-9", "11-20"], "colors": ["#86e1fb", "#3999fb"], "texts": [[1], [2]], "seriesLabels": ["Gender"] });
+  expect(result).toStrictEqual({ "datasets": [[1], [2]], "labels": ["11-20"], "colors": ["#3999fb"], "texts": [[1], [2]], "seriesLabels": ["Age Group", "Gender"] });
 
   result = hideEmptyAnswersInData({
     "datasets": [[0, 0], [3, 2]],
@@ -416,7 +416,7 @@ test("hideEmptyAnswersInData", () => {
     "texts": [[0, 0], [3, 2]],
     "seriesLabels": ["Age Group", "Gender"]
   });
-  expect(result).toStrictEqual({ "datasets": [[3, 2]], "labels": ["11-20"], "colors": ["#3999fb"], "texts": [[3, 2]], "seriesLabels": ["Age Group", "Gender"] });
+  expect(result).toStrictEqual({ "datasets": [[3, 2]], "labels": ["0-9", "11-20"], "colors": ["#86e1fb", "#3999fb"], "texts": [[3, 2]], "seriesLabels": ["Gender"] });
 });
 
 test("convertFromExternalData", async () => {

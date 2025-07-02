@@ -33,10 +33,10 @@ test.describe("Matrixes visualizer", () => {
     await page.getByRole("list").getByText("Doughnut").click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-doughnut.png");
 
-    const transposeButtonSelector = questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Values$/ });
+    const transposeButtonSelector = questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ });
     await expect(transposeButtonSelector).toBeVisible();
     await transposeButtonSelector.click();
-    await expect(questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ })).toBeVisible();
+    await expect(questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Values$/ })).toBeVisible();
 
     await chartTypeSelector.click();
     await page.getByRole("list").getByText("Bar", { exact: true }).click();
@@ -90,10 +90,10 @@ test.describe("Matrixes visualizer", () => {
     await page.getByRole("list").getByText("Stacked bar").click();
     await compareScreenshot(page, chartCol1ContentSelector, "matrixdropdown-simple-stackedbar.png");
 
-    const transposeButtonSelector = column1VisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Values$/ });
+    const transposeButtonSelector = column1VisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ });
     await expect(transposeButtonSelector).toBeVisible();
     await transposeButtonSelector.click();
-    await expect(column1VisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ })).toBeVisible();
+    await expect(column1VisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Values$/ })).toBeVisible();
 
     await chartCol1TypeSelector.click();
     await page.getByRole("list").getByText("Bar", { exact: true }).click();

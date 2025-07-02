@@ -11,6 +11,7 @@ import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
 import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import "./visualizationPanel.scss";
+import { VisualizationManager } from "./visualizationManager";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -604,30 +605,13 @@ export class VisualizationPanel extends VisualizerBase {
   private buildVisualizers(questions: Array<Question>) {
     questions.forEach((question) => {
       let visualizerOptions = Object.assign({}, this.options);
-      let visualizerData = undefined;
+      let visualizerData = this.surveyData;
+      let visualizer: VisualizerBase;
       if(Array.isArray(question)) {
-        const auxQuestionName = question[1].name;
-        const auxVisualizer = this.createVisualizer(question[1]) as VisualizerBase;
-        visualizerOptions = Object.assign(visualizerOptions, {
-          seriesValues: auxVisualizer.getValues(),
-          seriesLabels: auxVisualizer.getLabels()
-        });
-        question = question[0];
-        visualizerData = [];
-        this.data.forEach((dataItem) => {
-          let rawDataItemValue = dataItem[question.name];
-          if (rawDataItemValue !== undefined) {
-            visualizerData.push({
-              [question.name]: rawDataItemValue,
-              [auxQuestionName]: dataItem[auxQuestionName],
-              [DataProvider.seriesMarkerKey]: dataItem[auxQuestionName],
-            });
-          }
-        });
-        visualizerOptions.dataProvider = new DataProvider(visualizerData);
+        visualizer = new (VisualizationManager.getPivotVisualizerConstructor() as any)(question, visualizerData, visualizerOptions);
+      } else {
+        visualizer = this.createVisualizer(question, visualizerOptions, visualizerData);
       }
-
-      const visualizer = this.createVisualizer(question, visualizerOptions, visualizerData);
       if(!visualizer) {
         return;
       }
