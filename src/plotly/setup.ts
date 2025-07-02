@@ -413,7 +413,7 @@ export class PlotlySetup {
       },
     };
 
-    if (model.type === "histogram" || model.type === "pivot" || !hasSeries) {
+    if (!hasSeries) {
       traceConfig.width = 0.5;
       traceConfig.bargap = 0.5;
       traceConfig.mode = "markers",
