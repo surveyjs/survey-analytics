@@ -65,7 +65,7 @@ var options = {
   // allowDynamicLayout: false,
   // allowHideQuestions: false,
   // allowSortAnswers: true,
-  // allowTransposeData: true
+  allowTransposeData: true
 };
 
 var visPanel = new SurveyAnalytics.VisualizationPanel(
