@@ -1,10 +1,9 @@
 import { ItemValue, Question } from "survey-core";
-import { DataProvider } from "./dataProvider";
 import { SelectBase } from "./selectBase";
 import { DocumentHelper } from "./utils";
 import { VisualizerBase } from "./visualizerBase";
-import { reverse } from "dns";
 import { localization } from "./localizationManager";
+import { VisualizationManager } from "./visualizationManager";
 
 export class PivotModel extends SelectBase {
   protected valueType: "enum" | "date" | "number" = "enum";
@@ -407,3 +406,5 @@ export class PivotModel extends SelectBase {
     return this.valueType;
   }
 }
+
+VisualizationManager.registerPivotVisualizer(PivotModel);

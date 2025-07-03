@@ -1,6 +1,7 @@
 import { ItemValue, Question } from "survey-core";
 import { DataProvider } from "./dataProvider";
 import { SelectBase } from "./selectBase";
+import { VisualizationManager } from "./visualizationManager";
 
 export class HistogramModel extends SelectBase {
   protected valueType: "date" | "number" = "number";
@@ -204,3 +205,7 @@ export class HistogramModel extends SelectBase {
     return this.valueType;
   }
 }
+
+VisualizationManager.registerVisualizer("date", HistogramModel);
+VisualizationManager.registerVisualizer("number", HistogramModel);
+VisualizationManager.registerVisualizer("rating", HistogramModel);

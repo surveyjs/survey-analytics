@@ -1,5 +1,6 @@
 import { ItemValue, QuestionMatrixModel, Question } from "survey-core";
 import { IAnswersData, SelectBase } from "./selectBase";
+import { VisualizationManager } from "./visualizationManager";
 
 export class Matrix extends SelectBase {
   constructor(
@@ -106,3 +107,5 @@ export class Matrix extends SelectBase {
   }
 
 }
+
+VisualizationManager.registerVisualizer("matrix", Matrix);

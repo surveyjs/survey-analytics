@@ -2,6 +2,7 @@ import { Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils/index";
+import { VisualizationManager } from "./visualizationManager";
 
 export class NumberModel extends VisualizerBase {
   private _resultAverage: number;
@@ -180,3 +181,7 @@ export class NumberModel extends VisualizerBase {
     return [this._resultAverage, this._resultMin, this._resultMax];
   }
 }
+
+VisualizationManager.registerVisualizer("number", NumberModel);
+VisualizationManager.registerVisualizer("rating", NumberModel);
+VisualizationManager.registerVisualizer("expression", NumberModel);
