@@ -207,5 +207,5 @@ export class HistogramModel extends SelectBase {
 }
 
 VisualizationManager.registerVisualizer("date", HistogramModel);
-VisualizationManager.registerVisualizer("number", HistogramModel);
-VisualizationManager.registerVisualizer("rating", HistogramModel);
+VisualizationManager.registerVisualizer("number", HistogramModel, 100);
+VisualizationManager.registerVisualizer("rating", HistogramModel, 100);

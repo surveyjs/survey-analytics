@@ -182,6 +182,6 @@ export class NumberModel extends VisualizerBase {
   }
 }
 
-VisualizationManager.registerVisualizer("number", NumberModel);
-VisualizationManager.registerVisualizer("rating", NumberModel);
+VisualizationManager.registerVisualizer("number", NumberModel, 200);
+VisualizationManager.registerVisualizer("rating", NumberModel, 200);
 VisualizationManager.registerVisualizer("expression", NumberModel);

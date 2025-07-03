@@ -36,7 +36,7 @@ export * from "../wordcloud/stopwords/index";
 export * from "../text";
 export * from "../statistics-table";
 export * from "../nps";
-export * from "../pivot";
 export * from "../ranking";
+export * from "../pivot";
 
 export { DocumentHelper } from "../utils/index";
