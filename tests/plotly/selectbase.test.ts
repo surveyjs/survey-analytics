@@ -1,7 +1,7 @@
 window.URL.createObjectURL = jest.fn();
 import { SurveyModel, QuestionMatrixDropdownModel } from "survey-core";
 import { VisualizationMatrixDropdown } from "../../src/visualizationMatrixDropdown";
-import { SelectBasePlotly } from "../../src/plotly/selectBase";
+import { SelectBasePlotly } from "../../src/plotly/legacy";
 import { PlotlySetup } from "../../src/plotly/setup";
 import { VisualizationPanel } from "../../src/visualizationPanel";
 

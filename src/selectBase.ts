@@ -125,6 +125,13 @@ export class SelectBase
     this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
     this._answersOrder = this.options.answersOrder || "default";
     this._showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
+
+    if (VisualizerBase.chartAdapterType) {
+      this._chartAdapter = new VisualizerBase.chartAdapterType(this);
+      this.chartTypes = this._chartAdapter.getChartTypes();
+      this._chartType = this.chartTypes[0];
+    }
+
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
         return DocumentHelper.createSelector(
@@ -333,6 +340,13 @@ export class SelectBase
     const resultValues = Array.isArray(correctAnswerValue) ? correctAnswerValue : [correctAnswerValue];
     const selectBaseQuestion = this.question as QuestionSelectBase;
     return resultValues.map((value: any) => ItemValue.getTextOrHtmlByValue(selectBaseQuestion.choices, value)).join(", ");
+  }
+
+  public updateContent(): void {
+    const chartNode: HTMLElement = <HTMLElement>this.contentContainer?.children[0];
+    if(chartNode) {
+      this._chartAdapter.update(chartNode);
+    }
   }
 
   public getSelectedItemByText(itemText: string) {

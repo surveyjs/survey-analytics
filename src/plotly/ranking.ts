@@ -1,5 +1,5 @@
 import { VisualizationManager } from "../visualizationManager";
-import { SelectBasePlotly } from "./selectBase";
+import { SelectBasePlotly } from "./legacy";
 
 export class RankingPlotly extends SelectBasePlotly {
   getQuestionResults() {

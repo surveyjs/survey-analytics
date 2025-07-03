@@ -8,7 +8,6 @@ export class HistogramModel extends SelectBase {
   private _continiousData: { [series: string]: Array<number> } = undefined;
   private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
   private _intervalPrecision: number = 2;
-  protected chartTypes: string[];
 
   public static IntervalsCount = 10;
   public static UseIntervalsFrom = 10;
@@ -199,5 +198,9 @@ export class HistogramModel extends SelectBase {
       });
     }
     return statistics;
+  }
+
+  public getValueType(): "date" | "number" {
+    return this.valueType;
   }
 }

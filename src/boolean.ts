@@ -5,7 +5,6 @@ import { DataProvider } from "./dataProvider";
 import { localization } from "./localizationManager";
 
 export class BooleanModel extends SelectBase {
-  protected chartTypes: string[];
 
   constructor(
     question: Question,

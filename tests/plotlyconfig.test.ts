@@ -2,14 +2,17 @@ jest.mock("plotly.js", () => { }, { virtual: true });
 (<any>global).URL.createObjectURL = jest.fn();
 
 import { PlotlySetup } from "../src/plotly/setup";
-import { SelectBasePlotly } from "../src/plotly/selectBase";
-import { MatrixPlotly } from "../src/plotly/matrix";
+import { SelectBasePlotly, MatrixPlotly } from "../src/plotly/legacy";
 import { QuestionDropdownModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
 import { Matrix } from "../src/matrix";
 import { localization } from "../src/localizationManager";
 import { VisualizationMatrixDropdown } from "../src/visualizationMatrixDropdown";
 import { VisualizationPanel } from "../src/visualizationPanel";
 import { SelectBase } from "../src/selectBase";
+import { PlotlyChartAdapter } from "../src/plotly/chart-adapter";
+import { VisualizerBase } from "../src/visualizerBase";
+
+VisualizerBase.chartAdapterType = PlotlyChartAdapter;
 
 let choices = [
   { value: "father", text: "father_text" },

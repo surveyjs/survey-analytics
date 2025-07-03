@@ -402,4 +402,8 @@ export class PivotModel extends SelectBase {
     }
     return statistics;
   }
+
+  public getValueType(): "enum" | "date" | "number" {
+    return this.valueType;
+  }
 }

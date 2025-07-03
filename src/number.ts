@@ -29,6 +29,13 @@ export class NumberModel extends VisualizerBase {
     name?: string
   ) {
     super(question, data, options, name || "number");
+
+    if (VisualizerBase.chartAdapterType) {
+      this._chartAdapter = new VisualizerBase.chartAdapterType(this);
+      this.chartTypes = this._chartAdapter.getChartTypes();
+      this.chartType = this.chartTypes[0];
+    }
+
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
         return DocumentHelper.createSelector(
