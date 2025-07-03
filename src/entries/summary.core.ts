@@ -37,5 +37,6 @@ export * from "../text";
 export * from "../statistics-table";
 export * from "../nps";
 export * from "../pivot";
+export * from "../ranking";
 
 export { DocumentHelper } from "../utils/index";

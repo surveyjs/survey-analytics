@@ -5,6 +5,7 @@ import { Matrix } from "../matrix";
 import { MatrixDropdownGrouped } from "../matrixDropdownGrouped";
 import { PivotModel } from "../pivot";
 import { NumberModel } from "../number";
+import { RankingModel } from "../ranking";
 
 export class SelectBasePlotly extends SelectBase {
   public static types = ["bar", "vbar", "pie", "doughnut"];
@@ -35,3 +36,5 @@ export class GaugePlotly extends NumberModel {
   public static displayModeBar: any = undefined;
   public static types = ["gauge", "bullet"];
 }
+
+export class RankingPlotly extends RankingModel {}

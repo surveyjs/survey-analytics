@@ -1,8 +1,8 @@
 window.URL.createObjectURL = jest.fn();
-import { RankingPlotly } from "../../src/plotly/ranking";
+import { RankingModel } from "../src/ranking";
 
 test("applyResultToPlotlyData method", () => {
-  const rp = new RankingPlotly(<any>{}, null);
+  const rp = new RankingModel(<any>{}, null);
 
   const result = ["c", "b", "a"];
   const plotlyData = [0, 0, 0];
