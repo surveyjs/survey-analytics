@@ -3,6 +3,7 @@ import { VisualizationManager } from "../visualizationManager";
 import { BooleanModel } from "../boolean";
 import { PlotlyChartAdapter } from "./selectBase";
 import { DocumentHelper } from "../utils";
+import { SelectBase } from "../selectBase";
 
 export class PlotlyBoolChartAdapter extends PlotlyChartAdapter {
   constructor(model: BooleanPlotly) {
@@ -20,15 +21,16 @@ export class PlotlyBoolChartAdapter extends PlotlyChartAdapter {
       BooleanPlotly.trueColor || colors[0],
       BooleanPlotly.falseColor || colors[1],
     ];
-    if(this.model.showMissingAnswers) {
+    if((this.model as SelectBase).showMissingAnswers) {
       boolColors.push(colors[2]);
     }
 
-    if (this.model.chartType === "pie" || this.model.chartType === "doughnut") {
+    const chartType = (this.model as any).chartType;
+    if (chartType === "pie" || chartType === "doughnut") {
       traces.forEach((trace: any) => {
         trace.marker.colors = boolColors;
       });
-    } else if (this.model.chartType === "bar") {
+    } else if (chartType === "bar") {
       traces.forEach((trace: any) => {
         trace.marker.color = boolColors;
       });

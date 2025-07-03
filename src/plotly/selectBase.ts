@@ -5,11 +5,12 @@ import { allowDomRendering, DataHelper, DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
 import Plotly from "plotly.js-dist-min";
 import { PlotlySetup } from "./setup";
+import { VisualizerBase } from "../visualizerBase";
 
 export class PlotlyChartAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
 
-  constructor(protected model: SelectBase) { }
+  constructor(protected model: SelectBase | VisualizerBase) { }
 
   protected patchConfigParameters(
     chartNode: object,
@@ -25,25 +26,27 @@ export class PlotlyChartAdapter {
   public async create(chartNode: HTMLElement): Promise<any> {
     const [plot, plotlyOptions] = await this.update(chartNode);
 
-    (<any>chartNode)["on"]("plotly_click", (data: any) => {
-      if (data.points.length > 0) {
-        let itemText = "";
-        if (!plotlyOptions.hasSeries) {
-          itemText = Array.isArray(data.points[0].customdata)
-            ? data.points[0].customdata[0]
-            : data.points[0].customdata;
-          const item: ItemValue = this.model.getSelectedItemByText(itemText);
-          this.model.setSelection(item);
-        } else {
-          itemText = data.points[0].data.name;
-          const propertyLabel = data.points[0].label;
-          const seriesValues = this.model.getSeriesValues();
-          const seriesLabels = this.model.getSeriesLabels();
-          const propertyValue = seriesValues[seriesLabels.indexOf(propertyLabel)];
-          const selectedItem: ItemValue = this.model.getSelectedItemByText(itemText);
-          const item = new ItemValue({ [propertyValue]: selectedItem.value }, propertyLabel + ": " + selectedItem.text);
-          this.model.setSelection(item);
-        }
+    if(this.model instanceof SelectBase) {
+      const _model = this.model as SelectBase;
+      (<any>chartNode)["on"]("plotly_click", (data: any) => {
+        if (data.points.length > 0) {
+          let itemText = "";
+          if (!plotlyOptions.hasSeries) {
+            itemText = Array.isArray(data.points[0].customdata)
+              ? data.points[0].customdata[0]
+              : data.points[0].customdata;
+            const item: ItemValue = _model.getSelectedItemByText(itemText);
+            _model.setSelection(item);
+          } else {
+            itemText = data.points[0].data.name;
+            const propertyLabel = data.points[0].label;
+            const seriesValues = this.model.getSeriesValues();
+            const seriesLabels = this.model.getSeriesLabels();
+            const propertyValue = seriesValues[seriesLabels.indexOf(propertyLabel)];
+            const selectedItem: ItemValue = _model.getSelectedItemByText(itemText);
+            const item = new ItemValue({ [propertyValue]: selectedItem.value }, propertyLabel + ": " + selectedItem.text);
+            _model.setSelection(item);
+          }
 
         // const itemText = plotlyOptions.hasSeries
         //   ? data.points[0].data.name
@@ -52,8 +55,9 @@ export class PlotlyChartAdapter {
         //     : data.points[0].customdata;
         // const item: ItemValue = this.model.getSelectedItemByText(itemText);
         // this.model.setSelection(item);
-      }
-    });
+        }
+      });
+    }
 
     var getDragLayer = () =>
       <HTMLElement>chartNode.getElementsByClassName("nsewdrag")[0];
@@ -72,8 +76,8 @@ export class PlotlyChartAdapter {
   }
 
   public async update(chartNode: HTMLElement): Promise<any> {
-    const answersData = await this.model.getAnswersData();
-    var plotlyOptions = PlotlySetup.setup(this.model.chartType, this.model, answersData);
+    const answersData = (this.model instanceof SelectBase) ? await this.model.getAnswersData() : await this.model.getCalculatedValues();
+    var plotlyOptions = PlotlySetup.setup((this.model as any).chartType, this.model, answersData as any);
 
     let config: any = {
       displaylogo: false,

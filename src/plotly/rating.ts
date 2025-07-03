@@ -2,128 +2,11 @@ import { Question, QuestionRatingModel } from "survey-core";
 import { NumberModel } from "../number";
 import { VisualizationManager } from "../visualizationManager";
 import { allowDomRendering, DataHelper, DocumentHelper } from "../utils/index";
-import { localization } from "../localizationManager";
-import { PlotlySetup } from "./setup";
-import Plotly from "plotly.js-dist-min";
 
-export class PlotlyGaugeAdapter {
-  private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
-
-  constructor(private model: GaugePlotly) { }
-
-  public get chart() {
-    return this._chart;
-  }
-
-  public async create(chartNode: HTMLElement): Promise<any> {
-    const question = this.model.question;
-    let [level, minValue, maxValue] = await this.model.getCalculatedValues() as any;
-
-    if (question.getType() === "rating") {
-      const rateValues = (<QuestionRatingModel>question).visibleRateValues;
-      maxValue = rateValues[rateValues.length - 1].value;
-      minValue = rateValues[0].value;
-    }
-
-    const colors = this.model.generateColors(
-      maxValue,
-      minValue,
-      GaugePlotly.stepsCount
-    );
-
-    if (GaugePlotly.showAsPercentage) {
-      level = DataHelper.toPercentage(level, maxValue);
-      minValue = DataHelper.toPercentage(minValue, maxValue);
-      maxValue = DataHelper.toPercentage(maxValue, maxValue);
-    }
-
-    var data: any = [
-      {
-        type: "indicator",
-        mode: "gauge+number",
-        gauge: {
-          axis: { range: [minValue, maxValue] },
-          shape: this.model.chartType,
-          bgcolor: "white",
-          bar: { color: colors[0] },
-        },
-        value: level,
-        text: question.name,
-        domain: { x: [0, 1], y: [0, 1] },
-      },
-    ];
-
-    const chartMargin = this.model.chartType === "bullet" ? 60 : 30;
-    var layout: any = {
-      height: 250,
-      margin: {
-        l: chartMargin,
-        r: chartMargin,
-        b: chartMargin,
-        t: chartMargin,
-        pad: 5
-      },
-      plot_bgcolor: this.model.backgroundColor,
-      paper_bgcolor: this.model.backgroundColor,
-    };
-
-    const config = {
-      displayModeBar: true,
-      locale: localization.currentLocale,
-      responsive: true,
-      displaylogo: false,
-      modeBarButtonsToRemove: ["toImage"],
-      modeBarButtonsToAdd: [
-        {
-          name: "toImageSjs",
-          title: localization.getString("saveDiagramAsPNG"),
-          icon: (<any>Plotly).Icons.camera,
-          click: (gd: any) => {
-            let options = {
-              format: PlotlySetup.imageExportFormat,
-              // width: 800,
-              // height: 600,
-              filename: this.model.question.name,
-            };
-            PlotlySetup.onImageSaving.fire(this.model as any, options);
-            (<any>Plotly).downloadImage(gd, options);
-          },
-        },
-      ],
-
-    };
-    if (GaugePlotly.displayModeBar !== undefined) {
-      config.displayModeBar = GaugePlotly.displayModeBar;
-    }
-
-    let options = {
-      data: data,
-      layout: layout,
-      config: config,
-    };
-    PlotlySetup.onPlotCreating.fire(this.model, options);
-
-    const plot = (<any>Plotly).newPlot(
-      chartNode,
-      options.data,
-      options.layout,
-      options.config
-    );
-    // setTimeout(() => Plotly.Plots.resize(chartNode), 10);
-
-    return plot;
-  }
-
-  public destroy(node: HTMLElement) {
-    if(!!node) {
-      (<any>Plotly).purge(node);
-    }
-    this._chart = undefined;
-  }
-}
+import { PlotlyChartAdapter } from "./selectBase";
 
 export class GaugePlotly extends NumberModel {
-  private _chartAdapter: PlotlyGaugeAdapter;
+  private _chartAdapter: PlotlyChartAdapter;
 
   public static displayModeBar: any = undefined;
   public static types = ["gauge", "bullet"];
@@ -137,7 +20,7 @@ export class GaugePlotly extends NumberModel {
     super(question, data, options, name);
     this.chartTypes = GaugePlotly.types;
     this.chartType = this.chartTypes[0];
-    this._chartAdapter = new PlotlyGaugeAdapter(this);
+    this._chartAdapter = new PlotlyChartAdapter(this);
   }
 
   protected destroyContent(container: HTMLElement) {

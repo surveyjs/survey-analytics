@@ -1,7 +1,9 @@
-import { Event } from "survey-core";
+import { Event, QuestionRatingModel } from "survey-core";
 import { IAnswersData, SelectBase } from "../selectBase";
 import { VisualizerBase } from "../visualizerBase";
 import { localization } from "../localizationManager";
+import { DataHelper } from "../utils";
+import { NumberModel } from "../number";
 
 export interface PlotlyOptions {
   traces: Array<any>;
@@ -15,8 +17,8 @@ export class PlotlySetup {
    * Fires when end user clicks on the 'save as image' button.
    */
   public static onImageSaving = new Event<
-    (sender: SelectBase, options: any) => any,
-    SelectBase,
+    (sender: VisualizerBase, options: any) => any,
+    VisualizerBase,
     any
   >();
 
@@ -30,7 +32,7 @@ export class PlotlySetup {
     any
   >();
 
-  static setups: { [type: string]: (model: SelectBase, answersData: IAnswersData) => PlotlyOptions } = {
+  static setups: { [type: string]: (model: VisualizerBase, answersData: IAnswersData) => PlotlyOptions } = {
     bar: PlotlySetup.setupBar,
     vbar: PlotlySetup.setupVBar,
     line: PlotlySetup.setupVBar,
@@ -38,9 +40,11 @@ export class PlotlySetup {
     doughnut: PlotlySetup.setupPie,
     pie: PlotlySetup.setupPie,
     scatter: PlotlySetup.setupScatter,
+    gauge: PlotlySetup.setupGauge,
+    bullet: PlotlySetup.setupGauge,
   };
 
-  static setup(charType: string, model: SelectBase, answersData: IAnswersData): PlotlyOptions {
+  static setup(charType: string, model: VisualizerBase, answersData: IAnswersData): PlotlyOptions {
     return this.setups[charType](model, answersData);
   }
 
@@ -485,5 +489,59 @@ export class PlotlySetup {
       });
     }
     return { traces, layout, hasSeries };
+  }
+
+  static setupGauge(model: NumberModel, answersData: IAnswersData): PlotlyOptions {
+    let [level, minValue, maxValue] = answersData as any;
+
+    if (model.question.getType() === "rating") {
+      const rateValues = model.question.visibleRateValues;
+      maxValue = rateValues[rateValues.length - 1].value;
+      minValue = rateValues[0].value;
+    }
+
+    const colors = model.generateColors(
+      maxValue,
+      minValue,
+      NumberModel.stepsCount
+    );
+
+    if (NumberModel.showAsPercentage) {
+      level = DataHelper.toPercentage(level, maxValue);
+      minValue = DataHelper.toPercentage(minValue, maxValue);
+      maxValue = DataHelper.toPercentage(maxValue, maxValue);
+    }
+
+    var traces: any = [
+      {
+        type: "indicator",
+        mode: "gauge+number",
+        gauge: {
+          axis: { range: [minValue, maxValue] },
+          shape: model.chartType,
+          bgcolor: "white",
+          bar: { color: colors[0] },
+        },
+        value: level,
+        text: model.name,
+        domain: { x: [0, 1], y: [0, 1] },
+      },
+    ];
+
+    const chartMargin = model.chartType === "bullet" ? 60 : 30;
+    var layout: any = {
+      height: 250,
+      margin: {
+        l: chartMargin,
+        r: chartMargin,
+        b: chartMargin,
+        t: chartMargin,
+        pad: 5
+      },
+      plot_bgcolor: model.backgroundColor,
+      paper_bgcolor: model.backgroundColor,
+    };
+
+    return { traces, layout, hasSeries: false };
   }
 }
