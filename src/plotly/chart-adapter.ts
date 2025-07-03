@@ -17,7 +17,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
     chartNode: object,
     traces: Array<object>,
     layout: object,
-    config: object
+    config: any
   ) {
     if(this.model.question.getType() === "boolean") {
       const colors = this.model.getColors();
@@ -39,6 +39,9 @@ export class PlotlyChartAdapter implements IChartAdapter {
           trace.marker.color = boolColors;
         });
       }
+    }
+    if(this.model.type === "number") {
+      config.displayModeBar = true;
     }
   }
 
