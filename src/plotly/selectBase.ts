@@ -6,6 +6,7 @@ import { localization } from "../localizationManager";
 import Plotly from "plotly.js-dist-min";
 import { PlotlySetup } from "./setup";
 import { VisualizerBase } from "../visualizerBase";
+import { BooleanModel } from "../boolean";
 
 export class PlotlyChartAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
@@ -17,7 +18,29 @@ export class PlotlyChartAdapter {
     traces: Array<object>,
     layout: object,
     config: object
-  ) { }
+  ) {
+    if(this.model.question.getType() === "boolean") {
+      const colors = this.model.getColors();
+      const boolColors = [
+        BooleanModel.trueColor || colors[0],
+        BooleanModel.falseColor || colors[1],
+      ];
+      if((this.model as SelectBase).showMissingAnswers) {
+        boolColors.push(colors[2]);
+      }
+
+      const chartType = (this.model as any).chartType;
+      if (chartType === "pie" || chartType === "doughnut") {
+        traces.forEach((trace: any) => {
+          trace.marker.colors = boolColors;
+        });
+      } else if (chartType === "bar") {
+        traces.forEach((trace: any) => {
+          trace.marker.color = boolColors;
+        });
+      }
+    }
+  }
 
   public get chart() {
     return this._chart;

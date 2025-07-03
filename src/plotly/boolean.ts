@@ -5,39 +5,6 @@ import { PlotlyChartAdapter } from "./selectBase";
 import { DocumentHelper } from "../utils";
 import { SelectBase } from "../selectBase";
 
-export class PlotlyBoolChartAdapter extends PlotlyChartAdapter {
-  constructor(model: BooleanPlotly) {
-    super(model);
-  }
-
-  protected patchConfigParameters(
-    chartNode: object,
-    traces: Array<object>,
-    layout: object,
-    config: object
-  ) {
-    const colors = this.model.getColors();
-    const boolColors = [
-      BooleanPlotly.trueColor || colors[0],
-      BooleanPlotly.falseColor || colors[1],
-    ];
-    if((this.model as SelectBase).showMissingAnswers) {
-      boolColors.push(colors[2]);
-    }
-
-    const chartType = (this.model as any).chartType;
-    if (chartType === "pie" || chartType === "doughnut") {
-      traces.forEach((trace: any) => {
-        trace.marker.colors = boolColors;
-      });
-    } else if (chartType === "bar") {
-      traces.forEach((trace: any) => {
-        trace.marker.color = boolColors;
-      });
-    }
-  }
-}
-
 export class BooleanPlotly extends BooleanModel {
   private _chartAdapter: PlotlyChartAdapter;
   public static types = ["pie", "bar", "doughnut"];
@@ -51,7 +18,7 @@ export class BooleanPlotly extends BooleanModel {
     super(question, data, options, name);
     this.chartTypes = BooleanPlotly.types;
     this._chartType = this.chartTypes[0];
-    this._chartAdapter = new PlotlyBoolChartAdapter(this);
+    this._chartAdapter = new PlotlyChartAdapter(this);
   }
 
   protected destroyContent(container: HTMLElement) {
