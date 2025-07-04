@@ -18,11 +18,11 @@ import "../analytics-localization/finnish";
 export * from "../dataProvider";
 export * from "../visualizerFactory";
 
-export * from "../number";
 export * from "../selectBase";
 export * from "../matrix";
 export * from "../boolean";
 export * from "../histogram";
+export * from "../number";
 export * from "../visualizerBase";
 export * from "../visualizationManager";
 export * from "../visualizationPanel";
@@ -36,6 +36,7 @@ export * from "../wordcloud/stopwords/index";
 export * from "../text";
 export * from "../statistics-table";
 export * from "../nps";
+export * from "../ranking";
 export * from "../pivot";
 
 export { DocumentHelper } from "../utils/index";

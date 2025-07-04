@@ -1,6 +1,7 @@
 import { ItemValue, Question } from "survey-core";
 import { DataProvider } from "./dataProvider";
 import { SelectBase } from "./selectBase";
+import { VisualizationManager } from "./visualizationManager";
 
 export class HistogramModel extends SelectBase {
   protected valueType: "date" | "number" = "number";
@@ -8,7 +9,6 @@ export class HistogramModel extends SelectBase {
   private _continiousData: { [series: string]: Array<number> } = undefined;
   private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
   private _intervalPrecision: number = 2;
-  protected chartTypes: string[];
 
   public static IntervalsCount = 10;
   public static UseIntervalsFrom = 10;
@@ -200,4 +200,12 @@ export class HistogramModel extends SelectBase {
     }
     return statistics;
   }
+
+  public getValueType(): "date" | "number" {
+    return this.valueType;
+  }
 }
+
+VisualizationManager.registerVisualizer("date", HistogramModel);
+VisualizationManager.registerVisualizer("number", HistogramModel, 100);
+VisualizationManager.registerVisualizer("rating", HistogramModel, 100);

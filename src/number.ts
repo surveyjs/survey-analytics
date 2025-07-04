@@ -2,6 +2,7 @@ import { Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils/index";
+import { VisualizationManager } from "./visualizationManager";
 
 export class NumberModel extends VisualizerBase {
   private _resultAverage: number;
@@ -29,6 +30,13 @@ export class NumberModel extends VisualizerBase {
     name?: string
   ) {
     super(question, data, options, name || "number");
+
+    if (VisualizerBase.chartAdapterType) {
+      this._chartAdapter = new VisualizerBase.chartAdapterType(this);
+      this.chartTypes = this._chartAdapter.getChartTypes();
+      this.chartType = this.chartTypes[0];
+    }
+
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
         return DocumentHelper.createSelector(
@@ -173,3 +181,7 @@ export class NumberModel extends VisualizerBase {
     return [this._resultAverage, this._resultMin, this._resultMax];
   }
 }
+
+VisualizationManager.registerVisualizer("number", NumberModel, 200);
+VisualizationManager.registerVisualizer("rating", NumberModel, 200);
+VisualizationManager.registerVisualizer("expression", NumberModel);
