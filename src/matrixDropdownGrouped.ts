@@ -11,7 +11,6 @@ export class MatrixDropdownGrouped extends SelectBase {
     name?: string
   ) {
     super(question, data, options, name || "matrixDropdownGrouped");
-    // this.getAnswersData();
   }
 
   protected get matrixQuestion(): QuestionMatrixDropdownModel {
@@ -58,14 +57,7 @@ export class MatrixDropdownGrouped extends SelectBase {
       getSeriesLabels: () => rows,
     });
 
-    const preparedData: Array<Array<number>> = [];
-    values.forEach((val, valueIndex) => {
-      const seriesData = series.map(
-        (seriesName, seriesIndex) => statistics[seriesIndex][0][valueIndex]
-      );
-      preparedData.push(seriesData);
-    });
-    return preparedData;
+    return statistics.map(s => s[0]);
   }
 }
 
