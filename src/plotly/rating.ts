@@ -8,6 +8,21 @@ import Plotly from "plotly.js-dist-min";
 
 export class PlotlyGaugeAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
+  static defaultValueFont = {
+    color: "rgba(0, 0, 0, 0.90)", // var(--dsb-guage-title-color, rgba(0, 0, 0, 0.90));
+    family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
+    size: 32, // font-size: var(--ctr-font-large-size, 32px);
+    textcase: "normal",
+    weight: 700,
+  };
+
+  static defaultTickFont = {
+    color: "rgba(0, 0, 0, 0.90)", // var(--dsb-guage-linear-axis-label-color, rgba(0, 0, 0, 0.90));
+    family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
+    size: 12, // font-size: var(--ctr-font-small-size, 12px);
+    textcase: "normal",
+    weight: 400,
+  }
 
   constructor(private model: GaugePlotly) { }
 
@@ -42,20 +57,29 @@ export class PlotlyGaugeAdapter {
         type: "indicator",
         mode: "gauge+number",
         gauge: {
-          axis: { range: [minValue, maxValue] },
+          axis: {
+            range: [minValue, maxValue],
+            tickfont: { ...PlotlyGaugeAdapter.defaultTickFont }
+          },
           shape: this.model.chartType,
-          bgcolor: "white",
-          bar: { color: colors[0] },
+          bgcolor: "#F5F5F5", // background: var(--dsb-guage-linear-color-inactive, #F5F5F5);
+          bar: {
+            color: ["#19B394"], // background: var(--dsb-guage-linear-color, #19B394);
+            thickness: 0.5,
+          },
         },
         value: level,
         text: question.name,
         domain: { x: [0, 1], y: [0, 1] },
+        number: {
+          font: { ...PlotlyGaugeAdapter.defaultValueFont }
+        },
       },
     ];
 
     const chartMargin = this.model.chartType === "bullet" ? 60 : 30;
     var layout: any = {
-      height: 250,
+      height: this.model.chartType === "bullet" ? 150 : 250,
       margin: {
         l: chartMargin,
         r: chartMargin,
@@ -65,6 +89,7 @@ export class PlotlyGaugeAdapter {
       },
       plot_bgcolor: this.model.backgroundColor,
       paper_bgcolor: this.model.backgroundColor,
+      modebar: { ...PlotlySetup.defaultModebarConfig },
     };
 
     const config = {

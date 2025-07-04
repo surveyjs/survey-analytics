@@ -62,7 +62,7 @@ export class MuuriLayoutEngine extends LayoutEngine {
   protected startCore(container: HTMLElement) {
     this._muuri = new Muuri(container, {
       dragStartPredicate: {
-        handle: ".sa-question__title--draggable",
+        handle: ".sa-question__header--draggable",
       },
       items: this._selector,
       dragEnabled: this.dragEnabled,

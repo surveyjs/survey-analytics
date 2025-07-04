@@ -6,6 +6,8 @@ import { localization } from "../localizationManager";
 import Plotly from "plotly.js-dist-min";
 import { PlotlySetup } from "./setup";
 
+import "./selectBase.scss";
+
 export class PlotlyChartAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
 
@@ -72,6 +74,7 @@ export class PlotlyChartAdapter {
   }
 
   public async update(chartNode: HTMLElement): Promise<any> {
+    chartNode.className = "sa-visualizer--plotly";
     const answersData = await this.model.getAnswersData();
     var plotlyOptions = PlotlySetup.setup(this.model.chartType, this.model, answersData);
 

@@ -31,7 +31,7 @@ export class NumberModel extends VisualizerBase {
     super(question, data, options, name || "number");
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
-        return DocumentHelper.createSelector(
+        return DocumentHelper.createDropdown(
           this.chartTypes.map((chartType) => {
             return {
               value: chartType,
@@ -40,7 +40,7 @@ export class NumberModel extends VisualizerBase {
           }),
           (option: any) => this.chartType === option.value,
           (e: any) => {
-            this.setChartType(e.target.value);
+            this.setChartType(e);
           }
         );
       }
@@ -124,7 +124,7 @@ export class NumberModel extends VisualizerBase {
   }
 
   generateColors(maxValue: number, minValue: number, stepsCount: number) {
-    const palette = this.getColors();
+    const palette = VisualizerBase.getColors();
     const colors = [];
 
     for (let i = 0; i < stepsCount; i++) {
