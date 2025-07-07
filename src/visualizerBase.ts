@@ -615,9 +615,24 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
-  public updateContent(): void {
+  protected isSupportSoftUpdateContent(): boolean {
+    return false;
+  }
+
+  protected softUpdateContent(): void {
+  }
+
+  protected hardUpdateContent(): void {
     this.destroyContent(this.contentContainer);
     this.renderContent(this.contentContainer);
+  }
+
+  public updateContent(): void {
+    if(!this.isSupportSoftUpdateContent()) {
+      this.hardUpdateContent();
+    } else {
+      this.softUpdateContent();
+    }
   }
 
   /**

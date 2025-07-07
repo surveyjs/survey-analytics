@@ -405,6 +405,10 @@ export class PivotModel extends SelectBase {
   public getValueType(): "enum" | "date" | "number" {
     return this.valueType;
   }
+
+  protected isSupportSoftUpdateContent(): boolean {
+    return false;
+  }
 }
 
 VisualizationManager.registerPivotVisualizer(PivotModel);

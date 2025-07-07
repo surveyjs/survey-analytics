@@ -352,7 +352,11 @@ export class SelectBase
     return resultValues.map((value: any) => ItemValue.getTextOrHtmlByValue(selectBaseQuestion.choices, value)).join(", ");
   }
 
-  public updateContent(): void {
+  protected isSupportSoftUpdateContent(): boolean {
+    return true;
+  }
+
+  protected softUpdateContent(): void {
     const chartNode: HTMLElement = <HTMLElement>this.contentContainer?.children[0];
     if(chartNode) {
       this._chartAdapter.update(chartNode);
