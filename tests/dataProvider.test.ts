@@ -3,7 +3,8 @@ import { SurveyModel } from "survey-core";
 import { VisualizationMatrixDropdown } from "../src/visualizationMatrixDropdown";
 import { VisualizationManager } from "../src/visualizationManager";
 import { SelectBase } from "../src/selectBase";
-import { defaultStatisticsCalculator, IDataInfo } from "../src/visualizerBase";
+import { IDataInfo } from "../src/visualizerBase";
+import { defaultStatisticsCalculator } from "../src/statisticCalculators";
 
 const testData = [
   {

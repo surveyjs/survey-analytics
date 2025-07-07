@@ -1,6 +1,6 @@
 import { ItemValue, QuestionMatrixDropdownModel, Question, MatrixDropdownColumn, MatrixDropdownRowModelBase } from "survey-core";
 import { IAnswersData, SelectBase } from "./selectBase";
-import { defaultStatisticsCalculator } from "./visualizerBase";
+import { defaultStatisticsCalculator } from "./statisticCalculators";
 import { VisualizationManager } from "./visualizationManager";
 
 export class MatrixDropdownGrouped extends SelectBase {
