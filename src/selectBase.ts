@@ -2,6 +2,7 @@ import { Question, QuestionSelectBase, ItemValue, Event } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DataHelper, DocumentHelper } from "./utils/index";
+import { VisualizationManager } from "./visualizationManager";
 
 export interface IVisualizerWithSelection {
   selection: ItemValue;
@@ -125,6 +126,22 @@ export class SelectBase
     this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
     this._answersOrder = this.options.answersOrder || "default";
     this._showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
+
+    if(this.options.allowExperimentalFeatures) {
+    // this.chartTypes.splice(1, 0, "vbar");
+    }
+    if (VisualizerBase.chartAdapterType) {
+      this._chartAdapter = new VisualizerBase.chartAdapterType(this);
+      this.chartTypes = this._chartAdapter.getChartTypes();
+      if (this.getSeriesValues().length > 0 && this.chartTypes.indexOf("stackedbar") === -1) {
+        this.chartTypes.push("stackedbar");
+      }
+      this._chartType = this.chartTypes[0];
+      if (this.chartTypes.indexOf(this.options.defaultChartType) !== -1) {
+        this._chartType = this.options.defaultChartType;
+      }
+    }
+
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
         return DocumentHelper.createSelector(
@@ -333,6 +350,17 @@ export class SelectBase
     const resultValues = Array.isArray(correctAnswerValue) ? correctAnswerValue : [correctAnswerValue];
     const selectBaseQuestion = this.question as QuestionSelectBase;
     return resultValues.map((value: any) => ItemValue.getTextOrHtmlByValue(selectBaseQuestion.choices, value)).join(", ");
+  }
+
+  protected isSupportSoftUpdateContent(): boolean {
+    return true;
+  }
+
+  protected softUpdateContent(): void {
+    const chartNode: HTMLElement = <HTMLElement>this.contentContainer?.children[0];
+    if(chartNode) {
+      this._chartAdapter.update(chartNode);
+    }
   }
 
   public getSelectedItemByText(itemText: string) {
@@ -695,3 +723,9 @@ export class SelectBase
     this.setSelection(selectedItem ?? undefined);
   }
 }
+
+VisualizationManager.registerVisualizer("checkbox", SelectBase);
+VisualizationManager.registerVisualizer("radiogroup", SelectBase);
+VisualizationManager.registerVisualizer("dropdown", SelectBase);
+VisualizationManager.registerVisualizer("imagepicker", SelectBase);
+VisualizationManager.registerVisualizer("tagbox", SelectBase);

@@ -12,8 +12,6 @@ import { PivotModel } from "../src/pivot";
 
 VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
-VisualizationManager.registerVisualizer("checkbox", SelectBase);
-VisualizationManager.registerVisualizer("radiogroup", SelectBase);
 VisualizationManager.registerAltVisualizerSelector(AlternativeVisualizersWrapper);
 VisualizationManager.registerPivotVisualizer(PivotModel);
 

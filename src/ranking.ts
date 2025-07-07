@@ -1,7 +1,7 @@
-import { VisualizationManager } from "../visualizationManager";
-import { SelectBasePlotly } from "./selectBase";
+import { VisualizationManager } from "./visualizationManager";
+import { SelectBase } from "./selectBase";
 
-export class RankingPlotly extends SelectBasePlotly {
+export class RankingModel extends SelectBase {
   getQuestionResults() {
     const name = this.question.name;
     return this.data.map((dataItem) => dataItem[name]);
@@ -41,4 +41,4 @@ export class RankingPlotly extends SelectBasePlotly {
   }
 }
 
-VisualizationManager.registerVisualizer("ranking", RankingPlotly);
+VisualizationManager.registerVisualizer("ranking", RankingModel);
