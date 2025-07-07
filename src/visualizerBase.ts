@@ -7,6 +7,13 @@ import { Event } from "survey-core";
 
 import "./visualizerBase.scss";
 
+export interface IChartAdapter {
+  getChartTypes(): string[];
+  create(chartNode: HTMLElement): Promise<any>;
+  update(chartNode: HTMLElement): Promise<any> ;
+  destroy(node: HTMLElement): void;
+}
+
 export interface IDataInfo {
   name: string; // TODO - remove from this interface
   dataNames: Array<string>;
@@ -55,6 +62,7 @@ export class PostponeHelper {
  */
 export class VisualizerBase implements IDataInfo {
   public static suppressVisualizerStubRendering: boolean = false;
+  public static chartAdapterType: any = undefined;
 
   private _showToolbar = true;
   private _footerVisualizer: VisualizerBase = undefined;
@@ -67,6 +75,7 @@ export class VisualizerBase implements IDataInfo {
   protected contentContainer: HTMLElement = undefined;
   protected footerContainer: HTMLElement = undefined;
   protected _supportSelection: boolean = false;
+  protected _chartAdapter: IChartAdapter = undefined;
   // public static otherCommentQuestionType = "comment"; // TODO: make it configureable - allow choose what kind of question/visualizer will be used for comments/others
   public static otherCommentCollapsed = true;
 
@@ -459,9 +468,10 @@ export class VisualizerBase implements IDataInfo {
   protected destroyContent(container: HTMLElement) {
     if (!!this.options && typeof this.options.destroyContent === "function") {
       this.options.destroyContent(container, this);
-    } else {
-      container.innerHTML = "";
+    } else if (this._chartAdapter) {
+      this._chartAdapter.destroy(<HTMLElement>container.children[0]);
     }
+    container.innerHTML = "";
   }
 
   protected renderHeader(container: HTMLElement) {
@@ -478,10 +488,15 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected async renderContentAsync(container: HTMLElement): Promise<HTMLElement> {
-    return new Promise<HTMLElement>((resolve, reject) => {
+    if(this._chartAdapter) {
+      const chartNode: HTMLElement = DocumentHelper.createElement("div");
+      container.innerHTML = "";
+      container.appendChild(chartNode);
+      await this._chartAdapter.create(chartNode);
+    } else {
       container.innerText = localization.getString("noVisualizerForQuestion");
-      resolve(container);
-    });
+    }
+    return container;
   }
 
   protected ensureQuestionIsReady(): Promise<void> {
@@ -598,9 +613,24 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
-  public updateContent(): void {
+  protected isSupportSoftUpdateContent(): boolean {
+    return false;
+  }
+
+  protected softUpdateContent(): void {
+  }
+
+  protected hardUpdateContent(): void {
     this.destroyContent(this.contentContainer);
     this.renderContent(this.contentContainer);
+  }
+
+  public updateContent(): void {
+    if(!this.isSupportSoftUpdateContent()) {
+      this.hardUpdateContent();
+    } else {
+      this.softUpdateContent();
+    }
   }
 
   /**

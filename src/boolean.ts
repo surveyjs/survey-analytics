@@ -1,11 +1,10 @@
 import { Question, QuestionBooleanModel } from "survey-core";
 import { ItemValue } from "survey-core";
 import { SelectBase } from "./selectBase";
-import { DataProvider } from "./dataProvider";
 import { localization } from "./localizationManager";
+import { VisualizationManager } from "./visualizationManager";
 
 export class BooleanModel extends SelectBase {
-  protected chartTypes: string[];
 
   constructor(
     question: Question,
@@ -69,3 +68,5 @@ export class BooleanModel extends SelectBase {
     return labels;
   }
 }
+
+VisualizationManager.registerVisualizer("boolean", BooleanModel);

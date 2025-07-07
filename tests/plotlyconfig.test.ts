@@ -2,15 +2,17 @@ jest.mock("plotly.js", () => { }, { virtual: true });
 (<any>global).URL.createObjectURL = jest.fn();
 
 import { PlotlySetup } from "../src/plotly/setup";
-import { SelectBasePlotly } from "../src/plotly/selectBase";
-import { MatrixPlotly } from "../src/plotly/matrix";
-import { QuestionDropdownModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
+import { SelectBasePlotly, MatrixPlotly } from "../src/plotly/legacy";
+import { QuestionDropdownModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase, SurveyModel } from "survey-core";
 import { Matrix } from "../src/matrix";
 import { localization } from "../src/localizationManager";
 import { VisualizationMatrixDropdown } from "../src/visualizationMatrixDropdown";
 import { VisualizationPanel } from "../src/visualizationPanel";
 import { SelectBase } from "../src/selectBase";
+import { PlotlyChartAdapter } from "../src/plotly/chart-adapter";
 import { VisualizerBase } from "../src/visualizerBase";
+
+VisualizerBase.chartAdapterType = PlotlyChartAdapter;
 
 let choices = [
   { value: "father", text: "father_text" },
@@ -477,4 +479,71 @@ test("VisualizationMatrixDropdown stackedbar chart height", async () => {
   selectBase.chartType = "stackedbar";
   const config = PlotlySetup.setupBar(selectBase, await selectBase.getAnswersData());
   expect(config.layout.height).toEqual(780);
+});
+
+test("SelectBase null ref #394", async () => {
+  var survey = new SurveyModel({
+    "pages": [
+      {
+        "name": "page1",
+        "elements": [
+          {
+            "type": "matrixdropdown",
+            "name": "q1",
+            "columns": [
+              {
+                "name": "Colonne 1",
+                "title": "Nombre de fois",
+                "choices": [
+                  {
+                    "value": "0",
+                    "text": "Jamais ou moins d'une fois par mois",
+                  },
+                  {
+                    "value": "1",
+                    "text": "1 fois"
+                  },
+                  {
+                    "value": "2",
+                    "text": "2 fois"
+                  },
+                ],
+              },
+              {
+                "name": "Colonne 2",
+                "title": "Par jour, semaine ou mois",
+                "choices": [
+                  {
+                    "value": "Z",
+                    "text": "Jamais ou moins d'une fois par mois",
+                  },
+                  {
+                    "value": "J",
+                    "text": "Par jour",
+                  },
+                ],
+              }
+            ],
+            "rows": [
+              {
+                "value": "Row1",
+                "text": "Row 1:"
+              }
+            ]
+          }
+        ],
+      }
+    ]
+  });
+  const matrixDropdown: QuestionMatrixDropdownModel = survey.getQuestionByName("q1") as any;
+  const sbp = new SelectBasePlotly(matrixDropdown.columns[0].templateQuestion, []); // keep it to register visualizer
+  const matrixVisualizer = new VisualizationMatrixDropdown(matrixDropdown, []);
+  const innerVisPanel = matrixVisualizer["_matrixDropdownVisualizer"] as VisualizationPanel;
+  const selectBase = innerVisPanel.getVisualizer("Colonne 1") as SelectBasePlotly;
+  try {
+    var plotlyOptions = PlotlySetup.setup("bar", selectBase, await selectBase.getAnswersData());
+    expect(plotlyOptions).toBeDefined();
+  } catch (e) {
+    expect(e).toBeUndefined();
+  }
 });

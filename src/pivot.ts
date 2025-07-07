@@ -1,10 +1,9 @@
 import { ItemValue, Question } from "survey-core";
-import { DataProvider } from "./dataProvider";
 import { SelectBase } from "./selectBase";
 import { DocumentHelper } from "./utils";
 import { VisualizerBase } from "./visualizerBase";
-import { reverse } from "dns";
 import { localization } from "./localizationManager";
+import { VisualizationManager } from "./visualizationManager";
 
 export class PivotModel extends SelectBase {
   protected valueType: "enum" | "date" | "number" = "enum";
@@ -223,7 +222,7 @@ export class PivotModel extends SelectBase {
   }
 
   public getSeriesValues(): Array<string> {
-    if(this.questionsY.length === 0) {
+    if(!this.questionsY || this.questionsY.length === 0) {
       return this.options.seriesValues || [];
     }
     const seriesValues = [];
@@ -404,4 +403,14 @@ export class PivotModel extends SelectBase {
     }
     return statistics;
   }
+
+  public getValueType(): "enum" | "date" | "number" {
+    return this.valueType;
+  }
+
+  protected isSupportSoftUpdateContent(): boolean {
+    return false;
+  }
 }
+
+VisualizationManager.registerPivotVisualizer(PivotModel);
