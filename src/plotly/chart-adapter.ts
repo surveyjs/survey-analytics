@@ -61,7 +61,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
       return HistogramPlotly.types;
     } else if(visualizerType === "matrix") {
       return MatrixPlotly.types;
-    } else if(visualizerType === "matrixdropdown-grouped") {
+    } else if(visualizerType === "matrixDropdownGrouped") {
       return MatrixDropdownGroupedPlotly.types;
     } else if(visualizerType === "pivot") {
       return PivotPlotly.types;
