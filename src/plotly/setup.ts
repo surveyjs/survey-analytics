@@ -101,6 +101,15 @@ export class PlotlySetup {
     griddash: "dot",
   };
 
+  static defaultGaugeConfig = {
+    bgcolor: "#F5F5F5", // background: var(--dsb-guage-linear-color-inactive, #F5F5F5);
+    bordercolor: "#F5F5F5", // var(--dsb-guage-linear-color-inactive, #F5F5F5);",
+    bar: {
+      color: ["#19B394"], // background: var(--dsb-guage-linear-color, #19B394);
+      thickness: 0.5,
+    },
+  }
+
   static defaultValueGaugeFont = {
     color: "rgba(0, 0, 0, 0.90)", // var(--dsb-guage-title-color, rgba(0, 0, 0, 0.90));
     family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
@@ -438,12 +447,12 @@ export class PlotlySetup {
       showlegend: hasSeries,
       bargap: 0.01,
       yaxis: {
-        ...PlotlySetup.defaultAxisXConfig,
+        ...PlotlySetup.defaultAxisYWithGridLineConfig,
         rangemode: "nonnegative",
         automargin: true,
       },
       xaxis: {
-        ...PlotlySetup.defaultAxisYWithGridLineConfig,
+        ...PlotlySetup.defaultAxisXConfig,
         automargin: true,
         type: "category",
         tickmode: "array",
@@ -460,7 +469,7 @@ export class PlotlySetup {
 
     if (model.showPercentages && model.showOnlyPercentages) {
       layout.yaxis = {
-        ...PlotlySetup.defaultAxisYConfig,
+        ...PlotlySetup.defaultAxisYWithGridLineConfig,
         tickformat: ".0%",
         range: [0, 1],
         ticklen: model.showOnlyPercentages ? 25 : 5,
@@ -588,16 +597,12 @@ export class PlotlySetup {
         type: "indicator",
         mode: "gauge+number",
         gauge: {
+          ...PlotlySetup.defaultGaugeConfig,
           axis: {
             range: [minValue, maxValue],
             tickfont: { ...PlotlySetup.defaultGaugeTickFont }
           },
           shape: model.chartType,
-          bgcolor: "#F5F5F5", // background: var(--dsb-guage-linear-color-inactive, #F5F5F5);
-          bar: {
-            color: ["#19B394"], // background: var(--dsb-guage-linear-color, #19B394);
-            thickness: 0.5,
-          },
         },
         value: level,
         text: model.name,
