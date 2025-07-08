@@ -47,9 +47,8 @@ export class VisualizerNew extends VisualizerBase {
         return result;
       case "dropdown": return SurveyResultDataTypes.Enum;
       case "rating": return SurveyResultDataTypes.Number;
+      default: return SurveyResultDataTypes.Unknown;
     }
-
-    return SurveyResultDataTypes.Number;
   }
 
   public get aggregators(): any {
