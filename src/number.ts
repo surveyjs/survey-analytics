@@ -49,7 +49,7 @@ export class NumberModel extends VisualizerBase {
           }),
           (option: any) => this.chartType === option.value,
           (e: any) => {
-            this.setChartType(e.target.value);
+            this.setChartType(e);
           }
         );
       }

@@ -37,13 +37,13 @@ test("data aggregation types", () => {
   expect(visualizer.aggregators[2]).toBe(AggregatorFunctions.Math);
 });
 
-test("chart types", () => {
+test("viewer types", () => {
   const q1 = new QuestionTextModel("q1");
   q1.inputType = "number";
   const visualizer = new VisualizerNew(q1, []);
-  const _diagramTypes = visualizer.chartData.map(dt => {
+  const _viewerTypes = visualizer.viewerList.map(dt => {
     const prefix = dt.aggregator === AggregatorFunctions.Categorial ? "cat_" : (dt.aggregator === AggregatorFunctions.Continious ? "cont_" : "math_");
-    return prefix + dt.chartType;
+    return prefix + dt.viewerType;
   });
-  expect(_diagramTypes).toStrictEqual(["cat_bar", "cat_vbar", "cat_stackedbar", "cat_pie", "cat_doughnut", "cont_bar", "cont_vbar", "math_gauge", "math_bullet"]);
+  expect(_viewerTypes).toStrictEqual(["cat_bar", "cat_vbar", "cat_stackedbar", "cat_pie", "cat_doughnut", "cont_bar", "cont_vbar", "math_gauge", "math_bullet"]);
 });

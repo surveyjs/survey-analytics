@@ -364,7 +364,7 @@ export class VisualizationPanel extends VisualizerBase {
                 }),
               (option: any) => false,
               (e: any) => {
-                this.showElement(e.target.value);
+                this.showElement(e);
               }
             );
             (addElementSelector &&
@@ -396,7 +396,7 @@ export class VisualizationPanel extends VisualizerBase {
         return DocumentHelper.createSelector(localeChoices,
           (option: any) => !!option.value && (this.locale || surveyLocalization.defaultLocale) === option.value,
           (e: any) => {
-            var newLocale = e.target.value;
+            var newLocale = e;
             this.locale = newLocale;
           }
         );

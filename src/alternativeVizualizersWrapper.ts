@@ -52,7 +52,7 @@ export class AlternativeVisualizersWrapper
           };
         }),
         (option: any) => this.visualizer.type === option.value,
-        (e: any) => this.setVisualizer(e.target.value)
+        (e: any) => this.setVisualizer(e)
       )
     );
 

@@ -1,6 +1,6 @@
 export class DocumentHelper {
   public static createSelector(
-    options: Array<{ value: string, text: string }>,
+    options: Array<{ value: string, text: string, obj?: any }>,
     isSelected: (option: { value: string, text: string }) => boolean,
     handler: (e: any) => void,
     title?: string
@@ -19,11 +19,12 @@ export class DocumentHelper {
       let optionElement = DocumentHelper.createElement("option", "", {
         value: option.value,
         text: option.text,
-        selected: isSelected(option),
+        selected: isSelected(option.obj || option),
       });
+      optionElement["__obj"] = option.obj;
       select.appendChild(optionElement);
     });
-    select.onchange = handler;
+    select.onchange = (e: any) => { handler(e.target.selectedOptions[0].__obj || e.target.value); };
     selectWrapper.appendChild(select);
     return selectWrapper;
   }

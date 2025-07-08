@@ -1,5 +1,9 @@
+import { Question } from "survey-core";
 import { defaultStatisticsCalculator, histogramStatisticsCalculator, mathStatisticsCalculator } from "./statisticCalculators";
+import { VisualizationManager } from "./visualizationManager";
 import { VisualizerBase } from "./visualizerBase";
+import { DocumentHelper } from "./utils";
+import { localization } from "./localizationManager";
 
 export enum SurveyResultDataTypes { Number, Enum, Date, Text, Unknown }
 
@@ -9,8 +13,8 @@ export const AggregatorFunctions = {
   Math: mathStatisticsCalculator,
 };
 
-export interface IChartData {
-  chartType: string;
+export interface IVisualizationInfo {
+  viewerType: string;
   aggregator: any;
 }
 
@@ -21,6 +25,43 @@ const diagramTypes: { [key: string]: any } = {
 };
 
 export class VisualizerNew extends VisualizerBase {
+
+  constructor(
+    question: Question,
+    data: Array<{ [index: string]: any }>,
+    options?: any,
+    name?: string
+  ) {
+    super(question, data, options, name || "simple");
+    this.registerToolbarItem("changeViewerType", () => {
+      if (this.viewerList.length > 1) {
+        return DocumentHelper.createSelector(
+          this.viewerList.map((viewer) => {
+            return {
+              value: viewer.viewerType,
+              obj: viewer,
+              text: localization.getString("viewerType_" + viewer.viewerType),
+            };
+          }),
+          (option: any) => this.viewerType === option.value,
+          (value: any) => {
+            this.viewerType = value;
+          }
+        );
+      }
+      return null;
+    });
+  }
+
+  private _viewerType: IVisualizationInfo;
+  public get viewerType(): IVisualizationInfo {
+    return this._viewerType;
+  }
+  public set viewerType(value: IVisualizationInfo) {
+    this._viewerType = value;
+    this._chartAdapter = new VisualizerBase.chartAdapterType(this);
+    this.onDataChanged();
+  }
 
   public get dataType(): SurveyResultDataTypes {
     const questionType = this.question.getType();
@@ -45,7 +86,13 @@ export class VisualizerNew extends VisualizerBase {
             break;
         }
         return result;
-      case "dropdown": return SurveyResultDataTypes.Enum;
+      case "dropdown":
+      case "radiogroup":
+      case "boolean":
+      case "imagepicker":
+      case "tagbox":
+      case "checkbox":
+        return SurveyResultDataTypes.Enum;
       case "rating": return SurveyResultDataTypes.Number;
       default: return SurveyResultDataTypes.Unknown;
     }
@@ -60,12 +107,31 @@ export class VisualizerNew extends VisualizerBase {
     return [];
   }
 
-  public get chartData(): IChartData[] {
-    const result: IChartData[] = [];
+  public get viewerList(): IVisualizationInfo[] {
+    const result: IVisualizationInfo[] = [];
     this.aggregators.forEach(aggregator => {
       const aggregatorName = aggregator.name;
-      result.push(...diagramTypes[aggregatorName].map(chartType => <IChartData>{ chartType, aggregator }));
+      result.push(...diagramTypes[aggregatorName].map(chartType => <IVisualizationInfo>{ viewerType: chartType, aggregator }));
     });
     return result;
   }
+
+  protected getCalculatedValuesCore(): Array<any> {
+    if (!this.viewerType) {
+      return super.getCalculatedValuesCore();
+    }
+
+    return this.viewerType.aggregator(this.surveyData, this);
+  }
+
+  public get chartType(): string {
+    return this._viewerType?.viewerType;
+  }
+
+  public getValues(): Array<any> {
+    const qu = this.question as any;
+    return (qu.activeChoices || qu.choices || (qu.valueFalse !== undefined && qu.valueTrue !== undefined && qu.valueTrue[qu.valueFalse, qu.valueTrue])).map(c => c.value);
+  }
 }
+
+VisualizationManager.defaultVisualizer = VisualizerNew;

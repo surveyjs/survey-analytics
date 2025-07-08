@@ -153,7 +153,7 @@ export class SelectBase
           }),
           (option: any) => this.chartType === option.value,
           (e: any) => {
-            this.setChartType(e.target.value);
+            this.setChartType(e);
           }
         );
       }
@@ -169,7 +169,7 @@ export class SelectBase
           ],
           (option) => false,
           (e) => {
-            this.answersOrder = e.target.value;
+            this.answersOrder = e;
           }
         );
         this.updateOrderSelector();
@@ -212,7 +212,7 @@ export class SelectBase
           }),
           (option) => false,
           (e) => {
-            this.topN = parseInt(e.target.value);
+            this.topN = parseInt(e);
           }
         );
         this.updateTopNSelector();

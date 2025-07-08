@@ -1,6 +1,7 @@
 import { Question, QuestionCommentModel, Event, settings } from "survey-core";
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
+import { VisualizationManager } from "./visualizationManager";
 import { DocumentHelper, createLoadingIndicator } from "./utils";
 import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
@@ -15,7 +16,6 @@ export interface IChartAdapter {
 }
 
 export interface IDataInfo {
-  name: string; // TODO - remove from this interface
   dataNames: Array<string>;
   getValues(): Array<any>;
   getLabels(): Array<string>;
@@ -308,8 +308,8 @@ export class VisualizerBase implements IDataInfo {
    *     // A function that specifies initial selection
    *     (option) => false,
    *     // An event handler that is executed when selection is changed
-   *     (e) => {
-   *       alert(e.target.value);
+   *     (value) => {
+   *       alert(value);
    *     }
    *   );
    * });
@@ -864,3 +864,5 @@ export class VisualizerBase implements IDataInfo {
   }
 
 }
+
+// VisualizationManager.defaultVisualizer = VisualizerBase;
