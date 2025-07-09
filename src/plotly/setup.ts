@@ -16,6 +16,8 @@ export class PlotlySetup {
 
   static defaultFontFamily = "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif";
 
+  static defaultBarGap = 0.05; // var(--dsb-bar-chart-gap, 2px);
+
   static defaultModebarConfig = {
     bgcolor: "#FFF",
     activecolor: "rgba(25, 179, 148, 1)",
@@ -105,7 +107,7 @@ export class PlotlySetup {
     bgcolor: "#F5F5F5", // background: var(--dsb-guage-linear-color-inactive, #F5F5F5);
     bordercolor: "#F5F5F5", // var(--dsb-guage-linear-color-inactive, #F5F5F5);",
     bar: {
-      color: ["#19B394"], // background: var(--dsb-guage-linear-color, #19B394);
+      color: "#19B394", // background: var(--dsb-guage-linear-color, #19B394);
       thickness: 0.5,
     },
   }
@@ -210,7 +212,7 @@ export class PlotlySetup {
     }
 
     if (!hasSeries) {
-      traceConfig.mode = "markers",
+      traceConfig.mode = "markers";
       traceConfig.marker = { color: colors };
       traceConfig.marker.symbol = "circle";
       traceConfig.marker.size = 16;
@@ -271,6 +273,7 @@ export class PlotlySetup {
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const isHistogram = model.type === "histogram";
 
     const traces: any = [];
     const traceConfig: any = {
@@ -288,7 +291,7 @@ export class PlotlySetup {
       },
     };
     if (!hasSeries) {
-      traceConfig.mode = "markers",
+      traceConfig.mode = "markers";
       traceConfig.marker = { color: colors };
     }
 
@@ -317,7 +320,7 @@ export class PlotlySetup {
     const height = (labels.length + 1) * lineHeight + topMargin + bottomMargin;
 
     const layout: any = {
-      bargap: 0.05,
+      bargap: isHistogram ? 0 : PlotlySetup.defaultBarGap,
       height: height,
       margin: {
         t: topMargin,
@@ -385,8 +388,9 @@ export class PlotlySetup {
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const isHistogram = model.type === "histogram";
 
-    if (model.type !== "histogram" && model.type !== "pivot") {
+    if (!isHistogram && model.type !== "pivot") {
       labels = [].concat(labels).reverse();
       seriesLabels = [].concat(seriesLabels).reverse();
       colors = [].concat(colors.slice(0, hasSeries ? seriesLabels.length : labels.length)).reverse();
@@ -417,7 +421,7 @@ export class PlotlySetup {
     };
 
     if (!hasSeries) {
-      traceConfig.mode = "markers",
+      traceConfig.mode = "markers";
       traceConfig.marker = { color: colors };
     }
 
@@ -445,7 +449,7 @@ export class PlotlySetup {
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
       showlegend: hasSeries,
-      bargap: 0.01,
+      bargap: isHistogram ? 0 : PlotlySetup.defaultBarGap,
       yaxis: {
         ...PlotlySetup.defaultAxisYWithGridLineConfig,
         rangemode: "nonnegative",
