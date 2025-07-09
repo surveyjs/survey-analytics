@@ -44,6 +44,7 @@ export var englishStrings = {
   ascOrder: "Ascending",
   descOrder: "Descending",
   showMinorColumns: "Show minor columns",
+  actionsColumn: "Actions",
   otherCommentTitle: "Other items and comments",
   showPercentages: "Show percentages",
   hidePercentages: "Hide percentages",

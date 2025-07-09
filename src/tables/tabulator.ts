@@ -6,6 +6,7 @@ import { localization } from "../localizationManager";
 import { ARIAL_FONT } from "./custom_jspdf_font";
 import { svgTemplate } from "../svgbundle";
 import type { DownloadType, SortDirection, TabulatorFull, RowComponent } from "tabulator-tables";
+import { TableExtensions } from "./extensions/tableextensions";
 import "./tabulator.scss";
 
 if (!!document) {
@@ -365,15 +366,22 @@ export class Tabulator extends Table {
         },
       };
     });
-    // add special column (collapse/expand)
+    // const rowExtensions = TableExtensions.getExtensions("row").filter(e => e.visibleIndex >= 0);
+    // const detailsExtension = TableExtensions.getExtensions("details").filter(e => e.visibleIndex >= 0);
+    // const hasRowColumns = this.columns.some(c => c.location === QuestionLocation.Row);
+    // if(rowExtensions.length > 1 || detailsExtension.length > 0
+    //       || rowExtensions.length == 1 && (rowExtensions[0].name == "details" && hasRowColumns || rowExtensions[0].name != "details")) {
     columns.unshift({
-      field: "",
-      title: "",
       download: false,
       resizable: false,
+      headerSort: false,
       minWidth: this._options.actionsColumnWidth,
       width: this._options.actionsColumnWidth,
+      tooltip: (_: MouseEvent, cell: any) => {
+        return localization.getString("actionsColumn");
+      }
     });
+    // }
 
     return columns;
   }

@@ -81,6 +81,11 @@ export class TableExtensions {
     return extension || null;
   }
 
+  public static getExtensions(location: string): Array<ITableExtension> {
+    if (!this.extensions[location]) return [];
+    return this.extensions[location].slice(0);
+  }
+
   private sortExtensions(extensions: Array<ITableExtension>) {
     if (!Array.isArray(extensions)) return;
     return []
