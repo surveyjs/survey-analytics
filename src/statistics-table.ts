@@ -38,29 +38,40 @@ export class StatisticsTableAdapter {
       container.appendChild(tableNode);
 
       var headerRow = DocumentHelper.createElement("tr");
-      var labelCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header", {
+      var labelCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header");
+      var cellHeaderContent = DocumentHelper.createElement("div", "sa-statistics-table__cell-header-text", {
         textContent: localization.getString("answer"),
       });
+      labelCell.appendChild(cellHeaderContent);
       headerRow.appendChild(labelCell);
-      var sparklineCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header", {
+      var sparklineCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header");
+      cellHeaderContent = DocumentHelper.createElement("div", "sa-statistics-table__cell-header-text", {
         textContent: localization.getString("statistics_chart"),
       });
+      sparklineCell.appendChild(cellHeaderContent);
       headerRow.appendChild(sparklineCell);
-      var percentCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header", {
+      var percentCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header sa-statistics-table__cell-value");
+      cellHeaderContent = DocumentHelper.createElement("div", "sa-statistics-table__cell-header-text", {
         textContent: localization.getString("percentage"),
       });
+      percentCell.appendChild(cellHeaderContent);
       headerRow.appendChild(percentCell);
-      var valueCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header", {
+      var valueCell = DocumentHelper.createElement("th", "sa-statistics-table__cell-header sa-statistics-table__cell-value");
+      cellHeaderContent = DocumentHelper.createElement("div", "sa-statistics-table__cell-header-text", {
         textContent: localization.getString("responses"),
       });
+      valueCell.appendChild(cellHeaderContent);
       headerRow.appendChild(valueCell);
       tableNode.appendChild(headerRow);
 
       for(let index = data.length - 1; index >= 0; index--) {
         var row = DocumentHelper.createElement("tr");
-        var labelCell = DocumentHelper.createElement("td", "sa-statistics-table__cell", {
+        var labelCell = DocumentHelper.createElement("td", "sa-statistics-table__cell");
+        var labelCellContent = DocumentHelper.createElement("div", "sa-statistics-table__cell-text", {
           textContent: labels[index],
         });
+        labelCell.appendChild(labelCellContent);
+
         row.appendChild(labelCell);
         var sparklineCell = DocumentHelper.createElement("td", "sa-statistics-table__cell");
         var outerBar = DocumentHelper.createElement("div", "sa-choices-sparkline");
@@ -69,13 +80,19 @@ export class StatisticsTableAdapter {
         outerBar.appendChild(innerBar);
         sparklineCell.appendChild(outerBar);
         row.appendChild(sparklineCell);
-        var percentCell = DocumentHelper.createElement("td", "sa-statistics-table__cell sa-statistics-table__cell-value", {
+        var percentCell = DocumentHelper.createElement("td", "sa-statistics-table__cell sa-statistics-table__cell-value");
+        labelCellContent = DocumentHelper.createElement("div", "sa-statistics-table__cell-text", {
           textContent: "" + texts[idx][index] + "%",
         });
+        percentCell.appendChild(labelCellContent);
+
         row.appendChild(percentCell);
-        var valueCell = DocumentHelper.createElement("td", "sa-statistics-table__cell sa-statistics-table__cell-value", {
+        var valueCell = DocumentHelper.createElement("td", "sa-statistics-table__cell sa-statistics-table__cell-value");
+        labelCellContent = DocumentHelper.createElement("div", "sa-statistics-table__cell-text", {
           textContent: data[index],
         });
+        valueCell.appendChild(labelCellContent);
+
         row.appendChild(valueCell);
         tableNode.appendChild(row);
       }
