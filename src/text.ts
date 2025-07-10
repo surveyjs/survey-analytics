@@ -27,7 +27,7 @@ export class TextTableAdapter {
     tableNode.style.backgroundColor = this.model.backgroundColor;
     container.appendChild(tableNode);
 
-    if(this.model.columns) {
+    if(this.model.columns && this.model.columns.length > 0) {
       var row = DocumentHelper.createElement("tr");
       this.model.columns.forEach(column => {
         var td = DocumentHelper.createElement("th", "sa-text-table__cell", {
