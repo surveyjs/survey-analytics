@@ -1,5 +1,4 @@
 import { Question } from "survey-core";
-import { VisualizerBase } from "./visualizerBase";
 
 declare type VisualizerConstructor = new (
   question: Question,
@@ -13,6 +12,7 @@ declare type VisualizerConstructor = new (
  * [View Demo](https://surveyjs.io/dashboard/examples/custom-survey-data-visualizer/ (linkStyle))
  */
 export class VisualizationManager {
+  static defaultVisualizer: any = undefined;
   static alternativesVisualizer: any = undefined;
   static pivotVisualizer: any = undefined;
   static vizualizers: { [index: string]: Array<{ ctor: VisualizerConstructor, index: number }> } = {};
@@ -81,10 +81,10 @@ export class VisualizationManager {
   ): VisualizerConstructor[] {
     let vDescrs = VisualizationManager.vizualizers[questionType];
     if (!vDescrs) {
-      if(VisualizerBase.suppressVisualizerStubRendering) {
+      if(VisualizationManager.defaultVisualizer.suppressVisualizerStubRendering) {
         return [];
       }
-      return [VisualizerBase];
+      return [VisualizationManager.defaultVisualizer];
     }
     vDescrs = [].concat(vDescrs);
     vDescrs.sort((v1, v2) => v1.index - v2.index);
@@ -95,7 +95,7 @@ export class VisualizationManager {
    * @see registerAltVisualizerSelector
    */
   public static getAltVisualizerSelector() {
-    return VisualizationManager.alternativesVisualizer || VisualizerBase;
+    return VisualizationManager.alternativesVisualizer || VisualizationManager.defaultVisualizer;
   }
   /**
    * Registers an alternative visualizer selector.
@@ -105,7 +105,7 @@ export class VisualizationManager {
     VisualizationManager.alternativesVisualizer = constructor;
   }
   public static getPivotVisualizerConstructor() {
-    return VisualizationManager.pivotVisualizer || VisualizerBase;
+    return VisualizationManager.pivotVisualizer || VisualizationManager.defaultVisualizer;
   }
   public static registerPivotVisualizer(constructor: any) {
     VisualizationManager.pivotVisualizer = constructor;

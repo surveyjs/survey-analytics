@@ -2,6 +2,7 @@ import { ItemValue, Question } from "survey-core";
 import { DataProvider } from "./dataProvider";
 import { SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
+import { histogramStatisticsCalculator } from "./statisticCalculators";
 
 export class HistogramModel extends SelectBase {
   protected valueType: "date" | "number" = "number";
@@ -181,24 +182,7 @@ export class HistogramModel extends SelectBase {
 
   protected getCalculatedValuesCore(): Array<any> {
     const continiousValues = this.getContiniousValues();
-    const intervals = this.intervals;
-    const statistics: Array<Array<number>> = [];
-    const series = this.getSeriesValues();
-    if (series.length === 0) {
-      series.push("");
-    }
-    for (var i = 0; i < series.length; ++i) {
-      statistics.push(intervals.map(i => 0));
-      this._continiousData[series[i]].forEach(dataValue => {
-        for (let j = 0; j < intervals.length; ++j) {
-          if (intervals[j].start <= dataValue && (dataValue < intervals[j].end || j == intervals.length - 1)) {
-            statistics[i][j]++;
-            break;
-          }
-        }
-      });
-    }
-    return statistics;
+    return histogramStatisticsCalculator(this._continiousData, this.intervals, this.getSeriesValues());
   }
 
   public getValueType(): "date" | "number" {
