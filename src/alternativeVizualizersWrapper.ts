@@ -14,9 +14,7 @@ export class AlternativeVisualizersWrapper
 
   private updateVisualizerSelector() {
     if (!!this.visualizerSelector) {
-      this.visualizerSelector.getElementsByTagName(
-        "select"
-      )[0].value = this.visualizer.type;
+      (this.visualizerSelector as any).setValue(this.visualizer.type);
     }
   }
 
@@ -44,7 +42,7 @@ export class AlternativeVisualizersWrapper
     });
 
     this.registerToolbarItem("changeVisualizer", () =>
-      this.visualizerSelector = DocumentHelper.createSelector(
+      this.visualizerSelector = DocumentHelper.createDropdown(
         this.visualizers.map((visualizer) => {
           return {
             value: visualizer.type,
@@ -52,7 +50,7 @@ export class AlternativeVisualizersWrapper
           };
         }),
         (option: any) => this.visualizer.type === option.value,
-        (e: any) => this.setVisualizer(e.target.value)
+        (e: any) => this.setVisualizer(e)
       )
     );
 

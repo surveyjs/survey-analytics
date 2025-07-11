@@ -57,10 +57,9 @@ test.describe("localization", () => {
     expect(title).toBe(json.questions[0].title.ru);
 
     // Change locale to English
-    const changeLocaleDropdown = page.locator(".sa-question__select", { hasText: "Русский" });
-    await changeLocaleDropdown.selectOption("en");
-    // await changeLocaleDropdown.click();
-    // await page.locator(".sa-question__select option", { hasText: "English" }).click();
+    const changeLocaleDropdown = page.locator(".sa-dropdown", { hasText: "Русский" });
+    await changeLocaleDropdown.click();
+    await page.getByRole("list").getByText("English").click();
 
     // Check Y axis values in English
     const yAxisValuesEn = await getYAxisValues(page);
@@ -71,7 +70,7 @@ test.describe("localization", () => {
     expect(titleEn).toBe(json.questions[0].title.default);
 
     // Check dropdown shows English
-    await expect(page.locator(".sa-question__select", { hasText: "English" })).toHaveCount(1);
+    await expect(page.locator(".sa-dropdown", { hasText: "English" })).toHaveCount(1);
 
     // Check locale in state
     const localeInState = await page.evaluate(() => (window as any).visPanel.state.locale);
@@ -84,6 +83,6 @@ test.describe("localization", () => {
     const yAxisValues = await getYAxisValues(page);
     expect(yAxisValues).toEqual(json.questions[0].choices.map((choice) => choice.text.default + "  ").reverse());
 
-    await expect(page.locator(".sa-question__select", { hasText: "English" })).toHaveCount(1);
+    await expect(page.locator(".sa-dropdown", { hasText: "English" })).toHaveCount(1);
   });
 });

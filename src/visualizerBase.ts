@@ -549,12 +549,10 @@ export class VisualizerBase implements IDataInfo {
       const visibilityButton = DocumentHelper.createButton(() => {
         if (footerContentElement.style.display === "none") {
           footerContentElement.style.display = "block";
-          visibilityButton.innerText = localization.getString("hideButton");
+          (visibilityButton as any).setText(localization.getString("hideButton"));
         } else {
           footerContentElement.style.display = "none";
-          visibilityButton.innerText = localization.getString(
-            VisualizerBase.otherCommentCollapsed ? "showButton" : "hideButton"
-          );
+          (visibilityButton as any).setText(localization.getString(VisualizerBase.otherCommentCollapsed ? "showButton" : "hideButton"));
         }
         this.footerVisualizer.invokeOnUpdate();
       }, localization.getString("showButton") /*, "sa-toolbar__button--right"*/);
@@ -672,11 +670,11 @@ export class VisualizerBase implements IDataInfo {
   }
 
   getRandomColor() {
-    const colors = this.getColors();
+    const colors = VisualizerBase.getColors();
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
-  private _backgroundColor = "#f7f7f7";
+  private _backgroundColor = "transparent";
 
   get backgroundColor() { return this.getBackgroundColorCore(); }
   set backgroundColor(value) { this.setBackgroundColorCore(value); }
@@ -691,19 +689,27 @@ export class VisualizerBase implements IDataInfo {
 
   static customColors: string[] = [];
   private static colors = [
-    "#86e1fb",
-    "#3999fb",
-    "#ff6771",
-    "#1eb496",
-    "#ffc152",
-    "#aba1ff",
-    "#7d8da5",
-    "#4ec46c",
-    "#cf37a6",
-    "#4e6198",
+    "#e50a3e",
+    "#19b394",
+    "#437fd9",
+    "#ff9814",
+    "#4faf24",
+    "#a62cec",
+    "#6e5bd1",
+    "#af496b"
+    // "#86e1fb",
+    // "#3999fb",
+    // "#ff6771",
+    // "#1eb496",
+    // "#ffc152",
+    // "#aba1ff",
+    // "#7d8da5",
+    // "#4ec46c",
+    // "#cf37a6",
+    // "#4e6198",
   ];
 
-  getColors(count = 10) {
+  static getColors(count = 10) {
     const colors =
       Array.isArray(VisualizerBase.customColors) &&
         VisualizerBase.customColors.length > 0
