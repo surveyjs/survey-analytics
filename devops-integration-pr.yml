@@ -65,6 +65,7 @@ steps:
     condition: ne(variables.NPM_CACHE_RESTORED, 'true')
 
   - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
       npm run postinstall
     displayName: "Install chrome playwright"
 
