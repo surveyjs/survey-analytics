@@ -243,7 +243,7 @@ export class PlotlySetup {
         l: 0,
         t: 25,
         b: 0,
-        r: 10,
+        r: 0,
       },
       modebar: { ...PlotlySetup.defaultModebarConfig },
       colorway: colors,
@@ -325,7 +325,8 @@ export class PlotlySetup {
       margin: {
         t: topMargin,
         b: bottomMargin,
-        r: 10,
+        r: 0,
+        l: 0,
       },
       colorway: colors,
       hovermode: "closest",
@@ -442,7 +443,8 @@ export class PlotlySetup {
       margin: {
         t: topMargin,
         b: bottomMargin,
-        r: 10,
+        r: 0,
+        l: 0,
       },
       colorway: colors,
       hovermode: "closest",
@@ -541,7 +543,8 @@ export class PlotlySetup {
       margin: {
         t: topMargin,
         b: bottomMargin,
-        r: 10,
+        r: 0,
+        l: 0,
       },
       colorway: colors,
       hovermode: "closest",
