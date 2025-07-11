@@ -65,8 +65,7 @@ steps:
     condition: ne(variables.NPM_CACHE_RESTORED, 'true')
 
   - script: |
-      cd $(Build.SourcesDirectory)/survey-creator
-      npx playwright install chromium
+      npm run postinstall
     displayName: "Install chrome playwright"
 
   - task: DownloadBuildArtifacts@0
