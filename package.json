@@ -15,7 +15,8 @@
     "build:types:summary": "tsc --p tsconfig.summary.json && echo \"export * from './survey-analytics.types/entries/summary';\" >> build/survey.analytics.d.ts",
     "build:types:tabulator": "tsc --p tsconfig.tabulator.json && echo \"export * from './survey-analytics-tabulator.types/entries/tabulator';\" >> build/survey.analytics.tabulator.d.ts",
     "lint": "eslint ./src --quiet",
-    "pre-push-check": "npm run lint && npm run test"
+    "pre-push-check": "npm run lint && npm run test",
+    "postinstall": "playwright install chromium"
   },
   "version": "2.2.4",
   "name": "survey-analytics",
@@ -46,7 +47,7 @@
     "tabulator-tables": "^6.2.5"
   },
   "devDependencies": {
-    "@playwright/test": "^1.53.1",
+    "@playwright/test": "1.53.1",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-replace": "^6.0.2",
@@ -68,7 +69,7 @@
     "jest-junit": "^16.0.0",
     "mini-css-extract-plugin": "^2.9.0",
     "node-uuid": "1.4.7",
-    "playwright": "^1.53.1",
+    "playwright": "1.53.1",
     "puppeteer": "22.13.1",
     "replace-in-file": "^6.3.2",
     "rollup": "^4.34.8",

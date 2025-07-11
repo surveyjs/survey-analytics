@@ -7,6 +7,16 @@ import { VisualizerBase, IChartAdapter } from "../visualizerBase";
 import { BooleanModel } from "../boolean";
 import { BooleanPlotly, GaugePlotly, HistogramPlotly, MatrixDropdownGroupedPlotly, MatrixPlotly, PivotPlotly, SelectBasePlotly } from "./legacy";
 
+export const plotlyChartTypes = {
+  "boolean": BooleanPlotly.types,
+  "number": GaugePlotly.types,
+  "selectBase": SelectBasePlotly.types,
+  "histogram": HistogramPlotly.types,
+  "matrix": MatrixPlotly.types,
+  "matrixDropdownGrouped": MatrixDropdownGroupedPlotly.types,
+  "pivot": PivotPlotly.types,
+};
+
 export class PlotlyChartAdapter implements IChartAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
 
@@ -50,22 +60,8 @@ export class PlotlyChartAdapter implements IChartAdapter {
 
   getChartTypes(): string[] {
     const visualizerType = this.model.type;
-    if(visualizerType === "boolean") {
-      return BooleanPlotly.types;
-    } else if(visualizerType === "number") {
-      return GaugePlotly.types;
-    } else if(visualizerType === "selectBase") {
-      return SelectBasePlotly.types;
-    } else if(visualizerType === "histogram") {
-      return HistogramPlotly.types;
-    } else if(visualizerType === "matrix") {
-      return MatrixPlotly.types;
-    } else if(visualizerType === "matrixDropdownGrouped") {
-      return MatrixDropdownGroupedPlotly.types;
-    } else if(visualizerType === "pivot") {
-      return PivotPlotly.types;
-    }
-    return [];
+    const chartCtypes = plotlyChartTypes[visualizerType];
+    return chartCtypes || [];
   }
 
   public async create(chartNode: HTMLElement): Promise<any> {
@@ -162,6 +158,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
     let options = {
       traces: plotlyOptions.traces,
       layout: plotlyOptions.layout,
+      data: answersData,
       config: config,
     };
     PlotlySetup.onPlotCreating.fire(this.model, options);

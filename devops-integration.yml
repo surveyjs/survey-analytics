@@ -31,7 +31,7 @@ steps:
 
   - task: NodeTool@0
     inputs:
-      versionSpec: "16.x"
+      versionSpec: "18.x"
     displayName: "Install Node.js"
 
   - task: CopyFiles@2
@@ -65,8 +65,8 @@ steps:
     condition: ne(variables.NPM_CACHE_RESTORED, 'true')
 
   - script: |
-      cd $(Build.SourcesDirectory)/survey-creator
-      npx playwright install chromium
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm run postinstall
     displayName: "Install chrome playwright"
 
   - task: DownloadBuildArtifacts@0
