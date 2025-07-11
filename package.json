@@ -46,7 +46,7 @@
     "tabulator-tables": "^6.2.5"
   },
   "devDependencies": {
-    "@playwright/test": "^1.53.1",
+    "@playwright/test": "1.53.2",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-replace": "^6.0.2",
@@ -68,7 +68,7 @@
     "jest-junit": "^16.0.0",
     "mini-css-extract-plugin": "^2.9.0",
     "node-uuid": "1.4.7",
-    "playwright": "^1.53.1",
+    "playwright": "1.53.2",
     "puppeteer": "22.13.1",
     "replace-in-file": "^6.3.2",
     "rollup": "^4.34.8",
