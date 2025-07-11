@@ -1,14 +1,16 @@
 jest.mock("plotly.js", () => { }, { virtual: true });
+jest.mock("plotly.js-dist-min", () => ({ default: { Icons: {}, react: () => { } } }), { virtual: true });
 (<any>global).URL.createObjectURL = jest.fn();
 
 import { PlotlySetup } from "../src/plotly/setup";
 import { SelectBasePlotly, MatrixPlotly } from "../src/plotly/legacy";
-import { QuestionDropdownModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase, SurveyModel } from "survey-core";
+import { QuestionDropdownModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase, QuestionRatingModel, SurveyModel } from "survey-core";
 import { Matrix } from "../src/matrix";
 import { localization } from "../src/localizationManager";
 import { VisualizationMatrixDropdown } from "../src/visualizationMatrixDropdown";
 import { VisualizationPanel } from "../src/visualizationPanel";
 import { SelectBase } from "../src/selectBase";
+import { NumberModel } from "../src/number";
 import { PlotlyChartAdapter } from "../src/plotly/chart-adapter";
 import { VisualizerBase } from "../src/visualizerBase";
 
@@ -554,4 +556,19 @@ test("SelectBase null ref #394", async () => {
   } catch (e) {
     expect(e).toBeUndefined();
   }
+});
+
+test("data is present in onPlotCreating options", async () => {
+  const ratingQuestion = new QuestionRatingModel("q1");
+  const numberModel = new NumberModel(ratingQuestion, [{ q1: 2 }, { q1: 4 }, { q1: 9 }], {});
+  let lastData: any = undefined;
+  let callCount = 0;
+  const creatingHandler = (sender, options) => {
+    lastData = options.data;
+    callCount++;
+  };
+  PlotlySetup.onPlotCreating.add(creatingHandler);
+  await (numberModel as any)._chartAdapter.update({ appendChild: jest.fn(), on: jest.fn() });
+  expect(callCount).toBe(1);
+  expect(lastData).toEqual([5, 2, 9]);
 });

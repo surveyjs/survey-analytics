@@ -162,6 +162,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
     let options = {
       traces: plotlyOptions.traces,
       layout: plotlyOptions.layout,
+      data: answersData,
       config: config,
     };
     PlotlySetup.onPlotCreating.fire(this.model, options);
