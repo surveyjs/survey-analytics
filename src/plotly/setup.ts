@@ -27,7 +27,7 @@ export class PlotlySetup {
   static defaultTextInsideFont = {
     color: "#FFF", // var(--dsb-bar-chart-series-label-text-color-inside, #FFF);
     family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
-    size: 12, // font-size: var(--ctr-font-small-size, 12px);
+    size: 14, // font-size: var(--ctr-font-small-size, 12px);
     textcase: "normal",
     weight: 600,
   };
@@ -35,7 +35,7 @@ export class PlotlySetup {
   static defaultTooltipFont = {
     color: "rgba(0, 0, 0, 0.9)", // var(--ctr-tooltip-text-color, rgba(0, 0, 0, 0.91));
     family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
-    size: 12, // font-size: var(--ctr-font-small-size, 12px);
+    size: 14, // font-size: var(--ctr-font-small-size, 12px);
     textcase: "normal",
     weight: 600,
   };
@@ -49,7 +49,7 @@ export class PlotlySetup {
   static defaultPieTitleFont = {
     color: "rgba(0, 0, 0, 0.90)", //var(--dsb-legend-item-text-color, rgba(0, 0, 0, 0.90));
     family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
-    size: 12, // font-size: var(--ctr-font-small-size, 12px);
+    size: 14, // font-size: var(--ctr-font-small-size, 12px);
     textcase: "normal",
     weight: 400,
   };
@@ -62,7 +62,7 @@ export class PlotlySetup {
     font: {
       color: "rgba(0, 0, 0, 0.90)", //var(--dsb-legend-item-text-color, rgba(0, 0, 0, 0.90));
       family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
-      size: 12, // font-size: var(--ctr-font-small-size, 12px);
+      size: 14, // font-size: var(--ctr-font-small-size, 12px);
       textcase: "normal",
       weight: 400,
     }
@@ -75,7 +75,7 @@ export class PlotlySetup {
     tickfont: {
       color: "rgba(0, 0, 0, 0.90)", //var(--dsb-diagram-axis-label-color, rgba(0, 0, 0, 0.90));
       family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
-      size: 12, // font-size: var(--ctr-font-small-size, 12px);
+      size: 14, // font-size: var(--ctr-font-small-size, 12px);
       textcase: "normal",
       weight: 400,
     }
@@ -123,7 +123,7 @@ export class PlotlySetup {
   static defaultGaugeTickFont = {
     color: "rgba(0, 0, 0, 0.90)", // var(--dsb-guage-linear-axis-label-color, rgba(0, 0, 0, 0.90));
     family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
-    size: 12, // font-size: var(--ctr-font-small-size, 12px);
+    size: 14, // font-size: var(--ctr-font-small-size, 12px);
     textcase: "normal",
     weight: 400,
   }
