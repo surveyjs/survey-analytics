@@ -256,6 +256,14 @@ export class DocumentHelper {
     return buttonElement;
   }
 
+  public static setStyles(element: HTMLElement, styles: Record<string, any>): void {
+    if (!element || !styles) return;
+
+    Object.keys(styles).forEach(property => {
+      element.style.setProperty(property, styles[property]);
+    });
+  }
+
   public static createElement(
     tagName: string,
     className: string = "",

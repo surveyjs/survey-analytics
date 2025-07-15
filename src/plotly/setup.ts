@@ -4,6 +4,7 @@ import { VisualizerBase } from "../visualizerBase";
 import { localization } from "../localizationManager";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
+import { DashboardTheme } from "../theme";
 
 export interface PlotlyOptions {
   traces: Array<any>;
@@ -14,118 +15,109 @@ export interface PlotlyOptions {
 export class PlotlySetup {
   public static imageExportFormat = "png";
 
-  static defaultFontFamily = "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif";
-
-  static defaultBarGap = 0.05; // var(--dsb-bar-chart-gap, 2px);
+  static defaultFontFamily = DashboardTheme.fontFamily;
+  static defaultBarGap = DashboardTheme.barGap;
 
   static defaultModebarConfig = {
-    bgcolor: "#FFF",
-    activecolor: "rgba(25, 179, 148, 1)",
-    color: "rgba(25, 179, 148, 0.5)"
+    bgcolor: DashboardTheme.modebarBgcolor,
+    activecolor: DashboardTheme.modebarActivecolor,
+    color: DashboardTheme.modebarColor
   };
 
   static defaultTextInsideFont = {
-    color: "#FFF", // var(--dsb-bar-chart-series-label-text-color-inside, #FFF);
-    family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
-    size: 14, // font-size: var(--ctr-font-small-size, 12px);
-    textcase: "normal",
-    weight: 600,
+    color: DashboardTheme.textInsideColor,
+    family: DashboardTheme.fontFamily,
+    size: DashboardTheme.textInsideSize,
+    weight: DashboardTheme.textInsideWeight,
   };
 
   static defaultTooltipFont = {
-    color: "rgba(0, 0, 0, 0.9)", // var(--ctr-tooltip-text-color, rgba(0, 0, 0, 0.91));
-    family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
-    size: 14, // font-size: var(--ctr-font-small-size, 12px);
-    textcase: "normal",
-    weight: 600,
+    color: DashboardTheme.tooltipColor,
+    family: PlotlySetup.defaultFontFamily,
+    size: DashboardTheme.tooltipSize,
+    weight: DashboardTheme.tooltipWeight,
   };
 
   static defaultTooltipConfig = {
-    bgcolor: "#FFF", // background: var(--ctr-tooltip-background-color, #FFF);
-    bordercolor: "rgba(0, 0, 0, 0.10)", // var(--ctr-tooltip-shadow-1-color, rgba(0, 0, 0, 0.10);
+    bgcolor: DashboardTheme.tooltipBgcolor,
+    bordercolor: DashboardTheme.tooltipBordercolor,
     font: { ...PlotlySetup.defaultTooltipFont },
   };
 
   static defaultPieTitleFont = {
-    color: "rgba(0, 0, 0, 0.90)", //var(--dsb-legend-item-text-color, rgba(0, 0, 0, 0.90));
-    family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
-    size: 14, // font-size: var(--ctr-font-small-size, 12px);
-    textcase: "normal",
-    weight: 400,
+    color: DashboardTheme.pieTitleColor,
+    family: PlotlySetup.defaultFontFamily,
+    size: DashboardTheme.pieTitleSize,
+    weight: DashboardTheme.pieTitleWeight,
   };
 
   static defaultLegendConfig = {
-    bgcolor: "#FFF", // bgcolor: "var(--dsb-legend-background, #FFF)",
-    bordercolor: "#DCDCDC", // bordercolor: "var(--dsb-legend-border-color, #DCDCDC)",
-    borderwidth: 1,
-    itemwidth: 20, // var(--dsb-legend-item-swatch-width, 20px);
+    bgcolor: DashboardTheme.legendBgcolor,
+    bordercolor: DashboardTheme.legendBordercolor,
+    borderwidth: DashboardTheme.legendBorderwidth,
+    itemwidth: DashboardTheme.legendItemwidth,
     font: {
-      color: "rgba(0, 0, 0, 0.90)", //var(--dsb-legend-item-text-color, rgba(0, 0, 0, 0.90));
-      family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
-      size: 14, // font-size: var(--ctr-font-small-size, 12px);
-      textcase: "normal",
-      weight: 400,
+      color: DashboardTheme.legendColor,
+      family: PlotlySetup.defaultFontFamily,
+      size: DashboardTheme.legendSize,
+      weight: DashboardTheme.legendWeight,
     }
   };
 
   static defaultAxisConfig = {
-    zerolinecolor: "#DCDCDC", // var(--dsb-diagram-gridline-color, #DCDCDC),
+    zerolinecolor: DashboardTheme.axisZerolinecolor,
     automargin: true,
-
     tickfont: {
-      color: "rgba(0, 0, 0, 0.90)", //var(--dsb-diagram-axis-label-color, rgba(0, 0, 0, 0.90));
-      family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
-      size: 14, // font-size: var(--ctr-font-small-size, 12px);
-      textcase: "normal",
-      weight: 400,
+      color: DashboardTheme.axisColor,
+      family: PlotlySetup.defaultFontFamily,
+      size: DashboardTheme.axisSize,
+      weight: DashboardTheme.axisWeight,
     }
   }
 
   static defaultAxisXConfig = {
     ...PlotlySetup.defaultAxisConfig,
-    ticklabelstandoff: 8, // var(--dsb-diagram-axis-horizontal-padding-top, 8px)
+    ticklabelstandoff: DashboardTheme.axisXTicklabelstandoff,
   };
 
   static defaultAxisXWithGridLineConfig = {
     ...PlotlySetup.defaultAxisXConfig,
-    gridcolor: "#DCDCDC", // var(--dsb-diagram-gridline-color, #DCDCDC)
-    griddash: "dot",
+    gridcolor: DashboardTheme.axisXGridcolor,
+    griddash: DashboardTheme.axisXGriddash,
   };
 
   static defaultAxisYConfig = {
     ...PlotlySetup.defaultAxisConfig,
-    ticklabelstandoff: 16, // var(--dsb-diagram-axis-vertical-padding-right, 16px)
+    ticklabelstandoff: DashboardTheme.axisYTicklabelstandoff,
   }
 
   static defaultAxisYWithGridLineConfig = {
     ...PlotlySetup.defaultAxisYConfig,
-    gridcolor: "#DCDCDC", // var(--dsb-diagram-gridline-color, #DCDCDC)
-    griddash: "dot",
+    gridcolor: DashboardTheme.axisYGridcolor,
+    griddash: DashboardTheme.axisYGriddash,
   };
 
   static defaultGaugeConfig = {
-    bgcolor: "#F5F5F5", // background: var(--dsb-guage-linear-color-inactive, #F5F5F5);
-    bordercolor: "#F5F5F5", // var(--dsb-guage-linear-color-inactive, #F5F5F5);",
+    bgcolor: DashboardTheme.gaugeBgcolor,
+    bordercolor: DashboardTheme.gaugeBordercolor,
     bar: {
-      color: "#19B394", // background: var(--dsb-guage-linear-color, #19B394);
+      color: DashboardTheme.gaugeBarColor,
       thickness: 0.5,
     },
   }
 
   static defaultValueGaugeFont = {
-    color: "rgba(0, 0, 0, 0.90)", // var(--dsb-guage-title-color, rgba(0, 0, 0, 0.90));
-    family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
-    size: 32, // font-size: var(--ctr-font-large-size, 32px);
-    textcase: "normal",
-    weight: 700,
+    color: DashboardTheme.gaugeValueColor,
+    family: PlotlySetup.defaultFontFamily,
+    size: DashboardTheme.gaugeValueSize,
+    weight: DashboardTheme.gaugeValueWeight,
   };
 
   static defaultGaugeTickFont = {
-    color: "rgba(0, 0, 0, 0.90)", // var(--dsb-guage-linear-axis-label-color, rgba(0, 0, 0, 0.90));
-    family: PlotlySetup.defaultFontFamily, // var(--ctr-font-family, "Open Sans");
-    size: 14, // font-size: var(--ctr-font-small-size, 12px);
-    textcase: "normal",
-    weight: 400,
+    color: DashboardTheme.gaugeTickColor,
+    family: PlotlySetup.defaultFontFamily,
+    size: DashboardTheme.gaugeTickSize,
+    weight: DashboardTheme.gaugeTickWeight,
   }
 
   /**

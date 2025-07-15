@@ -7,6 +7,7 @@ import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
 
 import "./visualizerBase.scss";
+import { DashboardTheme } from "./theme";
 
 export interface IChartAdapter {
   getChartTypes(): string[];
@@ -638,6 +639,8 @@ export class VisualizerBase implements IDataInfo {
     }
     this.renderResult = targetElement;
 
+    DocumentHelper.setStyles(targetElement, DashboardTheme);
+
     this.toolbarContainer = DocumentHelper.createElement(
       "div",
       "sa-visualizer__toolbar"
@@ -738,13 +741,13 @@ export class VisualizerBase implements IDataInfo {
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
-  private _backgroundColor = "transparent";
+  private _backgroundColor;
 
   get backgroundColor() { return this.getBackgroundColorCore(); }
   set backgroundColor(value) { this.setBackgroundColorCore(value); }
 
   protected getBackgroundColorCore() {
-    return this._backgroundColor;
+    return this._backgroundColor || DashboardTheme.backgroundColor;
   }
   protected setBackgroundColorCore(color: string) {
     this._backgroundColor = color;
