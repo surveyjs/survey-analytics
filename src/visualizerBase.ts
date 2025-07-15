@@ -24,6 +24,17 @@ export interface IDataInfo {
   getSeriesLabels(): Array<string>;
 }
 
+type ToolbarItemType = "button" | "dropdown" | "filter"| "license";
+
+type ToolbarItemCreators = {
+  [name: string]: {
+    creator: (toolbar?: HTMLDivElement) => HTMLElement,
+    type: ToolbarItemType,
+    index: number,
+    groupIndex: number,
+  },
+};
+
 export class PostponeHelper {
   public static postponeFunction: (fn: () => void, timeout?: number) => any;
   public static postpone(fn: () => void, timeout?: number): any {
@@ -156,7 +167,13 @@ export class VisualizerBase implements IDataInfo {
     this.onStateChanged.fire(this, this.getState());
   }
 
-  protected toolbarItemCreators: { [name: string]: (toolbar?: HTMLDivElement) => HTMLElement } = {};
+  protected toolbarItemCreators: ToolbarItemCreators = {};
+
+  public onGetToolbarItemCreators: () => ToolbarItemCreators;
+
+  protected getToolbarItemCreators(): ToolbarItemCreators {
+    return Object.assign({}, this.toolbarItemCreators, this.onGetToolbarItemCreators && this.onGetToolbarItemCreators() || {});
+  }
 
   constructor(
     public question: Question,
@@ -321,9 +338,12 @@ export class VisualizerBase implements IDataInfo {
    */
   public registerToolbarItem(
     name: string,
-    creator: (toolbar?: HTMLDivElement) => HTMLElement
+    creator: (toolbar?: HTMLDivElement) => HTMLElement,
+    type: ToolbarItemType,
+    index: number = 100,
+    groupIndex: number = 0
   ): void {
-    this.toolbarItemCreators[name] = creator;
+    this.toolbarItemCreators[name] = { creator, type, index, groupIndex };
   }
 
   /**
@@ -337,7 +357,7 @@ export class VisualizerBase implements IDataInfo {
     name: string
   ): (toolbar?: HTMLDivElement) => HTMLElement {
     if(this.toolbarItemCreators[name] !== undefined) {
-      const creator = this.toolbarItemCreators[name];
+      const creator = this.toolbarItemCreators[name].creator;
       delete this.toolbarItemCreators[name];
       return creator;
     }
@@ -431,9 +451,53 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  public getSortedToolbarItemCreators(): Array<any> {
+    const toolbarItemCreators = this.getToolbarItemCreators();
+
+    const groupedItems: { [type: string]: Array<{ name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement, type: ToolbarItemType, index: number, groupIndex: number }> } = {};
+
+    Object.keys(toolbarItemCreators).forEach((toolbarItemName) => {
+      const item = toolbarItemCreators[toolbarItemName];
+      const type = item.type;
+
+      if (!groupedItems[type]) {
+        groupedItems[type] = [];
+      }
+
+      groupedItems[type].push({
+        name: toolbarItemName,
+        ...item
+      });
+    });
+
+    Object.keys(groupedItems).forEach((type) => {
+      groupedItems[type].sort((a, b) => {
+        const indexA = a.index || 0;
+        const indexB = b.index || 0;
+        return indexA - indexB;
+      });
+    });
+
+    const sortedItems: Array<{ name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement, type: ToolbarItemType, index: number, groupIndex: number }> = [];
+
+    const sortedGroups = Object.keys(groupedItems).sort((typeA, typeB) => {
+      const groupA = groupedItems[typeA][0]?.groupIndex || 0;
+      const groupB = groupedItems[typeB][0]?.groupIndex || 0;
+      return groupA - groupB;
+    });
+
+    sortedGroups.forEach((type) => {
+      sortedItems.push(...groupedItems[type]);
+    });
+
+    return sortedItems;
+  }
+
   protected createToolbarItems(toolbar: HTMLDivElement) {
-    Object.keys(this.toolbarItemCreators || {}).forEach((toolbarItemName) => {
-      let toolbarItem = this.toolbarItemCreators[toolbarItemName](toolbar);
+    const toolbarItemCreators = this.getSortedToolbarItemCreators();
+
+    toolbarItemCreators.forEach((item) => {
+      let toolbarItem = item.creator(toolbar);
       if (!!toolbarItem) {
         toolbar.appendChild(toolbarItem);
       }

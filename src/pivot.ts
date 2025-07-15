@@ -46,9 +46,9 @@ export class PivotModel extends SelectBase {
         (e: any) => { this.axisXQuestionName = e; this.setupPivot(); },
         undefined,
         localization.getString("axisXSelectorTitle")
-      )
+      ), "dropdown"
     );
-    this.registerToolbarItem("axisYSelector0", this.createYSelecterGenerator());
+    this.registerToolbarItem("axisYSelector0", this.createYSelecterGenerator(), "dropdown");
     this.setupPivot();
   }
 
@@ -87,7 +87,7 @@ export class PivotModel extends SelectBase {
       }
     } else {
       if(!!value) {
-        this.registerToolbarItem("axisYSelector" + this.axisYSelectors.length, this.createYSelecterGenerator());
+        this.registerToolbarItem("axisYSelector" + this.axisYSelectors.length, this.createYSelecterGenerator(), "dropdown");
         this.updateToolbar();
       }
     }

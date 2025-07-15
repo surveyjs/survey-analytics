@@ -158,7 +158,7 @@ export class SelectBase
         );
       }
       return null;
-    });
+    }, "dropdown");
     this.registerToolbarItem("changeAnswersOrder", () => {
       if (this.isSupportAnswersOrder()) {
         this.choicesOrderSelector = DocumentHelper.createDropdown(
@@ -175,7 +175,7 @@ export class SelectBase
         this.updateOrderSelector();
       }
       return this.choicesOrderSelector;
-    });
+    }, "dropdown");
     this.registerToolbarItem("showPercentages", () => {
       if (
         this.options.allowShowPercentages &&
@@ -188,7 +188,7 @@ export class SelectBase
         this.updateShowPercentageBtn();
         return this.showPercentageBtn;
       }
-    });
+    }, "button");
     this.registerToolbarItem("hideEmptyAnswers", () => {
       if (this.options.allowHideEmptyAnswers) {
         this.emptyAnswersBtn = DocumentHelper.createButton(() => {
@@ -197,7 +197,7 @@ export class SelectBase
         this.updateEmptyAnswersBtn();
       }
       return this.emptyAnswersBtn;
-    });
+    }, "button");
     this.registerToolbarItem("topNAnswers", () => {
       if (
         this.options.allowTopNAnswers &&
@@ -218,7 +218,7 @@ export class SelectBase
         this.updateTopNSelector();
       }
       return this.topNSelector;
-    });
+    }, "dropdown");
     this.registerToolbarItem("transposeData", () => {
       if (this.options.allowTransposeData) {
         this.transposeDataBtn = DocumentHelper.createButton(() => {
@@ -227,7 +227,7 @@ export class SelectBase
         this.updateTransposeDataBtn();
       }
       return this.transposeDataBtn;
-    });
+    }, "button");
     this.registerToolbarItem("showMissingAnswers", () => {
       if (this.isSupportMissingAnswers() && this.options.allowShowMissingAnswers) {
         this.missingAnswersBtn = DocumentHelper.createButton(() => {
@@ -236,7 +236,7 @@ export class SelectBase
         this.updateMissingAnswersBtn();
       }
       return this.missingAnswersBtn;
-    });
+    }, "button");
   }
 
   protected chartTypes: string[] = [];

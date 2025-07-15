@@ -408,7 +408,7 @@ test("check bar axes RTL setup", async () => {
     "font": {
       "color": "rgba(0, 0, 0, 0.90)",
       "family": "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif",
-      "size": 12,
+      "size": 14,
       "textcase": "normal",
       "weight": 400,
     },

@@ -54,7 +54,7 @@ export class NumberModel extends VisualizerBase {
         );
       }
       return null;
-    });
+    }, "dropdown");
   }
 
   protected onDataChanged() {

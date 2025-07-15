@@ -326,7 +326,7 @@ export class VisualizationPanel extends VisualizerBase {
     if (!this.haveCommercialLicense) {
       this.registerToolbarItem("commercialLicense", () => {
         return createCommercialLicenseLink();
-      });
+      }, "license");
     }
 
     this.registerToolbarItem("resetFilter", () => {
@@ -337,7 +337,7 @@ export class VisualizationPanel extends VisualizerBase {
           }
         });
       }, localization.getString("resetFilter"));
-    });
+    }, "button");
 
     this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
       if (this.allowHideQuestions) {
@@ -383,7 +383,7 @@ export class VisualizationPanel extends VisualizerBase {
         this.onVisibleElementsChanged.add(addElementSelectorUpdater);
       }
       return undefined;
-    });
+    }, "dropdown");
     if (!this.options.disableLocaleSwitch && this.locales.length > 1) {
       const localeChoices = this.locales.map((element) => {
         return {
@@ -403,7 +403,7 @@ export class VisualizationPanel extends VisualizerBase {
             this.locale = newLocale;
           }
         );
-      });
+      }, "dropdown");
     }
   }
   reorderVisibleElements(order: string[]): void {
@@ -621,7 +621,7 @@ export class VisualizationPanel extends VisualizerBase {
           return DocumentHelper.createButton(() => {
             setTimeout(() => this.hideElement(question.name), 0);
           }, localization.getString("hideButton"), undefined, "invisible-24x24");
-        });
+        }, "button");
       }
 
       if (this.allowMakeQuestionsPrivate) {
@@ -650,7 +650,7 @@ export class VisualizationPanel extends VisualizerBase {
             doPrivate,
             state
           );
-        });
+        }, "button");
       }
 
       if (visualizer.supportSelection) {
@@ -662,7 +662,7 @@ export class VisualizationPanel extends VisualizerBase {
         visualizer.registerToolbarItem("questionFilterInfo", () => {
           filterInfo.update(visualizerWithSelection.selection);
           return filterInfo.htmlElement;
-        });
+        }, "filter");
 
         visualizerWithSelection.onDataItemSelected = (
           selectedValue: any,
