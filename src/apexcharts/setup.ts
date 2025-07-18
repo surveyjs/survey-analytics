@@ -1,6 +1,10 @@
-import { IAnswersData, SelectBase } from "../selectBase";
 import { Event } from "survey-core";
+import { IAnswersData, SelectBase } from "../selectBase";
 import { VisualizerBase } from "../visualizerBase";
+import { DataHelper } from "../utils";
+import { NumberModel } from "../number";
+import { DashboardTheme } from "../theme";
+import { getTruncatedLabel } from "../utils/utils";
 import { localization } from "../localizationManager";
 
 export interface ApexChartsOptions {
@@ -9,29 +13,157 @@ export interface ApexChartsOptions {
   labels: Array<string>;
   colors: Array<string>;
   plotOptions: any;
-  dataLabels: any;
-  legend: any;
-  responsive: Array<any>;
-  tooltip: any;
-  hasSeries: boolean;
+  dataLabels?: any;
+  legend?: any;
+  tooltip?: any;
+  hasSeries?: boolean;
   xaxis?: any;
   yaxis?: any;
+  grid?: any;
+
+  stroke?: any;
+  fill?: any;
 }
 
 export class ApexChartsSetup {
   public static imageExportFormat = "png";
+
+  static defaultBarGap = DashboardTheme.barGap;
+
+  static defaultToolbarConfig = {
+    show: true,
+    tools: {
+      download: true,
+      selection: false,
+      zoom: false,
+      zoomin: false,
+      zoomout: false,
+      pan: false,
+      reset: false
+    }
+  };
+
+  static defaultDataLabelsConfig = {
+    enabled: true,
+    style: {
+      colors: [DashboardTheme.textInsideFontColor],
+      fontSize: DashboardTheme.textInsideFontSize.toString() + "px",
+      fontFamily: DashboardTheme.fontFamily,
+      fontWeight: DashboardTheme.textInsideFontWeight,
+    }
+  };
+
+  static defaultTooltipConfig = {
+    enabled: true,
+    style: {
+      fontSize: DashboardTheme.tooltipFontSize.toString() + "px",
+      fontFamily: DashboardTheme.fontFamily,
+    },
+    marker: {
+      show: false,
+    },
+    x: {
+      formatter: () => "",
+    },
+    y: {
+      formatter: function(val: number) {
+        return val.toString();
+      },
+      title: {
+        formatter: () => "",
+      },
+    }
+  };
+
+  static defaultLegendConfig = {
+    position: "right",
+    horizontalAlign: "right",
+    verticalAlign: "top",
+    fontSize: DashboardTheme.legendFontSize.toString() + "px",
+    fontFamily: DashboardTheme.fontFamily,
+    fontWeight: DashboardTheme.legendFontWeight,
+    labels: {
+      colors: DashboardTheme.legendFontColor
+    },
+    markers: {
+      size: 10,
+      strokeWidth: 1,
+      // customHTML: function() {
+      //   return '<span class="sa-legend-item-marker"><i class="sa-legend-item-text"></i></span>';
+      // }
+    },
+  };
+  static defaultAxisZerolineConfig = {
+    color: DashboardTheme.axisZerolinecolor,
+  }
+
+  static defaultGridConfig = {
+    borderColor: DashboardTheme.axisXGridcolor,
+    strokeDashArray: 4,
+    position: "back",
+    xaxis: {
+      lines: {
+        show: false,
+      }
+    },
+    yaxis: {
+      lines: {
+        show: false,
+      }
+    }
+  };
+
+  static defaultAxisLabelFont = {
+    colors: DashboardTheme.axisTickFontColor,
+    fontSize: DashboardTheme.axisTickFontSize.toString() + "px",
+    fontFamily: DashboardTheme.fontFamily,
+    fontWeight: DashboardTheme.axisTickFontWeight,
+  };
+
+  static defaultAxisXLabelConfig = {
+    style: {
+      ...ApexChartsSetup.defaultAxisLabelFont
+    },
+    rotate: -45,
+    maxHeight: 60
+  }
+
+  static defaultGaugeValueFont = {
+    fontFamily: DashboardTheme.fontFamily,
+    color: DashboardTheme.gaugeValueFontColor,
+    fontSize: DashboardTheme.gaugeValueFontSize.toString() + "px",
+    fontWeight: DashboardTheme.gaugeValueFontWeight,
+  }
+
+  static defaultGaugeTickFont = {
+    family: DashboardTheme.fontFamily,
+    color: DashboardTheme.gaugeTickFontColor,
+    size: DashboardTheme.gaugeTickFontSize + "px",
+    weight: DashboardTheme.gaugeTickFontWeight,
+  }
+
+  static defaultStrokeConfig = {
+    width: 2,
+    curve: "smooth"
+  };
+
+  static defaultFillConfig = {
+    type: "solid",
+    opacity: 0.8
+  };
+
   /**
    * Fires when end user clicks on the 'save as image' button.
    */
   public static onImageSaving = new Event<
-    (sender: SelectBase, options: any) => any,
-    SelectBase,
+    (sender: VisualizerBase, options: any) => any,
+    VisualizerBase,
     any
   >();
 
   /**
-   * Fires before chart will be created. User can change series, chart, labels and other options of the chart.
-   * Options is an object with the following fields: series, chart, labels, colors, plotOptions, dataLabels, legend, responsive, tooltip.
+   * Fires before chart will be created. User can change series, chart options and config of the chart.
+   * Options is an object with the following fields: series, chart, xaxis, yaxis, labels, colors, plotOptions, dataLabels, legend, tooltip, grid, fill and hasSeries.
    */
   public static onChartCreating = new Event<
     (sender: VisualizerBase, options: any) => any,
@@ -39,7 +171,7 @@ export class ApexChartsSetup {
     any
   >();
 
-  static setups: { [type: string]: (model: SelectBase, answersData: IAnswersData) => ApexChartsOptions } = {
+  static setups: { [type: string]: (model: VisualizerBase, answersData: IAnswersData) => ApexChartsOptions } = {
     bar: ApexChartsSetup.setupBar,
     vbar: ApexChartsSetup.setupVBar,
     line: ApexChartsSetup.setupLine,
@@ -47,23 +179,13 @@ export class ApexChartsSetup {
     doughnut: ApexChartsSetup.setupPie,
     pie: ApexChartsSetup.setupPie,
     scatter: ApexChartsSetup.setupScatter,
+    gauge: ApexChartsSetup.setupGauge,
+    bullet: ApexChartsSetup.setupBullet,
   };
 
-  static setup(charType: string, model: SelectBase, answersData: IAnswersData): ApexChartsOptions {
+  static setup(charType: string, model: VisualizerBase, answersData: IAnswersData): ApexChartsOptions {
     return this.setups[charType](model, answersData);
   }
-
-  static getTruncatedLabel = (label: string, labelTruncateLength: number) => {
-    const truncateSymbols = "...";
-    const truncateSymbolsLength = truncateSymbols.length;
-
-    if (!labelTruncateLength) return label;
-    if (labelTruncateLength === -1) return label;
-    if (label.length <= labelTruncateLength + truncateSymbolsLength)
-      return label;
-
-    return label.substring(0, labelTruncateLength) + truncateSymbols;
-  };
 
   static setupPie(model: SelectBase, answersData: IAnswersData): ApexChartsOptions {
     let {
@@ -91,53 +213,25 @@ export class ApexChartsSetup {
       series = datasets[0];
     }
 
+    // const layoutColumns = 2;
+    // const radius = labels.length < 10 ? labels.length * 50 + 100 : 550;
+    // const height = (radius + 25) * Math.ceil(series.length / layoutColumns);
+
     // Chart settings
     const chart: any = {
       type: model.chartType === "doughnut" ? "donut" : "pie",
       height: hasSeries ? series.length * 200 + 100 : 400,
-      fontFamily: "Segoe UI, sans-serif",
-      toolbar: {
-        show: true,
-        tools: {
-          download: true,
-          selection: false,
-          zoom: false,
-          zoomin: false,
-          zoomout: false,
-          pan: false,
-          reset: false
-        }
-      },
+      toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
       background: model.backgroundColor
-    };
-
-    // Legend settings
-    const legend: any = {
-      show: !hasSeries,
-      position: "bottom",
-      horizontalAlign: "center",
-      fontSize: "14px",
-      fontFamily: "Segoe UI, sans-serif",
-      fontWeight: "normal",
-      labels: {
-        colors: "#404040"
-      }
     };
 
     // Data label settings
     const dataLabels: any = {
-      enabled: true,
+      ...ApexChartsSetup.defaultDataLabelsConfig,
       formatter: function(val: number, opts: any) {
-        const total = opts.w.globals.seriesTotals[opts.seriesIndex];
-        const percentage = ((val / total) * 100).toFixed(1);
-        return model.showPercentages ? `${percentage}%` : `${val}`;
+        const name = opts.w.globals.labels[opts.seriesIndex];
+        return [name, val.toFixed(1) + "%"];
       },
-      style: {
-        fontSize: "14px",
-        fontFamily: "Segoe UI, sans-serif",
-        fontWeight: "normal",
-        colors: ["#ffffff"]
-      }
     };
 
     // Chart options settings
@@ -145,34 +239,6 @@ export class ApexChartsSetup {
       pie: {
         donut: {
           size: model.chartType === "doughnut" ? "40%" : "0%",
-          labels: {
-            show: model.chartType === "doughnut",
-            name: {
-              show: true,
-              fontSize: "14px",
-              fontFamily: "Segoe UI, sans-serif",
-              fontWeight: "normal",
-              color: "#404040"
-            },
-            value: {
-              show: true,
-              fontSize: "14px",
-              fontFamily: "Segoe UI, sans-serif",
-              fontWeight: "normal",
-              color: "#404040",
-              formatter: function(val: number) {
-                return model.showPercentages ? `${val}%` : val;
-              }
-            },
-            total: {
-              show: model.chartType === "doughnut",
-              label: "Total",
-              fontSize: "16px",
-              fontFamily: "Segoe UI, sans-serif",
-              fontWeight: "bold",
-              color: "#404040"
-            }
-          }
         },
         customScale: 1,
         offsetX: 0,
@@ -181,50 +247,19 @@ export class ApexChartsSetup {
         endAngle: 360,
         expandOnClick: true,
         dataLabels: {
-          offset: 0,
-          minAngleToShowLabel: 10
+          offset: -10,
         }
       }
     };
 
     // Tooltip settings
     const tooltip: any = {
-      enabled: true,
-      theme: "light",
-      style: {
-        fontSize: "14px",
-        fontFamily: "Segoe UI, sans-serif"
-      },
-      y: {
-        formatter: function(value: number, { series, seriesIndex, dataPointIndex, w }: any) {
-          const total = w.globals.seriesTotals[seriesIndex];
-          const percentage = ((value / total) * 100).toFixed(1);
-          const label = hasSeries ? seriesLabels[dataPointIndex] : labels[dataPointIndex];
-          return `${label}: ${value} (${percentage}%)`;
-        }
-      }
+      ...ApexChartsSetup.defaultTooltipConfig,
     };
 
-    // Responsiveness settings
-    const responsive: Array<any> = [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            height: 300
-          },
-          legend: {
-            position: "bottom"
-          }
-        }
-      }
-    ];
-
-    // RTL language handling
-    if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
-      chart.direction = "rtl";
-      legend.position = "bottom";
-    }
+    const legend= {
+      show: false,
+    };
 
     return {
       series,
@@ -234,7 +269,6 @@ export class ApexChartsSetup {
       plotOptions,
       dataLabels,
       legend,
-      responsive,
       tooltip,
       hasSeries
     };
@@ -250,6 +284,7 @@ export class ApexChartsSetup {
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const isHistogram = model.type === "histogram";
 
     // Prepare data series
     let series: Array<any> = [];
@@ -270,125 +305,76 @@ export class ApexChartsSetup {
       });
     }
 
+    let lineHeight = 30;
+    let margin = 40;
+    let height = (labels.length + 1) * lineHeight + 2 * margin;
+    if(hasSeries) {
+      height = (labels.length * seriesLabels.length + 1) * lineHeight + 2 * margin;
+    }
+
     // Chart settings
     const chart: any = {
       type: "bar",
-      height: 400,
-      fontFamily: "Segoe UI, sans-serif",
-      toolbar: {
-        show: true,
-        tools: {
-          download: true,
-          selection: false,
-          zoom: false,
-          zoomin: false,
-          zoomout: false,
-          pan: false,
-          reset: false
-        }
-      },
+      height: height,
+      toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
       background: model.backgroundColor
     };
 
     // Axis settings
     const xaxis: any = {
       categories: labels,
+      axisBorder: {
+        show: false,
+      },
       labels: {
-        style: {
-          fontSize: "12px",
-          fontFamily: "Segoe UI, sans-serif",
-          colors: "#404040"
-        },
-        rotate: -45,
-        rotateAlways: false,
-        maxHeight: 60
+        ...ApexChartsSetup.defaultAxisXLabelConfig
       }
     };
 
     const yaxis: any = {
-      title: {
-        text: "Count",
-        style: {
-          fontSize: "14px",
-          fontFamily: "Segoe UI, sans-serif",
-          color: "#404040"
-        }
+      axisBorder: {
+        ...ApexChartsSetup.defaultAxisZerolineConfig
       },
       labels: {
         style: {
-          fontSize: "12px",
-          fontFamily: "Segoe UI, sans-serif",
-          colors: "#404040"
+          ...ApexChartsSetup.defaultAxisLabelFont
         }
       }
+    };
+
+    const grid = {
+      ...ApexChartsSetup.defaultGridConfig,
+      xaxis: {
+        lines: {
+          show: true
+        }
+      },
     };
 
     // Legend settings
     const legend: any = {
+      ...ApexChartsSetup.defaultLegendConfig,
       show: hasSeries,
-      position: "top",
-      horizontalAlign: "right",
-      fontSize: "14px",
-      fontFamily: "Segoe UI, sans-serif",
-      fontWeight: "normal",
-      labels: {
-        colors: "#404040"
-      }
     };
 
     // Data label settings
     const dataLabels: any = {
-      style: {
-        fontSize: "12px",
-        fontFamily: "Segoe UI, sans-serif",
-        fontWeight: "normal",
-        colors: ["#404040"]
-      }
+      ...ApexChartsSetup.defaultDataLabelsConfig,
     };
 
     // Chart options settings
     const plotOptions: any = {
       bar: {
         horizontal: true,
-        borderRadius: 4,
-        dataLabels: {
-          position: "center"
-        }
+        distributed: !isHistogram && !hasSeries,
+        columnWidth: isHistogram ? "100%": "70%",
       }
     };
 
     // Tooltip settings
     const tooltip: any = {
-      enabled: true,
-      theme: "light",
-      style: {
-        fontSize: "14px",
-        fontFamily: "Segoe UI, sans-serif"
-      },
-      y: {
-        formatter: function(value: number, { series, seriesIndex, dataPointIndex }: any) {
-          const label = hasSeries ? seriesLabels[dataPointIndex] : labels[dataPointIndex];
-          return `${label}: ${value}`;
-        }
-      }
+      ...ApexChartsSetup.defaultTooltipConfig,
     };
-
-    // Responsiveness settings
-    const responsive: Array<any> = [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            height: 300
-          },
-          xaxis: {
-            labels: {
-              rotate: -90
-            }
-          }
-        }
-      }
-    ];
 
     // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
@@ -403,9 +389,9 @@ export class ApexChartsSetup {
       plotOptions,
       dataLabels,
       legend,
-      responsive,
       tooltip,
       hasSeries,
+      grid,
       xaxis,
       yaxis
     };
@@ -421,6 +407,7 @@ export class ApexChartsSetup {
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const isHistogram = model.type === "histogram";
 
     // Prepare data series
     let series: Array<any> = [];
@@ -444,122 +431,60 @@ export class ApexChartsSetup {
     // Chart settings
     const chart: any = {
       type: "bar",
-      height: 400,
-      fontFamily: "Segoe UI, sans-serif",
-      toolbar: {
-        show: true,
-        tools: {
-          download: true,
-          selection: false,
-          zoom: false,
-          zoomin: false,
-          zoomout: false,
-          pan: false,
-          reset: false
-        }
-      },
+      toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
       background: model.backgroundColor
     };
 
     // Axis settings
     const xaxis: any = {
       categories: labels,
+      axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig },
       labels: {
-        style: {
-          fontSize: "12px",
-          fontFamily: "Segoe UI, sans-serif",
-          colors: "#404040"
-        },
-        rotate: -45,
-        rotateAlways: false,
-        maxHeight: 60
+        ...ApexChartsSetup.defaultAxisXLabelConfig
       }
     };
 
     const yaxis: any = {
-      title: {
-        text: "Count",
-        style: {
-          fontSize: "14px",
-          fontFamily: "Segoe UI, sans-serif",
-          color: "#404040"
-        }
-      },
       labels: {
         style: {
-          fontSize: "12px",
-          fontFamily: "Segoe UI, sans-serif",
-          colors: "#404040"
+          ...ApexChartsSetup.defaultAxisLabelFont
+        }
+      }
+    };
+
+    const grid = {
+      ...ApexChartsSetup.defaultGridConfig,
+      yaxis: {
+        lines: {
+          show: true
         }
       }
     };
 
     // Legend settings
     const legend: any = {
+      ...ApexChartsSetup.defaultLegendConfig,
       show: hasSeries,
-      position: "top",
-      horizontalAlign: "right",
-      fontSize: "14px",
-      fontFamily: "Segoe UI, sans-serif",
-      fontWeight: "normal",
-      labels: {
-        colors: "#404040"
-      }
     };
 
     // Data label settings
     const dataLabels: any = {
-      style: {
-        fontSize: "12px",
-        fontFamily: "Segoe UI, sans-serif",
-        fontWeight: "normal",
-        colors: ["#404040"]
-      }
+      ...ApexChartsSetup.defaultDataLabelsConfig,
     };
 
     // Chart options settings
     const plotOptions: any = {
       bar: {
         horizontal: false,
-        borderRadius: 4,
-        dataLabels: {
-          position: "top"
-        }
+        distributed: !isHistogram && !hasSeries,
+        columnWidth: isHistogram ? "100%": "70%",
       }
     };
 
     // Tooltip settings
     const tooltip: any = {
-      enabled: true,
-      theme: "light",
-      style: {
-        fontSize: "14px",
-        fontFamily: "Segoe UI, sans-serif"
-      },
-      y: {
-        formatter: function(value: number, { series, seriesIndex, dataPointIndex }: any) {
-          const label = hasSeries ? seriesLabels[dataPointIndex] : labels[dataPointIndex];
-          return `${label}: ${value}`;
-        }
-      }
+      ...ApexChartsSetup.defaultTooltipConfig,
     };
-
-    // Responsiveness settings
-    const responsive: Array<any> = [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            height: 300
-          },
-          xaxis: {
-            labels: {
-              rotate: -90
-            }
-          }
-        }
-      }
-    ];
 
     // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
@@ -574,9 +499,9 @@ export class ApexChartsSetup {
       plotOptions,
       dataLabels,
       legend,
-      responsive,
       tooltip,
       hasSeries,
+      grid,
       xaxis,
       yaxis
     };
@@ -615,72 +540,39 @@ export class ApexChartsSetup {
     // Chart settings
     const chart: any = {
       type: "line",
-      height: 400,
-      fontFamily: "Segoe UI, sans-serif",
-      toolbar: {
-        show: true,
-        tools: {
-          download: true,
-          selection: false,
-          zoom: false,
-          zoomin: false,
-          zoomout: false,
-          pan: false,
-          reset: false
-        }
-      },
+      toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
       background: model.backgroundColor
     };
 
     // Axis settings
     const xaxis: any = {
+      axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig },
       categories: labels,
       labels: {
         style: {
-          fontSize: "12px",
-          fontFamily: "Segoe UI, sans-serif",
-          colors: "#404040"
+          ...ApexChartsSetup.defaultAxisLabelFont
         }
       }
     };
 
     const yaxis: any = {
-      title: {
-        text: "Count",
-        style: {
-          fontSize: "14px",
-          fontFamily: "Segoe UI, sans-serif",
-          color: "#404040"
-        }
-      },
       labels: {
         style: {
-          fontSize: "12px",
-          fontFamily: "Segoe UI, sans-serif",
-          colors: "#404040"
+          ...ApexChartsSetup.defaultAxisLabelFont
         }
       }
     };
 
     // Legend settings
     const legend: any = {
+      ...ApexChartsSetup.defaultLegendConfig,
       show: hasSeries,
-      position: "top",
-      horizontalAlign: "right",
-      fontSize: "14px",
-      fontFamily: "Segoe UI, sans-serif",
-      fontWeight: "normal",
-      labels: {
-        colors: "#404040"
-      }
     };
 
     // Data label settings
     const dataLabels: any = {
+      ...ApexChartsSetup.defaultDataLabelsConfig,
       style: {
-        fontSize: "12px",
-        fontFamily: "Segoe UI, sans-serif",
-        fontWeight: "normal",
         colors: ["#404040"]
       }
     };
@@ -694,31 +586,8 @@ export class ApexChartsSetup {
 
     // Tooltip settings
     const tooltip: any = {
-      enabled: true,
-      theme: "light",
-      style: {
-        fontSize: "14px",
-        fontFamily: "Segoe UI, sans-serif"
-      },
-      y: {
-        formatter: function(value: number, { series, seriesIndex, dataPointIndex }: any) {
-          const label = hasSeries ? seriesLabels[dataPointIndex] : labels[dataPointIndex];
-          return `${label}: ${value}`;
-        }
-      }
+      ...ApexChartsSetup.defaultTooltipConfig,
     };
-
-    // Responsiveness settings
-    const responsive: Array<any> = [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            height: 300
-          }
-        }
-      }
-    ];
 
     // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
@@ -733,7 +602,6 @@ export class ApexChartsSetup {
       plotOptions,
       dataLabels,
       legend,
-      responsive,
       tooltip,
       hasSeries,
       xaxis,
@@ -771,126 +639,72 @@ export class ApexChartsSetup {
       });
     }
 
+    let lineHeight = 30;
+    let margin = 40;
+    let height = (labels.length + 1) * lineHeight + 2 * margin;
+
     // Chart settings
     const chart: any = {
       type: "bar",
-      height: 400,
       stacked: true,
-      fontFamily: "Segoe UI, sans-serif",
-      toolbar: {
-        show: true,
-        tools: {
-          download: true,
-          selection: false,
-          zoom: false,
-          zoomin: false,
-          zoomout: false,
-          pan: false,
-          reset: false
-        }
-      },
+      height: height,
+      toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
       background: model.backgroundColor
     };
 
     // Axis settings
     const xaxis: any = {
-      categories: labels,
+      axisBorder: {
+        ...ApexChartsSetup.defaultAxisZerolineConfig,
+      },
       labels: {
         style: {
-          fontSize: "12px",
-          fontFamily: "Segoe UI, sans-serif",
-          colors: "#404040"
-        },
-        rotate: -45,
-        rotateAlways: false,
-        maxHeight: 60
+          ...ApexChartsSetup.defaultAxisLabelFont,
+        }
       }
     };
 
     const yaxis: any = {
-      title: {
-        text: "Count",
-        style: {
-          fontSize: "14px",
-          fontFamily: "Segoe UI, sans-serif",
-          color: "#404040"
-        }
+      categories: labels,
+      axisBorder: {
+        show: false,
       },
       labels: {
-        style: {
-          fontSize: "12px",
-          fontFamily: "Segoe UI, sans-serif",
-          colors: "#404040"
-        }
+        ...ApexChartsSetup.defaultAxisXLabelConfig,
       }
+    };
+
+    const grid = {
+      ...ApexChartsSetup.defaultGridConfig,
+      yaxis: {
+        lines: {
+          show: true
+        }
+      },
     };
 
     // Legend settings
     const legend: any = {
+      ...ApexChartsSetup.defaultLegendConfig,
       show: hasSeries,
-      position: "top",
-      horizontalAlign: "right",
-      fontSize: "14px",
-      fontFamily: "Segoe UI, sans-serif",
-      fontWeight: "normal",
-      labels: {
-        colors: "#404040"
-      }
     };
 
     // Data label settings
     const dataLabels: any = {
-      style: {
-        fontSize: "12px",
-        fontFamily: "Segoe UI, sans-serif",
-        fontWeight: "normal",
-        colors: ["#404040"]
-      }
+      ...ApexChartsSetup.defaultDataLabelsConfig,
     };
 
     // Chart options settings
     const plotOptions: any = {
       bar: {
-        horizontal: false,
-        borderRadius: 4,
-        dataLabels: {
-          position: "center"
-        }
+        horizontal: true,
       }
     };
 
     // Tooltip settings
     const tooltip: any = {
-      enabled: true,
-      theme: "light",
-      style: {
-        fontSize: "14px",
-        fontFamily: "Segoe UI, sans-serif"
-      },
-      y: {
-        formatter: function(value: number, { series, seriesIndex, dataPointIndex }: any) {
-          const label = hasSeries ? seriesLabels[dataPointIndex] : labels[dataPointIndex];
-          return `${label}: ${value}`;
-        }
-      }
+      ...ApexChartsSetup.defaultTooltipConfig,
     };
-
-    // Responsiveness settings
-    const responsive: Array<any> = [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            height: 300
-          },
-          xaxis: {
-            labels: {
-              rotate: -90
-            }
-          }
-        }
-      }
-    ];
 
     // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
@@ -905,9 +719,9 @@ export class ApexChartsSetup {
       plotOptions,
       dataLabels,
       legend,
-      responsive,
       tooltip,
       hasSeries,
+      grid,
       xaxis,
       yaxis
     };
@@ -954,72 +768,42 @@ export class ApexChartsSetup {
     // Chart settings
     const chart: any = {
       type: "scatter",
-      height: 400,
-      fontFamily: "Segoe UI, sans-serif",
-      toolbar: {
-        show: true,
-        tools: {
-          download: true,
-          selection: false,
-          zoom: false,
-          zoomin: false,
-          zoomout: false,
-          pan: false,
-          reset: false
-        }
-      },
+      toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
       background: model.backgroundColor
     };
 
     // Axis settings
     const xaxis: any = {
       type: "numeric",
-      title: {
-        text: "Index",
-        style: {
-          fontSize: "14px",
-          fontFamily: "Segoe UI, sans-serif",
-          color: "#404040"
-        }
-      },
+      axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig },
       labels: {
         style: {
-          fontSize: "12px",
-          fontFamily: "Segoe UI, sans-serif",
-          colors: "#404040"
+          ...ApexChartsSetup.defaultAxisLabelFont
         }
       }
     };
 
     const yaxis: any = {
-      title: {
-        text: "Value",
-        style: {
-          fontSize: "14px",
-          fontFamily: "Segoe UI, sans-serif",
-          color: "#404040"
-        }
-      },
       labels: {
         style: {
-          fontSize: "12px",
-          fontFamily: "Segoe UI, sans-serif",
-          colors: "#404040"
+          ...ApexChartsSetup.defaultAxisLabelFont
         }
       }
     };
 
+    const grid = {
+      ...ApexChartsSetup.defaultGridConfig,
+      xaxis: {
+        lines: {
+          show: true
+        }
+      },
+    };
+
     // Legend settings
     const legend: any = {
+      ...ApexChartsSetup.defaultLegendConfig,
       show: hasSeries,
-      position: "top",
-      horizontalAlign: "right",
-      fontSize: "14px",
-      fontFamily: "Segoe UI, sans-serif",
-      fontWeight: "normal",
-      labels: {
-        colors: "#404040"
-      }
     };
 
     // Data label settings
@@ -1036,12 +820,7 @@ export class ApexChartsSetup {
 
     // Tooltip settings
     const tooltip: any = {
-      enabled: true,
-      theme: "light",
-      style: {
-        fontSize: "14px",
-        fontFamily: "Segoe UI, sans-serif"
-      },
+      ...ApexChartsSetup.defaultTooltipConfig,
       custom: function({ series, seriesIndex, dataPointIndex, w }: any) {
         const value = series[seriesIndex][dataPointIndex];
         const label = hasSeries ? seriesLabels[dataPointIndex] : labels[dataPointIndex];
@@ -1050,18 +829,6 @@ export class ApexChartsSetup {
         </div>`;
       }
     };
-
-    // Responsiveness settings
-    const responsive: Array<any> = [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            height: 300
-          }
-        }
-      }
-    ];
 
     // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
@@ -1076,11 +843,172 @@ export class ApexChartsSetup {
       plotOptions,
       dataLabels,
       legend,
-      responsive,
       tooltip,
       hasSeries,
+      grid,
       xaxis,
       yaxis
+    };
+  }
+
+  static setupGauge(model: NumberModel, answersData: IAnswersData): ApexChartsOptions {
+    let [level, minValue, maxValue] = answersData as any;
+
+    if (model.question.getType() === "rating") {
+      const rateValues = model.question.visibleRateValues;
+      maxValue = rateValues[rateValues.length - 1].value;
+      minValue = rateValues[0].value;
+    }
+
+    if (NumberModel.showAsPercentage) {
+      level = DataHelper.toPercentage(level, maxValue);
+      minValue = DataHelper.toPercentage(minValue, maxValue);
+      maxValue = DataHelper.toPercentage(maxValue, maxValue);
+    }
+
+    const chart= {
+      type: "radialBar",
+      height: 450,
+      background: model.backgroundColor,
+      toolbar: {
+        show: false
+      }
+    };
+    const plotOptions = {
+      radialBar: {
+        startAngle: -90,
+        endAngle: 90,
+        track: {
+          background: DashboardTheme.gaugeBgcolor,
+          strokeWidth: "97%",
+        },
+        dataLabels: {
+          name: {
+            show: false,
+          },
+          value: {
+            ...ApexChartsSetup.defaultGaugeValueFont,
+            show: true,
+            offsetY: -10,
+            formatter: function (val) {
+              return level.toString();
+            }
+          }
+        }
+      }
+    };
+
+    const percent = ((level - minValue) / (maxValue - minValue)) * 100;
+
+    const yaxis = {
+      min: minValue,
+      max: maxValue,
+      labels: {
+        formatter: (val) => {
+          const realValue = minValue + (val / 100) * (maxValue - minValue);
+          return realValue.toFixed(1);
+        }
+      }
+    };
+    const series = [percent];
+    const labels = [model.name];
+    const colors = [DashboardTheme.gaugeBarColor];
+
+    return {
+      series,
+      chart,
+      labels,
+      colors,
+      plotOptions,
+      yaxis,
+      // dataLabels,
+    };
+  }
+
+  static setupBullet(model: NumberModel, answersData: IAnswersData): ApexChartsOptions {
+    let [level, minValue, maxValue] = answersData as any;
+
+    if (model.question.getType() === "rating") {
+      const rateValues = model.question.visibleRateValues;
+      maxValue = rateValues[rateValues.length - 1].value;
+      minValue = rateValues[0].value;
+    }
+
+    if (NumberModel.showAsPercentage) {
+      level = DataHelper.toPercentage(level, maxValue);
+      minValue = DataHelper.toPercentage(minValue, maxValue);
+      maxValue = DataHelper.toPercentage(maxValue, maxValue);
+    }
+
+    const chart = {
+      type: "bar",
+      height: 100,
+      background: model.backgroundColor,
+      toolbar: {
+        show: false
+      }
+    };
+    const plotOptions = {
+      bar: {
+        horizontal: true,
+      }
+    };
+    const dataLabels = {
+      enabled: false
+    };
+
+    const xaxis = {
+      min: minValue,
+      max: maxValue,
+      stepSize: 5,
+      style: {
+        ...ApexChartsSetup.defaultGaugeTickFont,
+      },
+      axisBorder: {
+        color: DashboardTheme.gaugeBordercolor,
+      },
+    };
+
+    const yaxis = {
+      axisBorder: {
+        color: DashboardTheme.gaugeBordercolor,
+      },
+      labels: {
+        style: {
+          ...ApexChartsSetup.defaultGaugeValueFont,
+        }
+      }
+    };
+
+    // Tooltip settings
+    const tooltip: any = {
+      ...ApexChartsSetup.defaultTooltipConfig,
+    };
+
+    const series = [{
+      data: [{
+        x: "",
+        y: level,
+        goals: [{
+          value: maxValue,
+          strokeWidth: 1,
+          strokeColor: DashboardTheme.gaugeBordercolor,
+        }]
+      }]
+    }];
+    const labels = [level];
+    const colors = [DashboardTheme.gaugeBarColor];
+
+    return {
+      series,
+      chart,
+      labels,
+      colors,
+      plotOptions,
+      xaxis,
+      yaxis,
+      dataLabels,
+      tooltip,
     };
   }
 }

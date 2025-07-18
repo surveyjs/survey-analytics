@@ -1,26 +1,26 @@
 var json = {
   elements: [
-    // {
-    //   "type": "rating",
-    //   "name": "nps_score",
-    //   "title": "How likely are you to recommend our product to a friend or colleague?"
-    // },
-    // {
-    //   type: "text",
-    //   inputType: "date",
-    //   name: "date",
-    // },
-    // {
-    //   type: "text",
-    //   inputType: "number",
-    //   name: "age",
-    // },
-    // { "type": "rating", "name": "question1", "rateValues": [{ "value": 1, "text": "15 minutes" }, { "value": 2, "text": "30 minutes" }, { "value": 3, "text": "1 hour" }] },
-    // {
-    //   "type": "text",
-    //   "name": "question2",
-    //   "inputType": "number"    
-    //  }
+    {
+      "type": "rating",
+      "name": "nps_score",
+      "title": "How likely are you to recommend our product to a friend or colleague?"
+    },
+    {
+      type: "text",
+      inputType: "date",
+      name: "date",
+    },
+    {
+      type: "text",
+      inputType: "number",
+      name: "age",
+    },
+    { "type": "rating", "name": "question1", "rateValues": [{ "value": 1, "text": "15 minutes" }, { "value": 2, "text": "30 minutes" }, { "value": 3, "text": "1 hour" }] },
+    {
+      "type": "text",
+      "name": "question2",
+      "inputType": "number"    
+     },
     {
           type: "matrixdropdown",
           name: "question2",

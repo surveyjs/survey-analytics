@@ -5,6 +5,7 @@ import { localization } from "../localizationManager";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
 import { DashboardTheme } from "../theme";
+import { getTruncatedLabel } from "../utils/utils";
 
 export interface PlotlyOptions {
   traces: Array<any>;
@@ -15,7 +16,6 @@ export interface PlotlyOptions {
 export class PlotlySetup {
   public static imageExportFormat = "png";
 
-  static defaultFontFamily = DashboardTheme.fontFamily;
   static defaultBarGap = DashboardTheme.barGap;
 
   static defaultModebarConfig = {
@@ -25,17 +25,17 @@ export class PlotlySetup {
   };
 
   static defaultTextInsideFont = {
-    color: DashboardTheme.textInsideColor,
+    color: DashboardTheme.textInsideFontColor,
     family: DashboardTheme.fontFamily,
-    size: DashboardTheme.textInsideSize,
-    weight: DashboardTheme.textInsideWeight,
+    size: DashboardTheme.textInsideFontSize,
+    weight: DashboardTheme.textInsideFontWeight,
   };
 
   static defaultTooltipFont = {
-    color: DashboardTheme.tooltipColor,
-    family: PlotlySetup.defaultFontFamily,
-    size: DashboardTheme.tooltipSize,
-    weight: DashboardTheme.tooltipWeight,
+    color: DashboardTheme.tooltipFontColor,
+    family: DashboardTheme.fontFamily,
+    size: DashboardTheme.tooltipFontSize,
+    weight: DashboardTheme.tooltipFontWeight,
   };
 
   static defaultTooltipConfig = {
@@ -45,10 +45,10 @@ export class PlotlySetup {
   };
 
   static defaultPieTitleFont = {
-    color: DashboardTheme.pieTitleColor,
-    family: PlotlySetup.defaultFontFamily,
-    size: DashboardTheme.pieTitleSize,
-    weight: DashboardTheme.pieTitleWeight,
+    color: DashboardTheme.pieTitleFontColor,
+    family: DashboardTheme.fontFamily,
+    size: DashboardTheme.pieTitleFontSize,
+    weight: DashboardTheme.pieTitleFontWeight,
   };
 
   static defaultLegendConfig = {
@@ -57,10 +57,10 @@ export class PlotlySetup {
     borderwidth: DashboardTheme.legendBorderwidth,
     itemwidth: DashboardTheme.legendItemwidth,
     font: {
-      color: DashboardTheme.legendColor,
-      family: PlotlySetup.defaultFontFamily,
-      size: DashboardTheme.legendSize,
-      weight: DashboardTheme.legendWeight,
+      color: DashboardTheme.legendFontColor,
+      family: DashboardTheme.fontFamily,
+      size: DashboardTheme.legendFontSize,
+      weight: DashboardTheme.legendFontWeight,
     }
   };
 
@@ -68,10 +68,10 @@ export class PlotlySetup {
     zerolinecolor: DashboardTheme.axisZerolinecolor,
     automargin: true,
     tickfont: {
-      color: DashboardTheme.axisColor,
-      family: PlotlySetup.defaultFontFamily,
-      size: DashboardTheme.axisSize,
-      weight: DashboardTheme.axisWeight,
+      color: DashboardTheme.axisTickFontColor,
+      family: DashboardTheme.fontFamily,
+      size: DashboardTheme.axisTickFontSize,
+      weight: DashboardTheme.axisTickFontWeight,
     }
   }
 
@@ -83,7 +83,7 @@ export class PlotlySetup {
   static defaultAxisXWithGridLineConfig = {
     ...PlotlySetup.defaultAxisXConfig,
     gridcolor: DashboardTheme.axisXGridcolor,
-    griddash: DashboardTheme.axisXGriddash,
+    griddash: "dot",
   };
 
   static defaultAxisYConfig = {
@@ -94,7 +94,7 @@ export class PlotlySetup {
   static defaultAxisYWithGridLineConfig = {
     ...PlotlySetup.defaultAxisYConfig,
     gridcolor: DashboardTheme.axisYGridcolor,
-    griddash: DashboardTheme.axisYGriddash,
+    griddash: "dot",
   };
 
   static defaultGaugeConfig = {
@@ -107,17 +107,17 @@ export class PlotlySetup {
   }
 
   static defaultValueGaugeFont = {
-    color: DashboardTheme.gaugeValueColor,
-    family: PlotlySetup.defaultFontFamily,
-    size: DashboardTheme.gaugeValueSize,
-    weight: DashboardTheme.gaugeValueWeight,
+    color: DashboardTheme.gaugeValueFontColor,
+    family: DashboardTheme.fontFamily,
+    size: DashboardTheme.gaugeValueFontSize,
+    weight: DashboardTheme.gaugeValueFontWeight,
   };
 
   static defaultGaugeTickFont = {
-    color: DashboardTheme.gaugeTickColor,
-    family: PlotlySetup.defaultFontFamily,
-    size: DashboardTheme.gaugeTickSize,
-    weight: DashboardTheme.gaugeTickWeight,
+    color: DashboardTheme.gaugeTickFontColor,
+    family: DashboardTheme.fontFamily,
+    size: DashboardTheme.gaugeTickFontSize,
+    weight: DashboardTheme.gaugeTickFontWeight,
   }
 
   /**
@@ -155,18 +155,6 @@ export class PlotlySetup {
     return this.setups[charType](model, answersData);
   }
 
-  static getTruncatedLabel = (label: string, labelTruncateLength: number) => {
-    const truncateSymbols = "...";
-    const truncateSymbolsLength = truncateSymbols.length;
-
-    if (!labelTruncateLength) return label;
-    if (labelTruncateLength === -1) return label;
-    if (label.length <= labelTruncateLength + truncateSymbolsLength)
-      return label;
-
-    return label.substring(0, labelTruncateLength) + truncateSymbols;
-  };
-
   static setupPie(model: SelectBase, answersData: IAnswersData): PlotlyOptions {
     let {
       datasets,
@@ -185,7 +173,7 @@ export class PlotlySetup {
       labels: labels,
       customdata: labels,
       text: labels.map((label: string) => {
-        return PlotlySetup.getTruncatedLabel(
+        return getTruncatedLabel(
           label,
           model.labelTruncateLength
         );
@@ -336,7 +324,7 @@ export class PlotlySetup {
         tickmode: "array",
         tickvals: labels,
         ticktext: labels.map((label: string) => {
-          return PlotlySetup.getTruncatedLabel(
+          return getTruncatedLabel(
             label,
             model.labelTruncateLength
           ) + "  ";
@@ -456,7 +444,7 @@ export class PlotlySetup {
         tickmode: "array",
         tickvals: labels,
         ticktext: labels.map((label: string) => {
-          return PlotlySetup.getTruncatedLabel(
+          return getTruncatedLabel(
             label,
             model.labelTruncateLength
           ) + "  ";
@@ -501,7 +489,7 @@ export class PlotlySetup {
     const traceConfig: any = {
       type: "scatter",
       y: (hasSeries ? seriesLabels : labels).map((label: string) => {
-        return PlotlySetup.getTruncatedLabel(
+        return getTruncatedLabel(
           label,
           model.labelTruncateLength
         );

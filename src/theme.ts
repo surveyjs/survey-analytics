@@ -22,46 +22,44 @@ export const DashboardTheme = {
   modebarColor: "rgba(25, 179, 148, 0.5)",
 
   // Text inside font settings
-  textInsideColor: "#FFF",
-  textInsideSize: 14,
-  textInsideWeight: 600,
+  textInsideFontColor: "#FFF",
+  textInsideFontSize: 14,
+  textInsideFontWeight: 600,
 
   // Tooltip settings
-  tooltipColor: "rgba(0, 0, 0, 0.9)",
-  tooltipSize: 14,
-  tooltipWeight: 600,
+  tooltipFontColor: "rgba(0, 0, 0, 0.9)",
+  tooltipFontSize: 14,
+  tooltipFontWeight: 600,
   tooltipBgcolor: "#FFF",
   tooltipBordercolor: "rgba(0, 0, 0, 0.10)",
 
   // Pie title font settings
-  pieTitleColor: "rgba(0, 0, 0, 0.90)",
-  pieTitleSize: 14,
-  pieTitleWeight: 400,
+  pieTitleFontColor: "rgba(0, 0, 0, 0.90)",
+  pieTitleFontSize: 14,
+  pieTitleFontWeight: 400,
 
   // Legend settings
   legendBgcolor: "#FFF",
   legendBordercolor: "#DCDCDC",
   legendBorderwidth: 1,
   legendItemwidth: 20,
-  legendColor: "rgba(0, 0, 0, 0.90)",
-  legendSize: 14,
-  legendWeight: 400,
+  legendFontColor: "rgba(0, 0, 0, 0.90)",
+  legendFontSize: 14,
+  legendFontWeight: 400,
 
   // Axis settings
   axisZerolinecolor: "#DCDCDC",
-  axisColor: "rgba(0, 0, 0, 0.90)",
-  axisSize: 14,
-  axisWeight: 400,
+  axisTickFontColor: "rgba(0, 0, 0, 0.90)",
+  axisTickFontSize: 14,
+  axisTickFontWeight: 400,
 
   // X-axis settings
   axisXTicklabelstandoff: 8,
   axisXGridcolor: "#DCDCDC",
-  axisXGriddash: "dot",
 
   // Y-axis settings
   axisYTicklabelstandoff: 16,
   axisYGridcolor: "#DCDCDC",
-  axisYGriddash: "dot",
 
   // Gauge settings
   gaugeBgcolor: "#F5F5F5",
@@ -70,12 +68,12 @@ export const DashboardTheme = {
   gaugeBarThickness: 0.5,
 
   // Gauge value font settings
-  gaugeValueColor: "rgba(0, 0, 0, 0.90)",
-  gaugeValueSize: 32,
-  gaugeValueWeight: 700,
+  gaugeValueFontColor: "rgba(0, 0, 0, 0.90)",
+  gaugeValueFontSize: 32,
+  gaugeValueFontWeight: 700,
 
   // Gauge tick font settings
-  gaugeTickColor: "rgba(0, 0, 0, 0.90)",
-  gaugeTickSize: 14,
-  gaugeTickWeight: 400
+  gaugeTickFontColor: "rgba(0, 0, 0, 0.90)",
+  gaugeTickFontSize: 14,
+  gaugeTickFontWeight: 400
 };

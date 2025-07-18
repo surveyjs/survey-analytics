@@ -18,7 +18,7 @@ export const chartTypes = {
 export class ApexChartsAdapter {
   private _chart: ApexCharts = undefined;
 
-  constructor(protected model: SelectBase) { }
+  constructor(protected model: SelectBase | VisualizerBase) { }
 
   protected patchConfigParameters(
     chartNode: object,
@@ -38,42 +38,45 @@ export class ApexChartsAdapter {
   public async create(chartNode: HTMLElement): Promise<any> {
     const [chart, chartOptions] = await this.update(chartNode);
 
+    if(this.model instanceof SelectBase) {
     // Handle chart clicks
-    chart.addEventListener("click", (event: any, chartContext: any, config: any) => {
-      if (config.dataPointIndex !== undefined && config.dataPointIndex !== null) {
-        let itemText = "";
-        if (!chartOptions.hasSeries) {
-          itemText = config.config.labels[config.dataPointIndex];
-          const item: ItemValue = this.model.getSelectedItemByText(itemText);
-          this.model.setSelection(item);
-        } else {
-          itemText = config.config.labels[config.dataPointIndex];
-          const propertyLabel = config.config.series[config.seriesIndex].name;
-          const seriesValues = this.model.getSeriesValues();
-          const seriesLabels = this.model.getSeriesLabels();
-          const propertyValue = seriesValues[seriesLabels.indexOf(propertyLabel)];
-          const selectedItem: ItemValue = this.model.getSelectedItemByText(itemText);
-          const item = new ItemValue({ [propertyValue]: selectedItem.value }, propertyLabel + ": " + selectedItem.text);
-          this.model.setSelection(item);
+      const _model = this.model as SelectBase;
+      chart.addEventListener("click", (event: any, chartContext: any, config: any) => {
+        if (config.dataPointIndex !== undefined && config.dataPointIndex !== null) {
+          let itemText = "";
+          if (!chartOptions.hasSeries) {
+            itemText = config.config.labels[config.dataPointIndex];
+            const item: ItemValue = _model.getSelectedItemByText(itemText);
+            _model.setSelection(item);
+          } else {
+            itemText = config.config.labels[config.dataPointIndex];
+            const propertyLabel = config.config.series[config.seriesIndex].name;
+            const seriesValues = _model.getSeriesValues();
+            const seriesLabels = _model.getSeriesLabels();
+            const propertyValue = seriesValues[seriesLabels.indexOf(propertyLabel)];
+            const selectedItem: ItemValue = _model.getSelectedItemByText(itemText);
+            const item = new ItemValue({ [propertyValue]: selectedItem.value }, propertyLabel + ": " + selectedItem.text);
+            _model.setSelection(item);
+          }
         }
-      }
-    });
+      });
 
-    // Change cursor on hover
-    chart.addEventListener("mouseenter", () => {
-      chartNode.style.cursor = "pointer";
-    });
-    chart.addEventListener("mouseleave", () => {
-      chartNode.style.cursor = "";
-    });
+      // Change cursor on hover
+      chart.addEventListener("mouseenter", () => {
+        chartNode.style.cursor = "pointer";
+      });
+      chart.addEventListener("mouseleave", () => {
+        chartNode.style.cursor = "";
+      });
+    }
 
     this._chart = chart;
     return chart;
   }
 
   public async update(chartNode: HTMLElement): Promise<any> {
-    const answersData = await this.model.getAnswersData();
-    var chartOptions = ApexChartsSetup.setup(this.model.chartType, this.model, answersData);
+    const answersData = (this.model instanceof SelectBase) ? await this.model.getAnswersData() : await this.model.getCalculatedValues();
+    var chartOptions = ApexChartsSetup.setup((this.model as any).chartType, this.model, answersData as any);
 
     let config: any = {
       chart: {
