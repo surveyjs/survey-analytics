@@ -57,7 +57,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     this.updateData(data);
   }
 
-  public canGroupColumns(): boolean {
+  public get canGroupColumns(): boolean {
     const innerQuestions = this.getQuestions();
     const canGroupColumns = this._childOptions.seriesValues.length == 1 && innerQuestions.every(innerQuestion => isChoicesArraysEqual(innerQuestion.choices, (<QuestionSelectBase>this.question).choices));
     return canGroupColumns;
