@@ -5,7 +5,7 @@ import { localization } from "../localizationManager";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
 import { DashboardTheme } from "../theme";
-import { getTruncatedLabel } from "../utils/utils";
+import { getTruncatedLabel, reverseAll } from "../utils/utils";
 
 export interface PlotlyOptions {
   traces: Array<any>;
@@ -372,19 +372,7 @@ export class PlotlySetup {
     const isHistogram = model.type === "histogram";
 
     if (!isHistogram && model.type !== "pivot") {
-      labels = [].concat(labels).reverse();
-      seriesLabels = [].concat(seriesLabels).reverse();
-      colors = [].concat(colors.slice(0, hasSeries ? seriesLabels.length : labels.length)).reverse();
-      const ts = [];
-      texts.forEach(text => {
-        ts.push([].concat(text).reverse());
-      });
-      texts = ts;
-      const ds = [];
-      datasets.forEach(dataset => {
-        ds.push([].concat(dataset).reverse());
-      });
-      datasets = ds;
+      ({ labels, seriesLabels, colors, texts, datasets } = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets));
     }
 
     const traces: any = [];

@@ -4,7 +4,7 @@ import { VisualizerBase } from "../visualizerBase";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
 import { DashboardTheme } from "../theme";
-import { getTruncatedLabel } from "../utils/utils";
+import { getTruncatedLabel, reverseAll } from "../utils/utils";
 import { localization } from "../localizationManager";
 
 export interface ApexChartsOptions {
@@ -20,9 +20,6 @@ export interface ApexChartsOptions {
   xaxis?: any;
   yaxis?: any;
   grid?: any;
-
-  stroke?: any;
-  fill?: any;
 }
 
 export class ApexChartsSetup {
@@ -121,12 +118,20 @@ export class ApexChartsSetup {
   };
 
   static defaultAxisXLabelConfig = {
-    style: {
-      ...ApexChartsSetup.defaultAxisLabelFont
+    labels: {
+      style: {
+        ...ApexChartsSetup.defaultAxisLabelFont
+      },
+    }
+  };
+
+  static defaultAxisYLabelConfig = {
+    labels: {
+      style: {
+        ...ApexChartsSetup.defaultAxisLabelFont
+      },
     },
-    rotate: -45,
-    maxHeight: 60
-  }
+  };
 
   static defaultGaugeValueFont = {
     fontFamily: DashboardTheme.fontFamily,
@@ -163,13 +168,24 @@ export class ApexChartsSetup {
 
   /**
    * Fires before chart will be created. User can change series, chart options and config of the chart.
-   * Options is an object with the following fields: series, chart, xaxis, yaxis, labels, colors, plotOptions, dataLabels, legend, tooltip, grid, fill and hasSeries.
+   * Options is an object with the following fields: series, chart, xaxis, yaxis, labels, colors, plotOptions, dataLabels, legend, tooltip, grid and hasSeries.
    */
   public static onChartCreating = new Event<
     (sender: VisualizerBase, options: any) => any,
     VisualizerBase,
     any
   >();
+
+  static dataListFormatter(model: SelectBase, text: string, value: string): string {
+    if (model.showPercentages) {
+      if (model.showOnlyPercentages) {
+        return text + "%";
+      } else {
+        return value + " (" + text + "%)";
+      }
+    }
+    return value;
+  }
 
   static setups: { [type: string]: (model: VisualizerBase, answersData: IAnswersData) => ApexChartsOptions } = {
     bar: ApexChartsSetup.setupBar,
@@ -204,23 +220,21 @@ export class ApexChartsSetup {
     if (hasSeries) {
       // For matrix questions or multiple series
       series = datasets.map((dataset: Array<number>, index: number) => {
-        dataset.map((dataset: number, valueIndex: number) => (
-          { series: dataset, labels: labels, title: seriesLabels[valueIndex] }
-        ));
+        return { series: dataset, labels: labels, title: seriesLabels[index] };
       });
     } else {
       // For simple questions
       series = datasets[0];
     }
 
-    // const layoutColumns = 2;
-    // const radius = labels.length < 10 ? labels.length * 50 + 100 : 550;
-    // const height = (radius + 25) * Math.ceil(series.length / layoutColumns);
+    const layoutColumns = 2;
+    const radius = labels.length < 10 ? labels.length * 50 + 100 : 550;
+    const height = (radius + 25) * Math.ceil(datasets.length / layoutColumns);
 
     // Chart settings
     const chart: any = {
       type: model.chartType === "doughnut" ? "donut" : "pie",
-      height: hasSeries ? series.length * 200 + 100 : 400,
+      height: height,
       toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
       background: model.backgroundColor
     };
@@ -247,7 +261,7 @@ export class ApexChartsSetup {
         endAngle: 360,
         expandOnClick: true,
         dataLabels: {
-          offset: -10,
+          offset: model.chartType === "doughnut" ? -10 : -25,
         }
       }
     };
@@ -286,6 +300,10 @@ export class ApexChartsSetup {
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
     const isHistogram = model.type === "histogram";
 
+    if (!isHistogram && model.type !== "pivot") {
+      ({ labels, seriesLabels, colors, texts, datasets } = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets));
+    }
+
     // Prepare data series
     let series: Array<any> = [];
 
@@ -306,10 +324,10 @@ export class ApexChartsSetup {
     }
 
     let lineHeight = 30;
-    let margin = 40;
-    let height = (labels.length + 1) * lineHeight + 2 * margin;
+    let margin = 35;
+    let height = (labels.length) * lineHeight + 2 * margin;
     if(hasSeries) {
-      height = (labels.length * seriesLabels.length + 1) * lineHeight + 2 * margin;
+      height = (labels.length * seriesLabels.length) * lineHeight + 2 * margin;
     }
 
     // Chart settings
@@ -322,24 +340,18 @@ export class ApexChartsSetup {
 
     // Axis settings
     const xaxis: any = {
+      ...ApexChartsSetup.defaultAxisXLabelConfig,
       categories: labels,
       axisBorder: {
         show: false,
       },
-      labels: {
-        ...ApexChartsSetup.defaultAxisXLabelConfig
-      }
     };
 
     const yaxis: any = {
+      ...ApexChartsSetup.defaultAxisYLabelConfig,
       axisBorder: {
         ...ApexChartsSetup.defaultAxisZerolineConfig
       },
-      labels: {
-        style: {
-          ...ApexChartsSetup.defaultAxisLabelFont
-        }
-      }
     };
 
     const grid = {
@@ -360,6 +372,9 @@ export class ApexChartsSetup {
     // Data label settings
     const dataLabels: any = {
       ...ApexChartsSetup.defaultDataLabelsConfig,
+      formatter: function(val, opts) {
+        return ApexChartsSetup.dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], val);
+      },
     };
 
     // Chart options settings
@@ -367,7 +382,7 @@ export class ApexChartsSetup {
       bar: {
         horizontal: true,
         distributed: !isHistogram && !hasSeries,
-        columnWidth: isHistogram ? "100%": "70%",
+        barHeight: isHistogram ? "100%": (1 - DashboardTheme.barGap) * 100 + "%",
       }
     };
 
@@ -409,6 +424,10 @@ export class ApexChartsSetup {
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
     const isHistogram = model.type === "histogram";
 
+    if (!isHistogram && model.type !== "pivot") {
+      ({ labels, seriesLabels, colors, texts, datasets } = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets));
+    }
+
     // Prepare data series
     let series: Array<any> = [];
 
@@ -437,19 +456,13 @@ export class ApexChartsSetup {
 
     // Axis settings
     const xaxis: any = {
+      ...ApexChartsSetup.defaultAxisXLabelConfig,
       categories: labels,
       axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig },
-      labels: {
-        ...ApexChartsSetup.defaultAxisXLabelConfig
-      }
     };
 
     const yaxis: any = {
-      labels: {
-        style: {
-          ...ApexChartsSetup.defaultAxisLabelFont
-        }
-      }
+      ...ApexChartsSetup.defaultAxisYLabelConfig
     };
 
     const grid = {
@@ -470,6 +483,9 @@ export class ApexChartsSetup {
     // Data label settings
     const dataLabels: any = {
       ...ApexChartsSetup.defaultDataLabelsConfig,
+      formatter: function(val, opts) {
+        return ApexChartsSetup.dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], val);
+      }
     };
 
     // Chart options settings
@@ -477,7 +493,7 @@ export class ApexChartsSetup {
       bar: {
         horizontal: false,
         distributed: !isHistogram && !hasSeries,
-        columnWidth: isHistogram ? "100%": "70%",
+        columnWidth: isHistogram ? "100%": (1 - DashboardTheme.barGap) * 100 + "%",
       }
     };
 
@@ -556,11 +572,7 @@ export class ApexChartsSetup {
     };
 
     const yaxis: any = {
-      labels: {
-        style: {
-          ...ApexChartsSetup.defaultAxisLabelFont
-        }
-      }
+      ...ApexChartsSetup.defaultAxisYLabelConfig
     };
 
     // Legend settings
@@ -620,6 +632,10 @@ export class ApexChartsSetup {
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
+    if (model.type !== "pivot") {
+      ({ labels, seriesLabels, colors, texts, datasets } = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets));
+    }
+
     // Prepare data series
     let series: Array<any> = [];
 
@@ -640,8 +656,8 @@ export class ApexChartsSetup {
     }
 
     let lineHeight = 30;
-    let margin = 40;
-    let height = (labels.length + 1) * lineHeight + 2 * margin;
+    let margin = 35;
+    let height = labels.length * lineHeight + 2 * margin;
 
     // Chart settings
     const chart: any = {
@@ -654,24 +670,18 @@ export class ApexChartsSetup {
 
     // Axis settings
     const xaxis: any = {
+      ...ApexChartsSetup.defaultAxisYLabelConfig,
       axisBorder: {
         ...ApexChartsSetup.defaultAxisZerolineConfig,
       },
-      labels: {
-        style: {
-          ...ApexChartsSetup.defaultAxisLabelFont,
-        }
-      }
     };
 
     const yaxis: any = {
+      ...ApexChartsSetup.defaultAxisXLabelConfig,
       categories: labels,
       axisBorder: {
         show: false,
       },
-      labels: {
-        ...ApexChartsSetup.defaultAxisXLabelConfig,
-      }
     };
 
     const grid = {
@@ -698,6 +708,7 @@ export class ApexChartsSetup {
     const plotOptions: any = {
       bar: {
         horizontal: true,
+        barHeight: (1 - DashboardTheme.barGap) * 100 + "%",
       }
     };
 
@@ -784,11 +795,7 @@ export class ApexChartsSetup {
     };
 
     const yaxis: any = {
-      labels: {
-        style: {
-          ...ApexChartsSetup.defaultAxisLabelFont
-        }
-      }
+      ...ApexChartsSetup.defaultAxisYLabelConfig
     };
 
     const grid = {
@@ -974,6 +981,7 @@ export class ApexChartsSetup {
         color: DashboardTheme.gaugeBordercolor,
       },
       labels: {
+        offsetY: 10,
         style: {
           ...ApexChartsSetup.defaultGaugeValueFont,
         }
