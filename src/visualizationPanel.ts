@@ -326,7 +326,7 @@ export class VisualizationPanel extends VisualizerBase {
     if (!this.haveCommercialLicense) {
       this.registerToolbarItem("commercialLicense", () => {
         return createCommercialLicenseLink();
-      });
+      }, "license");
     }
 
     this.registerToolbarItem("resetFilter", () => {
@@ -337,7 +337,7 @@ export class VisualizationPanel extends VisualizerBase {
           }
         });
       }, localization.getString("resetFilter"));
-    });
+    }, "button");
 
     this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
       if (this.allowHideQuestions) {
@@ -348,7 +348,7 @@ export class VisualizationPanel extends VisualizerBase {
         ) => {
           const hiddenElements = this.hiddenElements;
           if (hiddenElements.length > 0) {
-            const selectWrapper = DocumentHelper.createSelector(
+            const selectWrapper = DocumentHelper.createDropdown(
               [
                 <any>{
                   name: undefined,
@@ -364,8 +364,11 @@ export class VisualizationPanel extends VisualizerBase {
                 }),
               (option: any) => false,
               (e: any) => {
-                this.showElement(e.target.value);
-              }
+                if(!!e) {
+                  this.showElement(e);
+                }
+              },
+              localization.getString("addElement")
             );
             (addElementSelector &&
               toolbar.replaceChild(selectWrapper, addElementSelector)) ||
@@ -380,7 +383,7 @@ export class VisualizationPanel extends VisualizerBase {
         this.onVisibleElementsChanged.add(addElementSelectorUpdater);
       }
       return undefined;
-    });
+    }, "dropdown");
     if (!this.options.disableLocaleSwitch && this.locales.length > 1) {
       const localeChoices = this.locales.map((element) => {
         return {
@@ -393,14 +396,14 @@ export class VisualizationPanel extends VisualizerBase {
       //   text: localization.getString("changeLocale"),
       // });
       this.registerToolbarItem("changeLocale", () => {
-        return DocumentHelper.createSelector(localeChoices,
+        return DocumentHelper.createDropdown(localeChoices,
           (option: any) => !!option.value && (this.locale || surveyLocalization.defaultLocale) === option.value,
           (e: any) => {
-            var newLocale = e.target.value;
+            var newLocale = e;
             this.locale = newLocale;
           }
         );
-      });
+      }, "dropdown");
     }
   }
   reorderVisibleElements(order: string[]): void {
@@ -459,6 +462,35 @@ export class VisualizationPanel extends VisualizerBase {
   ) => {
     this.onAlternativeVisualizerChanged.fire(sender, options);
   };
+
+  private createHeaderElement(element: IVisualizerPanelRenderedElement) {
+    const headerElement = DocumentHelper.createElement("div");
+    headerElement.className = "sa-question__header";
+
+    const dragAreaElement = DocumentHelper.createElement("div");
+    dragAreaElement.className = "sa-question__drag-area sa-question__header--draggable";
+
+    const svgElement = document.createElement("div");
+    svgElement.className = "sa-question__drag-area-icon";
+    svgElement.appendChild(DocumentHelper.createSvgElement("draghorizontal-24x16"));
+    dragAreaElement.appendChild(svgElement);
+
+    const titleElement = DocumentHelper.createElement("h3");
+    titleElement.innerText = element.displayName;
+
+    titleElement.className = questionElementClassName + "__title";
+    if (this.allowDynamicLayout && this.allowDragDrop) {
+      titleElement.className =
+        titleElement.className +
+        " " +
+        questionElementClassName +
+        "__title--draggable";
+    }
+
+    headerElement.appendChild(dragAreaElement);
+    headerElement.appendChild(titleElement);
+    return headerElement;
+  }
 
   protected onDataChanged(): void {
   }
@@ -588,8 +620,8 @@ export class VisualizationPanel extends VisualizerBase {
         visualizer.registerToolbarItem("removeQuestion", () => {
           return DocumentHelper.createButton(() => {
             setTimeout(() => this.hideElement(question.name), 0);
-          }, localization.getString("hideButton"));
-        });
+          }, localization.getString("hideButton"), undefined, "invisible-24x24");
+        }, "button");
       }
 
       if (this.allowMakeQuestionsPrivate) {
@@ -618,7 +650,7 @@ export class VisualizationPanel extends VisualizerBase {
             doPrivate,
             state
           );
-        });
+        }, "button");
       }
 
       if (visualizer.supportSelection) {
@@ -630,7 +662,7 @@ export class VisualizationPanel extends VisualizerBase {
         visualizer.registerToolbarItem("questionFilterInfo", () => {
           filterInfo.update(visualizerWithSelection.selection);
           return filterInfo.htmlElement;
-        });
+        }, "filter");
 
         visualizerWithSelection.onDataItemSelected = (
           selectedValue: any,
@@ -932,26 +964,16 @@ export class VisualizationPanel extends VisualizerBase {
     !!container && container.appendChild(questionElement);
 
     const questionContent = DocumentHelper.createElement("div");
-    const titleElement = DocumentHelper.createElement("h3");
     const vizualizerElement = DocumentHelper.createElement("div");
-
-    titleElement.innerText = element.displayName;
+    const headerElement = this.createHeaderElement(element);
 
     questionElement.className = this.allowDynamicLayout
       ? questionElementClassName + " " + questionLayoutedElementClassName
       : questionElementClassName;
-    titleElement.className = questionElementClassName + "__title";
-    if (this.allowDynamicLayout && this.allowDragDrop) {
-      titleElement.className =
-        titleElement.className +
-        " " +
-        questionElementClassName +
-        "__title--draggable";
-    }
     questionContent.className = questionElementClassName + "__content";
-    questionContent.style.backgroundColor = this.backgroundColor;
+    // questionContent.style.backgroundColor = this.backgroundColor;
 
-    questionContent.appendChild(titleElement);
+    questionContent.appendChild(headerElement);
     questionContent.appendChild(vizualizerElement);
     questionElement.appendChild(questionContent);
 

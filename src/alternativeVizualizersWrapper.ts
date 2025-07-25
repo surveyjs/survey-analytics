@@ -14,9 +14,7 @@ export class AlternativeVisualizersWrapper
 
   private updateVisualizerSelector() {
     if (!!this.visualizerSelector) {
-      this.visualizerSelector.getElementsByTagName(
-        "select"
-      )[0].value = this.visualizer.type;
+      (this.visualizerSelector as any).setValue(this.visualizer.type);
     }
   }
 
@@ -27,6 +25,7 @@ export class AlternativeVisualizersWrapper
     options?: Object
   ) {
     super(question, data, options);
+    this.showToolbar = false;
     this.loadingData = false;
     if (!visualizers || visualizers.length < 2) {
       throw new Error(
@@ -35,6 +34,7 @@ export class AlternativeVisualizersWrapper
     }
     this.visualizers.forEach((visualizer) => {
       visualizer.onUpdate = () => this.invokeOnUpdate();
+      visualizer.onGetToolbarItemCreators = () => this.toolbarItemCreators;
       if (visualizer.supportSelection) {
         this._supportSelection = true;
         this.visualizersWithSelection.push(
@@ -44,7 +44,7 @@ export class AlternativeVisualizersWrapper
     });
 
     this.registerToolbarItem("changeVisualizer", () =>
-      this.visualizerSelector = DocumentHelper.createSelector(
+      this.visualizerSelector = DocumentHelper.createDropdown(
         this.visualizers.map((visualizer) => {
           return {
             value: visualizer.type,
@@ -52,8 +52,8 @@ export class AlternativeVisualizersWrapper
           };
         }),
         (option: any) => this.visualizer.type === option.value,
-        (e: any) => this.setVisualizer(e.target.value)
-      )
+        (e: any) => this.setVisualizer(e)
+      ), "dropdown", 0
     );
 
     this.visualizer = visualizers[0];
@@ -62,6 +62,10 @@ export class AlternativeVisualizersWrapper
   }
 
   protected visualizerContainer: HTMLElement;
+
+  protected onDataChanged(): void {
+  }
+
   public get hasFooter(): boolean {
     return false;
   }

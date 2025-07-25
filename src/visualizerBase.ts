@@ -7,6 +7,7 @@ import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
 
 import "./visualizerBase.scss";
+import { DashboardTheme } from "./theme";
 
 export interface IChartAdapter {
   getChartTypes(): string[];
@@ -23,6 +24,17 @@ export interface IDataInfo {
   getSeriesValues(): Array<string>;
   getSeriesLabels(): Array<string>;
 }
+
+type ToolbarItemType = "button" | "dropdown" | "filter"| "license";
+
+type ToolbarItemCreators = {
+  [name: string]: {
+    creator: (toolbar?: HTMLDivElement) => HTMLElement,
+    type: ToolbarItemType,
+    index: number,
+    groupIndex: number,
+  },
+};
 
 export class PostponeHelper {
   public static postponeFunction: (fn: () => void, timeout?: number) => any;
@@ -156,7 +168,13 @@ export class VisualizerBase implements IDataInfo {
     this.onStateChanged.fire(this, this.getState());
   }
 
-  protected toolbarItemCreators: { [name: string]: (toolbar?: HTMLDivElement) => HTMLElement } = {};
+  protected toolbarItemCreators: ToolbarItemCreators = {};
+
+  public onGetToolbarItemCreators: () => ToolbarItemCreators;
+
+  protected getToolbarItemCreators(): ToolbarItemCreators {
+    return Object.assign({}, this.toolbarItemCreators, this.onGetToolbarItemCreators && this.onGetToolbarItemCreators() || {});
+  }
 
   constructor(
     public question: Question,
@@ -321,9 +339,12 @@ export class VisualizerBase implements IDataInfo {
    */
   public registerToolbarItem(
     name: string,
-    creator: (toolbar?: HTMLDivElement) => HTMLElement
+    creator: (toolbar?: HTMLDivElement) => HTMLElement,
+    type: ToolbarItemType,
+    index: number = 100,
+    groupIndex: number = 0
   ): void {
-    this.toolbarItemCreators[name] = creator;
+    this.toolbarItemCreators[name] = { creator, type, index, groupIndex };
   }
 
   /**
@@ -337,7 +358,7 @@ export class VisualizerBase implements IDataInfo {
     name: string
   ): (toolbar?: HTMLDivElement) => HTMLElement {
     if(this.toolbarItemCreators[name] !== undefined) {
-      const creator = this.toolbarItemCreators[name];
+      const creator = this.toolbarItemCreators[name].creator;
       delete this.toolbarItemCreators[name];
       return creator;
     }
@@ -431,9 +452,53 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  public getSortedToolbarItemCreators(): Array<any> {
+    const toolbarItemCreators = this.getToolbarItemCreators();
+
+    const groupedItems: { [type: string]: Array<{ name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement, type: ToolbarItemType, index: number, groupIndex: number }> } = {};
+
+    Object.keys(toolbarItemCreators).forEach((toolbarItemName) => {
+      const item = toolbarItemCreators[toolbarItemName];
+      const type = item.type;
+
+      if (!groupedItems[type]) {
+        groupedItems[type] = [];
+      }
+
+      groupedItems[type].push({
+        name: toolbarItemName,
+        ...item
+      });
+    });
+
+    Object.keys(groupedItems).forEach((type) => {
+      groupedItems[type].sort((a, b) => {
+        const indexA = a.index || 0;
+        const indexB = b.index || 0;
+        return indexA - indexB;
+      });
+    });
+
+    const sortedItems: Array<{ name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement, type: ToolbarItemType, index: number, groupIndex: number }> = [];
+
+    const sortedGroups = Object.keys(groupedItems).sort((typeA, typeB) => {
+      const groupA = groupedItems[typeA][0]?.groupIndex || 0;
+      const groupB = groupedItems[typeB][0]?.groupIndex || 0;
+      return groupA - groupB;
+    });
+
+    sortedGroups.forEach((type) => {
+      sortedItems.push(...groupedItems[type]);
+    });
+
+    return sortedItems;
+  }
+
   protected createToolbarItems(toolbar: HTMLDivElement) {
-    Object.keys(this.toolbarItemCreators || {}).forEach((toolbarItemName) => {
-      let toolbarItem = this.toolbarItemCreators[toolbarItemName](toolbar);
+    const toolbarItemCreators = this.getSortedToolbarItemCreators();
+
+    toolbarItemCreators.forEach((item) => {
+      let toolbarItem = item.creator(toolbar);
       if (!!toolbarItem) {
         toolbar.appendChild(toolbarItem);
       }
@@ -549,12 +614,10 @@ export class VisualizerBase implements IDataInfo {
       const visibilityButton = DocumentHelper.createButton(() => {
         if (footerContentElement.style.display === "none") {
           footerContentElement.style.display = "block";
-          visibilityButton.innerText = localization.getString("hideButton");
+          (visibilityButton as any).setText(localization.getString("hideButton"));
         } else {
           footerContentElement.style.display = "none";
-          visibilityButton.innerText = localization.getString(
-            VisualizerBase.otherCommentCollapsed ? "showButton" : "hideButton"
-          );
+          (visibilityButton as any).setText(localization.getString(VisualizerBase.otherCommentCollapsed ? "showButton" : "hideButton"));
         }
         this.footerVisualizer.invokeOnUpdate();
       }, localization.getString("showButton") /*, "sa-toolbar__button--right"*/);
@@ -575,6 +638,8 @@ export class VisualizerBase implements IDataInfo {
       targetElement = document.getElementById(targetElement);
     }
     this.renderResult = targetElement;
+
+    DocumentHelper.setStyles(targetElement, DashboardTheme);
 
     this.toolbarContainer = DocumentHelper.createElement(
       "div",
@@ -672,17 +737,17 @@ export class VisualizerBase implements IDataInfo {
   }
 
   getRandomColor() {
-    const colors = this.getColors();
+    const colors = VisualizerBase.getColors();
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
-  private _backgroundColor = "#f7f7f7";
+  private _backgroundColor;
 
   get backgroundColor() { return this.getBackgroundColorCore(); }
   set backgroundColor(value) { this.setBackgroundColorCore(value); }
 
   protected getBackgroundColorCore() {
-    return this._backgroundColor;
+    return this._backgroundColor || DashboardTheme.backgroundColor;
   }
   protected setBackgroundColorCore(color: string) {
     this._backgroundColor = color;
@@ -691,19 +756,27 @@ export class VisualizerBase implements IDataInfo {
 
   static customColors: string[] = [];
   private static colors = [
-    "#86e1fb",
-    "#3999fb",
-    "#ff6771",
-    "#1eb496",
-    "#ffc152",
-    "#aba1ff",
-    "#7d8da5",
-    "#4ec46c",
-    "#cf37a6",
-    "#4e6198",
+    "#e50a3e",
+    "#19b394",
+    "#437fd9",
+    "#ff9814",
+    "#4faf24",
+    "#a62cec",
+    "#6e5bd1",
+    "#af496b"
+    // "#86e1fb",
+    // "#3999fb",
+    // "#ff6771",
+    // "#1eb496",
+    // "#ffc152",
+    // "#aba1ff",
+    // "#7d8da5",
+    // "#4ec46c",
+    // "#cf37a6",
+    // "#4e6198",
   ];
 
-  getColors(count = 10) {
+  static getColors(count = 10) {
     const colors =
       Array.isArray(VisualizerBase.customColors) &&
         VisualizerBase.customColors.length > 0

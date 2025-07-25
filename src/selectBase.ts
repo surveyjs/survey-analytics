@@ -144,7 +144,7 @@ export class SelectBase
 
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
-        return DocumentHelper.createSelector(
+        return DocumentHelper.createDropdown(
           this.chartTypes.map((chartType) => {
             return {
               value: chartType,
@@ -153,15 +153,15 @@ export class SelectBase
           }),
           (option: any) => this.chartType === option.value,
           (e: any) => {
-            this.setChartType(e.target.value);
+            this.setChartType(e);
           }
         );
       }
       return null;
-    });
+    }, "dropdown");
     this.registerToolbarItem("changeAnswersOrder", () => {
       if (this.isSupportAnswersOrder()) {
-        this.choicesOrderSelector = DocumentHelper.createSelector(
+        this.choicesOrderSelector = DocumentHelper.createDropdown(
           [
             { text: localization.getString("defaultOrder"), value: "default" },
             { text: localization.getString("ascOrder"), value: "asc" },
@@ -169,13 +169,13 @@ export class SelectBase
           ],
           (option) => false,
           (e) => {
-            this.answersOrder = e.target.value;
+            this.answersOrder = e;
           }
         );
         this.updateOrderSelector();
       }
       return this.choicesOrderSelector;
-    });
+    }, "dropdown");
     this.registerToolbarItem("showPercentages", () => {
       if (
         this.options.allowShowPercentages &&
@@ -188,7 +188,7 @@ export class SelectBase
         this.updateShowPercentageBtn();
         return this.showPercentageBtn;
       }
-    });
+    }, "button");
     this.registerToolbarItem("hideEmptyAnswers", () => {
       if (this.options.allowHideEmptyAnswers) {
         this.emptyAnswersBtn = DocumentHelper.createButton(() => {
@@ -197,13 +197,13 @@ export class SelectBase
         this.updateEmptyAnswersBtn();
       }
       return this.emptyAnswersBtn;
-    });
+    }, "button");
     this.registerToolbarItem("topNAnswers", () => {
       if (
         this.options.allowTopNAnswers &&
         this.getSeriesValues().length === 0
       ) {
-        this.topNSelector = DocumentHelper.createSelector(
+        this.topNSelector = DocumentHelper.createDropdown(
           this.topNValues.map((value) => {
             return {
               text: localization.getString("topNValueText" + value),
@@ -212,13 +212,13 @@ export class SelectBase
           }),
           (option) => false,
           (e) => {
-            this.topN = parseInt(e.target.value);
+            this.topN = parseInt(e);
           }
         );
         this.updateTopNSelector();
       }
       return this.topNSelector;
-    });
+    }, "dropdown");
     this.registerToolbarItem("transposeData", () => {
       if (this.options.allowTransposeData) {
         this.transposeDataBtn = DocumentHelper.createButton(() => {
@@ -227,7 +227,7 @@ export class SelectBase
         this.updateTransposeDataBtn();
       }
       return this.transposeDataBtn;
-    });
+    }, "button");
     this.registerToolbarItem("showMissingAnswers", () => {
       if (this.isSupportMissingAnswers() && this.options.allowShowMissingAnswers) {
         this.missingAnswersBtn = DocumentHelper.createButton(() => {
@@ -236,7 +236,7 @@ export class SelectBase
         this.updateMissingAnswersBtn();
       }
       return this.missingAnswersBtn;
-    });
+    }, "button");
   }
 
   protected chartTypes: string[] = [];
@@ -253,9 +253,7 @@ export class SelectBase
 
   private updateEmptyAnswersBtn() {
     if (!!this.emptyAnswersBtn) {
-      this.emptyAnswersBtn.innerText = this._hideEmptyAnswers
-        ? localization.getString("showEmptyAnswers")
-        : localization.getString("hideEmptyAnswers");
+      (this.emptyAnswersBtn as any).setText(localization.getString(this._hideEmptyAnswers ? "showEmptyAnswers" : "hideEmptyAnswers"));
       if (this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "line" || this.chartType == "scatter") {
         this.emptyAnswersBtn.style.display = "inline";
       } else {
@@ -266,9 +264,7 @@ export class SelectBase
 
   private updateTransposeDataBtn() {
     if (!!this.transposeDataBtn) {
-      this.transposeDataBtn.innerText = this.transposeData
-        ? localization.getString("showPerColumns")
-        : localization.getString("showPerValues");
+      (this.transposeDataBtn as any).setText(localization.getString(this.transposeData ? "showPerColumns" : "showPerValues"));
       if (this.getSeriesValues().length > 0) {
         this.transposeDataBtn.style.display = "inline";
       } else {
@@ -291,17 +287,13 @@ export class SelectBase
       } else {
         this.choicesOrderSelector.style.display = "none";
       }
-      this.choicesOrderSelector.getElementsByTagName(
-        "select"
-      )[0].value = this.answersOrder;
+      (this.choicesOrderSelector as any).setValue(this.answersOrder);
     }
   }
 
   private updateShowPercentageBtn() {
     if (!!this.showPercentageBtn) {
-      this.showPercentageBtn.innerText = this._showPercentages
-        ? localization.getString("hidePercentages")
-        : localization.getString("showPercentages");
+      (this.showPercentageBtn as any).setText(localization.getString(this._showPercentages ? "hidePercentages" : "showPercentages"));
       if (this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "stackedbar") {
         this.showPercentageBtn.style.display = "inline";
       } else {
@@ -312,17 +304,13 @@ export class SelectBase
 
   private updateTopNSelector() {
     if (!!this.topNSelector) {
-      this.topNSelector.getElementsByTagName("select")[0].value = <any>(
-        this._topN
-      );
+      (this.topNSelector as any).setValue(this._topN);
     }
   }
 
   private updateMissingAnswersBtn() {
     if (!!this.missingAnswersBtn) {
-      this.missingAnswersBtn.innerText = this._showMissingAnswers
-        ? localization.getString("hideMissingAnswers")
-        : localization.getString("showMissingAnswers");
+      (this.missingAnswersBtn as any).setText(localization.getString(this._showMissingAnswers ? "hideMissingAnswers" : "showMissingAnswers"));
     }
   }
 
@@ -623,7 +611,7 @@ export class SelectBase
     let seriesLabels = this.getSeriesLabels();
     let datasets = (await this.getCalculatedValues()) as number[][];
     let labels = this.getLabels();
-    let colors = this.getColors();
+    let colors = VisualizerBase.getColors();
     var texts = this.showPercentages ? this.getPercentages(datasets) : datasets;
 
     if (this.transposeData) {

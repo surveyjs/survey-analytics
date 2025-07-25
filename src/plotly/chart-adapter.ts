@@ -1,6 +1,5 @@
 import { Question, ItemValue, Event } from "survey-core";
 import { SelectBase } from "../selectBase";
-import { VisualizationManager } from "../visualizationManager";
 import { localization } from "../localizationManager";
 import Plotly from "plotly.js-dist-min";
 import { PlotlySetup } from "./setup";
@@ -31,7 +30,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
     config: any
   ) {
     if(this.model.question.getType() === "boolean") {
-      const colors = this.model.getColors();
+      const colors = VisualizerBase.getColors();
       const boolColors = [
         BooleanModel.trueColor || colors[0],
         BooleanModel.falseColor || colors[1],
@@ -119,6 +118,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
   }
 
   public async update(chartNode: HTMLElement): Promise<any> {
+    chartNode.className = "sa-visualizer--plotly";
     const answersData = (this.model instanceof SelectBase) ? await this.model.getAnswersData() : await this.model.getCalculatedValues();
     var plotlyOptions = PlotlySetup.setup((this.model as any).chartType, this.model, answersData as any);
 
