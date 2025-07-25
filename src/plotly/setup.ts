@@ -250,27 +250,6 @@ export class PlotlySetup {
           bottomMargin;
     }
 
-    // labels.forEach((label, index) => {
-    //   traces[index].marker.color = undefined;
-    //   traces[index].name = label;
-
-    //   if (model.chartType === "stackedbar") {
-    //     traces[index].type = "bar";
-    //     traces[index].width = 0.5;
-    //   } else {
-    //     traces[index].width =
-    //       (model.showPercentages ? 0.7 : 0.5) / traces.length;
-    //   }
-    // });
-
-    // traces.forEach((trace, traceIndex) => {
-    //   const percentString = model.showPercentages ? "%" : "";
-    //   traces[traceIndex].hovertext = [];
-    //   yFullTexts.forEach((yFullText, yFullTextIndex) => {
-    //     traces[traceIndex].hovertext.push(`${trace.y[yFullTextIndex]} : ${trace.name}, ${trace.text[yFullTextIndex]}${percentString}`);
-    //   });
-    // });
-
     if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       layout.xaxis.autorange = "reversed";
       layout.yaxis.side = "right";
@@ -557,7 +536,6 @@ export class PlotlySetup {
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
     const traces: any = [];
 
-    // Для radar chart нужны полярные координаты
     const traceConfig: any = {
       type: "scatterpolar",
       mode: "lines+markers",
@@ -573,8 +551,8 @@ export class PlotlySetup {
     datasets.forEach((dataset: Array<number>, index: number) => {
       const traceName = hasSeries ? seriesLabels[index] : labels[index];
       const trace = Object.assign({}, traceConfig, {
-        r: dataset, // радиус (значения)
-        theta: labels, // углы (метки)
+        r: dataset,
+        theta: labels,
         name: traceName,
         text: texts[index],
         hoverinfo: "r+theta+name",
@@ -601,7 +579,7 @@ export class PlotlySetup {
       polar: {
         radialaxis: {
           visible: true,
-          range: [0, Math.max(...datasets.map(s => Math.max(...s))) * 1.1], // Автоматический диапазон с небольшим отступом
+          range: [0, Math.max(...datasets.map(s => Math.max(...s))) * 1.1],
           tickfont: {
             size: 12
           }
