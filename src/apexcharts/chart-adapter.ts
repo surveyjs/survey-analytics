@@ -2,7 +2,7 @@ import ApexCharts from "apexcharts";
 import { ItemValue } from "survey-core";
 import { SelectBase } from "../selectBase";
 import { localization } from "../localizationManager";
-import { ApexChartsSetup } from "./setup";
+import { ApexChartsOptions, ApexChartsSetup } from "./setup";
 import { VisualizerBase } from "../visualizerBase";
 
 export const chartTypes = {
@@ -17,6 +17,29 @@ export const chartTypes = {
 
 export class ApexChartsAdapter {
   private _chart: ApexCharts = undefined;
+  private _pieCharts: ApexCharts[] = undefined;
+
+  private updatePieCharts(options: any, chartOptions: ApexChartsOptions, chartNode: HTMLElement): void {
+    if (this._pieCharts) {
+      this._pieCharts.forEach((chart) => chart.updateOptions(options));
+    } else {
+      chartNode.style.cssText = "display: grid; grid-template-columns: repeat(2, 1fr);";
+      this._pieCharts = chartOptions.series.map((s, i) => {
+        const chartDiv = document.createElement("div");
+        chartDiv.id = "sa-chart" + i;
+        chartNode.appendChild(chartDiv);
+
+        const _options = Object.assign({}, options, {
+          series: s.series,
+        });
+        _options.title.text = s.title;
+
+        const chart = new ApexCharts(chartDiv, _options);
+        return chart;
+      });
+      this._pieCharts.forEach((chart) => chart.render());
+    }
+  }
 
   constructor(protected model: SelectBase | VisualizerBase) { }
 
@@ -36,47 +59,70 @@ export class ApexChartsAdapter {
   }
 
   public async create(chartNode: HTMLElement): Promise<any> {
-    const [chart, chartOptions] = await this.update(chartNode);
+    const chartOptions = await this.update(chartNode);
+    const currentCharts = this._pieCharts || [this._chart];
 
     if(this.model instanceof SelectBase) {
     // Handle chart clicks
       const _model = this.model as SelectBase;
-      chart.addEventListener("click", (event: any, chartContext: any, config: any) => {
-        if (config.dataPointIndex !== undefined && config.dataPointIndex !== null) {
-          let itemText = "";
-          if (!chartOptions.hasSeries) {
-            itemText = config.config.labels[config.dataPointIndex];
-            const item: ItemValue = _model.getSelectedItemByText(itemText);
-            _model.setSelection(item);
-          } else {
-            itemText = config.config.labels[config.dataPointIndex];
-            const propertyLabel = config.config.series[config.seriesIndex].name;
-            const seriesValues = _model.getSeriesValues();
-            const seriesLabels = _model.getSeriesLabels();
-            const propertyValue = seriesValues[seriesLabels.indexOf(propertyLabel)];
-            const selectedItem: ItemValue = _model.getSelectedItemByText(itemText);
-            const item = new ItemValue({ [propertyValue]: selectedItem.value }, propertyLabel + ": " + selectedItem.text);
-            _model.setSelection(item);
-          }
-        }
-      });
-
-      // Change cursor on hover
-      chart.addEventListener("mouseenter", () => {
-        chartNode.style.cursor = "pointer";
-      });
-      chart.addEventListener("mouseleave", () => {
-        chartNode.style.cursor = "";
-      });
     }
 
-    this._chart = chart;
-    return chart;
+    return currentCharts;
   }
 
-  public async update(chartNode: HTMLElement): Promise<any> {
+  public async update(chartNode: HTMLElement): Promise<ApexChartsOptions> {
+    const _chartType = (this.model as any).chartType;
     const answersData = (this.model instanceof SelectBase) ? await this.model.getAnswersData() : await this.model.getCalculatedValues();
-    var chartOptions = ApexChartsSetup.setup((this.model as any).chartType, this.model, answersData as any);
+    var chartOptions = ApexChartsSetup.setup(_chartType, this.model, answersData as any);
+
+    if (this.model instanceof SelectBase) {
+      const _model = this.model as SelectBase;
+      chartOptions.chart.events = {
+        dataPointMouseEnter: function () { chartNode.style.cursor = "pointer"; },
+        dataPointMouseLeave: function () { chartNode.style.cursor = ""; },
+        dataPointSelection: function(event, chartContext, opts) {
+          if (opts.dataPointIndex !== undefined && opts.seriesIndex !== undefined) {
+            let itemText = "";
+            if (!chartOptions.hasSeries) {
+              itemText = config.labels[opts.dataPointIndex];
+              const item: ItemValue = _model.getSelectedItemByText(itemText);
+              _model.setSelection(item);
+            } else {
+              itemText = config.series[opts.seriesIndex].name;
+              const propertyLabel = config.labels[opts.dataPointIndex];
+
+              const seriesValues = _model.getSeriesValues();
+              const seriesLabels = _model.getSeriesLabels();
+              const propertyValue = seriesValues[seriesLabels.indexOf(propertyLabel)];
+              const selectedItem: ItemValue = _model.getSelectedItemByText(itemText);
+              const item = new ItemValue({ [propertyValue]: selectedItem.value }, propertyLabel + ": " + selectedItem.text);
+              _model.setSelection(item);
+            }
+          }
+
+          // The last parameter opts contains additional information like `seriesIndex` and `dataPointIndex` for cartesian charts
+          /*if (data.points.length > 0) {
+              let itemText = "";
+              if (!chartOptions.hasSeries) {
+                itemText = Array.isArray(data.points[0].customdata)
+                  ? data.points[0].customdata[0]
+                  : data.points[0].customdata;
+                const item: ItemValue = _model.getSelectedItemByText(itemText);
+                _model.setSelection(item);
+              } else {
+                itemText = data.points[0].data.name;
+                const propertyLabel = data.points[0].label;
+                // const seriesValues = this.model.getSeriesValues();
+                // const seriesLabels = this.model.getSeriesLabels();
+                // const propertyValue = seriesValues[seriesLabels.indexOf(propertyLabel)];
+                // const selectedItem: ItemValue = _model.getSelectedItemByText(itemText);
+                // const item = new ItemValue({ [propertyValue]: selectedItem.value }, propertyLabel + ": " + selectedItem.text);
+                // _model.setSelection(item);
+              }
+            }*/
+        }
+      };
+    }
 
     let config: any = {
       chart: {
@@ -96,20 +142,28 @@ export class ApexChartsAdapter {
     };
     ApexChartsSetup.onChartCreating.fire(this.model, options);
 
-    if (this._chart) {
-      this._chart.updateOptions(options);
+    if((_chartType=== "pie" || _chartType === "doughnut") && chartOptions.series.length > 1 && typeof chartOptions.series[0] !== "number") {
+      this.updatePieCharts(options, chartOptions, chartNode);
     } else {
-      this._chart = new ApexCharts(chartNode, options);
-      await this._chart.render();
+      if (this._chart) {
+        await this._chart.updateOptions({ series: options.series });
+      } else {
+        this._chart = new ApexCharts(chartNode, options);
+        await this._chart.render();
+      }
     }
 
-    return [this._chart, chartOptions];
+    return chartOptions;
   }
 
-  public destroy(node: HTMLElement) {
+  public destroy(node: HTMLElement): void {
     if (this._chart) {
       this._chart.destroy();
       this._chart = undefined;
+    }
+    if (this._pieCharts) {
+      this._pieCharts.forEach(ch => ch.destroy());
+      this._pieCharts = undefined;
     }
   }
 }

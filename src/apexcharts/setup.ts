@@ -20,6 +20,7 @@ export interface ApexChartsOptions {
   xaxis?: any;
   yaxis?: any;
   grid?: any;
+  title?: any;
 }
 
 export class ApexChartsSetup {
@@ -216,25 +217,32 @@ export class ApexChartsSetup {
 
     // Prepare data series
     let series: Array<any> = [];
+    let chartCount = 1;
 
     if (hasSeries) {
       // For matrix questions or multiple series
-      series = datasets.map((dataset: Array<number>, index: number) => {
-        return { series: dataset, labels: labels, title: seriesLabels[index] };
+      datasets.forEach((dataset: Array<number>, index: number) => {
+        const isNotEmpty = dataset.some((value: number) => value != 0);
+        if(isNotEmpty) {
+          chartCount += 1;
+          series.push({
+            series: dataset,
+            labels: labels,
+            title: seriesLabels[index]
+          });
+        }
       });
     } else {
       // For simple questions
       series = datasets[0];
     }
 
-    const layoutColumns = 2;
-    const radius = labels.length < 10 ? labels.length * 50 + 100 : 550;
-    const height = (radius + 25) * Math.ceil(datasets.length / layoutColumns);
+    const diameter = labels.length < 10 ? labels.length * 50 + 100 : 550;
 
     // Chart settings
     const chart: any = {
       type: model.chartType === "doughnut" ? "donut" : "pie",
-      height: height,
+      height: diameter,
       toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
       background: model.backgroundColor
     };
@@ -275,7 +283,7 @@ export class ApexChartsSetup {
       show: false,
     };
 
-    return {
+    const options: ApexChartsOptions = {
       series,
       chart,
       labels: hasSeries ? seriesLabels : labels,
@@ -286,6 +294,17 @@ export class ApexChartsSetup {
       tooltip,
       hasSeries
     };
+
+    if (hasSeries) {
+      options.title = {
+        align: "center",
+        style: {
+          ...ApexChartsSetup.defaultAxisLabelFont,
+        },
+      };
+    }
+
+    return options;
   }
 
   static setupBar(model: SelectBase, answersData: IAnswersData): ApexChartsOptions {

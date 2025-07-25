@@ -62,6 +62,10 @@ export class AlternativeVisualizersWrapper
   }
 
   protected visualizerContainer: HTMLElement;
+
+  protected onDataChanged(): void {
+  }
+
   public get hasFooter(): boolean {
     return false;
   }

@@ -208,7 +208,11 @@ export class PlotlySetup {
               column: traces.length % layoutColumns,
               row: Math.floor(traces.length / layoutColumns),
             },
-            title: { position: "bottom center", text: seriesLabels[index], font: { ...PlotlySetup.defaultPieTitleFont } }
+            title: {
+              position: "bottom center",
+              text: seriesLabels[index],
+              font: { ...PlotlySetup.defaultPieTitleFont },
+            }
           })
         );
       }
