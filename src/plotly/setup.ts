@@ -42,6 +42,7 @@ export class PlotlySetup {
     scatter: PlotlySetup.setupScatter,
     gauge: PlotlySetup.setupGauge,
     bullet: PlotlySetup.setupGauge,
+    radar: PlotlySetup.setupRadar,
   };
 
   static setup(charType: string, model: VisualizerBase, answersData: IAnswersData): PlotlyOptions {
@@ -543,5 +544,92 @@ export class PlotlySetup {
     };
 
     return { traces, layout, hasSeries: false };
+  }
+
+  static setupRadar(model: SelectBase, answersData: IAnswersData): PlotlyOptions {
+    let {
+      datasets,
+      labels,
+      colors,
+      texts,
+      seriesLabels,
+    } = answersData;
+    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const traces: any = [];
+
+    // Для radar chart нужны полярные координаты
+    const traceConfig: any = {
+      type: "scatterpolar",
+      mode: "lines+markers",
+      fill: "toself",
+      line: {
+        width: 2
+      },
+      marker: {
+        size: 6
+      }
+    };
+
+    datasets.forEach((dataset: Array<number>, index: number) => {
+      const traceName = hasSeries ? seriesLabels[index] : labels[index];
+      const trace = Object.assign({}, traceConfig, {
+        r: dataset, // радиус (значения)
+        theta: labels, // углы (метки)
+        name: traceName,
+        text: texts[index],
+        hoverinfo: "r+theta+name",
+        customdata: labels,
+        line: {
+          ...traceConfig.line,
+          color: colors[index % colors.length]
+        },
+        marker: {
+          ...traceConfig.marker,
+          color: colors[index % colors.length]
+        }
+      });
+      traces.push(trace);
+    });
+
+    const layout: any = {
+      font: {
+        family: "Segoe UI, sans-serif",
+        size: 14,
+        weight: "normal",
+        color: "#404040",
+      },
+      polar: {
+        radialaxis: {
+          visible: true,
+          range: [0, Math.max(...datasets.map(s => Math.max(...s))) * 1.1], // Автоматический диапазон с небольшим отступом
+          tickfont: {
+            size: 12
+          }
+        },
+        angularaxis: {
+          tickfont: {
+            size: 12
+          },
+          ticktext: labels.map((label: string) => {
+            return PlotlySetup.getTruncatedLabel(
+              label,
+              model.labelTruncateLength
+            );
+          }),
+          tickvals: labels
+        }
+      },
+      showlegend: hasSeries,
+      plot_bgcolor: model.backgroundColor,
+      paper_bgcolor: model.backgroundColor,
+      margin: {
+        l: 50,
+        r: 50,
+        t: 50,
+        b: 50
+      }
+    };
+
+    return { traces, layout, hasSeries };
   }
 }

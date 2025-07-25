@@ -1,7 +1,18 @@
 import { VisualizationManager } from "./visualizationManager";
 import { SelectBase } from "./selectBase";
+import { QuestionRankingModel } from "survey-core";
 
 export class RankingModel extends SelectBase {
+
+  constructor(
+    question: QuestionRankingModel,
+    data: Array<{ [index: string]: any }>,
+    options?: any,
+    name?: string
+  ) {
+    super(question, data, options, name || "ranking");
+  }
+
   getQuestionResults() {
     const name = this.question.name;
     return this.data.map((dataItem) => dataItem[name]);

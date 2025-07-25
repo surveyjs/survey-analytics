@@ -31,6 +31,7 @@ export var englishStrings = {
   chartType_gauge: "Gauge",
   chartType_bullet: "Bullet",
   chartType_line: "Line",
+  chartType_radar: "Radar",
   hideButton: "Hide",
   makePrivateButton: "Make private",
   makePublicButton: "Make public",
