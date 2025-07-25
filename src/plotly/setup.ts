@@ -622,7 +622,6 @@ export class PlotlySetup {
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
     const traces: any = [];
 
-    // Для radar chart нужны полярные координаты
     const traceConfig: any = {
       type: "scatterpolar",
       mode: "lines+markers",
@@ -638,8 +637,8 @@ export class PlotlySetup {
     datasets.forEach((dataset: Array<number>, index: number) => {
       const traceName = hasSeries ? seriesLabels[index] : labels[index];
       const trace = Object.assign({}, traceConfig, {
-        r: dataset, // радиус (значения)
-        theta: labels, // углы (метки)
+        r: dataset,
+        theta: labels,
         name: traceName,
         text: texts[index],
         hoverinfo: "r+theta+name",
@@ -666,7 +665,7 @@ export class PlotlySetup {
       polar: {
         radialaxis: {
           visible: true,
-          range: [0, Math.max(...datasets.map(s => Math.max(...s))) * 1.1], // Автоматический диапазон с небольшим отступом
+          range: [0, Math.max(...datasets.map(s => Math.max(...s))) * 1.1],
           tickfont: {
             size: 12
           }
@@ -676,7 +675,7 @@ export class PlotlySetup {
             size: 12
           },
           ticktext: labels.map((label: string) => {
-            return PlotlySetup.getTruncatedLabel(
+            return getTruncatedLabel(
               label,
               model.labelTruncateLength
             );

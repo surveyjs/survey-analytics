@@ -198,6 +198,7 @@ export class ApexChartsSetup {
     scatter: ApexChartsSetup.setupScatter,
     gauge: ApexChartsSetup.setupGauge,
     bullet: ApexChartsSetup.setupBullet,
+    radar: ApexChartsSetup.setupRadar,
   };
 
   static setup(charType: string, model: VisualizerBase, answersData: IAnswersData): ApexChartsOptions {
@@ -1037,5 +1038,116 @@ export class ApexChartsSetup {
       dataLabels,
       tooltip,
     };
+  }
+
+  static setupRadar(model: SelectBase, answersData: IAnswersData): ApexChartsOptions {
+    let {
+      datasets,
+      labels,
+      colors,
+      texts,
+      seriesLabels,
+    } = answersData;
+    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+
+    const series = datasets.map((dataset: Array<number>, index: number) => {
+      const seriesName = hasSeries ? seriesLabels[index] : labels[index];
+      return {
+        name: seriesName,
+        data: dataset
+      };
+    });
+
+    const options: ApexChartsOptions = {
+      chart: {
+        type: "radar",
+        background: model.backgroundColor,
+        toolbar: {
+          show: true,
+          tools: {
+            download: true,
+            selection: false,
+            zoom: false,
+            zoomin: false,
+            zoomout: false,
+            pan: false,
+            reset: false
+          }
+        }
+      },
+      series: series,
+      labels: labels.map((label: string) => {
+        return getTruncatedLabel(
+          label,
+          model.labelTruncateLength
+        );
+      }),
+      colors: colors,
+      // stroke: {
+      //   width: 2
+      // },
+      // fill: {
+      //   opacity: 0.3
+      // },
+      // markers: {
+      //   size: 6
+      // },
+      plotOptions: {
+        radar: {
+          polygons: {
+            strokeColors: "#e8e8e8",
+            fill: {
+              colors: ["#f8f8f8", "#fff"]
+            }
+          }
+        }
+      },
+      yaxis: {
+        show: true,
+        labels: {
+          show: true,
+          style: {
+            colors: DashboardTheme.axisTickFontColor,
+            fontSize: "12px",
+            fontFamily: DashboardTheme.fontFamily,
+            fontWeight: DashboardTheme.axisTickFontWeight
+          }
+        },
+        tickAmount: 5
+      },
+      legend: {
+        show: hasSeries,
+        position: "top",
+        horizontalAlign: "center",
+        fontSize: "14px",
+        fontFamily: DashboardTheme.fontFamily,
+        fontWeight: DashboardTheme.legendFontWeight,
+        labels: {
+          colors: DashboardTheme.legendFontColor
+        },
+        markers: {
+          width: 12,
+          height: 12,
+          radius: 6
+        }
+      },
+      tooltip: {
+        enabled: true,
+        theme: "light",
+        style: {
+          fontSize: "12px",
+          fontFamily: DashboardTheme.fontFamily
+        },
+        y: {
+          formatter: function(val: number, opts: any) {
+            const seriesName = opts.seriesNames[opts.seriesIndex];
+            const label = opts.w.globals.labels[opts.dataPointIndex];
+            return `${seriesName}: ${val} (${label})`;
+          }
+        }
+      },
+    };
+
+    return options;
   }
 }

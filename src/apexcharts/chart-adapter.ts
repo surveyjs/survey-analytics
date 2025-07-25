@@ -13,6 +13,7 @@ export const chartTypes = {
   "matrix": ["bar", "stackedbar", "pie", "doughnut"],
   "matrixDropdownGrouped": ["stackedbar", "bar", "pie", "doughnut"],
   "pivot": ["vbar", "bar", "line", "stackedbar", "pie", "doughnut"], // ["vbar", "bar"];
+  "ranking": ["bar", "vbar", "pie", "doughnut", "radar"],
 };
 
 export class ApexChartsAdapter {
