@@ -15,6 +15,7 @@ export const plotlyChartTypes = {
   "matrix": MatrixPlotly.types,
   "matrixDropdownGrouped": MatrixDropdownGroupedPlotly.types,
   "pivot": PivotPlotly.types,
+  "ranking": [].concat(SelectBasePlotly.types).concat(["radar"]),
 };
 
 export class PlotlyChartAdapter implements IChartAdapter {
