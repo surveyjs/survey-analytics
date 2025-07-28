@@ -557,7 +557,7 @@ export class PlotlySetup {
         text: texts[index],
         hoverinfo: "r+theta+name",
         customdata: labels,
-        hovertemplate: "<b>%{theta}: %{r}</b>" +
+        hovertemplate: "%{theta}: %{r}" +
                       "<extra></extra>",
         line: {
           ...traceConfig.line,
