@@ -229,14 +229,16 @@ export interface IVisualizationPanelOptions {
    * - Matrix: `"bar"` | `"vbar"` | `"pie"` | `"doughnut"` | `"stackedbar"`
    * - Rating: `"bar"` | `"vbar"` | `"gauge"` | `"bullet"`
    * - Radiogroup, Checkbox, Dropdown, Image Picker: `"bar"` | `"vbar"` | `"pie"` | `"doughnut"`
+   * - Ranking: `"bar"` | `"vbar"` | `"pie"` | `"doughnut" | `"radar"`
    *
-   * To set a type for an individual chart, access this chart in the `visualizers` array and set its `chartType` property to one of the values described above:
+   * To set a type for an individual chart, access this chart in the `visualizers` array or using the [`getVisualizer(questionName)`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#getVisualizer) method and set its `chartType` property to one of the values described above:
    *
    * ```js
    * const vizPanel = new SurveyAnalytics.VisualizationPanel( ... );
    * vizPanel.visualizers[0].chartType = "stackedbar";
+   * // --- or ---
+   * vizPanel.getVisualizer("my-question").chartType = "stackedbar";
    * ```
-   *
    */
   defaultChartType?: string;
   /**
