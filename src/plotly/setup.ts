@@ -549,7 +549,7 @@ export class PlotlySetup {
     };
 
     datasets.forEach((dataset: Array<number>, index: number) => {
-      const traceName = hasSeries ? seriesLabels[index] : labels[index];
+      const traceName = hasSeries ? seriesLabels[index] : "";
       const trace = Object.assign({}, traceConfig, {
         r: dataset,
         theta: labels,
@@ -557,6 +557,8 @@ export class PlotlySetup {
         text: texts[index],
         hoverinfo: "r+theta+name",
         customdata: labels,
+        hovertemplate: "<b>%{theta}: %{r}</b>" +
+                      "<extra></extra>",
         line: {
           ...traceConfig.line,
           color: colors[index % colors.length]
@@ -598,6 +600,7 @@ export class PlotlySetup {
         }
       },
       showlegend: hasSeries,
+      colorway: colors,
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
       margin: {
