@@ -5,9 +5,9 @@ import { VisualizationManager } from "./visualizationManager";
 import { DocumentHelper, createLoadingIndicator } from "./utils";
 import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
+import { DashboardTheme, IDashboardTheme } from "./theme";
 
 import "./visualizerBase.scss";
-import { DashboardTheme } from "./theme";
 
 export interface IChartAdapter {
   getChartTypes(): string[];
@@ -77,6 +77,7 @@ export class VisualizerBase implements IDataInfo {
   public static suppressVisualizerStubRendering: boolean = false;
   public static chartAdapterType: any = undefined;
 
+  private _theme: DashboardTheme = new DashboardTheme();
   private _showToolbar = true;
   private _footerVisualizer: VisualizerBase = undefined;
   private _dataProvider: DataProvider = undefined;
@@ -639,7 +640,7 @@ export class VisualizerBase implements IDataInfo {
     }
     this.renderResult = targetElement;
 
-    DocumentHelper.setStyles(targetElement, DashboardTheme);
+    DocumentHelper.setStyles(targetElement, this._theme?.cssVariables);
 
     this.toolbarContainer = DocumentHelper.createElement(
       "div",
@@ -747,11 +748,21 @@ export class VisualizerBase implements IDataInfo {
   set backgroundColor(value) { this.setBackgroundColorCore(value); }
 
   protected getBackgroundColorCore() {
-    return this._backgroundColor || DashboardTheme.backgroundColor;
+    return this._backgroundColor || this._theme.backgroundColor;
   }
   protected setBackgroundColorCore(color: string) {
     this._backgroundColor = color;
     if (this.footerVisualizer) this.footerVisualizer.backgroundColor = color;
+  }
+
+  get theme() : DashboardTheme {
+    return this._theme;
+  }
+
+  public applyTheme(theme: IDashboardTheme): void {
+    if (!theme) return;
+    this._theme = new DashboardTheme(theme);
+    DocumentHelper.setStyles(this.renderResult, theme.cssVariables);
   }
 
   static customColors: string[] = [];

@@ -313,50 +313,40 @@
 .sa-dropdown {
     position: relative;
     cursor: pointer;
-
-    // --sa-dropdown-bg: white;
-    // --sa-dropdown-border: #ccc;
-    // --sa-dropdown-item-text-color: #333;
-    // --sa-dropdown-item-hover-bg: #f0f0f0;
-    // --sa-dropdown-item-selected-bg: #e0e0e0;
-    // --sa-icon-size: 20px;
 }
 
 .sa-dropdown-header {
     display: flex;
-    padding: var(--ctr-editor-padding-top, 4px) var(--ctr-editor-padding-right, 4px) var(--ctr-editor-padding-bottom, 4px) var(--ctr-editor-padding-left, 4px);
+    padding: var(--sjs2-layout-control-formbox-medium-vertical, 4px) var(--sjs2-layout-control-formbox-medium-horizontal, 4px);
     align-items: flex-start;
-    gap: var(--ctr-editor-gap, 4px);
+    gap: var(--sjs2-layout-control-formbox-medium-gap, 4px);
     align-self: stretch;
 
-    margin: var(--ctr-editor-border-width, 1px);
-    border-radius: var(--ctr-editor-corner-radius, 6px);
-    outline: var(--ctr-editor-border-width, 1px) solid var(--sa-dropdown-border, #DCDCDC);
-    background: var(--sa-dropdown-bg, #F4F4F4);
+    border-radius: var(--sjs2-radius-semantic-form, 8px);
+    margin: var(--sjs2-border-width-x100, 1px);
+    outline: var(--sjs2-border-width-x100, 1px) solid var(--sjs2-color-control-formbox-default-border, #D4D4D4);
+    background: var(--sjs2-color-control-formbox-default-bg, rgba(28, 27, 32, 0.05));
 }
 
 .sa-dropdown-arrow {
-  // gap: var(--ctr-editor-gap, 4px);
-    margin-left: var(--ctr-editor-gap, 4px);
-
     display: flex;
-    padding: var(--ctr-editor-button-padding-top, 8px) var(--ctr-editor-button-padding-right, 8px) var(--ctr-editor-button-padding-bottom, 8px) var(--ctr-editor-button-padding-left, 8px);
+    padding: var(--sjs2-layout-control-action-small-box-vertical, 8px) var(--sjs2-layout-control-action-small-box-horizontal, 8px);
     justify-content: center;
     align-items: center;
-    gap: var(--ctr-editor-button-gap, 8px);
     align-self: stretch;
-    border-radius: var(--ctr-editor-button-corner-radius, 4px);
+    border-radius: var(--sjs2-radius-semantic-form-item, 4px);
+    background: var(--sjs2-color-bg-neutral-tertiary, rgba(28, 27, 32, 0.00));
 }
 
 .sa-dropdown-arrow svg {
     display: flex;
-    width: var(--ctr-editor-button-icon-width, 24px);
-    height: var(--ctr-editor-button-icon-height, 24px);
+    width: var(--sjs2-size-icon-medium, 24px);
+    height: var(--sjs2-size-icon-medium, 24px);
     justify-content: center;
     align-items: center;
 
     use {
-      fill: (--ctr-editor-button-icon-color, rgba(0, 0, 0, 0.75))
+      fill: var(--sjs2-color-fg-basic-primary-alt, rgba(66, 65, 70, 1));
     }
 }
 
@@ -367,17 +357,21 @@
     right: 0;
     max-height: 300px;
     overflow-y: auto;
-    border: 1px solid var(--sa-dropdown-border);
+    border: var(--sjs2-border-width-x100, 1px) solid var(--sjs2-color-border-basic-secondary, #D4D4D4);
     border-top: none;
-    border-radius: 0 0 4px 4px;
-    background-color: var(--sa-dropdown-bg);
-    color: var(--sa-dropdown-item-text-color);
+    border-radius: var(--sjs2-radius-container-drop, 16px);
+    background: var(--sjs2-color-utility-sheet, #FFF);
     display: none;
     z-index: 1000;
     margin: 0;
-    padding: 0;
     list-style: none;
     transition: all 0.3s;
+
+    padding: var(--sjs2-layout-container-drop-vertical, 8px) var(--sjs2-layout-container-drop-horizontal, 8px);
+
+    /* sjs2/shadow/large */
+    box-shadow: var(--sjs2-shadow-size-large-offset-x, 0) var(--sjs2-shadow-size-large-offset-y, 6px) var(--sjs2-shadow-size-large-blur, 12px) var(--sjs2-shadow-size-large-spread, 4px) var(--sjs2-shadow-color-large, rgba(0, 76, 68, 0.10));
+
 }
 
 .sa-dropdown-list.open {
@@ -385,33 +379,36 @@
 }
 
 .sa-dropdown-item {
-  padding: 10px 15px;
+  padding: var(--sjs2-spacing-x150, 12px) var(--sjs2-size-x200, 16px);
   cursor: pointer;
   transition: all 0.3s;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  border-radius: var(--sjs2-radius-control-drop-item, 8px);
+  color: var(--sjs2-color-fg-basic-primary, #1C1B20);
 }
 
 .sa-dropdown-item:hover {
-  background-color: var(--sa-dropdown-item-hover-bg);
+  background-color: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));;
 }
 
 .sa-dropdown-item.selected {
-  background-color: var(--sa-dropdown-item-selected-bg);
+  background-color: var(--sjs2-color-bg-brand-primary, #19B394);
+  color: var(--sjs2-color-fg-static-main-primary, #FFF);
+
+  /* sjs2/typography/default-strong */
+  font-family: var(--sjs2-font-family-semantic-default, "Open Sans");
+  font-size: var(--sjs2-font-size-semantic-default, 16px);
+  font-style: normal;
+  font-weight: 600;
+  line-height: var(--sjs2-line-height-semantic-default, 24px); /* 150% */
 }
 
 .sa-dropdown-placeholder {
   overflow: hidden;
-  color: var(--ctr-editor-content-text-color-placeholder, rgba(0, 0, 0, 0.50));
+  color: var(--sjs2-color-control-input-default-placeholder, rgba(28, 27, 32, 0.60));
   text-overflow: ellipsis;
-
-  /* ctr/Default */
-  font-family: var(--ctr-font-family, $font-family);
-  font-size: var(--ctr-font-default-size, 16px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: var(--ctr-font-default-line-height, 24px); /* 150% */
 }
 
 .sa-dropdown-icon {
@@ -428,9 +425,8 @@
 
 .sa-dropdown-header-content {
   display: flex;
-  padding: var(--ctr-editor-content-margin-top, 8px) var(--ctr-editor-content-margin-right, 12px) var(--ctr-editor-content-margin-bottom, 8px) var(--ctr-editor-content-margin-left, 12px);
+  padding: var(--sjs2-layout-control-input-medium-content-vertical, 8px) var(--sjs2-layout-control-input-medium-content-horizontal, 12px);
   align-items: flex-start;
-  gap: var(--ctr-editor-content-gap, 8px);
   flex: 1 0 0;
 }
 
@@ -438,12 +434,12 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--ctr-editor-content-text-color, rgba(0, 0, 0, 0.90));
+  color: var(--sjs2-color-control-input-default-value, #1C1B20);
 
-  /* ctr/Default */
-  font-family: var(--ctr-font-family, $font-family);
-  font-size: var(--ctr-font-default-size, 16px);
+  /* sjs2/typography/default */
+  font-family: var(--sjs2-font-family-semantic-default, "Open Sans");
+  font-size: var(--sjs2-font-size-semantic-default, 16px);
   font-style: normal;
   font-weight: 400;
-  line-height: var(--ctr-font-default-line-height, 24px); /* 150% */
+  line-height: var(--sjs2-line-height-semantic-default, 24px); /* 150% */
 }

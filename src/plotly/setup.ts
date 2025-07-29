@@ -4,7 +4,7 @@ import { VisualizerBase } from "../visualizerBase";
 import { localization } from "../localizationManager";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
-import { DashboardTheme } from "../theme";
+import { DashboardTheme, LegacyDashboardTheme } from "../theme";
 import { getTruncatedLabel, reverseAll } from "../utils/utils";
 
 export interface PlotlyOptions {
@@ -18,106 +18,123 @@ export class PlotlySetup {
 
   static defaultBarGap = DashboardTheme.barGap;
 
-  static defaultModebarConfig = {
-    bgcolor: DashboardTheme.modebarBgcolor,
-    activecolor: DashboardTheme.modebarActivecolor,
-    color: DashboardTheme.modebarColor
-  };
-
-  static defaultTextInsideFont = {
-    color: DashboardTheme.textInsideFontColor,
-    family: DashboardTheme.fontFamily,
-    size: DashboardTheme.textInsideFontSize,
-    weight: DashboardTheme.textInsideFontWeight,
-  };
+  static defaultModebarConfig(theme: DashboardTheme) {
+    return {
+      bgcolor: "transparent",
+      activecolor: theme.modebarActiveColor,
+      color: theme.modebarColor,
+    };
+  }
 
   static defaultTooltipFont = {
-    color: DashboardTheme.tooltipFontColor,
-    family: DashboardTheme.fontFamily,
-    size: DashboardTheme.tooltipFontSize,
-    weight: DashboardTheme.tooltipFontWeight,
+    color: LegacyDashboardTheme.tooltipFontColor,
+    family: LegacyDashboardTheme.fontFamily,
+    size: LegacyDashboardTheme.tooltipFontSize,
+    weight: LegacyDashboardTheme.tooltipFontWeight,
   };
 
   static defaultTooltipConfig = {
-    bgcolor: DashboardTheme.tooltipBgcolor,
-    bordercolor: DashboardTheme.tooltipBordercolor,
+    bgcolor: LegacyDashboardTheme.tooltipBgcolor,
+    bordercolor: LegacyDashboardTheme.tooltipBordercolor,
     font: { ...PlotlySetup.defaultTooltipFont },
   };
 
   static defaultPieTitleFont = {
-    color: DashboardTheme.pieTitleFontColor,
-    family: DashboardTheme.fontFamily,
-    size: DashboardTheme.pieTitleFontSize,
-    weight: DashboardTheme.pieTitleFontWeight,
+    color: LegacyDashboardTheme.pieTitleFontColor,
+    family: LegacyDashboardTheme.fontFamily,
+    size: LegacyDashboardTheme.pieTitleFontSize,
+    weight: LegacyDashboardTheme.pieTitleFontWeight,
   };
 
-  static defaultLegendConfig = {
-    bgcolor: DashboardTheme.legendBgcolor,
-    bordercolor: DashboardTheme.legendBordercolor,
-    borderwidth: DashboardTheme.legendBorderwidth,
-    itemwidth: DashboardTheme.legendItemwidth,
-    font: {
-      color: DashboardTheme.legendFontColor,
-      family: DashboardTheme.fontFamily,
-      size: DashboardTheme.legendFontSize,
-      weight: DashboardTheme.legendFontWeight,
-    }
-  };
+  static defaultLegendConfig(theme: DashboardTheme) {
+    const legendSetting = theme.legendSetting;
+    const legendLabelFont = {
+      ...theme.legendLabelFont,
+      size: parseFloat(theme.legendLabelFont.size)
+    };
 
-  static defaultAxisConfig = {
-    zerolinecolor: DashboardTheme.axisZerolinecolor,
-    automargin: true,
-    tickfont: {
-      color: DashboardTheme.axisTickFontColor,
-      family: DashboardTheme.fontFamily,
-      size: DashboardTheme.axisTickFontSize,
-      weight: DashboardTheme.axisTickFontWeight,
-    }
+    return {
+      bgcolor: legendSetting.background,
+      bordercolor: legendSetting.borderColor,
+      borderwidth: legendSetting.borderWidth,
+      itemwidth: 20,
+      font: legendLabelFont
+    };
   }
 
-  static defaultAxisXConfig = {
-    ...PlotlySetup.defaultAxisConfig,
-    ticklabelstandoff: DashboardTheme.axisXTicklabelstandoff,
-  };
+  static defaultAxisConfig(theme: DashboardTheme) {
+    const axisLabelFont = {
+      ...theme.axisLabelFont,
+      size: parseFloat(theme.axisLabelFont.size)
+    };
 
-  static defaultAxisXWithGridLineConfig = {
-    ...PlotlySetup.defaultAxisXConfig,
-    gridcolor: DashboardTheme.axisXGridcolor,
-    griddash: "dot",
-  };
-
-  static defaultAxisYConfig = {
-    ...PlotlySetup.defaultAxisConfig,
-    ticklabelstandoff: DashboardTheme.axisYTicklabelstandoff,
+    return {
+      zerolinecolor: theme.axisGridColor,
+      automargin: true,
+      tickfont: axisLabelFont
+    };
   }
 
-  static defaultAxisYWithGridLineConfig = {
-    ...PlotlySetup.defaultAxisYConfig,
-    gridcolor: DashboardTheme.axisYGridcolor,
-    griddash: "dot",
-  };
+  static defaultInsideLabelFont(theme: DashboardTheme) {
+    const insideLabelFont = {
+      ...theme.insideLabelFont,
+      size: parseFloat(theme.insideLabelFont.size)
+    };
+
+    return insideLabelFont;
+  }
+
+  static defaultAxisXConfig(theme: DashboardTheme) {
+    return {
+      ...PlotlySetup.defaultAxisConfig(theme),
+      ticklabelstandoff: 8,
+    };
+  }
+
+  static defaultAxisXWithGridLineConfig (theme: DashboardTheme) {
+    return {
+      ...PlotlySetup.defaultAxisXConfig(theme),
+      gridcolor: theme.axisGridColor,
+      griddash: "dot",
+    };
+  }
+
+  static defaultAxisYConfig(theme: DashboardTheme) {
+    return {
+      ...PlotlySetup.defaultAxisConfig(theme),
+      ticklabelstandoff: 16,
+    };
+  }
+
+  static defaultAxisYWithGridLineConfig(theme: DashboardTheme) {
+    return {
+      ...PlotlySetup.defaultAxisYConfig(theme),
+      gridcolor: theme.axisGridColor,
+      griddash: "dot",
+    };
+  }
 
   static defaultGaugeConfig = {
-    bgcolor: DashboardTheme.gaugeBgcolor,
-    bordercolor: DashboardTheme.gaugeBordercolor,
+    bgcolor: LegacyDashboardTheme.gaugeBgcolor,
+    bordercolor: LegacyDashboardTheme.gaugeBordercolor,
     bar: {
-      color: DashboardTheme.gaugeBarColor,
+      color: LegacyDashboardTheme.gaugeBarColor,
       thickness: 0.5,
     },
   }
 
   static defaultValueGaugeFont = {
-    color: DashboardTheme.gaugeValueFontColor,
-    family: DashboardTheme.fontFamily,
-    size: DashboardTheme.gaugeValueFontSize,
-    weight: DashboardTheme.gaugeValueFontWeight,
+    color: LegacyDashboardTheme.gaugeValueFontColor,
+    family: LegacyDashboardTheme.fontFamily,
+    size: LegacyDashboardTheme.gaugeValueFontSize,
+    weight: LegacyDashboardTheme.gaugeValueFontWeight,
   };
 
   static defaultGaugeTickFont = {
-    color: DashboardTheme.gaugeTickFontColor,
-    family: DashboardTheme.fontFamily,
-    size: DashboardTheme.gaugeTickFontSize,
-    weight: DashboardTheme.gaugeTickFontWeight,
+    color: LegacyDashboardTheme.gaugeTickFontColor,
+    family: LegacyDashboardTheme.fontFamily,
+    size: LegacyDashboardTheme.gaugeTickFontSize,
+    weight: LegacyDashboardTheme.gaugeTickFontWeight,
   }
 
   /**
@@ -181,7 +198,7 @@ export class PlotlySetup {
       }),
       hoverinfo: "label+value+percent", // "x+y",
       textposition: "inside",
-      insidetextfont: { ...PlotlySetup.defaultTextInsideFont },
+      insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
       hoverlabel: {
         ...PlotlySetup.defaultTooltipConfig
       },
@@ -230,7 +247,7 @@ export class PlotlySetup {
         b: 0,
         r: 0,
       },
-      modebar: { ...PlotlySetup.defaultModebarConfig },
+      modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
       colorway: colors,
       hovermode: "closest",
       plot_bgcolor: model.backgroundColor,
@@ -270,7 +287,7 @@ export class PlotlySetup {
       textposition: "inside",
       textangle: 0,
       insidetextanchor: "middle",
-      insidetextfont: { ...PlotlySetup.defaultTextInsideFont },
+      insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
       hoverlabel: {
         ...PlotlySetup.defaultTooltipConfig
       },
@@ -318,12 +335,12 @@ export class PlotlySetup {
       showlegend: hasSeries,
       barmode: hasSeries && model.chartType == "stackedbar" ? "stack" : "group",
       xaxis: {
-        ...PlotlySetup.defaultAxisXWithGridLineConfig,
+        ...PlotlySetup.defaultAxisXWithGridLineConfig(model.theme),
         rangemode: "nonnegative",
         automargin: true,
       },
       yaxis: {
-        ...PlotlySetup.defaultAxisYConfig,
+        ...PlotlySetup.defaultAxisYConfig(model.theme),
         type: "category",
         orientation: "h",
         tickmode: "array",
@@ -335,13 +352,13 @@ export class PlotlySetup {
           ) + "  ";
         }),
       },
-      modebar: { ...PlotlySetup.defaultModebarConfig },
+      modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
     };
 
     if (hasSeries) {
-      layout.legend = { ...PlotlySetup.defaultLegendConfig };
+      layout.legend = PlotlySetup.defaultLegendConfig(model.theme);
       if (model.chartType !== "stackedbar") {
         layout.height = (labels.length * seriesLabels.length + 1) * lineHeight + topMargin + bottomMargin;
       }
@@ -350,7 +367,7 @@ export class PlotlySetup {
     if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       layout.xaxis.autorange = "reversed";
       layout.yaxis.side = "right";
-      const legendSettings = Object.assign({}, PlotlySetup.defaultLegendConfig, {
+      const legendSettings = Object.assign({}, PlotlySetup.defaultLegendConfig(model.theme), {
         x: 0,
         y: 1,
         xanchor: "left",
@@ -388,7 +405,7 @@ export class PlotlySetup {
       hoverinfo: hasSeries ? undefined : "x+y",
       orientation: "v",
       insidetextanchor: "middle",
-      insidetextfont: { ...PlotlySetup.defaultTextInsideFont },
+      insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
       hoverlabel: {
         ...PlotlySetup.defaultTooltipConfig
       },
@@ -426,12 +443,12 @@ export class PlotlySetup {
       showlegend: hasSeries,
       bargap: isHistogram ? 0 : PlotlySetup.defaultBarGap,
       yaxis: {
-        ...PlotlySetup.defaultAxisYWithGridLineConfig,
+        ...PlotlySetup.defaultAxisYWithGridLineConfig(model.theme),
         rangemode: "nonnegative",
         automargin: true,
       },
       xaxis: {
-        ...PlotlySetup.defaultAxisXConfig,
+        ...PlotlySetup.defaultAxisXConfig(model.theme),
         automargin: true,
         type: "category",
         tickmode: "array",
@@ -443,12 +460,12 @@ export class PlotlySetup {
           ) + "  ";
         }),
       },
-      modebar: { ...PlotlySetup.defaultModebarConfig },
+      modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
     };
 
     if (model.showPercentages && model.showOnlyPercentages) {
       layout.yaxis = {
-        ...PlotlySetup.defaultAxisYWithGridLineConfig,
+        ...PlotlySetup.defaultAxisYWithGridLineConfig(model.theme),
         tickformat: ".0%",
         range: [0, 1],
         ticklen: model.showOnlyPercentages ? 25 : 5,
@@ -457,7 +474,7 @@ export class PlotlySetup {
     }
     if(!(model as any).getValueType || (model as any).getValueType() != "date") {
       layout.xaxis = {
-        ...PlotlySetup.defaultAxisXConfig,
+        ...PlotlySetup.defaultAxisXConfig(model.theme),
         type: "category",
       };
     }
@@ -522,16 +539,16 @@ export class PlotlySetup {
       colorway: colors,
       hovermode: "closest",
       yaxis: {
-        ...PlotlySetup.defaultAxisYConfig,
+        ...PlotlySetup.defaultAxisYConfig(model.theme),
         type: "category",
         ticklen: 5,
         tickcolor: "transparent",
       },
       xaxis: {
-        ...PlotlySetup.defaultAxisXConfig,
+        ...PlotlySetup.defaultAxisXConfig(model.theme),
         rangemode: "nonnegative",
       },
-      modebar: { ...PlotlySetup.defaultModebarConfig },
+      modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
       showlegend: false,
@@ -539,7 +556,7 @@ export class PlotlySetup {
 
     if (hasSeries) {
       layout.showlegend = true;
-      layout.legend = { ...PlotlySetup.defaultLegendConfig };
+      layout.legend = PlotlySetup.defaultLegendConfig(model.theme);
       layout.height = undefined;
 
       labels.forEach((label, index) => {
@@ -605,7 +622,7 @@ export class PlotlySetup {
       },
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
-      modebar: { ...PlotlySetup.defaultModebarConfig },
+      modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
     };
 
     return { traces, layout, hasSeries: false };

@@ -3,7 +3,7 @@ import { IAnswersData, SelectBase } from "../selectBase";
 import { VisualizerBase } from "../visualizerBase";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
-import { DashboardTheme } from "../theme";
+import { DashboardTheme, LegacyDashboardTheme } from "../theme";
 import { getTruncatedLabel, reverseAll } from "../utils/utils";
 import { localization } from "../localizationManager";
 
@@ -32,30 +32,33 @@ export class ApexChartsSetup {
     show: true,
     tools: {
       download: true,
-      selection: false,
-      zoom: false,
-      zoomin: false,
-      zoomout: false,
-      pan: false,
-      reset: false
+      selection: true,
+      zoom: true,
+      zoomin: true,
+      zoomout: true,
+      pan: true,
+      reset: true
     }
   };
 
-  static defaultDataLabelsConfig = {
-    enabled: true,
-    style: {
-      colors: [DashboardTheme.textInsideFontColor],
-      fontSize: DashboardTheme.textInsideFontSize.toString() + "px",
-      fontFamily: DashboardTheme.fontFamily,
-      fontWeight: DashboardTheme.textInsideFontWeight,
-    }
-  };
+  static defaultDataLabelsConfig(theme: DashboardTheme) {
+    const insideLabelFont = theme.insideLabelFont;
+    return {
+      enabled: true,
+      style: {
+        colors: [insideLabelFont.color],
+        fontSize: insideLabelFont.size,
+        fontFamily: insideLabelFont.family,
+        fontWeight: insideLabelFont.weight,
+      }
+    };
+  }
 
   static defaultTooltipConfig = {
     enabled: true,
     style: {
-      fontSize: DashboardTheme.tooltipFontSize.toString() + "px",
-      fontFamily: DashboardTheme.fontFamily,
+      fontSize: LegacyDashboardTheme.tooltipFontSize.toString() + "px",
+      fontFamily: LegacyDashboardTheme.fontFamily,
     },
     marker: {
       show: false,
@@ -73,79 +76,83 @@ export class ApexChartsSetup {
     }
   };
 
-  static defaultLegendConfig = {
-    position: "right",
-    horizontalAlign: "right",
-    verticalAlign: "top",
-    fontSize: DashboardTheme.legendFontSize.toString() + "px",
-    fontFamily: DashboardTheme.fontFamily,
-    fontWeight: DashboardTheme.legendFontWeight,
-    labels: {
-      colors: DashboardTheme.legendFontColor
-    },
-    markers: {
-      size: 10,
-      strokeWidth: 1,
+  static defaultLegendConfig(theme: DashboardTheme) {
+    const font = theme.legendLabelFont;
+    return {
+      position: "right",
+      horizontalAlign: "right",
+      verticalAlign: "top",
+      fontSize: font.size,
+      fontFamily: font.family,
+      fontWeight: font.weight,
+      labels: {
+        colors: font.color
+      },
+      markers: {
+        size: 10,
+        strokeWidth: 1,
       // customHTML: function() {
       //   return '<span class="sa-legend-item-marker"><i class="sa-legend-item-text"></i></span>';
       // }
-    },
-  };
-  static defaultAxisZerolineConfig = {
-    color: DashboardTheme.axisZerolinecolor,
+      },
+    };
+  }
+  static defaultAxisZerolineConfig(theme: DashboardTheme) {
+    return {
+      color: theme.axisGridColor,
+    };
   }
 
-  static defaultGridConfig = {
-    borderColor: DashboardTheme.axisXGridcolor,
-    strokeDashArray: 4,
-    position: "back",
-    xaxis: {
-      lines: {
-        show: false,
-      }
-    },
-    yaxis: {
-      lines: {
-        show: false,
-      }
-    }
-  };
-
-  static defaultAxisLabelFont = {
-    colors: DashboardTheme.axisTickFontColor,
-    fontSize: DashboardTheme.axisTickFontSize.toString() + "px",
-    fontFamily: DashboardTheme.fontFamily,
-    fontWeight: DashboardTheme.axisTickFontWeight,
-  };
-
-  static defaultAxisXLabelConfig = {
-    labels: {
-      style: {
-        ...ApexChartsSetup.defaultAxisLabelFont
+  static defaultGridConfig(theme: DashboardTheme) {
+    return {
+      borderColor: theme.axisGridColor,
+      strokeDashArray: 4,
+      position: "back",
+      xaxis: {
+        lines: {
+          show: false,
+        }
       },
-    }
-  };
+      yaxis: {
+        lines: {
+          show: false,
+        }
+      }
+    };
+  }
 
-  static defaultAxisYLabelConfig = {
-    labels: {
-      style: {
-        ...ApexChartsSetup.defaultAxisLabelFont
-      },
-    },
-  };
+  static defaultAxisLabelFont(theme: DashboardTheme) {
+    const font = theme.axisLabelFont;
+    return {
+      colors: font.color,
+      fontSize: font.size,
+      fontFamily: font.family,
+      fontWeight: font.weight,
+    };
+  }
+
+  static defaultAxisLabelConfig(theme: DashboardTheme) {
+    return {
+      labels: {
+        style: {
+          ...ApexChartsSetup.defaultAxisLabelFont(theme)
+        },
+      }
+    };
+  }
 
   static defaultGaugeValueFont = {
-    fontFamily: DashboardTheme.fontFamily,
-    color: DashboardTheme.gaugeValueFontColor,
-    fontSize: DashboardTheme.gaugeValueFontSize.toString() + "px",
-    fontWeight: DashboardTheme.gaugeValueFontWeight,
+    fontFamily: LegacyDashboardTheme.fontFamily,
+    color: LegacyDashboardTheme.gaugeValueFontColor,
+    fontSize: LegacyDashboardTheme.gaugeValueFontSize.toString() + "px",
+    fontWeight: LegacyDashboardTheme.gaugeValueFontWeight,
   }
 
   static defaultGaugeTickFont = {
-    family: DashboardTheme.fontFamily,
-    color: DashboardTheme.gaugeTickFontColor,
-    size: DashboardTheme.gaugeTickFontSize + "px",
-    weight: DashboardTheme.gaugeTickFontWeight,
+    family: LegacyDashboardTheme.fontFamily,
+    color: LegacyDashboardTheme.gaugeTickFontColor,
+    size: LegacyDashboardTheme.gaugeTickFontSize + "px",
+    weight: LegacyDashboardTheme.gaugeTickFontWeight,
   }
 
   static defaultStrokeConfig = {
@@ -300,7 +307,7 @@ export class ApexChartsSetup {
       options.title = {
         align: "center",
         style: {
-          ...ApexChartsSetup.defaultAxisLabelFont,
+          ...ApexChartsSetup.defaultAxisLabelFont(model.theme),
         },
       };
     }
@@ -360,7 +367,7 @@ export class ApexChartsSetup {
 
     // Axis settings
     const xaxis: any = {
-      ...ApexChartsSetup.defaultAxisXLabelConfig,
+      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
       categories: labels,
       axisBorder: {
         show: false,
@@ -368,14 +375,14 @@ export class ApexChartsSetup {
     };
 
     const yaxis: any = {
-      ...ApexChartsSetup.defaultAxisYLabelConfig,
+      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
       axisBorder: {
-        ...ApexChartsSetup.defaultAxisZerolineConfig
+        ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme)
       },
     };
 
     const grid = {
-      ...ApexChartsSetup.defaultGridConfig,
+      ...ApexChartsSetup.defaultGridConfig(model.theme),
       xaxis: {
         lines: {
           show: true
@@ -385,7 +392,7 @@ export class ApexChartsSetup {
 
     // Legend settings
     const legend: any = {
-      ...ApexChartsSetup.defaultLegendConfig,
+      ...ApexChartsSetup.defaultLegendConfig(model.theme),
       show: hasSeries,
     };
 
@@ -402,7 +409,7 @@ export class ApexChartsSetup {
       bar: {
         horizontal: true,
         distributed: !isHistogram && !hasSeries,
-        barHeight: isHistogram ? "100%": (1 - DashboardTheme.barGap) * 100 + "%",
+        barHeight: isHistogram ? "100%": (1 - ApexChartsSetup.defaultBarGap) * 100 + "%",
       }
     };
 
@@ -476,17 +483,17 @@ export class ApexChartsSetup {
 
     // Axis settings
     const xaxis: any = {
-      ...ApexChartsSetup.defaultAxisXLabelConfig,
+      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
       categories: labels,
-      axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig },
+      axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme) },
     };
 
     const yaxis: any = {
-      ...ApexChartsSetup.defaultAxisYLabelConfig
+      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme)
     };
 
     const grid = {
-      ...ApexChartsSetup.defaultGridConfig,
+      ...ApexChartsSetup.defaultGridConfig(model.theme),
       yaxis: {
         lines: {
           show: true
@@ -496,7 +503,7 @@ export class ApexChartsSetup {
 
     // Legend settings
     const legend: any = {
-      ...ApexChartsSetup.defaultLegendConfig,
+      ...ApexChartsSetup.defaultLegendConfig(model.theme),
       show: hasSeries,
     };
 
@@ -513,7 +520,7 @@ export class ApexChartsSetup {
       bar: {
         horizontal: false,
         distributed: !isHistogram && !hasSeries,
-        columnWidth: isHistogram ? "100%": (1 - DashboardTheme.barGap) * 100 + "%",
+        columnWidth: isHistogram ? "100%": (1 - ApexChartsSetup.defaultBarGap) * 100 + "%",
       }
     };
 
@@ -582,28 +589,28 @@ export class ApexChartsSetup {
 
     // Axis settings
     const xaxis: any = {
-      axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig },
+      axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme) },
       categories: labels,
       labels: {
         style: {
-          ...ApexChartsSetup.defaultAxisLabelFont
+          ...ApexChartsSetup.defaultAxisLabelFont(model.theme)
         }
       }
     };
 
     const yaxis: any = {
-      ...ApexChartsSetup.defaultAxisYLabelConfig
+      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme)
     };
 
     // Legend settings
     const legend: any = {
-      ...ApexChartsSetup.defaultLegendConfig,
+      ...ApexChartsSetup.defaultLegendConfig(model.theme),
       show: hasSeries,
     };
 
     // Data label settings
     const dataLabels: any = {
-      ...ApexChartsSetup.defaultDataLabelsConfig,
+      ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
       style: {
         colors: ["#404040"]
       }
@@ -690,14 +697,14 @@ export class ApexChartsSetup {
 
     // Axis settings
     const xaxis: any = {
-      ...ApexChartsSetup.defaultAxisYLabelConfig,
+      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
       axisBorder: {
-        ...ApexChartsSetup.defaultAxisZerolineConfig,
+        ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme),
       },
     };
 
     const yaxis: any = {
-      ...ApexChartsSetup.defaultAxisXLabelConfig,
+      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
       categories: labels,
       axisBorder: {
         show: false,
@@ -705,7 +712,7 @@ export class ApexChartsSetup {
     };
 
     const grid = {
-      ...ApexChartsSetup.defaultGridConfig,
+      ...ApexChartsSetup.defaultGridConfig(model.theme),
       yaxis: {
         lines: {
           show: true
@@ -715,20 +722,20 @@ export class ApexChartsSetup {
 
     // Legend settings
     const legend: any = {
-      ...ApexChartsSetup.defaultLegendConfig,
+      ...ApexChartsSetup.defaultLegendConfig(model.theme),
       show: hasSeries,
     };
 
     // Data label settings
     const dataLabels: any = {
-      ...ApexChartsSetup.defaultDataLabelsConfig,
+      ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
     };
 
     // Chart options settings
     const plotOptions: any = {
       bar: {
         horizontal: true,
-        barHeight: (1 - DashboardTheme.barGap) * 100 + "%",
+        barHeight: (1 - ApexChartsSetup.defaultBarGap) * 100 + "%",
       }
     };
 
@@ -806,20 +813,20 @@ export class ApexChartsSetup {
     // Axis settings
     const xaxis: any = {
       type: "numeric",
-      axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig },
+      axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme) },
       labels: {
         style: {
-          ...ApexChartsSetup.defaultAxisLabelFont
+          ...ApexChartsSetup.defaultAxisLabelFont(model.theme)
         }
       }
     };
 
     const yaxis: any = {
-      ...ApexChartsSetup.defaultAxisYLabelConfig
+      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme)
     };
 
     const grid = {
-      ...ApexChartsSetup.defaultGridConfig,
+      ...ApexChartsSetup.defaultGridConfig(model.theme),
       xaxis: {
         lines: {
           show: true
@@ -829,7 +836,7 @@ export class ApexChartsSetup {
 
     // Legend settings
     const legend: any = {
-      ...ApexChartsSetup.defaultLegendConfig,
+      ...ApexChartsSetup.defaultLegendConfig(model.theme),
       show: hasSeries,
     };
 
@@ -906,7 +913,7 @@ export class ApexChartsSetup {
         startAngle: -90,
         endAngle: 90,
         track: {
-          background: DashboardTheme.gaugeBgcolor,
+          background: LegacyDashboardTheme.gaugeBgcolor,
           strokeWidth: "97%",
         },
         dataLabels: {
@@ -939,7 +946,7 @@ export class ApexChartsSetup {
     };
     const series = [percent];
     const labels = [model.name];
-    const colors = [DashboardTheme.gaugeBarColor];
+    const colors = [LegacyDashboardTheme.gaugeBarColor];
 
     return {
       series,
@@ -992,13 +999,13 @@ export class ApexChartsSetup {
         ...ApexChartsSetup.defaultGaugeTickFont,
       },
       axisBorder: {
-        color: DashboardTheme.gaugeBordercolor,
+        color: LegacyDashboardTheme.gaugeBordercolor,
       },
     };
 
     const yaxis = {
       axisBorder: {
-        color: DashboardTheme.gaugeBordercolor,
+        color: LegacyDashboardTheme.gaugeBordercolor,
       },
       labels: {
         offsetY: 10,
@@ -1020,12 +1027,12 @@ export class ApexChartsSetup {
         goals: [{
           value: maxValue,
           strokeWidth: 1,
-          strokeColor: DashboardTheme.gaugeBordercolor,
+          strokeColor: LegacyDashboardTheme.gaugeBordercolor,
         }]
       }]
     }];
     const labels = [level];
-    const colors = [DashboardTheme.gaugeBarColor];
+    const colors = [LegacyDashboardTheme.gaugeBarColor];
 
     return {
       series,
@@ -1062,18 +1069,7 @@ export class ApexChartsSetup {
       chart: {
         type: "radar",
         background: model.backgroundColor,
-        toolbar: {
-          show: true,
-          tools: {
-            download: true,
-            selection: false,
-            zoom: false,
-            zoomin: false,
-            zoomout: false,
-            pan: false,
-            reset: false
-          }
-        }
+        toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
       },
       series: series,
       labels: labels.map((label: string) => {
@@ -1095,7 +1091,7 @@ export class ApexChartsSetup {
       plotOptions: {
         radar: {
           polygons: {
-            strokeColors: "#e8e8e8",
+            strokeColors: model.theme.axisGridColor,
             fill: {
               colors: ["#f8f8f8", "#fff"]
             }
@@ -1107,24 +1103,14 @@ export class ApexChartsSetup {
         labels: {
           show: true,
           style: {
-            colors: DashboardTheme.axisTickFontColor,
-            fontSize: "12px",
-            fontFamily: DashboardTheme.fontFamily,
-            fontWeight: DashboardTheme.axisTickFontWeight
+            ...ApexChartsSetup.defaultAxisLabelFont(model.theme),
           }
         },
         tickAmount: 5
       },
       legend: {
+        ...ApexChartsSetup.defaultLegendConfig(model.theme),
         show: hasSeries,
-        position: "top",
-        horizontalAlign: "center",
-        fontSize: "14px",
-        fontFamily: DashboardTheme.fontFamily,
-        fontWeight: DashboardTheme.legendFontWeight,
-        labels: {
-          colors: DashboardTheme.legendFontColor
-        },
         markers: {
           width: 12,
           height: 12,
@@ -1133,10 +1119,8 @@ export class ApexChartsSetup {
       },
       tooltip: {
         enabled: true,
-        theme: "light",
         style: {
-          fontSize: "12px",
-          fontFamily: DashboardTheme.fontFamily
+          ...ApexChartsSetup.defaultTooltipConfig,
         },
         y: {
           formatter: function(val: number, opts: any) {

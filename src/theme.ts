@@ -1,6 +1,6 @@
+import { defaultDashboardTheme } from "./defaultDashboardTheme";
 
-export const DashboardTheme = {
-  backgroundColor: "#FFF", // var(--dsb-item-background-color, #FFF)
+export const LegacyDashboardTheme = {
   "--dsb-item-background-color": "#FFF",
 
   "--sa-dropdown-bg": "white",
@@ -13,19 +13,6 @@ export const DashboardTheme = {
   // Font settings
   fontFamily: "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif",
 
-  // Bar chart settings
-  barGap: 0.05,
-
-  // Modebar settings
-  modebarBgcolor: "transparent",
-  modebarActivecolor: "rgba(25, 179, 148, 1)",
-  modebarColor: "rgba(25, 179, 148, 0.5)",
-
-  // Text inside font settings
-  textInsideFontColor: "#FFF",
-  textInsideFontSize: 14,
-  textInsideFontWeight: 600,
-
   // Tooltip settings
   tooltipFontColor: "rgba(0, 0, 0, 0.9)",
   tooltipFontSize: 14,
@@ -37,29 +24,6 @@ export const DashboardTheme = {
   pieTitleFontColor: "rgba(0, 0, 0, 0.90)",
   pieTitleFontSize: 14,
   pieTitleFontWeight: 400,
-
-  // Legend settings
-  legendBgcolor: "#FFF",
-  legendBordercolor: "#DCDCDC",
-  legendBorderwidth: 1,
-  legendItemwidth: 20,
-  legendFontColor: "rgba(0, 0, 0, 0.90)",
-  legendFontSize: 14,
-  legendFontWeight: 400,
-
-  // Axis settings
-  axisZerolinecolor: "#DCDCDC",
-  axisTickFontColor: "rgba(0, 0, 0, 0.90)",
-  axisTickFontSize: 14,
-  axisTickFontWeight: 400,
-
-  // X-axis settings
-  axisXTicklabelstandoff: 8,
-  axisXGridcolor: "#DCDCDC",
-
-  // Y-axis settings
-  axisYTicklabelstandoff: 16,
-  axisYGridcolor: "#DCDCDC",
 
   // Gauge settings
   gaugeBgcolor: "#F5F5F5",
@@ -77,3 +41,78 @@ export const DashboardTheme = {
   gaugeTickFontSize: 14,
   gaugeTickFontWeight: 400
 };
+
+export interface IDashboardTheme {
+  cssVariables?: { [index: string]: string | any };
+}
+
+export interface FontSettings {
+  family: string;
+  color: string;
+  size: string;
+  weight: number;
+}
+
+export class DashboardTheme implements IDashboardTheme {
+  static barGap = 0.05;
+
+  constructor(private theme: IDashboardTheme = defaultDashboardTheme) {
+  }
+
+  public get cssVariables(): { [index: string]: string | any } {
+    return this.theme.cssVariables;
+  }
+
+  public get backgroundColor(): string {
+    return this.cssVariables["--sjs2-color-bg-basic-primary"];
+  }
+
+  public get axisGridColor(): string {
+    return this.cssVariables["--sjs2-color-data-grid-border-line"];
+  }
+
+  public get modebarActiveColor(): string {
+    return this.cssVariables["--sjs2-color-fg-brand-primary"];
+  }
+
+  public get modebarColor(): string {
+    return "rgba(var(--sjs2-color-fg-brand-primary), 0.5)";
+  }
+
+  public get axisLabelFont(): FontSettings {
+    return <FontSettings>{
+      color: this.cssVariables["--sjs2-color-data-grid-fg-label"],
+      family: this.cssVariables["--sjs2-font-family-semantic-default"],
+      size: this.cssVariables["--sjs2-font-size-semantic-small"],
+      weight: 400
+    };
+  }
+
+  public get insideLabelFont(): FontSettings {
+    return <FontSettings>{
+      color: this.cssVariables["--sjs2-color-data-chart-fg-on-color-1"],
+      family: this.cssVariables["--sjs2-font-family-semantic-default"],
+      size: this.cssVariables["--sjs2-font-size-semantic-small"],
+      weight: 600
+    };
+  }
+
+  public get legendLabelFont(): FontSettings {
+    return <FontSettings>{
+      color: this.cssVariables["--sjs2-color-fg-basic-primary"],
+      family: this.cssVariables["--sjs2-font-family-semantic-default"],
+      size: this.cssVariables["--sjs2-font-size-semantic-small"],
+      weight: 400
+    };
+  }
+
+  public get legendSetting() {
+    return {
+      borderWidth: this.cssVariables["--sjs2-border-width-default"],
+      borderColor: this.cssVariables["--sjs2-color-border-basic-secondary"],
+      borderRadius: this.cssVariables["--sjs2-radius-x250"],
+      background: this.cssVariables["--sjs2-color-bg-basic-primary"],
+    };
+  }
+
+}
