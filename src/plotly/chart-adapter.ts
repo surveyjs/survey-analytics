@@ -43,10 +43,14 @@ export class PlotlyChartAdapter implements IChartAdapter {
       const chartType = (this.model as any).chartType;
       if (chartType === "pie" || chartType === "doughnut") {
         traces.forEach((trace: any) => {
+          if (!trace) return;
+          if (!trace.marker) trace.marker = {};
           trace.marker.colors = boolColors;
         });
       } else if (chartType === "bar") {
         traces.forEach((trace: any) => {
+          if (!trace) return;
+          if (!trace.marker) trace.marker = {};
           trace.marker.color = boolColors;
         });
       }
