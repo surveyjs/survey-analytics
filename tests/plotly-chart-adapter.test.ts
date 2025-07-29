@@ -10,7 +10,6 @@ import { NumberModel } from "../src/number";
 import { VisualizerBase } from "../src/visualizerBase";
 import { BooleanPlotly } from "../src/plotly/legacy";
 
-// Устанавливаем PlotlyChartAdapter как адаптер по умолчанию
 VisualizerBase.chartAdapterType = PlotlyChartAdapter;
 
 var adapter: PlotlyChartAdapter;
