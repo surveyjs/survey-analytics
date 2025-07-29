@@ -52,7 +52,7 @@ export class VisualizationManager {
       if(constructor) {
         let visualizers = VisualizationManager.vizualizers[qType];
         if (!!visualizers) {
-          const vDescr = visualizers.filter(v => v.ctor === constructor)[0];
+          const vDescr = visualizers.filter(v => v.ctor === constructor || v.ctor.isPrototypeOf(constructor))[0];
           if(!!vDescr) {
             let index = visualizers.indexOf(vDescr);
             if (index !== -1) {
