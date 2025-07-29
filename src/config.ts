@@ -35,6 +35,7 @@ export interface IVisualizerPanelElement {
    * - `"doughnut"`
    * - `"gauge"`
    * - `"bullet"`
+   * - `"radar"`
    */
   chartType?: string;
   /**
