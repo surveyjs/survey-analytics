@@ -86,7 +86,7 @@ export class ApexChartsSetup {
       fontFamily: font.family,
       fontWeight: font.weight,
       labels: {
-        colors: [font.color]
+        colors: font.color
       },
       markers: {
         size: 10,
@@ -124,7 +124,7 @@ export class ApexChartsSetup {
   static defaultAxisLabelFont(theme: DashboardTheme) {
     const font = theme.axisLabelFont;
     return {
-      colors: [font.color],
+      colors: font.color,
       fontSize: font.size,
       fontFamily: font.family,
       fontWeight: font.weight,
@@ -257,7 +257,7 @@ export class ApexChartsSetup {
 
     // Data label settings
     const dataLabels: any = {
-      ...ApexChartsSetup.defaultDataLabelsConfig,
+      ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
       formatter: function(val: number, opts: any) {
         const name = opts.w.globals.labels[opts.seriesIndex];
         return [name, val.toFixed(1) + "%"];
@@ -398,7 +398,7 @@ export class ApexChartsSetup {
 
     // Data label settings
     const dataLabels: any = {
-      ...ApexChartsSetup.defaultDataLabelsConfig,
+      ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
       formatter: function(val, opts) {
         return ApexChartsSetup.dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], val);
       },
@@ -509,7 +509,7 @@ export class ApexChartsSetup {
 
     // Data label settings
     const dataLabels: any = {
-      ...ApexChartsSetup.defaultDataLabelsConfig,
+      ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
       formatter: function(val, opts) {
         return ApexChartsSetup.dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], val);
       }
@@ -611,9 +611,6 @@ export class ApexChartsSetup {
     // Data label settings
     const dataLabels: any = {
       ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
-      style: {
-        colors: ["#404040"]
-      }
     };
 
     // Chart options settings
@@ -1058,83 +1055,80 @@ export class ApexChartsSetup {
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
     const series = datasets.map((dataset: Array<number>, index: number) => {
-      const seriesName = hasSeries ? seriesLabels[index] : labels[index];
+      const seriesName = hasSeries ? seriesLabels[index] : "";
       return {
         name: seriesName,
         data: dataset
       };
     });
 
-    const options: ApexChartsOptions = {
-      chart: {
-        type: "radar",
-        background: model.backgroundColor,
-        toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
-      },
-      series: series,
-      labels: labels.map((label: string) => {
-        return getTruncatedLabel(
-          label,
-          model.labelTruncateLength
-        );
-      }),
-      colors: colors,
-      // stroke: {
-      //   width: 2
-      // },
-      // fill: {
-      //   opacity: 0.3
-      // },
-      // markers: {
-      //   size: 6
-      // },
-      plotOptions: {
-        radar: {
-          polygons: {
-            strokeColors: model.theme.axisGridColor,
-            fill: {
-              colors: ["#f8f8f8", "#fff"]
-            }
-          }
-        }
-      },
-      xaxis: {
-        ...ApexChartsSetup.defaultAxisLabelConfig(model.theme)
-      },
-      yaxis: {
-        show: true,
-        labels: {
-          show: true,
-          style: {
-            ...ApexChartsSetup.defaultAxisLabelFont(model.theme),
-          }
-        },
-        tickAmount: 5
-      },
-      legend: {
-        ...ApexChartsSetup.defaultLegendConfig(model.theme),
-        show: hasSeries,
-        markers: {
-          width: 12,
-          height: 12,
-          radius: 6
-        }
-      },
-      tooltip: {
-        enabled: true,
-        style: {
-          ...ApexChartsSetup.defaultTooltipConfig,
-        },
-        y: {
-          formatter: function(val: number, opts: any) {
-            const seriesName = opts.seriesNames[opts.seriesIndex];
-            const label = opts.w.globals.labels[opts.dataPointIndex];
-            return `${seriesName}: ${val} (${label})`;
-          }
-        }
-      },
+    const chart = {
+      type: "radar",
+      background: model.backgroundColor,
+      toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
     };
 
-    return options;
+    const plotOptions = {
+      radar: {
+        polygons: {
+          strokeColors: model.theme.axisGridColor,
+          fill: {
+            colors: ["#f8f8f8", "#fff"]
+          }
+        }
+      }
+    };
+
+    const xaxis = {
+      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
+      categories: labels,
+    };
+    xaxis.labels.style.colors = Array(labels.length).fill(model.theme.axisLabelFont.color) as any;
+
+    const yaxis= {
+      show: true,
+      labels: {
+        show: true,
+        style: {
+          ...ApexChartsSetup.defaultAxisLabelFont(model.theme),
+        }
+      },
+      tickAmount: 5
+    };
+
+    const legend = {
+      ...ApexChartsSetup.defaultLegendConfig(model.theme),
+      show: hasSeries,
+      markers: {
+        width: 12,
+        height: 12,
+        radius: 6
+      }
+    };
+    const tooltip = {
+      enabled: true,
+      style: {
+        ...ApexChartsSetup.defaultTooltipConfig,
+      },
+      y: {
+        formatter: function(val: number, opts: any) {
+          const seriesName = opts.w.globals.seriesNames[opts.seriesIndex];
+          const label = opts.w.globals.labels[opts.dataPointIndex];
+          return !!seriesName ? `${seriesName}: ${val} (${label})` : `${label}: ${val}`;
+        }
+      }
+    };
+
+    return {
+      series,
+      chart,
+      labels,
+      colors,
+      plotOptions,
+      xaxis,
+      yaxis,
+      tooltip,
+      legend,
+    };
   }
 }

@@ -675,34 +675,18 @@ export class PlotlySetup {
     });
 
     const layout: any = {
-      font: {
-        family: "Segoe UI, sans-serif",
-        size: 14,
-        weight: "normal",
-        color: "#404040",
-      },
       polar: {
         radialaxis: {
+          ...PlotlySetup.defaultAxisConfig(model.theme),
           visible: true,
           range: [0, Math.max(...datasets.map(s => Math.max(...s))) * 1.1],
-          tickfont: {
-            size: 12
-          }
         },
         angularaxis: {
-          tickfont: {
-            size: 12
-          },
-          ticktext: labels.map((label: string) => {
-            return getTruncatedLabel(
-              label,
-              model.labelTruncateLength
-            );
-          }),
-          tickvals: labels
+          ...PlotlySetup.defaultAxisConfig(model.theme),
         }
       },
       showlegend: hasSeries,
+      legend: hasSeries ? PlotlySetup.defaultLegendConfig(model.theme) : undefined,
       colorway: colors,
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
@@ -711,6 +695,11 @@ export class PlotlySetup {
         r: 50,
         t: 50,
         b: 50
+      },
+      modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
+      hovermode: "closest",
+      hoverlabel: {
+        ...PlotlySetup.defaultTooltipConfig
       }
     };
 

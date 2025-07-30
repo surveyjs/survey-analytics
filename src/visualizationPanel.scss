@@ -387,6 +387,13 @@
   gap: 8px;
   border-radius: var(--sjs2-radius-control-drop-item, 8px);
   color: var(--sjs2-color-fg-basic-primary, #1C1B20);
+
+  /* sjs2/typography/default */
+  font-family: var(--sjs2-font-family-semantic-default, "Open Sans");
+  font-size: var(--sjs2-font-size-semantic-default, 16px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: var(--sjs2-line-height-semantic-default, 24px); /* 150% */
 }
 
 .sa-dropdown-item:hover {
