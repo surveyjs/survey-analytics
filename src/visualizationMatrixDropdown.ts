@@ -46,11 +46,11 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     this._childOptions.seriesValues = question.rows.map((row: ItemValue) => row.value);
     this._childOptions.seriesLabels = question.rows.map((row: ItemValue) => row.text);
 
+    const innerQuestions = this.getQuestions();
     if (this.canGroupColumns) {
       var creators = VisualizationManager.getVisualizersByType("matrixdropdown-grouped");
       this._matrixDropdownVisualizer = new creators[0](this.question, [], this._childOptions);
     } else {
-      const innerQuestions = this.getQuestions();
       this._matrixDropdownVisualizer = new VisualizationPanel(innerQuestions, [], this._childOptions);
     }
     this._matrixDropdownVisualizer.onAfterRender.add(this.onPanelAfterRenderCallback);
@@ -59,8 +59,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
 
   public get canGroupColumns(): boolean {
     const innerQuestions = this.getQuestions();
-    const canGroupColumns = this._childOptions.seriesValues.length == 1 && innerQuestions.every(innerQuestion =>
-      innerQuestion.getType() !== "boolean" && isChoicesArraysEqual(innerQuestion.choices, (<QuestionSelectBase>this.question).choices));
+    const canGroupColumns = this._childOptions.seriesValues.length == 1 && innerQuestions.every(innerQuestion => isChoicesArraysEqual(innerQuestion.choices, (<QuestionSelectBase>this.question).choices));
     return canGroupColumns;
   }
 
