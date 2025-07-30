@@ -4,7 +4,7 @@ import { VisualizerBase } from "../visualizerBase";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
 import { DashboardTheme, LegacyDashboardTheme } from "../theme";
-import { getTruncatedLabel, reverseAll } from "../utils/utils";
+import { reverseAll } from "../utils/utils";
 import { localization } from "../localizationManager";
 
 export interface ApexChartsOptions {

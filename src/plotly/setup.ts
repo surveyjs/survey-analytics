@@ -5,7 +5,7 @@ import { localization } from "../localizationManager";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
 import { DashboardTheme, LegacyDashboardTheme } from "../theme";
-import { getTruncatedLabel, reverseAll } from "../utils/utils";
+import { reverseAll } from "../utils/utils";
 
 export interface PlotlyOptions {
   traces: Array<any>;
@@ -173,6 +173,18 @@ export class PlotlySetup {
     return this.setups[charType](model, answersData);
   }
 
+  static getTruncatedLabel = (label: string, labelTruncateLength: number) => {
+    const truncateSymbols = "...";
+    const truncateSymbolsLength = truncateSymbols.length;
+
+    if (!labelTruncateLength) return label;
+    if (labelTruncateLength === -1) return label;
+    if (label.length <= labelTruncateLength + truncateSymbolsLength)
+      return label;
+
+    return label.substring(0, labelTruncateLength) + truncateSymbols;
+  };
+
   static setupPie(model: SelectBase, answersData: IAnswersData): PlotlyOptions {
     let {
       datasets,
@@ -191,7 +203,7 @@ export class PlotlySetup {
       labels: labels,
       customdata: labels,
       text: labels.map((label: string) => {
-        return getTruncatedLabel(
+        return PlotlySetup.getTruncatedLabel(
           label,
           model.labelTruncateLength
         );
@@ -346,7 +358,7 @@ export class PlotlySetup {
         tickmode: "array",
         tickvals: labels,
         ticktext: labels.map((label: string) => {
-          return getTruncatedLabel(
+          return PlotlySetup.getTruncatedLabel(
             label,
             model.labelTruncateLength
           ) + "  ";
@@ -454,7 +466,7 @@ export class PlotlySetup {
         tickmode: "array",
         tickvals: labels,
         ticktext: labels.map((label: string) => {
-          return getTruncatedLabel(
+          return PlotlySetup.getTruncatedLabel(
             label,
             model.labelTruncateLength
           ) + "  ";
@@ -499,7 +511,7 @@ export class PlotlySetup {
     const traceConfig: any = {
       type: "scatter",
       y: (hasSeries ? seriesLabels : labels).map((label: string) => {
-        return getTruncatedLabel(
+        return PlotlySetup.getTruncatedLabel(
           label,
           model.labelTruncateLength
         );

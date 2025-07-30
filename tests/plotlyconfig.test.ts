@@ -403,13 +403,12 @@ test("check bar axes RTL setup", async () => {
   expect(config.layout.yaxis.side).toBe("right");
   expect(config.layout.legend).toStrictEqual({
     "bgcolor": "#FFF",
-    "bordercolor": "#DCDCDC",
-    "borderwidth": 1,
+    "bordercolor": "#D4D4D4",
+    "borderwidth": "1px",
     "font": {
-      "color": "rgba(0, 0, 0, 0.90)",
+      "color": "#1C1B20",
       "family": "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif",
-      "size": 14,
-      "textcase": "normal",
+      "size": 12,
       "weight": 400,
     },
     "itemwidth": 20,
