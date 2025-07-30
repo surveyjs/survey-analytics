@@ -14,6 +14,7 @@ export const defaultDashboardTheme = {
 
     // Colors - Basic
     "--sjs2-color-fg-brand-primary": "rgba(25, 179, 148, 1)",
+    "--sjs2-color-fg-brand": "rgba(29, 206, 170, 1)",
     "--sjs2-color-fg-basic-primary": "#1C1B20",
     "--sjs2-color-bg-basic-primary": "#FFF",
     "--sjs2-color-fg-basic-tertiary": "rgba(28, 27, 32, 0.4)",
@@ -100,5 +101,7 @@ export const defaultDashboardTheme = {
     // Layout control input
     "--sjs2-layout-control-input-medium-content-vertical": "8px",
     "--sjs2-layout-control-input-medium-content-horizontal": "12px",
+
+    "--sa-icon-size": "20px",
   }
 };

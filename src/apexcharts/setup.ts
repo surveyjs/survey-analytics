@@ -86,7 +86,7 @@ export class ApexChartsSetup {
       fontFamily: font.family,
       fontWeight: font.weight,
       labels: {
-        colors: font.color
+        colors: [font.color]
       },
       markers: {
         size: 10,
@@ -124,7 +124,7 @@ export class ApexChartsSetup {
   static defaultAxisLabelFont(theme: DashboardTheme) {
     const font = theme.axisLabelFont;
     return {
-      colors: font.color,
+      colors: [font.color],
       fontSize: font.size,
       fontFamily: font.family,
       fontWeight: font.weight,
@@ -1097,6 +1097,9 @@ export class ApexChartsSetup {
             }
           }
         }
+      },
+      xaxis: {
+        ...ApexChartsSetup.defaultAxisLabelConfig(model.theme)
       },
       yaxis: {
         show: true,

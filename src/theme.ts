@@ -1,15 +1,6 @@
 import { defaultDashboardTheme } from "./defaultDashboardTheme";
 
 export const LegacyDashboardTheme = {
-  "--dsb-item-background-color": "#FFF",
-
-  "--sa-dropdown-bg": "white",
-  "--sa-dropdown-border": "#ccc",
-  "--sa-dropdown-item-text-color": "#333",
-  "--sa-dropdown-item-hover-bg": "#f0f0f0",
-  "--sa-dropdown-item-selected-bg": "#e0e0e0",
-  "--sa-icon-size": "20px",
-
   // Font settings
   fontFamily: "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif",
 
@@ -76,7 +67,7 @@ export class DashboardTheme implements IDashboardTheme {
   }
 
   public get modebarColor(): string {
-    return "rgba(var(--sjs2-color-fg-brand-primary), 0.5)";
+    return this.cssVariables["--sjs2-color-fg-brand"];
   }
 
   public get axisLabelFont(): FontSettings {
