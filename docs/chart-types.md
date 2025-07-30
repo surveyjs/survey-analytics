@@ -105,6 +105,18 @@ Bullet charts are supported by the following question types:
 - [Expression](https://surveyjs.io/form-library/examples/expression-question-for-dynamic-form-calculations/)
 - Any of these question types used within a [Multi-Select Matrix](https://surveyjs.io/form-library/examples/multi-select-matrix-question/), [Dynamic Matrix](https://surveyjs.io/form-library/examples/dynamic-matrix-add-new-rows/), or [Dynamic Panel](https://surveyjs.io/form-library/examples/duplicate-group-of-fields-in-form/)
 
+## Radar Chart / Spider Chart
+
+A radar chart, also known as "spider chart" or "web chart", displays multivariate data as a two-dimensional chart in which multiple axes are arranged in a circle and radiate from the same central point. Each data point is plotted on its corresponding axis, and the points are connected to form a polygon. Radar charts provide a quick and intuitive way to compare values across different variables, making it easy to identify strengths and weaknesses at a glance.
+
+<img src="images/radar-chart.png" width="914" height="678" alt="SurveyJS Dashboard: Radar chart">
+
+Radar charts are supported by the following question types:
+
+- [Ranking](https://surveyjs.io/form-library/examples/add-ranking-question-to-form/)
+
+[View Demo](/dashboard/examples/radar-chart/ (linkStyle))
+
 ## Stacked Bar Chart
 
 A stacked bar chart displays each bar divided into multiple segments that visualize the percentage contribution of each category. The total length of bars represents 100%. Stacked bar charts are useful for showing the breakdown of a total into its individual components.
