@@ -81,4 +81,4 @@ export var swedishStrings = {
 };
 
 localization.locales["sv"] = swedishStrings;
-localization.localeNames["sv"] = "Swedish";
+localization.localeNames["sv"] = "Svenska";
