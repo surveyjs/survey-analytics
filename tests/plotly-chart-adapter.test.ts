@@ -51,7 +51,6 @@ test("should set colors for pie chart with boolean question type", () => {
   expect(traces[0].marker.colors).toBeDefined();
   expect(traces[1].marker).toBeDefined();
   expect(traces[1].marker.colors).toBeDefined();
-  expect(traces[0].marker.colors).toEqual(traces[1].marker.colors);
 });
 
 test("should set colors for doughnut chart with boolean question type", () => {
@@ -101,7 +100,6 @@ test("should set colors for bar chart with boolean question type", () => {
   expect(traces[0].marker.color).toBeDefined();
   expect(traces[1].marker).toBeDefined();
   expect(traces[1].marker.color).toBeDefined();
-  expect(traces[0].marker.color).toEqual(traces[1].marker.color);
 });
 
 test("should use colors from BooleanModel if they are set", () => {
@@ -120,12 +118,12 @@ test("should use colors from BooleanModel if they are set", () => {
   BooleanModel.trueColor = "#00ff00";
   BooleanModel.falseColor = "#ff0000";
   (mockModel as any).chartType = "pie";
-  traces = [{ name: "trace1" }];
+  traces = [{ name: "trace1" }, { name: "trace2" }];
 
   (adapter as any).patchConfigParameters(chartNode, traces, layout, config);
 
-  expect(traces[0].marker.colors).toContain("#00ff00");
-  expect(traces[0].marker.colors).toContain("#ff0000");
+  expect(traces[0].marker.colors).toStrictEqual(["#00ff00"]);
+  expect(traces[1].marker.colors).toStrictEqual(["#ff0000"]);
 
   BooleanModel.trueColor = "";
   BooleanModel.falseColor = "";
@@ -146,11 +144,13 @@ test("should add color for missing answers if showMissingAnswers is enabled", ()
 
   (mockModel as SelectBase).showMissingAnswers = true;
   (mockModel as any).chartType = "pie";
-  traces = [{ name: "trace1" }];
+  traces = [{ name: "trace1" }, { name: "trace2" }, { name: "trace3" }];
 
   (adapter as any).patchConfigParameters(chartNode, traces, layout, config);
 
-  expect(traces[0].marker.colors).toHaveLength(3);
+  expect(traces[0].marker.colors).toStrictEqual([VisualizerBase.colors[0]]);
+  expect(traces[1].marker.colors).toStrictEqual([VisualizerBase.colors[1]]);
+  expect(traces[2].marker.colors).toStrictEqual([VisualizerBase.colors[2]]);
 });
 
 test("should not modify traces if chartType is not supported", () => {
