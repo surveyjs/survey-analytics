@@ -1,5 +1,5 @@
-import { Question, QuestionCompositeModel, QuestionCustomModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase } from "survey-core";
-import { BaseColumn, CommentColumn, CompositeQuestionColumn, CustomQuestionColumn, FileColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn, OtherColumn } from "./columns";
+import { Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionRadiogroupModel, QuestionSelectBase } from "survey-core";
+import { BaseColumn, CheckboxColumn, CommentColumn, CompositeQuestionColumn, CustomQuestionColumn, FileColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn, OtherColumn, SelectBaseColumn, SingleChoiceColumn } from "./columns";
 import { IColumn } from "./config";
 import { Table } from "./table";
 
@@ -43,6 +43,19 @@ export class ColumnsBuilderFactory {
     return this.columnsBuilders[type] || this.defaultColumnsBuilder;
   }
 }
+export class CheckboxColumnsBuilder extends DefaultColumnsBuilder<QuestionCheckboxModel> {
+  protected createColumn(question: QuestionCheckboxModel, table: Table): BaseColumn<QuestionCheckboxModel> {
+    return new CheckboxColumn(question, table);
+  }
+}
+ColumnsBuilderFactory.Instance.registerBuilderColumn("checkbox", new CheckboxColumnsBuilder());
+export class SingleChoiceColumnsBuilder extends DefaultColumnsBuilder<QuestionDropdownModel | QuestionRadiogroupModel> {
+  protected createColumn(question: QuestionDropdownModel | QuestionRadiogroupModel, table: Table): BaseColumn<QuestionDropdownModel | QuestionRadiogroupModel> {
+    return new SingleChoiceColumn(question, table);
+  }
+}
+ColumnsBuilderFactory.Instance.registerBuilderColumn("radiogroup", new SingleChoiceColumnsBuilder());
+ColumnsBuilderFactory.Instance.registerBuilderColumn("dropdown", new SingleChoiceColumnsBuilder());
 
 export class MatrixColumnsBuilder extends DefaultColumnsBuilder<QuestionMatrixModel> {
   protected buildColumnsCore(questionBase: Question, table: Table): IColumn[] {

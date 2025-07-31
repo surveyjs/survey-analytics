@@ -1,4 +1,4 @@
-import { ItemValue, MatrixRowModel, Question, QuestionCompositeModel, QuestionCustomModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase, settings } from "survey-core";
+import { Base, ItemValue, MatrixRowModel, Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionRadiogroupModel, QuestionSelectBase, settings } from "survey-core";
 import { createImagesContainer, createLinksContainer } from "../utils";
 import { ICellData, IColumn, ColumnDataType, QuestionLocation, IColumnData } from "./config";
 import { ITableOptions, Table } from "./table";
@@ -108,6 +108,35 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
 export class DefaultColumn extends BaseColumn {
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
     return this.getDisplayValueCore(data);
+  }
+}
+
+export class CheckboxColumn extends BaseColumn<QuestionCheckboxModel> {
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
+    const selectedItems = this.question.selectedItems;
+    const res:Array<string> = [];
+    selectedItems.forEach(item => {
+      res.push(options.useValuesAsLabels ? item.value : item.textOrHtml);
+    });
+    return res.join(", ");
+  }
+}
+
+export class SingleChoiceColumn extends BaseColumn<QuestionDropdownModel | QuestionRadiogroupModel> {
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
+    const selectedItem = this.question.selectedItem;
+    if(!selectedItem) return "";
+    return options.useValuesAsLabels ? selectedItem.value : selectedItem.textOrHtml;
+  }
+}
+export class SelectBaseColumn extends BaseColumn<QuestionDropdownModel | QuestionCheckboxModel | QuestionRadiogroupModel> {
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
+    const value = options.useValuesAsLabels ? this.question.renderedValue : this.question.displayValue;
+    if(Array.isArray(value)) {
+      return value.join(", ");
+    } else {
+      return value;
+    }
   }
 }
 
