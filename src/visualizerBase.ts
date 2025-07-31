@@ -24,6 +24,15 @@ export interface IDataInfo {
   getSeriesLabels(): Array<string>;
 }
 
+type ToolbarItemCreators = {
+  [name: string]: {
+    creator: (toolbar?: HTMLDivElement) => HTMLElement,
+    // type: ToolbarItemType,
+    order: number,
+    // groupIndex: number,
+  },
+};
+
 export class PostponeHelper {
   public static postponeFunction: (fn: () => void, timeout?: number) => any;
   public static postpone(fn: () => void, timeout?: number): any {
@@ -156,7 +165,13 @@ export class VisualizerBase implements IDataInfo {
     this.onStateChanged.fire(this, this.getState());
   }
 
-  protected toolbarItemCreators: { [name: string]: (toolbar?: HTMLDivElement) => HTMLElement } = {};
+  protected toolbarItemCreators: ToolbarItemCreators = {};
+
+  public onGetToolbarItemCreators: () => ToolbarItemCreators;
+
+  protected getToolbarItemCreators(): ToolbarItemCreators {
+    return Object.assign({}, this.toolbarItemCreators, this.onGetToolbarItemCreators && this.onGetToolbarItemCreators() || {});
+  }
 
   constructor(
     public question: Question,
@@ -321,9 +336,10 @@ export class VisualizerBase implements IDataInfo {
    */
   public registerToolbarItem(
     name: string,
-    creator: (toolbar?: HTMLDivElement) => HTMLElement
+    creator: (toolbar?: HTMLDivElement) => HTMLElement,
+    order = 100
   ): void {
-    this.toolbarItemCreators[name] = creator;
+    this.toolbarItemCreators[name] = { creator, order };
   }
 
   /**
@@ -337,9 +353,9 @@ export class VisualizerBase implements IDataInfo {
     name: string
   ): (toolbar?: HTMLDivElement) => HTMLElement {
     if(this.toolbarItemCreators[name] !== undefined) {
-      const creator = this.toolbarItemCreators[name];
+      const item = this.toolbarItemCreators[name];
       delete this.toolbarItemCreators[name];
-      return creator;
+      return item.creator;
     }
     return undefined;
   }
@@ -432,8 +448,13 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected createToolbarItems(toolbar: HTMLDivElement) {
-    Object.keys(this.toolbarItemCreators || {}).forEach((toolbarItemName) => {
-      let toolbarItem = this.toolbarItemCreators[toolbarItemName](toolbar);
+    const toolbarItemCreators = this.getToolbarItemCreators();
+    const sortedItems = Object.keys(toolbarItemCreators || {})
+      .map(name => ({ name, ...toolbarItemCreators[name] }))
+      .sort((a, b) => a.order - b.order);
+
+    sortedItems.forEach((item) => {
+      let toolbarItem = item.creator(toolbar);
       if (!!toolbarItem) {
         toolbar.appendChild(toolbarItem);
       }

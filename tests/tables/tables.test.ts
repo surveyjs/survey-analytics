@@ -417,7 +417,7 @@ test("check data for question with other and storeOthersAsComment: true", () => 
   const survey = new SurveyModel(json);
   const data = [{ radio: "otherValue" }];
   const table = new TableTest(survey, data, {}, []);
-  expect((<any>table).tableData[0]["radio"]).toEqual("otherValue");
+  expect((<any>table).tableData[0]["radio"]).toEqual("Other (describe)");
   expect((<any>table).tableData[0]["radio-Comment"]).toBeUndefined();
 });
 
@@ -932,4 +932,126 @@ test("check set state with columns which not inside survey", () => {
   expect(table.columns[0].getCellData(table, data).question).toBe(survey.getAllQuestions()[0]);
   expect(table.columns[1].getCellData(table, data).displayValue).toEqual("text2");
   expect(table.columns[1].getCellData(table, data).question).toBe(undefined);
+});
+
+test("check checkbox column with multi comments", () => {
+  const json = { "elements":
+         [{
+           "type": "checkbox",
+           "name": "question1",
+           "choices": [
+             {
+               "value": "item1",
+               "text": "Item 1",
+               "showCommentArea": true
+             },
+             {
+               "value": "item2",
+               "text": "Item 2"
+             },
+             {
+               "value": "item3",
+               "text": "Item 3"
+             }
+           ],
+           "colCount": 1
+         }]
+  };
+  const survey = new SurveyModel(json);
+  const data = { "question1":
+    [
+      {
+        "value": "item1",
+        "comment": "aaaaa"
+      },
+      {
+        "value": "item2"
+      }
+    ]
+  };
+  survey.data = data;
+  let table = new TableTest(survey, [], {}, []);
+  expect((<any>table).columns.length).toEqual(1);
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1, Item 2");
+
+  table = new TableTest(survey, [], { useValuesAsLabels: true }, []);
+  expect((<any>table).columns.length).toEqual(1);
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("item1, item2");
+});
+
+test("check dropdown column with multi comments", () => {
+  const json = { "elements":
+         [{
+           "type": "dropdown",
+           "name": "question1",
+           "choices": [
+             {
+               "value": "item1",
+               "text": "Item 1",
+               "showCommentArea": true
+             },
+             {
+               "value": "item2",
+               "text": "Item 2"
+             },
+             {
+               "value": "item3",
+               "text": "Item 3"
+             }
+           ],
+           "colCount": 1
+         }]
+  };
+  const survey = new SurveyModel(json);
+  const data = { "question1": {
+    "value": "item1",
+    "comment": "aaaaa" } };
+  survey.data = data;
+  let table = new TableTest(survey, [], {}, []);
+  expect((<any>table).columns.length).toEqual(1);
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1");
+
+  table = new TableTest(survey, [], { useValuesAsLabels: true }, []);
+  expect((<any>table).columns.length).toEqual(1);
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("item1");
+});
+
+test("check radiogroup column with multi comments", () => {
+  const json = { "elements":
+         [{
+           "type": "radiogroup",
+           "name": "question1",
+           "choices": [
+             {
+               "value": "item1",
+               "text": "Item 1",
+               "showCommentArea": true
+             },
+             {
+               "value": "item2",
+               "text": "Item 2"
+             },
+             {
+               "value": "item3",
+               "text": "Item 3"
+             }
+           ],
+           "colCount": 1
+         }]
+  };
+  const survey = new SurveyModel(json);
+  const data = { "question1":
+      {
+        "value": "item1",
+        "comment": "aaaaa"
+      },
+  };
+  survey.data = data;
+  let table = new TableTest(survey, [], {}, []);
+  expect((<any>table).columns.length).toEqual(1);
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1");
+
+  table = new TableTest(survey, [], { useValuesAsLabels: true }, []);
+  expect((<any>table).columns.length).toEqual(1);
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("item1");
 });
