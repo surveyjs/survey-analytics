@@ -23,8 +23,8 @@ test.describe("text", () => {
     await initSummary(page, json, data, options);
 
     // Select "Texts in table" from the dropdown
-    await page.click(".sa-question__select");
-    await page.selectOption(".sa-question__select", { label: "Texts in table" });
+    await page.locator(".sa-dropdown").click();
+    await page.getByRole("list").getByText("Texts in table").click();
 
     // Get all table cell values
     const cells = await page.evaluate(() => {

@@ -53,17 +53,16 @@ test.describe("basetests", () => {
     }
 
     const questionTitle = "Question 1";
-    const questionSelector = page.locator("#summaryContainer .sa-question div", { hasText: questionTitle });
-    const showDropdown = page.locator("#summaryContainer .sa-question__select").first();
+    const questionSelector = page.locator("#summaryContainer .sa-question .sa-question__content", { hasText: questionTitle });
+    const showQuestionDropdown = page.locator("#summaryContainer .sa-dropdown").first();
 
     await expect(questionSelector).toBeVisible();
     await questionSelector.locator("span", { hasText: "Hide" }).click();
     await expect(questionSelector).not.toBeVisible();
     expect(await isVisibleInState(page, questionTitle)).toBeFalsy();
 
-    // await showDropdown.click();
-    // await showDropdown.locator("option", { hasText: questionTitle }).click();
-    await showDropdown.selectOption(questionTitle);
+    await showQuestionDropdown.click();
+    await page.getByRole("list").getByText(questionTitle).click();
     await expect(questionSelector).toBeVisible();
     expect(await isVisibleInState(page, questionTitle)).toBeTruthy();
   });
@@ -83,8 +82,8 @@ test.describe("basetests", () => {
         renderedElement: {},
       },
     ]);
-    const q1 = page.locator("#summaryContainer .sa-question div", { hasText: "Question 1" });
-    const q2 = page.locator("#summaryContainer .sa-question div", { hasText: "Question 2" });
+    const q1 = page.locator("#summaryContainer .sa-question .sa-question__content", { hasText: "Question 1" });
+    const q2 = page.locator("#summaryContainer .sa-question .sa-question__content", { hasText: "Question 2" });
     await expect(q1).not.toBeVisible();
     await expect(q2).toBeVisible();
   });
@@ -97,7 +96,7 @@ test.describe("basetests", () => {
       }, title);
     }
     const questionTitle = "Question 1";
-    const questionSelector = page.locator("#summaryContainer .sa-question div", { hasText: questionTitle });
+    const questionSelector = page.locator("#summaryContainer .sa-question .sa-question__content", { hasText: questionTitle });
     expect(await getPositionInState(page, questionTitle)).toBe(0);
 
     // await questionSelector.locator(".sa-question__title").hover({ force: true });
@@ -107,7 +106,7 @@ test.describe("basetests", () => {
     // await page.waitForTimeout(500);
     // await page.mouse.up();
     // await page.waitForTimeout(500);
-    await dragDropElement(page, questionSelector.locator(".sa-question__title"), page.locator("#summaryContainer .sa-panel__content"));
+    await dragDropElement(page, questionSelector.locator(".sa-question__header"), page.locator("#summaryContainer .sa-panel__content"));
 
     expect(await getPositionInState(page, questionTitle)).toBe(1);
   });
@@ -115,8 +114,8 @@ test.describe("basetests", () => {
   test("check filtering data", async ({ page }) => {
     const questionTitle = "Question 1";
     const secondQuestionTitle = "Question 2";
-    const questionSelector = page.locator("#summaryContainer .sa-question div", { hasText: questionTitle });
-    const secondQuestionSelector = page.locator("#summaryContainer .sa-question div", { hasText: secondQuestionTitle });
+    const questionSelector = page.locator("#summaryContainer .sa-question .sa-question__content", { hasText: questionTitle });
+    const secondQuestionSelector = page.locator("#summaryContainer .sa-question .sa-question__content", { hasText: secondQuestionTitle });
 
     // await questionSelector.locator("[data-unformatted='Yes<br>66.7%']").click();
     await page.getByRole("img").filter({ hasText: "Yes66.7%No33.3%" }).locator("path").first().click({ position: { x: 125, y: 125 } });

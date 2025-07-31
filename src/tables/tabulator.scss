@@ -117,18 +117,17 @@
   }
 
   .tabulator {
-    border: 1px solid #ddd;
+    border: var(--dsb-table-view-cell-border-width, 1px) dashed var(--dsb-table-view-cell-border-color, #DCDCDC);
     background-color: $background-color;
 
     .tabulator-row .tabulator-cell {
       padding: 20px;
-      border-top: 1px solid #ddd;
-      border-right: 1px solid #ddd;
+      border-top: var(--dsb-table-view-cell-border-width, 1px) dashed var(--dsb-table-view-cell-border-color, #DCDCDC);
+      border-right: var(--dsb-table-view-cell-border-width, 1px) dashed var(--dsb-table-view-cell-border-color, #DCDCDC);
     }
 
     .tabulator-header .tabulator-col {
-      padding: 13px 20px;
-      border-right: 1px solid #ddd;
+      border-right: var(--dsb-table-view-cell-border-width, 1px) dashed var(--dsb-table-view-cell-border-color, #DCDCDC);
     }
 
     .tabulator-header .tabulator-col .tabulator-col-content {
