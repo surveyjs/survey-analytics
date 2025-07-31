@@ -14,6 +14,7 @@ import "../analytics-localization/arabic";
 import "../analytics-localization/japanese";
 import "../analytics-localization/polish";
 import "../analytics-localization/finnish";
+import "../analytics-localization/swedish";
 
 export * from "../dataProvider";
 export * from "../visualizerFactory";
