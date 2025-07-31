@@ -417,7 +417,7 @@ test("check data for question with other and storeOthersAsComment: true", () => 
   const survey = new SurveyModel(json);
   const data = [{ radio: "otherValue" }];
   const table = new TableTest(survey, data, {}, []);
-  expect((<any>table).tableData[0]["radio"]).toEqual("otherValue");
+  expect((<any>table).tableData[0]["radio"]).toEqual("Other (describe)");
   expect((<any>table).tableData[0]["radio-Comment"]).toBeUndefined();
 });
 
