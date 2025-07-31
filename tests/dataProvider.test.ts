@@ -600,3 +600,35 @@ test("getData for select base question values + missing answers", () => {
     })
   ).toEqual([[2, 1, 0, 1, 0, 0, 1]]);
 });
+
+test("getData for select base question values with showCommentArea choices", () => {
+  const choices = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6"];
+  const data = [
+    {
+      "q1": [
+        {
+          value: "Item 1",
+          comment: "comment1",
+        },
+        {
+          value: "Item 2",
+          comment: "comment2",
+        },
+        {
+          value: "Item 3",
+          comment: "comment3",
+        },
+      ]
+    }
+  ];
+  const dataProvider = new DataProvider(data);
+  const result = defaultStatisticsCalculator(dataProvider.filteredData, {
+    name: "q1",
+    dataNames: ["q1"],
+    getValues: () => choices.concat([undefined]),
+    getLabels: () => choices.concat(["missing"]),
+    getSeriesValues: () => [],
+    getSeriesLabels: () => [],
+  });
+  expect(result).toEqual([[1, 1, 1, 0, 0, 0, 0]]);
+});

@@ -26,6 +26,10 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
     }
     statistics.push(dataNameStatistics);
   }
+  const getValueIndex = (val) => {
+    if(val !== null && typeof val === "object") return valuesIndex[val.value];
+    return valuesIndex[val];
+  };
 
   data.forEach((row: any) => {
     dataNames.forEach((dataName, index) => {
@@ -38,7 +42,8 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
             const seriesNo =
               seriesIndex[row[DataProvider.seriesMarkerKey]] || 0;
             rowValues.forEach((val) => {
-              statistics[index][seriesNo][valuesIndex[val]]++;
+              const valIndex = getValueIndex(val);
+              statistics[index][seriesNo][valIndex]++;
             });
           } else {
             // Series are the keys in question value (matrix question)
@@ -54,7 +59,10 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
           }
         } else {
           // No series
-          rowValues.forEach((val) => statistics[0][0][valuesIndex[val]]++);
+          rowValues.forEach((val) => {
+            const valIndex = getValueIndex(val);
+            statistics[0][0][valIndex]++;
+          });
         }
       }
     });
