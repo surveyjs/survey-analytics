@@ -632,3 +632,29 @@ test("getData for select base question values with showCommentArea choices", () 
   });
   expect(result).toEqual([[1, 1, 1, 0, 0, 0, 0]]);
 });
+
+test("getData for matrix & cellType is checkbox", () => {
+  const data = [
+    {
+      "q1": {
+        "row1": [5, 4, 3, 2],
+        "row2": [5, 4, 3],
+        "row3": [5, 4],
+        "row4": [5]
+      }
+    }
+  ];
+  const dataProvider = new DataProvider(data);
+  const result = defaultStatisticsCalculator(dataProvider.filteredData, {
+    name: "q1",
+    dataNames: ["q1"],
+    getValues: () => [1, 2, 3, 4, 5],
+    getLabels: () => ["1", "2", "3", "4", "5"],
+    getSeriesValues: () => ["row1", "row2", "row3", "row4"],
+    getSeriesLabels: () => ["row1", "row2", "row3", "row4"],
+  });
+  expect(result[0]).toEqual([0, 1, 1, 1, 1]);
+  expect(result[1]).toEqual([0, 0, 1, 1, 1]);
+  expect(result[2]).toEqual([0, 0, 0, 1, 1]);
+  expect(result[3]).toEqual([0, 0, 0, 0, 1]);
+});
