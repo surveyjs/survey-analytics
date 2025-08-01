@@ -37,10 +37,10 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
       if (rowValue !== undefined || processMissingAnswers) {
         const rowValues = Array.isArray(rowValue) ? rowValue : [rowValue];
         if (series.length > 0) {
-          if (row[DataProvider.seriesMarkerKey] !== undefined) {
+          const rowName = row[DataProvider.seriesMarkerKey];
+          if (rowName !== undefined) {
             // Series are labelled by seriesMarkerKey in row data
-            const seriesNo =
-              seriesIndex[row[DataProvider.seriesMarkerKey]] || 0;
+            const seriesNo = seriesIndex[rowName] || 0;
             rowValues.forEach((val) => {
               const valIndex = getValueIndex(val);
               statistics[index][seriesNo][valIndex]++;
@@ -52,7 +52,11 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
               series.forEach((seriesName) => {
                 if (val[seriesName] !== undefined) {
                   const seriesNo = seriesIndex[seriesName] || 0;
-                  statistics[index][seriesNo][valuesIndex[val[seriesName]]]++;
+                  const values = Array.isArray(val[seriesName]) ? val[seriesName] : [val[seriesName]];
+                  values.forEach(value => {
+                    const valIndex = getValueIndex(value);
+                    statistics[index][seriesNo][valIndex]++;
+                  });
                 }
               });
             });
