@@ -657,5 +657,4 @@ test("getData for matrix & cellType is checkbox", () => {
   expect(result[1]).toEqual([0, 0, 1, 1, 1]);
   expect(result[2]).toEqual([0, 0, 0, 1, 1]);
   expect(result[3]).toEqual([0, 0, 0, 0, 1]);
-
 });

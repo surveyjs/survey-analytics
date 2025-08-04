@@ -1118,5 +1118,4 @@ test("check radiogroup column with multi comments", () => {
   expect((<any>table).columns.length).toEqual(2);
   expect(table.columns[0].getCellData(table, data).displayValue).toBe("column1");
   expect(table.columns[1].getCellData(table, data).displayValue).toBe("column2, column3");
-
 });
