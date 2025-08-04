@@ -182,9 +182,21 @@ export class MatrixColumn extends BaseColumn<QuestionMatrixModel> {
     if(this.valuePath && typeof displayValue === "object") {
       displayValue = displayValue[this.valuePath];
       if(displayValue !== undefined) {
-        const choiceValue = ItemValue.getItemByValue(this.question.columns, displayValue);
-        if(!!choiceValue) {
-          displayValue = options.useValuesAsLabels ? choiceValue.value : choiceValue.locText.textOrHtml;
+        if(Array.isArray(displayValue)) {
+          const res = [];
+          displayValue.forEach(itemValue => {
+            const item = ItemValue.getItemByValue(this.question.columns, itemValue);
+            if(!!item) {
+              res.push(options.useValuesAsLabels ? item.value : item.locText.textOrHtml);
+            }
+          }
+          );
+          displayValue = res.join(", ");
+        } else {
+          const choiceValue = ItemValue.getItemByValue(this.question.columns, displayValue);
+          if(!!choiceValue) {
+            displayValue = options.useValuesAsLabels ? choiceValue.value : choiceValue.locText.textOrHtml;
+          }
         }
       }
     }
