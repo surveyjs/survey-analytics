@@ -350,6 +350,14 @@
     }
 }
 
+.sa-dropdown-container {
+  display: inline-block;
+}
+
+.sa-dropdown__title {
+  padding: 8px;
+}
+
 .sa-dropdown-list {
     position: absolute;
     top: 100%;
@@ -366,6 +374,7 @@
     margin: 0;
     list-style: none;
     transition: all 0.3s;
+    min-width: 150px;
 
     padding: var(--sjs2-layout-container-drop-vertical, 8px) var(--sjs2-layout-container-drop-horizontal, 8px);
 
