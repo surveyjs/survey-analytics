@@ -27,6 +27,7 @@ export class AlternativeVisualizersWrapper
     options?: Object
   ) {
     super(question, data, options);
+    this.showToolbar = false;
     this.loadingData = false;
     if (!visualizers || visualizers.length < 2) {
       throw new Error(
@@ -35,6 +36,7 @@ export class AlternativeVisualizersWrapper
     }
     this.visualizers.forEach((visualizer) => {
       visualizer.onUpdate = () => this.invokeOnUpdate();
+      visualizer.onGetToolbarItemCreators = () => this.toolbarItemCreators;
       if (visualizer.supportSelection) {
         this._supportSelection = true;
         this.visualizersWithSelection.push(
@@ -53,7 +55,7 @@ export class AlternativeVisualizersWrapper
         }),
         (option: any) => this.visualizer.type === option.value,
         (e: any) => this.setVisualizer(e.target.value)
-      )
+      ), 0
     );
 
     this.visualizer = visualizers[0];

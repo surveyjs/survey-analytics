@@ -749,7 +749,7 @@ test("change language with different locales order", () => {
     [],
     { survey: survey }
   );
-  const changeLocaleSelectorCreator = visualizationPanel["toolbarItemCreators"]["changeLocale"] as (el: HTMLElement) => HTMLSelectElement;
+  const changeLocaleSelectorCreator = visualizationPanel["toolbarItemCreators"]["changeLocale"].creator as (el: HTMLElement) => HTMLSelectElement;
   var element = visualizationPanel.getElement("satisfaction");
   expect(visualizationPanel.locale).toEqual("fr");
   expect(visualizationPanel["locales"]).toStrictEqual(["fr", "en", "ru"]);
