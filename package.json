@@ -16,7 +16,8 @@
     "build:types:tabulator": "tsc --p tsconfig.tabulator.json && echo \"export * from './survey-analytics-tabulator.types/entries/tabulator';\" >> build/survey.analytics.tabulator.d.ts",
     "lint": "eslint ./src --quiet",
     "pre-push-check": "npm run lint && npm run test",
-    "postinstall": "playwright install chromium"
+    "postinstall": "playwright install chromium",
+    "pwinst": "playwright install chromium"
   },
   "version": "2.3.0",
   "name": "survey-analytics",
