@@ -188,7 +188,7 @@ test("date value type handling", () => {
 
   expect(pivot.getValueType()).toBe("date");
   expect(pivot.getContiniousValue("2020-01-01")).toBe(Date.parse("2020-01-01"));
-  expect(pivot.getString(Date.parse("2020-01-01"))).toMatch(/01\.01\.2020/);
+  expect(pivot.getString(Date.parse("2020-01-01"))).toMatch(/1\/01\/2020/);
 });
 
 test("continuous values and intervals", () => {
@@ -526,7 +526,7 @@ test("getString with different value types", () => {
   const datePivot = new PivotModel([], []);
   datePivot["valueType"] = "date";
   const timestamp = Date.parse("2020-01-01");
-  expect(datePivot.getString(timestamp)).toMatch(/01\.01\.2020/);
+  expect(datePivot.getString(timestamp)).toMatch(/1\/1\/2020/);
 });
 
 test("setupPivot with non-existent question", () => {
