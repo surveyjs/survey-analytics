@@ -43,8 +43,13 @@ export class PivotModel extends SelectBase {
           };
         }),
         (option: any) => this.axisXQuestionName === option.value,
-        (e: any) => { this.axisXQuestionName = e.target.value; this.setupPivot(); },
-        localization.getString("axisXSelectorTitle")
+        (e: any) => {
+          this.axisXQuestionName = e.target.value;
+          this.updateQuestionsSelection();
+          this.updateToolbar();
+          this.setupPivot();
+        },
+        () => this.isXYChart() ? localization.getString("axisXSelectorTitle") : localization.getString("axisXAlternativeSelectorTitle")
       )
     );
     this.registerToolbarItem("axisYSelector0", this.createYSelecterGenerator());
@@ -58,6 +63,8 @@ export class PivotModel extends SelectBase {
       if(!selector) {
         selector = this.createAxisYSelector(selectorIndex);
         this.axisYSelectors.push(selector);
+      } else {
+        selector["__updateSelect"] && selector["__updateSelect"]();
       }
       return selector;
     };
@@ -82,31 +89,69 @@ export class PivotModel extends SelectBase {
         }
         this.axisYSelectors = this.axisYSelectors.slice(0, index + 1);
         this.axisYQuestionNames = this.axisYQuestionNames.slice(0, index + 1);
-        this.updateToolbar();
       }
     } else {
       if(!!value) {
         this.registerToolbarItem("axisYSelector" + this.axisYSelectors.length, this.createYSelecterGenerator());
-        this.updateToolbar();
       }
     }
 
+    this.updateQuestionsSelection();
+    this.updateToolbar();
     this.setupPivot();
   }
 
+  protected updateQuestionsSelection() {
+    const selectedQuestions = [this.axisXQuestionName];
+    for(let i = 0; i < this.axisYQuestionNames.length; ++i) {
+      const questionName = this.axisYQuestionNames[i];
+      if (selectedQuestions.indexOf(questionName) !== -1) {
+        this.onAxisYSelectorChanged(i, undefined);
+        break;
+      } else {
+        selectedQuestions.push(questionName);
+      }
+    }
+  }
+
   private createAxisYSelector(selectorIndex: number): HTMLDivElement {
-    const selector = DocumentHelper.createSelector(
-      [{ value: "", text: "Not selected" }].concat(this.questions.map((question) => {
+    const getChoices = () => {
+      const choices = this.questions.filter(q => {
+        if(q.name === this.axisXQuestionName) {
+          return false;
+        }
+        const usedIndex = this.axisYQuestionNames.indexOf(q.name);
+        return usedIndex == -1 || usedIndex >= selectorIndex;
+      }).map((question) => {
         return {
           value: question.name,
           text: question.title || question.name,
         };
-      })),
+      });
+      return [{ value: "", text: localization.getString("notSelected") }].concat(choices);
+    };
+    if(getChoices().length == 1) {
+      return undefined;
+    }
+    const selector = DocumentHelper.createSelector(
+      getChoices,
       (option: any) => this.axisYQuestionNames[selectorIndex] === option.value,
       (e: any) => { this.onAxisYSelectorChanged(selectorIndex, e.target.value); },
-      selectorIndex ? undefined : localization.getString("axisYSelectorTitle")
+      () => selectorIndex ? undefined : (this.isXYChart() ? localization.getString("axisYSelectorTitle") : localization.getString("axisYAlternativeSelectorTitle"))
     );
     return selector;
+  }
+
+  protected setChartType(chartType: string) {
+    const prev2Dchart = this.isXYChart();
+    super.setChartType(chartType);
+    if (prev2Dchart !== this.isXYChart()) {
+      this.updateToolbar();
+    }
+  }
+
+  private isXYChart() {
+    return ["pie", "doughnut"].indexOf(this.chartType) === -1;
   }
 
   public getQuestionValueType(question: Question): "enum" | "date" | "number" {
