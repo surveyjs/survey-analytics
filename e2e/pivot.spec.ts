@@ -8,11 +8,11 @@ test.describe("Pivot chart", () => {
   });
 
   test("simple cases", async ({ page }) => {
-    const xAxisSelector = page.locator("div").filter({ hasText: /^X axis:GenderItem kindBill amount$/ }).getByRole("combobox");
-    const yAxisSelector = page.locator("div").filter({ hasText: /^Y axis:Not selectedGenderItem kindBill amount$/ }).getByRole("combobox");
-    await expect(page.locator("#pivotContainer").getByText("X axis:")).toBeVisible();
+    const xAxisSelector = page.locator("div").filter({ hasText: /^Category \(X Axis\):GenderItem kindBill amount$/ }).getByRole("combobox");
+    let yAxisSelector = page.locator("div").filter({ hasText: /^Legend \(Series\):Not selectedItem kindBill amount$/ }).getByRole("combobox");
+    await expect(page.locator("#pivotContainer").getByText("Category (X Axis):")).toBeVisible();
     await expect(xAxisSelector).toBeVisible();
-    await expect(page.locator("#pivotContainer").getByText("Y axis:")).toBeVisible();
+    await expect(page.locator("#pivotContainer").getByText("Legend (Series):")).toBeVisible();
     await expect(yAxisSelector).toBeVisible();
     await compareScreenshot(page, "#pivotContainer", "pivot-q1-none.png");
     await yAxisSelector.selectOption("question2");
@@ -20,17 +20,17 @@ test.describe("Pivot chart", () => {
     await yAxisSelector.selectOption("question3");
     await compareScreenshot(page, "#pivotContainer", "pivot-q1-q3.png");
     await xAxisSelector.selectOption("question2");
+    yAxisSelector = page.locator("div").filter({ hasText: /^Legend \(Series\):Not selectedGenderBill amount$/ }).getByRole("combobox");
     await yAxisSelector.selectOption("question1");
     await compareScreenshot(page, "#pivotContainer", "pivot-q2-q1.png");
     await yAxisSelector.selectOption("question3");
     await compareScreenshot(page, "#pivotContainer", "pivot-q2-q3.png");
     await xAxisSelector.selectOption("question3");
+    yAxisSelector = page.locator("div").filter({ hasText: /^Legend \(Series\):Not selectedGenderItem kind$/ }).getByRole("combobox");
     await yAxisSelector.selectOption("question1");
     await compareScreenshot(page, "#pivotContainer", "pivot-q3-q1.png");
     await yAxisSelector.selectOption("question2");
     await compareScreenshot(page, "#pivotContainer", "pivot-q3-q2.png");
-    await yAxisSelector.selectOption("question3");
-    await compareScreenshot(page, "#pivotContainer", "pivot-q3-q3.png");
   });
 
 });

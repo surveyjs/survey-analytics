@@ -7,8 +7,8 @@ import { VisualizationManager } from "./visualizationManager";
 
 export class PivotModel extends SelectBase {
   protected valueType: "enum" | "date" | "number" = "enum";
-  private _cachedValues: Array<{ original: any, continious: number, row: any }> = undefined;
-  private _continiousData: Array<{ continious: number, row: any }> = undefined;
+  private _cachedValues: Array<{ original: any, continuous: number, row: any }> = undefined;
+  private _continuousData: Array<{ continuous: number, row: any }> = undefined;
   private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
   private _intervalPrecision: number = 2;
 
@@ -43,8 +43,13 @@ export class PivotModel extends SelectBase {
           };
         }),
         (option: any) => this.axisXQuestionName === option.value,
-        (e: any) => { this.axisXQuestionName = e.target.value; this.setupPivot(); },
-        localization.getString("axisXSelectorTitle")
+        (e: any) => {
+          this.axisXQuestionName = e.target.value;
+          this.updateQuestionsSelection();
+          this.updateToolbar();
+          this.setupPivot();
+        },
+        () => this.isXYChart() ? localization.getString("axisXSelectorTitle") : localization.getString("axisXAlternativeSelectorTitle")
       )
     );
     this.registerToolbarItem("axisYSelector0", this.createYSelecterGenerator());
@@ -58,6 +63,8 @@ export class PivotModel extends SelectBase {
       if(!selector) {
         selector = this.createAxisYSelector(selectorIndex);
         this.axisYSelectors.push(selector);
+      } else {
+        selector["__updateSelect"] && selector["__updateSelect"]();
       }
       return selector;
     };
@@ -82,31 +89,69 @@ export class PivotModel extends SelectBase {
         }
         this.axisYSelectors = this.axisYSelectors.slice(0, index + 1);
         this.axisYQuestionNames = this.axisYQuestionNames.slice(0, index + 1);
-        this.updateToolbar();
       }
     } else {
       if(!!value) {
         this.registerToolbarItem("axisYSelector" + this.axisYSelectors.length, this.createYSelecterGenerator());
-        this.updateToolbar();
       }
     }
 
+    this.updateQuestionsSelection();
+    this.updateToolbar();
     this.setupPivot();
   }
 
+  protected updateQuestionsSelection() {
+    const selectedQuestions = [this.axisXQuestionName];
+    for(let i = 0; i < this.axisYQuestionNames.length; ++i) {
+      const questionName = this.axisYQuestionNames[i];
+      if (selectedQuestions.indexOf(questionName) !== -1) {
+        this.onAxisYSelectorChanged(i, undefined);
+        break;
+      } else {
+        selectedQuestions.push(questionName);
+      }
+    }
+  }
+
   private createAxisYSelector(selectorIndex: number): HTMLDivElement {
-    const selector = DocumentHelper.createSelector(
-      [{ value: "", text: "Not selected" }].concat(this.questions.map((question) => {
+    const getChoices = () => {
+      const choices = this.questions.filter(q => {
+        if(q.name === this.axisXQuestionName) {
+          return false;
+        }
+        const usedIndex = this.axisYQuestionNames.indexOf(q.name);
+        return usedIndex == -1 || usedIndex >= selectorIndex;
+      }).map((question) => {
         return {
           value: question.name,
           text: question.title || question.name,
         };
-      })),
+      });
+      return [{ value: "", text: localization.getString("notSelected") }].concat(choices);
+    };
+    if(getChoices().length == 1) {
+      return undefined;
+    }
+    const selector = DocumentHelper.createSelector(
+      getChoices,
       (option: any) => this.axisYQuestionNames[selectorIndex] === option.value,
       (e: any) => { this.onAxisYSelectorChanged(selectorIndex, e.target.value); },
-      selectorIndex ? undefined : localization.getString("axisYSelectorTitle")
+      () => selectorIndex ? undefined : (this.isXYChart() ? localization.getString("axisYSelectorTitle") : localization.getString("axisYAlternativeSelectorTitle"))
     );
     return selector;
+  }
+
+  protected setChartType(chartType: string) {
+    const prev2Dchart = this.isXYChart();
+    super.setChartType(chartType);
+    if (prev2Dchart !== this.isXYChart()) {
+      this.updateToolbar();
+    }
+  }
+
+  private isXYChart() {
+    return ["pie", "doughnut"].indexOf(this.chartType) === -1;
   }
 
   public getQuestionValueType(question: Question): "enum" | "date" | "number" {
@@ -138,12 +183,12 @@ export class PivotModel extends SelectBase {
   }
 
   private reset() {
-    this._continiousData = undefined;
+    this._continuousData = undefined;
     this._cachedValues = undefined;
     this._cachedIntervals = undefined;
   }
 
-  public getContiniousValue(value: any): number {
+  public getContinuousValue(value: any): number {
     if (this.valueType === "date") {
       return Date.parse(value);
     }
@@ -163,7 +208,7 @@ export class PivotModel extends SelectBase {
   }
 
   public getSelectedItemByText(itemText: string) {
-    if (this.hasCustomIntervals || this.getContiniousValues().length > PivotModel.UseIntervalsFrom) {
+    if (this.hasCustomIntervals || this.getContinuousValues().length > PivotModel.UseIntervalsFrom) {
       const interval = this.intervals.filter(interval => interval.label === itemText)[0];
       return new ItemValue(interval, interval !== undefined ? interval.label : "");
     }
@@ -185,9 +230,9 @@ export class PivotModel extends SelectBase {
     super.onDataChanged();
   }
 
-  protected getContiniousValues() {
+  protected getContinuousValues() {
     if (this._cachedValues === undefined) {
-      this._continiousData = [];
+      this._continuousData = [];
       if(this.valueType === "enum") {
         this._cachedValues = [];
         return this._cachedValues;
@@ -196,13 +241,13 @@ export class PivotModel extends SelectBase {
       this.data.forEach(dataItem => {
         const answerData = dataItem[this.name];
         if (answerData !== undefined) {
-          // TODO: _continiousData should be sorted in order to speed-up statistics calculation in the getData function
-          this._continiousData.push({ continious: this.getContiniousValue(answerData), row: dataItem });
+          // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
+          this._continuousData.push({ continuous: this.getContinuousValue(answerData), row: dataItem });
           hash[answerData] = { value: answerData, row: dataItem };
         }
       });
-      this._cachedValues = Object.keys(hash).map(key => ({ original: hash[key].value, continious: this.getContiniousValue(key), row: hash[key].row }));
-      this._cachedValues.sort((a, b) => a.continious - b.continious);
+      this._cachedValues = Object.keys(hash).map(key => ({ original: hash[key].value, continuous: this.getContinuousValue(key), row: hash[key].row }));
+      this._cachedValues.sort((a, b) => a.continuous - b.continuous);
     }
     return this._cachedValues;
   }
@@ -295,11 +340,11 @@ export class PivotModel extends SelectBase {
     }
 
     if (this._cachedIntervals === undefined) {
-      const continiousValues = this.getContiniousValues();
+      const continuousValues = this.getContinuousValues();
       this._cachedIntervals = [];
-      if (continiousValues.length) {
-        let start = continiousValues[0].continious;
-        const end = continiousValues[continiousValues.length - 1].continious;
+      if (continuousValues.length) {
+        let start = continuousValues[0].continuous;
+        const end = continuousValues[continuousValues.length - 1].continuous;
         const intervalsCount = PivotModel.IntervalsCount;
         const delta = (end - start) / intervalsCount;
         for (let i = 0; i < intervalsCount; ++i) {
@@ -381,14 +426,14 @@ export class PivotModel extends SelectBase {
         }
       });
     } else {
-      const continiousValues = this.getContiniousValues();
+      const continuousValues = this.getContinuousValues();
       const intervals = this.intervals;
       for (var i = 0; i < series.length; ++i) {
         statistics.push(intervals.map(i => 0));
       }
-      this._continiousData.forEach(dataValue => {
+      this._continuousData.forEach(dataValue => {
         for (let valueIndex = 0; valueIndex < intervals.length; ++valueIndex) {
-          if (intervals[valueIndex].start <= dataValue.continious && (dataValue.continious < intervals[valueIndex].end || valueIndex == intervals.length - 1)) {
+          if (intervals[valueIndex].start <= dataValue.continuous && (dataValue.continuous < intervals[valueIndex].end || valueIndex == intervals.length - 1)) {
             if(this.questionsY.length === 0) {
               statistics[0][valueIndex]++;
             } else {
