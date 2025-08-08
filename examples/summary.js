@@ -1,3 +1,5 @@
+// SurveyAnalytics.VisualizationPanel.LayoutEngine = SurveyAnalytics.PanelLayoutEngine;
+
 var surveyId = "";
 var accessKey = "";
 

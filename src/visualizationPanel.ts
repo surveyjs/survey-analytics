@@ -7,7 +7,7 @@ import { DocumentHelper, createCommercialLicenseLink } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, IState, IPermission } from "./config";
 import { FilterInfo } from "./filterInfo";
-import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
+import { LayoutEngine } from "./layout-engine";
 import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import "./visualizationPanel.scss";
@@ -284,6 +284,7 @@ export interface IVisualizationPanelOptions {
  * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
  */
 export class VisualizationPanel extends VisualizerBase {
+  public static LayoutEngine: new (allowed: boolean, itemSelector: string, dragEnabled?: boolean) => LayoutEngine;
   public static haveCommercialLicense: boolean = false;
   public visualizers: Array<VisualizerBase> = [];
   private haveCommercialLicense: boolean = false;
@@ -306,7 +307,7 @@ export class VisualizationPanel extends VisualizerBase {
 
     this._layoutEngine =
       options.layoutEngine ||
-      new MuuriLayoutEngine(
+      VisualizationPanel.LayoutEngine && new VisualizationPanel.LayoutEngine(
         this.allowDynamicLayout,
         "." + questionLayoutedElementClassName,
         this.allowDragDrop
