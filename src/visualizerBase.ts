@@ -77,7 +77,7 @@ export class VisualizerBase implements IDataInfo {
   public static suppressVisualizerStubRendering: boolean = false;
   public static chartAdapterType: any = undefined;
 
-  private _theme: DashboardTheme = new DashboardTheme();
+  private _theme: DashboardTheme;
   private _showToolbar = true;
   private _footerVisualizer: VisualizerBase = undefined;
   private _dataProvider: DataProvider = undefined;
@@ -641,6 +641,7 @@ export class VisualizerBase implements IDataInfo {
     this.renderResult = targetElement;
 
     DocumentHelper.setStyles(targetElement, this._theme?.cssVariables);
+    this._theme = new DashboardTheme(null, targetElement);
 
     this.toolbarContainer = DocumentHelper.createElement(
       "div",
@@ -761,8 +762,8 @@ export class VisualizerBase implements IDataInfo {
 
   public applyTheme(theme: IDashboardTheme): void {
     if (!theme) return;
-    this._theme = new DashboardTheme(theme);
     DocumentHelper.setStyles(this.renderResult, theme.cssVariables);
+    this._theme = new DashboardTheme(theme, this.renderResult);
   }
 
   static customColors: string[] = [];

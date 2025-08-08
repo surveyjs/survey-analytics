@@ -1,4 +1,4 @@
-import { defaultDashboardTheme } from "./defaultDashboardTheme";
+import { dsbLightTheme } from "sjs-design-tokens";
 
 export const LegacyDashboardTheme = {
   // Font settings
@@ -46,8 +46,18 @@ export interface FontSettings {
 
 export class DashboardTheme implements IDashboardTheme {
   static barGap = 0.05;
+  private _cssStyleDeclaration;
 
-  constructor(private theme: IDashboardTheme = defaultDashboardTheme) {
+  private getCssVariableValue(propertyName: string) {
+    if(!!this._cssStyleDeclaration){
+      return this._cssStyleDeclaration.getPropertyValue(propertyName);
+    }
+  }
+
+  constructor(private theme: IDashboardTheme = dsbLightTheme, element: HTMLElement) {
+    if (!!element && !!getComputedStyle) {
+      this._cssStyleDeclaration = getComputedStyle(element)
+    }
   }
 
   public get cssVariables(): { [index: string]: string | any } {
@@ -55,54 +65,54 @@ export class DashboardTheme implements IDashboardTheme {
   }
 
   public get backgroundColor(): string {
-    return this.cssVariables["--sjs2-color-bg-basic-primary"];
+    return this.getCssVariableValue("--sjs2-color-bg-basic-primary");
   }
 
   public get axisGridColor(): string {
-    return this.cssVariables["--sjs2-color-data-grid-border-line"];
+    return this.getCssVariableValue("--sjs2-color-data-grid-border-line");
   }
 
   public get modebarActiveColor(): string {
-    return this.cssVariables["--sjs2-color-fg-brand-primary"];
+    return this.getCssVariableValue("--sjs2-color-fg-brand-primary");
   }
 
   public get modebarColor(): string {
-    return this.cssVariables["--sjs2-color-fg-brand"];
+    return this.getCssVariableValue("--sjs2-color-fg-brand");
   }
 
   public get axisLabelFont(): FontSettings {
     return <FontSettings>{
-      color: this.cssVariables["--sjs2-color-data-grid-fg-label"],
-      family: this.cssVariables["--sjs2-font-family-semantic-default"],
-      size: this.cssVariables["--sjs2-font-size-semantic-small"],
+      color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
+      family: this.getCssVariableValue("--sjs2-font-family-semantic-default"),
+      size: this.getCssVariableValue("--sjs2-font-size-semantic-small"),
       weight: 400
     };
   }
 
   public get insideLabelFont(): FontSettings {
     return <FontSettings>{
-      color: this.cssVariables["--sjs2-color-data-chart-fg-on-color-1"],
-      family: this.cssVariables["--sjs2-font-family-semantic-default"],
-      size: this.cssVariables["--sjs2-font-size-semantic-small"],
+      color: this.getCssVariableValue("--sjs2-color-data-chart-fg-on-color-1"),
+      family: this.getCssVariableValue("--sjs2-font-family-semantic-default"),
+      size: this.getCssVariableValue("--sjs2-font-size-semantic-small"),
       weight: 600
     };
   }
 
   public get legendLabelFont(): FontSettings {
     return <FontSettings>{
-      color: this.cssVariables["--sjs2-color-fg-basic-primary"],
-      family: this.cssVariables["--sjs2-font-family-semantic-default"],
-      size: this.cssVariables["--sjs2-font-size-semantic-small"],
+      color: this.getCssVariableValue("--sjs2-color-fg-basic-primary"),
+      family: this.getCssVariableValue("--sjs2-font-family-semantic-default"),
+      size: this.getCssVariableValue("--sjs2-font-size-semantic-small"),
       weight: 400
     };
   }
 
   public get legendSetting() {
     return {
-      borderWidth: this.cssVariables["--sjs2-border-width-default"],
-      borderColor: this.cssVariables["--sjs2-color-border-basic-secondary"],
-      borderRadius: this.cssVariables["--sjs2-radius-x250"],
-      background: this.cssVariables["--sjs2-color-bg-basic-primary"],
+      borderWidth: this.getCssVariableValue("--sjs2-border-width-default"),
+      borderColor: this.getCssVariableValue("--sjs2-color-border-basic-secondary"),
+      borderRadius: this.getCssVariableValue("--sjs2-radius-x250"),
+      background: this.getCssVariableValue("--sjs2-color-bg-basic-primary"),
     };
   }
 

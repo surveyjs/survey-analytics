@@ -45,7 +45,8 @@
   "dependencies": {
     "muuri": "^0.8.0",
     "plotly.js-dist-min": "^2.28.0",
-    "survey-core": "latest",
+    "survey-core": "../survey-library/packages/survey-core/build",
+    "sjs-design-tokens": "../sjs-design-tokens/build",
     "tabulator-tables": "^6.2.5",
     "apexcharts": "^4.7.0"
   },

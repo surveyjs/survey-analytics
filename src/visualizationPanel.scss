@@ -25,33 +25,33 @@
 }
 
 .sa-question__content {
-  padding: 0 var(--dsb-item-content-padding-right, 40px) var(--dsb-item-content-padding-bottom, 40px) var(--dsb-item-content-padding-left, 40px);
+  padding: 0 var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px);
 }
 
 .sa-question-layouted {
   position: absolute;
-  margin: calc(var(--dsb-surface-gap, 24px) / 2);
-  border-radius: var(--dsb-item-corner-radius, 4px);
-  background: var(--dsb-item-background-color, #FFF);
-  box-shadow: var(--dsb-item-shadow-offset-x, 0px) var(--dsb-item-shadow-offset-y, 1px) var(--dsb-item-shadow-blur, 2px) var(--dsb-item-shadow-spread, 0px) var(--dsb-item-shadow-color, rgba(0, 0, 0, 0.25));
+  margin: calc(var(--sjs2-spacing-x300, 24px) / 2);
+  border-radius: var(--sjs2-radius-container-panel, 16px);
+  background: var(--sjs2-color-bg-basic-primary, #FFF);
+  box-shadow: var(--sjs2-shadow-size-small-offset-x, 0) var(--sjs2-shadow-size-small-offset-y, 0) var(--sjs2-shadow-size-small-blur, 0) var(--sjs2-shadow-size-small-spread, 1px) var(--sjs2-color-utility-shadow-small, #D4D4D4);
 
   @media screen and (min-width: 1400px) {
-    width: calc(50% - calc(var(--dsb-surface-gap, 24px) * 2));
+    width: calc(50% - calc(var(--sjs2-spacing-x300, 24px) * 2));
   }
 }
 
 
 .sa-question__title {
   margin: 0;
-  margin-bottom: var(--dsb-item-header-title-margin-bottom, 16px);
-  color: var(--dsb-item-header-title-color, rgba(0, 0, 0, 0.90));
+  padding-bottom: var(--sjs2-spacing-x200, 16px);
+  color: var(--sjs2-color-fg-basic-primary, #1C1B20);
 
-  /* ctr/Default Bold */
+  /* sjs2/typography/default-strong */
   font-family: $font-family;
-  font-size: var(--ctr-font-default-size, 16px);
+  font-size: var(--sjs2-font-size-semantic-default, 16px);
   font-style: normal;
   font-weight: 600;
-  line-height: var(--ctr-font-default-line-height, 24px); /* 150% */
+  line-height: var(--sjs2-line-height-semantic-default, 24px); /* 150% */
 }
 
 .sa-question__header--draggable {
@@ -68,81 +68,73 @@
 .sa-question__drag-area-icon {
   cursor: move;
   display: flex;
-  padding: var(--dsb-item-drag-area-padding-top, 8px) var(--dsb-item-drag-area-padding-right, 8px) var(--dsb-item-drag-area-padding-bottom, 8px) var(--dsb-item-drag-area-padding-left, 8px);
+  padding: var(--sjs2-spacing-x100, 8px);
   align-items: center;
 
   svg {
     display: flex;
-    width: var(--dsb-item-drag-area-drag-grip-width, 24px);
-    height: var(--dsb-item-drag-area-drag-grip-height, 16px);
+    width: var(--sjs2-size-x300, 24px);
+    height: var(--sjs2-size-x200, 16px);
     flex-direction: column;
     align-items: center;
-    opacity: var(--dsb-item-drag-area-drag-grip-opacity, 0.5);
   }
 
   use {
-    fill: var(--dsb-item-drag-area-drag-grip-color, rgba(0, 0, 0, 0.5));
+    fill: var(--sjs2-color-fg-basic-tertiary, rgba(28, 27, 32, 0.4));
   }
 }
 
 .sa-toolbar {
-  font-family: $font-family;
-  font-size: $root-font-size;
-  color: $text-color;
-  // line-height: 34px;
-  // margin-bottom: 25px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: var(--dsb-item-header-toolbar-editors-gap, 8px);
-  padding-bottom: var(--dsb-item-header-toolbar-margin-bottom, 16px);
+  gap: var(--sjs2-spacing-static-x100, 8px);
+  padding-bottom: var(--sjs2-spacing-x200, 16px);
   align-items: center;
   align-self: stretch;
 }
 
 .sa-toolbar__button {
   display: flex;
-  padding: var(--ctr-survey-action-button-padding-top, 8px) var(--ctr-survey-action-button-padding-right, 24px) var(--ctr-survey-action-button-padding-bottom, 8px) var(--ctr-survey-action-button-padding-left, 24px);
+  padding: var(--sjs2-layout-control-action-small-box-vertical, 8px) var(--sjs2-layout-control-action-small-box-horizontal, 8px);
   justify-content: center;
   align-items: center;
-  gap: var(--ctr-survey-action-button-gap, 8px);
-  border-radius: var(--ctr-survey-action-button-corner-radius, 8px);
+  gap: var(--sjs2-layout-control-action-small-box-gap, 0);
+  border-radius: var(--sjs2-radius-control-action, 8px);
+  background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
   cursor: pointer;
 }
 
-.sa-toolbar__button-with-icon {
-  padding: var(--ctr-survey-action-button-padding-top, 8px) var(--ctr-survey-action-button-padding-right, 24px) var(--ctr-survey-action-button-padding-bottom, 8px) var(--ctr-survey-action-button-padding-left-with-icon, 16px);
-}
-
 .sa-toolbar__button:hover {
-  background: var(--ctr-survey-action-button-background-color-hovered-positive, rgba(25, 179, 148, 0.10));
+  background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
 }
 
 .sa-toolbar__button:disabled {
-  opacity: var(--ctr-survey-action-button-opacity-disabled, 0.25);
+  opacity: var(--sjs2-opacity-disabled, 0.25);
 }
 
 .sa-toolbar__button-text {
-  color: var(--ctr-survey-action-button-text-color-positive, #19B394);
+  color: var(--sjs2-color-fg-brand-primary, #19B394);
   text-align: center;
+  padding: var(--sjs2-layout-control-action-small-label-vertical, 0) var(--sjs2-layout-control-action-small-label-horizontal, 8px);
 
-  /* lbr/Default Bold */
-  font-family: var(--lbr-font-family, $font-family);
-  font-size: var(--lbr-font-default-size, 16px);
+  /* sjs2/typography/default-strong */
+  font-family: $font-family;
+  font-size: var(--sjs2-font-size-semantic-default, 16px);
   font-style: normal;
   font-weight: 600;
-  line-height: var(--lbr-font-default-line-height, 24px); /* 150% */
+  line-height: var(--sjs2-line-height-semantic-default, 24px); /* 150% */
 }
 
 .sa-toolbar__button-icon {
   display: flex;
-  width: var(--ctr-survey-action-button-icon-width, 24px);
-  height: var(--ctr-survey-action-button-icon-height, 24px);
+  width: var(--sjs2-size-x300, 24px);
+  height: var(--sjs2-size-x300, 24px);
   justify-content: center;
   align-items: center;
 
   use {
-    fill: var(--ctr-survey-action-button-text-color-positive, #19B394);
+    fill: var(--sjs2-color-project-accent-600, rgba(25, 179, 148, 1));
   }
 }
 
@@ -398,7 +390,7 @@
   color: var(--sjs2-color-fg-basic-primary, #1C1B20);
 
   /* sjs2/typography/default */
-  font-family: var(--sjs2-font-family-semantic-default, "Open Sans");
+  font-family: $font-family;
   font-size: var(--sjs2-font-size-semantic-default, 16px);
   font-style: normal;
   font-weight: 400;
@@ -414,7 +406,7 @@
   color: var(--sjs2-color-fg-static-main-primary, #FFF);
 
   /* sjs2/typography/default-strong */
-  font-family: var(--sjs2-font-family-semantic-default, "Open Sans");
+  font-family: $font-family;
   font-size: var(--sjs2-font-size-semantic-default, 16px);
   font-style: normal;
   font-weight: 600;
@@ -453,7 +445,7 @@
   color: var(--sjs2-color-control-input-default-value, #1C1B20);
 
   /* sjs2/typography/default */
-  font-family: var(--sjs2-font-family-semantic-default, "Open Sans");
+  font-family: $font-family;
   font-size: var(--sjs2-font-size-semantic-default, 16px);
   font-style: normal;
   font-weight: 400;
