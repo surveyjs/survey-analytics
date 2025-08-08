@@ -7,8 +7,8 @@ import { VisualizationManager } from "./visualizationManager";
 
 export class PivotModel extends SelectBase {
   protected valueType: "enum" | "date" | "number" = "enum";
-  private _cachedValues: Array<{ original: any, continious: number, row: any }> = undefined;
-  private _continiousData: Array<{ continious: number, row: any }> = undefined;
+  private _cachedValues: Array<{ original: any, continuous: number, row: any }> = undefined;
+  private _continuousData: Array<{ continuous: number, row: any }> = undefined;
   private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
   private _intervalPrecision: number = 2;
 
@@ -183,12 +183,12 @@ export class PivotModel extends SelectBase {
   }
 
   private reset() {
-    this._continiousData = undefined;
+    this._continuousData = undefined;
     this._cachedValues = undefined;
     this._cachedIntervals = undefined;
   }
 
-  public getContiniousValue(value: any): number {
+  public getContinuousValue(value: any): number {
     if (this.valueType === "date") {
       return Date.parse(value);
     }
@@ -208,7 +208,7 @@ export class PivotModel extends SelectBase {
   }
 
   public getSelectedItemByText(itemText: string) {
-    if (this.hasCustomIntervals || this.getContiniousValues().length > PivotModel.UseIntervalsFrom) {
+    if (this.hasCustomIntervals || this.getContinuousValues().length > PivotModel.UseIntervalsFrom) {
       const interval = this.intervals.filter(interval => interval.label === itemText)[0];
       return new ItemValue(interval, interval !== undefined ? interval.label : "");
     }
@@ -230,9 +230,9 @@ export class PivotModel extends SelectBase {
     super.onDataChanged();
   }
 
-  protected getContiniousValues() {
+  protected getContinuousValues() {
     if (this._cachedValues === undefined) {
-      this._continiousData = [];
+      this._continuousData = [];
       if(this.valueType === "enum") {
         this._cachedValues = [];
         return this._cachedValues;
@@ -241,13 +241,13 @@ export class PivotModel extends SelectBase {
       this.data.forEach(dataItem => {
         const answerData = dataItem[this.name];
         if (answerData !== undefined) {
-          // TODO: _continiousData should be sorted in order to speed-up statistics calculation in the getData function
-          this._continiousData.push({ continious: this.getContiniousValue(answerData), row: dataItem });
+          // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
+          this._continuousData.push({ continuous: this.getContinuousValue(answerData), row: dataItem });
           hash[answerData] = { value: answerData, row: dataItem };
         }
       });
-      this._cachedValues = Object.keys(hash).map(key => ({ original: hash[key].value, continious: this.getContiniousValue(key), row: hash[key].row }));
-      this._cachedValues.sort((a, b) => a.continious - b.continious);
+      this._cachedValues = Object.keys(hash).map(key => ({ original: hash[key].value, continuous: this.getContinuousValue(key), row: hash[key].row }));
+      this._cachedValues.sort((a, b) => a.continuous - b.continuous);
     }
     return this._cachedValues;
   }
@@ -340,11 +340,11 @@ export class PivotModel extends SelectBase {
     }
 
     if (this._cachedIntervals === undefined) {
-      const continiousValues = this.getContiniousValues();
+      const continuousValues = this.getContinuousValues();
       this._cachedIntervals = [];
-      if (continiousValues.length) {
-        let start = continiousValues[0].continious;
-        const end = continiousValues[continiousValues.length - 1].continious;
+      if (continuousValues.length) {
+        let start = continuousValues[0].continuous;
+        const end = continuousValues[continuousValues.length - 1].continuous;
         const intervalsCount = PivotModel.IntervalsCount;
         const delta = (end - start) / intervalsCount;
         for (let i = 0; i < intervalsCount; ++i) {
@@ -426,14 +426,14 @@ export class PivotModel extends SelectBase {
         }
       });
     } else {
-      const continiousValues = this.getContiniousValues();
+      const continuousValues = this.getContinuousValues();
       const intervals = this.intervals;
       for (var i = 0; i < series.length; ++i) {
         statistics.push(intervals.map(i => 0));
       }
-      this._continiousData.forEach(dataValue => {
+      this._continuousData.forEach(dataValue => {
         for (let valueIndex = 0; valueIndex < intervals.length; ++valueIndex) {
-          if (intervals[valueIndex].start <= dataValue.continious && (dataValue.continious < intervals[valueIndex].end || valueIndex == intervals.length - 1)) {
+          if (intervals[valueIndex].start <= dataValue.continuous && (dataValue.continuous < intervals[valueIndex].end || valueIndex == intervals.length - 1)) {
             if(this.questionsY.length === 0) {
               statistics[0][valueIndex]++;
             } else {

@@ -6,8 +6,8 @@ import { histogramStatisticsCalculator } from "./statisticCalculators";
 
 export class HistogramModel extends SelectBase {
   protected valueType: "date" | "number" = "number";
-  private _cachedValues: Array<{ original: any, continious: number }> = undefined;
-  private _continiousData: { [series: string]: Array<number> } = undefined;
+  private _cachedValues: Array<{ original: any, continuous: number }> = undefined;
+  private _continuousData: { [series: string]: Array<number> } = undefined;
   private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
   private _intervalPrecision: number = 2;
 
@@ -34,12 +34,12 @@ export class HistogramModel extends SelectBase {
   }
 
   private reset() {
-    this._continiousData = undefined;
+    this._continuousData = undefined;
     this._cachedValues = undefined;
     this._cachedIntervals = undefined;
   }
 
-  public getContiniousValue(value: any): number {
+  public getContinuousValue(value: any): number {
     if (this.valueType === "date") {
       return Date.parse(value);
     }
@@ -59,7 +59,7 @@ export class HistogramModel extends SelectBase {
   }
 
   public getSelectedItemByText(itemText: string) {
-    if (this.hasCustomIntervals || this.getContiniousValues().length > HistogramModel.UseIntervalsFrom) {
+    if (this.hasCustomIntervals || this.getContinuousValues().length > HistogramModel.UseIntervalsFrom) {
       const interval = this.intervals.filter(interval => interval.label === itemText)[0];
       return new ItemValue(interval, interval !== undefined ? interval.label : "");
     }
@@ -81,26 +81,26 @@ export class HistogramModel extends SelectBase {
     super.onDataChanged();
   }
 
-  protected getContiniousValues() {
+  protected getContinuousValues() {
     if (this._cachedValues === undefined) {
       const series = this.getSeriesValues();
       if (series.length === 0) {
         series.push("");
       }
-      this._continiousData = {};
-      series.forEach(seriesValue => this._continiousData[seriesValue] = []);
+      this._continuousData = {};
+      series.forEach(seriesValue => this._continuousData[seriesValue] = []);
       const hash = {};
       this.data.forEach(dataItem => {
         const answerData = dataItem[this.name];
         if (answerData !== undefined) {
           const seriesValue = dataItem[DataProvider.seriesMarkerKey] || "";
-          // TODO: _continiousData should be sorted in order to speed-up statistics calculation in the getData function
-          this._continiousData[seriesValue].push(this.getContiniousValue(answerData));
+          // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
+          this._continuousData[seriesValue].push(this.getContinuousValue(answerData));
           hash[answerData] = answerData;
         }
       });
-      this._cachedValues = Object.keys(hash).map(key => ({ original: hash[key], continious: this.getContiniousValue(key) }));
-      this._cachedValues.sort((a, b) => a.continious - b.continious);
+      this._cachedValues = Object.keys(hash).map(key => ({ original: hash[key], continuous: this.getContinuousValue(key) }));
+      this._cachedValues.sort((a, b) => a.continuous - b.continuous);
     }
     return this._cachedValues;
   }
@@ -153,11 +153,11 @@ export class HistogramModel extends SelectBase {
     }
 
     if (this._cachedIntervals === undefined) {
-      const continiousValues = this.getContiniousValues();
+      const continuousValues = this.getContinuousValues();
       this._cachedIntervals = [];
-      if (continiousValues.length) {
-        let start = continiousValues[0].continious;
-        const end = continiousValues[continiousValues.length - 1].continious;
+      if (continuousValues.length) {
+        let start = continuousValues[0].continuous;
+        const end = continuousValues[continuousValues.length - 1].continuous;
         const intervalsCount = HistogramModel.IntervalsCount;
         const delta = (end - start) / intervalsCount;
         for (let i = 0; i < intervalsCount; ++i) {
@@ -181,8 +181,8 @@ export class HistogramModel extends SelectBase {
   }
 
   protected getCalculatedValuesCore(): Array<any> {
-    const continiousValues = this.getContiniousValues();
-    return histogramStatisticsCalculator(this._continiousData, this.intervals, this.getSeriesValues());
+    const continuousValues = this.getContinuousValues();
+    return histogramStatisticsCalculator(this._continuousData, this.intervals, this.getSeriesValues());
   }
 
   public getValueType(): "date" | "number" {

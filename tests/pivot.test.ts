@@ -187,7 +187,7 @@ test("date value type handling", () => {
   const pivot = new PivotModel(dateSurvey.getAllQuestions(), dateData);
 
   expect(pivot.getValueType()).toBe("date");
-  expect(pivot.getContiniousValue("2020-01-01")).toBe(Date.parse("2020-01-01"));
+  expect(pivot.getContinuousValue("2020-01-01")).toBe(Date.parse("2020-01-01"));
   expect(pivot.getString(Date.parse("2020-01-01"))).toMatch(/1\/1\/2020/);
 });
 
@@ -195,10 +195,10 @@ test("continuous values and intervals", () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
   pivot.setAxisQuestions("question3", "question1");
 
-  const continuousValues = pivot["getContiniousValues"]();
+  const continuousValues = pivot["getContinuousValues"]();
   expect(continuousValues.length).toBeGreaterThan(0);
   expect(continuousValues[0]).toHaveProperty("original");
-  expect(continuousValues[0]).toHaveProperty("continious");
+  expect(continuousValues[0]).toHaveProperty("continuous");
   expect(continuousValues[0]).toHaveProperty("row");
 
   const intervals = pivot.intervals;
@@ -323,7 +323,7 @@ test("updateData resets cached values", () => {
   pivot.setAxisQuestions("question3", "question1");
 
   // Trigger caching
-  pivot["getContiniousValues"]();
+  pivot["getContinuousValues"]();
   expect(pivot["_cachedValues"]).toBeDefined();
 
   const newData = [
@@ -333,7 +333,7 @@ test("updateData resets cached values", () => {
 
   pivot.updateData(newData);
   expect(pivot["_cachedValues"]).toBeUndefined();
-  expect(pivot["_continiousData"]).toBeUndefined();
+  expect(pivot["_continuousData"]).toBeUndefined();
   expect(pivot["_cachedIntervals"]).toBeUndefined();
 });
 
@@ -342,12 +342,12 @@ test("onDataChanged resets cached values", () => {
   pivot.setAxisQuestions("question3", "question1");
 
   // Trigger caching
-  pivot["getContiniousValues"]();
+  pivot["getContinuousValues"]();
   expect(pivot["_cachedValues"]).toBeDefined();
 
   pivot["onDataChanged"]();
   expect(pivot["_cachedValues"]).toBeUndefined();
-  expect(pivot["_continiousData"]).toBeUndefined();
+  expect(pivot["_continuousData"]).toBeUndefined();
   expect(pivot["_cachedIntervals"]).toBeUndefined();
 });
 
@@ -500,19 +500,19 @@ test("getValueType returns correct type", () => {
   expect(pivot.getValueType()).toBe("number");
 });
 
-test("getContiniousValue with different value types", () => {
+test("getContinuousValue with different value types", () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
 
   // Test number type
   pivot.setAxisQuestions("question3", "question1");
-  expect(pivot.getContiniousValue("100")).toBe(100);
-  expect(pivot.getContiniousValue(200)).toBe(200);
+  expect(pivot.getContinuousValue("100")).toBe(100);
+  expect(pivot.getContinuousValue(200)).toBe(200);
 
   // Test date type
   const datePivot = new PivotModel([], []);
   datePivot["valueType"] = "date";
   const dateValue = "2020-01-01";
-  expect(datePivot.getContiniousValue(dateValue)).toBe(Date.parse(dateValue));
+  expect(datePivot.getContinuousValue(dateValue)).toBe(Date.parse(dateValue));
 });
 
 test("getString with different value types", () => {
@@ -540,26 +540,26 @@ test("setupPivot with non-existent question", () => {
   expect(pivot.question).toBe(originalQuestion);
 });
 
-test("getContiniousValues with enum type returns empty array", () => {
+test("getContinuousValues with enum type returns empty array", () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
 
-  const continuousValues = pivot["getContiniousValues"]();
+  const continuousValues = pivot["getContinuousValues"]();
   expect(continuousValues).toEqual([]);
 });
 
-test("getContiniousValues with number type processes data correctly", () => {
+test("getContinuousValues with number type processes data correctly", () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
   pivot.setAxisQuestions("question3", "question1");
 
-  const continuousValues = pivot["getContiniousValues"]();
+  const continuousValues = pivot["getContinuousValues"]();
   expect(continuousValues.length).toBeGreaterThan(0);
   expect(continuousValues[0]).toHaveProperty("original");
-  expect(continuousValues[0]).toHaveProperty("continious");
+  expect(continuousValues[0]).toHaveProperty("continuous");
   expect(continuousValues[0]).toHaveProperty("row");
 
   // Values should be sorted
   for (let i = 1; i < continuousValues.length; i++) {
-    expect(continuousValues[i].continious).toBeGreaterThanOrEqual(continuousValues[i-1].continious);
+    expect(continuousValues[i].continuous).toBeGreaterThanOrEqual(continuousValues[i-1].continuous);
   }
 });
 
