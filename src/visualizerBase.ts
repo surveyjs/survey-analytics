@@ -77,7 +77,8 @@ export class VisualizerBase implements IDataInfo {
   public static suppressVisualizerStubRendering: boolean = false;
   public static chartAdapterType: any = undefined;
 
-  private _theme: DashboardTheme;
+  private _appliedTheme: DashboardTheme;
+  private _theme = new DashboardTheme();
   private _showToolbar = true;
   private _footerVisualizer: VisualizerBase = undefined;
   private _dataProvider: DataProvider = undefined;
@@ -639,9 +640,9 @@ export class VisualizerBase implements IDataInfo {
       targetElement = document.getElementById(targetElement);
     }
     this.renderResult = targetElement;
-
-    DocumentHelper.setStyles(targetElement, this._theme?.cssVariables);
-    this._theme = new DashboardTheme(null, targetElement);
+    if(this._appliedTheme) {
+      this._appliedTheme.applyThemeToElement(this.renderResult);
+    }
 
     this.toolbarContainer = DocumentHelper.createElement(
       "div",
@@ -756,14 +757,25 @@ export class VisualizerBase implements IDataInfo {
     if (this.footerVisualizer) this.footerVisualizer.backgroundColor = color;
   }
 
+  protected onThemeChanged(): void {
+  }
+
   get theme() : DashboardTheme {
     return this._theme;
   }
+  set theme(theme: DashboardTheme) {
+    this._theme = theme;
+    this._appliedTheme = undefined;
+    this.onThemeChanged();
+  }
 
   public applyTheme(theme: IDashboardTheme): void {
-    if (!theme) return;
-    DocumentHelper.setStyles(this.renderResult, theme.cssVariables);
-    this._theme = new DashboardTheme(theme, this.renderResult);
+    this.theme.setTheme(theme);
+    this._appliedTheme = this.theme;
+    if(this.renderResult) {
+      this._appliedTheme.applyThemeToElement(this.renderResult);
+    }
+    this.onThemeChanged();
   }
 
   static customColors: string[] = [];

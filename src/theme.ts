@@ -1,4 +1,5 @@
 import { dsbLightTheme } from "sjs-design-tokens";
+import { DocumentHelper } from "./utils";
 
 export const LegacyDashboardTheme = {
   // Font settings
@@ -49,15 +50,25 @@ export class DashboardTheme implements IDashboardTheme {
   private _cssStyleDeclaration;
 
   private getCssVariableValue(propertyName: string) {
-    if(!!this._cssStyleDeclaration){
+    if(!!this._cssStyleDeclaration) {
       return this._cssStyleDeclaration.getPropertyValue(propertyName);
     }
   }
 
-  constructor(private theme: IDashboardTheme = dsbLightTheme, element: HTMLElement) {
-    if (!!element && !!getComputedStyle) {
-      this._cssStyleDeclaration = getComputedStyle(element)
+  constructor(private theme: IDashboardTheme = dsbLightTheme) {
+  }
+
+  public applyThemeToElement(element: HTMLElement): void {
+    if(!element || !this.theme) return;
+
+    DocumentHelper.setStyles(element, this.cssVariables);
+    if (!!getComputedStyle) {
+      this._cssStyleDeclaration = getComputedStyle(element);
     }
+  }
+
+  public setTheme(theme: IDashboardTheme): void {
+    this.theme = theme;
   }
 
   public get cssVariables(): { [index: string]: string | any } {

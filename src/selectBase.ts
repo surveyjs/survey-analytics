@@ -3,6 +3,7 @@ import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DataHelper, DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
+import { IDashboardTheme } from "./theme";
 
 export interface IVisualizerWithSelection {
   selection: ItemValue;
@@ -709,6 +710,10 @@ export class SelectBase
     });
     const selectedItem = ItemValue.getItemByValue((this.question as QuestionSelectBase).visibleChoices, state.filter);
     this.setSelection(selectedItem ?? undefined);
+  }
+  protected onThemeChanged(): void {
+    super.onThemeChanged();
+    this.refreshContent();
   }
 }
 

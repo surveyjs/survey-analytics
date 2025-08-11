@@ -5,6 +5,7 @@ import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 import { IVisualizerWithSelection } from "./selectBase";
 import { Event } from "survey-core";
+import { IDashboardTheme } from "./theme";
 
 export class AlternativeVisualizersWrapper
   extends VisualizerBase
@@ -202,6 +203,13 @@ export class AlternativeVisualizersWrapper
 
   public getCalculatedValues(): Promise<Array<Object>> {
     return this.visualizer.getCalculatedValues();
+  }
+
+  protected onThemeChanged(): void {
+    super.onThemeChanged();
+    this.visualizers.forEach(v => {
+      v.theme = this.theme;
+    });
   }
 
   destroy() {

@@ -12,6 +12,7 @@ import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import "./visualizationPanel.scss";
 import { VisualizationManager } from "./visualizationManager";
+import { DashboardTheme, IDashboardTheme } from "./theme";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -1104,6 +1105,13 @@ export class VisualizationPanel extends VisualizerBase {
 
   protected getCalculatedValuesCore(): Array<any> {
     return [];
+  }
+
+  protected onThemeChanged(): void {
+    super.onThemeChanged();
+    this.visualizers.forEach(v => {
+      v.theme = this.theme;
+    });
   }
 
   destroy() {
