@@ -69,7 +69,7 @@ export class VisualizationPanelDynamic extends VisualizerBase {
   }
 
   renderContent(container: HTMLElement): void {
-    this._panelVisualizer.render(container);
+    this._panelVisualizer.render(container, false);
   }
 
   public destroy() {

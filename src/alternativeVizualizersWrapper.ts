@@ -154,7 +154,7 @@ export class AlternativeVisualizersWrapper
 
   protected renderContent(container: HTMLElement): void {
     this.visualizerContainer = container;
-    this.visualizer.render(this.visualizerContainer);
+    this.visualizer.render(this.visualizerContainer, false);
   }
 
   protected setBackgroundColorCore(color: string) {

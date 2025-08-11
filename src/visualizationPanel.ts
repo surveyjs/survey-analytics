@@ -980,7 +980,7 @@ export class VisualizationPanel extends VisualizerBase {
     questionContent.appendChild(vizualizerElement);
     questionElement.appendChild(questionContent);
 
-    visualizer.render(vizualizerElement);
+    visualizer.render(vizualizerElement, false);
 
     element.renderedElement = questionElement;
     return questionElement;

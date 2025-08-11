@@ -627,7 +627,7 @@ export class VisualizerBase implements IDataInfo {
 
       container.appendChild(footerContentElement);
 
-      this.footerVisualizer.render(footerContentElement);
+      this.footerVisualizer.render(footerContentElement, false);
     }
   }
 
@@ -635,11 +635,15 @@ export class VisualizerBase implements IDataInfo {
    * Renders the visualizer in a specified container.
    * @param targetElement An `HTMLElement` or an `id` of a page element in which you want to render the visualizer.
    */
-  render(targetElement: HTMLElement | string) {
+  render(targetElement: HTMLElement | string, isRoot = true) {
     if (typeof targetElement === "string") {
       targetElement = document.getElementById(targetElement);
     }
     this.renderResult = targetElement;
+    if(isRoot && !this._appliedTheme) {
+      this._appliedTheme = this.theme;
+      this.onThemeChanged();
+    }
     if(this._appliedTheme) {
       this._appliedTheme.applyThemeToElement(this.renderResult);
     }
@@ -758,6 +762,9 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected onThemeChanged(): void {
+    if (this.footerVisualizer) {
+      this.footerVisualizer.theme = this.theme;
+    }
   }
 
   get theme() : DashboardTheme {

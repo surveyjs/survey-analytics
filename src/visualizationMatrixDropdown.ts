@@ -122,7 +122,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
   }
 
   renderContent(container: HTMLElement): void {
-    this._matrixDropdownVisualizer.render(container);
+    this._matrixDropdownVisualizer.render(container, false);
   }
 
   destroy() {

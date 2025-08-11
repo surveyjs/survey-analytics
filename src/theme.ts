@@ -56,6 +56,7 @@ export class DashboardTheme implements IDashboardTheme {
   }
 
   constructor(private theme: IDashboardTheme = dsbLightTheme) {
+    this.setTheme(theme);
   }
 
   public applyThemeToElement(element: HTMLElement): void {
@@ -69,6 +70,10 @@ export class DashboardTheme implements IDashboardTheme {
 
   public setTheme(theme: IDashboardTheme): void {
     this.theme = theme;
+    // const calculater = DocumentHelper.createElement("div");
+    // document.body.appendChild(calculater);
+    // this.applyThemeToElement(calculater);
+    // calculater.remove();
   }
 
   public get cssVariables(): { [index: string]: string | any } {
