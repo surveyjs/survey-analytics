@@ -1,5 +1,5 @@
 // Uncomment the line below if you create a custom dictionary
-// import { localization } from "../localizationManager";
+// import { setupLocale } from "../localizationManager";
 
 export var englishStrings = {
   groupButton: "Group By Me",
@@ -84,8 +84,7 @@ export var englishStrings = {
   notSelected: "Not selected"
 };
 
-// Uncomment the lines below if you create a custom dictionary.
+// Uncomment the line below if you create a custom dictionary.
 // Replace "en" with a custom locale code (for example, "fr" or "de"),
 // Replace `englishStrings` with the name of the variable that contains the custom dictionary.
-// localization.locales["en"] = englishStrings;
-// localization.localeNames["en"] = "English";
+// setupLocale({ localeCode: "en", strings: englishStrings });

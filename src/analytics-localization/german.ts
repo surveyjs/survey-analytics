@@ -1,6 +1,4 @@
-// This dictionary contains 1 untranslated or inherited localization strings.
-// These strings are commented out. Uncomment and edit them if you want to add your translations.
-import { localization } from "../localizationManager";
+import { setupLocale } from "../localizationManager";
 
 export var germanStrings = {
   groupButton: "Gruppieren",
@@ -69,5 +67,5 @@ export var germanStrings = {
   percent: "Prozent",
   responses: "Antworten"
 };
-localization.locales["de"] = germanStrings;
-localization.localeNames["de"] = "Deutsch";
+
+setupLocale({ localeCode: "de", strings: germanStrings });

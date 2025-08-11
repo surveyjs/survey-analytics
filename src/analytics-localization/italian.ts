@@ -1,6 +1,4 @@
-// This dictionary contains 1 untranslated or inherited localization strings.
-// These strings are commented out. Uncomment and edit them if you want to add your translations.
-import { localization } from "../localizationManager";
+import { setupLocale } from "../localizationManager";
 
 export var italianStrings = {
   groupButton: "Raggruppa",
@@ -70,9 +68,4 @@ export var italianStrings = {
   responses: "Risposte"
 };
 
-localization.locales["it"] = italianStrings;
-localization.localeNames["it"] = "Italiano";
-
-// The following strings have been translated by a machine translation service
-// Remove those strings that you have corrected manually
-// undefined.correctAnswer: "Correct answer: " => "Risposta esatta: "
+setupLocale({ localeCode: "it", strings: italianStrings });

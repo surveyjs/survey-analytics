@@ -1,6 +1,4 @@
-// This dictionary contains 1 untranslated or inherited localization strings.
-// These strings are commented out. Uncomment and edit them if you want to add your translations.
-import { localization } from "../localizationManager";
+import { setupLocale } from "../localizationManager";
 
 export var frenchStrings = {
   groupButton: "Grouper",
@@ -70,28 +68,4 @@ export var frenchStrings = {
   responses: "Réponses"
 };
 
-localization.locales["fr"] = frenchStrings;
-localization.localeNames["fr"] = "Français";
-
-// The following strings have been translated by a machine translation service
-// Remove those strings that you have corrected manually
-// undefined.visualizer_histogram: "Histogram" => "Histogramme"
-// undefined.visualizer_number: "Average" => "Moyenne"
-// undefined.visualizer_choices: "Table" => "Table"
-// undefined.visualizer_selectBase: "Chart" => "Graphique"
-// undefined.chartType_vbar: "Vertical Bar" => "Barre verticale"
-// undefined.changeLocale: "Change Locale" => "Changer les paramètres régionaux"
-// undefined.showPercentages: "Show percentages" => "Afficher les pourcentages"
-// undefined.hidePercentages: "Hide percentages" => "Masquer les pourcentages"
-// undefined.pdfDownloadCaption: "PDF" => "PDF"
-// undefined.xlsxDownloadCaption: "Excel" => "Exceller"
-// undefined.csvDownloadCaption: "CSV" => "Fichier CSV"
-// undefined.hideEmptyAnswers: "Hide empty answers" => "Masquer les réponses vides"
-// undefined.showEmptyAnswers: "Show empty answers" => "Afficher les réponses vides"
-// undefined.topNValueText-1: "All answers" => "Toutes les réponses"
-// undefined.topNValueText5: "Top 5 answers" => "Top 5 des réponses"
-// undefined.topNValueText10: "Top 10 answers" => "Top 10 des réponses"
-// undefined.topNValueText20: "Top 20 answers" => "Top 20 des réponses"
-// undefined.hideMissingAnswers: "Hide missing answers" => "Masquer les réponses manquantes"
-// undefined.showMissingAnswers: "Show missing answers" => "Afficher les réponses manquantes"
-// undefined.missingAnswersLabel: "Missing answers" => "Réponses manquantes"
+setupLocale({ localeCode: "fr", strings: frenchStrings });

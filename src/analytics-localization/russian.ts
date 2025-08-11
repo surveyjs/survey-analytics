@@ -1,4 +1,4 @@
-import { localization } from "../localizationManager";
+import { setupLocale } from "../localizationManager";
 
 export var russianStrings = {
   groupButton: "Сгруппировать",
@@ -68,5 +68,4 @@ export var russianStrings = {
   responses: "ответов"
 };
 
-localization.locales["ru"] = russianStrings;
-localization.localeNames["ru"] = "Русский";
+setupLocale({ localeCode: "ru", strings: russianStrings });

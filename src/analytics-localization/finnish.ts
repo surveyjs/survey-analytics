@@ -1,5 +1,4 @@
-// Uncomment the line below if you create a custom dictionary
-import { localization } from "../localizationManager";
+import { setupLocale } from "../localizationManager";
 
 export var finnishStrings = {
   groupButton: "Erottele minulla",
@@ -77,8 +76,4 @@ export var finnishStrings = {
   npsDetractors: "Arvostelija",
 };
 
-// Uncomment the lines below if you create a custom dictionary.
-// Replace "en" with a custom locale code (for example, "fr" or "de"),
-// Replace `englishStrings` with the name of the variable that contains the custom dictionary.
-localization.locales["fi"] = finnishStrings;
-localization.localeNames["fi"] = "Suomi";
+setupLocale({ localeCode: "fi", strings: finnishStrings });

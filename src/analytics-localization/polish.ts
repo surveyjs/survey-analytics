@@ -1,6 +1,4 @@
-// This dictionary contains 1 untranslated or inherited localization strings.
-// These strings are commented out. Uncomment and edit them if you want to add your translations.
-import { localization } from "../localizationManager";
+import { setupLocale } from "../localizationManager";
 
 export var plStrings = {
   groupButton: "Grupuj według mnie",
@@ -70,6 +68,4 @@ export var plStrings = {
   responses: "Odpowiedzi"
 };
 
-//Uncomment these two lines on creating a translation file. You should replace "en" and enStrings with your locale ("fr", "de" and so on) and your variable.
-localization.locales["pl"] = plStrings;
-localization.localeNames["pl"] = "Polish";
+setupLocale({ localeCode: "pl", strings: plStrings });

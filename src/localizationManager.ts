@@ -1,4 +1,5 @@
 import { englishStrings } from "./analytics-localization/english";
+import { surveyLocalization } from "survey-core";
 
 export var localization = {
   currentLocaleValue: "",
@@ -19,6 +20,12 @@ export var localization = {
   },
   set defaultLocale(val: string) {
     this.defaultLocaleValue = val;
+  },
+  setupLocale: function (loc: string, strings: any) {
+    this.locales[loc] = strings;
+  },
+  getLocaleName: function (loc: string, inEnglish: boolean = false): string {
+    return surveyLocalization.getLocaleName(loc, inEnglish);
   },
   getString: function (strName: string) {
     var loc = this.currentLocale
@@ -49,5 +56,7 @@ export var localization = {
 };
 
 export var surveyStrings = englishStrings;
-(<any>localization).locales["en"] = englishStrings;
-(<any>localization).localeNames["en"] = "English";
+export function setupLocale(localeConfig: { localeCode: string, strings: any }): void {
+  localization.setupLocale(localeConfig.localeCode, localeConfig.strings);
+}
+setupLocale({ localeCode: "en", strings: englishStrings });

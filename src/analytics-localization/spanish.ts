@@ -1,6 +1,4 @@
-// This dictionary contains 1 untranslated or inherited localization strings.
-// These strings are commented out. Uncomment and edit them if you want to add your translations.
-import { localization } from "../localizationManager";
+import { setupLocale } from "../localizationManager";
 
 export var spanishStrings = {
   groupButton: "Grupo Por Mí",
@@ -69,24 +67,5 @@ export var spanishStrings = {
   percent: "Por ciento",
   responses: "Respuestas"
 };
-localization.locales["es"] = spanishStrings;
-localization.localeNames["es"] = "Español";
 
-// The following strings have been translated by a machine translation service
-// Remove those strings that you have corrected manually
-// undefined.groupButton: "Group By Me" => "Grupo Por Mí"
-// undefined.entriesLabel: "entries" => "Entradas"
-// undefined.visualizer_histogram: "Histogram" => "Histograma"
-// undefined.visualizer_number: "Average" => "Promedio"
-// undefined.visualizer_choices: "Table" => "Mesa"
-// undefined.visualizer_selectBase: "Chart" => "Gráfico"
-// undefined.chartType_vbar: "Vertical Bar" => "Barra vertical"
-// undefined.hideMissingAnswers: "Hide missing answers" => "Ocultar las respuestas que faltan"
-// undefined.showMissingAnswers: "Show missing answers" => "Mostrar las respuestas que faltan"
-// undefined.missingAnswersLabel: "Missing answers" => "Respuestas faltantes"
-// undefined.showPerValues: "Per Values" => "Por valores"
-// undefined.showPerColumns: "Per Columns" => "Por columnas"
-// undefined.answer: "Answer" => "Respuesta"
-// undefined.correctAnswer: "Correct answer: " => "Respuesta correcta: "
-// undefined.percent: "Percent" => "Por ciento"
-// undefined.responses: "Responses" => "Respuestas"
+setupLocale({ localeCode: "es", strings: spanishStrings });

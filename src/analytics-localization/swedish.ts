@@ -1,4 +1,4 @@
-import { localization } from "../localizationManager";
+import { setupLocale } from "../localizationManager";
 
 export var swedishStrings = {
   groupButton: "Gruppera av mig",
@@ -80,5 +80,4 @@ export var swedishStrings = {
   axisYSelectorTitle: "Y-axel:",
 };
 
-localization.locales["sv"] = swedishStrings;
-localization.localeNames["sv"] = "Svenska";
+setupLocale({ localeCode: "sv", strings: swedishStrings });

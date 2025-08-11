@@ -1,6 +1,4 @@
-// This dictionary contains 1 untranslated or inherited localization strings.
-// These strings are commented out. Uncomment and edit them if you want to add your translations.
-import { localization } from "../localizationManager";
+import { setupLocale } from "../localizationManager";
 
 export var arabicStrings = {
   groupButton: "زرار المجموعة",
@@ -70,12 +68,4 @@ export var arabicStrings = {
   responses: "الاستجابات"
 };
 
-localization.locales["ar"] = arabicStrings;
-localization.localeNames["ar"] = "العربية";
-
-// The following strings have been translated by a machine translation service
-// Remove those strings that you have corrected manually
-// undefined.topNValueText-1: "All answers" => "جميع الإجابات"
-// undefined.topNValueText5: "Top 5 answers" => "أهم 5 إجابات"
-// undefined.topNValueText10: "Top 10 answers" => "أفضل 10 إجابات"
-// undefined.topNValueText20: "Top 20 answers" => "أفضل 20 إجابة"
+setupLocale({ localeCode: "ar", strings: arabicStrings });

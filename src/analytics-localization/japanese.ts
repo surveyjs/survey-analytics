@@ -1,4 +1,4 @@
-import { localization } from "../localizationManager";
+import { setupLocale } from "../localizationManager";
 
 export var japaneseStrings = {
   groupButton: "グループ化",
@@ -67,5 +67,4 @@ export var japaneseStrings = {
   responses: "回答数"
 };
 
-localization.locales["ja"] = japaneseStrings;
-localization.localeNames["ja"] = "Japanese";
+setupLocale({ localeCode: "ja", strings: japaneseStrings });
