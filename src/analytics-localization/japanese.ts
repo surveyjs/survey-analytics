@@ -67,4 +67,4 @@ export var japaneseStrings = {
   responses: "回答数"
 };
 
-setupLocale({ localeCode: "ja", strings: japaneseStrings });
+setupLocale({ localeCode: "ja", strings: japaneseStrings, nativeName: "日本語" });

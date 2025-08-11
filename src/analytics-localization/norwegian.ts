@@ -68,4 +68,4 @@ export var norwegianStrings = {
   responses: "Svar"
 };
 
-setupLocale({ localeCode: "no", strings: norwegianStrings });
+setupLocale({ localeCode: "no", strings: norwegianStrings, nativeName: "Norsk" });

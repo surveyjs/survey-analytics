@@ -68,4 +68,4 @@ export var russianStrings = {
   responses: "ответов"
 };
 
-setupLocale({ localeCode: "ru", strings: russianStrings });
+setupLocale({ localeCode: "ru", strings: russianStrings, nativeName: "Русский" });

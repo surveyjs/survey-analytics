@@ -68,4 +68,4 @@ export var plStrings = {
   responses: "Odpowiedzi"
 };
 
-setupLocale({ localeCode: "pl", strings: plStrings });
+setupLocale({ localeCode: "pl", strings: plStrings, nativeName: "Polski" });

@@ -76,4 +76,4 @@ export var finnishStrings = {
   npsDetractors: "Arvostelija",
 };
 
-setupLocale({ localeCode: "fi", strings: finnishStrings });
+setupLocale({ localeCode: "fi", strings: finnishStrings, nativeName: "Suomi" });

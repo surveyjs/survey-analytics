@@ -25,7 +25,8 @@ export var localization = {
     this.locales[loc] = strings;
   },
   getLocaleName: function (loc: string, inEnglish: boolean = false): string {
-    return surveyLocalization.getLocaleName(loc, inEnglish);
+    const res = !inEnglish ? this.localeNames[loc] : "";
+    return res || surveyLocalization.getLocaleName(loc, inEnglish);
   },
   getString: function (strName: string) {
     var loc = this.currentLocale
@@ -56,7 +57,11 @@ export var localization = {
 };
 
 export var surveyStrings = englishStrings;
-export function setupLocale(localeConfig: { localeCode: string, strings: any }): void {
-  localization.setupLocale(localeConfig.localeCode, localeConfig.strings);
+export function setupLocale(localeConfig: { localeCode: string, strings: any, nativeName?: string }): void {
+  const loc = localeConfig.localeCode;
+  localization.setupLocale(loc, localeConfig.strings);
+  if (localeConfig.nativeName) {
+    localization.localeNames[loc] = localeConfig.nativeName;
+  }
 }
-setupLocale({ localeCode: "en", strings: englishStrings });
+setupLocale({ localeCode: "en", strings: englishStrings, nativeName: "English" });

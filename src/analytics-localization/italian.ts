@@ -68,4 +68,4 @@ export var italianStrings = {
   responses: "Risposte"
 };
 
-setupLocale({ localeCode: "it", strings: italianStrings });
+setupLocale({ localeCode: "it", strings: italianStrings, nativeName: "Italiano" });

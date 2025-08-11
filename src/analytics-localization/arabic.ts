@@ -68,4 +68,4 @@ export var arabicStrings = {
   responses: "الاستجابات"
 };
 
-setupLocale({ localeCode: "ar", strings: arabicStrings });
+setupLocale({ localeCode: "ar", strings: arabicStrings, nativeName: "العربية" });

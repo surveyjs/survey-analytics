@@ -80,4 +80,4 @@ export var swedishStrings = {
   axisYSelectorTitle: "Y-axel:",
 };
 
-setupLocale({ localeCode: "sv", strings: swedishStrings });
+setupLocale({ localeCode: "sv", strings: swedishStrings, nativeName: "Svenska" });

@@ -68,4 +68,4 @@ export var spanishStrings = {
   responses: "Respuestas"
 };
 
-setupLocale({ localeCode: "es", strings: spanishStrings });
+setupLocale({ localeCode: "es", strings: spanishStrings, nativeName: "Español" });

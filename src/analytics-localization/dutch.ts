@@ -68,4 +68,4 @@ export var dutchStrings = {
   responses: "Reacties"
 };
 
-setupLocale({ localeCode: "nl", strings: dutchStrings });
+setupLocale({ localeCode: "nl", strings: dutchStrings, nativeName: "Nederlands" });

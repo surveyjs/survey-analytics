@@ -68,4 +68,4 @@ export var germanStrings = {
   responses: "Antworten"
 };
 
-setupLocale({ localeCode: "de", strings: germanStrings });
+setupLocale({ localeCode: "de", strings: germanStrings, nativeName: "Deutsch" });

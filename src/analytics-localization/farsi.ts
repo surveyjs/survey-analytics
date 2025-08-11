@@ -68,4 +68,4 @@ export var farsiStrings = {
   responses: "پاسخ"
 };
 
-setupLocale({ localeCode: "fa", strings: farsiStrings });
+setupLocale({ localeCode: "fa", strings: farsiStrings, nativeName: "فارسی" });
