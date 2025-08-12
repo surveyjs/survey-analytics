@@ -1,3 +1,6 @@
+import { glc } from "survey-core";
+import { localization } from "../localizationManager";
+
 export class DocumentHelper {
   public static createSelector(
     options: Array<{ value: string, text: string }> | Function,
@@ -163,6 +166,12 @@ export function allowDomRendering() {
   return options.runningInBrowser;
 }
 
+function getLicenseText(): string {
+  const d: any = !!glc ? glc(1) : false;
+  if (!!d && d.toLocaleDateString) return localization.getString("license2").replace("{date}", d.toLocaleDateString());
+  return localization.getString("license");
+}
+
 export function createCommercialLicenseLink() {
   const container = DocumentHelper.createElement("div", "sa-commercial");
   const link = DocumentHelper.createElement("a", "sa-commercial__text", {
@@ -174,9 +183,7 @@ export function createCommercialLicenseLink() {
   const textSpan = DocumentHelper.createElement(
     "span",
     "sa-commercial__product",
-    {
-      innerText: "Please purchase a SurveyJS Analytics developer license to use it in your app.",
-    }
+    { innerText: getLicenseText() }
   );
   container.appendChild(link).appendChild(containerSpan);
   containerSpan.appendChild(icon);
