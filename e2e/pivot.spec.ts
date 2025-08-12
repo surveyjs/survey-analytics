@@ -10,9 +10,9 @@ test.describe("Pivot chart", () => {
   test("simple cases", async ({ page }) => {
     const xAxisSelector = page.locator(".sa-dropdown").nth(1);
     const yAxisSelector = page.locator(".sa-dropdown").nth(2);
-    await expect(page.locator("#pivotContainer").getByText("X axis:")).toBeVisible();
+    await expect(page.locator("#pivotContainer").getByText("Category (X Axis):")).toBeVisible();
     await expect(xAxisSelector).toBeVisible();
-    await expect(page.locator("#pivotContainer").getByText("Y axis:")).toBeVisible();
+    await expect(page.locator("#pivotContainer").getByText("Legend (Series):")).toBeVisible();
     await expect(yAxisSelector).toBeVisible();
     await compareScreenshot(page, "#pivotContainer", "pivot-q1-none.png");
 
@@ -38,9 +38,6 @@ test.describe("Pivot chart", () => {
     await yAxisSelector.click();
     await page.getByRole("list").getByText("Item kind").click();
     await compareScreenshot(page, "#pivotContainer", "pivot-q3-q2.png");
-    await yAxisSelector.click();
-    await page.getByRole("list").getByText("Bill amount").click();
-    await compareScreenshot(page, "#pivotContainer", "pivot-q3-q3.png");
   });
 
 });

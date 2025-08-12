@@ -340,7 +340,7 @@ export class VisualizationPanel extends VisualizerBase {
           }
         });
       }, localization.getString("resetFilter"));
-    }, "button");
+    }, "button", 900);
 
     this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
       if (this.allowHideQuestions) {
@@ -624,7 +624,7 @@ export class VisualizationPanel extends VisualizerBase {
           return DocumentHelper.createButton(() => {
             setTimeout(() => this.hideElement(question.name), 0);
           }, localization.getString("hideButton"), undefined, "invisible-24x24");
-        }, "button");
+        }, "button", 1000);
       }
 
       if (this.allowMakeQuestionsPrivate) {
@@ -665,7 +665,7 @@ export class VisualizationPanel extends VisualizerBase {
         visualizer.registerToolbarItem("questionFilterInfo", () => {
           filterInfo.update(visualizerWithSelection.selection);
           return filterInfo.htmlElement;
-        }, "filter");
+        }, "filter", 900);
 
         visualizerWithSelection.onDataItemSelected = (
           selectedValue: any,

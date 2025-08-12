@@ -360,9 +360,9 @@ export class VisualizerBase implements IDataInfo {
     name: string
   ): (toolbar?: HTMLDivElement) => HTMLElement {
     if(this.toolbarItemCreators[name] !== undefined) {
-      const creator = this.toolbarItemCreators[name].creator;
+      const item = this.toolbarItemCreators[name];
       delete this.toolbarItemCreators[name];
-      return creator;
+      return item.creator;
     }
     return undefined;
   }

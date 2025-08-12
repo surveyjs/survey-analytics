@@ -198,7 +198,7 @@ export class SelectBase
         this.updateEmptyAnswersBtn();
       }
       return this.emptyAnswersBtn;
-    }, "button");
+    }, "button", 1000);
     this.registerToolbarItem("topNAnswers", () => {
       if (
         this.options.allowTopNAnswers &&

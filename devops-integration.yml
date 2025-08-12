@@ -66,7 +66,7 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
-      npm run postinstall
+      npm run pwinst
     displayName: "Install chrome playwright"
 
   - task: DownloadBuildArtifacts@0

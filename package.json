@@ -18,9 +18,9 @@
     "build:types:apexcharts": "tsc --p tsconfig.apexcharts.json && echo \"export * from './survey-analytics-apexcharts.types/entries/apexcharts';\" >> build/survey.analytics.apexcharts.d.ts",
     "lint": "eslint ./src --quiet",
     "pre-push-check": "npm run lint && npm run test",
-    "postinstall": "playwright install chromium"
+    "pwinst": "playwright install chromium"
   },
-  "version": "2.2.6",
+  "version": "2.3.1",
   "name": "survey-analytics",
   "description": "SurveyJS analytics Library.",
   "main": "survey.analytics.js",

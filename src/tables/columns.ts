@@ -1,4 +1,4 @@
-import { ItemValue, MatrixRowModel, Question, QuestionCompositeModel, QuestionCustomModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionSelectBase, settings } from "survey-core";
+import { Base, ItemValue, MatrixRowModel, Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionRadiogroupModel, QuestionSelectBase, settings } from "survey-core";
 import { createImagesContainer, createLinksContainer } from "../utils";
 import { ICellData, IColumn, ColumnDataType, QuestionLocation, IColumnData } from "./config";
 import { ITableOptions, Table } from "./table";
@@ -111,6 +111,35 @@ export class DefaultColumn extends BaseColumn {
   }
 }
 
+export class CheckboxColumn extends BaseColumn<QuestionCheckboxModel> {
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
+    const selectedItems = this.question.selectedItems;
+    const res:Array<string> = [];
+    selectedItems.forEach(item => {
+      res.push(options.useValuesAsLabels ? item.value : item.textOrHtml);
+    });
+    return res.join(", ");
+  }
+}
+
+export class SingleChoiceColumn extends BaseColumn<QuestionDropdownModel | QuestionRadiogroupModel> {
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
+    const selectedItem = this.question.selectedItem;
+    if(!selectedItem) return "";
+    return options.useValuesAsLabels ? selectedItem.value : selectedItem.textOrHtml;
+  }
+}
+export class SelectBaseColumn extends BaseColumn<QuestionDropdownModel | QuestionCheckboxModel | QuestionRadiogroupModel> {
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
+    const value = options.useValuesAsLabels ? this.question.renderedValue : this.question.displayValue;
+    if(Array.isArray(value)) {
+      return value.join(", ");
+    } else {
+      return value;
+    }
+  }
+}
+
 export class CommentColumn<T extends Question = Question> extends BaseColumn<T> {
   protected getName(): string {
     return `${this.question.name}${settings.commentPrefix}`;
@@ -153,9 +182,21 @@ export class MatrixColumn extends BaseColumn<QuestionMatrixModel> {
     if(this.valuePath && typeof displayValue === "object") {
       displayValue = displayValue[this.valuePath];
       if(displayValue !== undefined) {
-        const choiceValue = ItemValue.getItemByValue(this.question.columns, displayValue);
-        if(!!choiceValue) {
-          displayValue = options.useValuesAsLabels ? choiceValue.value : choiceValue.locText.textOrHtml;
+        if(Array.isArray(displayValue)) {
+          const res = [];
+          displayValue.forEach(itemValue => {
+            const item = ItemValue.getItemByValue(this.question.columns, itemValue);
+            if(!!item) {
+              res.push(options.useValuesAsLabels ? item.value : item.locText.textOrHtml);
+            }
+          }
+          );
+          displayValue = res.join(", ");
+        } else {
+          const choiceValue = ItemValue.getItemByValue(this.question.columns, displayValue);
+          if(!!choiceValue) {
+            displayValue = options.useValuesAsLabels ? choiceValue.value : choiceValue.locText.textOrHtml;
+          }
         }
       }
     }

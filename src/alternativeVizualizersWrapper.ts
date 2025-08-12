@@ -53,7 +53,7 @@ export class AlternativeVisualizersWrapper
           };
         }),
         (option: any) => this.visualizer.type === option.value,
-        (e: any) => this.setVisualizer(e)
+        (e: any) => this.setVisualizer(e.target.value)
       ), "dropdown", 0
     );
 

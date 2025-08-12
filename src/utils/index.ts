@@ -1,30 +1,44 @@
 export class DocumentHelper {
   public static createSelector(
-    options: Array<{ value: string, text: string }>,
+    options: Array<{ value: string, text: string }> | Function,
     isSelected: (option: { value: string, text: string }) => boolean,
     handler: (e: any) => void,
-    title?: string
+    title?: string | Function
   ) {
     const selectWrapper = document.createElement("div");
     selectWrapper.className = "sa-question__select-wrapper";
-    if (title) {
-      const titleElement = DocumentHelper.createElement("span", "sa-question__select-title", {
-        innerText: title,
-      });
-      selectWrapper.appendChild(titleElement);
-    }
+    const titleElement = DocumentHelper.createElement("span", "sa-question__select-title");
     const select = document.createElement("select");
     select.className = "sa-question__select";
-    options.forEach((option) => {
-      let optionElement = DocumentHelper.createElement("option", "", {
-        value: option.value,
-        text: option.text,
-        selected: isSelected(option),
-      });
-      select.appendChild(optionElement);
-    });
+    const updateTitle = () => {
+      const titleText = !!title && (typeof title == "string" ? title : title());
+      titleElement.innerText = titleText;
+      if (!!titleText) {
+        selectWrapper.insertBefore(titleElement, select);
+      } else if (titleElement.parentElement === selectWrapper) {
+        selectWrapper.removeChild(titleElement);
+      }
+    };
     select.onchange = handler;
     selectWrapper.appendChild(select);
+    const updateOptions = () => {
+      select.innerHTML = "";
+      const optionsSource = options || [];
+      const optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
+      optionItems.forEach((option) => {
+        let optionElement = DocumentHelper.createElement("option", "", {
+          value: option.value,
+          text: option.text,
+          selected: isSelected(option),
+        });
+        select.appendChild(optionElement);
+      });
+    };
+    selectWrapper["__updateSelect"] = () => {
+      updateTitle();
+      updateOptions();
+    };
+    selectWrapper["__updateSelect"]();
     return selectWrapper;
   }
 
