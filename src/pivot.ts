@@ -44,7 +44,7 @@ export class PivotModel extends SelectBase {
         }),
         (option: any) => this.axisXQuestionName === option.value,
         (e: any) => {
-          this.axisXQuestionName = e.target.value;
+          this.axisXQuestionName = e;
           this.updateQuestionsSelection();
           this.updateToolbar();
           this.setupPivot();
@@ -135,7 +135,7 @@ export class PivotModel extends SelectBase {
     if(getChoices().length == 1) {
       return undefined;
     }
-    const selector = DocumentHelper.createSelector(
+    const selector = DocumentHelper.createDropdown(
       getChoices,
       (option: any) => this.axisYQuestionNames[selectorIndex] === option.value,
       (e: any) => { this.onAxisYSelectorChanged(selectorIndex, e); },
