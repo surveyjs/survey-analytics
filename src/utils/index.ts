@@ -174,19 +174,14 @@ function getLicenseText(): string {
 
 export function createCommercialLicenseLink() {
   const container = DocumentHelper.createElement("div", "sa-commercial");
-  const link = DocumentHelper.createElement("a", "sa-commercial__text", {
-    href: "https://www.surveyjs.io/Buy",
-    target: "_blank",
-  });
+  const link = DocumentHelper.createElement("div", "sa-commercial__text");
   const containerSpan = DocumentHelper.createElement("span", "");
-  const icon = DocumentHelper.createSvgElement("noncommercial");
   const textSpan = DocumentHelper.createElement(
     "span",
     "sa-commercial__product",
-    { innerText: getLicenseText() }
+    { innerHTML: getLicenseText() }
   );
   container.appendChild(link).appendChild(containerSpan);
-  containerSpan.appendChild(icon);
   containerSpan.appendChild(textSpan);
   return container;
 }
