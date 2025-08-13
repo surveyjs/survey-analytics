@@ -4,7 +4,7 @@ import { VisualizerBase } from "../visualizerBase";
 import { localization } from "../localizationManager";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
-import { DashboardTheme, LegacyDashboardTheme } from "../theme";
+import { DashboardTheme } from "../theme";
 import { reverseAll } from "../utils/utils";
 
 export interface PlotlyOptions {
@@ -26,25 +26,17 @@ export class PlotlySetup {
     };
   }
 
-  static defaultTooltipFont = {
-    color: LegacyDashboardTheme.tooltipFontColor,
-    family: LegacyDashboardTheme.fontFamily,
-    size: LegacyDashboardTheme.tooltipFontSize,
-    weight: LegacyDashboardTheme.tooltipFontWeight,
-  };
+  static defaultTooltipConfig(theme: DashboardTheme) {
+    const font = {
+      ...theme.tooltipFont,
+      size: parseFloat(theme.tooltipFont.size)
+    };
 
-  static defaultTooltipConfig = {
-    bgcolor: LegacyDashboardTheme.tooltipBgcolor,
-    bordercolor: LegacyDashboardTheme.tooltipBordercolor,
-    font: { ...PlotlySetup.defaultTooltipFont },
-  };
-
-  static defaultPieTitleFont = {
-    color: LegacyDashboardTheme.pieTitleFontColor,
-    family: LegacyDashboardTheme.fontFamily,
-    size: LegacyDashboardTheme.pieTitleFontSize,
-    weight: LegacyDashboardTheme.pieTitleFontWeight,
-  };
+    return {
+      bgcolor: theme.tooltipBackground,
+      font: font,
+    };
+  }
 
   static defaultLegendConfig(theme: DashboardTheme) {
     const legendSetting = theme.legendSetting;
@@ -114,27 +106,33 @@ export class PlotlySetup {
     };
   }
 
-  static defaultGaugeConfig = {
-    bgcolor: LegacyDashboardTheme.gaugeBgcolor,
-    bordercolor: LegacyDashboardTheme.gaugeBordercolor,
-    bar: {
-      color: LegacyDashboardTheme.gaugeBarColor,
-      thickness: 0.5,
-    },
+  static defaultGaugeConfig(theme) {
+    return {
+      bgcolor: theme.gaugeBackground,
+      bordercolor: theme.gaugeBackground,
+      bar: {
+        color: theme.gaugeBarColor,
+        thickness: 0.5,
+      },
+    };
   }
 
-  static defaultValueGaugeFont = {
-    color: LegacyDashboardTheme.gaugeValueFontColor,
-    family: LegacyDashboardTheme.fontFamily,
-    size: LegacyDashboardTheme.gaugeValueFontSize,
-    weight: LegacyDashboardTheme.gaugeValueFontWeight,
-  };
+  static defaultValueGaugeFont(theme: DashboardTheme) {
+    const font = {
+      ...theme.gaugeValueFont,
+      size: parseFloat(theme.gaugeValueFont.size)
+    };
 
-  static defaultGaugeTickFont = {
-    color: LegacyDashboardTheme.gaugeTickFontColor,
-    family: LegacyDashboardTheme.fontFamily,
-    size: LegacyDashboardTheme.gaugeTickFontSize,
-    weight: LegacyDashboardTheme.gaugeTickFontWeight,
+    return font;
+  }
+
+  static defaultGaugeTickFont(theme: DashboardTheme) {
+    const font = {
+      ...theme.gaugeTickFont,
+      size: parseFloat(theme.gaugeTickFont.size)
+    };
+
+    return font;
   }
 
   /**
@@ -211,9 +209,7 @@ export class PlotlySetup {
       hoverinfo: "label+value+percent", // "x+y",
       textposition: "inside",
       insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
-      hoverlabel: {
-        ...PlotlySetup.defaultTooltipConfig
-      },
+      hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
 
     if (model.chartType === "doughnut") {
@@ -241,7 +237,7 @@ export class PlotlySetup {
             title: {
               position: "bottom center",
               text: seriesLabels[index],
-              font: { ...PlotlySetup.defaultPieTitleFont },
+              font: PlotlySetup.defaultTooltipConfig(model.theme),
             }
           })
         );
@@ -300,9 +296,7 @@ export class PlotlySetup {
       textangle: 0,
       insidetextanchor: "middle",
       insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
-      hoverlabel: {
-        ...PlotlySetup.defaultTooltipConfig
-      },
+      hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
     if (!hasSeries) {
       traceConfig.mode = "markers";
@@ -418,9 +412,7 @@ export class PlotlySetup {
       orientation: "v",
       insidetextanchor: "middle",
       insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
-      hoverlabel: {
-        ...PlotlySetup.defaultTooltipConfig
-      },
+      hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
 
     if (!hasSeries) {
@@ -606,10 +598,10 @@ export class PlotlySetup {
         type: "indicator",
         mode: "gauge+number",
         gauge: {
-          ...PlotlySetup.defaultGaugeConfig,
+          ...PlotlySetup.defaultGaugeConfig(model.theme),
           axis: {
             range: [minValue, maxValue],
-            tickfont: { ...PlotlySetup.defaultGaugeTickFont }
+            tickfont: { ...PlotlySetup.defaultGaugeTickFont(model.theme) }
           },
           shape: model.chartType,
         },
@@ -617,7 +609,7 @@ export class PlotlySetup {
         text: model.name,
         domain: { x: [0, 1], y: [0, 1] },
         number: {
-          font: { ...PlotlySetup.defaultValueGaugeFont }
+          font: { ...PlotlySetup.defaultValueGaugeFont(model.theme) }
         },
       },
     ];
@@ -710,9 +702,7 @@ export class PlotlySetup {
       },
       modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
       hovermode: "closest",
-      hoverlabel: {
-        ...PlotlySetup.defaultTooltipConfig
-      }
+      hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
 
     return { traces, layout, hasSeries };

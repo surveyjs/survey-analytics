@@ -3,10 +3,11 @@ import { IAnswersData, SelectBase } from "../selectBase";
 import { VisualizerBase } from "../visualizerBase";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
-import { DashboardTheme, LegacyDashboardTheme } from "../theme";
+import { DashboardTheme } from "../theme";
 import { reverseAll } from "../utils/utils";
 import { localization } from "../localizationManager";
 
+import "./styles.scss";
 export interface ApexChartsOptions {
   series: Array<any>;
   chart: any;
@@ -54,27 +55,31 @@ export class ApexChartsSetup {
     };
   }
 
-  static defaultTooltipConfig = {
-    enabled: true,
-    style: {
-      fontSize: LegacyDashboardTheme.tooltipFontSize.toString() + "px",
-      fontFamily: LegacyDashboardTheme.fontFamily,
-    },
-    marker: {
-      show: false,
-    },
-    x: {
-      formatter: () => "",
-    },
-    y: {
-      formatter: function(val: number) {
-        return val.toString();
+  static defaultTooltipConfig(theme: DashboardTheme) {
+    const font = theme.tooltipFont;
+
+    return {
+      enabled: true,
+      style: {
+        fontSize: font.size,
+        fontFamily: font.family,
       },
-      title: {
+      marker: {
+        show: false,
+      },
+      x: {
         formatter: () => "",
       },
-    }
-  };
+      y: {
+        formatter: function(val: number) {
+          return val.toString();
+        },
+        title: {
+          formatter: () => "",
+        },
+      }
+    };
+  }
 
   static defaultLegendConfig(theme: DashboardTheme) {
     const font = theme.legendLabelFont;
@@ -141,18 +146,24 @@ export class ApexChartsSetup {
     };
   }
 
-  static defaultGaugeValueFont = {
-    fontFamily: LegacyDashboardTheme.fontFamily,
-    color: LegacyDashboardTheme.gaugeValueFontColor,
-    fontSize: LegacyDashboardTheme.gaugeValueFontSize.toString() + "px",
-    fontWeight: LegacyDashboardTheme.gaugeValueFontWeight,
+  static defaultGaugeValueFont(theme: DashboardTheme) {
+    const font = theme.gaugeValueFont;
+    return {
+      colors: font.color,
+      fontSize: font.size,
+      fontFamily: font.family,
+      fontWeight: font.weight,
+    };
   }
 
-  static defaultGaugeTickFont = {
-    family: LegacyDashboardTheme.fontFamily,
-    color: LegacyDashboardTheme.gaugeTickFontColor,
-    size: LegacyDashboardTheme.gaugeTickFontSize + "px",
-    weight: LegacyDashboardTheme.gaugeTickFontWeight,
+  static defaultGaugeTickFont(theme: DashboardTheme) {
+    const font = theme.gaugeTickFont;
+    return {
+      colors: font.color,
+      fontSize: font.size,
+      fontFamily: font.family,
+      fontWeight: font.weight,
+    };
   }
 
   static defaultStrokeConfig = {
@@ -283,9 +294,7 @@ export class ApexChartsSetup {
     };
 
     // Tooltip settings
-    const tooltip: any = {
-      ...ApexChartsSetup.defaultTooltipConfig,
-    };
+    const tooltip: any = ApexChartsSetup.defaultTooltipConfig(model.theme);
 
     const legend= {
       show: false,
@@ -414,9 +423,7 @@ export class ApexChartsSetup {
     };
 
     // Tooltip settings
-    const tooltip: any = {
-      ...ApexChartsSetup.defaultTooltipConfig,
-    };
+    const tooltip: any = ApexChartsSetup.defaultTooltipConfig(model.theme);
 
     // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
@@ -525,9 +532,7 @@ export class ApexChartsSetup {
     };
 
     // Tooltip settings
-    const tooltip: any = {
-      ...ApexChartsSetup.defaultTooltipConfig,
-    };
+    const tooltip: any = ApexChartsSetup.defaultTooltipConfig(model.theme);
 
     // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
@@ -621,9 +626,7 @@ export class ApexChartsSetup {
     };
 
     // Tooltip settings
-    const tooltip: any = {
-      ...ApexChartsSetup.defaultTooltipConfig,
-    };
+    const tooltip: any = ApexChartsSetup.defaultTooltipConfig(model.theme);
 
     // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
@@ -737,9 +740,7 @@ export class ApexChartsSetup {
     };
 
     // Tooltip settings
-    const tooltip: any = {
-      ...ApexChartsSetup.defaultTooltipConfig,
-    };
+    const tooltip: any = ApexChartsSetup.defaultTooltipConfig(model.theme);
 
     // RTL language handling
     if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
@@ -851,7 +852,7 @@ export class ApexChartsSetup {
 
     // Tooltip settings
     const tooltip: any = {
-      ...ApexChartsSetup.defaultTooltipConfig,
+      ...ApexChartsSetup.defaultTooltipConfig(model.theme),
       custom: function({ series, seriesIndex, dataPointIndex, w }: any) {
         const value = series[seriesIndex][dataPointIndex];
         const label = hasSeries ? seriesLabels[dataPointIndex] : labels[dataPointIndex];
@@ -905,12 +906,13 @@ export class ApexChartsSetup {
         show: false
       }
     };
+
     const plotOptions = {
       radialBar: {
         startAngle: -90,
         endAngle: 90,
         track: {
-          background: LegacyDashboardTheme.gaugeBgcolor,
+          background: model.theme.gaugeBackground,
           strokeWidth: "97%",
         },
         dataLabels: {
@@ -918,7 +920,7 @@ export class ApexChartsSetup {
             show: false,
           },
           value: {
-            ...ApexChartsSetup.defaultGaugeValueFont,
+            ...ApexChartsSetup.defaultGaugeValueFont(model.theme),
             show: true,
             offsetY: -10,
             formatter: function (val) {
@@ -943,7 +945,7 @@ export class ApexChartsSetup {
     };
     const series = [percent];
     const labels = [model.name];
-    const colors = [LegacyDashboardTheme.gaugeBarColor];
+    const colors = [model.theme.gaugeBarColor];
 
     return {
       series,
@@ -992,30 +994,24 @@ export class ApexChartsSetup {
       min: minValue,
       max: maxValue,
       stepSize: 5,
-      style: {
-        ...ApexChartsSetup.defaultGaugeTickFont,
-      },
+      style: ApexChartsSetup.defaultGaugeTickFont(model.theme),
       axisBorder: {
-        color: LegacyDashboardTheme.gaugeBordercolor,
+        color: model.theme.gaugeBackground,
       },
     };
 
     const yaxis = {
       axisBorder: {
-        color: LegacyDashboardTheme.gaugeBordercolor,
+        color: model.theme.gaugeBackground,
       },
       labels: {
         offsetY: 10,
-        style: {
-          ...ApexChartsSetup.defaultGaugeValueFont,
-        }
+        style: ApexChartsSetup.defaultGaugeValueFont(model.theme)
       }
     };
 
     // Tooltip settings
-    const tooltip: any = {
-      ...ApexChartsSetup.defaultTooltipConfig,
-    };
+    const tooltip: any = ApexChartsSetup.defaultTooltipConfig(model.theme);
 
     const series = [{
       data: [{
@@ -1024,12 +1020,12 @@ export class ApexChartsSetup {
         goals: [{
           value: maxValue,
           strokeWidth: 1,
-          strokeColor: LegacyDashboardTheme.gaugeBordercolor,
+          strokeColor: model.theme.gaugeBackground,
         }]
       }]
     }];
     const labels = [level];
-    const colors = [LegacyDashboardTheme.gaugeBarColor];
+    const colors = [model.theme.gaugeBarColor];
 
     return {
       series,
@@ -1108,7 +1104,7 @@ export class ApexChartsSetup {
     const tooltip = {
       enabled: true,
       style: {
-        ...ApexChartsSetup.defaultTooltipConfig,
+        ...ApexChartsSetup.defaultTooltipConfig(model.theme),
       },
       y: {
         formatter: function(val: number, opts: any) {

@@ -648,6 +648,7 @@ export class VisualizerBase implements IDataInfo {
       this._appliedTheme.applyThemeToElement(this.renderResult);
     }
 
+    targetElement.className = "sa-visualizer";
     this.toolbarContainer = DocumentHelper.createElement(
       "div",
       "sa-visualizer__toolbar"

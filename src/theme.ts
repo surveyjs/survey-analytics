@@ -1,39 +1,6 @@
 import { dsbLightTheme } from "sjs-design-tokens";
 import { DocumentHelper } from "./utils";
 
-export const LegacyDashboardTheme = {
-  // Font settings
-  fontFamily: "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif",
-
-  // Tooltip settings
-  tooltipFontColor: "rgba(0, 0, 0, 0.9)",
-  tooltipFontSize: 14,
-  tooltipFontWeight: 600,
-  tooltipBgcolor: "#FFF",
-  tooltipBordercolor: "rgba(0, 0, 0, 0.10)",
-
-  // Pie title font settings
-  pieTitleFontColor: "rgba(0, 0, 0, 0.90)",
-  pieTitleFontSize: 14,
-  pieTitleFontWeight: 400,
-
-  // Gauge settings
-  gaugeBgcolor: "#F5F5F5",
-  gaugeBordercolor: "#F5F5F5",
-  gaugeBarColor: "#19B394",
-  gaugeBarThickness: 0.5,
-
-  // Gauge value font settings
-  gaugeValueFontColor: "rgba(0, 0, 0, 0.90)",
-  gaugeValueFontSize: 32,
-  gaugeValueFontWeight: 700,
-
-  // Gauge tick font settings
-  gaugeTickFontColor: "rgba(0, 0, 0, 0.90)",
-  gaugeTickFontSize: 14,
-  gaugeTickFontWeight: 400
-};
-
 export interface IDashboardTheme {
   cssVariables?: { [index: string]: string | any };
 }
@@ -47,6 +14,7 @@ export interface FontSettings {
 
 export class DashboardTheme implements IDashboardTheme {
   static barGap = 0.05;
+  static fontFamily = "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif";
   private _cssStyleDeclaration;
 
   private getCssVariableValue(propertyName: string) {
@@ -80,6 +48,10 @@ export class DashboardTheme implements IDashboardTheme {
     return this.theme.cssVariables;
   }
 
+  public get defaultFontFamily() {
+    return this.getCssVariableValue("--sjs2-font-family-semantic-default") || DashboardTheme.fontFamily;
+  }
+
   public get backgroundColor(): string {
     return this.getCssVariableValue("--sjs2-color-bg-basic-primary");
   }
@@ -99,7 +71,7 @@ export class DashboardTheme implements IDashboardTheme {
   public get axisLabelFont(): FontSettings {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
-      family: this.getCssVariableValue("--sjs2-font-family-semantic-default"),
+      family: this.defaultFontFamily,
       size: this.getCssVariableValue("--sjs2-font-size-semantic-small"),
       weight: 400
     };
@@ -108,7 +80,7 @@ export class DashboardTheme implements IDashboardTheme {
   public get insideLabelFont(): FontSettings {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-data-chart-fg-on-color-1"),
-      family: this.getCssVariableValue("--sjs2-font-family-semantic-default"),
+      family: this.defaultFontFamily,
       size: this.getCssVariableValue("--sjs2-font-size-semantic-small"),
       weight: 600
     };
@@ -117,7 +89,7 @@ export class DashboardTheme implements IDashboardTheme {
   public get legendLabelFont(): FontSettings {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-fg-basic-primary"),
-      family: this.getCssVariableValue("--sjs2-font-family-semantic-default"),
+      family: this.defaultFontFamily,
       size: this.getCssVariableValue("--sjs2-font-size-semantic-small"),
       weight: 400
     };
@@ -129,6 +101,44 @@ export class DashboardTheme implements IDashboardTheme {
       borderColor: this.getCssVariableValue("--sjs2-color-border-basic-secondary"),
       borderRadius: this.getCssVariableValue("--sjs2-radius-x250"),
       background: this.getCssVariableValue("--sjs2-color-bg-basic-primary"),
+    };
+  }
+
+  public get tooltipBackground() {
+    return this.getCssVariableValue("--sjs2-color-bg-neutral-primary");
+  }
+
+  public get tooltipFont(): FontSettings {
+    return <FontSettings>{
+      color: this.getCssVariableValue("--sjs2-color-fg-neutral-primary"),
+      family: this.defaultFontFamily,
+      size: this.getCssVariableValue("--sjs2-font-size-semantic-small") || "12px",
+      weight: 600
+    };
+  }
+
+  public get gaugeBackground() {
+    return this.getCssVariableValue("--sjs2-color-bg-basic-secondary");
+  }
+  public get gaugeBarColor() {
+    return this.getCssVariableValue("--sjs2-color-fg-brand-primary");
+  }
+
+  public get gaugeValueFont(): FontSettings {
+    return <FontSettings>{
+      color: this.getCssVariableValue("--sjs2-color-fg-basic-primary"),
+      family: this.defaultFontFamily,
+      size: this.getCssVariableValue("--sjs2-font-size-semantic-large") || "32px",
+      weight: 600
+    };
+  }
+
+  public get gaugeTickFont(): FontSettings {
+    return <FontSettings>{
+      color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
+      family: this.defaultFontFamily,
+      size: this.getCssVariableValue("--sjs2-font-size-semantic-small") || "16px",
+      weight: 400
     };
   }
 
