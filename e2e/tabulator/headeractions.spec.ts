@@ -149,12 +149,12 @@ test.describe("headeractions", () => {
     const data: any[] = [];
 
     await initTabulator(page, json, data, { });
-    await expect(page.locator("#tabulatorContainer span", { hasText: "Please purchase a SurveyJS Analytics developer lic" }).nth(1)).toBeVisible();
+    await expect(page.locator("#tabulatorContainer span", { hasText: "To use the Dashboard library in your application" }).nth(1)).toBeVisible();
 
     await initTabulator(page, json, data, { haveCommercialLicense: true });
-    await expect(page.locator("#tabulatorContainer span", { hasText: "Please purchase a SurveyJS Analytics developer lic" }).nth(1)).not.toBeVisible();
+    await expect(page.locator("#tabulatorContainer span", { hasText: "To use the Dashboard library in your application" }).nth(1)).not.toBeVisible();
 
     await initTabulator(page, json, data, { haveCommercialLicense: true });
-    await expect(page.locator("#tabulatorContainer span", { hasText: "Please purchase a SurveyJS Analytics developer lic" }).nth(1)).not.toBeVisible();
+    await expect(page.locator("#tabulatorContainer span", { hasText: "To use the Dashboard library in your application" }).nth(1)).not.toBeVisible();
   });
 });

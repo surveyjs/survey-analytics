@@ -1,0 +1,46 @@
+.sa-commercial {
+  font-size: 12px;
+  padding: 0.5em 0 0.5em 2em;
+  padding: var(--sjs2-spacing-static-x150, 12px) var(--sjs2-spacing-static-x600, 48px);
+  justify-content: center;
+  width: 100%;
+  background: var(--sjs2-color-bg-brand-primary, #19B394);
+  @media screen and (max-width: 600px) {
+    padding: var(--sjs2-spacing-static-x100, 8px) var(--sjs2-spacing-static-x300, 24px);
+  }
+}
+.sa-commercial__text {
+  text-decoration: none;
+  color: var(--sjs2-color-fg-static-main-primary, #FFF);
+  text-align: center;
+  font-family: var(--sjs2-font-family-semantic-default, "Segoe UI", SegoeUI, Arial, sans-serif);
+  font-size: var(--sjs2-font-size-semantic-default, 16px);
+  font-style: normal;
+  font-weight: 600;
+  line-height: var(--sjs2-line-height-semantic-default, 24px);
+  @media screen and (max-width: 600px) {
+    font-size: var(--sjs2-font-size-semantic-small, 12px);
+    line-height: var(--sjs2-line-height-semantic-small, 16px);
+  }
+
+  a {
+    color: var(--sjs2-color-fg-static-main-primary, #FFF);
+    text-align: center;
+    font-family: var(--sjs2-font-family-semantic-default, "Segoe UI", SegoeUI, Arial, sans-serif);
+    font-size: var(--sjs2-font-size-semantic-default, 16px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: var(--sjs2-line-height-semantic-default, 24px);
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 5%;
+    text-underline-offset: 10%;
+    text-underline-position: from-font;
+
+    @media screen and (max-width: 600px) {
+      font-size: var(--sjs2-font-size-semantic-small, 12px);
+      line-height: var(--sjs2-line-height-semantic-small, 16px);
+    }
+  }
+}

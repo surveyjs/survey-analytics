@@ -1,92 +1,166 @@
-// This dictionary contains 1 untranslated or inherited localization strings.
-// These strings are commented out. Uncomment and edit them if you want to add your translations.
-import { localization } from "../localizationManager";
+import { setupLocale } from "../localizationManager";
 
 export var spanishStrings = {
+  // "Group By Me"
   groupButton: "Grupo Por Mí",
+  // "Ungroup By Me"
   ungroupButton: "Desagrupar por mí",
+  // "Select Me"
   selectButton: "Seleccionarme",
+  // "Hide column"
   hideColumn: "Ocultar columna",
+  // "Show column"
   showColumn: "Mostrar columna",
+  // "Make column private"
   makePrivateColumn: "Hacer que la columna sea privada",
+  // "Make column public"
   makePublicColumn: "Hacer pública la columna",
+  // "Move to Detail"
   moveToDetail: "Mover al detalle",
+  // "Show as Column"
   showAsColumn: "Mostrar como columna",
+  // "Search..."
   filterPlaceholder: "Buscar ...",
+  // "Remove rows"
   removeRows: "Eliminar filas",
+  // "Show"
   showLabel: "Mostrar",
+  // "entries"
   entriesLabel: "Entradas",
+  // "Texts in table"
   visualizer_text: "Textos en tabla",
+  // "Wordcloud"
   visualizer_wordcloud: "Wordcloud",
+  // "Histogram"
   visualizer_histogram: "Histograma",
+  // "Average"
   visualizer_number: "Promedio",
+  // "Table"
   visualizer_choices: "Mesa",
+  // "Chart"
   visualizer_selectBase: "Gráfico",
-  // visualizer_matrix: "Chart",
-  chartType_bar: "Bar",
+  // [Auto-translated] "Chart"
+  visualizer_matrix: "Gráfico",
+  // [Auto-translated] "Bar"
+  chartType_bar: "Barra",
+  // "Vertical Bar"
   chartType_vbar: "Barra vertical",
+  // "Stacked Bar"
   chartType_stackedbar: "Barra apilada",
+  // "Doughnut"
   chartType_doughnut: "Donut",
+  // "Pie"
   chartType_pie: "Pie",
+  // "Scatter"
   chartType_scatter: "Dispersión",
+  // "Gauge"
   chartType_gauge: "Gauge",
+  // "Bullet"
   chartType_bullet: "Bullet",
+  // [Auto-translated] "Line"
+  chartType_line: "Línea",
+  // [Auto-translated] "Radar"
+  chartType_radar: "Radar",
+  // "Hide"
   hideButton: "Ocultar",
+  // "Make private"
   makePrivateButton: "Hacer privado",
+  // "Make public"
   makePublicButton: "Hacer público",
+  // "Show"
   showButton: "Mostrar",
+  // "Filter"
   filter: "Filtro",
+  // "Reset Filter"
   resetFilter: "Restablecer filtro",
+  // "Change Locale"
   changeLocale: "Cambiar configuración regional",
+  // "Clear"
   clearButton: "Borrar",
+  // "Choose question to show..."
   addElement: "Elija la pregunta para mostrar ...",
+  // "Default Order"
   defaultOrder: "Orden predeterminado",
+  // "Ascending"
   ascOrder: "Ascendente",
+  // "Descending"
   descOrder: "Descendente",
+  // "Show minor columns"
   showMinorColumns: "Mostrar columnas secundarias",
+  // [Auto-translated] "Actions"
+  actionsColumn: "Acciones",
+  // "Other items and comments"
   otherCommentTitle: "Otros elementos y comentarios",
+  // "Show percentages"
   showPercentages: "Mostrar porcentajes",
+  // "Hide percentages"
   hidePercentages: "Ocultar porcentajes",
+  // "PDF"
   pdfDownloadCaption: "PDF",
+  // "Excel"
   xlsxDownloadCaption: "Excel",
+  // "CSV"
   csvDownloadCaption: "CSV",
+  // "Download plot as a PNG file"
   saveDiagramAsPNG: "Descargar el gráfico como png",
+  // "Hide empty answers"
   hideEmptyAnswers: "Ocultar respuestas vacías",
+  // "Show empty answers"
   showEmptyAnswers: "Mostrar respuestas vacías",
+  // "All answers"
   "topNValueText-1": "Todas las respuestas",
+  // "Top 5 answers"
   topNValueText5: "Las 5 respuestas principales",
+  // "Top 10 answers"
   topNValueText10: "Las 10 respuestas principales",
+  // "Top 20 answers"
   topNValueText20: "20 respuestas principales",
+  // "Hide missing answers"
   hideMissingAnswers: "Ocultar las respuestas que faltan",
+  // "Show missing answers"
   showMissingAnswers: "Mostrar las respuestas que faltan",
+  // "Missing answers"
   missingAnswersLabel: "Respuestas faltantes",
+  // "This question type is not visualized yet"
   noVisualizerForQuestion: "Este tipo de pregunta aún no se visualiza",
+  // "There are no results yet"
   noResults: "Aún no hay resultados",
+  // "Per Values"
   showPerValues: "Por valores",
+  // "Per Columns"
   showPerColumns: "Por columnas",
+  // "Answer"
   answer: "Respuesta",
+  // "Correct answer: "
   correctAnswer: "Respuesta correcta: ",
+  // "Percent"
   percent: "Por ciento",
-  responses: "Respuestas"
+  // [Auto-translated] "Percentage"
+  percentage: "Porcentaje",
+  // [Auto-translated] "Chart"
+  statistics_chart: "Gráfico",
+  // "Responses"
+  responses: "Respuestas",
+  // [Auto-translated] "NPS"
+  visualizer_nps: "NPS",
+  // [Auto-translated] "NPS"
+  npsScore: "NPS",
+  // [Auto-translated] "Promoters"
+  npsPromoters: "Promotores",
+  // [Auto-translated] "Passives"
+  npsPassives: "Pasivos",
+  // [Auto-translated] "Detractors"
+  npsDetractors: "Detractores",
+  // [Auto-translated] "Category (X Axis):"
+  axisXSelectorTitle: "Categoría (eje X):",
+  // [Auto-translated] "Legend (Series):"
+  axisYSelectorTitle: "Leyenda (Serie):",
+  // [Auto-translated] "Segments:"
+  axisXAlternativeSelectorTitle: "Segmentos:",
+  // [Auto-translated] "Groups:"
+  axisYAlternativeSelectorTitle: "Grupos:",
+  // [Auto-translated] "Not selected"
+  notSelected: "No seleccionado"
 };
-localization.locales["es"] = spanishStrings;
-localization.localeNames["es"] = "Español";
 
-// The following strings have been translated by a machine translation service
-// Remove those strings that you have corrected manually
-// undefined.groupButton: "Group By Me" => "Grupo Por Mí"
-// undefined.entriesLabel: "entries" => "Entradas"
-// undefined.visualizer_histogram: "Histogram" => "Histograma"
-// undefined.visualizer_number: "Average" => "Promedio"
-// undefined.visualizer_choices: "Table" => "Mesa"
-// undefined.visualizer_selectBase: "Chart" => "Gráfico"
-// undefined.chartType_vbar: "Vertical Bar" => "Barra vertical"
-// undefined.hideMissingAnswers: "Hide missing answers" => "Ocultar las respuestas que faltan"
-// undefined.showMissingAnswers: "Show missing answers" => "Mostrar las respuestas que faltan"
-// undefined.missingAnswersLabel: "Missing answers" => "Respuestas faltantes"
-// undefined.showPerValues: "Per Values" => "Por valores"
-// undefined.showPerColumns: "Per Columns" => "Por columnas"
-// undefined.answer: "Answer" => "Respuesta"
-// undefined.correctAnswer: "Correct answer: " => "Respuesta correcta: "
-// undefined.percent: "Percent" => "Por ciento"
-// undefined.responses: "Responses" => "Respuestas"
+setupLocale({ localeCode: "es", strings: spanishStrings, nativeName: "Español" });
