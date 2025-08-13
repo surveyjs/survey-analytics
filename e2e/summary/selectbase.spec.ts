@@ -46,11 +46,12 @@ test.describe("selectbase", () => {
 
     // check data filtering for regular choice
     // await page.locator(".trace.bars .point").nth(1).click();
-    await page.locator(".nsewdrag").click({ position: { x: 100, y: 60 } }); //selector for choice with value 1
+    const box = await page.locator(".nsewdrag").boundingBox();
+    await page.mouse.click(box.x + 100, box.y + 10); //selector for choice with value 1
     await page.waitForTimeout(500);
-    expect(await isBarVisible(3)).toBeFalsy();
     expect(await isBarVisible(1)).toBeFalsy();
-    expect(await isBarVisible(2)).toBeTruthy();
+    expect(await isBarVisible(2)).toBeFalsy();
+    expect(await isBarVisible(3)).toBeTruthy();
 
     await page.click('span:text("Clear")');
     await page.waitForTimeout(500);
@@ -60,11 +61,11 @@ test.describe("selectbase", () => {
 
     // check data filtering for other choice
     // await page.locator(".trace.bars .point").nth(0).click();
-    await page.locator(".nsewdrag").click({ position: { x: 100, y: 100 } }); //selector for 'other' choice
+    await page.mouse.click(box.x + 100, box.y + box.height - 20); //selector for 'other' choice
     await page.waitForTimeout(500);
-    expect(await isBarVisible(3)).toBeFalsy();
-    expect(await isBarVisible(2)).toBeFalsy();
     expect(await isBarVisible(1)).toBeTruthy();
+    expect(await isBarVisible(2)).toBeFalsy();
+    expect(await isBarVisible(3)).toBeFalsy();
 
     await page.click('span:text("Clear")');
     await page.waitForTimeout(500);

@@ -8,8 +8,8 @@ test.describe("Pivot chart", () => {
   });
 
   test("simple cases", async ({ page }) => {
-    const xAxisSelector = page.locator(".sa-dropdown").nth(1);
-    const yAxisSelector = page.locator(".sa-dropdown").nth(2);
+    const xAxisSelector = page.locator(".sa-dropdown-header").nth(1);
+    const yAxisSelector = page.locator(".sa-dropdown-header").nth(2);
     await expect(page.locator("#pivotContainer").getByText("Category (X Axis):")).toBeVisible();
     await expect(xAxisSelector).toBeVisible();
     await expect(page.locator("#pivotContainer").getByText("Legend (Series):")).toBeVisible();

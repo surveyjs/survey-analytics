@@ -106,7 +106,7 @@ test.describe("basetests", () => {
     // await page.waitForTimeout(500);
     // await page.mouse.up();
     // await page.waitForTimeout(500);
-    await dragDropElement(page, questionSelector.locator(".sa-question__header"), page.locator("#summaryContainer .sa-panel__content"));
+    await dragDropElement(page, questionSelector.locator(".sa-question__header--draggable"), page.locator("#summaryContainer .sa-panel__content"));
 
     expect(await getPositionInState(page, questionTitle)).toBe(1);
   });

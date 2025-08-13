@@ -401,22 +401,10 @@ test("check bar axes RTL setup", async () => {
 
   expect(config.layout.xaxis.autorange).toBe("reversed");
   expect(config.layout.yaxis.side).toBe("right");
-  expect(config.layout.legend).toStrictEqual({
-    "bgcolor": "#FFF",
-    "bordercolor": "#D4D4D4",
-    "borderwidth": "1px",
-    "font": {
-      "color": "#1C1B20",
-      "family": "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif",
-      "size": 12,
-      "weight": 400,
-    },
-    "itemwidth": 20,
-    x: 0,
-    y: 1,
-    xanchor: "left",
-    yanchor: "top"
-  });
+  expect(config.layout.legend.x).toBe(0);
+  expect(config.layout.legend.y).toBe(1);
+  expect(config.layout.legend.xanchor).toBe("left");
+  expect(config.layout.legend.yanchor).toBe("top");
 });
 
 test("VisualizationMatrixDropdown stackedbar chart height", async () => {

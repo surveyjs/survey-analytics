@@ -200,6 +200,18 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
     }
   }
 );
+
+const checkbox = document.getElementById('toggle-checkbox');
+checkbox.addEventListener('change', () => {
+  if (checkbox.checked) {
+    visPanel.applyTheme(SurveyTokens.dsbDarkTheme);
+  } else {
+    visPanel.applyTheme(SurveyTokens.dsbLightTheme);
+  }
+});
+
+// visPanel.applyTheme(SurveyTokens.dsbDarkTheme);
+
 visPanel.showToolbar = true;
 visPanel.onAlternativeVisualizerChanged.add(function(sender, options) {
   visPanel.visualizers.forEach(visualizer => {
