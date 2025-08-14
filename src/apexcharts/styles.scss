@@ -5,5 +5,9 @@
     border-color: var(--sjs2-color-bg-neutral-primary, #1C1B20);
     background: var(--sjs2-color-bg-neutral-primary, #1C1B20);
     color: var(--sjs2-color-fg-neutral-primary, #FFF);
+
+    .apexcharts-tooltip-title {
+      display: none;
+    }
   }
 }

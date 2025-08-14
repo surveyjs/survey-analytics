@@ -710,9 +710,15 @@ export class PlotlySetup {
           ...PlotlySetup.defaultAxisConfig(model.theme),
           visible: true,
           range: [0, Math.max(...datasets.map(s => Math.max(...s))) * 1.1],
+          gridcolor: model.theme.axisGridColor,
+          linecolor: model.theme.axisBorderColor,
+          tickcolor: model.theme.axisBorderColor,
+          gridwidth: 1,
         },
         angularaxis: {
           ...PlotlySetup.defaultAxisConfig(model.theme),
+          tickfont: model.theme.radarLabelFont,
+          linecolor: model.theme.axisGridColor,
         }
       },
       showlegend: hasSeries,

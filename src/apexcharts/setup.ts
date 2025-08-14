@@ -60,6 +60,7 @@ export class ApexChartsSetup {
 
     return {
       enabled: true,
+      fillSeriesColor: false,
       style: {
         fontSize: font.size,
         fontFamily: font.family,
@@ -1068,15 +1069,20 @@ export class ApexChartsSetup {
       radar: {
         polygons: {
           strokeColors: model.theme.axisGridColor,
-          fill: {
-            colors: ["#f8f8f8", "#fff"]
-          }
         }
       }
     };
 
+    const radarLabelFont = model.theme.radarLabelFont;
     const xaxis = {
-      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
+      labels: {
+        style: {
+          colors: radarLabelFont.color,
+          fontSize: radarLabelFont.size,
+          fontFamily: radarLabelFont.family,
+          fontWeight: radarLabelFont.weight,
+        },
+      },
       categories: labels,
     };
     xaxis.labels.style.colors = Array(labels.length).fill(model.theme.axisLabelFont.color) as any;

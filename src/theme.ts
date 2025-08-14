@@ -60,6 +60,10 @@ export class DashboardTheme implements IDashboardTheme {
     return this.getCssVariableValue("--sjs2-color-data-grid-border-line");
   }
 
+  public get axisBorderColor(): string {
+    return this.getCssVariableValue("--sjs2-color-data-grid-border-axis");
+  }
+
   public get modebarActiveColor(): string {
     return this.getCssVariableValue("--sjs2-color-fg-brand-primary");
   }
@@ -138,6 +142,15 @@ export class DashboardTheme implements IDashboardTheme {
       color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
       family: this.defaultFontFamily,
       size: this.getCssVariableValue("--sjs2-font-size-semantic-small") || "16px",
+      weight: 400
+    };
+  }
+
+  public get radarLabelFont(): FontSettings {
+    return <FontSettings>{
+      color: this.getCssVariableValue("--sjs2-color-fg-basic-primary"),
+      family: this.defaultFontFamily,
+      size: this.getCssVariableValue("--sjs2-font-size-semantic-small"),
       weight: 400
     };
   }
