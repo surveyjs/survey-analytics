@@ -324,7 +324,7 @@ export class PlotlySetup {
       insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
       hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
-    if (!hasSeries) {
+    if (!hasSeries && !isHistogram) {
       traceConfig.mode = "markers";
       traceConfig.marker = { color: colors };
     }
@@ -441,7 +441,7 @@ export class PlotlySetup {
       hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
 
-    if (!hasSeries) {
+    if (!hasSeries && !isHistogram) {
       traceConfig.mode = "markers";
       traceConfig.marker = { color: colors };
     }
