@@ -61,7 +61,7 @@ export class DocumentHelper {
     placeholder = "Select...",
     title?: string | (() => string)
   ): HTMLDivElement {
-    // Create container
+    const dropdownOpenedClass = "sa-dropdown--opened";
     const dropdownElement = document.createElement("div");
     dropdownElement.className = "sa-dropdown";
     const titleElement = DocumentHelper.createElement("span", "sa-dropdown__title");
@@ -145,8 +145,8 @@ export class DocumentHelper {
           handler(option.value);
           updateHeader();
 
-          dropdownHeader.classList.remove("open");
-          dropdownList.classList.remove("open");
+          dropdownHeader.classList.remove(dropdownOpenedClass);
+          dropdownList.classList.remove(dropdownOpenedClass);
 
           // Remove selection from all items and add to current
           dropdownList.querySelectorAll(".sa-dropdown-item").forEach(item => {
@@ -161,15 +161,15 @@ export class DocumentHelper {
     // Function to close dropdown when clicking outside
     const handleClickOutside = (event) => {
       if (!dropdownElement.contains(event.target)) {
-        dropdownHeader.classList.remove("open");
-        dropdownList.classList.remove("open");
+        dropdownHeader.classList.remove(dropdownOpenedClass);
+        dropdownList.classList.remove(dropdownOpenedClass);
       }
     };
 
     // Add open/close handler
     dropdownHeader.addEventListener("click", (e) => {
-      dropdownHeader.classList.toggle("open");
-      dropdownList.classList.toggle("open");
+      dropdownHeader.classList.toggle(dropdownOpenedClass);
+      dropdownList.classList.toggle(dropdownOpenedClass);
     });
 
     // Add click outside handler

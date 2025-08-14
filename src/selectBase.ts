@@ -168,7 +168,7 @@ export class SelectBase
             { text: localization.getString("ascOrder"), value: "asc" },
             { text: localization.getString("descOrder"), value: "desc" },
           ],
-          (option) => false,
+          (option) => this.answersOrder === option.value,
           (e) => {
             this.answersOrder = e;
           }
@@ -211,7 +211,7 @@ export class SelectBase
               value: value,
             };
           }),
-          (option) => false,
+          (option) => this.topN === option.value as any,
           (e) => {
             this.topN = parseInt(e);
           }
