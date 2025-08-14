@@ -18,6 +18,32 @@ export class PlotlySetup {
 
   static defaultBarGap = DashboardTheme.barGap;
 
+  static getRgbaColor(propertyValue: any) {
+    let str = propertyValue;
+    if (!str) return null;
+    const canvasElement = document.createElement("canvas") as HTMLCanvasElement;
+    if (!canvasElement) return null;
+    const ctx = canvasElement.getContext("2d");
+    ctx.fillStyle = str;
+
+    if (ctx.fillStyle == "#000000") {
+      ctx.fillStyle = propertyValue;
+    }
+    const newStr = ctx.fillStyle as string;
+    const match = newStr.match(/color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*\/\s*([\d.]+)\)/);
+
+    if (!match) {
+      return newStr;
+    }
+
+    const r = parseFloat(match[1]);
+    const g = parseFloat(match[2]);
+    const b = parseFloat(match[3]);
+    const alpha = parseFloat(match[4]);
+    const result = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    return result;
+  }
+
   static defaultModebarConfig(theme: DashboardTheme) {
     return {
       bgcolor: "transparent",
@@ -108,10 +134,10 @@ export class PlotlySetup {
 
   static defaultGaugeConfig(theme) {
     return {
-      bgcolor: theme.gaugeBackground,
-      bordercolor: theme.gaugeBackground,
+      bgcolor: PlotlySetup.getRgbaColor(theme.gaugeBackground),
+      bordercolor: PlotlySetup.getRgbaColor(theme.gaugeBackground),
       bar: {
-        color: theme.gaugeBarColor,
+        color: PlotlySetup.getRgbaColor(theme.gaugeBarColor),
         thickness: 0.5,
       },
     };
