@@ -13,15 +13,16 @@ test.describe("Miscellaneous cases", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const chartTypeSelector = questionVisualizerSelector.locator("select").filter({ hasText: /^BarStacked BarPieDoughnut$/ });
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartTypeSelector).toBeVisible();
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
     await expect(chartContentSelector).toBeVisible();
 
-    await expect(chartTypeSelector).toHaveValue("bar");
+    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Bar");
     await compareScreenshot(page, chartContentSelector, "matrix-single-row-bar.png");
 
-    await chartTypeSelector.selectOption("pie");
+    await chartTypeSelector.click();
+    await page.getByRole("list").getByText("Pie").click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-row-pie.png");
 
     const transposeButtonSelector = questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ });
@@ -29,10 +30,12 @@ test.describe("Miscellaneous cases", () => {
     await transposeButtonSelector.click();
     await expect(questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Values$/ })).toBeVisible();
 
-    await chartTypeSelector.selectOption("bar");
+    await chartTypeSelector.click();
+    await page.getByRole("list").getByText("Bar", { exact: true }).click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-row-bar-per-values.png");
 
-    await chartTypeSelector.selectOption("pie");
+    await chartTypeSelector.click();
+    await page.getByRole("list").getByText("Pie").click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-row-pie-per-values.png");
   });
 
@@ -44,15 +47,16 @@ test.describe("Miscellaneous cases", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const chartTypeSelector = questionVisualizerSelector.locator("select").filter({ hasText: /^Stacked BarBarPieDoughnut$/ });
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartTypeSelector).toBeVisible();
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").nth(1);
     await expect(chartContentSelector).toBeVisible();
 
-    await expect(chartTypeSelector).toHaveValue("stackedbar");
+    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Stacked Bar");
     await compareScreenshot(page, chartContentSelector, "matrixdropdown-grouped-stackedbar.png");
 
-    await chartTypeSelector.selectOption("bar");
+    await chartTypeSelector.click();
+    await page.getByRole("list").getByText("Bar", { exact: true }).click();
     await compareScreenshot(page, chartContentSelector, "matrixdropdown-grouped-bar.png");
 
     const transposeButtonSelector = questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ });
@@ -60,10 +64,12 @@ test.describe("Miscellaneous cases", () => {
     await transposeButtonSelector.click();
     await expect(questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Values$/ })).toBeVisible();
 
-    await chartTypeSelector.selectOption("stackedbar");
+    await chartTypeSelector.click();
+    await page.getByRole("list").getByText("Stacked Bar").click();
     await compareScreenshot(page, chartContentSelector, "matrixdropdown-grouped-stackedbar-per-values.png");
 
-    await chartTypeSelector.selectOption("bar");
+    await chartTypeSelector.click();
+    await page.getByRole("list").getByText("Bar", { exact: true }).click();
     await compareScreenshot(page, chartContentSelector, "matrixdropdown-grouped-bar-per-values.png");
   });
 });

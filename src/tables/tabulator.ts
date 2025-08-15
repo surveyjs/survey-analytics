@@ -56,7 +56,7 @@ export const defaultDownloadOptions = {
 export const defaultOptions: ITabulatorOptions = {
   tabulatorOptions: {},
   actionsColumnWidth: 60,
-  columnMinWidth: 248,
+  columnMinWidth: 384,
   downloadHiddenColumns: false,
   downloadButtons: ["csv"],
   downloadOptions: defaultDownloadOptions,
@@ -305,13 +305,13 @@ export class Tabulator extends Table {
     onRendered: any,
     columnName: any
   ): HTMLElement {
-    var container = DocumentHelper.createElement("div");
-    var title = DocumentHelper.createElement("span", "", {
+    var container = DocumentHelper.createElement("div", "sa-tabulator-column-header");
+    var title = DocumentHelper.createElement("span", "sa-tabulator-column-title-text", {
       innerText: cell.getValue(),
     });
     var actions = this.getHeaderActions(columnName);
-    container.appendChild(actions);
     container.appendChild(title);
+    container.appendChild(actions);
     container.onmousedown = (e: any) => {
       if (!this.isColumnReorderEnabled) {
         e.stopPropagation();
