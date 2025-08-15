@@ -13,24 +13,24 @@
   text-decoration: none;
   color: var(--sjs2-color-fg-static-main-primary, #FFF);
   text-align: center;
-  font-family: var(--sjs2-font-family-semantic-default, "Segoe UI", SegoeUI, Arial, sans-serif);
-  font-size: var(--sjs2-font-size-semantic-default, 16px);
+  font-family: var(--sjs2-typography-font-family-default, "Segoe UI", SegoeUI, Arial, sans-serif);
+  font-size: var(--sjs2-typography-font-size-default, 16px);
   font-style: normal;
   font-weight: 600;
-  line-height: var(--sjs2-line-height-semantic-default, 24px);
+  line-height: var(--sjs2-typography-line-height-default, 24px);
   @media screen and (max-width: 600px) {
-    font-size: var(--sjs2-font-size-semantic-small, 12px);
-    line-height: var(--sjs2-line-height-semantic-small, 16px);
+    font-size: var(--sjs2-typography-font-size-small, 12px);
+    line-height: var(--sjs2-typography-line-height-small, 16px);
   }
 
   a {
     color: var(--sjs2-color-fg-static-main-primary, #FFF);
     text-align: center;
-    font-family: var(--sjs2-font-family-semantic-default, "Segoe UI", SegoeUI, Arial, sans-serif);
-    font-size: var(--sjs2-font-size-semantic-default, 16px);
+    font-family: var(--sjs2-typography-font-family-default, "Segoe UI", SegoeUI, Arial, sans-serif);
+    font-size: var(--sjs2-typography-font-size-default, 16px);
     font-style: normal;
     font-weight: 600;
-    line-height: var(--sjs2-line-height-semantic-default, 24px);
+    line-height: var(--sjs2-typography-line-height-default, 24px);
     text-decoration-line: underline;
     text-decoration-style: solid;
     text-decoration-skip-ink: auto;
@@ -39,8 +39,8 @@
     text-underline-position: from-font;
 
     @media screen and (max-width: 600px) {
-      font-size: var(--sjs2-font-size-semantic-small, 12px);
-      line-height: var(--sjs2-line-height-semantic-small, 16px);
+      font-size: var(--sjs2-typography-font-size-small, 12px);
+      line-height: var(--sjs2-typography-line-height-small, 16px);
     }
   }
 }

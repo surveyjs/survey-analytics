@@ -49,10 +49,10 @@
 
   /* sjs2/typography/default-strong */
   font-family: $font-family;
-  font-size: var(--sjs2-font-size-semantic-default, 16px);
+  font-size: var(--sjs2-typography-font-size-default, 16px);
   font-style: normal;
   font-weight: 600;
-  line-height: var(--sjs2-line-height-semantic-default, 24px); /* 150% */
+  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
 }
 
 .sa-question__header--draggable {
@@ -121,10 +121,10 @@
 
   /* sjs2/typography/default-strong */
   font-family: $font-family;
-  font-size: var(--sjs2-font-size-semantic-default, 16px);
+  font-size: var(--sjs2-typography-font-size-default, 16px);
   font-style: normal;
   font-weight: 600;
-  line-height: var(--sjs2-line-height-semantic-default, 24px); /* 150% */
+  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
 }
 
 .sa-toolbar__button-icon {
@@ -260,11 +260,11 @@
   text-align: center;
 
   /* sjs2/typography/default */
-  font-family: var(--sjs2-font-family-semantic-default, "Open Sans");
-  font-size: var(--sjs2-font-size-semantic-default, 16px);
+  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
+  font-size: var(--sjs2-typography-font-size-default, 16px);
   font-style: normal;
   font-weight: 400;
-  line-height: var(--sjs2-line-height-semantic-default, 24px); /* 150% */
+  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
 }
 
 /* latin-ext */
@@ -375,11 +375,11 @@
   text-overflow: ellipsis;
 
   /* sjs2/typography/default */
-  font-family: var(--sjs2-font-family-semantic-default, "Open Sans");
-  font-size: var(--sjs2-font-size-semantic-default, 16px);
+  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
+  font-size: var(--sjs2-typography-font-size-default, 16px);
   font-style: normal;
   font-weight: 400;
-  line-height: var(--sjs2-line-height-semantic-default, 24px); /* 150% */
+  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
 }
 
 .sa-dropdown-list {
@@ -423,10 +423,10 @@
 
   /* sjs2/typography/default */
   font-family: $font-family;
-  font-size: var(--sjs2-font-size-semantic-default, 16px);
+  font-size: var(--sjs2-typography-font-size-default, 16px);
   font-style: normal;
   font-weight: 400;
-  line-height: var(--sjs2-line-height-semantic-default, 24px); /* 150% */
+  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
 }
 
 .sa-dropdown-item:hover {
@@ -439,10 +439,10 @@
 
   /* sjs2/typography/default-strong */
   font-family: $font-family;
-  font-size: var(--sjs2-font-size-semantic-default, 16px);
+  font-size: var(--sjs2-typography-font-size-default, 16px);
   font-style: normal;
   font-weight: 600;
-  line-height: var(--sjs2-line-height-semantic-default, 24px); /* 150% */
+  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
 }
 
 .sa-dropdown-placeholder {
@@ -451,11 +451,11 @@
   text-overflow: ellipsis;
 
   /* sjs2/typography/default */
-  font-family: var(--sjs2-font-family-semantic-default, "Open Sans");
-  font-size: var(--sjs2-font-size-semantic-default, 16px);
+  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
+  font-size: var(--sjs2-typography-font-size-default, 16px);
   font-style: normal;
   font-weight: 400;
-  line-height: var(--sjs2-line-height-semantic-default, 24px); /* 150% */
+  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
 }
 
 .sa-dropdown-icon {
@@ -485,8 +485,8 @@
 
   /* sjs2/typography/default */
   font-family: $font-family;
-  font-size: var(--sjs2-font-size-semantic-default, 16px);
+  font-size: var(--sjs2-typography-font-size-default, 16px);
   font-style: normal;
   font-weight: 400;
-  line-height: var(--sjs2-line-height-semantic-default, 24px); /* 150% */
+  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
 }

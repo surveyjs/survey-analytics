@@ -49,7 +49,7 @@ export class DashboardTheme implements IDashboardTheme {
   }
 
   public get defaultFontFamily() {
-    return this.getCssVariableValue("--sjs2-font-family-semantic-default") || DashboardTheme.fontFamily;
+    return this.getCssVariableValue("--sjs2-typography-font-family-default") || DashboardTheme.fontFamily;
   }
 
   public get backgroundColor(): string {
@@ -76,7 +76,7 @@ export class DashboardTheme implements IDashboardTheme {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-font-size-semantic-small"),
+      size: this.getCssVariableValue("--sjs2-typography-font-size-small"),
       weight: 400
     };
   }
@@ -85,7 +85,7 @@ export class DashboardTheme implements IDashboardTheme {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-data-chart-fg-on-color-1"),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-font-size-semantic-small"),
+      size: this.getCssVariableValue("--sjs2-typography-font-size-small"),
       weight: 600
     };
   }
@@ -94,7 +94,7 @@ export class DashboardTheme implements IDashboardTheme {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-fg-basic-primary"),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-font-size-semantic-small"),
+      size: this.getCssVariableValue("--sjs2-typography-font-size-small"),
       weight: 400
     };
   }
@@ -116,7 +116,7 @@ export class DashboardTheme implements IDashboardTheme {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-fg-neutral-primary"),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-font-size-semantic-small") || "12px",
+      size: this.getCssVariableValue("--sjs2-typography-font-size-small") || "12px",
       weight: 600
     };
   }
@@ -132,7 +132,7 @@ export class DashboardTheme implements IDashboardTheme {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-fg-basic-primary"),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-font-size-semantic-large") || "32px",
+      size: this.getCssVariableValue("--sjs2-typography-font-size-large") || "32px",
       weight: 600
     };
   }
@@ -141,7 +141,7 @@ export class DashboardTheme implements IDashboardTheme {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-font-size-semantic-small") || "16px",
+      size: this.getCssVariableValue("--sjs2-typography-font-size-small") || "16px",
       weight: 400
     };
   }
@@ -150,7 +150,7 @@ export class DashboardTheme implements IDashboardTheme {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-fg-basic-primary"),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-font-size-semantic-small"),
+      size: this.getCssVariableValue("--sjs2-typography-font-size-small"),
       weight: 400
     };
   }
