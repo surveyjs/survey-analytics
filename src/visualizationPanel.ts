@@ -326,11 +326,35 @@ export class VisualizationPanel extends VisualizerBase {
 
     this.buildVisualizers(questions);
 
-    if (!this.haveCommercialLicense) {
-      this.registerToolbarItem("commercialLicense", () => {
-        return createCommercialLicenseLink();
-      }, "license");
-    }
+    this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
+      if (this.allowHideQuestions) {
+        const allQuestions = this._elements.map((element) => {
+          return {
+            value: element.name,
+            text: element.displayName,
+            icon: "check_24x24"
+          };
+        });
+        const selectWrapper = DocumentHelper.createMultiSelect(
+          allQuestions,
+          (option: any) => this.hiddenElements.length === 0 || this.hiddenElements.filter(el => el.name === option.value).length === 0,
+          (e: any) => {
+            if(!!e) {
+              const element = this.getElement(e);
+              if(!!element && element.isVisible) {
+                this.hideElement(e);
+              } else {
+                this.showElement(e);
+              }
+            }
+          },
+          localization.getString("allQuestions"),
+          "sa-multiple-dropdown"
+        );
+        return selectWrapper;
+      }
+      return undefined;
+    }, "dropdown");
 
     this.registerToolbarItem("resetFilter", () => {
       return DocumentHelper.createButton(() => {
@@ -342,51 +366,6 @@ export class VisualizationPanel extends VisualizerBase {
       }, localization.getString("resetFilter"));
     }, "button", 900);
 
-    this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
-      if (this.allowHideQuestions) {
-        let addElementSelector: HTMLElement = undefined;
-        const addElementSelectorUpdater = (
-          panel: VisualizationPanel,
-          options: any
-        ) => {
-          const hiddenElements = this.hiddenElements;
-          if (hiddenElements.length > 0) {
-            const selectWrapper = DocumentHelper.createDropdown(
-              [
-                <any>{
-                  name: undefined,
-                  displayName: localization.getString("addElement"),
-                },
-              ]
-                .concat(hiddenElements)
-                .map((element) => {
-                  return {
-                    value: element.name,
-                    text: element.displayName,
-                  };
-                }),
-              (option: any) => false,
-              (e: any) => {
-                if(!!e) {
-                  this.showElement(e);
-                }
-              },
-              localization.getString("addElement")
-            );
-            (addElementSelector &&
-              toolbar.replaceChild(selectWrapper, addElementSelector)) ||
-              toolbar.appendChild(selectWrapper);
-            addElementSelector = selectWrapper;
-          } else {
-            addElementSelector && toolbar.removeChild(addElementSelector);
-            addElementSelector = undefined;
-          }
-        };
-        addElementSelectorUpdater(this, {});
-        this.onVisibleElementsChanged.add(addElementSelectorUpdater);
-      }
-      return undefined;
-    }, "dropdown");
     if (!this.options.disableLocaleSwitch && this.locales.length > 1) {
       const localeChoices = this.locales.map((element) => {
         return {
@@ -987,6 +966,10 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   protected renderToolbar(container: HTMLElement) {
+    if (!this.haveCommercialLicense) {
+      const banner = createCommercialLicenseLink();
+      container.appendChild(banner);
+    }
     container.className += " sa-panel__header";
     super.renderToolbar(container);
   }

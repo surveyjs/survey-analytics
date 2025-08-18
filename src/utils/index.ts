@@ -59,14 +59,16 @@ export class DocumentHelper {
     isSelected: (option: {value: string, text: string, icon?: string}) => boolean,
     handler: (value: string) => void,
     placeholder = "Select...",
-    title?: string | (() => string)
+    title?: string | (() => string),
+    className = "sa-dropdown"
   ): HTMLDivElement {
-    const dropdownOpenedClass = "sa-dropdown--opened";
+    const dropdownOpenedClass = className + "--opened";
     const dropdownElement = document.createElement("div");
-    dropdownElement.className = "sa-dropdown";
-    const titleElement = DocumentHelper.createElement("span", "sa-dropdown__title");
+    dropdownElement.className = className;
+    const titleElement = DocumentHelper.createElement("span", className + "__title");
     const dropdownHeader = document.createElement("div");
-    dropdownHeader.className = "sa-dropdown-header";
+    dropdownHeader.className = className + "-header";
+    const itemClassSelected = className + "-item--selected";
 
     const updateTitle = () => {
       const titleText = !!title && (typeof title == "string" ? title : title());
@@ -82,7 +84,7 @@ export class DocumentHelper {
     let optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
     let selectedOption = optionItems.find(option => isSelected(option));
     const headerContent = document.createElement("div");
-    headerContent.className = "sa-dropdown-header-content";
+    headerContent.className = className + "-header-content";
 
     const updateHeader = () => {
       headerContent.innerHTML = "";
@@ -91,13 +93,13 @@ export class DocumentHelper {
 
       if (selectedOption?.icon) {
         const headerIcon = document.createElement("div");
-        headerIcon.className = "sa-dropdown-header-icon";
+        headerIcon.className = className + "-header-icon";
         headerIcon.innerHTML = selectedOption.icon;
         headerContent.appendChild(headerIcon);
       }
 
       const headerText = document.createElement("span");
-      headerText.className = selectedOption ? "sa-dropdown-header-text" : "sa-dropdown-placeholder";
+      headerText.className = selectedOption ? className + "-header-text" : className + "-placeholder";
       headerText.textContent = selectedOption ? selectedOption.text : placeholder;
       headerContent.appendChild(headerText);
     };
@@ -108,13 +110,13 @@ export class DocumentHelper {
 
     // Add arrow icon
     const arrowElement = document.createElement("div");
-    arrowElement.className = "sa-dropdown-arrow";
+    arrowElement.className = className + "-arrow";
     arrowElement.appendChild(DocumentHelper.createSvgElement("chevrondown-24x24"));
     dropdownHeader.appendChild(arrowElement);
     const dropdownList = document.createElement("ul");
-    dropdownList.className = "sa-dropdown-list";
+    dropdownList.className = className + "-list";
     const dropdownContainer = document.createElement("div");
-    dropdownContainer.className = "sa-dropdown-container";
+    dropdownContainer.className = className + "-container";
 
     const updateOptions = () => {
       dropdownList.innerHTML = "";
@@ -122,13 +124,13 @@ export class DocumentHelper {
       const optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
       optionItems.forEach(option => {
         const dropdownItem = document.createElement("li");
-        dropdownItem.className = "sa-dropdown-item";
+        dropdownItem.className = className + "-item";
         dropdownItem.dataset.value = option.value;
 
         if (option.icon) {
           const iconContainer = document.createElement("div");
-          iconContainer.className = "sa-dropdown-icon";
-          iconContainer.innerHTML = option.icon;
+          iconContainer.className = className + "-icon";
+          iconContainer.appendChild(DocumentHelper.createSvgElement(option.icon));
           dropdownItem.appendChild(iconContainer);
         }
 
@@ -137,7 +139,7 @@ export class DocumentHelper {
         dropdownItem.appendChild(textSpan);
 
         if (isSelected(option)) {
-          dropdownItem.classList.add("selected");
+          dropdownItem.classList.add(itemClassSelected);
         }
 
         dropdownItem.addEventListener("click", () => {
@@ -150,9 +152,9 @@ export class DocumentHelper {
 
           // Remove selection from all items and add to current
           dropdownList.querySelectorAll(".sa-dropdown-item").forEach(item => {
-            item.classList.remove("selected");
+            item.classList.remove(itemClassSelected);
           });
-          dropdownItem.classList.add("selected");
+          dropdownItem.classList.add(itemClassSelected);
         });
 
         dropdownList.appendChild(dropdownItem);
@@ -189,9 +191,9 @@ export class DocumentHelper {
 
         // Update selected state in list
         dropdownList.querySelectorAll(".sa-dropdown-item").forEach(item => {
-          item.classList.remove("selected");
+          item.classList.remove(itemClassSelected);
           if ((item as any)?.dataset?.value === value) {
-            item.classList.add("selected");
+            item.classList.add(itemClassSelected);
           }
         });
 
@@ -204,7 +206,7 @@ export class DocumentHelper {
 
         // Remove all selections
         dropdownList.querySelectorAll(".sa-dropdown-item").forEach(item => {
-          item.classList.remove("selected");
+          item.classList.remove(itemClassSelected);
         });
       }
     };
@@ -225,6 +227,107 @@ export class DocumentHelper {
     dropdownElement.appendChild(dropdownContainer);
     (dropdownElement as any).__updateSelect();
 
+    return dropdownElement;
+  }
+
+  public static createMultiSelect(
+    options: Array<{value: string, text: string, icon?: string}> | (() => Array<{value: string, text: string, icon?: string}>),
+    isSelected: (option: {value: string, text: string, icon?: string}) => boolean,
+    handler: (value: string) => void,
+    placeholder: string,
+    className: string
+  ): HTMLDivElement {
+    const dropdownOpenedClass = className + "--opened";
+    const dropdownElement = document.createElement("div");
+    dropdownElement.className = className;
+
+    const dropdownHeader = document.createElement("div");
+    dropdownHeader.className = className + "-header";
+    const itemClassSelected = className + "-item--selected";
+
+    const optionsSource = options || [];
+    let optionItems: Array<any> = Array.isArray(optionsSource) ? optionsSource : optionsSource();
+    const headerContent = document.createElement("div");
+    headerContent.className = className + "-header-content";
+    headerContent.innerHTML = "";
+
+    const headerText = document.createElement("span");
+    headerText.className = className + "-placeholder";
+    headerText.textContent = placeholder;
+    headerContent.appendChild(headerText);
+    dropdownHeader.appendChild(headerContent);
+
+    const arrowElement = document.createElement("div");
+    arrowElement.className = className + "-arrow";
+    arrowElement.appendChild(DocumentHelper.createSvgElement("chevrondown-24x24"));
+    dropdownHeader.appendChild(arrowElement);
+    const dropdownList = document.createElement("ul");
+    dropdownList.className = className + "-list";
+    dropdownList.innerHTML = "";
+    const dropdownContainer = document.createElement("div");
+    dropdownContainer.className = className + "-container";
+
+    const updateOptions = () => {
+      dropdownList.innerHTML = "";
+      const optionsSource = options || [];
+      const optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
+      optionItems.forEach(option => {
+        const dropdownItem = document.createElement("li");
+        dropdownItem.className = className + "-item";
+        dropdownItem.dataset.value = option.value;
+
+        const textSpan = document.createElement("span");
+        textSpan.textContent = option.text;
+        dropdownItem.appendChild(textSpan);
+        if (option.icon) {
+          const iconContainer = document.createElement("div");
+          iconContainer.className = className + "-icon";
+          iconContainer.appendChild(DocumentHelper.createSvgElement(option.icon));
+          dropdownItem.appendChild(iconContainer);
+        }
+
+        if (isSelected(option)) {
+          dropdownItem.classList.add(itemClassSelected);
+        }
+
+        dropdownItem.addEventListener("click", (e) => {
+          handler(option.value);
+          e.preventDefault();
+          e.stopPropagation();
+
+          if(isSelected(option)) {
+            dropdownItem.classList.add(itemClassSelected);
+          } else {
+            dropdownItem.classList.remove(itemClassSelected);
+          }
+        });
+
+        dropdownList.appendChild(dropdownItem);
+      });
+    };
+
+    const handleClickOutside = (event) => {
+      if (!dropdownElement.contains(event.target)) {
+        dropdownHeader.classList.remove(dropdownOpenedClass);
+        dropdownList.classList.remove(dropdownOpenedClass);
+      }
+    };
+
+    dropdownHeader.addEventListener("click", (e) => {
+      updateOptions();
+      dropdownHeader.classList.toggle(dropdownOpenedClass);
+      dropdownList.classList.toggle(dropdownOpenedClass);
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    document.addEventListener("click", handleClickOutside);
+
+    (dropdownElement as any)._handleClickOutside = handleClickOutside;
+
+    dropdownContainer.appendChild(dropdownHeader);
+    dropdownContainer.appendChild(dropdownList);
+    dropdownElement.appendChild(dropdownContainer);
     return dropdownElement;
   }
 
