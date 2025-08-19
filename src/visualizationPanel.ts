@@ -457,6 +457,17 @@ export class VisualizationPanel extends VisualizerBase {
     svgElement.appendChild(DocumentHelper.createSvgElement("draghorizontal-24x16"));
     dragAreaElement.appendChild(svgElement);
 
+    if (this.allowHideQuestions) {
+      const hideElement = document.createElement("div");
+      hideElement.className = "sa-question__hide-action";
+      hideElement.title = localization.getString("hideButton");
+      hideElement.appendChild(DocumentHelper.createSvgElement("close_16x16"));
+      dragAreaElement.appendChild(hideElement);
+      hideElement.addEventListener("click", (e) => {
+        setTimeout(() => this.hideElement(element.name), 0);
+      });
+    }
+
     const titleElement = DocumentHelper.createElement("h3");
     titleElement.innerText = element.displayName;
 
@@ -596,14 +607,6 @@ export class VisualizationPanel extends VisualizerBase {
       }
       if(!visualizer) {
         return;
-      }
-
-      if (this.allowHideQuestions) {
-        visualizer.registerToolbarItem("removeQuestion", () => {
-          return DocumentHelper.createButton(() => {
-            setTimeout(() => this.hideElement(question.name), 0);
-          }, localization.getString("hideButton"), undefined, "invisible-24x24");
-        }, "button", 1000);
       }
 
       if (this.allowMakeQuestionsPrivate) {
