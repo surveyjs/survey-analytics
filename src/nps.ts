@@ -81,6 +81,7 @@ export class NpsAdapter {
     this._npsVisualizer = undefined;
   }
 }
+
 export class NpsVisualizer extends VisualizerBase {
   public static DetractorScore = 6;
   public static PromoterScore = 9;
