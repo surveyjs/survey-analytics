@@ -10,7 +10,8 @@
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "i18n"
     ],
     "rules": {
         "no-console": 2, // Remember, this means error!
@@ -144,6 +145,13 @@
         "linebreak-style": [
             "off",
             "windows"
+        ],
+        "i18n/no-russian-character": [
+            "error",
+            {
+                "includeIdentifier": true,
+                "includeComment": true
+            }
         ]
     }
 }
