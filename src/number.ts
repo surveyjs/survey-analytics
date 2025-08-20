@@ -40,7 +40,7 @@ export class NumberModel extends VisualizerBase {
 
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
-        return DocumentHelper.createDropdown(
+        return DocumentHelper.createSelector(
           this.chartTypes.map((chartType) => {
             return {
               value: chartType,
@@ -49,12 +49,12 @@ export class NumberModel extends VisualizerBase {
           }),
           (option: any) => this.chartType === option.value,
           (e: any) => {
-            this.setChartType(e);
+            this.setChartType(e.target.value);
           }
         );
       }
       return null;
-    }, "dropdown");
+    });
   }
 
   protected onDataChanged() {
@@ -81,14 +81,14 @@ export class NumberModel extends VisualizerBase {
     }
   }
 
-  destroy() {
+  destroy(): void {
     this._resultAverage = undefined;
     this._resultMin = undefined;
     this._resultMax = undefined;
     super.destroy();
   }
 
-  generateText(maxValue: number, minValue: number, stepsCount: number) {
+  generateText(maxValue: number, minValue: number, stepsCount: number): string[] {
     let texts: any = [];
 
     if (stepsCount === 5) {
@@ -120,28 +120,22 @@ export class NumberModel extends VisualizerBase {
     return texts;
   }
 
-  generateValues(maxValue: number, stepsCount: number) {
+  generateValues(maxValue: number, stepsCount: number): number[] {
     const values = [];
-
     for (let i = 0; i < stepsCount; i++) {
       values.push(maxValue / stepsCount);
     }
-
     values.push(maxValue);
-
     return values;
   }
 
-  generateColors(maxValue: number, minValue: number, stepsCount: number) {
-    const palette = VisualizerBase.getColors();
+  generateColors(maxValue: number, minValue: number, stepsCount: number): string[] {
+    const palette = this.getColors();
     const colors = [];
-
     for (let i = 0; i < stepsCount; i++) {
       colors.push(palette[i]);
     }
-
     colors.push("rgba(255, 255, 255, 0)");
-
     return colors;
   }
 
