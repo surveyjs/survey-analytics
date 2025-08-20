@@ -153,5 +153,13 @@
                 "includeComment": true
             }
         ]
-    }
+    },
+    "overrides": [
+        {
+        "files": ["src/analytics-localization/*.ts"],
+        "rules": {
+            "i18n/no-russian-character": "off"
+        }
+        }
+    ]
 }
