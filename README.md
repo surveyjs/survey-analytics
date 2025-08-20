@@ -25,6 +25,7 @@ The SurveyJS Dashboard library lets you build survey data dashboards and simplif
   - Pie chart
   - Gauge chart
   - Bullet graph
+  - Radar / Spider chart
   - Word cloud
 - Interactive value filtering ordering
 - Customizable colors
