@@ -1,4 +1,4 @@
-import { Question, QuestionCommentModel, Event, settings } from "survey-core";
+import { Question, QuestionCommentModel, Event, settings, hasLicense } from "survey-core";
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { VisualizationManager } from "./visualizationManager";
@@ -74,6 +74,7 @@ export class PostponeHelper {
  * [View Demo](https://surveyjs.io/dashboard/examples/how-to-plot-survey-data-in-custom-bar-chart/ (linkStyle))
  */
 export class VisualizerBase implements IDataInfo {
+  public static haveCommercialLicense: boolean = false;
   public static suppressVisualizerStubRendering: boolean = false;
   public static chartAdapterType: any = undefined;
 
@@ -84,6 +85,7 @@ export class VisualizerBase implements IDataInfo {
   private _dataProvider: DataProvider = undefined;
   private _getDataCore: (dataInfo: IDataInfo) => number[][] = undefined
   public labelTruncateLength: number = 27;
+  protected haveCommercialLicense: boolean = false;
   protected renderResult: HTMLElement = undefined;
   protected toolbarContainer: HTMLElement = undefined;
   protected headerContainer: HTMLElement = undefined;
@@ -184,6 +186,11 @@ export class VisualizerBase implements IDataInfo {
     public options: { [index: string]: any } = {},
     private _type?: string
   ) {
+    const f = hasLicense;
+    this.haveCommercialLicense = (!!f && f(4)) ||
+      VisualizerBase.haveCommercialLicense ||
+      (typeof options.haveCommercialLicense !== "undefined" ? options.haveCommercialLicense : false);
+
     this._getDataCore = this.questionOptions?.getDataCore;
     this._dataProvider = options.dataProvider || new DataProvider(data);
     this._dataProvider.onDataChanged.add(() => this.onDataChanged());
@@ -788,14 +795,16 @@ export class VisualizerBase implements IDataInfo {
 
   static customColors: string[] = [];
   private static colors = [
-    "#e50a3e",
-    "#19b394",
-    "#437fd9",
-    "#ff9814",
-    "#4faf24",
-    "#a62cec",
-    "#6e5bd1",
-    "#af496b"
+    "#84CAD4",
+    "#3a99fb",
+    "#ff6771",
+    "#1db496",
+    "#ffc152",
+    "#aba1ff",
+    "#7d8ca5",
+    "#4fc46c",
+    "#e87bcb",
+    "#4e6198"
     // "#86e1fb",
     // "#3999fb",
     // "#ff6771",

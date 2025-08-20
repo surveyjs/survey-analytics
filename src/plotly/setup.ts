@@ -47,8 +47,8 @@ export class PlotlySetup {
   static defaultModebarConfig(theme: DashboardTheme) {
     return {
       bgcolor: "transparent",
-      activecolor: theme.modebarActiveColor,
-      color: theme.modebarColor,
+      activecolor: PlotlySetup.getRgbaColor(theme.modebarActiveColor),
+      color: PlotlySetup.getRgbaColor(theme.modebarColor),
     };
   }
 
@@ -59,7 +59,7 @@ export class PlotlySetup {
     };
 
     return {
-      bgcolor: theme.tooltipBackground,
+      bgcolor: PlotlySetup.getRgbaColor(theme.tooltipBackground),
       font: font,
     };
   }
@@ -87,7 +87,7 @@ export class PlotlySetup {
     };
 
     return {
-      zerolinecolor: theme.axisGridColor,
+      zerolinecolor: PlotlySetup.getRgbaColor(theme.axisGridColor),
       automargin: true,
       tickfont: axisLabelFont
     };
@@ -112,7 +112,7 @@ export class PlotlySetup {
   static defaultAxisXWithGridLineConfig (theme: DashboardTheme) {
     return {
       ...PlotlySetup.defaultAxisXConfig(theme),
-      gridcolor: theme.axisGridColor,
+      gridcolor: PlotlySetup.getRgbaColor(theme.axisGridColor),
       griddash: "dot",
     };
   }
@@ -127,7 +127,7 @@ export class PlotlySetup {
   static defaultAxisYWithGridLineConfig(theme: DashboardTheme) {
     return {
       ...PlotlySetup.defaultAxisYConfig(theme),
-      gridcolor: theme.axisGridColor,
+      gridcolor: PlotlySetup.getRgbaColor(theme.axisGridColor),
       griddash: "dot",
     };
   }

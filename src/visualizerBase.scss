@@ -17,6 +17,9 @@
 
 .sa-visualizer__footer {
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .sa-visualizer__footer-title {

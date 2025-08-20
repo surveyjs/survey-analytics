@@ -1,5 +1,5 @@
 import { Event, Question, SurveyModel, surveyLocalization } from "survey-core";
-import { hasLicense, IsTouch } from "survey-core";
+import { IsTouch } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
@@ -12,7 +12,6 @@ import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import "./visualizationPanel.scss";
 import { VisualizationManager } from "./visualizationManager";
-import { DashboardTheme, IDashboardTheme } from "./theme";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -285,9 +284,7 @@ export interface IVisualizationPanelOptions {
  * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
  */
 export class VisualizationPanel extends VisualizerBase {
-  public static haveCommercialLicense: boolean = false;
   public visualizers: Array<VisualizerBase> = [];
-  private haveCommercialLicense: boolean = false;
   private renderedQuestionsCount: number = 0;
   constructor(
     protected questions: Array<any>,
@@ -297,13 +294,6 @@ export class VisualizationPanel extends VisualizerBase {
   ) {
     super(null, data, options, "panel");
     this.loadingData = false;
-
-    const f = hasLicense;
-    this.haveCommercialLicense = (!!f && f(4)) ||
-      VisualizationPanel.haveCommercialLicense ||
-      (typeof options.haveCommercialLicense !== "undefined"
-        ? options.haveCommercialLicense
-        : false);
 
     this._layoutEngine =
       options.layoutEngine ||

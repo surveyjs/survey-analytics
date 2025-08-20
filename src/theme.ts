@@ -69,7 +69,7 @@ export class DashboardTheme implements IDashboardTheme {
   }
 
   public get modebarColor(): string {
-    return this.getCssVariableValue("--sjs2-color-fg-brand");
+    return this.getCssVariableValue("--sjs2-color-bg-brand-secondary-dim");
   }
 
   public get axisLabelFont(): FontSettings {
