@@ -1,7 +1,8 @@
 @use "globals" as *;
 @use "./utils/utils.scss" as *;
 
-.sa-panel__header {
+.sa-panel__header,
+.sa-pivot__header {
   display: flex;
   flex-direction: column;
   gap: var(--sjs2-spacing-x300, 24px);;

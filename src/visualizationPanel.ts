@@ -591,7 +591,7 @@ export class VisualizationPanel extends VisualizerBase {
       let visualizerData = this.surveyData;
       let visualizer: VisualizerBase;
       if(Array.isArray(question)) {
-        visualizer = new (VisualizationManager.getPivotVisualizerConstructor() as any)(question, visualizerData, visualizerOptions);
+        visualizer = new (VisualizationManager.getPivotVisualizerConstructor() as any)(question, visualizerData, visualizerOptions, undefined, false);
       } else {
         visualizer = this.createVisualizer(question, visualizerOptions, visualizerData);
       }
