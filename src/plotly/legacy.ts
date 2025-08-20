@@ -13,7 +13,7 @@ export class SelectBasePlotly extends SelectBase {
 }
 
 export class BooleanPlotly extends BooleanModel {
-  public static types = ["pie", "bar", "doughnut"];
+  public static types = ["pie", "doughnut", "bar"];
 }
 
 export class HistogramPlotly extends HistogramModel {

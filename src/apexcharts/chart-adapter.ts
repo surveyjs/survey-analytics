@@ -6,7 +6,7 @@ import { ApexChartsOptions, ApexChartsSetup } from "./setup";
 import { VisualizerBase } from "../visualizerBase";
 
 export const chartTypes = {
-  "boolean": ["pie", "bar", "doughnut"],
+  "boolean": ["pie", "doughnut", "bar"],
   "number": ["gauge", "bullet"],
   "selectBase": ["bar", "vbar", "pie", "doughnut"],
   "histogram": ["vbar", "bar"],
