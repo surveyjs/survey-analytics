@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { resolve } from "path";
 
 /**
  * Read environment variables from file.
@@ -49,6 +50,10 @@ export default defineConfig({
       name: "webkit",
       use: { ...devices["Desktop Safari"] },
     },
+    {
+      name: "a11y",
+      testDir: resolve(__dirname, "./accessibilityTests")
+    },
 
     /* Test against mobile viewports. */
     // {
@@ -73,7 +78,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run start",
+    command: "npm run serve",
     url: "http://localhost:8080",
     reuseExistingServer: !process.env.CI,
   },

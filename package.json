@@ -1,6 +1,7 @@
 {
   "scripts": {
     "start": "webpack-dev-server --env buildType=dev",
+    "serve": "http-server --silent",
     "test": "jest",
     "test:dev": "jest --watch",
     "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
@@ -18,7 +19,9 @@
     "build:types:apexcharts": "tsc --p tsconfig.apexcharts.json && echo \"export * from './survey-analytics-apexcharts.types/entries/apexcharts';\" >> build/survey.analytics.apexcharts.d.ts",
     "lint": "eslint ./src --quiet",
     "pre-push-check": "npm run lint && npm run test",
-    "pwinst": "playwright install chromium"
+    "pwinst": "playwright install chromium",
+    "accessibility-tests": "playwright test --project a11y --ui",
+    "accessibility-tests:ci": "playwright test --project a11y --reporter dot --quiet"
   },
   "version": "2.3.3",
   "name": "survey-analytics",
@@ -58,8 +61,12 @@
     "@types/jest": "^26.0.24",
     "@types/jquery": "3.3.29",
     "@types/node": "7.0.4",
+    "@types/minimatch": "5.1.2",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
+    "axe-core": "^4.8.2",
+    "axe-playwright": "^2.1.0",
+    "axe-testcafe": "^3.0.0",
     "concurrently": "^5.3.0",
     "css-loader": "^7.1.2",
     "eslint": "^7.32.0",
@@ -95,6 +102,11 @@
   "peerDependencies": {
     "@types/plotly.js-dist-min": "^2.3.0",
     "@types/tabulator-tables": "^6.2.3"
+  },
+  "overrides": {
+    "axe-testcafe": {
+      "axe-core": "^4.8.2"
+    }
   },
   "husky": {
     "hooks": {
