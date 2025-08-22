@@ -272,7 +272,8 @@ export class ApexChartsSetup {
       ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
       formatter: function(val: number, opts: any) {
         const name = opts.w.globals.labels[opts.seriesIndex];
-        return [name, val.toFixed(1) + "%"];
+        const text = name.length > 15 ? name.substring(0, 15) + "..." : name;
+        return [text, val.toFixed(1) + "%"];
       },
     };
 
@@ -296,6 +297,10 @@ export class ApexChartsSetup {
 
     // Tooltip settings
     const tooltip: any = ApexChartsSetup.defaultTooltipConfig(model.theme);
+    tooltip.y.title.formatter = (seriesName, opts: any) => {
+      const val = opts.w.globals.seriesPercent[opts.seriesIndex][0];
+      return [seriesName, val.toFixed(1) + "%"];
+    };
 
     const legend= {
       show: false,

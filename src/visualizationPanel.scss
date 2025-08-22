@@ -450,6 +450,7 @@
   min-width: 150px;
   max-height: 90vh;
   max-width: 90vw;
+  overflow-x: hidden;
   overflow-y: auto;
   border: var(--sjs2-border-width-x100, 1px) solid var(--sjs2-color-border-basic-secondary, #D4D4D4);
   border-top: none;
@@ -466,6 +467,35 @@
   /* sjs2/shadow/large */
   box-shadow: var(--sjs2-shadow-size-large-offset-x, 0) var(--sjs2-shadow-size-large-offset-y, 6px) var(--sjs2-shadow-size-large-blur, 12px) var(--sjs2-shadow-size-large-spread, 4px) var(--sjs2-shadow-color-large, rgba(0, 76, 68, 0.10));
 
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+
+    @-moz-document url-prefix() {
+      scrollbar-width: thin;
+      scrollbar-color: #00000026 transparent;
+    }
+
+    &::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border: 4px solid rgba(0, 0, 0, 0);
+      background-clip: padding-box;
+      border-radius: 1024px;
+      background-color: #00000026;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      border: 2px solid rgba(0, 0, 0, 0);
+      background-color: #00000026;
+    }
 }
 
 .sa-dropdown-list.sa-dropdown--opened {

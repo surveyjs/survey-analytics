@@ -18,7 +18,7 @@ export class PlotlySetup {
 
   static defaultBarGap = DashboardTheme.barGap;
 
-  static getRgbaColor(propertyValue: any) {
+  static getRgbaColor(propertyValue: any): string {
     let str = propertyValue;
     if (!str) return null;
     const canvasElement = document.createElement("canvas") as HTMLCanvasElement;
@@ -375,6 +375,7 @@ export class PlotlySetup {
         ...PlotlySetup.defaultAxisYConfig(model.theme),
         type: "category",
         orientation: "h",
+        automargin: true,
         tickmode: "array",
         tickvals: labels,
         ticktext: labels.map((label: string) => {

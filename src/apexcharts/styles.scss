@@ -10,4 +10,13 @@
       display: none;
     }
   }
+
+  .apexcharts-menu-icon.apexcharts-menu-icon svg {
+    fill: var(--sjs2-color-fg-brand-primary, #19B394);
+    opacity: var(--sjs2-opacity-x035, 0.35);
+  }
+  .apexcharts-menu-icon.apexcharts-menu-icon:hover svg {
+    fill: var(--sjs2-color-fg-brand-primary, #19B394);
+    opacity: 1;
+  }
 }
