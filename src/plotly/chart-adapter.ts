@@ -71,52 +71,6 @@ export class PlotlyChartAdapter implements IChartAdapter {
 
   public async create(chartNode: HTMLElement): Promise<any> {
     const [plot, plotlyOptions] = await this.update(chartNode);
-
-    if(this.model instanceof SelectBase) {
-      const _model = this.model as SelectBase;
-      (<any>chartNode)["on"]("plotly_click", (data: any) => {
-        if (data.points.length > 0) {
-          let itemText = "";
-          if (!plotlyOptions.hasSeries) {
-            itemText = Array.isArray(data.points[0].customdata)
-              ? data.points[0].customdata[0]
-              : data.points[0].customdata;
-            const item: ItemValue = _model.getSelectedItemByText(itemText);
-            _model.setSelection(item);
-          } else {
-            itemText = data.points[0].data.name;
-            const propertyLabel = data.points[0].label;
-            const seriesValues = this.model.getSeriesValues();
-            const seriesLabels = this.model.getSeriesLabels();
-            const propertyValue = seriesValues[seriesLabels.indexOf(propertyLabel)];
-            const selectedItem: ItemValue = _model.getSelectedItemByText(itemText);
-            const item = new ItemValue({ [propertyValue]: selectedItem.value }, propertyLabel + ": " + selectedItem.text);
-            _model.setSelection(item);
-          }
-
-        // const itemText = plotlyOptions.hasSeries
-        //   ? data.points[0].data.name
-        //   : Array.isArray(data.points[0].customdata)
-        //     ? data.points[0].customdata[0]
-        //     : data.points[0].customdata;
-        // const item: ItemValue = this.model.getSelectedItemByText(itemText);
-        // this.model.setSelection(item);
-        }
-      });
-    }
-
-    var getDragLayer = () =>
-      <HTMLElement>chartNode.getElementsByClassName("nsewdrag")[0];
-    (<any>chartNode)["on"]("plotly_hover", () => {
-      const dragLayer = getDragLayer();
-      dragLayer && (dragLayer.style.cursor = "pointer");
-    });
-    (<any>chartNode)["on"]("plotly_unhover", () => {
-      const dragLayer = getDragLayer();
-      dragLayer && (dragLayer.style.cursor = "");
-    });
-
-    // setTimeout(() => Plotly.Plots.resize(chartNode), 10);
     this._chart = plot;
     return plot;
   }
@@ -174,6 +128,51 @@ export class PlotlyChartAdapter implements IChartAdapter {
       options.layout,
       options.config
     );
+
+    const plotlyChart = <any>chartNode;
+
+    if(this.model instanceof SelectBase) {
+      const _model = this.model as SelectBase;
+      plotlyChart.removeAllListeners("plotly_click");
+      plotlyChart.on("plotly_click", (data: any) => {
+        if (data.points.length > 0) {
+          let itemText = "";
+          if (!plotlyOptions.hasSeries) {
+            itemText = Array.isArray(data.points[0].customdata)
+              ? data.points[0].customdata[0]
+              : data.points[0].customdata;
+            const item: ItemValue = _model.getSelectedItemByText(itemText);
+            _model.setSelection(item);
+          } else {
+            itemText = data.points[0].data.name;
+            const propertyLabel = data.points[0].label;
+            const seriesValues = this.model.getSeriesValues();
+            const seriesLabels = this.model.getSeriesLabels();
+            const propertyValue = seriesValues[seriesLabels.indexOf(propertyLabel)];
+            const selectedItem: ItemValue = _model.getSelectedItemByText(itemText);
+            const item = new ItemValue({ [propertyValue]: selectedItem.value }, propertyLabel + ": " + selectedItem.text);
+            _model.setSelection(item);
+          }
+
+        // const itemText = plotlyOptions.hasSeries
+        //   ? data.points[0].data.name
+        //   : Array.isArray(data.points[0].customdata)
+        //     ? data.points[0].customdata[0]
+        //     : data.points[0].customdata;
+        // const item: ItemValue = this.model.getSelectedItemByText(itemText);
+        // this.model.setSelection(item);
+        }
+      });
+    }
+
+    var setCursorOnDragLayer = (cursor: string) => {
+      const dragLayer = <HTMLElement>chartNode.getElementsByClassName("nsewdrag")[0];
+      dragLayer && (dragLayer.style.cursor = cursor);
+    }
+    plotlyChart.removeAllListeners("plotly_hover");
+    plotlyChart.on("plotly_hover", () => setCursorOnDragLayer("pointer"));
+    plotlyChart.removeAllListeners("plotly_unhover");
+    plotlyChart.on("plotly_unhover", () => setCursorOnDragLayer(""));
 
     return [plot, plotlyOptions];
   }
