@@ -302,6 +302,10 @@ export class VisualizerBase implements IDataInfo {
     return this.getValues();
   }
 
+  public getChartAdapter(): IChartAdapter {
+    return this._chartAdapter;
+  }
+
   /**
    * Registers a function used to create a toolbar item for this visualizer.
    *

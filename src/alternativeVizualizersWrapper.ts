@@ -1,5 +1,5 @@
 import { Question, ItemValue } from "survey-core";
-import { VisualizerBase } from "./visualizerBase";
+import { IChartAdapter, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
@@ -73,6 +73,10 @@ export class AlternativeVisualizersWrapper
 
   public getVisualizers() {
     return this.visualizers;
+  }
+
+  public getChartAdapter(): IChartAdapter {
+    return this.visualizer.getChartAdapter();
   }
 
   private visualizersWithSelection: Array<IVisualizerWithSelection> = [];

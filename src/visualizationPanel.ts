@@ -510,6 +510,10 @@ export class VisualizationPanel extends VisualizerBase {
   public hideElement(elementName: string) {
     const element = this.getElement(elementName);
     this.hideElementCore(element);
+    const visualizer = this.getVisualizer(elementName);
+    if(!!visualizer && !!visualizer.getChartAdapter()) {
+      visualizer.getChartAdapter().destroy(element.renderedElement);
+    }
     this.visibleElementsChanged(element, "REMOVED");
   }
 
