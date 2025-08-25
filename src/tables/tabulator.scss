@@ -65,6 +65,11 @@
     box-sizing: border-box;
   }
 }
+.tabulator-col.tabulator-moving {
+  .sa-table__filter.sa-table__filter {
+    pointer-events: none;
+  }
+}
 
 //redefine tabulator's styles
 .sa-tabulator {
