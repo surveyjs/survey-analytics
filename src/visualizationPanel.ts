@@ -1,5 +1,5 @@
 import { Event, Question, SurveyModel, surveyLocalization } from "survey-core";
-import { hasLicense, IsTouch } from "survey-core";
+import { IsTouch } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
@@ -284,25 +284,17 @@ export interface IVisualizationPanelOptions {
  * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
  */
 export class VisualizationPanel extends VisualizerBase {
-  public static haveCommercialLicense: boolean = false;
   public visualizers: Array<VisualizerBase> = [];
-  private haveCommercialLicense: boolean = false;
   private renderedQuestionsCount: number = 0;
   constructor(
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
     options: IVisualizationPanelOptions = {},
-    private _elements: Array<IVisualizerPanelRenderedElement> = undefined
+    private _elements: Array<IVisualizerPanelRenderedElement> = undefined,
+    private isRoot = true
   ) {
     super(null, data, options, "panel");
     this.loadingData = false;
-
-    const f = hasLicense;
-    this.haveCommercialLicense = (!!f && f(4)) ||
-      VisualizationPanel.haveCommercialLicense ||
-      (typeof options.haveCommercialLicense !== "undefined"
-        ? options.haveCommercialLicense
-        : false);
 
     this._layoutEngine =
       options.layoutEngine ||
@@ -325,7 +317,7 @@ export class VisualizationPanel extends VisualizerBase {
 
     this.buildVisualizers(questions);
 
-    if (!this.haveCommercialLicense) {
+    if (!this.haveCommercialLicense && this.isRoot) {
       this.registerToolbarItem("commercialLicense", () => {
         return createCommercialLicenseLink();
       });
@@ -578,7 +570,7 @@ export class VisualizationPanel extends VisualizerBase {
       let visualizerData = this.surveyData;
       let visualizer: VisualizerBase;
       if(Array.isArray(question)) {
-        visualizer = new (VisualizationManager.getPivotVisualizerConstructor() as any)(question, visualizerData, visualizerOptions);
+        visualizer = new (VisualizationManager.getPivotVisualizerConstructor() as any)(question, visualizerData, visualizerOptions, undefined, false);
       } else {
         visualizer = this.createVisualizer(question, visualizerOptions, visualizerData);
       }
