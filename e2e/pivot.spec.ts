@@ -8,6 +8,11 @@ test.describe("Pivot chart", () => {
   });
 
   test("simple cases", async ({ page }) => {
+    await page.evaluate(() => {
+      const style = document.createElement("style");
+      style.textContent = ".sa-commercial { display: none; }";
+      document.head.appendChild(style);
+    });
     const xAxisSelector = page.locator("div").filter({ hasText: /^Category \(X Axis\):GenderItem kindBill amount$/ }).getByRole("combobox");
     let yAxisSelector = page.locator("div").filter({ hasText: /^Legend \(Series\):Not selectedItem kindBill amount$/ }).getByRole("combobox");
     await expect(page.locator("#pivotContainer").getByText("Category (X Axis):")).toBeVisible();

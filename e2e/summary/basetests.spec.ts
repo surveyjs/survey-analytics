@@ -130,14 +130,14 @@ test.describe("basetests", () => {
 
   test("check show/hide commercial license caption", async ({ page }) => {
     await page.evaluate(() => {
-      (window as any).SurveyAnalytics.VisualizationPanel.haveCommercialLicense = true;
+      (window as any).SurveyAnalytics.VisualizerBase.haveCommercialLicense = true;
     });
     const commercialSelector = page.locator("div.sa-commercial");
     await expect(commercialSelector).toBeVisible();
     await initSummary(page, json, data, { haveCommercialLicense: true });
     await expect(commercialSelector).not.toBeVisible();
     await page.evaluate(() => {
-      (window as any).SurveyAnalytics.VisualizationPanel.haveCommercialLicense = true;
+      (window as any).SurveyAnalytics.VisualizerBase.haveCommercialLicense = true;
     });
     await initSummary(page, json, data, {});
     await expect(commercialSelector).not.toBeVisible();

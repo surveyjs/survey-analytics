@@ -1,6 +1,6 @@
 import { ItemValue, Question } from "survey-core";
 import { SelectBase } from "./selectBase";
-import { DocumentHelper } from "./utils";
+import { createCommercialLicenseLink, DocumentHelper } from "./utils";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { VisualizationManager } from "./visualizationManager";
@@ -25,7 +25,8 @@ export class PivotModel extends SelectBase {
     private questions: Array<Question>,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    name?: string,
+    private isRoot = true
   ) {
     super(null, data, options, name || "pivot");
     this.questions = this.questions.filter((question) => ["matrixdropdown", "matrixdynamic", "matrix", "file", "signature", "multipletext", "comment", "html", "image"].indexOf(question.getType()) === -1);
@@ -453,6 +454,15 @@ export class PivotModel extends SelectBase {
 
   protected isSupportSoftUpdateContent(): boolean {
     return false;
+  }
+
+  protected renderToolbar(container: HTMLElement) {
+    if (!this.haveCommercialLicense && this.isRoot) {
+      const banner = createCommercialLicenseLink();
+      container.appendChild(banner);
+    }
+    container.className += " sa-pivot__header";
+    super.renderToolbar(container);
   }
 }
 
