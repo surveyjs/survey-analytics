@@ -1,6 +1,6 @@
 import { ItemValue, Question } from "survey-core";
 import { SelectBase } from "./selectBase";
-import { DocumentHelper } from "./utils";
+import { createCommercialLicenseLink, DocumentHelper } from "./utils";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { VisualizationManager } from "./visualizationManager";
@@ -25,7 +25,8 @@ export class PivotModel extends SelectBase {
     private questions: Array<Question>,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    name?: string,
+    private isRoot = true
   ) {
     super(null, data, options, name || "pivot");
     this.questions = this.questions.filter((question) => ["matrixdropdown", "matrixdynamic", "matrix", "file", "signature", "multipletext", "comment", "html", "image"].indexOf(question.getType()) === -1);
@@ -35,7 +36,7 @@ export class PivotModel extends SelectBase {
 
     this.axisXQuestionName = this.questions.length > 0 ? this.questions[0].name : undefined;
     this.registerToolbarItem("axisXSelector", () =>
-      this.axisXSelector = DocumentHelper.createSelector(
+      this.axisXSelector = DocumentHelper.createDropdown(
         this.questions.map((question) => {
           return {
             value: question.name,
@@ -44,15 +45,16 @@ export class PivotModel extends SelectBase {
         }),
         (option: any) => this.axisXQuestionName === option.value,
         (e: any) => {
-          this.axisXQuestionName = e.target.value;
+          this.axisXQuestionName = e;
           this.updateQuestionsSelection();
           this.updateToolbar();
           this.setupPivot();
         },
+        undefined,
         () => this.isXYChart() ? localization.getString("axisXSelectorTitle") : localization.getString("axisXAlternativeSelectorTitle")
-      )
+      ), "dropdown"
     );
-    this.registerToolbarItem("axisYSelector0", this.createYSelecterGenerator());
+    this.registerToolbarItem("axisYSelector0", this.createYSelecterGenerator(), "dropdown");
     this.setupPivot();
   }
 
@@ -92,7 +94,7 @@ export class PivotModel extends SelectBase {
       }
     } else {
       if(!!value) {
-        this.registerToolbarItem("axisYSelector" + this.axisYSelectors.length, this.createYSelecterGenerator());
+        this.registerToolbarItem("axisYSelector" + this.axisYSelectors.length, this.createYSelecterGenerator(), "dropdown");
       }
     }
 
@@ -115,6 +117,7 @@ export class PivotModel extends SelectBase {
   }
 
   private createAxisYSelector(selectorIndex: number): HTMLDivElement {
+
     const getChoices = () => {
       const choices = this.questions.filter(q => {
         if(q.name === this.axisXQuestionName) {
@@ -133,10 +136,11 @@ export class PivotModel extends SelectBase {
     if(getChoices().length == 1) {
       return undefined;
     }
-    const selector = DocumentHelper.createSelector(
+    const selector = DocumentHelper.createDropdown(
       getChoices,
       (option: any) => this.axisYQuestionNames[selectorIndex] === option.value,
-      (e: any) => { this.onAxisYSelectorChanged(selectorIndex, e.target.value); },
+      (e: any) => { this.onAxisYSelectorChanged(selectorIndex, e); },
+      undefined,
       () => selectorIndex ? undefined : (this.isXYChart() ? localization.getString("axisYSelectorTitle") : localization.getString("axisYAlternativeSelectorTitle"))
     );
     return selector;
@@ -453,6 +457,15 @@ export class PivotModel extends SelectBase {
 
   protected isSupportSoftUpdateContent(): boolean {
     return false;
+  }
+
+  protected renderToolbar(container: HTMLElement) {
+    if (!this.haveCommercialLicense && this.isRoot) {
+      const banner = createCommercialLicenseLink();
+      container.appendChild(banner);
+    }
+    container.className += " sa-pivot__header";
+    super.renderToolbar(container);
   }
 }
 

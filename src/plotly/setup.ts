@@ -4,6 +4,8 @@ import { VisualizerBase } from "../visualizerBase";
 import { localization } from "../localizationManager";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
+import { DashboardTheme } from "../theme";
+import { reverseAll } from "../utils/utils";
 
 export interface PlotlyOptions {
   traces: Array<any>;
@@ -13,6 +15,152 @@ export interface PlotlyOptions {
 
 export class PlotlySetup {
   public static imageExportFormat = "png";
+
+  static defaultBarGap = DashboardTheme.barGap;
+
+  static getRgbaColor(propertyValue: any): string {
+    let str = propertyValue;
+    if (!str) return null;
+    const canvasElement = document.createElement("canvas") as HTMLCanvasElement;
+    if (!canvasElement) return null;
+    const ctx = canvasElement.getContext("2d");
+    ctx.fillStyle = str;
+
+    if (ctx.fillStyle == "#000000") {
+      ctx.fillStyle = propertyValue;
+    }
+    const newStr = ctx.fillStyle as string;
+    const match = newStr.match(/color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*\/\s*([\d.]+)\)/);
+
+    if (!match) {
+      return newStr;
+    }
+
+    const r = parseFloat(match[1]);
+    const g = parseFloat(match[2]);
+    const b = parseFloat(match[3]);
+    const alpha = parseFloat(match[4]);
+    const result = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    return result;
+  }
+
+  static defaultModebarConfig(theme: DashboardTheme) {
+    return {
+      bgcolor: "transparent",
+      activecolor: PlotlySetup.getRgbaColor(theme.modebarActiveColor),
+      color: PlotlySetup.getRgbaColor(theme.modebarColor),
+    };
+  }
+
+  static defaultTooltipConfig(theme: DashboardTheme) {
+    const font = {
+      ...theme.tooltipFont,
+      size: parseFloat(theme.tooltipFont.size)
+    };
+
+    return {
+      bgcolor: PlotlySetup.getRgbaColor(theme.tooltipBackground),
+      font: font,
+    };
+  }
+
+  static defaultLegendConfig(theme: DashboardTheme) {
+    const legendSetting = theme.legendSetting;
+    const legendLabelFont = {
+      ...theme.legendLabelFont,
+      size: parseFloat(theme.legendLabelFont.size)
+    };
+
+    return {
+      bgcolor: legendSetting.background,
+      bordercolor: legendSetting.borderColor,
+      borderwidth: legendSetting.borderWidth,
+      itemwidth: 20,
+      font: legendLabelFont
+    };
+  }
+
+  static defaultAxisConfig(theme: DashboardTheme) {
+    const axisLabelFont = {
+      ...theme.axisLabelFont,
+      size: parseFloat(theme.axisLabelFont.size)
+    };
+
+    return {
+      zerolinecolor: PlotlySetup.getRgbaColor(theme.axisGridColor),
+      automargin: true,
+      tickfont: axisLabelFont
+    };
+  }
+
+  static defaultInsideLabelFont(theme: DashboardTheme) {
+    const insideLabelFont = {
+      ...theme.insideLabelFont,
+      size: parseFloat(theme.insideLabelFont.size)
+    };
+
+    return insideLabelFont;
+  }
+
+  static defaultAxisXConfig(theme: DashboardTheme) {
+    return {
+      ...PlotlySetup.defaultAxisConfig(theme),
+      ticklabelstandoff: 8,
+    };
+  }
+
+  static defaultAxisXWithGridLineConfig (theme: DashboardTheme) {
+    return {
+      ...PlotlySetup.defaultAxisXConfig(theme),
+      gridcolor: PlotlySetup.getRgbaColor(theme.axisGridColor),
+      griddash: "dot",
+    };
+  }
+
+  static defaultAxisYConfig(theme: DashboardTheme) {
+    return {
+      ...PlotlySetup.defaultAxisConfig(theme),
+      ticklabelstandoff: 16,
+    };
+  }
+
+  static defaultAxisYWithGridLineConfig(theme: DashboardTheme) {
+    return {
+      ...PlotlySetup.defaultAxisYConfig(theme),
+      gridcolor: PlotlySetup.getRgbaColor(theme.axisGridColor),
+      griddash: "dot",
+    };
+  }
+
+  static defaultGaugeConfig(theme) {
+    return {
+      bgcolor: PlotlySetup.getRgbaColor(theme.gaugeBackground),
+      bordercolor: PlotlySetup.getRgbaColor(theme.gaugeBackground),
+      bar: {
+        color: PlotlySetup.getRgbaColor(theme.gaugeBarColor),
+        thickness: 0.5,
+      },
+    };
+  }
+
+  static defaultValueGaugeFont(theme: DashboardTheme) {
+    const font = {
+      ...theme.gaugeValueFont,
+      size: parseFloat(theme.gaugeValueFont.size)
+    };
+
+    return font;
+  }
+
+  static defaultGaugeTickFont(theme: DashboardTheme) {
+    const font = {
+      ...theme.gaugeTickFont,
+      size: parseFloat(theme.gaugeTickFont.size)
+    };
+
+    return font;
+  }
+
   /**
    * Fires when end user clicks on the 'save as image' button.
    */
@@ -84,8 +232,10 @@ export class PlotlySetup {
           model.labelTruncateLength
         );
       }),
-      hoverinfo: "label+value+percent",
+      hoverinfo: "label+value+percent", // "x+y",
       textposition: "inside",
+      insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
+      hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
 
     if (model.chartType === "doughnut") {
@@ -94,7 +244,7 @@ export class PlotlySetup {
     }
 
     if (!hasSeries) {
-      traceConfig.mode = "markers",
+      traceConfig.mode = "markers";
       traceConfig.marker = { color: colors };
       traceConfig.marker.symbol = "circle";
       traceConfig.marker.size = 16;
@@ -110,7 +260,11 @@ export class PlotlySetup {
               column: traces.length % layoutColumns,
               row: Math.floor(traces.length / layoutColumns),
             },
-            title: { position: "bottom center", text: seriesLabels[index] }
+            title: {
+              position: "bottom center",
+              text: seriesLabels[index],
+              font: PlotlySetup.defaultTooltipConfig(model.theme),
+            }
           })
         );
       }
@@ -120,19 +274,14 @@ export class PlotlySetup {
     const height = (radius + 25) * Math.ceil(traces.length / layoutColumns);
 
     const layout: any = {
-      font: {
-        family: "Segoe UI, sans-serif",
-        size: 14,
-        weight: "normal",
-        color: "#404040",
-      },
       height: height,
       margin: {
         l: 0,
         t: 25,
         b: 0,
-        r: 10,
+        r: 0,
       },
+      modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
       colorway: colors,
       hovermode: "closest",
       plot_bgcolor: model.backgroundColor,
@@ -160,6 +309,7 @@ export class PlotlySetup {
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const isHistogram = model.type === "histogram";
 
     const traces: any = [];
     const traceConfig: any = {
@@ -168,12 +318,14 @@ export class PlotlySetup {
       customdata: labels,
       hoverinfo: "text",
       orientation: "h",
-      textposition: "none",
+      textposition: "inside",
+      textangle: 0,
+      insidetextanchor: "middle",
+      insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
+      hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
-    if (!hasSeries) {
-      traceConfig.width = 0.5;
-      traceConfig.bargap = 0.5;
-      traceConfig.mode = "markers",
+    if (!hasSeries && !isHistogram) {
+      traceConfig.mode = "markers";
       traceConfig.marker = { color: colors };
     }
 
@@ -183,7 +335,6 @@ export class PlotlySetup {
       const trace = Object.assign({}, traceConfig, {
         x: dataset,
         name: traceName,
-        width: hasSeries && model.chartType !== "stackedbar" ? 0.5 / seriesLabels.length : 0.5,
         text: texts[index],
         hovertext: labels.map((label: string, labelIndex: number) => {
           if(model.showOnlyPercentages) {
@@ -195,10 +346,7 @@ export class PlotlySetup {
       });
       if (model.showPercentages) {
         let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
-        trace.textposition = "inside";
         trace.texttemplate = texttemplate;
-        trace.width = hasSeries && model.chartType !== "stackedbar" ? 0.7 / seriesLabels.length : 0.9;
-        trace.bargap = hasSeries && model.chartType !== "stackedbar" ? 0.3 / seriesLabels.length : 0.1;
       }
       traces.push(trace);
     });
@@ -206,32 +354,28 @@ export class PlotlySetup {
     const height = (labels.length + 1) * lineHeight + topMargin + bottomMargin;
 
     const layout: any = {
-      font: {
-        family: "Segoe UI, sans-serif",
-        size: 14,
-        weight: "normal",
-        color: "#404040",
-      },
+      bargap: isHistogram ? 0 : PlotlySetup.defaultBarGap,
       height: height,
       margin: {
         t: topMargin,
         b: bottomMargin,
-        r: 10,
+        r: 0,
+        l: 0,
       },
       colorway: colors,
       hovermode: "closest",
-      plot_bgcolor: model.backgroundColor,
-      paper_bgcolor: model.backgroundColor,
       showlegend: hasSeries,
       barmode: hasSeries && model.chartType == "stackedbar" ? "stack" : "group",
       xaxis: {
+        ...PlotlySetup.defaultAxisXWithGridLineConfig(model.theme),
         rangemode: "nonnegative",
         automargin: true,
       },
       yaxis: {
-        automargin: true,
+        ...PlotlySetup.defaultAxisYConfig(model.theme),
         type: "category",
         orientation: "h",
+        automargin: true,
         tickmode: "array",
         tickvals: labels,
         ticktext: labels.map((label: string) => {
@@ -241,24 +385,28 @@ export class PlotlySetup {
           ) + "  ";
         }),
       },
+      modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
+      plot_bgcolor: model.backgroundColor,
+      paper_bgcolor: model.backgroundColor,
     };
 
-    if (hasSeries && model.chartType !== "stackedbar") {
-      layout.height =
-          (labels.length * seriesLabels.length + 1) * lineHeight +
-          topMargin +
-          bottomMargin;
+    if (hasSeries) {
+      layout.legend = PlotlySetup.defaultLegendConfig(model.theme);
+      if (model.chartType !== "stackedbar") {
+        layout.height = (labels.length * seriesLabels.length + 1) * lineHeight + topMargin + bottomMargin;
+      }
     }
 
     if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       layout.xaxis.autorange = "reversed";
       layout.yaxis.side = "right";
-      layout.legend = {
+      const legendSettings = Object.assign({}, PlotlySetup.defaultLegendConfig(model.theme), {
         x: 0,
         y: 1,
         xanchor: "left",
         yanchor: "top"
-      };
+      });
+      layout.legend = legendSettings;
     }
 
     return { traces, layout, hasSeries };
@@ -276,21 +424,10 @@ export class PlotlySetup {
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const isHistogram = model.type === "histogram";
 
-    if (model.type !== "histogram" && model.type !== "pivot") {
-      labels = [].concat(labels).reverse();
-      seriesLabels = [].concat(seriesLabels).reverse();
-      colors = [].concat(colors.slice(0, hasSeries ? seriesLabels.length : labels.length)).reverse();
-      const ts = [];
-      texts.forEach(text => {
-        ts.push([].concat(text).reverse());
-      });
-      texts = ts;
-      const ds = [];
-      datasets.forEach(dataset => {
-        ds.push([].concat(dataset).reverse());
-      });
-      datasets = ds;
+    if (!isHistogram && model.type !== "pivot") {
+      ({ labels, seriesLabels, colors, texts, datasets } = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets));
     }
 
     const traces: any = [];
@@ -300,12 +437,13 @@ export class PlotlySetup {
       customdata: hasSeries ? seriesLabels : labels,
       hoverinfo: hasSeries ? undefined : "x+y",
       orientation: "v",
-      textposition: "none",
+      insidetextanchor: "middle",
+      insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
+      hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
-    if (model.type === "histogram" || !hasSeries) {
-      traceConfig.width = 0.5;
-      traceConfig.bargap = 0.5;
-      traceConfig.mode = "markers",
+
+    if (!hasSeries && !isHistogram) {
+      traceConfig.mode = "markers";
       traceConfig.marker = { color: colors };
     }
 
@@ -317,38 +455,31 @@ export class PlotlySetup {
       });
       if (model.showPercentages) {
         let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
-        trace.textposition = "inside";
         trace.texttemplate = texttemplate;
-        if (!hasSeries) {
-          trace.width = 0.9;
-          trace.bargap = 0.1;
-        }
       }
       traces.push(trace);
     });
 
     const layout: any = {
-      font: {
-        family: "Segoe UI, sans-serif",
-        size: 14,
-        weight: "normal",
-        color: "#404040",
-      },
       margin: {
         t: topMargin,
         b: bottomMargin,
-        r: 10,
+        r: 0,
+        l: 0,
       },
       colorway: colors,
       hovermode: "closest",
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
       showlegend: hasSeries,
+      bargap: isHistogram ? 0 : PlotlySetup.defaultBarGap,
       yaxis: {
+        ...PlotlySetup.defaultAxisYWithGridLineConfig(model.theme),
         rangemode: "nonnegative",
         automargin: true,
       },
       xaxis: {
+        ...PlotlySetup.defaultAxisXConfig(model.theme),
         automargin: true,
         type: "category",
         tickmode: "array",
@@ -360,11 +491,12 @@ export class PlotlySetup {
           ) + "  ";
         }),
       },
+      modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
     };
 
     if (model.showPercentages && model.showOnlyPercentages) {
       layout.yaxis = {
-        automargin: true,
+        ...PlotlySetup.defaultAxisYWithGridLineConfig(model.theme),
         tickformat: ".0%",
         range: [0, 1],
         ticklen: model.showOnlyPercentages ? 25 : 5,
@@ -373,7 +505,7 @@ export class PlotlySetup {
     }
     if(!(model as any).getValueType || (model as any).getValueType() != "date") {
       layout.xaxis = {
-        automargin: true,
+        ...PlotlySetup.defaultAxisXConfig(model.theme),
         type: "category",
       };
     }
@@ -408,7 +540,6 @@ export class PlotlySetup {
       hoverinfo: "x+y",
       orientation: "h",
       mode: "markers",
-      width: 0.5,
       marker: <any>{},
     };
 
@@ -429,30 +560,26 @@ export class PlotlySetup {
     const height = (labels.length + 1) * lineHeight + topMargin + bottomMargin;
 
     const layout: any = {
-      font: {
-        family: "Segoe UI, sans-serif",
-        size: 14,
-        weight: "normal",
-        color: "#404040",
-      },
       height: height,
       margin: {
         t: topMargin,
         b: bottomMargin,
-        r: 10,
+        r: 0,
+        l: 0,
       },
       colorway: colors,
       hovermode: "closest",
       yaxis: {
-        automargin: true,
+        ...PlotlySetup.defaultAxisYConfig(model.theme),
         type: "category",
         ticklen: 5,
         tickcolor: "transparent",
       },
       xaxis: {
+        ...PlotlySetup.defaultAxisXConfig(model.theme),
         rangemode: "nonnegative",
-        automargin: true,
       },
+      modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
       showlegend: false,
@@ -460,6 +587,7 @@ export class PlotlySetup {
 
     if (hasSeries) {
       layout.showlegend = true;
+      layout.legend = PlotlySetup.defaultLegendConfig(model.theme);
       layout.height = undefined;
 
       labels.forEach((label, index) => {
@@ -497,20 +625,25 @@ export class PlotlySetup {
         type: "indicator",
         mode: "gauge+number",
         gauge: {
-          axis: { range: [minValue, maxValue] },
+          ...PlotlySetup.defaultGaugeConfig(model.theme),
+          axis: {
+            range: [minValue, maxValue],
+            tickfont: { ...PlotlySetup.defaultGaugeTickFont(model.theme) }
+          },
           shape: model.chartType,
-          bgcolor: "white",
-          bar: { color: colors[0] },
         },
         value: level,
         text: model.name,
         domain: { x: [0, 1], y: [0, 1] },
+        number: {
+          font: { ...PlotlySetup.defaultValueGaugeFont(model.theme) }
+        },
       },
     ];
 
     const chartMargin = model.chartType === "bullet" ? 60 : 30;
     var layout: any = {
-      height: 250,
+      height: model.chartType === "bullet" ? 150 : 250,
       margin: {
         l: chartMargin,
         r: chartMargin,
@@ -520,6 +653,7 @@ export class PlotlySetup {
       },
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
+      modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
     };
 
     return { traces, layout, hasSeries: false };
@@ -572,34 +706,24 @@ export class PlotlySetup {
     });
 
     const layout: any = {
-      font: {
-        family: "Segoe UI, sans-serif",
-        size: 14,
-        weight: "normal",
-        color: "#404040",
-      },
       polar: {
         radialaxis: {
+          ...PlotlySetup.defaultAxisConfig(model.theme),
           visible: true,
           range: [0, Math.max(...datasets.map(s => Math.max(...s))) * 1.1],
-          tickfont: {
-            size: 12
-          }
+          gridcolor: model.theme.axisGridColor,
+          linecolor: model.theme.axisBorderColor,
+          tickcolor: model.theme.axisBorderColor,
+          gridwidth: 1,
         },
         angularaxis: {
-          tickfont: {
-            size: 12
-          },
-          ticktext: labels.map((label: string) => {
-            return PlotlySetup.getTruncatedLabel(
-              label,
-              model.labelTruncateLength
-            );
-          }),
-          tickvals: labels
+          ...PlotlySetup.defaultAxisConfig(model.theme),
+          tickfont: model.theme.radarLabelFont,
+          linecolor: model.theme.axisGridColor,
         }
       },
       showlegend: hasSeries,
+      legend: hasSeries ? PlotlySetup.defaultLegendConfig(model.theme) : undefined,
       colorway: colors,
       plot_bgcolor: model.backgroundColor,
       paper_bgcolor: model.backgroundColor,
@@ -608,7 +732,10 @@ export class PlotlySetup {
         r: 50,
         t: 50,
         b: 50
-      }
+      },
+      modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
+      hovermode: "closest",
+      hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
 
     return { traces, layout, hasSeries };

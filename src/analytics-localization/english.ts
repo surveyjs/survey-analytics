@@ -41,6 +41,7 @@ export var englishStrings = {
   changeLocale: "Change Locale",
   clearButton: "Clear",
   addElement: "Choose question to show...",
+  allQuestions: "All questions",
   defaultOrder: "Default Order",
   ascOrder: "Ascending",
   descOrder: "Descending",

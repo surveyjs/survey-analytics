@@ -46,11 +46,12 @@ test.describe("selectbase", () => {
 
     // check data filtering for regular choice
     // await page.locator(".trace.bars .point").nth(1).click();
-    await page.locator(".nsewdrag").click({ position: { x: 100, y: 60 } }); //selector for choice with value 1
+    const box = await page.locator(".nsewdrag").boundingBox();
+    await page.mouse.click(box.x + 100, box.y + 10); //selector for choice with value 1
     await page.waitForTimeout(500);
-    expect(await isBarVisible(3)).toBeFalsy();
     expect(await isBarVisible(1)).toBeFalsy();
-    expect(await isBarVisible(2)).toBeTruthy();
+    expect(await isBarVisible(2)).toBeFalsy();
+    expect(await isBarVisible(3)).toBeTruthy();
 
     await page.click('span:text("Clear")');
     await page.waitForTimeout(500);
@@ -60,11 +61,11 @@ test.describe("selectbase", () => {
 
     // check data filtering for other choice
     // await page.locator(".trace.bars .point").nth(0).click();
-    await page.locator(".nsewdrag").click({ position: { x: 100, y: 100 } }); //selector for 'other' choice
+    await page.mouse.click(box.x + 100, box.y + box.height - 20); //selector for 'other' choice
     await page.waitForTimeout(500);
-    expect(await isBarVisible(3)).toBeFalsy();
-    expect(await isBarVisible(2)).toBeFalsy();
     expect(await isBarVisible(1)).toBeTruthy();
+    expect(await isBarVisible(2)).toBeFalsy();
+    expect(await isBarVisible(3)).toBeFalsy();
 
     await page.click('span:text("Clear")');
     await page.waitForTimeout(500);
@@ -93,7 +94,8 @@ test.describe("selectbase", () => {
     await initSummary(page, json, data, options);
 
     // check that percentages aren't shown
-    await expect(page.locator(".trace.bars .point text")).not.toBeVisible();
+    // await expect(page.locator(".trace.bars .point text")).not.toBeVisible();
+    await expect(await getValuesInsideBars()).toEqual(["2", "1", "2"].reverse());
 
     // check that percentages are shown when button is clicked
     await page.click('span:text("Show percentages")');
@@ -102,7 +104,8 @@ test.describe("selectbase", () => {
 
     // check that percentage are hided when button is double-clicked
     await page.click('span:text("Hide percentages")');
-    await expect(page.locator(".trace.bars .point text")).not.toBeVisible();
+    // await expect(page.locator(".trace.bars .point text")).not.toBeVisible();
+    await expect(await getValuesInsideBars()).toEqual(["2", "1", "2"].reverse());
   });
 
   test("check comment actions", async ({ page }) => {
@@ -128,7 +131,8 @@ test.describe("selectbase", () => {
     await expect(page.locator(".sa-visualizer__footer-content .sa-visualizer-wordcloud")).toHaveCount(1);
 
     // check comment's table
-    await page.locator("div").filter({ hasText: /^WordcloudTexts in tablecommenttext$/ }).getByRole("combobox").selectOption("text");
+    await page.locator(".sa-dropdown").nth(3).click();
+    await page.getByRole("list").getByText("Texts in table").click();
 
     const cells = await getTableCells();
     expect(cells).toEqual(["Comment text", "Another comment text"]);
@@ -175,20 +179,27 @@ test.describe("selectbase", () => {
     ];
 
     await initSummary(page, json, data, options);
-    const orderingSelect = page.locator("select").nth(2);
+    const orderingSelect = page.locator(".sa-dropdown").nth(2);
+    const color1 = "#e50a3e";
+    const color2 = "#19b394";
+    const color3 = "#437fd9";
 
     // check default order
     expect(await getYAxisValues(page)).toEqual(["Other  ", "Two  ", "One  "]);
-    expect((await getColorsOrder()).map(RGBToHex)).toEqual(["#86e1fb", "#3999fb", "#ff6771"]);
+    expect((await getColorsOrder()).map(RGBToHex)).toEqual([color1, color2, color3]);
 
     // check ascending order
-    await orderingSelect.selectOption("asc");
+    await orderingSelect.click();
+    await page.getByRole("list").getByText("Ascending").click();
+
     expect(await getYAxisValues(page)).toEqual(["One  ", "Other  ", "Two  "]);
-    expect((await getColorsOrder()).map(RGBToHex)).toEqual(["#ff6771", "#86e1fb", "#3999fb"]);
+    expect((await getColorsOrder()).map(RGBToHex)).toEqual([color3, color1, color2]);
 
     // check descending order
-    await orderingSelect.selectOption("desc");
+    await orderingSelect.click();
+    await page.getByRole("list").getByText("Descending").click();
+
     expect(await getYAxisValues(page)).toEqual(["Two  ", "Other  ", "One  "]);
-    expect((await getColorsOrder()).map(RGBToHex)).toEqual(["#3999fb", "#86e1fb", "#ff6771"]);
+    expect((await getColorsOrder()).map(RGBToHex)).toEqual([color2, color1, color3]);
   });
 });

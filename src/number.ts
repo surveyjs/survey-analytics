@@ -40,7 +40,7 @@ export class NumberModel extends VisualizerBase {
 
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
-        return DocumentHelper.createSelector(
+        return DocumentHelper.createDropdown(
           this.chartTypes.map((chartType) => {
             return {
               value: chartType,
@@ -49,12 +49,12 @@ export class NumberModel extends VisualizerBase {
           }),
           (option: any) => this.chartType === option.value,
           (e: any) => {
-            this.setChartType(e.target.value);
+            this.setChartType(e);
           }
         );
       }
       return null;
-    });
+    }, "dropdown");
   }
 
   protected onDataChanged() {
@@ -130,7 +130,7 @@ export class NumberModel extends VisualizerBase {
   }
 
   generateColors(maxValue: number, minValue: number, stepsCount: number): string[] {
-    const palette = this.getColors();
+    const palette = VisualizerBase.getColors();
     const colors = [];
     for (let i = 0; i < stepsCount; i++) {
       colors.push(palette[i]);
