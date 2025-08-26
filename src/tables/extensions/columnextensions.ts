@@ -14,13 +14,15 @@ TableExtensions.registerExtension({
       "sa-table__svg-button sa-table__drag-button"
     );
     btn.appendChild(DocumentHelper.createSvgElement("drag"));
-    btn.onmousedown = (e) => {
+    btn.addEventListener("mousedown", () => {
       table.enableColumnReorder();
-    };
+      document.body.addEventListener("mouseup", () => {
+        table.disableColumnReorder();
+      }, { once: true });
+    });
     return btn;
   },
 });
-
 TableExtensions.registerExtension({
   location: "column",
   name: "sort",
