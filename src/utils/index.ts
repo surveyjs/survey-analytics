@@ -167,7 +167,6 @@ export class DocumentHelper {
           dropdownHeader.classList.remove(dropdownOpenedClass);
           dropdownList.classList.remove(dropdownOpenedClass);
           dropdownHeader.setAttribute("aria-expanded", "false");
-          dropdownHeader.removeAttribute("aria-activedescendant");
 
           // Remove selection from all items and add to current
           dropdownList.querySelectorAll("." + className + "-item").forEach(item => {
@@ -187,7 +186,6 @@ export class DocumentHelper {
         dropdownHeader.classList.remove(dropdownOpenedClass);
         dropdownList.classList.remove(dropdownOpenedClass);
         dropdownHeader.setAttribute("aria-expanded", "false");
-        dropdownHeader.removeAttribute("aria-activedescendant");
         currentFocusIndex = -1;
       }
     };
@@ -199,7 +197,6 @@ export class DocumentHelper {
       dropdownHeader.setAttribute("aria-expanded", isOpened ? "true" : "false");
 
       if (!isOpened) {
-        dropdownHeader.removeAttribute("aria-activedescendant");
         currentFocusIndex = -1;
       }
     });
@@ -222,9 +219,6 @@ export class DocumentHelper {
       const itemToFocus = items[currentFocusIndex] as HTMLElement;
       itemToFocus.classList.add(className + "-item--focused");
       itemToFocus.setAttribute("aria-selected", "true");
-
-      dropdownHeader.setAttribute("aria-activedescendant", itemToFocus.id || `item-${currentFocusIndex}`);
-
       itemToFocus.scrollIntoView({ block: "nearest" });
     };
 
@@ -266,8 +260,6 @@ export class DocumentHelper {
 
                 dropdownHeader.classList.remove(dropdownOpenedClass);
                 dropdownList.classList.remove(dropdownOpenedClass);
-                dropdownHeader.removeAttribute("aria-activedescendant");
-
                 dropdownList.querySelectorAll("." + className + "-item").forEach(item => {
                   item.classList.remove(itemClassSelected);
                   item.setAttribute("aria-selected", "false");
@@ -283,7 +275,6 @@ export class DocumentHelper {
           dropdownHeader.classList.remove(dropdownOpenedClass);
           dropdownList.classList.remove(dropdownOpenedClass);
           dropdownHeader.setAttribute("aria-expanded", "false");
-          dropdownHeader.removeAttribute("aria-activedescendant");
           currentFocusIndex = -1;
           break;
       }
@@ -314,7 +305,6 @@ export class DocumentHelper {
           if ((item as any)?.dataset?.value === value) {
             item.classList.add(itemClassSelected);
             item.setAttribute("aria-selected", "true");
-            dropdownHeader.setAttribute("aria-activedescendant", item.id);
           }
         });
 
@@ -324,7 +314,6 @@ export class DocumentHelper {
         // Reset to placeholder
         selectedOption = null;
         updateHeader();
-        dropdownHeader.removeAttribute("aria-activedescendant");
 
         // Remove all selections
         dropdownList.querySelectorAll("." + className + "-item").forEach(item => {
@@ -371,7 +360,6 @@ export class DocumentHelper {
     dropdownHeader.setAttribute("aria-haspopup", "listbox");
     dropdownHeader.setAttribute("aria-expanded", "false");
     dropdownHeader.setAttribute("aria-label", placeholder);
-    dropdownHeader.setAttribute("aria-multiselectable", "true");
     const itemClassSelected = className + "-item--selected";
 
     const optionsSource = options || [];
@@ -393,7 +381,6 @@ export class DocumentHelper {
     const dropdownList = document.createElement("ul");
     dropdownList.className = className + "-list";
     dropdownList.setAttribute("role", "listbox");
-    dropdownList.setAttribute("aria-multiselectable", "true");
     dropdownList.innerHTML = "";
     const dropdownContainer = document.createElement("div");
     dropdownContainer.className = className + "-container";
@@ -414,9 +401,6 @@ export class DocumentHelper {
       currentFocusIndex = index;
       const itemToFocus = items[currentFocusIndex] as HTMLElement;
       itemToFocus.classList.add(className + "-item--focused");
-
-      dropdownHeader.setAttribute("aria-activedescendant", itemToFocus.id || `item-${currentFocusIndex}`);
-
       itemToFocus.scrollIntoView({ block: "nearest" });
     };
 
@@ -532,7 +516,6 @@ export class DocumentHelper {
           dropdownHeader.classList.remove(dropdownOpenedClass);
           dropdownList.classList.remove(dropdownOpenedClass);
           dropdownHeader.setAttribute("aria-expanded", "false");
-          dropdownHeader.removeAttribute("aria-activedescendant");
           currentFocusIndex = -1;
           break;
       }
@@ -543,7 +526,6 @@ export class DocumentHelper {
         dropdownHeader.classList.remove(dropdownOpenedClass);
         dropdownList.classList.remove(dropdownOpenedClass);
         dropdownHeader.setAttribute("aria-expanded", "false");
-        dropdownHeader.removeAttribute("aria-activedescendant");
         currentFocusIndex = -1;
       }
     };
@@ -555,7 +537,6 @@ export class DocumentHelper {
       dropdownHeader.setAttribute("aria-expanded", isOpened ? "true" : "false");
 
       if (!isOpened) {
-        dropdownHeader.removeAttribute("aria-activedescendant");
         currentFocusIndex = -1;
       } else {
         setTimeout(() => focusItem(0), 0);
