@@ -365,6 +365,8 @@ export class DocumentHelper {
   ): HTMLDivElement {
     const buttonElement = document.createElement("div");
     buttonElement.className = className + (icon ? " " + className + "-with-icon" : "");
+    buttonElement.setAttribute("role", "button");
+    buttonElement.setAttribute("tabindex", "0");
 
     if (icon) {
       const svgElement = document.createElement("div");
@@ -383,6 +385,13 @@ export class DocumentHelper {
 
     buttonElement.addEventListener("click", function(e) {
       handler(e);
+    });
+
+    buttonElement.addEventListener("keydown", function(e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        handler(e);
+      }
     });
 
     return buttonElement;

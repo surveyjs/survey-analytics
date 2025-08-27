@@ -452,10 +452,18 @@ export class VisualizationPanel extends VisualizerBase {
       const hideElement = document.createElement("div");
       hideElement.className = "sa-question__hide-action";
       hideElement.title = localization.getString("hideButton");
+      hideElement.setAttribute("role", "button");
+      hideElement.setAttribute("tabindex", "0");
       hideElement.appendChild(DocumentHelper.createSvgElement("close_16x16"));
       dragAreaElement.appendChild(hideElement);
       hideElement.addEventListener("click", (e) => {
         setTimeout(() => this.hideElement(element.name), 0);
+      });
+      hideElement.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          this.hideElement(element.name);
+        }
       });
     }
 

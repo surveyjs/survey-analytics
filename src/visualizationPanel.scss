@@ -133,6 +133,12 @@
       fill: var(--sjs2-color-fg-basic-primary-muted, rgba(66, 65, 70, 1));
     }
   }
+
+  &:focus {
+    border-radius: var(--sjs2-radius-control-action-icon, 8px);
+    outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.60));
+    background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0.00));
+  }
 }
 
 .sa-toolbar {
@@ -163,6 +169,12 @@
 
 .sa-toolbar__button:disabled {
   opacity: var(--sjs2-opacity-disabled, 0.25);
+}
+
+.sa-toolbar__button:focus {
+  border-radius: var(--sjs2-radius-control-action, 8px);
+  outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.60));
+  background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
 }
 
 .sa-toolbar__button-text {
