@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { compareScreenshot } from "./helper";
+import { compareScreenshot, getListItemByText } from "./helper";
 
 test.describe("Miscellaneous cases", () => {
   test.beforeEach(async ({ page }) => {
@@ -22,7 +22,7 @@ test.describe("Miscellaneous cases", () => {
     await compareScreenshot(page, chartContentSelector, "matrix-single-row-bar.png");
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Pie").click();
+    await getListItemByText(page, "Pie").click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-row-pie.png");
 
     const transposeButtonSelector = questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ });
@@ -31,11 +31,11 @@ test.describe("Miscellaneous cases", () => {
     await expect(questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Values$/ })).toBeVisible();
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Bar", { exact: true }).click();
+    await getListItemByText(page, "Bar").click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-row-bar-per-values.png");
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Pie").click();
+    await getListItemByText(page, "Pie").click();
     await compareScreenshot(page, chartContentSelector, "matrix-single-row-pie-per-values.png");
   });
 
@@ -56,7 +56,7 @@ test.describe("Miscellaneous cases", () => {
     await compareScreenshot(page, chartContentSelector, "matrixdropdown-grouped-stackedbar.png");
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Bar", { exact: true }).click();
+    await getListItemByText(page, "Bar").click();
     await compareScreenshot(page, chartContentSelector, "matrixdropdown-grouped-bar.png");
 
     const transposeButtonSelector = questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ });
@@ -65,11 +65,11 @@ test.describe("Miscellaneous cases", () => {
     await expect(questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Values$/ })).toBeVisible();
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Stacked Bar").click();
+    await getListItemByText(page, "Stacked Bar").click();
     await compareScreenshot(page, chartContentSelector, "matrixdropdown-grouped-stackedbar-per-values.png");
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Bar", { exact: true }).click();
+    await getListItemByText(page, "Bar").click();
     await compareScreenshot(page, chartContentSelector, "matrixdropdown-grouped-bar-per-values.png");
   });
 });

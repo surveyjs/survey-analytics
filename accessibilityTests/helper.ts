@@ -30,3 +30,7 @@ export const axeOptions: RunOptions = {
     }
   }
 };
+
+export function getListItemByText(page, text) {
+  return page.getByRole("option", { name: text, exact: true });
+}

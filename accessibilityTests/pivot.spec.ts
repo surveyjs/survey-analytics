@@ -1,4 +1,4 @@
-import { axeOptions } from "./helper";
+import { axeOptions, getListItemByText } from "./helper";
 import { checkA11y, injectAxe } from "axe-playwright";
 import { test } from "@playwright/test";
 
@@ -16,26 +16,26 @@ test.describe("Pivot chart", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await yAxisSelector.click();
-    await page.getByRole("list").getByText("Item kind").click();
+    await getListItemByText(page, "Item kind").click();
     await checkA11y(page, axeContext, { axeOptions });
     await yAxisSelector.click();
-    await page.getByRole("list").getByText("Bill amount").click();
-    await checkA11y(page, axeContext, { axeOptions });
-    await xAxisSelector.click();
-    await page.getByRole("list").getByText("Item kind").click();
-    await yAxisSelector.click();
-    await page.getByRole("list").getByText("Gender").click();
-    await checkA11y(page, axeContext, { axeOptions });
-    await yAxisSelector.click();
-    await page.getByRole("list").getByText("Bill amount").click();
+    await getListItemByText(page, "Bill amount").click();
     await checkA11y(page, axeContext, { axeOptions });
     await xAxisSelector.click();
-    await page.getByRole("list").getByText("Bill amount").click();
+    await getListItemByText(page, "Item kind").click();
     await yAxisSelector.click();
-    await page.getByRole("list").getByText("Gender").click();
+    await getListItemByText(page, "Gender").click();
     await checkA11y(page, axeContext, { axeOptions });
     await yAxisSelector.click();
-    await page.getByRole("list").getByText("Item kind").click();
+    await getListItemByText(page, "Bill amount").click();
+    await checkA11y(page, axeContext, { axeOptions });
+    await xAxisSelector.click();
+    await getListItemByText(page, "Bill amount").click();
+    await yAxisSelector.click();
+    await getListItemByText(page, "Gender").click();
+    await checkA11y(page, axeContext, { axeOptions });
+    await yAxisSelector.click();
+    await getListItemByText(page, "Item kind").click();
     await checkA11y(page, axeContext, { axeOptions });
   });
 

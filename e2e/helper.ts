@@ -81,6 +81,10 @@ export async function getYAxisValues(page) {
   });
 }
 
+export function getListItemByText(page, text) {
+  return page.getByRole("option", { name: text, exact: true });
+}
+
 // export const getYAxisValues = ClientFunction(() => {
 //   var yValues = [];
 //   document.querySelectorAll(".yaxislayer-above g.ytick text").forEach((el) => {

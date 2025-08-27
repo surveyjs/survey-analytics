@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { initSummary, url_summary } from "../helper";
+import { getListItemByText, initSummary, url_summary } from "../helper";
 
 const json = {
   elements: [
@@ -24,7 +24,7 @@ test.describe("text", () => {
 
     // Select "Texts in table" from the dropdown
     await page.locator(".sa-dropdown").click();
-    await page.getByRole("list").getByText("Texts in table").click();
+    await getListItemByText(page, "Texts in table").click();
 
     // Get all table cell values
     const cells = await page.evaluate(() => {

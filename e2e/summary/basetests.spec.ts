@@ -1,5 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
-import { url_summary, initSummary, dragDropElement } from "../helper";
+import { url_summary, initSummary, dragDropElement, getListItemByText } from "../helper";
 
 const json = {
   elements: [
@@ -57,12 +57,12 @@ test.describe("basetests", () => {
     const showQuestionDropdown = page.locator("#summaryContainer .sa-dropdown").first();
 
     await expect(questionSelector).toBeVisible();
-    await questionSelector.locator("span", { hasText: "Hide" }).click();
+    await questionSelector.locator(".sa-question__hide-action").click();
     await expect(questionSelector).not.toBeVisible();
     expect(await isVisibleInState(page, questionTitle)).toBeFalsy();
 
     await showQuestionDropdown.click();
-    await page.getByRole("list").getByText(questionTitle).click();
+    await getListItemByText(page, questionTitle).click();
     await expect(questionSelector).toBeVisible();
     expect(await isVisibleInState(page, questionTitle)).toBeTruthy();
   });
@@ -122,7 +122,7 @@ test.describe("basetests", () => {
     await expect(questionSelector.locator("[data-unformatted='No<br>33.3%']")).not.toBeVisible();
     await expect(secondQuestionSelector.locator("[data-unformatted='Yes<br>33.3%']")).not.toBeVisible();
 
-    await questionSelector.locator("span", { hasText: "Clear" }).click();
+    await questionSelector.locator(".sa-question__filter .sa-toolbar__button").click();
     await expect(questionSelector.locator("[data-unformatted='No<br>33.3%']")).toBeVisible();
     await expect(secondQuestionSelector.locator("[data-unformatted='Yes<br>33.3%']")).toBeVisible();
   });

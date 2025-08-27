@@ -1,5 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
-import { url_summary, initSummary, RGBToHex, getYAxisValues } from "../helper";
+import { url_summary, initSummary, RGBToHex, getYAxisValues, getListItemByText } from "../helper";
 
 let json = {
   elements: [
@@ -132,7 +132,7 @@ test.describe("selectbase", () => {
 
     // check comment's table
     await page.locator(".sa-dropdown").nth(3).click();
-    await page.getByRole("list").getByText("Texts in table").click();
+    await getListItemByText(page, "Texts in table").click();
 
     const cells = await getTableCells();
     expect(cells).toEqual(["Comment text", "Another comment text"]);
@@ -190,14 +190,14 @@ test.describe("selectbase", () => {
 
     // check ascending order
     await orderingSelect.click();
-    await page.getByRole("list").getByText("Ascending").click();
+    await getListItemByText(page, "Ascending").click();
 
     expect(await getYAxisValues(page)).toEqual(["One  ", "Other  ", "Two  "]);
     expect((await getColorsOrder()).map(RGBToHex)).toEqual([color3, color1, color2]);
 
     // check descending order
     await orderingSelect.click();
-    await page.getByRole("list").getByText("Descending").click();
+    await getListItemByText(page, "Descending").click();
 
     expect(await getYAxisValues(page)).toEqual(["Two  ", "Other  ", "One  "]);
     expect((await getColorsOrder()).map(RGBToHex)).toEqual([color2, color1, color3]);

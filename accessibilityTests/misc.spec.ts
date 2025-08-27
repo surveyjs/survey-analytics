@@ -1,4 +1,4 @@
-import { axeOptions } from "./helper";
+import { axeOptions, getListItemByText } from "./helper";
 import { checkA11y, injectAxe } from "axe-playwright";
 import { test } from "@playwright/test";
 
@@ -22,18 +22,18 @@ test.describe("Miscellaneous cases", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Pie").click();
+    await getListItemByText(page, "Pie").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     const transposeButtonSelector = questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ });
     await transposeButtonSelector.click();
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Bar", { exact: true }).click();
+    await getListItemByText(page, "Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Pie").click();
+    await getListItemByText(page, "Pie").click();
     await checkA11y(page, axeContext, { axeOptions });
   });
 
@@ -53,18 +53,18 @@ test.describe("Miscellaneous cases", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Bar", { exact: true }).click();
+    await getListItemByText(page, "Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     const transposeButtonSelector = questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ });
     await transposeButtonSelector.click();
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Stacked Bar").click();
+    await getListItemByText(page, "Stacked Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Bar", { exact: true }).click();
+    await getListItemByText(page, "Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
   });
 });

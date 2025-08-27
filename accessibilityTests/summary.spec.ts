@@ -1,4 +1,4 @@
-import { axeOptions } from "./helper";
+import { axeOptions, getListItemByText } from "./helper";
 import { checkA11y, injectAxe } from "axe-playwright";
 import { test } from "@playwright/test";
 
@@ -20,15 +20,15 @@ test.describe("Summary common", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Stacked bar").click();
+    await getListItemByText(page, "Stacked Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Pie").click();
+    await getListItemByText(page, "Pie").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Doughnut").click();
+    await getListItemByText(page, "Doughnut").click();
     await checkA11y(page, axeContext, { axeOptions });
   });
 
@@ -43,11 +43,11 @@ test.describe("Summary common", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Bar", { exact: true }).click();
+    await getListItemByText(page, "Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Doughnut").click();
+    await getListItemByText(page, "Doughnut").click();
     await checkA11y(page, axeContext, { axeOptions });
   });
 
@@ -63,19 +63,19 @@ test.describe("Summary common", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Vertical Bar").click();
+    await getListItemByText(page, "Vertical Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Pie").click();
+    await getListItemByText(page, "Pie").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Doughnut").click();
+    await getListItemByText(page, "Doughnut").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await visualizerSelector.click();
-    await page.getByRole("list").getByText("Table").click();
+    await getListItemByText(page, "Table").click();
     await checkA11y(page, axeContext, { axeOptions });
   });
 
@@ -91,17 +91,17 @@ test.describe("Summary common", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Bar", { exact: true }).click();
+    await getListItemByText(page, "Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await visualizerSelector.click();
-    await page.getByRole("list").getByText("Average").click();
+    await getListItemByText(page, "Average").click();
 
     const gaugeTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
     await checkA11y(page, axeContext, { axeOptions });
 
     await gaugeTypeSelector.click();
-    await page.getByRole("list").getByText("Bullet").click();
+    await getListItemByText(page, "Bullet").click();
     await checkA11y(page, axeContext, { axeOptions });
   });
 
@@ -116,7 +116,7 @@ test.describe("Summary common", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await visualizerTypeSelector.click();
-    await page.getByRole("list").getByText("Text").click();
+    await getListItemByText(page, "Texts in table").click();
     await checkA11y(page, axeContext, { axeOptions });
   });
 });

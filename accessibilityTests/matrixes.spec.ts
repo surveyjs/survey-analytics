@@ -1,4 +1,4 @@
-import { axeOptions } from "./helper";
+import { axeOptions, getListItemByText } from "./helper";
 import { checkA11y, injectAxe } from "axe-playwright";
 import { test } from "@playwright/test";
 
@@ -20,34 +20,34 @@ test.describe("Matrixes visualizer", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Stacked Bar").click();
+    await getListItemByText(page, "Stacked Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Pie").click();
+    await getListItemByText(page, "Pie").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Doughnut").click();
+    await getListItemByText(page, "Doughnut").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     const transposeButtonSelector = questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ });
     await transposeButtonSelector.click();
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Bar", { exact: true }).click();
+    await getListItemByText(page, "Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Stacked bar").click();
+    await getListItemByText(page, "Stacked Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Pie").click();
+    await getListItemByText(page, "Pie").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await page.getByRole("list").getByText("Doughnut").click();
+    await getListItemByText(page, "Doughnut").click();
     await checkA11y(page, axeContext, { axeOptions });
   });
 
@@ -66,42 +66,42 @@ test.describe("Matrixes visualizer", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartCol1TypeSelector.click();
-    await page.getByRole("list").getByText("Vertical Bar").click();
+    await getListItemByText(page, "Vertical Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartCol1TypeSelector.click();
-    await page.getByRole("list").getByText("Pie").click();
+    await getListItemByText(page, "Pie").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartCol1TypeSelector.click();
-    await page.getByRole("list").getByText("Doughnut").click();
+    await getListItemByText(page, "Doughnut").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartCol1TypeSelector.click();
-    await page.getByRole("list").getByText("Stacked bar").click();
+    await getListItemByText(page, "Stacked Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     const transposeButtonSelector = column1VisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Columns$/ });
     await transposeButtonSelector.click();
 
     await chartCol1TypeSelector.click();
-    await page.getByRole("list").getByText("Bar", { exact: true }).click();
+    await getListItemByText(page, "Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartCol1TypeSelector.click();
-    await page.getByRole("list").getByText("Vertical Bar").click();
+    await getListItemByText(page, "Vertical Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartCol1TypeSelector.click();
-    await page.getByRole("list").getByText("Pie").click();
+    await getListItemByText(page, "Pie").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartCol1TypeSelector.click();
-    await page.getByRole("list").getByText("Doughnut").click();
+    await getListItemByText(page, "Doughnut").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartCol1TypeSelector.click();
-    await page.getByRole("list").getByText("Stacked bar").click();
+    await getListItemByText(page, "Stacked Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
   });
 

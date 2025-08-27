@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { compareScreenshot } from "./helper";
+import { compareScreenshot, getListItemByText } from "./helper";
 
 test.describe("Pivot chart", () => {
   test.beforeEach(async ({ page }) => {
@@ -22,26 +22,26 @@ test.describe("Pivot chart", () => {
     await compareScreenshot(page, "#pivotContainer", "pivot-q1-none.png");
 
     await yAxisSelector.click();
-    await page.getByRole("list").getByText("Item kind").click();
+    await getListItemByText(page, "Item kind").click();
     await compareScreenshot(page, "#pivotContainer", "pivot-q1-q2.png");
     await yAxisSelector.click();
-    await page.getByRole("list").getByText("Bill amount").click();
+    await getListItemByText(page, "Bill amount").click();
     await compareScreenshot(page, "#pivotContainer", "pivot-q1-q3.png");
     await xAxisSelector.click();
-    await page.getByRole("list").getByText("Item kind").click();
+    await getListItemByText(page, "Item kind").click();
     await yAxisSelector.click();
-    await page.getByRole("list").getByText("Gender").click();
+    await getListItemByText(page, "Gender").click();
     await compareScreenshot(page, "#pivotContainer", "pivot-q2-q1.png");
     await yAxisSelector.click();
-    await page.getByRole("list").getByText("Bill amount").click();
+    await getListItemByText(page, "Bill amount").click();
     await compareScreenshot(page, "#pivotContainer", "pivot-q2-q3.png");
     await xAxisSelector.click();
-    await page.getByRole("list").getByText("Bill amount").click();
+    await getListItemByText(page, "Bill amount").click();
     await yAxisSelector.click();
-    await page.getByRole("list").getByText("Gender").click();
+    await getListItemByText(page, "Gender").click();
     await compareScreenshot(page, "#pivotContainer", "pivot-q3-q1.png");
     await yAxisSelector.click();
-    await page.getByRole("list").getByText("Item kind").click();
+    await getListItemByText(page, "Item kind").click();
     await compareScreenshot(page, "#pivotContainer", "pivot-q3-q2.png");
   });
 

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { url_summary, initSummary, getYAxisValues } from "../helper";
+import { url_summary, initSummary, getYAxisValues, getListItemByText } from "../helper";
 
 const json = {
   locale: "ru",
@@ -59,7 +59,7 @@ test.describe("localization", () => {
     // Change locale to English
     const changeLocaleDropdown = page.locator(".sa-dropdown", { hasText: "Русский" });
     await changeLocaleDropdown.click();
-    await page.getByRole("list").getByText("English").click();
+    await getListItemByText(page, "English").click();
 
     // Check Y axis values in English
     const yAxisValuesEn = await getYAxisValues(page);

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { compareScreenshot, testConfigs } from "./helper";
+import { compareScreenshot, getListItemByText, testConfigs } from "./helper";
 
 for (const config of testConfigs) {
   process.env.SNAPSHOT_SUFFIX = config.suffix;
@@ -25,15 +25,15 @@ for (const config of testConfigs) {
       await compareScreenshot(page, chartContentSelector, "matrix-simple-bar.png");
 
       await chartTypeSelector.click();
-      await page.getByRole("list").getByText("Stacked bar").click();
+      await getListItemByText(page, "Stacked Bar").click();
       await compareScreenshot(page, chartContentSelector, "matrix-simple-stackedbar.png");
 
       await chartTypeSelector.click();
-      await page.getByRole("list").getByText("Pie").click();
+      await getListItemByText(page, "Pie").click();
       await compareScreenshot(page, chartContentSelector, "matrix-simple-pie.png");
 
       await chartTypeSelector.click();
-      await page.getByRole("list").getByText("Doughnut").click();
+      await getListItemByText(page, "Doughnut").click();
       await compareScreenshot(page, chartContentSelector, "matrix-simple-doughnut.png");
     });
 
@@ -52,11 +52,11 @@ for (const config of testConfigs) {
       await compareScreenshot(page, chartContentSelector, "boolean-simple-bar.png");
 
       await chartTypeSelector.click();
-      await page.getByRole("list").getByText("Bar", { exact: true }).click();
+      await getListItemByText(page, "Bar").click();
       await compareScreenshot(page, chartContentSelector, "boolean-simple-pie.png");
 
       await chartTypeSelector.click();
-      await page.getByRole("list").getByText("Doughnut").click();
+      await getListItemByText(page, "Doughnut").click();
       await compareScreenshot(page, chartContentSelector, "boolean-simple-doughnut.png");
     });
 
@@ -79,19 +79,19 @@ for (const config of testConfigs) {
       await compareScreenshot(page, chartContentSelector, "select-simple-bar.png");
 
       await chartTypeSelector.click();
-      await page.getByRole("list").getByText("Vertical Bar").click();
+      await getListItemByText(page, "Vertical Bar").click();
       await compareScreenshot(page, chartContentSelector, "select-simple-vbar.png");
 
       await chartTypeSelector.click();
-      await page.getByRole("list").getByText("Pie").click();
+      await getListItemByText(page, "Pie").click();
       await compareScreenshot(page, chartContentSelector, "select-simple-pie.png");
 
       await chartTypeSelector.click();
-      await page.getByRole("list").getByText("Doughnut").click();
+      await getListItemByText(page, "Doughnut").click();
       await compareScreenshot(page, chartContentSelector, "select-simple-doughnut.png");
 
       await visualizerSelector.click();
-      await page.getByRole("list").getByText("Table").click();
+      await getListItemByText(page, "Table").click();
       await compareScreenshot(page, chartContentSelector, "select-simple-table.png");
 
       const otherItemsSelector = questionVisualizerSelector.locator("h4").filter({ hasText: "Other items and comments" });
@@ -118,11 +118,11 @@ for (const config of testConfigs) {
       await compareScreenshot(page, chartContentSelector, "histogram-simple-vbar.png");
 
       await chartTypeSelector.click();
-      await page.getByRole("list").getByText("Bar", { exact: true }).click();
+      await getListItemByText(page, "Bar").click();
       await compareScreenshot(page, chartContentSelector, "histogram-simple-bar.png");
 
       await visualizerSelector.click();
-      await page.getByRole("list").getByText("Average").click();
+      await getListItemByText(page, "Average").click();
       await expect(questionVisualizerSelector.locator(".sa-dropdown")).toHaveCount(2);
 
       const gaugeTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
@@ -131,7 +131,7 @@ for (const config of testConfigs) {
       await compareScreenshot(page, chartContentSelector, "number-simple-gauge.png");
 
       await gaugeTypeSelector.click();
-      await page.getByRole("list").getByText("Bullet").click();
+      await getListItemByText(page, "Bullet").click();
       await compareScreenshot(page, chartContentSelector, "number-simple-bullet.png");
     });
 
@@ -150,7 +150,7 @@ for (const config of testConfigs) {
       await compareScreenshot(page, chartContentSelector, "text-simple-wordcloud.png");
 
       await visualizerTypeSelector.click();
-      await page.getByRole("list").getByText("Text").click();
+      await getListItemByText(page, "Texts in table").click();
       await compareScreenshot(page, chartContentSelector, "text-simple-table.png");
     });
   });
