@@ -401,6 +401,13 @@
   margin: var(--sjs2-border-width-x100, 1px);
   outline: var(--sjs2-border-width-x100, 1px) solid var(--sjs2-color-control-formbox-default-border, #D4D4D4);
   background: var(--sjs2-color-control-formbox-default-bg, rgba(28, 27, 32, 0.05));
+
+  &:focus {
+    border-radius: var(--sjs2-radius-semantic-form, 8px);
+    background: var(--sjs2-color-control-formbox-focused-bg, #F5F5F5);
+    box-shadow: var(--sjs2-border-offset-x-form-focused, 0) var(--sjs2-border-offset-y-form-focused, 0) var(--sjs2-border-blur-form-focused, 0) var(--sjs2-border-spread-form-focused, 2px) var(--sjs2-color-control-formbox-focused-border, #19B394) inset;
+    outline: none;
+  }
 }
 
 .sa-dropdown-arrow {
@@ -460,7 +467,7 @@
   // left: 0;
   // right: 0;
   min-width: 150px;
-  max-height: 90vh;
+  max-height: 50vh;
   max-width: 90vw;
   overflow-x: hidden;
   overflow-y: auto;
@@ -526,7 +533,9 @@
 
 .sa-dropdown-item,
 .sa-multiple-dropdown-item {
-  min-width: max-content;
+  width: max-content;
+  min-width: 100%;
+  max-width: 100%;
   padding: var(--sjs2-spacing-x150, 12px) var(--sjs2-size-x200, 16px);
   cursor: pointer;
   transition: all 0.3s;
@@ -546,8 +555,16 @@
   line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
   
   &:hover {
-    background-color: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));;
+    background-color: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
   }
+}
+
+.sa-multiple-dropdown-item:focus,
+.sa-multiple-dropdown-item--focused,
+.sa-dropdown-item:focus,
+.sa-dropdown-item--focused {
+  border-radius: var(--sjs2-radius-control-drop-item, 8px);
+  background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
 }
 
 .sa-multiple-dropdown-item--selected .sa-multiple-dropdown-icon{
@@ -635,6 +652,12 @@
   gap: var(--sjs2-layout-control-action-small-box-gap, 0);
   border-radius: var(--sjs2-radius-control-action, 8px);
   background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0.00));
+
+  &:focus {
+    border-radius: var(--sjs2-radius-control-action, 8px);
+    outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.60));
+    background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0.00));
+  }
 }
 
 .sa-multiple-dropdown-arrow {

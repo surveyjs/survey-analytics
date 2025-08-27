@@ -68,6 +68,10 @@ export class DocumentHelper {
     const titleElement = DocumentHelper.createElement("span", className + "__title");
     const dropdownHeader = document.createElement("div");
     dropdownHeader.className = className + "-header";
+    dropdownHeader.setAttribute("tabindex", "0");
+    dropdownHeader.setAttribute("role", "button");
+    dropdownHeader.setAttribute("aria-haspopup", "listbox");
+    dropdownHeader.setAttribute("aria-expanded", "false");
     const itemClassSelected = className + "-item--selected";
 
     const updateTitle = () => {
@@ -90,6 +94,12 @@ export class DocumentHelper {
       headerContent.innerHTML = "";
       optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
       selectedOption = optionItems.find(option => isSelected(option));
+
+      if (selectedOption) {
+        dropdownHeader.setAttribute("aria-label", `Selected: ${selectedOption.text}`);
+      } else {
+        dropdownHeader.setAttribute("aria-label", placeholder);
+      }
 
       if (selectedOption?.icon) {
         const headerIcon = document.createElement("div");
@@ -115,6 +125,7 @@ export class DocumentHelper {
     dropdownHeader.appendChild(arrowElement);
     const dropdownList = document.createElement("ul");
     dropdownList.className = className + "-list";
+    dropdownList.setAttribute("role", "listbox");
     const dropdownContainer = document.createElement("div");
     dropdownContainer.className = className + "-container";
 
@@ -126,6 +137,9 @@ export class DocumentHelper {
         const dropdownItem = document.createElement("li");
         dropdownItem.className = className + "-item";
         dropdownItem.dataset.value = option.value;
+        dropdownItem.setAttribute("role", "option");
+        dropdownItem.setAttribute("tabindex", "-1");
+        dropdownItem.id = `${className}-item-${option.value}`;
 
         if (option.icon) {
           const iconContainer = document.createElement("div");
@@ -140,6 +154,9 @@ export class DocumentHelper {
 
         if (isSelected(option)) {
           dropdownItem.classList.add(itemClassSelected);
+          dropdownItem.setAttribute("aria-selected", "true");
+        } else {
+          dropdownItem.setAttribute("aria-selected", "false");
         }
 
         dropdownItem.addEventListener("click", () => {
@@ -149,12 +166,16 @@ export class DocumentHelper {
 
           dropdownHeader.classList.remove(dropdownOpenedClass);
           dropdownList.classList.remove(dropdownOpenedClass);
+          dropdownHeader.setAttribute("aria-expanded", "false");
+          dropdownHeader.removeAttribute("aria-activedescendant");
 
           // Remove selection from all items and add to current
-          dropdownList.querySelectorAll(".sa-dropdown-item").forEach(item => {
+          dropdownList.querySelectorAll("." + className + "-item").forEach(item => {
             item.classList.remove(itemClassSelected);
+            item.setAttribute("aria-selected", "false");
           });
           dropdownItem.classList.add(itemClassSelected);
+          dropdownItem.setAttribute("aria-selected", "true");
         });
 
         dropdownList.appendChild(dropdownItem);
@@ -165,14 +186,111 @@ export class DocumentHelper {
       if (!dropdownElement.contains(event.target)) {
         dropdownHeader.classList.remove(dropdownOpenedClass);
         dropdownList.classList.remove(dropdownOpenedClass);
+        dropdownHeader.setAttribute("aria-expanded", "false");
+        dropdownHeader.removeAttribute("aria-activedescendant");
+        currentFocusIndex = -1;
       }
     };
 
     // Add open/close handler
     dropdownHeader.addEventListener("click", (e) => {
-      dropdownHeader.classList.toggle(dropdownOpenedClass);
+      const isOpened = dropdownHeader.classList.toggle(dropdownOpenedClass);
       dropdownList.classList.toggle(dropdownOpenedClass);
+      dropdownHeader.setAttribute("aria-expanded", isOpened ? "true" : "false");
+
+      if (!isOpened) {
+        dropdownHeader.removeAttribute("aria-activedescendant");
+        currentFocusIndex = -1;
+      }
     });
+
+    let currentFocusIndex = -1;
+
+    const focusItem = (index: number) => {
+      const items = dropdownList.querySelectorAll("." + className + "-item");
+      if (items.length === 0) return;
+
+      items.forEach(item => {
+        item.classList.remove(className + "-item--focused");
+        item.setAttribute("aria-selected", "false");
+      });
+
+      if (index < 0) index = items.length - 1;
+      if (index >= items.length) index = 0;
+
+      currentFocusIndex = index;
+      const itemToFocus = items[currentFocusIndex] as HTMLElement;
+      itemToFocus.classList.add(className + "-item--focused");
+      itemToFocus.setAttribute("aria-selected", "true");
+
+      dropdownHeader.setAttribute("aria-activedescendant", itemToFocus.id || `item-${currentFocusIndex}`);
+
+      itemToFocus.scrollIntoView({ block: "nearest" });
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!dropdownHeader.classList.contains(dropdownOpenedClass)) {
+        if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
+          e.preventDefault();
+          dropdownHeader.classList.add(dropdownOpenedClass);
+          dropdownList.classList.add(dropdownOpenedClass);
+          dropdownHeader.setAttribute("aria-expanded", "true");
+          setTimeout(() => focusItem(0), 0);
+        }
+        return;
+      }
+
+      const items = dropdownList.querySelectorAll("." + className + "-item");
+      if (items.length === 0) return;
+
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          focusItem(currentFocusIndex + 1);
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          focusItem(currentFocusIndex - 1);
+          break;
+        case "Enter":
+          e.preventDefault();
+          if (currentFocusIndex >= 0 && currentFocusIndex < items.length) {
+            const selectedItem = items[currentFocusIndex] as HTMLElement;
+            const value = selectedItem.dataset.value;
+            if (value) {
+              const option = optionItems.find(opt => opt.value === value);
+              if (option) {
+                selectedOption = option;
+                handler(option.value);
+                updateHeader();
+
+                dropdownHeader.classList.remove(dropdownOpenedClass);
+                dropdownList.classList.remove(dropdownOpenedClass);
+                dropdownHeader.removeAttribute("aria-activedescendant");
+
+                dropdownList.querySelectorAll("." + className + "-item").forEach(item => {
+                  item.classList.remove(itemClassSelected);
+                  item.setAttribute("aria-selected", "false");
+                });
+                selectedItem.classList.add(itemClassSelected);
+                selectedItem.setAttribute("aria-selected", "true");
+              }
+            }
+          }
+          break;
+        case "Escape":
+          e.preventDefault();
+          dropdownHeader.classList.remove(dropdownOpenedClass);
+          dropdownList.classList.remove(dropdownOpenedClass);
+          dropdownHeader.setAttribute("aria-expanded", "false");
+          dropdownHeader.removeAttribute("aria-activedescendant");
+          currentFocusIndex = -1;
+          break;
+      }
+    };
+
+    dropdownHeader.addEventListener("keydown", handleKeyDown);
+    dropdownList.addEventListener("keydown", handleKeyDown);
 
     // Add click outside handler
     document.addEventListener("click", handleClickOutside);
@@ -190,10 +308,13 @@ export class DocumentHelper {
         updateHeader();
 
         // Update selected state in list
-        dropdownList.querySelectorAll(".sa-dropdown-item").forEach(item => {
+        dropdownList.querySelectorAll("." + className + "-item").forEach(item => {
           item.classList.remove(itemClassSelected);
+          item.setAttribute("aria-selected", "false");
           if ((item as any)?.dataset?.value === value) {
             item.classList.add(itemClassSelected);
+            item.setAttribute("aria-selected", "true");
+            dropdownHeader.setAttribute("aria-activedescendant", item.id);
           }
         });
 
@@ -203,10 +324,12 @@ export class DocumentHelper {
         // Reset to placeholder
         selectedOption = null;
         updateHeader();
+        dropdownHeader.removeAttribute("aria-activedescendant");
 
         // Remove all selections
-        dropdownList.querySelectorAll(".sa-dropdown-item").forEach(item => {
+        dropdownList.querySelectorAll("." + className + "-item").forEach(item => {
           item.classList.remove(itemClassSelected);
+          item.setAttribute("aria-selected", "false");
         });
       }
     };
@@ -243,6 +366,12 @@ export class DocumentHelper {
 
     const dropdownHeader = document.createElement("div");
     dropdownHeader.className = className + "-header";
+    dropdownHeader.setAttribute("tabindex", "0");
+    dropdownHeader.setAttribute("role", "button");
+    dropdownHeader.setAttribute("aria-haspopup", "listbox");
+    dropdownHeader.setAttribute("aria-expanded", "false");
+    dropdownHeader.setAttribute("aria-label", placeholder);
+    dropdownHeader.setAttribute("aria-multiselectable", "true");
     const itemClassSelected = className + "-item--selected";
 
     const optionsSource = options || [];
@@ -263,18 +392,55 @@ export class DocumentHelper {
     dropdownHeader.appendChild(arrowElement);
     const dropdownList = document.createElement("ul");
     dropdownList.className = className + "-list";
+    dropdownList.setAttribute("role", "listbox");
+    dropdownList.setAttribute("aria-multiselectable", "true");
     dropdownList.innerHTML = "";
     const dropdownContainer = document.createElement("div");
     dropdownContainer.className = className + "-container";
+
+    let currentFocusIndex = -1;
+
+    const focusItem = (index: number) => {
+      const items = dropdownList.querySelectorAll("." + className + "-item");
+      if (items.length === 0) return;
+
+      items.forEach(item => {
+        item.classList.remove(className + "-item--focused");
+      });
+
+      if (index < 0) index = items.length - 1;
+      if (index >= items.length) index = 0;
+
+      currentFocusIndex = index;
+      const itemToFocus = items[currentFocusIndex] as HTMLElement;
+      itemToFocus.classList.add(className + "-item--focused");
+
+      dropdownHeader.setAttribute("aria-activedescendant", itemToFocus.id || `item-${currentFocusIndex}`);
+
+      itemToFocus.scrollIntoView({ block: "nearest" });
+    };
+
+    const updateHeaderLabel = () => {
+      const selectedItems = optionItems.filter(option => isSelected(option));
+      if (selectedItems.length > 0) {
+        const selectedTexts = selectedItems.map(item => item.text).join(", ");
+        dropdownHeader.setAttribute("aria-label", `Selected: ${selectedTexts}`);
+      } else {
+        dropdownHeader.setAttribute("aria-label", placeholder);
+      }
+    };
 
     const updateOptions = () => {
       dropdownList.innerHTML = "";
       const optionsSource = options || [];
       const optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
-      optionItems.forEach(option => {
+      optionItems.forEach((option, index) => {
         const dropdownItem = document.createElement("li");
         dropdownItem.className = className + "-item";
         dropdownItem.dataset.value = option.value;
+        dropdownItem.setAttribute("role", "option");
+        dropdownItem.setAttribute("tabindex", "-1");
+        dropdownItem.id = `${className}-item-${option.value}`;
 
         const textSpan = document.createElement("span");
         textSpan.textContent = option.text;
@@ -288,6 +454,9 @@ export class DocumentHelper {
 
         if (isSelected(option)) {
           dropdownItem.classList.add(itemClassSelected);
+          dropdownItem.setAttribute("aria-selected", "true");
+        } else {
+          dropdownItem.setAttribute("aria-selected", "false");
         }
 
         dropdownItem.addEventListener("click", (e) => {
@@ -295,39 +464,146 @@ export class DocumentHelper {
           e.preventDefault();
           e.stopPropagation();
 
-          if(isSelected(option)) {
+          if (isSelected(option)) {
             dropdownItem.classList.add(itemClassSelected);
+            dropdownItem.setAttribute("aria-selected", "true");
           } else {
             dropdownItem.classList.remove(itemClassSelected);
+            dropdownItem.setAttribute("aria-selected", "false");
           }
+
+          updateHeaderLabel();
         });
 
         dropdownList.appendChild(dropdownItem);
       });
     };
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!dropdownHeader.classList.contains(dropdownOpenedClass)) {
+        if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
+          e.preventDefault();
+          dropdownHeader.classList.add(dropdownOpenedClass);
+          dropdownList.classList.add(dropdownOpenedClass);
+          dropdownHeader.setAttribute("aria-expanded", "true");
+          setTimeout(() => focusItem(0), 0);
+        }
+        return;
+      }
+
+      const items = dropdownList.querySelectorAll("." + className + "-item");
+      if (items.length === 0) return;
+
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          focusItem(currentFocusIndex + 1);
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          focusItem(currentFocusIndex - 1);
+          break;
+        case "Enter":
+        case " ":
+          e.preventDefault();
+          if (currentFocusIndex >= 0 && currentFocusIndex < items.length) {
+            const selectedItem = items[currentFocusIndex] as HTMLElement;
+            const value = selectedItem.dataset.value;
+            if (value) {
+              const option = optionItems.find(opt => opt.value === value);
+              if (option) {
+                handler(option.value);
+
+                if (isSelected(option)) {
+                  selectedItem.classList.add(itemClassSelected);
+                  selectedItem.setAttribute("aria-selected", "true");
+                } else {
+                  selectedItem.classList.remove(itemClassSelected);
+                  selectedItem.setAttribute("aria-selected", "false");
+                }
+
+                updateHeaderLabel();
+              }
+            }
+          }
+          break;
+        case "Escape":
+          e.preventDefault();
+          dropdownHeader.classList.remove(dropdownOpenedClass);
+          dropdownList.classList.remove(dropdownOpenedClass);
+          dropdownHeader.setAttribute("aria-expanded", "false");
+          dropdownHeader.removeAttribute("aria-activedescendant");
+          currentFocusIndex = -1;
+          break;
+      }
+    };
+
     const handleClickOutside = (event) => {
       if (!dropdownElement.contains(event.target)) {
         dropdownHeader.classList.remove(dropdownOpenedClass);
         dropdownList.classList.remove(dropdownOpenedClass);
+        dropdownHeader.setAttribute("aria-expanded", "false");
+        dropdownHeader.removeAttribute("aria-activedescendant");
+        currentFocusIndex = -1;
       }
     };
 
     dropdownHeader.addEventListener("click", (e) => {
       updateOptions();
-      dropdownHeader.classList.toggle(dropdownOpenedClass);
+      const isOpened = dropdownHeader.classList.toggle(dropdownOpenedClass);
       dropdownList.classList.toggle(dropdownOpenedClass);
+      dropdownHeader.setAttribute("aria-expanded", isOpened ? "true" : "false");
+
+      if (!isOpened) {
+        dropdownHeader.removeAttribute("aria-activedescendant");
+        currentFocusIndex = -1;
+      } else {
+        setTimeout(() => focusItem(0), 0);
+      }
+
       e.preventDefault();
       e.stopPropagation();
     });
+
+    dropdownHeader.addEventListener("keydown", handleKeyDown);
+    dropdownList.addEventListener("keydown", handleKeyDown);
 
     document.addEventListener("click", handleClickOutside);
 
     (dropdownElement as any)._handleClickOutside = handleClickOutside;
 
+    (dropdownElement as any).setValues = (values: string[]) => {
+      const optionsSource = options || [];
+      const optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
+
+      dropdownList.querySelectorAll("." + className + "-item").forEach(item => {
+        const itemValue = (item as any)?.dataset?.value;
+        if (itemValue && values.indexOf(itemValue) !== -1) {
+          item.classList.add(itemClassSelected);
+          item.setAttribute("aria-selected", "true");
+        } else {
+          item.classList.remove(itemClassSelected);
+          item.setAttribute("aria-selected", "false");
+        }
+      });
+
+      updateHeaderLabel();
+    };
+
+    (dropdownElement as any).getValues = () => {
+      return optionItems.filter(option => isSelected(option)).map(option => option.value);
+    };
+
+    (dropdownElement as any).__updateSelect = () => {
+      updateOptions();
+      updateHeaderLabel();
+    };
+
     dropdownContainer.appendChild(dropdownHeader);
     dropdownContainer.appendChild(dropdownList);
     dropdownElement.appendChild(dropdownContainer);
+    (dropdownElement as any).__updateSelect();
+
     return dropdownElement;
   }
 
