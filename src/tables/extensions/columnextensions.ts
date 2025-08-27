@@ -4,22 +4,25 @@ import { localization } from "../../localizationManager";
 import { TableExtensions } from "./tableextensions";
 import { QuestionLocation, IColumn } from "../config";
 
-// TableExtensions.registerExtension({
-//   location: "column",
-//   name: "drag",
-//   visibleIndex: 0,
-//   render: function (table: Table, options: any) {
-//     const btn = DocumentHelper.createElement(
-//       "button",
-//       "sa-table__svg-button sa-table__drag-button"
-//     );
-//     btn.appendChild(DocumentHelper.createSvgElement("drag"));
-//     btn.onmousedown = (e) => {
-//       table.enableColumnReorder();
-//     };
-//     return btn;
-//   },
-// });
+TableExtensions.registerExtension({
+  location: "column",
+  name: "drag",
+  visibleIndex: 0,
+  render: function (table: Table, options: any) {
+    const btn = DocumentHelper.createElement(
+      "button",
+      "sa-table__svg-button sa-table__drag-button"
+    );
+    btn.appendChild(DocumentHelper.createSvgElement("drag"));
+    btn.addEventListener("mousedown", () => {
+      table.enableColumnReorder();
+      document.body.addEventListener("mouseup", () => {
+        table.disableColumnReorder();
+      }, { once: true });
+    });
+    return btn;
+  },
+});
 
 TableExtensions.registerExtension({
   location: "column",

@@ -312,13 +312,11 @@ export class Tabulator extends Table {
     var actions = this.getHeaderActions(columnName);
     container.appendChild(title);
     container.appendChild(actions);
-    container.onmousedown = (e: any) => {
+    ["mousemove", "mousedown"].forEach(eventName => actions.addEventListener(eventName, (event) => {
       if (!this.isColumnReorderEnabled) {
-        e.stopPropagation();
-      } else {
-        this.disableColumnReorder();
+        event.stopPropagation();
       }
-    };
+    }));
     return container;
   }
 

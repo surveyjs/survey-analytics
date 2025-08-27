@@ -10,6 +10,11 @@ test.describe("Pivot chart", () => {
   test("simple cases", async ({ page }) => {
     const xAxisSelector = page.locator(".sa-dropdown-header").nth(1);
     const yAxisSelector = page.locator(".sa-dropdown-header").nth(2);
+    await page.evaluate(() => {
+      const style = document.createElement("style");
+      style.textContent = ".sa-commercial { display: none; }";
+      document.head.appendChild(style);
+    });
     await expect(page.locator("#pivotContainer").getByText("Category (X Axis):")).toBeVisible();
     await expect(xAxisSelector).toBeVisible();
     await expect(page.locator("#pivotContainer").getByText("Legend (Series):")).toBeVisible();

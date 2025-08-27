@@ -290,7 +290,8 @@ export class VisualizationPanel extends VisualizerBase {
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
     options: IVisualizationPanelOptions = {},
-    private _elements: Array<IVisualizerPanelRenderedElement> = undefined
+    private _elements: Array<IVisualizerPanelRenderedElement> = undefined,
+    private isRoot = true
   ) {
     super(null, data, options, "panel");
     this.loadingData = false;
@@ -963,7 +964,7 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   protected renderToolbar(container: HTMLElement) {
-    if (!this.haveCommercialLicense) {
+    if (!this.haveCommercialLicense && this.isRoot) {
       const banner = createCommercialLicenseLink();
       container.appendChild(banner);
     }

@@ -96,7 +96,7 @@ test.describe("columnactions", () => {
 
     // Simulate drag and drop
     const dragButton = page.locator('#tabulatorContainer div.tabulator-col[tabulator-field="bool"] button.sa-table__drag-button');
-    const target = page.locator('#tabulatorContainer div.tabulator-col[tabulator-field="bool3"]');
+    const target = page.locator('#tabulatorContainer div.tabulator-col[tabulator-field="bool2"]');
     // await dragButton.dragTo(target, { force: true });
     await dragDropElement(page, dragButton, target);
 
