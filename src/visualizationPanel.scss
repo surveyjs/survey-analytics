@@ -534,7 +534,7 @@
 .sa-dropdown-item,
 .sa-multiple-dropdown-item {
   width: max-content;
-  min-width: 100%;
+  min-width: calc(100% - 2 * var(--sjs2-size-x200, 16px)) ;
   max-width: 100%;
   padding: var(--sjs2-spacing-x150, 12px) var(--sjs2-size-x200, 16px);
   cursor: pointer;

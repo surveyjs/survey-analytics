@@ -4,6 +4,7 @@ import { localization } from "./localizationManager";
 import { DataHelper, DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 import { IDashboardTheme } from "./theme";
+import { ToggleWidget } from "./utils/toggle";
 
 export interface IVisualizerWithSelection {
   selection: ItemValue;
@@ -183,9 +184,10 @@ export class SelectBase
         (this.chartTypes.indexOf("bar") !== -1 ||
           this.chartTypes.indexOf("stackedbar") !== -1)
       ) {
-        this.showPercentageBtn = DocumentHelper.createButton(() => {
+        const toggleWidget = new ToggleWidget(() => {
           this.showPercentages = !this.showPercentages;
-        });
+        }, localization.getString("showPercentages"));
+        this.showPercentageBtn = toggleWidget.container;
         this.updateShowPercentageBtn();
         return this.showPercentageBtn;
       }
@@ -294,9 +296,9 @@ export class SelectBase
 
   private updateShowPercentageBtn() {
     if (!!this.showPercentageBtn) {
-      (this.showPercentageBtn as any).setText(localization.getString(this._showPercentages ? "hidePercentages" : "showPercentages"));
+      // (this.showPercentageBtn as any).setText(localization.getString(this._showPercentages ? "hidePercentages" : "showPercentages"));
       if (this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "stackedbar") {
-        this.showPercentageBtn.style.display = "inline";
+        this.showPercentageBtn.style.display = undefined;
       } else {
         this.showPercentageBtn.style.display = "none";
       }
