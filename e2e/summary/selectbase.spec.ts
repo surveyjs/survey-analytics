@@ -53,7 +53,7 @@ test.describe("selectbase", () => {
     expect(await isBarVisible(2)).toBeFalsy();
     expect(await isBarVisible(3)).toBeTruthy();
 
-    await page.click('span:text("Clear")');
+    await page.locator(".sa-question__filter .sa-toolbar__button").click();
     await page.waitForTimeout(500);
     expect(await isBarVisible(3)).toBeTruthy();
     expect(await isBarVisible(2)).toBeTruthy();
@@ -67,7 +67,7 @@ test.describe("selectbase", () => {
     expect(await isBarVisible(2)).toBeFalsy();
     expect(await isBarVisible(3)).toBeFalsy();
 
-    await page.click('span:text("Clear")');
+    await page.locator(".sa-question__filter .sa-toolbar__button").click();
     await page.waitForTimeout(500);
     expect(await isBarVisible(3)).toBeTruthy();
     expect(await isBarVisible(2)).toBeTruthy();
@@ -121,14 +121,14 @@ test.describe("selectbase", () => {
     await initSummary(page, json, data, options);
 
     // check that comment's footer doesn't exists
-    await expect(page.locator(".sa-visualizer__footer-content")).not.toBeVisible();
+    await expect(page.locator(".sa-visualizer__footer .sa-visualizer__content")).not.toBeVisible();
 
     // check comment's actions
     await page.click('.sa-visualizer__footer span:text("Show")');
-    await expect(page.locator(".sa-visualizer__footer-content")).toBeVisible();
+    await expect(page.locator(".sa-visualizer__footer .sa-visualizer__content")).toBeVisible();
 
     // check that wordcloud exists
-    await expect(page.locator(".sa-visualizer__footer-content .sa-visualizer-wordcloud")).toHaveCount(1);
+    await expect(page.locator(".sa-visualizer__footer .sa-visualizer__content .sa-visualizer-wordcloud")).toHaveCount(1);
 
     // check comment's table
     await page.locator(".sa-dropdown").nth(3).click();
@@ -139,7 +139,7 @@ test.describe("selectbase", () => {
 
     // check that comment's footer is hided
     await page.click('.sa-visualizer__footer span:text("Hide")');
-    await expect(page.locator(".sa-visualizer__footer-content")).not.toBeVisible();
+    await expect(page.locator(".sa-visualizer__footer .sa-visualizer__content")).not.toBeVisible();
   });
 
   test("check sign when there is no comment data", async ({ page }) => {
@@ -180,9 +180,9 @@ test.describe("selectbase", () => {
 
     await initSummary(page, json, data, options);
     const orderingSelect = page.locator(".sa-dropdown").nth(2);
-    const color1 = "#e50a3e";
-    const color2 = "#19b394";
-    const color3 = "#437fd9";
+    const color1 = "#84cad4";
+    const color2 = "#3a99fb";
+    const color3 = "#ff6771";
 
     // check default order
     expect(await getYAxisValues(page)).toEqual(["Other  ", "Two  ", "One  "]);

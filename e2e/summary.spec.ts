@@ -72,7 +72,7 @@ for (const config of testConfigs) {
 
       const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
       await expect(chartTypeSelector).toBeVisible();
-      const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").nth(1);
+      const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").first();
       await expect(chartContentSelector).toBeVisible();
 
       await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Bar");
@@ -111,7 +111,7 @@ for (const config of testConfigs) {
 
       const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
       await expect(chartTypeSelector).toBeVisible();
-      const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").nth(1);
+      const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
       await expect(chartContentSelector).toBeVisible();
 
       await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Vertical Bar");
@@ -143,7 +143,7 @@ for (const config of testConfigs) {
 
       const visualizerTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
       await expect(visualizerTypeSelector).toBeVisible();
-      const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").nth(1);
+      const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
       await expect(chartContentSelector).toBeVisible();
 
       await expect(visualizerTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Wordcloud");

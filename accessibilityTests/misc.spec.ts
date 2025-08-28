@@ -48,7 +48,7 @@ test.describe("Miscellaneous cases", () => {
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
     const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
-    const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").nth(1);
+    const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
 
     await checkA11y(page, axeContext, { axeOptions });
 
