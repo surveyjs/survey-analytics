@@ -341,37 +341,39 @@ export class VisualizationPanel extends VisualizerBase {
           options: any
         ) => {
           const hiddenElements = this.hiddenElements;
+          const selectWrapper = DocumentHelper.createSelector(
+            [
+              <any>{
+                name: undefined,
+                displayName: localization.getString("addElement"),
+              },
+            ]
+              .concat(hiddenElements)
+              .map((element) => {
+                return {
+                  value: element.name,
+                  text: element.displayName,
+                };
+              }),
+            (option: any) => false,
+            (e: any) => {
+              this.showElement(e.target.value);
+            }
+          );
+          if(addElementSelector) {
+            toolbar.replaceChild(selectWrapper, addElementSelector);
+          }
+          addElementSelector = selectWrapper;
+
           if (hiddenElements.length > 0) {
-            const selectWrapper = DocumentHelper.createSelector(
-              [
-                <any>{
-                  name: undefined,
-                  displayName: localization.getString("addElement"),
-                },
-              ]
-                .concat(hiddenElements)
-                .map((element) => {
-                  return {
-                    value: element.name,
-                    text: element.displayName,
-                  };
-                }),
-              (option: any) => false,
-              (e: any) => {
-                this.showElement(e.target.value);
-              }
-            );
-            (addElementSelector &&
-              toolbar.replaceChild(selectWrapper, addElementSelector)) ||
-              toolbar.appendChild(selectWrapper);
-            addElementSelector = selectWrapper;
-          } else {
-            addElementSelector && toolbar.removeChild(addElementSelector);
-            addElementSelector = undefined;
+            addElementSelector.style.display = undefined;
+          } else if(addElementSelector) {
+            addElementSelector.style.display = "none";
           }
         };
         addElementSelectorUpdater(this, {});
         this.onVisibleElementsChanged.add(addElementSelectorUpdater);
+        return addElementSelector;
       }
       return undefined;
     });
