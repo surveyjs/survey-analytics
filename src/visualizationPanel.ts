@@ -217,6 +217,12 @@ export interface IVisualizationPanelOptions {
    * Default value: `false`
    */
   allowShowMissingAnswers?: boolean;
+  /**
+   * Allows users to disable cross-filtering in visualization panel.
+   *
+   * Default value: `false`
+   */
+  disableCrossFiltering?: boolean;
 
   allowExperimentalFeatures?: boolean;
   /**
@@ -323,15 +329,17 @@ export class VisualizationPanel extends VisualizerBase {
       });
     }
 
-    this.registerToolbarItem("resetFilter", () => {
-      return DocumentHelper.createButton(() => {
-        this.visualizers.forEach((visualizer) => {
-          if (visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
-            visualizer.setSelection(undefined);
-          }
-        });
-      }, localization.getString("resetFilter"));
-    }, 900);
+    if(this.isCrossFilteringEnabled) {
+      this.registerToolbarItem("resetFilter", () => {
+        return DocumentHelper.createButton(() => {
+          this.visualizers.forEach((visualizer) => {
+            if (visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
+              visualizer.setSelection(undefined);
+            }
+          });
+        }, localization.getString("resetFilter"));
+      }, 900);
+    }
 
     this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
       if (this.allowHideQuestions) {
