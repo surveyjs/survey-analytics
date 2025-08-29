@@ -867,7 +867,6 @@ export class VisualizerBase implements IDataInfo {
    * > This method is overriden in classes descendant from `VisualizerBase`.
    * @see getState
    * @see setState
-   * @see resetState
    * @see onStateChanged
    */
   public resetState(): void {
