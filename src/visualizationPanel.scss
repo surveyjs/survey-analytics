@@ -51,6 +51,7 @@
 .sa-question-layouted {
   position: absolute;
   margin: calc(var(--sjs2-spacing-x300, 24px) / 2);
+  width: calc(100% - var(--sjs2-spacing-x300, 24px));
   border-radius: var(--sjs2-radius-container-panel, 16px);
   background: var(--sjs2-color-bg-basic-primary, #FFF);
   box-shadow: var(--sjs2-shadow-size-small-offset-x, 0) var(--sjs2-shadow-size-small-offset-y, 0) var(--sjs2-shadow-size-small-blur, 0) var(--sjs2-shadow-size-small-spread, 1px) var(--sjs2-color-utility-shadow-small, #D4D4D4);
@@ -83,6 +84,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-height: var(--sjs2-spacing-x400, 32px);
 }
 
 .sa-question__drag-area-icon {

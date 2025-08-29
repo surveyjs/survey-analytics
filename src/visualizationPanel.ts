@@ -441,12 +441,15 @@ export class VisualizationPanel extends VisualizerBase {
     headerElement.className = "sa-question__header";
 
     const dragAreaElement = DocumentHelper.createElement("div");
-    dragAreaElement.className = "sa-question__drag-area sa-question__header--draggable";
+    dragAreaElement.className = "sa-question__drag-area";
+    if (this.allowDynamicLayout && this.allowDragDrop) {
+      dragAreaElement.className = dragAreaElement.className + " sa-question__header--draggable";
 
-    const svgElement = document.createElement("div");
-    svgElement.className = "sa-question__drag-area-icon";
-    svgElement.appendChild(DocumentHelper.createSvgElement("draghorizontal-24x16"));
-    dragAreaElement.appendChild(svgElement);
+      const svgElement = document.createElement("div");
+      svgElement.className = "sa-question__drag-area-icon";
+      svgElement.appendChild(DocumentHelper.createSvgElement("draghorizontal-24x16"));
+      dragAreaElement.appendChild(svgElement);
+    }
 
     if (this.allowHideQuestions) {
       const hideElement = document.createElement("div");
