@@ -2,6 +2,7 @@ import { VisualizationManager } from "../src/visualizationManager";
 import { Text } from "../src/text";
 import { WordCloud } from "../src/wordcloud/wordcloud";
 import { VisualizerBase } from "../src/visualizerBase";
+import { VisualizerFactory } from "../src/visualizerFactory";
 
 test("register and get", () => {
   expect(VisualizationManager.vizualizers).toMatchObject({});
@@ -131,5 +132,34 @@ test("stub default visualizer and suppressVisulizerStubRendering setting", () =>
     expect(testVizualizers.length).toBe(0);
   } finally {
     VisualizerBase.suppressVisualizerStubRendering = false;
+  }
+});
+
+class Tel extends VisualizerBase {
+  constructor() {
+    super({ name: "tel" } as any, [], {}, "tel");
+  }
+}
+test("Create text visualizer for unregistered input types", () => {
+  try {
+    VisualizationManager.unregisterVisualizer("text", WordCloud);
+    VisualizationManager.registerVisualizer("tel", Tel);
+    VisualizerBase.suppressVisualizerStubRendering = true;
+
+    const telVisualizer = VisualizerFactory.createVisualizer({ name: "q1", getType: () => "text", inputType: "tel" } as any, []);
+    expect(telVisualizer).toBeDefined();
+    expect(telVisualizer.type).toBe("tel");
+
+    const textVisualizer = VisualizerFactory.createVisualizer({ name: "q1", getType: () => "text" } as any, []);
+    expect(textVisualizer).toBeDefined();
+    expect(textVisualizer.type).toBe("text");
+
+    const textWithUnknownInputTypeVisualizer = VisualizerFactory.createVisualizer({ name: "q1", getType: () => "text", inputType: "password" } as any, []);
+    expect(textWithUnknownInputTypeVisualizer).toBeDefined();
+    expect(textWithUnknownInputTypeVisualizer.type).toBe("text");
+  } finally {
+    VisualizerBase.suppressVisualizerStubRendering = false;
+    VisualizationManager.unregisterVisualizer("tel", Tel);
+    VisualizationManager.registerVisualizer("text", WordCloud);
   }
 });

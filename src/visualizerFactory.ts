@@ -31,15 +31,20 @@ export class VisualizerFactory {
     data: Array<{ [index: string]: any }>,
     options?: { [index: string]: any }
   ): VisualizerBase {
-    let type;
+    let type = question.getType();
+    let creators = [];
 
-    if (question.getType() === "text" && (<any>question).inputType) {
+    if (type === "text" && (<any>question).inputType) {
       type = (<any>question).inputType;
+      creators = VisualizationManager.getVisualizersByType(type);
+      if(creators === undefined || creators.length == 0) {
+        type = "text";
+        creators = VisualizationManager.getVisualizersByType(type);
+      }
     } else {
-      type = question.getType();
+      creators = VisualizationManager.getVisualizersByType(type);
     }
 
-    var creators = VisualizationManager.getVisualizersByType(type);
     var visualizers = creators.map(
       (creator) => new creator(question, data, options)
     );
