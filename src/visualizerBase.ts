@@ -90,6 +90,7 @@ export class VisualizerBase implements IDataInfo {
   protected _chartAdapter: IChartAdapter = undefined;
   // public static otherCommentQuestionType = "comment"; // TODO: make it configureable - allow choose what kind of question/visualizer will be used for comments/others
   public static otherCommentCollapsed = true;
+  protected _footerIsCollapsed: boolean = undefined;
 
   /**
    * An event that is raised after the visualizer's content is rendered.
@@ -556,6 +557,16 @@ export class VisualizerBase implements IDataInfo {
     container.innerHTML = "";
   }
 
+  public get isFooterCollapsed(): boolean {
+    if(this._footerIsCollapsed === undefined) {
+      this._footerIsCollapsed = VisualizerBase.otherCommentCollapsed;
+    }
+    return this._footerIsCollapsed;
+  }
+  public set isFooterCollapsed(newVal: boolean) {
+    this._footerIsCollapsed = newVal;
+  }
+
   protected renderFooter(container: HTMLElement) {
     container.innerHTML = "";
     if (this.hasFooter) {
@@ -570,19 +581,19 @@ export class VisualizerBase implements IDataInfo {
         "div",
         "sa-visualizer__footer-content"
       );
-      footerContentElement.style.display = VisualizerBase.otherCommentCollapsed
-        ? "none"
-        : "block";
+      footerContentElement.style.display = this.isFooterCollapsed ? "none" : "block";
 
       const visibilityButton = DocumentHelper.createButton(() => {
         if (footerContentElement.style.display === "none") {
           footerContentElement.style.display = "block";
           visibilityButton.innerText = localization.getString("hideButton");
+          this._footerIsCollapsed = false;
         } else {
           footerContentElement.style.display = "none";
           visibilityButton.innerText = localization.getString(
-            VisualizerBase.otherCommentCollapsed ? "showButton" : "hideButton"
+            this.isFooterCollapsed ? "showButton" : "hideButton"
           );
+          this._footerIsCollapsed = true;
         }
         this.footerVisualizer.invokeOnUpdate();
       }, localization.getString("showButton") /*, "sa-toolbar__button--right"*/);

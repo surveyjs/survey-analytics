@@ -103,12 +103,15 @@ export class AlternativeVisualizersWrapper
   public setVisualizer(type: string, quiet = false): void {
     const visualizerCandidate = this.visualizers.filter((v) => v.type === type)[0];
     if (!!visualizerCandidate && visualizerCandidate !== this.visualizer) {
+      let isFooterCollapsed;
       if (!!this.visualizer) {
+        isFooterCollapsed = this.visualizer.isFooterCollapsed;
         this.visualizer.onStateChanged.remove(this.onVisualizerStateChangedCallback);
         this.visualizer.onAfterRender.remove(this.onAfterVisualizerRenderCallback);
         this.visualizer.destroy();
       }
       this.visualizer = visualizerCandidate;
+      this.visualizer.isFooterCollapsed = isFooterCollapsed;
       this.refresh();
       this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
       this.visualizer.onStateChanged.add(this.onVisualizerStateChangedCallback);
