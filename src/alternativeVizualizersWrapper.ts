@@ -164,6 +164,7 @@ export class AlternativeVisualizersWrapper
    *
    * > This method is overriden in descendant classes.
    * @see setState
+   * @see resetState
    */
   public getState(): any {
     const currentVisualizerState = this.visualizer.getState();
@@ -178,8 +179,8 @@ export class AlternativeVisualizersWrapper
   /**
    * Sets the visualizer's state.
    *
-   * > This method is overriden in descendant classes.
    * @see getState
+   * @see resetState
    */
   public setState(state: any): void {
     if(!!state.visualizer) {
@@ -188,6 +189,17 @@ export class AlternativeVisualizersWrapper
     if(!!state.state) {
       this.visualizer.setState(state.state);
     }
+  }
+  /**
+   * Resets the visualizer's state.
+   *
+   * @see getState
+   * @see setState
+   */
+  public resetState(): void {
+      super.resetState();
+      this.visualizers.forEach(visualizer => visualizer.resetState());
+      this.setVisualizer(this.visualizers[0].type, true);
   }
 
   getValues(): Array<any> {
