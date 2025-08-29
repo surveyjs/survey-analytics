@@ -90,7 +90,6 @@ export class VisualizerBase implements IDataInfo {
   protected _chartAdapter: IChartAdapter = undefined;
   // public static otherCommentQuestionType = "comment"; // TODO: make it configureable - allow choose what kind of question/visualizer will be used for comments/others
   public static otherCommentCollapsed = true;
-  private _disableCrossFiltering: boolean = false;
 
   /**
    * An event that is raised after the visualizer's content is rendered.
@@ -187,8 +186,6 @@ export class VisualizerBase implements IDataInfo {
       VisualizerBase.haveCommercialLicense ||
       (typeof options.haveCommercialLicense !== "undefined" ? options.haveCommercialLicense : false);
 
-    this._disableCrossFiltering = this.options.disableCrossFiltering === true;
-
     this._getDataCore = this.questionOptions?.getDataCore;
     this._dataProvider = options.dataProvider || new DataProvider(data);
     this._dataProvider.onDataChanged.add(() => this.onDataChanged());
@@ -277,17 +274,10 @@ export class VisualizerBase implements IDataInfo {
    * Indicates whether users can select series points to cross-filter charts. To allow or disallow selection, set the [`allowSelection`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowSelection) property of the `IVisualizationPanelOptions` object in the [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel) constructor.
    */
   public get supportSelection(): boolean {
-    return this.isCrossFilteringEnabled && (
-      (this.options.allowSelection === undefined ||
+    return (this.options.allowSelection === undefined ||
         this.options.allowSelection) &&
-      this._supportSelection
-    );
+      this._supportSelection;
   }
-
-  public get isCrossFilteringEnabled() {
-    return !this._disableCrossFiltering;
-  }
-
 
   public getSeriesValues(): Array<string> {
     return this.options.seriesValues || [];

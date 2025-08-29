@@ -125,15 +125,15 @@ test("ensure question is ready", async () => {
   expect(q1.choices.length).toBe(1);
 });
 
-test("VisualizerBase isCrossFilteringEnabled and disableCrossFiltering option", () => {
+test("VisualizerBase supportSelection and allowSelection option", () => {
   var q = new QuestionDropdownModel("q1");
 
   let vis = new VisualizerBase(q, []);
-  expect(vis.isCrossFilteringEnabled).toBe(true);
+  expect(vis.supportSelection).toBe(false);
 
-  vis = new VisualizerBase(q, [], { disableCrossFiltering: true });
-  expect(vis.isCrossFilteringEnabled).toBe(false);
+  vis = new VisualizerBase(q, [], { allowSelection: true });
+  expect(vis.supportSelection).toBe(false);
 
-    vis = new VisualizerBase(q, [], { disableCrossFiltering: false });
-  expect(vis.isCrossFilteringEnabled).toBe(true);
+    vis = new VisualizerBase(q, [], { allowSelection: false });
+  expect(vis.supportSelection).toBe(false);
 });

@@ -947,18 +947,21 @@ test("getCalculatedValues should return empty array", async () => {
   expect(await vis.getCalculatedValues()).toStrictEqual([]);
 });
 
-test("VisualizationPanel reset filter button respects the disableCrossFiltering option", () => {
-  let panel = new VisualizationPanel([], [], { disableCrossFiltering: true });
+test("VisualizationPanel reset filter button respects the allowSelection option", () => {
+  let panel = new VisualizationPanel([], [], {});
+  expect(panel.supportSelection).toBeTruthy();
+  // @ts-ignore
   let creators = panel["toolbarItemCreators"];
+  expect(creators["resetFilter"]).toBeDefined();
+
+  panel = new VisualizationPanel([], [], { allowSelection: true });
+  expect(panel.supportSelection).toBeTruthy();
+  creators = panel["toolbarItemCreators"];
+  expect(creators["resetFilter"]).toBeDefined();
+
+  panel = new VisualizationPanel([], [], { allowSelection: false });
+  expect(panel.supportSelection).toBeFalsy();
+  // @ts-ignore
+  creators = panel["toolbarItemCreators"];
   expect(creators["resetFilter"]).toBeUndefined();
-
-  panel = new VisualizationPanel([], [], {});
-  // @ts-ignore
-  creators = panel["toolbarItemCreators"];
-  expect(creators["resetFilter"]).toBeDefined();
-
-  panel = new VisualizationPanel([], [], { disableCrossFiltering: false });
-  // @ts-ignore
-  creators = panel["toolbarItemCreators"];
-  expect(creators["resetFilter"]).toBeDefined();
 });

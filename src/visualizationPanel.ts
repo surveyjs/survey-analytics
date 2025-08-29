@@ -217,12 +217,6 @@ export interface IVisualizationPanelOptions {
    * Default value: `false`
    */
   allowShowMissingAnswers?: boolean;
-  /**
-   * Allows users to disable cross-filtering in visualization panel.
-   *
-   * Default value: `false`
-   */
-  disableCrossFiltering?: boolean;
 
   allowExperimentalFeatures?: boolean;
   /**
@@ -329,7 +323,8 @@ export class VisualizationPanel extends VisualizerBase {
       });
     }
 
-    if(this.isCrossFilteringEnabled) {
+    this._supportSelection = true;
+    if(this.supportSelection !== false) {
       this.registerToolbarItem("resetFilter", () => {
         return DocumentHelper.createButton(() => {
           this.visualizers.forEach((visualizer) => {
