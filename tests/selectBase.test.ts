@@ -371,7 +371,7 @@ test("choicesFromQuestion", () => {
   expect(selectBase2.getValues()).toStrictEqual(["Item 3", "Item 2", "Item 1"]);
 });
 
-test("save selection in state", () => {
+test("save selection to state / restore selection from state", () => {
   selectBase.setSelection(new ItemValue(1, "One"));
 
   let state = selectBase.getState();
@@ -385,6 +385,35 @@ test("save selection in state", () => {
   state.filter = "father";
   selectBase.setState(state);
   expect(selectBase.selection.value).toEqual("father");
+});
+
+test("get/set/reset state", () => {
+  selectBase["chartTypes"] = ["bar", "pie"];
+  const initialState = {
+    "answersOrder": "default",
+    "chartType": "bar", 
+    "hideEmptyAnswers": false,
+    "topN": -1,
+  };
+
+  let state = selectBase.getState();
+  expect(state).toStrictEqual(initialState);
+
+  selectBase.answersOrder = "asc";
+  selectBase.hideEmptyAnswers = true;
+  selectBase.topN = 3;
+  selectBase.chartType = "pie";
+  state = selectBase.getState();
+  expect(state).toStrictEqual({
+    "answersOrder": "asc",
+    "chartType": "pie",
+    "hideEmptyAnswers": true,
+    "topN": 3,
+  });
+
+  selectBase.resetState();
+  state = selectBase.getState();
+  expect(state).toStrictEqual(initialState);
 });
 
 test("hideEmptyAnswersInData", () => {
