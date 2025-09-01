@@ -93,9 +93,10 @@ test.describe("Summary common", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const visualizerSelector = questionVisualizerSelector.locator("select").filter({ hasText: /^HistogramAverage$/ });
+    const visualizerSelector = questionVisualizerSelector.locator("select").filter({ hasText: /^ChartAverageHistogram$/ });
     await expect(visualizerSelector).toBeVisible();
-    await expect(visualizerSelector).toHaveValue("histogram");
+    await expect(visualizerSelector).toHaveValue("selectBase");
+    await visualizerSelector.selectOption("histogram");
 
     const chartTypeSelector = questionVisualizerSelector.locator("select").filter({ hasText: /^Vertical BarBar$/ });
     await expect(chartTypeSelector).toBeVisible();
