@@ -275,11 +275,9 @@ export class VisualizerBase implements IDataInfo {
    * Indicates whether users can select series points to cross-filter charts. To allow or disallow selection, set the [`allowSelection`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowSelection) property of the `IVisualizationPanelOptions` object in the [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel) constructor.
    */
   public get supportSelection(): boolean {
-    return (
-      (this.options.allowSelection === undefined ||
+    return (this.options.allowSelection === undefined ||
         this.options.allowSelection) &&
-      this._supportSelection
-    );
+      this._supportSelection;
   }
 
   public getSeriesValues(): Array<string> {

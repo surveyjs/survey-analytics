@@ -125,6 +125,19 @@ test("ensure question is ready", async () => {
   expect(q1.choices.length).toBe(1);
 });
 
+test("VisualizerBase supportSelection and allowSelection option", () => {
+  var q = new QuestionDropdownModel("q1");
+
+  let vis = new VisualizerBase(q, []);
+  expect(vis.supportSelection).toBe(false);
+
+  vis = new VisualizerBase(q, [], { allowSelection: true });
+  expect(vis.supportSelection).toBe(false);
+
+    vis = new VisualizerBase(q, [], { allowSelection: false });
+  expect(vis.supportSelection).toBe(false);
+});
+
 test("isFooterCollapsed should default to VisualizerBase.otherCommentCollapsed if not set", () => {
   VisualizerBase.otherCommentCollapsed = true;
   const q = { q1: { getDataCore: (dataInfo: IDataInfo) => [] } } as any;
@@ -175,3 +188,4 @@ test("footer should render or hide the footer content depending on isFooterColla
   expect(contentDivExpanded).not.toBeNull();
   expect(contentDivExpanded.style.display).toBe("block");
 });
+

@@ -92,7 +92,6 @@ export class SelectBase
   private _showOnlyPercentages: boolean = false;
   private _percentagePrecision: number = 0;
   protected _answersOrder: string = "default";
-  protected _supportSelection: boolean = true;
   private _hideEmptyAnswers = false;
   private _topN = -1;
   public static topNValuesDefaults = [-1, 5, 10, 20];
@@ -113,6 +112,7 @@ export class SelectBase
         this.dataProvider.raiseDataChanged();
       };
     }
+    this._supportSelection = true;
     this._showPercentages = this.options.showPercentages === true;
     this._showOnlyPercentages = this.options.showOnlyPercentages === true;
 

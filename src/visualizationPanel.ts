@@ -323,15 +323,18 @@ export class VisualizationPanel extends VisualizerBase {
       });
     }
 
-    this.registerToolbarItem("resetFilter", () => {
-      return DocumentHelper.createButton(() => {
-        this.visualizers.forEach((visualizer) => {
-          if (visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
-            visualizer.setSelection(undefined);
-          }
-        });
-      }, localization.getString("resetFilter"));
-    }, 900);
+    this._supportSelection = true;
+    if(this.supportSelection !== false) {
+      this.registerToolbarItem("resetFilter", () => {
+        return DocumentHelper.createButton(() => {
+          this.visualizers.forEach((visualizer) => {
+            if (visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
+              visualizer.setSelection(undefined);
+            }
+          });
+        }, localization.getString("resetFilter"));
+      }, 900);
+    }
 
     this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
       if (this.allowHideQuestions) {

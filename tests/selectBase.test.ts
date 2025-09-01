@@ -559,3 +559,16 @@ test("choices from composite question", () => {
   expect(selectBase1.getValues()).toStrictEqual(["ALB", "ATG", "FRA"]);
   expect(selectBase1.getLabels()).toStrictEqual(["Albania", "Antigua and Barbuda", "France"]);
 });
+
+test("SelectBase supportSelection and allowSelection option", () => {
+  var q = new QuestionDropdownModel("q1");
+
+  let vis = new SelectBase(q, []);
+  expect(vis.supportSelection).toBe(true);
+
+  vis = new SelectBase(q, [], { allowSelection: true });
+  expect(vis.supportSelection).toBe(true);
+
+    vis = new SelectBase(q, [], { allowSelection: false });
+  expect(vis.supportSelection).toBe(false);
+});

@@ -73,7 +73,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
   public async create(chartNode: HTMLElement): Promise<any> {
     const [plot, plotlyOptions] = await this.update(chartNode);
 
-    if(this.model instanceof SelectBase) {
+    if(this.model instanceof SelectBase && this.model.supportSelection) {
       const _model = this.model as SelectBase;
       (<any>chartNode)["on"]("plotly_click", (data: any) => {
         if (data.points.length > 0) {
