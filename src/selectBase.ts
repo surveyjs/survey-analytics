@@ -722,6 +722,18 @@ export class SelectBase
     const selectedItem = ItemValue.getItemByValue((this.question as QuestionSelectBase).visibleChoices, state.filter);
     this.setSelection(selectedItem ?? undefined);
   }
+  public resetState(): void {
+    super.resetState();
+    // this._showPercentages = this.options.showPercentages === true;
+    // this._showOnlyPercentages = this.options.showOnlyPercentages === true;
+    // this._showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
+    // this._transposeData = this.options.transposeData || false;
+    this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
+    this._answersOrder = this.options.answersOrder || "default";
+    this._topN = -1;
+    this.chartType = this.chartTypes[0];
+    this.setSelection(undefined);
+  }
 }
 
 VisualizationManager.registerVisualizer("checkbox", SelectBase);

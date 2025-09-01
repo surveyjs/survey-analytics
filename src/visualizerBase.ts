@@ -843,6 +843,7 @@ export class VisualizerBase implements IDataInfo {
    *
    * > This method is overriden in classes descendant from `VisualizerBase`.
    * @see setState
+   * @see resetState
    * @see onStateChanged
    */
   public getState(): any {
@@ -855,9 +856,20 @@ export class VisualizerBase implements IDataInfo {
    *
    * > This method is overriden in classes descendant from `VisualizerBase`.
    * @see getState
+   * @see resetState
    * @see onStateChanged
    */
   public setState(state: any): void {
+  }
+  /**
+   * Resets the visualizer's state.
+   *
+   * > This method is overriden in classes descendant from `VisualizerBase`.
+   * @see getState
+   * @see setState
+   * @see onStateChanged
+   */
+  public resetState(): void {
   }
 
   /**

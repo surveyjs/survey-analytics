@@ -106,7 +106,7 @@ test("check onVisualizerChanged and setVisualizer", () => {
   expect(log).toEqual("->sb2->sb1");
 });
 
-test("get/set state", () => {
+test("get/set/reset state", () => {
   const initialState = {
     "visualizer": "sb1",
     "state": {
@@ -127,6 +127,10 @@ test("get/set state", () => {
   const currentVisualizer = alternativeVisualizersWrapper["visualizer"];
   expect(currentVisualizer.type).toEqual("sb2");
   expect(currentVisualizer["chartType"]).toEqual("pie");
+
+  alternativeVisualizersWrapper.resetState();
+  state = alternativeVisualizersWrapper.getState();
+  expect(state).toStrictEqual(initialState);
 });
 
 test("onStateChanged", () => {
