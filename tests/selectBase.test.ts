@@ -170,14 +170,14 @@ test("hide empty items", async () => {
   expect(selectBase.hideEmptyAnswers).toBe(false);
   expect(await selectBase.getAnswersData()).toEqual({ "colors": colors, "datasets": [[2, 1, 0, 1, 0, 0].reverse()], "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse(), "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0].reverse()] },);
   selectBase.hideEmptyAnswers = true;
-  expect(await selectBase.getAnswersData()).toEqual({ "colors": ["#437fd9", "#4faf24", "#a62cec"], "datasets": [[2, 1, 1].reverse()], "labels": ["father_text", "mother_text", "sister_text"].reverse(), "texts": [[2, 1, 1].reverse()], "seriesLabels": [] });
+  expect(await selectBase.getAnswersData()).toEqual({ "colors": ["#ff6771", "#ffc152", "#aba1ff"], "datasets": [[2, 1, 1].reverse()], "labels": ["father_text", "mother_text", "sister_text"].reverse(), "texts": [[2, 1, 1].reverse()], "seriesLabels": [] });
 });
 
 test("change answers order", async () => {
   selectBase.hideEmptyAnswers = true;
-  const color1 = "#437fd9";
-  const color2 = "#4faf24";
-  const color3 = "#a62cec";
+  const color1 = "#ff6771";
+  const color2 = "#ffc152";
+  const color3 = "#aba1ff";
   expect(selectBase.answersOrder).toBe("default");
   expect(await selectBase.getAnswersData()).toEqual({ "colors": [color1, color2, color3], "datasets": [[2, 1, 1].reverse()], "labels": ["father_text", "mother_text", "sister_text"].reverse(), "texts": [[2, 1, 1].reverse()], "seriesLabels": [] });
   selectBase.answersOrder = "asc";
@@ -397,7 +397,7 @@ test("get/set/reset state", () => {
   selectBase["chartTypes"] = ["bar", "pie"];
   const initialState = {
     "answersOrder": "default",
-    "chartType": "bar", 
+    "chartType": "bar",
     "hideEmptyAnswers": false,
     "topN": -1,
   };
@@ -575,6 +575,6 @@ test("SelectBase supportSelection and allowSelection option", () => {
   vis = new SelectBase(q, [], { allowSelection: true });
   expect(vis.supportSelection).toBe(true);
 
-    vis = new SelectBase(q, [], { allowSelection: false });
+  vis = new SelectBase(q, [], { allowSelection: false });
   expect(vis.supportSelection).toBe(false);
 });

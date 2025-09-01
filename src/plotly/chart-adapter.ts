@@ -169,9 +169,9 @@ export class PlotlyChartAdapter implements IChartAdapter {
       const dragLayer = <HTMLElement>chartNode.getElementsByClassName("nsewdrag")[0];
       dragLayer && (dragLayer.style.cursor = cursor);
     };
-    plotlyChart.removeAllListeners("plotly_hover");
+    !!plotlyChart.removeAllListeners && plotlyChart.removeAllListeners("plotly_hover");
     plotlyChart.on("plotly_hover", () => setCursorOnDragLayer("pointer"));
-    plotlyChart.removeAllListeners("plotly_unhover");
+    !!plotlyChart.removeAllListeners && plotlyChart.removeAllListeners("plotly_unhover");
     plotlyChart.on("plotly_unhover", () => setCursorOnDragLayer(""));
 
     return [plot, plotlyOptions];

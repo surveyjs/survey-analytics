@@ -74,18 +74,20 @@ test("allowHideQuestions option", () => {
     allowDynamicLayout: false,
   });
   expect(vis.allowHideQuestions).toBeTruthy();
-  vis.render(document.createElement("div"));
-  var innerVis = vis["visualizers"][0];
-  expect(innerVis["toolbarItemCreators"]["removeQuestion"]).toBeDefined();
+  let container = document.createElement("div");
+  vis.render(container);
+  let hideAction = container.querySelector(".sa-question__hide-action") as HTMLElement;
+  expect(hideAction).not.toBeNull();
 
   vis = new VisualizationPanel(survey.getAllQuestions(), data, {
     allowDynamicLayout: false,
     allowHideQuestions: false,
   });
   expect(vis.allowHideQuestions).toBeFalsy();
-  vis.render(document.createElement("div"));
-  innerVis = vis["visualizers"][0];
-  expect(innerVis["toolbarItemCreators"]["removeQuestion"]).toBeUndefined();
+  container = document.createElement("div");
+  vis.render(container);
+  hideAction = container.querySelector(".sa-question__hide-action") as HTMLElement;
+  expect(hideAction).toBeNull();
 });
 
 test("change language", () => {
