@@ -95,6 +95,7 @@ export class VisualizerBase implements IDataInfo {
   protected _chartAdapter: IChartAdapter = undefined;
   // public static otherCommentQuestionType = "comment"; // TODO: make it configureable - allow choose what kind of question/visualizer will be used for comments/others
   public static otherCommentCollapsed = true;
+  protected _footerIsCollapsed: boolean = undefined;
 
   /**
    * An event that is raised after the visualizer's content is rendered.
@@ -279,11 +280,9 @@ export class VisualizerBase implements IDataInfo {
    * Indicates whether users can select series points to cross-filter charts. To allow or disallow selection, set the [`allowSelection`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowSelection) property of the `IVisualizationPanelOptions` object in the [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel) constructor.
    */
   public get supportSelection(): boolean {
-    return (
-      (this.options.allowSelection === undefined ||
+    return (this.options.allowSelection === undefined ||
         this.options.allowSelection) &&
-      this._supportSelection
-    );
+      this._supportSelection;
   }
 
   public getSeriesValues(): Array<string> {
@@ -606,6 +605,16 @@ export class VisualizerBase implements IDataInfo {
     container.innerHTML = "";
   }
 
+  public get isFooterCollapsed(): boolean {
+    if(this._footerIsCollapsed === undefined) {
+      this._footerIsCollapsed = VisualizerBase.otherCommentCollapsed;
+    }
+    return this._footerIsCollapsed;
+  }
+  public set isFooterCollapsed(newVal: boolean) {
+    this._footerIsCollapsed = newVal;
+  }
+
   protected renderFooter(container: HTMLElement) {
     container.innerHTML = "";
     if (this.hasFooter) {
@@ -620,17 +629,17 @@ export class VisualizerBase implements IDataInfo {
         "div",
         "sa-visualizer__footer-content"
       );
-      footerContentElement.style.display = VisualizerBase.otherCommentCollapsed
-        ? "none"
-        : "block";
+      footerContentElement.style.display = this.isFooterCollapsed ? "none" : "block";
 
       const visibilityButton = DocumentHelper.createButton(() => {
         if (footerContentElement.style.display === "none") {
           footerContentElement.style.display = "block";
           (visibilityButton as any).setText(localization.getString("hideButton"));
+          this._footerIsCollapsed = false;
         } else {
           footerContentElement.style.display = "none";
-          (visibilityButton as any).setText(localization.getString(VisualizerBase.otherCommentCollapsed ? "showButton" : "hideButton"));
+          (visibilityButton as any).setText(localization.getString(this.isFooterCollapsed ? "showButton" : "hideButton"));
+          this._footerIsCollapsed = true;
         }
         this.footerVisualizer.invokeOnUpdate();
       }, localization.getString("showButton") /*, "sa-toolbar__button--right"*/);
@@ -933,6 +942,7 @@ export class VisualizerBase implements IDataInfo {
    *
    * > This method is overriden in classes descendant from `VisualizerBase`.
    * @see setState
+   * @see resetState
    * @see onStateChanged
    */
   public getState(): any {
@@ -945,9 +955,20 @@ export class VisualizerBase implements IDataInfo {
    *
    * > This method is overriden in classes descendant from `VisualizerBase`.
    * @see getState
+   * @see resetState
    * @see onStateChanged
    */
   public setState(state: any): void {
+  }
+  /**
+   * Resets the visualizer's state.
+   *
+   * > This method is overriden in classes descendant from `VisualizerBase`.
+   * @see getState
+   * @see setState
+   * @see onStateChanged
+   */
+  public resetState(): void {
   }
 
   /**

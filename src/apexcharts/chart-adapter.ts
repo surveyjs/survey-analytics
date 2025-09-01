@@ -76,7 +76,7 @@ export class ApexChartsAdapter {
     const answersData = (this.model instanceof SelectBase) ? await this.model.getAnswersData() : await this.model.getCalculatedValues();
     var chartOptions = ApexChartsSetup.setup(_chartType, this.model, answersData as any);
 
-    if (this.model instanceof SelectBase) {
+    if (this.model instanceof SelectBase && this.model.supportSelection) {
       const _model = this.model as SelectBase;
       chartOptions.chart.events = {
         dataPointMouseEnter: function () { chartNode.style.cursor = "pointer"; },

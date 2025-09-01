@@ -347,15 +347,18 @@ export class VisualizationPanel extends VisualizerBase {
       return undefined;
     }, "dropdown");
 
-    this.registerToolbarItem("resetFilter", () => {
-      return DocumentHelper.createButton(() => {
-        this.visualizers.forEach((visualizer) => {
-          if (visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
-            visualizer.setSelection(undefined);
-          }
-        });
-      }, localization.getString("resetFilter"));
-    }, "button", 900);
+    this._supportSelection = true;
+    if(this.supportSelection !== false) {
+      this.registerToolbarItem("resetFilter", () => {
+        return DocumentHelper.createButton(() => {
+          this.visualizers.forEach((visualizer) => {
+            if (visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
+              visualizer.setSelection(undefined);
+            }
+          });
+        }, localization.getString("resetFilter"));
+      }, "button", 900);
+    }
 
     if (!this.options.disableLocaleSwitch && this.locales.length > 1) {
       const localeChoices = this.locales.map((element) => {
@@ -1066,6 +1069,17 @@ export class VisualizationPanel extends VisualizerBase {
         }
       });
 
+    } finally {
+      this._settingState = false;
+    }
+    this.refresh();
+  }
+  public resetState(): void {
+    this._settingState = true;
+    super.resetState();
+    try {
+      this.visualizers.forEach(visualizer => visualizer.resetState());
+      this.locale = surveyLocalization.defaultLocale;
     } finally {
       this._settingState = false;
     }

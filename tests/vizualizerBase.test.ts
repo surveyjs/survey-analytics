@@ -113,3 +113,68 @@ test("ensure question is ready", async () => {
   });
   expect(q1.choices.length).toBe(1);
 });
+
+test("VisualizerBase supportSelection and allowSelection option", () => {
+  var q = new QuestionDropdownModel("q1");
+
+  let vis = new VisualizerBase(q, []);
+  expect(vis.supportSelection).toBe(false);
+
+  vis = new VisualizerBase(q, [], { allowSelection: true });
+  expect(vis.supportSelection).toBe(false);
+
+    vis = new VisualizerBase(q, [], { allowSelection: false });
+  expect(vis.supportSelection).toBe(false);
+});
+
+test("isFooterCollapsed should default to VisualizerBase.otherCommentCollapsed if not set", () => {
+  VisualizerBase.otherCommentCollapsed = true;
+  const q = { q1: { getDataCore: (dataInfo: IDataInfo) => [] } } as any;
+  const vis = new VisualizerBase(q, []);
+  expect(vis.isFooterCollapsed).toBe(true);
+
+  VisualizerBase.otherCommentCollapsed = false;
+  const vis2 = new VisualizerBase(q, []);
+  expect(vis2.isFooterCollapsed).toBe(false);
+});
+
+test("isFooterCollapsed should changea after set", () => {
+  VisualizerBase.otherCommentCollapsed = true;
+  const q = { q1: { getDataCore: (dataInfo: IDataInfo) => [] } } as any;
+  const vis = new VisualizerBase(q, []);
+  expect(vis.isFooterCollapsed).toBe(true);
+  vis.isFooterCollapsed = false;
+  expect(vis.isFooterCollapsed).toBe(false);
+});
+
+test("footer should render or hide the footer content depending on isFooterCollapsed", () => {
+  class TestVisualizer extends VisualizerBase {
+    // Always has a footer for testing
+    get hasFooter() {
+      return true;
+    }
+    // Mock footerVisualizer to avoid recursion
+    get footerVisualizer() {
+      return { render: (el: HTMLElement) => { el.innerHTML = "footer-content"; }, invokeOnUpdate: () => {} } as any;
+    }
+  }
+  const q = { q1: { getDataCore: (dataInfo: IDataInfo) => [] } } as any;
+  const vis = new TestVisualizer(q, []);
+  const container = document.createElement("div");
+
+  // Collapsed
+  vis.isFooterCollapsed = true;
+  vis.renderFooter(container);
+  const contentDivCollapsed = container.querySelector(".sa-visualizer__footer-content") as HTMLElement;
+  expect(contentDivCollapsed).not.toBeNull();
+  expect(contentDivCollapsed.style.display).toBe("none");
+
+  // Expanded
+  container.innerHTML = "";
+  vis.isFooterCollapsed = false;
+  vis.renderFooter(container);
+  const contentDivExpanded = container.querySelector(".sa-visualizer__footer-content") as HTMLElement;
+  expect(contentDivExpanded).not.toBeNull();
+  expect(contentDivExpanded.style.display).toBe("block");
+});
+

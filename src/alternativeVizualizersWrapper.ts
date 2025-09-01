@@ -110,12 +110,15 @@ export class AlternativeVisualizersWrapper
   public setVisualizer(type: string, quiet = false): void {
     const visualizerCandidate = this.visualizers.filter((v) => v.type === type)[0];
     if (!!visualizerCandidate && visualizerCandidate !== this.visualizer) {
+      let isFooterCollapsed;
       if (!!this.visualizer) {
+        isFooterCollapsed = this.visualizer.isFooterCollapsed;
         this.visualizer.onStateChanged.remove(this.onVisualizerStateChangedCallback);
         this.visualizer.onAfterRender.remove(this.onAfterVisualizerRenderCallback);
         this.visualizer.destroy();
       }
       this.visualizer = visualizerCandidate;
+      this.visualizer.isFooterCollapsed = isFooterCollapsed;
       this.refresh();
       this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
       this.visualizer.onStateChanged.add(this.onVisualizerStateChangedCallback);
@@ -171,6 +174,7 @@ export class AlternativeVisualizersWrapper
    *
    * > This method is overriden in descendant classes.
    * @see setState
+   * @see resetState
    */
   public getState(): any {
     const currentVisualizerState = this.visualizer.getState();
@@ -185,8 +189,8 @@ export class AlternativeVisualizersWrapper
   /**
    * Sets the visualizer's state.
    *
-   * > This method is overriden in descendant classes.
    * @see getState
+   * @see resetState
    */
   public setState(state: any): void {
     if(!!state.visualizer) {
@@ -195,6 +199,17 @@ export class AlternativeVisualizersWrapper
     if(!!state.state) {
       this.visualizer.setState(state.state);
     }
+  }
+  /**
+   * Resets the visualizer's state.
+   *
+   * @see getState
+   * @see setState
+   */
+  public resetState(): void {
+      super.resetState();
+      this.visualizers.forEach(visualizer => visualizer.resetState());
+      this.setVisualizer(this.visualizers[0].type, true);
   }
 
   getValues(): Array<any> {

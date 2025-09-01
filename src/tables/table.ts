@@ -1,4 +1,4 @@
-import { SurveyModel, Question, Event, Serializer, EventBase } from "survey-core";
+import { SurveyModel, Question, Event, Serializer, EventBase, surveyLocalization } from "survey-core";
 import { hasLicense } from "survey-core";
 import {
   IPermission,
@@ -314,7 +314,7 @@ export abstract class Table {
   }
 
   /**
-   * Vizualization panel state getter.
+   * Table state getter.
    */
   public get state(): ITableState {
     return {
@@ -324,7 +324,7 @@ export abstract class Table {
     };
   }
   /**
-   * Vizualization panel state setter.
+   * Table state setter.
    */
   public set state(newState: ITableState) {
     if (!newState) return;
@@ -339,6 +339,20 @@ export abstract class Table {
       this.updateColumnsFromData(newState.elements);
     if (typeof newState.pageSize !== "undefined")
       this.currentPageSize = newState.pageSize;
+  }
+  /**
+   * Resets table state.
+   */
+  public resetState() {
+    this._columns.forEach((column: IColumn, index: number) => {
+        column.fromJSON({});
+        column.visibleIndex = index;
+      }
+    );
+    this.locale = surveyLocalization.defaultLocale;
+    this.currentPageSize = 5;
+    this.initTableData(this.data);
+    this.onStateChanged.fire(this, this.state);
   }
 
   private updateColumnsFromData(columnsData: Array<IColumnData>) {

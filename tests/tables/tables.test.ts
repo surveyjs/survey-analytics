@@ -109,6 +109,12 @@ test("getState, setState, onStateChanged", () => {
   tables.locale = "ru";
   expect(count).toBe(1);
   expect(tables.state.locale).toEqual("ru");
+
+  tables.setPageSize(10);
+  expect(tables.getPageSize()).toEqual(10);
+
+  tables.resetState();
+  expect(tables.state).toEqual(initialState);
 });
 
 test("partial state", () => {

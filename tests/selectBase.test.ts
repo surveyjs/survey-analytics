@@ -377,7 +377,7 @@ test("choicesFromQuestion", () => {
   expect(selectBase2.getValues()).toStrictEqual(["Item 3", "Item 2", "Item 1"]);
 });
 
-test("save selection in state", () => {
+test("save selection to state / restore selection from state", () => {
   selectBase.setSelection(new ItemValue(1, "One"));
 
   let state = selectBase.getState();
@@ -391,6 +391,35 @@ test("save selection in state", () => {
   state.filter = "father";
   selectBase.setState(state);
   expect(selectBase.selection.value).toEqual("father");
+});
+
+test("get/set/reset state", () => {
+  selectBase["chartTypes"] = ["bar", "pie"];
+  const initialState = {
+    "answersOrder": "default",
+    "chartType": "bar", 
+    "hideEmptyAnswers": false,
+    "topN": -1,
+  };
+
+  let state = selectBase.getState();
+  expect(state).toStrictEqual(initialState);
+
+  selectBase.answersOrder = "asc";
+  selectBase.hideEmptyAnswers = true;
+  selectBase.topN = 3;
+  selectBase.chartType = "pie";
+  state = selectBase.getState();
+  expect(state).toStrictEqual({
+    "answersOrder": "asc",
+    "chartType": "pie",
+    "hideEmptyAnswers": true,
+    "topN": 3,
+  });
+
+  selectBase.resetState();
+  state = selectBase.getState();
+  expect(state).toStrictEqual(initialState);
 });
 
 test("hideEmptyAnswersInData", () => {
@@ -535,4 +564,17 @@ test("choices from composite question", () => {
   const selectBase1 = new SelectBase(survey.getQuestionByName("q1"), []);
   expect(selectBase1.getValues()).toStrictEqual(["ALB", "ATG", "FRA"]);
   expect(selectBase1.getLabels()).toStrictEqual(["Albania", "Antigua and Barbuda", "France"]);
+});
+
+test("SelectBase supportSelection and allowSelection option", () => {
+  var q = new QuestionDropdownModel("q1");
+
+  let vis = new SelectBase(q, []);
+  expect(vis.supportSelection).toBe(true);
+
+  vis = new SelectBase(q, [], { allowSelection: true });
+  expect(vis.supportSelection).toBe(true);
+
+    vis = new SelectBase(q, [], { allowSelection: false });
+  expect(vis.supportSelection).toBe(false);
 });

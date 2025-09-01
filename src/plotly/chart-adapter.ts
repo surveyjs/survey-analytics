@@ -131,7 +131,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
 
     const plotlyChart = <any>chartNode;
 
-    if(this.model instanceof SelectBase) {
+    if(this.model instanceof SelectBase && this.model.supportSelection) {
       const _model = this.model as SelectBase;
       plotlyChart.removeAllListeners("plotly_click");
       plotlyChart.on("plotly_click", (data: any) => {
@@ -168,7 +168,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
     var setCursorOnDragLayer = (cursor: string) => {
       const dragLayer = <HTMLElement>chartNode.getElementsByClassName("nsewdrag")[0];
       dragLayer && (dragLayer.style.cursor = cursor);
-    }
+    };
     plotlyChart.removeAllListeners("plotly_hover");
     plotlyChart.on("plotly_hover", () => setCursorOnDragLayer("pointer"));
     plotlyChart.removeAllListeners("plotly_unhover");
