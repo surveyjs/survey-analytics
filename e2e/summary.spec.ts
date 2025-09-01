@@ -37,9 +37,13 @@ test.describe("Summary common", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
+    const visualizerSelector = questionVisualizerSelector.locator("select").filter({ hasText: /^ChartTable$/ });
+    await expect(visualizerSelector).toBeVisible();
+    await expect(visualizerSelector).toHaveValue("boolean");
+
     const chartTypeSelector = questionVisualizerSelector.locator("select").filter({ hasText: /^PieBarDoughnut$/ });
     await expect(chartTypeSelector).toBeVisible();
-    const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
+    const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").nth(1);
     await expect(chartContentSelector).toBeVisible();
 
     await expect(chartTypeSelector).toHaveValue("pie");
@@ -50,6 +54,10 @@ test.describe("Summary common", () => {
 
     await chartTypeSelector.selectOption("doughnut");
     await compareScreenshot(page, chartContentSelector, "boolean-simple-doughnut.png");
+
+    await visualizerSelector.selectOption("options");
+    await expect(chartTypeSelector).toBeHidden();
+    await compareScreenshot(page, chartContentSelector, "boolean-simple-table.png");
   });
 
   test("select simple cases", async ({ page }) => {

@@ -1,13 +1,14 @@
 import { Question } from "survey-core";
 import { SelectBase } from "./selectBase";
+import { BooleanModel } from "./boolean";
 import { VisualizationManager } from "./visualizationManager";
-import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils";
+import { localization } from "./localizationManager";
 
 import "./statistics-table.scss";
 
 export class StatisticsTableAdapter {
-  constructor(private model: StatisticsTable) {}
+  constructor(private model: SelectBase) {}
 
   public async create(container: HTMLElement): Promise<void> {
     let {
@@ -123,6 +124,40 @@ export class StatisticsTable extends SelectBase {
   }
 }
 
+export class StatisticsTableBoolean extends BooleanModel {
+  private _statisticsTableAdapter: StatisticsTableAdapter;
+
+  constructor(
+    question: Question,
+    data: Array<{ [index: string]: any }>,
+    options?: Object,
+    name?: string
+  ) {
+    super(question, data, options, name || "options");
+    this._statisticsTableAdapter = new StatisticsTableAdapter(this);
+    this.showPercentages = true;
+  }
+
+  protected destroyContent(container: HTMLElement) {
+    this._statisticsTableAdapter.destroy(container);
+    super.destroyContent(container);
+  }
+
+  protected async renderContentAsync(container: HTMLElement) {
+    const tableNode: HTMLElement = DocumentHelper.createElement("div");
+    await this._statisticsTableAdapter.create(tableNode);
+    container.innerHTML = "";
+    container.appendChild(tableNode);
+    return container;
+  }
+
+  destroy() {
+    this._statisticsTableAdapter.destroy(this.contentContainer);
+    super.destroy();
+  }
+}
+
 VisualizationManager.registerVisualizer("radiogroup", StatisticsTable);
 VisualizationManager.registerVisualizer("dropdown", StatisticsTable);
 VisualizationManager.registerVisualizer("checkbox", StatisticsTable);
+VisualizationManager.registerVisualizer("boolean", StatisticsTableBoolean);
