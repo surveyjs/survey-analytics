@@ -143,6 +143,10 @@ export var italianStrings = {
   responses: "Risposte",
   // [Auto-translated] "NPS"
   visualizer_nps: "Rete nazionale di dati",
+  // [Auto-translated] "Chart"
+  visualizer_boolean: "Tabella",
+  // [Auto-translated] "Table"
+  visualizer_options: "Tavolo",
   // [Auto-translated] "NPS"
   npsScore: "Rete nazionale di dati",
   // [Auto-translated] "Promoters"

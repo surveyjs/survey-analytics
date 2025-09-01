@@ -143,6 +143,10 @@ export var russianStrings = {
   responses: "ответов",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
+  // [Auto-translated] "Chart"
+  visualizer_boolean: "Диаграмма",
+  // [Auto-translated] "Table"
+  visualizer_options: "Стол",
   // [Auto-translated] "NPS"
   npsScore: "NPS",
   // [Auto-translated] "Promoters"

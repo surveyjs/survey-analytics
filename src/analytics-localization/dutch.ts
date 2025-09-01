@@ -143,6 +143,10 @@ export var dutchStrings = {
   responses: "Reacties",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
+  // [Auto-translated] "Chart"
+  visualizer_boolean: "Zeekaart",
+  // [Auto-translated] "Table"
+  visualizer_options: "Tafel",
   // [Auto-translated] "NPS"
   npsScore: "NPS",
   // [Auto-translated] "Promoters"

@@ -143,6 +143,10 @@ export var germanStrings = {
   responses: "Antworten",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS (NPS)",
+  // [Auto-translated] "Chart"
+  visualizer_boolean: "Diagramm",
+  // [Auto-translated] "Table"
+  visualizer_options: "Tisch",
   // [Auto-translated] "NPS"
   npsScore: "NPS (NPS)",
   // [Auto-translated] "Promoters"

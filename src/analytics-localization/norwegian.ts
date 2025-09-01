@@ -143,6 +143,10 @@ export var norwegianStrings = {
   responses: "Svar",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
+  // [Auto-translated] "Chart"
+  visualizer_boolean: "Sjøkart",
+  // [Auto-translated] "Table"
+  visualizer_options: "Bord",
   // [Auto-translated] "NPS"
   npsScore: "NPS",
   // [Auto-translated] "Promoters"

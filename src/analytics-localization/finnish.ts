@@ -143,6 +143,10 @@ export var finnishStrings = {
   responses: "Vastaukset",
   // "NPS"
   visualizer_nps: "NPS",
+  // [Auto-translated] "Chart"
+  visualizer_boolean: "Kaavio",
+  // [Auto-translated] "Table"
+  visualizer_options: "Pöytä",
   // "NPS"
   npsScore: "NPS",
   // "Promoters"
