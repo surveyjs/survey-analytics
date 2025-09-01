@@ -19,13 +19,13 @@ test.describe("Rating common", () => {
     await expect(chartContentSelector).toBeVisible();
 
     await expect(visualizerTypeSelector).toHaveValue("selectBase");
-    await compareScreenshot(page, chartContentSelector, "range-number-chart.png");
+    await compareScreenshot(page, chartContentSelector, "rating-number-chart.png");
 
     await visualizerTypeSelector.selectOption("number");
-    await compareScreenshot(page, chartContentSelector, "range-number-average.png");
+    await compareScreenshot(page, chartContentSelector, "rating-number-average.png");
 
     await visualizerTypeSelector.selectOption("histogram");
-    await compareScreenshot(page, chartContentSelector, "range-number-histogram.png");
+    await compareScreenshot(page, chartContentSelector, "rating-number-histogram.png");
   });
 
   test("string value", async ({ page }) => {
@@ -40,11 +40,11 @@ test.describe("Rating common", () => {
     await expect(chartContentSelector).toBeVisible();
 
     await expect(visualizerTypeSelector).toHaveValue("selectBase");
-    await compareScreenshot(page, chartContentSelector, "range-string-chart.png");
+    await compareScreenshot(page, chartContentSelector, "rating-string-chart.png");
 
     await visualizerTypeSelector.selectOption("number");
-    await compareScreenshot(page, chartContentSelector, "range-string-average.png");
+    await compareScreenshot(page, chartContentSelector, "rating-string-average.png");
 
     await visualizerTypeSelector.selectOption("histogram");
-    await compareScreenshot(page, chartContentSelector, "range-string-histogram.png");  });
+    await compareScreenshot(page, chartContentSelector, "rating-string-histogram.png");  });
 });
