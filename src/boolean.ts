@@ -13,9 +13,10 @@ export class BooleanModel extends SelectBase {
     name?: string
   ) {
     super(question, data, options, name || "boolean");
-    if(this.options.showPercentages === undefined) {
-      this.showPercentages = true;
-    }
+  }
+
+  protected getShowPercentagesDefault(): boolean {
+    return this.options.showPercentages === undefined || !!this.options.showPercentages;
   }
 
   protected getCorrectAnswerText(): string {

@@ -88,7 +88,7 @@ export class SelectBase
   private emptyAnswersBtn: HTMLElement = undefined;
   private transposeDataBtn: HTMLElement = undefined;
   private topNSelector: HTMLDivElement = undefined;
-  private _showPercentages: boolean = false;
+  private _showPercentages: boolean;
   private _showOnlyPercentages: boolean = false;
   private _percentagePrecision: number = 2;
   protected _answersOrder: string = "default";
@@ -113,7 +113,6 @@ export class SelectBase
       };
     }
     this._supportSelection = true;
-    this._showPercentages = this.options.showPercentages === true;
     this._showOnlyPercentages = this.options.showOnlyPercentages === true;
 
     if (this.options.percentagePrecision) {
@@ -403,11 +402,19 @@ export class SelectBase
     this.stateChanged("showOnlyPercentages", val);
   }
 
+  protected getShowPercentagesDefault(): boolean {
+    return this.options.showPercentages === true;
+  }
+
   /**
    * Gets and sets whether chart should show values and percentages.
    */
   public get showPercentages(): boolean {
-    return this._showPercentages;
+    if(this._showPercentages !== undefined) {
+      return this._showPercentages;
+    } else {
+      return this.getShowPercentagesDefault();
+    }
   }
 
   public set showPercentages(val: boolean) {
