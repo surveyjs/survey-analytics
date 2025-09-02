@@ -9,11 +9,8 @@
 }
 
 .sa-panel__header > .sa-toolbar {
-  display: flex;
   height: 48px;
-  align-items: center;
   gap: var(--sjs2-spacing-x300, 24px);
-  align-self: stretch;
   margin-inline: calc(var(--sjs2-spacing-x300, 24px) / 2);
   padding: var(--sjs2-spacing-x200, 16px);
   border-radius: var(--sjs2-radius-container-panel, 16px);
@@ -49,6 +46,7 @@
 }
 
 .sa-question-layouted {
+  overflow: visible;
   position: absolute;
   margin: calc(var(--sjs2-spacing-x300, 24px) / 2);
   width: calc(100% - var(--sjs2-spacing-x300, 24px));
@@ -136,7 +134,7 @@
     }
   }
 
-  &:focus {
+  &:focus-visible {
     border-radius: var(--sjs2-radius-control-action-icon, 8px);
     outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.60));
     background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0.00));
@@ -173,7 +171,7 @@
   opacity: var(--sjs2-opacity-disabled, 0.25);
 }
 
-.sa-toolbar__button:focus {
+.sa-toolbar__button:focus-visible {
   border-radius: var(--sjs2-radius-control-action, 8px);
   outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.60));
   background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
@@ -655,7 +653,7 @@
   border-radius: var(--sjs2-radius-control-action, 8px);
   background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0.00));
 
-  &:focus {
+  &:focus-visible {
     border-radius: var(--sjs2-radius-control-action, 8px);
     outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.60));
     background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0.00));

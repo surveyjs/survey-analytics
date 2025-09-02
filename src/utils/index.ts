@@ -470,7 +470,6 @@ export class DocumentHelper {
           dropdownHeader.classList.add(dropdownOpenedClass);
           dropdownList.classList.add(dropdownOpenedClass);
           dropdownHeader.setAttribute("aria-expanded", "true");
-          setTimeout(() => focusItem(0), 0);
         }
         return;
       }
@@ -538,8 +537,6 @@ export class DocumentHelper {
 
       if (!isOpened) {
         currentFocusIndex = -1;
-      } else {
-        setTimeout(() => focusItem(0), 0);
       }
 
       e.preventDefault();
