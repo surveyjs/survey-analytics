@@ -43,9 +43,17 @@ for (const config of testConfigs) {
       const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
       questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-      const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
+      // const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
+      // await expect(chartTypeSelector).toBeVisible();
+      // const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
+      // await expect(chartContentSelector).toBeVisible();
+      const visualizerSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
+      await expect(visualizerSelector).toBeVisible();
+      await expect(visualizerSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart");
+
+      const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
       await expect(chartTypeSelector).toBeVisible();
-      const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
+      const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").first();
       await expect(chartContentSelector).toBeVisible();
 
       await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Pie");
@@ -58,6 +66,11 @@ for (const config of testConfigs) {
       await chartTypeSelector.click();
       await getListItemByText(page, "Doughnut").click();
       await compareScreenshot(page, chartContentSelector, "boolean-simple-doughnut.png");
+
+      await visualizerSelector.click();
+      await getListItemByText(page, "Table").click();
+      await expect(chartTypeSelector).toBeHidden();
+      await compareScreenshot(page, chartContentSelector, "boolean-simple-table.png");
     });
 
     test("select simple cases", async ({ page }) => {

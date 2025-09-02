@@ -738,3 +738,4 @@ VisualizationManager.registerVisualizer("radiogroup", SelectBase);
 VisualizationManager.registerVisualizer("dropdown", SelectBase);
 VisualizationManager.registerVisualizer("imagepicker", SelectBase);
 VisualizationManager.registerVisualizer("tagbox", SelectBase);
+VisualizationManager.registerVisualizer("rating", SelectBase, 100);

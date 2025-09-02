@@ -143,6 +143,10 @@ export var japaneseStrings = {
   responses: "回答数",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPSの",
+  // [Auto-translated] "Chart"
+  visualizer_boolean: "チャート",
+  // [Auto-translated] "Table"
+  visualizer_options: "テーブル",
   // [Auto-translated] "NPS"
   npsScore: "NPSの",
   // [Auto-translated] "Promoters"

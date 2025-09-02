@@ -143,6 +143,10 @@ export var spanishStrings = {
   responses: "Respuestas",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
+  // [Auto-translated] "Chart"
+  visualizer_boolean: "Gráfico",
+  // [Auto-translated] "Table"
+  visualizer_options: "Mesa",
   // [Auto-translated] "NPS"
   npsScore: "NPS",
   // [Auto-translated] "Promoters"

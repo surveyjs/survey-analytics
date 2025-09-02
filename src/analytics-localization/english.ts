@@ -74,6 +74,8 @@ export var englishStrings = {
   statistics_chart: "Chart",
   responses: "Responses",
   visualizer_nps: "NPS",
+  visualizer_boolean: "Chart",
+  visualizer_options: "Table",
   npsScore: "NPS",
   npsPromoters: "Promoters",
   npsPassives: "Passives",

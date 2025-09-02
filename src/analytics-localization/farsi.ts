@@ -143,6 +143,10 @@ export var farsiStrings = {
   responses: "پاسخ",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
+  // [Auto-translated] "Chart"
+  visualizer_boolean: "نمودار",
+  // [Auto-translated] "Table"
+  visualizer_options: "جدول",
   // [Auto-translated] "NPS"
   npsScore: "NPS",
   // [Auto-translated] "Promoters"

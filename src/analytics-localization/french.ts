@@ -143,6 +143,10 @@ export var frenchStrings = {
   responses: "Réponses",
   // [Auto-translated] "NPS"
   visualizer_nps: "Le NPS",
+  // [Auto-translated] "Chart"
+  visualizer_boolean: "Graphique",
+  // [Auto-translated] "Table"
+  visualizer_options: "Table",
   // [Auto-translated] "NPS"
   npsScore: "Le NPS",
   // [Auto-translated] "Promoters"

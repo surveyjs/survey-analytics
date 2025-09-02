@@ -143,6 +143,10 @@ export var swedishStrings = {
   responses: "Svar",
   // "NPS"
   visualizer_nps: "NPS",
+  // [Auto-translated] "Chart"
+  visualizer_boolean: "Diagram",
+  // [Auto-translated] "Table"
+  visualizer_options: "Bord",
   // "NPS"
   npsScore: "NPS",
   // "Promoters"

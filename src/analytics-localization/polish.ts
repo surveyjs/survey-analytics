@@ -143,6 +143,10 @@ export var plStrings = {
   responses: "Odpowiedzi",
   // [Auto-translated] "NPS"
   visualizer_nps: "Wskaźnik NPS",
+  // [Auto-translated] "Chart"
+  visualizer_boolean: "Wykres",
+  // [Auto-translated] "Table"
+  visualizer_options: "Stół",
   // [Auto-translated] "NPS"
   npsScore: "Wskaźnik NPS",
   // [Auto-translated] "Promoters"
