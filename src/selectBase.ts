@@ -576,12 +576,10 @@ export class SelectBase
     var percentagePrecision = this._percentagePrecision;
 
     if (data.length < 2) {
-      data.forEach((res, index) => {
-        var sum = res.reduce((sum, val) => sum + val, 0);
-        percentages[index] = res.map((val) => {
-          var value = percentagePrecision ? + (val / sum * 100).toFixed(percentagePrecision) : Math.round(val / sum * 100);
-          return sum && value;
-        });
+      var sum = data[0].reduce((sum, val) => sum + val, 0);
+      percentages[0] = data[0].map((val) => {
+        var value = percentagePrecision ? + (val / sum * 100).toFixed(percentagePrecision) : Math.round(val / sum * 100);
+        return sum && value;
       });
     } else {
       for (var i = 0; i < data[0].length; i++) {
@@ -634,15 +632,15 @@ export class SelectBase
     let datasets = (await this.getCalculatedValues()) as number[][];
     let labels = this.getLabels();
     let colors = this.getColors();
-    var texts = this.showPercentages ? this.getPercentages(datasets) : datasets;
 
     if (this.transposeData) {
       datasets = this.transpose(datasets);
-      texts = this.transpose(texts);
       const temp = seriesLabels;
       seriesLabels = labels;
       labels = temp;
     }
+
+    var texts = this.showPercentages ? this.getPercentages(datasets) : datasets;
 
     if (this.answersOrder == "asc" || this.answersOrder == "desc") {
       var zippedArray = this.showPercentages
