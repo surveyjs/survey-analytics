@@ -305,8 +305,9 @@ export class VisualizationPanel extends VisualizerBase {
         "." + questionLayoutedElementClassName,
         this.allowDragDrop
       );
-    this._layoutEngine.onMoveCallback = (order: Array<string>) =>
-      this.reorderVisibleElements(order);
+    if(!!this._layoutEngine) {
+      this._layoutEngine.onMoveCallback = (order: Array<string>) => this.reorderVisibleElements(order);
+    }
 
     this.showToolbar = true;
     if (this.options.survey) {
@@ -425,7 +426,7 @@ export class VisualizationPanel extends VisualizerBase {
     this.renderedQuestionsCount++;
     if (this.renderedQuestionsCount == this.questions.length) {
       this.renderedQuestionsCount = 0;
-      this.layoutEngine.update();
+      this.layoutEngine?.update();
       this.afterRender(this.contentContainer);
     }
   };
@@ -474,7 +475,7 @@ export class VisualizationPanel extends VisualizerBase {
     if(elementIndex >= 0) {
       options = { index: elementIndex };
     }
-    this.layoutEngine.add([questionElement], options);
+    this.layoutEngine?.add([questionElement], options);
   }
 
   public showElement(elementName: string) {
@@ -487,7 +488,7 @@ export class VisualizationPanel extends VisualizerBase {
   protected hideElementCore(element: IVisualizerPanelRenderedElement) {
     element.isVisible = false;
     if (!!element.renderedElement) {
-      this.layoutEngine.remove([element.renderedElement]);
+      this.layoutEngine?.remove([element.renderedElement]);
       this.contentContainer.removeChild(element.renderedElement);
       element.renderedElement = undefined;
     }
@@ -974,12 +975,12 @@ export class VisualizationPanel extends VisualizerBase {
       let questionElement = this.renderPanelElement(element, container);
     });
 
-    this.layoutEngine.start(container);
+    this.layoutEngine?.start(container);
     // !!window && window.dispatchEvent(new UIEvent("resize"));
   }
 
   protected destroyContent(container: HTMLElement) {
-    this.layoutEngine.stop();
+    this.layoutEngine?.stop();
     super.destroyContent(container);
   }
 
@@ -995,7 +996,7 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   public layout() {
-    this.layoutEngine.update();
+    this.layoutEngine?.update();
   }
 
   /**
