@@ -403,6 +403,9 @@ export class SelectBase
   }
 
   protected getShowPercentagesDefault(): boolean {
+    if(this.options.showPercentages === undefined) {
+      return ["pie", "doughnut"].indexOf(this.chartType) !== -1;
+    }
     return this.options.showPercentages === true;
   }
 
