@@ -580,6 +580,7 @@ export class VisualizerBase implements IDataInfo {
         "sa-visualizer__footer-content"
       );
       footerContentElement.style.display = this.isFooterCollapsed ? "none" : "block";
+      const visibilityButtonText = localization.getString(this.isFooterCollapsed ? "showButton" : "hideButton");
 
       const visibilityButton = DocumentHelper.createButton(() => {
         if (footerContentElement.style.display === "none") {
@@ -588,13 +589,11 @@ export class VisualizerBase implements IDataInfo {
           this._footerIsCollapsed = false;
         } else {
           footerContentElement.style.display = "none";
-          visibilityButton.innerText = localization.getString(
-            this.isFooterCollapsed ? "showButton" : "hideButton"
-          );
+          visibilityButton.innerText = localization.getString("showButton");
           this._footerIsCollapsed = true;
         }
         this.footerVisualizer.invokeOnUpdate();
-      }, localization.getString("showButton") /*, "sa-toolbar__button--right"*/);
+      }, visibilityButtonText /*, "sa-toolbar__button--right"*/);
       container.appendChild(visibilityButton);
 
       container.appendChild(footerContentElement);
