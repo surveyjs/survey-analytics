@@ -18,6 +18,7 @@ SurveyJS Dashboard visualizes survey results and allows users to analyze them.
   - [Histogram](/dashboard/documentation/chart-types#histogram)
   - [Gauge](/dashboard/documentation/chart-types#gauge-chart)
   - [Bullet](/dashboard/documentation/chart-types#bullet-chart)
+  - [Radar / Spider chart](/dashboard/documentation/chart-types#radar-chart-spider-chart)
   - [Stacked bar](/dashboard/documentation/chart-types#stacked-bar-chart)
   - [Word cloud](/dashboard/documentation/chart-types#word-cloud)
   - [Text table](/dashboard/documentation/chart-types#text-table)

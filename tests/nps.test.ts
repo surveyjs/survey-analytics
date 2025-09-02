@@ -1,7 +1,9 @@
 import { SurveyModel } from "survey-core";
 import { NpsVisualizer, NpsVisualizerWidget } from "../src/nps";
+import { SelectBase } from "../src/selectBase";
+import { HistogramModel } from "../src/histogram";
+import { NumberModel } from "../src/number";
 import { VisualizationManager } from "../src/visualizationManager";
-import { GaugePlotly, HistogramPlotly } from "../src/plotly/legacy";
 import { VisualizationPanel } from "../src/visualizationPanel";
 
 test("result resultMin resultMax", async () => {
@@ -31,8 +33,9 @@ test("result precision is 2 digits", async () => {
 });
 
 test("check unregisterVisualizer function", () => {
-  VisualizationManager.unregisterVisualizer("rating", HistogramPlotly);
-  VisualizationManager.unregisterVisualizer("rating", GaugePlotly);
+  VisualizationManager.unregisterVisualizer("rating", HistogramModel);
+  VisualizationManager.unregisterVisualizer("rating", NumberModel);
+  VisualizationManager.unregisterVisualizer("rating", SelectBase);
   VisualizationManager.registerVisualizer("rating", NpsVisualizer);
 
   const json = {
@@ -79,8 +82,9 @@ test("check unregisterVisualizer function", () => {
     expect(visPanel.visualizers[0].name).toBe("nps");
     expect(visPanel.visualizers[0] instanceof NpsVisualizer).toBeTruthy();
   } finally {
-    VisualizationManager.registerVisualizer("rating", HistogramPlotly);
-    VisualizationManager.registerVisualizer("rating", GaugePlotly);
+    VisualizationManager.registerVisualizer("rating", HistogramModel);
+    VisualizationManager.registerVisualizer("rating", NumberModel);
+    VisualizationManager.registerVisualizer("rating", SelectBase);
     VisualizationManager.unregisterVisualizer("rating", NpsVisualizer);
   }
 });

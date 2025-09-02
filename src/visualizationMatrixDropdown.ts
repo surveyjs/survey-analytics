@@ -51,7 +51,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
       this._matrixDropdownVisualizer = new creators[0](this.question, [], this._childOptions);
     } else {
       const innerQuestions = this.getQuestions();
-      this._matrixDropdownVisualizer = new VisualizationPanel(innerQuestions, [], this._childOptions);
+      this._matrixDropdownVisualizer = new VisualizationPanel(innerQuestions, [], this._childOptions, undefined, false);
     }
     this._matrixDropdownVisualizer.onAfterRender.add(this.onPanelAfterRenderCallback);
     this.updateData(data);

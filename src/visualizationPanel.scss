@@ -1,4 +1,5 @@
 @use "globals" as *;
+@use "./utils/utils.scss" as *;
 
 .sa-panel__header {
   margin: 0 1em;
@@ -173,25 +174,6 @@
   vertical-align: middle;
   margin-top: 1px;
   line-height: 32px;
-}
-
-.sa-commercial {
-  font-size: 12px;
-  padding: 0.5em 0 0.5em 2em;
-  svg {
-    width: 20px;
-    height: 20px;
-    fill: $main-color;
-    vertical-align: middle;
-  }
-}
-.sa-commercial__text {
-  font-weight: bold;
-  text-decoration: none;
-  color: $main-color;
-}
-.sa-commercial__product {
-  padding-left: 0.5em;
 }
 
 /* latin-ext */

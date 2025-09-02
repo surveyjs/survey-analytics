@@ -1,123 +1,170 @@
-// This dictionary contains 1 untranslated or inherited localization strings.
-// These strings are commented out. Uncomment and edit them if you want to add your translations.
-import { localization } from "../localizationManager";
+import { setupLocale } from "../localizationManager";
 
 export var farsiStrings = {
+  // "Group By Me"
   groupButton: "گروه بندی با",
+  // "Ungroup By Me"
   ungroupButton: "حذف گروه",
+  // "Select Me"
   selectButton: "انتخاب",
+  // "Hide column"
   hideColumn: "مخفی کردن ستون",
+  // "Show column"
   showColumn: "نمایش ستون",
+  // "Make column private"
   makePrivateColumn: "خصوصی کردن ستون",
+  // "Make column public"
   makePublicColumn: "عمومی کردن ستون",
+  // "Move to Detail"
   moveToDetail: "انتقال به جزئیات",
+  // "Show as Column"
   showAsColumn: "نمایش به عنوان ستون",
+  // "Search..."
   filterPlaceholder: "جستجو...",
+  // "Remove rows"
   removeRows: "حذف سطرها",
+  // "Show"
   showLabel: "نمایش",
+  // "entries"
   entriesLabel: "ورودی",
+  // "Texts in table"
   visualizer_text: "متون در جدول",
+  // "Wordcloud"
   visualizer_wordcloud: "ابر کلمات",
+  // "Histogram"
   visualizer_histogram: "هیستوگرام",
+  // "Average"
   visualizer_number: "متوسط",
+  // "Table"
   visualizer_choices: "جدول",
+  // "Chart"
   visualizer_selectBase: "نمودار",
-  // visualizer_matrix: "Chart",
-  chartType_bar: "میله ای",
+  // [Auto-translated] "Chart"
+  visualizer_matrix: "نمودار",
+  // [Auto-translated] "Bar"
+  chartType_bar: "نوار",
+  // "Vertical Bar"
   chartType_vbar: "نوار عمودی",
+  // "Stacked Bar"
   chartType_stackedbar: "نوار پشته",
+  // "Doughnut"
   chartType_doughnut: "دونات",
+  // "Pie"
   chartType_pie: "دابره ای(pie)",
+  // "Scatter"
   chartType_scatter: "پراکندگی(Scatter)",
+  // "Gauge"
   chartType_gauge: "عقربه ای",
+  // "Bullet"
   chartType_bullet: "Bullet",
+  // [Auto-translated] "Line"
+  chartType_line: "خط",
+  // [Auto-translated] "Radar"
+  chartType_radar: "رادار",
+  // "Hide"
   hideButton: "مخفی",
+  // "Make private"
   makePrivateButton: "خصوصی کردن",
+  // "Make public"
   makePublicButton: "عمومی کردن",
+  // "Show"
   showButton: "نمایش",
+  // "Filter"
   filter: "فیلتر",
+  // "Reset Filter"
   resetFilter: "بازنشانی فیلترها",
+  // "Change Locale"
   changeLocale: "تغییر محلی",
+  // "Clear"
   clearButton: "پاک کردن",
+  // "Choose question to show..."
   addElement: "انتخاب سوال برای نمایش...",
+  // "Default Order"
   defaultOrder: "ترتیب پیشفرض",
+  // "Ascending"
   ascOrder: "صعودی",
+  // "Descending"
   descOrder: "نزولی",
+  // "Show minor columns"
   showMinorColumns: "نمایش ستونهای فرعی",
+  // [Auto-translated] "Actions"
+  actionsColumn: "اقدامات",
+  // "Other items and comments"
   otherCommentTitle: "سایر موارد و نظرات",
+  // "Show percentages"
   showPercentages: "نمایش درصد",
+  // "Hide percentages"
   hidePercentages: "درصدهای مخفی",
+  // "PDF"
   pdfDownloadCaption: "پی دی اف",
+  // "Excel"
   xlsxDownloadCaption: "اکسل",
+  // "CSV"
   csvDownloadCaption: "Csv",
+  // "Download plot as a PNG file"
   saveDiagramAsPNG: "دانلود طرح به عنوان یک فایل PNG",
+  // "Hide empty answers"
   hideEmptyAnswers: "مخفی کردن پاسخهای خالی",
+  // "Show empty answers"
   showEmptyAnswers: "نمایش پاسخهای خالی",
+  // "All answers"
   "topNValueText-1": "همه پاسخ ها",
+  // "Top 5 answers"
   topNValueText5: "5 پاسخ برتر",
+  // "Top 10 answers"
   topNValueText10: "10 پاسخ برتر",
+  // "Top 20 answers"
   topNValueText20: "20 پاسخ برتر",
+  // "Hide missing answers"
   hideMissingAnswers: "مخفی کردن پاسخهای گمشده",
+  // "Show missing answers"
   showMissingAnswers: "نمایش پاسخهای گمشده",
+  // "Missing answers"
   missingAnswersLabel: "پاسخ های گمشده",
+  // "This question type is not visualized yet"
   noVisualizerForQuestion: "این نوع سوال هنوز تجسم نشده است",
+  // "There are no results yet"
   noResults: "هنوز نتیجه ای حاصل نشده است",
+  // "Per Values"
   showPerValues: "به ازای هر ارزش",
+  // "Per Columns"
   showPerColumns: "در هر ستون",
+  // "Answer"
   answer: "پاسخ",
+  // "Correct answer: "
   correctAnswer: "پاسخ صحیح: ",
+  // "Percent"
   percent: "درصد",
-  responses: "پاسخ"
+  // [Auto-translated] "Percentage"
+  percentage: "درصد",
+  // [Auto-translated] "Chart"
+  statistics_chart: "نمودار",
+  // "Responses"
+  responses: "پاسخ",
+  // [Auto-translated] "NPS"
+  visualizer_nps: "NPS",
+  // [Auto-translated] "Chart"
+  visualizer_boolean: "نمودار",
+  // [Auto-translated] "Table"
+  visualizer_options: "جدول",
+  // [Auto-translated] "NPS"
+  npsScore: "NPS",
+  // [Auto-translated] "Promoters"
+  npsPromoters: "مروج",
+  // [Auto-translated] "Passives"
+  npsPassives: "منفعل ها",
+  // [Auto-translated] "Detractors"
+  npsDetractors: "بدهیدان",
+  // [Auto-translated] "Category (X Axis):"
+  axisXSelectorTitle: "دسته (محور X):",
+  // [Auto-translated] "Legend (Series):"
+  axisYSelectorTitle: "افسانه (سری):",
+  // [Auto-translated] "Segments:"
+  axisXAlternativeSelectorTitle: "بخش:",
+  // [Auto-translated] "Groups:"
+  axisYAlternativeSelectorTitle: "گروه:",
+  // [Auto-translated] "Not selected"
+  notSelected: "انتخاب نشده است"
 };
 
-localization.locales["fa"] = farsiStrings;
-localization.localeNames["fa"] = "فارسی";
-
-// The following strings have been translated by a machine translation service
-// Remove those strings that you have corrected manually
-// undefined.makePrivateColumn: "Make column private" => "خصوصی کردن ستون"
-// undefined.makePublicColumn: "Make column public" => "عمومی کردن ستون"
-// undefined.filterPlaceholder: "Search..." => "جستجو..."
-// undefined.removeRows: "Remove rows" => "حذف سطرها"
-// undefined.showLabel: "Show" => "نمایش"
-// undefined.entriesLabel: "entries" => "ورودی"
-// undefined.visualizer_histogram: "Histogram" => "هیستوگرام"
-// undefined.visualizer_number: "Average" => "متوسط"
-// undefined.visualizer_choices: "Table" => "جدول"
-// undefined.visualizer_selectBase: "Chart" => "نمودار"
-// undefined.chartType_vbar: "Vertical Bar" => "نوار عمودی"
-// undefined.chartType_stackedbar: "Stacked Bar" => "نوار پشته"
-// undefined.chartType_doughnut: "Doughnut" => "دونات"
-// undefined.makePrivateButton: "Make private" => "خصوصی کردن"
-// undefined.makePublicButton: "Make public" => "عمومی کردن"
-// undefined.showButton: "Show" => "نمایش"
-// undefined.filter: "Filter" => "فیلتر"
-// undefined.changeLocale: "Change Locale" => "تغییر محلی"
-// undefined.defaultOrder: "Default Order" => "ترتیب پیشفرض"
-// undefined.ascOrder: "Ascending" => "صعودی"
-// undefined.descOrder: "Descending" => "نزولی"
-// undefined.showMinorColumns: "Show minor columns" => "نمایش ستونهای فرعی"
-// undefined.otherCommentTitle: "Other items and comments" => "سایر موارد و نظرات"
-// undefined.showPercentages: "Show percentages" => "نمایش درصد"
-// undefined.hidePercentages: "Hide percentages" => "درصدهای مخفی"
-// undefined.pdfDownloadCaption: "PDF" => "پی دی اف"
-// undefined.xlsxDownloadCaption: "Excel" => "اکسل"
-// undefined.csvDownloadCaption: "CSV" => "Csv"
-// undefined.saveDiagramAsPNG: "Download plot as a PNG file" => "دانلود طرح به عنوان یک فایل PNG"
-// undefined.hideEmptyAnswers: "Hide empty answers" => "مخفی کردن پاسخهای خالی"
-// undefined.showEmptyAnswers: "Show empty answers" => "نمایش پاسخهای خالی"
-// undefined.topNValueText-1: "All answers" => "همه پاسخ ها"
-// undefined.topNValueText5: "Top 5 answers" => "5 پاسخ برتر"
-// undefined.topNValueText10: "Top 10 answers" => "10 پاسخ برتر"
-// undefined.topNValueText20: "Top 20 answers" => "20 پاسخ برتر"
-// undefined.hideMissingAnswers: "Hide missing answers" => "مخفی کردن پاسخهای گمشده"
-// undefined.showMissingAnswers: "Show missing answers" => "نمایش پاسخهای گمشده"
-// undefined.missingAnswersLabel: "Missing answers" => "پاسخ های گمشده"
-// undefined.noVisualizerForQuestion: "This question type is not visualized yet" => "این نوع سوال هنوز تجسم نشده است"
-// undefined.noResults: "There are no results yet" => "هنوز نتیجه ای حاصل نشده است"
-// undefined.showPerValues: "Per Values" => "به ازای هر ارزش"
-// undefined.showPerColumns: "Per Columns" => "در هر ستون"
-// undefined.answer: "Answer" => "پاسخ"
-// undefined.correctAnswer: "Correct answer: " => "پاسخ صحیح: "
-// undefined.percent: "Percent" => "درصد"
-// undefined.responses: "Responses" => "پاسخ"
+setupLocale({ localeCode: "fa", strings: farsiStrings, nativeName: "فارسی" });

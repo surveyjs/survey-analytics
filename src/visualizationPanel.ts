@@ -1,5 +1,5 @@
 import { Event, Question, SurveyModel, surveyLocalization } from "survey-core";
-import { hasLicense, IsTouch } from "survey-core";
+import { IsTouch } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
@@ -287,23 +287,16 @@ export class VisualizationPanel extends VisualizerBase {
   public static LayoutEngine: new (allowed: boolean, itemSelector: string, dragEnabled?: boolean) => LayoutEngine;
   public static haveCommercialLicense: boolean = false;
   public visualizers: Array<VisualizerBase> = [];
-  private haveCommercialLicense: boolean = false;
   private renderedQuestionsCount: number = 0;
   constructor(
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
     options: IVisualizationPanelOptions = {},
-    private _elements: Array<IVisualizerPanelRenderedElement> = undefined
+    private _elements: Array<IVisualizerPanelRenderedElement> = undefined,
+    private isRoot = true
   ) {
     super(null, data, options, "panel");
     this.loadingData = false;
-
-    const f = hasLicense;
-    this.haveCommercialLicense = (!!f && f(4)) ||
-      VisualizationPanel.haveCommercialLicense ||
-      (typeof options.haveCommercialLicense !== "undefined"
-        ? options.haveCommercialLicense
-        : false);
 
     this._layoutEngine =
       options.layoutEngine ||
@@ -326,21 +319,24 @@ export class VisualizationPanel extends VisualizerBase {
 
     this.buildVisualizers(questions);
 
-    if (!this.haveCommercialLicense) {
+    if (!this.haveCommercialLicense && this.isRoot) {
       this.registerToolbarItem("commercialLicense", () => {
         return createCommercialLicenseLink();
       });
     }
 
-    this.registerToolbarItem("resetFilter", () => {
-      return DocumentHelper.createButton(() => {
-        this.visualizers.forEach((visualizer) => {
-          if (visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
-            visualizer.setSelection(undefined);
-          }
-        });
-      }, localization.getString("resetFilter"));
-    }, 900);
+    this._supportSelection = true;
+    if(this.supportSelection !== false) {
+      this.registerToolbarItem("resetFilter", () => {
+        return DocumentHelper.createButton(() => {
+          this.visualizers.forEach((visualizer) => {
+            if (visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
+              visualizer.setSelection(undefined);
+            }
+          });
+        }, localization.getString("resetFilter"));
+      }, 900);
+    }
 
     this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
       if (this.allowHideQuestions) {
@@ -350,37 +346,39 @@ export class VisualizationPanel extends VisualizerBase {
           options: any
         ) => {
           const hiddenElements = this.hiddenElements;
+          const selectWrapper = DocumentHelper.createSelector(
+            [
+              <any>{
+                name: undefined,
+                displayName: localization.getString("addElement"),
+              },
+            ]
+              .concat(hiddenElements)
+              .map((element) => {
+                return {
+                  value: element.name,
+                  text: element.displayName,
+                };
+              }),
+            (option: any) => false,
+            (e: any) => {
+              this.showElement(e.target.value);
+            }
+          );
+          if(addElementSelector) {
+            toolbar.replaceChild(selectWrapper, addElementSelector);
+          }
+          addElementSelector = selectWrapper;
+
           if (hiddenElements.length > 0) {
-            const selectWrapper = DocumentHelper.createSelector(
-              [
-                <any>{
-                  name: undefined,
-                  displayName: localization.getString("addElement"),
-                },
-              ]
-                .concat(hiddenElements)
-                .map((element) => {
-                  return {
-                    value: element.name,
-                    text: element.displayName,
-                  };
-                }),
-              (option: any) => false,
-              (e: any) => {
-                this.showElement(e.target.value);
-              }
-            );
-            (addElementSelector &&
-              toolbar.replaceChild(selectWrapper, addElementSelector)) ||
-              toolbar.appendChild(selectWrapper);
-            addElementSelector = selectWrapper;
-          } else {
-            addElementSelector && toolbar.removeChild(addElementSelector);
-            addElementSelector = undefined;
+            addElementSelector.style.display = undefined;
+          } else if(addElementSelector) {
+            addElementSelector.style.display = "none";
           }
         };
         addElementSelectorUpdater(this, {});
         this.onVisibleElementsChanged.add(addElementSelectorUpdater);
+        return addElementSelector;
       }
       return undefined;
     });
@@ -388,7 +386,7 @@ export class VisualizationPanel extends VisualizerBase {
       const localeChoices = this.locales.map((element) => {
         return {
           value: element,
-          text: localization.localeNames[element] || localization.getString(element) || element
+          text: localization.getLocaleName(element)
         };
       });
       // localeChoices.unshift({
@@ -579,7 +577,7 @@ export class VisualizationPanel extends VisualizerBase {
       let visualizerData = this.surveyData;
       let visualizer: VisualizerBase;
       if(Array.isArray(question)) {
-        visualizer = new (VisualizationManager.getPivotVisualizerConstructor() as any)(question, visualizerData, visualizerOptions);
+        visualizer = new (VisualizationManager.getPivotVisualizerConstructor() as any)(question, visualizerData, visualizerOptions, undefined, false);
       } else {
         visualizer = this.createVisualizer(question, visualizerOptions, visualizerData);
       }
@@ -1052,6 +1050,17 @@ export class VisualizationPanel extends VisualizerBase {
         }
       });
 
+    } finally {
+      this._settingState = false;
+    }
+    this.refresh();
+  }
+  public resetState(): void {
+    this._settingState = true;
+    super.resetState();
+    try {
+      this.visualizers.forEach(visualizer => visualizer.resetState());
+      this.locale = surveyLocalization.defaultLocale;
     } finally {
       this._settingState = false;
     }

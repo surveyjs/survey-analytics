@@ -175,7 +175,7 @@ test.describe("selectbase", () => {
     ];
 
     await initSummary(page, json, data, options);
-    const orderingSelect = page.locator("select").nth(2);
+    const orderingSelect = page.locator("select").nth(3);
 
     // check default order
     expect(await getYAxisValues(page)).toEqual(["Other  ", "Two  ", "One  "]);
