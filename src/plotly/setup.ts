@@ -84,8 +84,9 @@ export class PlotlySetup {
           model.labelTruncateLength
         );
       }),
-      hoverinfo: "label+value+percent",
+      hoverinfo: "value+label",
       textposition: "inside",
+      texttemplate: "%{label}"
     };
 
     if (model.chartType === "doughnut") {
@@ -106,6 +107,7 @@ export class PlotlySetup {
         traces.push(
           Object.assign({}, traceConfig, {
             values: dataset,
+            labels: labels.map((l, li) => (model.showPercentages ? (model.showOnlyPercentages ? texts[index][li] : l + "<br>" + texts[index][li]) + "%" : l)),
             domain: {
               column: traces.length % layoutColumns,
               row: Math.floor(traces.length / layoutColumns),

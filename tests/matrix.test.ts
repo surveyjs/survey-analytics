@@ -72,9 +72,9 @@ test("check getPercentages method", () => {
     [0, 0],
     [0, 0],
   ].reverse())).toEqual([
-    [33, 33],
-    [67, 33],
-    [0, 33],
+    [33.33, 33.33],
+    [66.67, 33.33],
+    [0, 33.33],
     [0, 0],
     [0, 0],
     [0, 0],
@@ -141,7 +141,7 @@ test("getPercentages percentagePrecision option", async () => {
     result += percentages[index][0];
   }
 
-  expect(result).toEqual(101);
+  expect(result).toEqual(100.01);
 
   matrixVizualizer = new Matrix(matrix, data, { percentagePrecision: 2 });
   datasets = (await matrixVizualizer.getAnswersData()).datasets;

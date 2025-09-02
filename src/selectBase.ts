@@ -90,7 +90,7 @@ export class SelectBase
   private topNSelector: HTMLDivElement = undefined;
   private _showPercentages: boolean = false;
   private _showOnlyPercentages: boolean = false;
-  private _percentagePrecision: number = 0;
+  private _percentagePrecision: number = 2;
   protected _answersOrder: string = "default";
   private _hideEmptyAnswers = false;
   private _topN = -1;
@@ -569,8 +569,8 @@ export class SelectBase
       data.forEach((res, index) => {
         var sum = res.reduce((sum, val) => sum + val, 0);
         percentages[index] = res.map((val) => {
-          var value = percentagePrecision ? +(val / sum).toFixed(percentagePrecision) : Math.round((val / sum) * 10000);
-          return sum && (value / 100);
+          var value = percentagePrecision ? + (val / sum * 100).toFixed(percentagePrecision) : Math.round(val / sum * 100);
+          return sum && value;
         });
       });
     } else {
@@ -581,7 +581,7 @@ export class SelectBase
         }
         for (var j = 0; j < data.length; j++) {
           if (!Array.isArray(percentages[j])) percentages[j] = [];
-          var value = percentagePrecision ? +((data[j][i] / sum) * 100).toFixed(percentagePrecision) : Math.round((data[j][i] / sum) * 100);
+          var value = percentagePrecision ? + (data[j][i] / sum * 100).toFixed(percentagePrecision) : Math.round(data[j][i] / sum * 100);
           percentages[j][i] = sum && value;
         }
       }
