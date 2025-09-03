@@ -400,6 +400,10 @@ export class SelectBase
     return this.options.showPercentages === true;
   }
 
+  public get percentagePrecision(): number {
+    return this._percentagePrecision;
+  }
+
   /**
    * Gets and sets whether chart should show values and percentages.
    */
