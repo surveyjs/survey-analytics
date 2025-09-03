@@ -9,6 +9,7 @@ export class NumberModel extends VisualizerBase {
   private _resultAverage: number;
   private _resultMin: number;
   private _resultMax: number;
+  private _resultCount: number;
 
   public static stepsCount = 5;
   public static generateTextsCallback: (
@@ -24,6 +25,8 @@ export class NumberModel extends VisualizerBase {
 
   public static showAsPercentage = false;
 
+  public displayValueName = "value";
+
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
@@ -31,6 +34,10 @@ export class NumberModel extends VisualizerBase {
     name?: string
   ) {
     super(question, data, options, name || "number");
+
+    if(!!this.question.displayValueName) {
+      this.displayValueName = this.question.displayValueName;
+    }
 
     if (VisualizerBase.chartAdapterType) {
       this._chartAdapter = new VisualizerBase.chartAdapterType(this);
@@ -140,18 +147,22 @@ export class NumberModel extends VisualizerBase {
   }
 
   public convertFromExternalData(externalCalculatedData: any): any[] {
-    return [externalCalculatedData.value || 0, externalCalculatedData.minValue || 0, externalCalculatedData.maxValue || 0];
+    return [externalCalculatedData.value || 0, externalCalculatedData.minValue || 0, externalCalculatedData.maxValue || 0, externalCalculatedData.count || 0];
   }
 
   protected getCalculatedValuesCore(): Array<any> {
     if (this._resultAverage === undefined ||
       this._resultMin === undefined ||
-      this._resultMax === undefined) {
-      [this._resultAverage, this._resultMin, this._resultMax] = mathStatisticsCalculator(this.surveyData, this.dataNames[0]);
+      this._resultMax === undefined ||
+      this._resultCount === undefined) {
+      [this._resultAverage, this._resultMin, this._resultMax, this._resultCount] = mathStatisticsCalculator(this.surveyData, this.dataNames[0]);
     }
-    return [this._resultAverage, this._resultMin, this._resultMax];
+    return [this._resultAverage, this._resultMin, this._resultMax, this._resultCount];
   }
 
+  public getValues(): Array<any> {
+    return ["value", "min", "max", "count"];
+  }
 }
 
 VisualizationManager.registerVisualizer("number", NumberModel, 200);

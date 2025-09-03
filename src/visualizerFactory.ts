@@ -40,12 +40,16 @@ export class VisualizerFactory {
       question = description.question || {
         name: description.dataName || description.questionName,
         title: description.title,
+        displayValueName: description.displayValueName,
         waitForQuestionIsReady: () => {
           return new Promise<void>((resolve) => resolve());
         }
       };
     } else {
       question = description;
+      if(description.displayValueName !== undefined) {
+        question.displayValueName = description.displayValueName;
+      }
       type = question.getType();
     }
     let creators = [];

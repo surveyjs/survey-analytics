@@ -10,6 +10,8 @@ import { LayoutEngine } from "../src/layoutEngine";
 import { PostponeHelper } from "../src/visualizerBase";
 import { PivotModel } from "../src/pivot";
 import { NpsVisualizer } from "../src/nps";
+import { NumberModel } from "../src/number";
+export { NumberModel } from "../src/number";
 
 VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
@@ -1050,3 +1052,17 @@ test("Create nps visualizer from definition with question", async () => {
   VisualizationManager.unregisterVisualizer("nps", NpsVisualizer);
 });
 
+test("Create number visualizer from definition", async () => {
+  const visualizerDefinition = {
+    visualizerType: "number",
+    dataName: "test",
+    displayValueName: "count"
+  };
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
+  let panel = new VisualizationPanel([visualizerDefinition], data, {});
+  const numberVis = panel.visualizers[0] as NumberModel;
+
+  let result: any = await numberVis.getCalculatedValues();
+
+  expect(result).toStrictEqual([7.34, 1, 10, 7]);
+});

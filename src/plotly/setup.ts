@@ -615,6 +615,8 @@ export class PlotlySetup {
       minValue = rateValues[0].value;
     }
 
+    let value = answersData[model.getValues().indexOf(model.displayValueName)];
+
     const colors = model.generateColors(
       maxValue,
       minValue,
@@ -622,7 +624,7 @@ export class PlotlySetup {
     );
 
     if (NumberModel.showAsPercentage) {
-      level = DataHelper.toPercentage(level, maxValue);
+      value = DataHelper.toPercentage(value, maxValue);
       minValue = DataHelper.toPercentage(minValue, maxValue);
       maxValue = DataHelper.toPercentage(maxValue, maxValue);
     }
@@ -639,7 +641,7 @@ export class PlotlySetup {
           },
           shape: model.chartType,
         },
-        value: level,
+        value: value,
         text: model.name,
         domain: { x: [0, 1], y: [0, 1] },
         number: {

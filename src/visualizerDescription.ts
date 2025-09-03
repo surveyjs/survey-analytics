@@ -5,5 +5,6 @@ export interface IVisualizerDescription {
   question?: Question;
   questionName?: string;
   dataName?: string;
+  displayValueName?: string;
   title?: string;
 }
