@@ -1,6 +1,7 @@
 import { Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
+import { IVisualizerDescription } from "./visualizerDescription";
 
 /**
  * An object that allows you to create individual visualizers without creating a [visualization panel](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel).
@@ -22,16 +23,31 @@ export class VisualizerFactory {
    * ```
    *
    * If a question has more than one [registered](https://surveyjs.io/dashboard/documentation/api-reference/visualizationmanager#registerVisualizer) visualizer, users can switch between them using a drop-down menu.
-   * @param question A question for which to create a visualizer.
+   * @param description A question for which to create a visualizer.
    * @param data A data array with survey results to be visualized.
    * @param options An object with any custom properties you need within the visualizer.
    */
   public static createVisualizer(
-    question: Question,
+    description: Question | IVisualizerDescription,
     data: Array<{ [index: string]: any }>,
     options?: { [index: string]: any }
   ): VisualizerBase {
-    let type = question.getType();
+    let type: string;
+    let question: Question;
+    if("visualizerType" in description) {
+      type = description.visualizerType;
+
+      question = description.question || {
+        name: description.dataName || description.questionName,
+        title: description.title,
+        waitForQuestionIsReady: () => {
+          return new Promise<void>((resolve) => resolve());
+        }
+      };
+    } else {
+      question = description;
+      type = question.getType();
+    }
     let creators = [];
 
     if (type === "text" && (<any>question).inputType) {

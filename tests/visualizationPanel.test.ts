@@ -1,4 +1,4 @@
-import { SurveyModel, QuestionCommentModel } from "survey-core";
+import { SurveyModel, QuestionCommentModel, QuestionTextModel } from "survey-core";
 import { WordCloud } from "../src/wordcloud/wordcloud";
 import { Text } from "../src/text";
 import { SelectBase } from "../src/selectBase";
@@ -9,6 +9,7 @@ import { VisualizationManager } from "../src/visualizationManager";
 import { LayoutEngine } from "../src/layoutEngine";
 import { PostponeHelper } from "../src/visualizerBase";
 import { PivotModel } from "../src/pivot";
+import { NpsVisualizer } from "../src/nps";
 
 VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
@@ -967,3 +968,85 @@ test("VisualizationPanel reset filter button respects the allowSelection option"
   creators = panel["toolbarItemCreators"];
   expect(creators["resetFilter"]).toBeUndefined();
 });
+
+test("VisualizationPanel should accept visualizer definitions", () => {
+  const visualizerDefinition = {
+    visualizerType: "nps"
+  };
+  let panel = new VisualizationPanel([visualizerDefinition], [], {});
+  expect(panel.visualizers.length).toBe(1);
+  expect(panel.visualizers[0].type).toBe("visualizer");
+
+  VisualizationManager.registerVisualizer("nps", NpsVisualizer);
+  panel = new VisualizationPanel([visualizerDefinition], [], {});
+  expect(panel.visualizers.length).toBe(1);
+  expect(panel.visualizers[0].type).toBe("nps");
+
+  panel = new VisualizationPanel([visualizerDefinition, visualizerDefinition], [], {});
+  expect(panel.visualizers.length).toBe(2);
+  expect(panel.visualizers[0].type).toBe("nps");
+  expect(panel.visualizers[1].type).toBe("nps");
+
+  VisualizationManager.unregisterVisualizer("nps", NpsVisualizer);
+});
+
+test("Create nps visualizer from definition with dataName", async () => {
+  VisualizationManager.registerVisualizer("nps", NpsVisualizer);
+  const visualizerDefinition = {
+    visualizerType: "nps",
+    dataName: "test"
+  };
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
+  let panel = new VisualizationPanel([visualizerDefinition], data, {});
+  const nps = panel.visualizers[0];
+
+  let result: any = await nps.getCalculatedValues();
+
+  expect(result.total).toBe(6);
+  expect(result.detractors).toBe(1);
+  expect(result.passive).toBe(2);
+  expect(result.promoters).toBe(3);
+
+  VisualizationManager.unregisterVisualizer("nps", NpsVisualizer);
+});
+
+test("Create nps visualizer from definition with questionName", async () => {
+  VisualizationManager.registerVisualizer("nps", NpsVisualizer);
+  const visualizerDefinition = {
+    visualizerType: "nps",
+    questionName: "test"
+  };
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
+  let panel = new VisualizationPanel([visualizerDefinition], data, {});
+  const nps = panel.visualizers[0];
+
+  let result: any = await nps.getCalculatedValues();
+
+  expect(result.total).toBe(6);
+  expect(result.detractors).toBe(1);
+  expect(result.passive).toBe(2);
+  expect(result.promoters).toBe(3);
+
+  VisualizationManager.unregisterVisualizer("nps", NpsVisualizer);
+});
+
+test("Create nps visualizer from definition with question", async () => {
+  VisualizationManager.registerVisualizer("nps", NpsVisualizer);
+  const visualizerDefinition = {
+    visualizerType: "nps",
+    question: new QuestionTextModel("test")
+  };
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
+  let panel = new VisualizationPanel([visualizerDefinition], data, {});
+  const nps = panel.visualizers[0];
+
+  let result: any = await nps.getCalculatedValues();
+
+  expect(result.total).toBe(6);
+  expect(result.detractors).toBe(1);
+  expect(result.passive).toBe(2);
+  expect(result.promoters).toBe(3);
+
+  VisualizationManager.unregisterVisualizer("nps", NpsVisualizer);
+});
+
