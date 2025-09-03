@@ -118,13 +118,13 @@ test.describe("basetests", () => {
     const secondQuestionSelector = page.locator("#summaryContainer .sa-question .sa-question__content", { hasText: secondQuestionTitle });
 
     // await questionSelector.locator("[data-unformatted='Yes<br>66.7%']").click();
-    await page.getByRole("img").filter({ hasText: "Yes66.7%No33.3%" }).locator("path").first().click({ position: { x: 125, y: 125 } });
-    await expect(questionSelector.locator("[data-unformatted='No<br>33.3%']")).not.toBeVisible();
-    await expect(secondQuestionSelector.locator("[data-unformatted='Yes<br>33.3%']")).not.toBeVisible();
+    await page.getByRole("img").filter({ hasText: "Yes66.67%No33.33%" }).locator("path").first().click({ position: { x: 125, y: 125 } });
+    await expect(questionSelector.locator("[data-unformatted='No<br>33.33%']")).not.toBeVisible();
+    await expect(secondQuestionSelector.locator("[data-unformatted='Yes<br>33.33%']")).not.toBeVisible();
 
     await questionSelector.locator(".sa-question__filter .sa-toolbar__button").click();
-    await expect(questionSelector.locator("[data-unformatted='No<br>33.3%']")).toBeVisible();
-    await expect(secondQuestionSelector.locator("[data-unformatted='Yes<br>33.3%']")).toBeVisible();
+    await expect(questionSelector.locator("[data-unformatted='No<br>33.33%']")).toBeVisible();
+    await expect(secondQuestionSelector.locator("[data-unformatted='Yes<br>33.33%']")).toBeVisible();
   });
 
   test("check show/hide commercial license caption", async ({ page }) => {

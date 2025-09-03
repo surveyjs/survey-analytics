@@ -232,8 +232,9 @@ export class PlotlySetup {
           model.labelTruncateLength
         );
       }),
-      hoverinfo: "label+value+percent", // "x+y",
+      hoverinfo: "value+text",
       textposition: "inside",
+      texttemplate: "%{text}",
       insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
       hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
@@ -252,10 +253,16 @@ export class PlotlySetup {
 
     datasets.forEach((dataset: Array<number>, index: number) => {
       const isNotEmpty = dataset.some((value: number) => value != 0);
+      let pieTexts = traceConfig.text;
+      if(model.showPercentages) {
+        const percentages = model.getPercentages([dataset])[0];
+        pieTexts = labels.map((l, li) => (model.showOnlyPercentages ? percentages[li] : PlotlySetup.getTruncatedLabel(l, model.labelTruncateLength) + "<br>" + percentages[li]) + "%");
+      }
       if(isNotEmpty) {
         traces.push(
           Object.assign({}, traceConfig, {
             values: dataset,
+            text: pieTexts,
             domain: {
               column: traces.length % layoutColumns,
               row: Math.floor(traces.length / layoutColumns),

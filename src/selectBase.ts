@@ -90,9 +90,9 @@ export class SelectBase
   private emptyAnswersBtn: HTMLElement = undefined;
   private transposeDataBtn: HTMLElement = undefined;
   private topNSelector: HTMLDivElement = undefined;
-  private _showPercentages: boolean = false;
+  private _showPercentages: boolean;
   private _showOnlyPercentages: boolean = false;
-  private _percentagePrecision: number = 0;
+  private _percentagePrecision: number = 2;
   protected _answersOrder: string = "default";
   private _hideEmptyAnswers = false;
   private _topN = -1;
@@ -115,7 +115,6 @@ export class SelectBase
       };
     }
     this._supportSelection = true;
-    this._showPercentages = this.options.showPercentages === true;
     this._showOnlyPercentages = this.options.showOnlyPercentages === true;
 
     if (this.options.percentagePrecision) {
@@ -394,11 +393,22 @@ export class SelectBase
     this.stateChanged("showOnlyPercentages", val);
   }
 
+  protected getShowPercentagesDefault(): boolean {
+    if(this.options.showPercentages === undefined) {
+      return ["pie", "doughnut"].indexOf(this.chartType) !== -1;
+    }
+    return this.options.showPercentages === true;
+  }
+
   /**
    * Gets and sets whether chart should show values and percentages.
    */
   public get showPercentages(): boolean {
-    return this._showPercentages;
+    if(this._showPercentages !== undefined) {
+      return this._showPercentages;
+    } else {
+      return this.getShowPercentagesDefault();
+    }
   }
 
   public set showPercentages(val: boolean) {
@@ -557,12 +567,10 @@ export class SelectBase
     var percentagePrecision = this._percentagePrecision;
 
     if (data.length < 2) {
-      data.forEach((res, index) => {
-        var sum = res.reduce((sum, val) => sum + val, 0);
-        percentages[index] = res.map((val) => {
-          var value = percentagePrecision ? +(val / sum).toFixed(percentagePrecision) : Math.round((val / sum) * 10000);
-          return sum && (value / 100);
-        });
+      var sum = data[0].reduce((sum, val) => sum + val, 0);
+      percentages[0] = data[0].map((val) => {
+        var value = percentagePrecision ? + (val / sum * 100).toFixed(percentagePrecision) : Math.round(val / sum * 100);
+        return sum && value;
       });
     } else {
       for (var i = 0; i < data[0].length; i++) {
@@ -572,7 +580,7 @@ export class SelectBase
         }
         for (var j = 0; j < data.length; j++) {
           if (!Array.isArray(percentages[j])) percentages[j] = [];
-          var value = percentagePrecision ? +((data[j][i] / sum) * 100).toFixed(percentagePrecision) : Math.round((data[j][i] / sum) * 100);
+          var value = percentagePrecision ? + (data[j][i] / sum * 100).toFixed(percentagePrecision) : Math.round(data[j][i] / sum * 100);
           percentages[j][i] = sum && value;
         }
       }
@@ -615,15 +623,14 @@ export class SelectBase
     let datasets = (await this.getCalculatedValues()) as number[][];
     let labels = this.getLabels();
     let colors = VisualizerBase.getColors();
-    var texts = this.showPercentages ? this.getPercentages(datasets) : datasets;
-
     if (this.transposeData) {
       datasets = this.transpose(datasets);
-      texts = this.transpose(texts);
       const temp = seriesLabels;
       seriesLabels = labels;
       labels = temp;
     }
+
+    var texts = this.showPercentages ? this.getPercentages(datasets) : datasets;
 
     if (this.answersOrder == "asc" || this.answersOrder == "desc") {
       var zippedArray = this.showPercentages
