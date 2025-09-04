@@ -74,12 +74,16 @@ export class VisualizationManager {
   }
   /**
    * Returns all visualizer constructors for a specified question type.
-   * @param questionType A question [type](https://surveyjs.io/form-library/documentation/api-reference/question#getType).
+   * @param visualizerType A question [type](https://surveyjs.io/form-library/documentation/api-reference/question#getType).
    */
   public static getVisualizersByType(
-    questionType: string
+    visualizerType: string,
+    fallbackVisualizerType?: string    
   ): VisualizerConstructor[] {
-    let vDescrs = VisualizationManager.vizualizers[questionType];
+    let vDescrs = VisualizationManager.vizualizers[visualizerType];
+    if (!!fallbackVisualizerType && (!vDescrs || vDescrs.length == 0)) {
+      vDescrs = VisualizationManager.vizualizers[fallbackVisualizerType];
+    }
     if (!vDescrs) {
       if(VisualizationManager.defaultVisualizer.suppressVisualizerStubRendering) {
         return [];
