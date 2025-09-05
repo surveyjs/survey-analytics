@@ -48,7 +48,7 @@ export var englishStrings = {
   showMinorColumns: "Show minor columns",
   actionsColumn: "Actions",
   otherCommentTitle: "Other items and comments",
-  showPercentages: "Show percentages",
+  showPercentages: "Show %",
   hidePercentages: "Hide percentages",
   pdfDownloadCaption: "PDF",
   xlsxDownloadCaption: "Excel",

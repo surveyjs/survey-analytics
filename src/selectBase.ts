@@ -185,7 +185,7 @@ export class SelectBase
       ) {
         const toggleWidget = new ToggleWidget(() => {
           this.showPercentages = !this.showPercentages;
-        }, localization.getString("showPercentages"));
+        }, localization.getString("showPercentages"), this.showPercentages);
         this.showPercentageBtn = toggleWidget.container;
         this.updateShowPercentageBtn();
         return this.showPercentageBtn;
