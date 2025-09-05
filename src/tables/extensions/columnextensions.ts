@@ -23,14 +23,15 @@ TableExtensions.registerExtension({
     return btn;
   },
 });
+
 TableExtensions.registerExtension({
   location: "column",
   name: "sort",
-  visibleIndex: 1,
+  visibleIndex: 3,
   render: function (table: Table, options: any) {
     const descTitle = localization.getString("descOrder");
     const ascTitle = localization.getString("ascOrder");
-    var btn = DocumentHelper.createSvgButton("sorting");
+    var btn = DocumentHelper.createSvgButton("reorder-24x24");
     btn.title = "";
     var direction = "asc";
     btn.onclick = () => {
@@ -53,9 +54,9 @@ TableExtensions.registerExtension({
 TableExtensions.registerExtension({
   location: "column",
   name: "hide",
-  visibleIndex: 2,
+  visibleIndex: 4,
   render: function (table: Table, options: any) {
-    var btn = DocumentHelper.createSvgButton("hide");
+    var btn = DocumentHelper.createSvgButton("invisible-24x24");
     btn.title = localization.getString("hideColumn");
     btn.onclick = () => {
       table.setColumnVisibility(options.columnName, false);
@@ -67,9 +68,9 @@ TableExtensions.registerExtension({
 TableExtensions.registerExtension({
   location: "column",
   name: "movetodetails",
-  visibleIndex: 3,
+  visibleIndex: 2,
   render: function (table: Table, options: any) {
-    const button = DocumentHelper.createSvgButton("movetodetails");
+    const button = DocumentHelper.createSvgButton("redo-24x24");
     button.title = localization.getString("moveToDetail");
     button.onclick = (e) => {
       e.stopPropagation();
@@ -82,7 +83,7 @@ TableExtensions.registerExtension({
 TableExtensions.registerExtension({
   location: "column",
   name: "filter",
-  visibleIndex: 4,
+  visibleIndex: 1,
   render: function (table: Table, options: any) {
     var el = DocumentHelper.createInput(
       "sa-table__filter",

@@ -5,6 +5,7 @@ import { VisualizationManager } from "./visualizationManager";
 import { DocumentHelper, createLoadingIndicator } from "./utils";
 import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
+import { DashboardTheme, IDashboardTheme } from "./theme";
 
 import "./visualizerBase.scss";
 
@@ -24,12 +25,14 @@ export interface IDataInfo {
   getSeriesLabels(): Array<string>;
 }
 
+type ToolbarItemType = "button" | "dropdown" | "filter"| "license";
+
 type ToolbarItemCreators = {
   [name: string]: {
     creator: (toolbar?: HTMLDivElement) => HTMLElement,
-    // type: ToolbarItemType,
-    order: number,
-    // groupIndex: number,
+    type: ToolbarItemType,
+    index: number,
+    groupIndex: number,
   },
 };
 
@@ -75,6 +78,8 @@ export class VisualizerBase implements IDataInfo {
   public static suppressVisualizerStubRendering: boolean = false;
   public static chartAdapterType: any = undefined;
 
+  private _appliedTheme: DashboardTheme;
+  private _theme = new DashboardTheme();
   private _showToolbar = true;
   private _footerVisualizer: VisualizerBase = undefined;
   private _dataProvider: DataProvider = undefined;
@@ -296,6 +301,10 @@ export class VisualizerBase implements IDataInfo {
     return this.getValues();
   }
 
+  public getChartAdapter(): IChartAdapter {
+    return this._chartAdapter;
+  }
+
   /**
    * Registers a function used to create a toolbar item for this visualizer.
    *
@@ -343,9 +352,11 @@ export class VisualizerBase implements IDataInfo {
   public registerToolbarItem(
     name: string,
     creator: (toolbar?: HTMLDivElement) => HTMLElement,
-    order = 100
+    type: ToolbarItemType,
+    index: number = 100,
+    groupIndex: number = 0
   ): void {
-    this.toolbarItemCreators[name] = { creator, order };
+    this.toolbarItemCreators[name] = { creator, type, index, groupIndex };
   }
 
   /**
@@ -453,13 +464,52 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
-  protected createToolbarItems(toolbar: HTMLDivElement) {
+  public getSortedToolbarItemCreators(): Array<any> {
     const toolbarItemCreators = this.getToolbarItemCreators();
-    const sortedItems = Object.keys(toolbarItemCreators || {})
-      .map(name => ({ name, ...toolbarItemCreators[name] }))
-      .sort((a, b) => a.order - b.order);
 
-    sortedItems.forEach((item) => {
+    const groupedItems: { [type: string]: Array<{ name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement, type: ToolbarItemType, index: number, groupIndex: number }> } = {};
+
+    Object.keys(toolbarItemCreators).forEach((toolbarItemName) => {
+      const item = toolbarItemCreators[toolbarItemName];
+      const type = item.type;
+
+      if (!groupedItems[type]) {
+        groupedItems[type] = [];
+      }
+
+      groupedItems[type].push({
+        name: toolbarItemName,
+        ...item
+      });
+    });
+
+    Object.keys(groupedItems).forEach((type) => {
+      groupedItems[type].sort((a, b) => {
+        const indexA = a.index || 0;
+        const indexB = b.index || 0;
+        return indexA - indexB;
+      });
+    });
+
+    const sortedItems: Array<{ name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement, type: ToolbarItemType, index: number, groupIndex: number }> = [];
+
+    const sortedGroups = Object.keys(groupedItems).sort((typeA, typeB) => {
+      const groupA = groupedItems[typeA][0]?.groupIndex || 0;
+      const groupB = groupedItems[typeB][0]?.groupIndex || 0;
+      return groupA - groupB;
+    });
+
+    sortedGroups.forEach((type) => {
+      sortedItems.push(...groupedItems[type]);
+    });
+
+    return sortedItems;
+  }
+
+  protected createToolbarItems(toolbar: HTMLDivElement) {
+    const toolbarItemCreators = this.getSortedToolbarItemCreators();
+
+    toolbarItemCreators.forEach((item) => {
       let toolbarItem = item.creator(toolbar);
       if (!!toolbarItem) {
         toolbar.appendChild(toolbarItem);
@@ -481,7 +531,9 @@ export class VisualizerBase implements IDataInfo {
         DocumentHelper.createElement("div", "sa-toolbar")
       );
       this.createToolbarItems(toolbar);
-      container.appendChild(toolbar);
+      if(!!toolbar && !!toolbar.innerHTML) {
+        container.appendChild(toolbar);
+      }
     }
   }
 
@@ -585,11 +637,11 @@ export class VisualizerBase implements IDataInfo {
       const visibilityButton = DocumentHelper.createButton(() => {
         if (footerContentElement.style.display === "none") {
           footerContentElement.style.display = "block";
-          visibilityButton.innerText = localization.getString("hideButton");
+          (visibilityButton as any).setText(localization.getString("hideButton"));
           this._footerIsCollapsed = false;
         } else {
           footerContentElement.style.display = "none";
-          visibilityButton.innerText = localization.getString("showButton");
+          (visibilityButton as any).setText(localization.getString("showButton"));
           this._footerIsCollapsed = true;
         }
         this.footerVisualizer.invokeOnUpdate();
@@ -598,7 +650,7 @@ export class VisualizerBase implements IDataInfo {
 
       container.appendChild(footerContentElement);
 
-      this.footerVisualizer.render(footerContentElement);
+      this.footerVisualizer.render(footerContentElement, false);
     }
   }
 
@@ -606,12 +658,20 @@ export class VisualizerBase implements IDataInfo {
    * Renders the visualizer in a specified container.
    * @param targetElement An `HTMLElement` or an `id` of a page element in which you want to render the visualizer.
    */
-  render(targetElement: HTMLElement | string) {
+  render(targetElement: HTMLElement | string, isRoot = true) {
     if (typeof targetElement === "string") {
       targetElement = document.getElementById(targetElement);
     }
     this.renderResult = targetElement;
+    if(isRoot && !this._appliedTheme) {
+      this._appliedTheme = this.theme;
+      this.onThemeChanged();
+    }
+    if(this._appliedTheme) {
+      this._appliedTheme.applyThemeToElement(this.renderResult);
+    }
 
+    targetElement.className = "sa-visualizer";
     this.toolbarContainer = DocumentHelper.createElement(
       "div",
       "sa-visualizer__toolbar"
@@ -708,38 +768,72 @@ export class VisualizerBase implements IDataInfo {
   }
 
   getRandomColor() {
-    const colors = this.getColors();
+    const colors = VisualizerBase.getColors();
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
-  private _backgroundColor = "#f7f7f7";
+  private _backgroundColor;
 
   get backgroundColor() { return this.getBackgroundColorCore(); }
   set backgroundColor(value) { this.setBackgroundColorCore(value); }
 
   protected getBackgroundColorCore() {
-    return this._backgroundColor;
+    return this._backgroundColor || this._theme.backgroundColor;
   }
   protected setBackgroundColorCore(color: string) {
     this._backgroundColor = color;
     if (this.footerVisualizer) this.footerVisualizer.backgroundColor = color;
   }
 
+  protected onThemeChanged(): void {
+    if (this.footerVisualizer) {
+      this.footerVisualizer.theme = this.theme;
+    }
+  }
+
+  get theme() : DashboardTheme {
+    return this._theme;
+  }
+  set theme(theme: DashboardTheme) {
+    this._theme = theme;
+    this._appliedTheme = undefined;
+    this.onThemeChanged();
+  }
+
+  public applyTheme(theme: IDashboardTheme): void {
+    this.theme.setTheme(theme);
+    this._appliedTheme = this.theme;
+    if(this.renderResult) {
+      this._appliedTheme.applyThemeToElement(this.renderResult);
+    }
+    this.onThemeChanged();
+  }
+
   static customColors: string[] = [];
   private static colors = [
-    "#86e1fb",
-    "#3999fb",
+    "#84CAD4",
+    "#3a99fb",
     "#ff6771",
-    "#1eb496",
+    "#1db496",
     "#ffc152",
     "#aba1ff",
-    "#7d8da5",
-    "#4ec46c",
-    "#cf37a6",
-    "#4e6198",
+    "#7d8ca5",
+    "#4fc46c",
+    "#e87bcb",
+    "#4e6198"
+    // "#86e1fb",
+    // "#3999fb",
+    // "#ff6771",
+    // "#1eb496",
+    // "#ffc152",
+    // "#aba1ff",
+    // "#7d8da5",
+    // "#4ec46c",
+    // "#cf37a6",
+    // "#4e6198",
   ];
 
-  getColors(count = 10) {
+  static getColors(count = 10) {
     const colors =
       Array.isArray(VisualizerBase.customColors) &&
         VisualizerBase.customColors.length > 0
