@@ -35,12 +35,7 @@ export class VisualizerFactory {
     let creators = [];
 
     if (type === "text" && (<any>question).inputType) {
-      type = (<any>question).inputType;
-      creators = VisualizationManager.getVisualizersByType(type);
-      if(creators === undefined || creators.length == 0) {
-        type = "text";
-        creators = VisualizationManager.getVisualizersByType(type);
-      }
+      creators = VisualizationManager.getVisualizersByType((<any>question).inputType, type);
     } else {
       creators = VisualizationManager.getVisualizersByType(type);
     }
