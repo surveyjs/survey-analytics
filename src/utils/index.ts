@@ -426,15 +426,16 @@ export class DocumentHelper {
         dropdownItem.setAttribute("tabindex", "-1");
         dropdownItem.id = `${className}-item-${option.value}`;
 
-        const textSpan = document.createElement("span");
-        textSpan.textContent = option.text;
-        dropdownItem.appendChild(textSpan);
         if (option.icon) {
           const iconContainer = document.createElement("div");
           iconContainer.className = className + "-icon";
           iconContainer.appendChild(DocumentHelper.createSvgElement(option.icon));
           dropdownItem.appendChild(iconContainer);
         }
+
+        const textSpan = document.createElement("span");
+        textSpan.textContent = option.text;
+        dropdownItem.appendChild(textSpan);
 
         if (isSelected(option)) {
           dropdownItem.classList.add(itemClassSelected);
