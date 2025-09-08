@@ -235,6 +235,16 @@ steps:
 
   - task: CopyFiles@2
     inputs:
+      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/docs"
+      Contents: |
+        surveyjs_definition.json
+      TargetFolder: "$(Build.SourcesDirectory)/survey-analytics/build"
+      OverWrite: true
+      CleanTargetFolder: false
+    displayName: "put surveyjs_definition.json into build"
+
+  - task: CopyFiles@2
+    inputs:
       SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/build"
       targetFolder: $(Build.ArtifactStagingDirectory)/SurveyJSAnalyticsBuild/packages/survey-analytics
 
