@@ -475,7 +475,7 @@ export class VisualizationPanel extends VisualizerBase {
 
     const titleElement = DocumentHelper.createElement("h3");
     titleElement.innerText = element.displayName;
-
+    titleElement.id = "el_" + element.name;
     titleElement.className = questionElementClassName + "__title";
     if (this.allowDynamicLayout && this.allowDragDrop) {
       titleElement.className =
@@ -959,6 +959,8 @@ export class VisualizationPanel extends VisualizerBase {
 
     const questionContent = DocumentHelper.createElement("div");
     const vizualizerElement = DocumentHelper.createElement("div");
+    vizualizerElement.role = "group";
+    vizualizerElement.setAttribute("aria-labelledby", "el_" + element.name);
     const headerElement = this.createHeaderElement(element);
 
     questionElement.className = this.allowDynamicLayout

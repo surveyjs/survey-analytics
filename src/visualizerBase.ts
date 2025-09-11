@@ -692,6 +692,7 @@ export class VisualizerBase implements IDataInfo {
       "div",
       "sa-visualizer__content"
     );
+    this.contentContainer.role = "presentation";
     targetElement.appendChild(this.contentContainer);
     this.renderContent(this.contentContainer);
 
