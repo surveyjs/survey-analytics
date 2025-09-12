@@ -7,7 +7,7 @@ import { DocumentHelper, createCommercialLicenseLink } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, IState, IPermission } from "./config";
 import { FilterInfo } from "./filterInfo";
-import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
+import { LayoutEngine } from "./layout-engine";
 import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import "./visualizationPanel.scss";
@@ -284,6 +284,8 @@ export interface IVisualizationPanelOptions {
  * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
  */
 export class VisualizationPanel extends VisualizerBase {
+  public static LayoutEngine: new (allowed: boolean, itemSelector: string, dragEnabled?: boolean) => LayoutEngine;
+  public static haveCommercialLicense: boolean = false;
   public visualizers: Array<VisualizerBase> = [];
   private renderedQuestionsCount: number = 0;
   constructor(
@@ -298,13 +300,14 @@ export class VisualizationPanel extends VisualizerBase {
 
     this._layoutEngine =
       options.layoutEngine ||
-      new MuuriLayoutEngine(
+      VisualizationPanel.LayoutEngine && new VisualizationPanel.LayoutEngine(
         this.allowDynamicLayout,
         "." + questionLayoutedElementClassName,
         this.allowDragDrop
       );
-    this._layoutEngine.onMoveCallback = (order: Array<string>) =>
-      this.reorderVisibleElements(order);
+    if(!!this._layoutEngine) {
+      this._layoutEngine.onMoveCallback = (order: Array<string>) => this.reorderVisibleElements(order);
+    }
 
     this.showToolbar = true;
     if (this.options.survey) {
@@ -423,7 +426,7 @@ export class VisualizationPanel extends VisualizerBase {
     this.renderedQuestionsCount++;
     if (this.renderedQuestionsCount == this.questions.length) {
       this.renderedQuestionsCount = 0;
-      this.layoutEngine.update();
+      this.layoutEngine?.update();
       this.afterRender(this.contentContainer);
     }
   };
@@ -472,7 +475,7 @@ export class VisualizationPanel extends VisualizerBase {
     if(elementIndex >= 0) {
       options = { index: elementIndex };
     }
-    this.layoutEngine.add([questionElement], options);
+    this.layoutEngine?.add([questionElement], options);
   }
 
   public showElement(elementName: string) {
@@ -485,7 +488,7 @@ export class VisualizationPanel extends VisualizerBase {
   protected hideElementCore(element: IVisualizerPanelRenderedElement) {
     element.isVisible = false;
     if (!!element.renderedElement) {
-      this.layoutEngine.remove([element.renderedElement]);
+      this.layoutEngine?.remove([element.renderedElement]);
       this.contentContainer.removeChild(element.renderedElement);
       element.renderedElement = undefined;
     }
@@ -972,12 +975,12 @@ export class VisualizationPanel extends VisualizerBase {
       let questionElement = this.renderPanelElement(element, container);
     });
 
-    this.layoutEngine.start(container);
+    this.layoutEngine?.start(container);
     // !!window && window.dispatchEvent(new UIEvent("resize"));
   }
 
   protected destroyContent(container: HTMLElement) {
-    this.layoutEngine.stop();
+    this.layoutEngine?.stop();
     super.destroyContent(container);
   }
 
@@ -993,7 +996,7 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   public layout() {
-    this.layoutEngine.update();
+    this.layoutEngine?.update();
   }
 
   /**
