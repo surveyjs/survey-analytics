@@ -22,6 +22,10 @@ export interface ITableOptions {
    */
   useNamesAsTitles?: boolean;
   /**
+   * Set this property to change items delimeter text. Default text is the ", "
+   */
+  itemsDelimeter?: string;
+  /**
    * Use this event to change the display value of question in table.
    * <br/> `sender` - the table object that fires the event.
    * <br/> `options.question` - the question obect for which event is fired.
@@ -170,6 +174,10 @@ export abstract class Table {
 
   public get useNamesAsTitles() {
     return this._options && this._options.useNamesAsTitles === true;
+  }
+
+  public get itemsDelimeter(): string {
+    return this._options && this._options.itemsDelimeter || ", ";
   }
 
   protected buildColumns = (survey: SurveyModel) => {
