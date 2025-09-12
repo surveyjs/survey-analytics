@@ -12,12 +12,16 @@
     src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
   <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
   <script src="../node_modules/tabulator-tables/dist/js/tabulator.js"></script>
+  <script src="../node_modules/sjs-design-tokens/index.js"></script>
   <script src="../node_modules/survey-core/survey.core.js"></script>
   <script src="../node_modules/survey-core/survey.i18n.js"></script>
   <script src="../build/survey.analytics.tabulator.js"></script>
 </head>
 
 <body>
+  <input type="checkbox" id="toggle-checkbox">
+  <label for="toggle-checkbox">Dark theme</label>
+  <br><br>
   <div id="tabulatorContainer"></div>
   <script src="./data_multi_lang.js"></script>
   <script src="./custom_tabulator.js"></script>

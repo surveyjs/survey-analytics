@@ -28,7 +28,13 @@ export class DashboardTheme implements IDashboardTheme {
   }
 
   public applyThemeToElement(element: HTMLElement): void {
-    if(!element || !this.theme) return;
+    if(!element) return;
+
+    if(!this.theme) {
+      element.removeAttribute("style");
+      this._cssStyleDeclaration = undefined;
+      return;
+    }
 
     DocumentHelper.setStyles(element, this.cssVariables);
     if (!!getComputedStyle) {

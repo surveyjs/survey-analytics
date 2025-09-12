@@ -7,6 +7,7 @@ import { ARIAL_FONT } from "./custom_jspdf_font";
 import { svgTemplate } from "../svgbundle";
 import type { DownloadType, SortDirection, TabulatorFull, RowComponent } from "tabulator-tables";
 import { TableExtensions } from "./extensions/tableextensions";
+import { DashboardTheme, IDashboardTheme } from "../theme";
 import "./tabulator.scss";
 
 if (!!document) {
@@ -87,6 +88,9 @@ const escapeCellFormula = (field: string) => {
 type TabulatorParameters = ConstructorParameters<typeof TabulatorFull>;
 type TabulatorConstuctor = { new (...args: TabulatorParameters): TabulatorFull };
 export class Tabulator extends Table {
+  private _appliedTheme: DashboardTheme;
+  private _theme = new DashboardTheme();
+
   private static tabulatorTablesConstructor: TabulatorConstuctor;
   public static initTabulatorConstructor(tabulatorTablesConstructor: TabulatorConstuctor): void {
     this.tabulatorTablesConstructor = tabulatorTablesConstructor;
@@ -122,6 +126,12 @@ export class Tabulator extends Table {
       targetNode = document.getElementById(targetNode);
     }
     targetNode.className += " sa-table sa-tabulator";
+    if(!this._appliedTheme) {
+      this._appliedTheme = this.theme;
+    }
+    if(this._appliedTheme) {
+      this._appliedTheme.applyThemeToElement(targetNode);
+    }
 
     const columns = this.getColumns();
     const data = this.tableData;
@@ -516,6 +526,22 @@ export class Tabulator extends Table {
     const dataItem = super.processLoadedDataItem(item);
     dataItem["surveyOriginalData"] = item;
     return dataItem;
+  }
+
+  get theme() : DashboardTheme {
+    return this._theme;
+  }
+  set theme(theme: DashboardTheme) {
+    this._theme = theme;
+    this._appliedTheme = undefined;
+  }
+
+  public applyTheme(theme: IDashboardTheme): void {
+    this.theme.setTheme(theme);
+    this._appliedTheme = this.theme;
+    if(this.renderResult) {
+      this._appliedTheme.applyThemeToElement(this.renderResult);
+    }
   }
 }
 
