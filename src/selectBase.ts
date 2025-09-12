@@ -3,6 +3,8 @@ import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DataHelper, DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
+import { IDashboardTheme } from "./theme";
+import { ToggleWidget } from "./utils/toggle";
 
 export interface IVisualizerWithSelection {
   selection: ItemValue;
@@ -143,7 +145,7 @@ export class SelectBase
 
     this.registerToolbarItem("changeChartType", () => {
       if (this.chartTypes.length > 1) {
-        return DocumentHelper.createSelector(
+        return DocumentHelper.createDropdown(
           this.chartTypes.map((chartType) => {
             return {
               value: chartType,
@@ -152,42 +154,43 @@ export class SelectBase
           }),
           (option: any) => this.chartType === option.value,
           (e: any) => {
-            this.setChartType(e.target.value);
+            this.setChartType(e);
           }
         );
       }
       return null;
-    });
+    }, "dropdown");
     this.registerToolbarItem("changeAnswersOrder", () => {
       if (this.isSupportAnswersOrder()) {
-        this.choicesOrderSelector = DocumentHelper.createSelector(
+        this.choicesOrderSelector = DocumentHelper.createDropdown(
           [
             { text: localization.getString("defaultOrder"), value: "default" },
             { text: localization.getString("ascOrder"), value: "asc" },
             { text: localization.getString("descOrder"), value: "desc" },
           ],
-          (option) => false,
+          (option) => this.answersOrder === option.value,
           (e) => {
-            this.answersOrder = e.target.value;
+            this.answersOrder = e;
           }
         );
         this.updateOrderSelector();
       }
       return this.choicesOrderSelector;
-    });
+    }, "dropdown");
     this.registerToolbarItem("showPercentages", () => {
       if (
         this.options.allowShowPercentages &&
         (this.chartTypes.indexOf("bar") !== -1 ||
           this.chartTypes.indexOf("stackedbar") !== -1)
       ) {
-        this.showPercentageBtn = DocumentHelper.createButton(() => {
+        const toggleWidget = new ToggleWidget(() => {
           this.showPercentages = !this.showPercentages;
-        });
+        }, localization.getString("showPercentages"), this.showPercentages);
+        this.showPercentageBtn = toggleWidget.container;
         this.updateShowPercentageBtn();
         return this.showPercentageBtn;
       }
-    });
+    }, "button");
     this.registerToolbarItem("hideEmptyAnswers", () => {
       if (this.options.allowHideEmptyAnswers) {
         this.emptyAnswersBtn = DocumentHelper.createButton(() => {
@@ -196,28 +199,28 @@ export class SelectBase
         this.updateEmptyAnswersBtn();
       }
       return this.emptyAnswersBtn;
-    }, 1000);
+    }, "button", 1000);
     this.registerToolbarItem("topNAnswers", () => {
       if (
         this.options.allowTopNAnswers &&
         this.getSeriesValues().length === 0
       ) {
-        this.topNSelector = DocumentHelper.createSelector(
+        this.topNSelector = DocumentHelper.createDropdown(
           this.topNValues.map((value) => {
             return {
               text: localization.getString("topNValueText" + value),
               value: value,
             };
           }),
-          (option) => false,
+          (option) => this.topN === option.value as any,
           (e) => {
-            this.topN = parseInt(e.target.value);
+            this.topN = parseInt(e);
           }
         );
         this.updateTopNSelector();
       }
       return this.topNSelector;
-    });
+    }, "dropdown");
     this.registerToolbarItem("transposeData", () => {
       if (this.options.allowTransposeData) {
         this.transposeDataBtn = DocumentHelper.createButton(() => {
@@ -226,7 +229,7 @@ export class SelectBase
         this.updateTransposeDataBtn();
       }
       return this.transposeDataBtn;
-    });
+    }, "button");
     this.registerToolbarItem("showMissingAnswers", () => {
       if (this.isSupportMissingAnswers() && this.options.allowShowMissingAnswers) {
         this.missingAnswersBtn = DocumentHelper.createButton(() => {
@@ -235,7 +238,7 @@ export class SelectBase
         this.updateMissingAnswersBtn();
       }
       return this.missingAnswersBtn;
-    });
+    }, "button");
   }
 
   protected chartTypes: string[] = [];
@@ -252,9 +255,7 @@ export class SelectBase
 
   private updateEmptyAnswersBtn() {
     if (!!this.emptyAnswersBtn) {
-      this.emptyAnswersBtn.innerText = this._hideEmptyAnswers
-        ? localization.getString("showEmptyAnswers")
-        : localization.getString("hideEmptyAnswers");
+      (this.emptyAnswersBtn as any).setText(localization.getString(this._hideEmptyAnswers ? "showEmptyAnswers" : "hideEmptyAnswers"));
       if (this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "line" || this.chartType == "scatter") {
         this.emptyAnswersBtn.style.display = "inline";
       } else {
@@ -265,9 +266,7 @@ export class SelectBase
 
   private updateTransposeDataBtn() {
     if (!!this.transposeDataBtn) {
-      this.transposeDataBtn.innerText = this.transposeData
-        ? localization.getString("showPerColumns")
-        : localization.getString("showPerValues");
+      (this.transposeDataBtn as any).setText(localization.getString(this.transposeData ? "showPerColumns" : "showPerValues"));
       if (this.getSeriesValues().length > 0) {
         this.transposeDataBtn.style.display = "inline";
       } else {
@@ -290,19 +289,15 @@ export class SelectBase
       } else {
         this.choicesOrderSelector.style.display = "none";
       }
-      this.choicesOrderSelector.getElementsByTagName(
-        "select"
-      )[0].value = this.answersOrder;
+      (this.choicesOrderSelector as any).setValue(this.answersOrder);
     }
   }
 
   private updateShowPercentageBtn() {
     if (!!this.showPercentageBtn) {
-      this.showPercentageBtn.innerText = this._showPercentages
-        ? localization.getString("hidePercentages")
-        : localization.getString("showPercentages");
+      // (this.showPercentageBtn as any).setText(localization.getString(this._showPercentages ? "hidePercentages" : "showPercentages"));
       if (this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "stackedbar") {
-        this.showPercentageBtn.style.display = "inline";
+        this.showPercentageBtn.style.display = undefined;
       } else {
         this.showPercentageBtn.style.display = "none";
       }
@@ -311,17 +306,13 @@ export class SelectBase
 
   private updateTopNSelector() {
     if (!!this.topNSelector) {
-      this.topNSelector.getElementsByTagName("select")[0].value = <any>(
-        this._topN
-      );
+      (this.topNSelector as any).setValue(this._topN);
     }
   }
 
   private updateMissingAnswersBtn() {
     if (!!this.missingAnswersBtn) {
-      this.missingAnswersBtn.innerText = this._showMissingAnswers
-        ? localization.getString("hideMissingAnswers")
-        : localization.getString("showMissingAnswers");
+      (this.missingAnswersBtn as any).setText(localization.getString(this._showMissingAnswers ? "hideMissingAnswers" : "showMissingAnswers"));
     }
   }
 
@@ -407,6 +398,10 @@ export class SelectBase
       return ["pie", "doughnut"].indexOf(this.chartType) !== -1;
     }
     return this.options.showPercentages === true;
+  }
+
+  public get percentagePrecision(): number {
+    return this._percentagePrecision;
   }
 
   /**
@@ -631,8 +626,7 @@ export class SelectBase
     let seriesLabels = this.getSeriesLabels();
     let datasets = (await this.getCalculatedValues()) as number[][];
     let labels = this.getLabels();
-    let colors = this.getColors();
-
+    let colors = VisualizerBase.getColors();
     if (this.transposeData) {
       datasets = this.transpose(datasets);
       const temp = seriesLabels;
@@ -730,6 +724,7 @@ export class SelectBase
     const selectedItem = ItemValue.getItemByValue((this.question as QuestionSelectBase).visibleChoices, state.filter);
     this.setSelection(selectedItem ?? undefined);
   }
+
   public resetState(): void {
     super.resetState();
     // this._showPercentages = this.options.showPercentages === true;
@@ -741,6 +736,11 @@ export class SelectBase
     this._topN = -1;
     this.chartType = this.chartTypes[0];
     this.setSelection(undefined);
+  }
+
+  protected onThemeChanged(): void {
+    super.onThemeChanged();
+    this.refreshContent();
   }
 }
 

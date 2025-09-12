@@ -19,6 +19,7 @@ import "../analytics-localization/swedish";
 //extensions
 import "../tables/extensions/rowextensions";
 import "../tables/extensions/headerextensions";
+import "../tables/extensions/footerextensions";
 import "../tables/extensions/columnextensions";
 import "../tables/extensions/detailsextensions";
 

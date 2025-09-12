@@ -442,7 +442,7 @@ test("onAxisYSelectorChanged adds new selector when value is set", () => {
 
   pivot.onAxisYSelectorChanged(1, "question3");
 
-  expect(mockRegister).toHaveBeenCalledWith("axisYSelector2", expect.any(Function));
+  expect(mockRegister).toHaveBeenCalledWith("axisYSelector2", expect.any(Function), "dropdown");
 
   // Restore original method
   pivot["registerToolbarItem"] = originalRegister;

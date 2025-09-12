@@ -345,9 +345,9 @@ export abstract class Table {
    */
   public resetState() {
     this._columns.forEach((column: IColumn, index: number) => {
-        column.fromJSON({});
-        column.visibleIndex = index;
-      }
+      column.fromJSON({});
+      column.visibleIndex = index;
+    }
     );
     this.locale = surveyLocalization.defaultLocale;
     this.currentPageSize = 5;

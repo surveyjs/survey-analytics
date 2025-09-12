@@ -119,5 +119,5 @@ export function mathStatisticsCalculator(data: Array<any>, dataName: string) {
   }
   resultAverage = Math.ceil(resultAverage * 100) / 100;
 
-  return [resultAverage, resultMin, resultMax];
+  return [resultAverage, resultMin, resultMax, data.length];
 }
