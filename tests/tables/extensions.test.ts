@@ -7,6 +7,7 @@ import { DocumentHelper } from "../../src/utils";
 import { QuestionLocation } from "../../src/tables/config";
 
 export * from "../../src/tables/extensions/headerextensions";
+export * from "../../src/tables/extensions/footerextensions";
 export * from "../../src/analytics-localization/german";
 
 const json = {

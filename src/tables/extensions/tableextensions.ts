@@ -18,14 +18,18 @@ export class TableExtensions {
     if (!!extensions) {
       extensions = this.sortExtensions(extensions);
       extensions.forEach((extension) => {
-        if (!!extension.render && this.table.allowExtension(extension)) {
-          var action = extension.render(this.table, options);
-          if (!!action) {
-            targetNode.appendChild(action);
-            this.renderedExtensions.push(extension);
-          }
-        }
+        this.renderExtension(extension, targetNode, options);
       });
+    }
+  }
+
+  public renderExtension(extension: ITableExtension, targetNode: HTMLElement, options?: any) {
+    if (!!extension.render && this.table.allowExtension(extension)) {
+      var action = extension.render(this.table, options);
+      if (!!action) {
+        targetNode.appendChild(action);
+        this.renderedExtensions.push(extension);
+      }
     }
   }
 
@@ -86,7 +90,7 @@ export class TableExtensions {
     return this.extensions[location].slice(0);
   }
 
-  private sortExtensions(extensions: Array<ITableExtension>) {
+  public sortExtensions(extensions: Array<ITableExtension>) {
     if (!Array.isArray(extensions)) return;
     return []
       .concat(extensions.filter((extension) => extension.visibleIndex >= 0))

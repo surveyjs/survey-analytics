@@ -342,16 +342,19 @@ export class DocumentHelper {
     return dropdownElement;
   }
 
-  public static createMultiSelect(
+  public static createActionDropdown(
     options: Array<{value: string, text: string, icon?: string}> | (() => Array<{value: string, text: string, icon?: string}>),
     isSelected: (option: {value: string, text: string, icon?: string}) => boolean,
-    handler: (value: string) => void,
-    placeholder: string,
-    className: string
+    handler: (value: string) => boolean,
+    title: string | Function,
+    className: string = "sa-action-dropdown",
+    showArrow = true
   ): HTMLDivElement {
     const dropdownOpenedClass = className + "--opened";
     const dropdownElement = document.createElement("div");
     dropdownElement.className = className;
+
+    const titleText = !!title && (typeof title == "string" ? title : title());
 
     const dropdownHeader = document.createElement("div");
     dropdownHeader.className = className + "-header";
@@ -359,7 +362,7 @@ export class DocumentHelper {
     dropdownHeader.setAttribute("role", "button");
     dropdownHeader.setAttribute("aria-haspopup", "listbox");
     dropdownHeader.setAttribute("aria-expanded", "false");
-    dropdownHeader.setAttribute("aria-label", placeholder);
+    dropdownHeader.setAttribute("aria-label", titleText);
     const itemClassSelected = className + "-item--selected";
 
     const optionsSource = options || [];
@@ -369,15 +372,18 @@ export class DocumentHelper {
     headerContent.innerHTML = "";
 
     const headerText = document.createElement("span");
-    headerText.className = className + "-placeholder";
-    headerText.textContent = placeholder;
+    headerText.className = className + "-title";
+    headerText.textContent = titleText;
     headerContent.appendChild(headerText);
     dropdownHeader.appendChild(headerContent);
 
-    const arrowElement = document.createElement("div");
-    arrowElement.className = className + "-arrow";
-    arrowElement.appendChild(DocumentHelper.createSvgElement("chevrondown-24x24"));
-    dropdownHeader.appendChild(arrowElement);
+    if (showArrow) {
+      const arrowElement = document.createElement("div");
+      arrowElement.className = className + "-arrow";
+      arrowElement.appendChild(DocumentHelper.createSvgElement("chevrondown-24x24"));
+      dropdownHeader.appendChild(arrowElement);
+    }
+
     const dropdownList = document.createElement("ul");
     dropdownList.className = className + "-list";
     dropdownList.setAttribute("role", "listbox");
@@ -386,6 +392,13 @@ export class DocumentHelper {
     dropdownContainer.className = className + "-container";
 
     let currentFocusIndex = -1;
+
+    const hidePopup = () => {
+      dropdownHeader.classList.remove(dropdownOpenedClass);
+      dropdownList.classList.remove(dropdownOpenedClass);
+      dropdownHeader.setAttribute("aria-expanded", "false");
+      currentFocusIndex = -1;
+    };
 
     const focusItem = (index: number) => {
       const items = dropdownList.querySelectorAll("." + className + "-item");
@@ -405,13 +418,16 @@ export class DocumentHelper {
     };
 
     const updateHeaderLabel = () => {
-      const selectedItems = optionItems.filter(option => isSelected(option));
-      if (selectedItems.length > 0) {
-        const selectedTexts = selectedItems.map(item => item.text).join(", ");
-        dropdownHeader.setAttribute("aria-label", `Selected: ${selectedTexts}`);
-      } else {
-        dropdownHeader.setAttribute("aria-label", placeholder);
-      }
+      const titleText = !!title && (typeof title == "string" ? title : title());
+      dropdownHeader.setAttribute("aria-label", titleText);
+      headerText.innerText = titleText;
+      // const selectedItems = optionItems.filter(option => isSelected(option));
+      // if (selectedItems.length > 0) {
+      //   const selectedTexts = selectedItems.map(item => item.text).join(", ");
+      //   dropdownHeader.setAttribute("aria-label", `Selected: ${selectedTexts}`);
+      // } else {
+      //   dropdownHeader.setAttribute("aria-label", title);
+      // }
     };
 
     const updateOptions = () => {
@@ -445,7 +461,9 @@ export class DocumentHelper {
         }
 
         dropdownItem.addEventListener("click", (e) => {
-          handler(option.value);
+          if (handler(option.value)) {
+            hidePopup();
+          }
           e.preventDefault();
           e.stopPropagation();
 
@@ -496,7 +514,9 @@ export class DocumentHelper {
             if (value) {
               const option = optionItems.find(opt => opt.value === value);
               if (option) {
-                handler(option.value);
+                if (handler(option.value)) {
+                  hidePopup();
+                }
 
                 if (isSelected(option)) {
                   selectedItem.classList.add(itemClassSelected);
@@ -513,20 +533,14 @@ export class DocumentHelper {
           break;
         case "Escape":
           e.preventDefault();
-          dropdownHeader.classList.remove(dropdownOpenedClass);
-          dropdownList.classList.remove(dropdownOpenedClass);
-          dropdownHeader.setAttribute("aria-expanded", "false");
-          currentFocusIndex = -1;
+          hidePopup();
           break;
       }
     };
 
     const handleClickOutside = (event) => {
       if (!dropdownElement.contains(event.target)) {
-        dropdownHeader.classList.remove(dropdownOpenedClass);
-        dropdownList.classList.remove(dropdownOpenedClass);
-        dropdownHeader.setAttribute("aria-expanded", "false");
-        currentFocusIndex = -1;
+        hidePopup();
       }
     };
 
@@ -693,11 +707,14 @@ export class DocumentHelper {
     return svgElem;
   }
 
-  public static createSvgButton(path: string): HTMLButtonElement {
+  public static createSvgButton(path: string, title?: string): HTMLButtonElement {
     const btn = <HTMLButtonElement>(
       DocumentHelper.createElement("button", "sa-table__svg-button")
     );
     btn.appendChild(DocumentHelper.createSvgElement(path));
+    if (title) {
+      btn.title = title;
+    }
     return btn;
   }
 
@@ -758,6 +775,41 @@ export class DocumentHelper {
       }
     );
     return el;
+  }
+
+  public static createTextEditor(options: { showIcon?: boolean, placeholder?: string, className?: string, inputValue?: string, onchange?: (val) => void } = {}): HTMLElement {
+    const {
+      className = "sa-table-filter",
+      placeholder = localization.getString("filterPlaceholder"),
+      inputValue = "",
+      showIcon = true,
+    } = options;
+
+    const editor = document.createElement("div");
+    editor.className = className;
+
+    if (showIcon) {
+      const iconContainer = DocumentHelper.createElement("div", className + "_icon");
+      const searchIcon = DocumentHelper.createSvgElement("search-24x24");
+
+      iconContainer.appendChild(searchIcon);
+      editor.appendChild(iconContainer);
+    }
+
+    const input = <HTMLInputElement>DocumentHelper.createElement("input", className + "_input",
+      {
+        placeholder: placeholder,
+        defaultValue: inputValue,
+      }
+    );
+    input.onchange = (e) => {
+      if (!!options.onchange) {
+        options.onchange(input.value);
+      }
+    };
+
+    editor.appendChild(input);
+    return editor;
   }
 }
 

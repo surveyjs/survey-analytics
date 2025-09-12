@@ -54,7 +54,7 @@ test.describe("basetests", () => {
 
     const questionTitle = "Question 1";
     const questionSelector = page.locator("#summaryContainer .sa-question .sa-question__content", { hasText: questionTitle });
-    const showQuestionDropdown = page.locator("#summaryContainer .sa-multiple-dropdown-header").first();
+    const showQuestionDropdown = page.locator("#summaryContainer .sa-action-dropdown-header").first();
 
     await expect(questionSelector).toBeVisible();
     await questionSelector.locator(".sa-question__hide-action").click();

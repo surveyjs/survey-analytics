@@ -323,10 +323,10 @@ export class VisualizationPanel extends VisualizerBase {
           return {
             value: element.name,
             text: element.displayName,
-            icon: "check_24x24"
+            icon: "check-24x24"
           };
         });
-        const selectWrapper = DocumentHelper.createMultiSelect(
+        const selectWrapper = DocumentHelper.createActionDropdown(
           allQuestions,
           (option: any) => this.hiddenElements.length === 0 || this.hiddenElements.filter(el => el.name === option.value).length === 0,
           (e: any) => {
@@ -337,10 +337,10 @@ export class VisualizationPanel extends VisualizerBase {
               } else {
                 this.showElement(e);
               }
+              return false;
             }
           },
-          localization.getString("allQuestions"),
-          "sa-multiple-dropdown"
+          localization.getString("allQuestions")
         );
         return selectWrapper;
       }
@@ -460,7 +460,7 @@ export class VisualizationPanel extends VisualizerBase {
       hideElement.title = localization.getString("hideButton");
       hideElement.setAttribute("role", "button");
       hideElement.setAttribute("tabindex", "0");
-      hideElement.appendChild(DocumentHelper.createSvgElement("close_16x16"));
+      hideElement.appendChild(DocumentHelper.createSvgElement("close-16x16"));
       dragAreaElement.appendChild(hideElement);
       hideElement.addEventListener("click", (e) => {
         setTimeout(() => this.hideElement(element.name), 0);

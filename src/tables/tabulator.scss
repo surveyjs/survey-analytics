@@ -2,40 +2,70 @@
 
 @mixin doubleArrow() {
   display: inline-block;
-  background: transparent;
   background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23a0a0a0;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E%0A"),
     url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23a0a0a0;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E%0A");
   background-repeat: no-repeat, no-repeat;
   background-size: 9px 100%;
-  background-position:
-    left 0,
-    left 5px;
-  height: 20px;
-  width: 10px;
+  // background-position: left 0, left 5px;
+  // height: 20px;
+  // width: 10px;
   white-space: nowrap;
   overflow: hidden;
   text-indent: -9999px;
+
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  box-sizing: content-box;
+  background-position: center -3px, center 3px;
+}
+
+.sa-tabulator__wrapper {
+  display: flex;
+  padding: var(--sjs2-spacing-x300, 24px);
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sjs2-spacing-x300, 24px);
+  align-self: stretch;
+  background: var(--sjs2-color-utility-surface-muted, rgba(28, 27, 32, 0.05));
+}
+
+.sa-tabulator__table-container {
+  overflow-y: auto;
+  width: 100%;
+}
+
+.sa-tabulator__container {
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1 0 0;
+  border-radius: var(--sjs2-radius-container-panel, 16px);
+  background: var(--sjs2-color-bg-basic-primary, #FFF);
+
+  /* sjs2/border-effect/surface/default */
+  box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
 }
 
 .sa-tabulator__header {
-  padding: 20px 13px;
-  background-color: $background-gray;
-  overflow: auto;
   display: flex;
-  flex-direction: row;
-  gap: 10px;
-  flex-wrap: wrap;
+  padding: var(--sjs2-spacing-x300, 24px);
+  align-items: flex-start;
+  flex: 1 0 0;
+  align-self: stretch;
+  border-bottom: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #D4D4D4);
 
-  &:after {
-    content: "";
-    clear: both;
-    display: block;
-  }
+  // &:after {
+  //   content: "";
+  //   clear: both;
+  //   display: block;
+  // }
 
-  .sa-table__header-space {
-    display: flex;
-    flex-grow: 1;
-  }
+  // .sa-table__footer-space {
+  //   display: flex;
+  //   flex-grow: 1;
+  // }
 
   .sa-table__entries {
     float: none;
@@ -45,18 +75,53 @@
   }
 }
 
-.sa-tabulator__downloads-bar {
-  float: left;
+.sa-tabulator__footer {
+  display: flex;
+  padding: var(--sjs2-spacing-x200, 16px) var(--sjs2-spacing-x300, 24px);
+  justify-content: space-between;
+  align-items: center;
+  flex: 1 0 0;
+  align-self: stretch;
+  border-top: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #D4D4D4);
+}
+
+.sa-tabulator__header {
   .sa-table__btn {
-    margin-left: 10px;
+    display: flex;
+    min-width: var(--sjs2-size-semantic-small, 40px);
+    justify-content: center;
+    align-items: center;
+
+    color: var(--sjs2-color-fg-brand-primary, #19B394);
+    text-align: center;
+
+    /* sjs2/typography/default-strong */
+    font-family: var(--sjs2-typography-font-family-default, "Open Sans");
+    font-size: var(--sjs2-typography-font-size-default, 16px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
   }
 }
 
+.tabulator-headers {
+  border-bottom: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
+}
+
+.sa-tabulator__downloads-bar {
+  // float: left;
+  // .sa-table__btn {
+  //   margin-left: 10px;
+  // }
+}
+
 .sa-tabulator__pagination-container {
-  float: right;
-  margin-top: 8px;
-  min-width: 200px;
-  text-align: right;
+  // float: right;
+  // margin-top: 8px;
+  // min-width: 200px;
+  // text-align: right;
+  display: flex;
+  align-items: center;
 }
 
 .sa-tabulator__filter-container {
@@ -74,65 +139,122 @@
 //redefine tabulator's styles
 .sa-tabulator {
   .tabulator-page {
-    margin-right: 15px;
-    padding: 1px;
-    vertical-align: middle;
-    color: $text-gray;
+    // margin-right: 15px;
+    // padding: 1px;
+    // vertical-align: middle;
+    // color: $text-gray;
     cursor: pointer;
     outline: none;
     border: none;
+    display: flex;
+    padding: var(--sjs2-layout-control-action-small-box-vertical, 8px) var(--sjs2-layout-control-action-small-box-horizontal, 8px);
+    justify-content: center;
+    align-items: center;
+    gap: var(--sjs2-layout-control-action-small-box-gap, 0);
+    background: transparent;
 
-    &:last-child {
-      margin-right: 0;
+    &:hover {
+      border-radius: var(--sjs2-radius-control-action-icon, 8px);
+      background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
     }
 
     &:disabled {
       cursor: default;
+      opacity: var(--sjs2-opacity-disabled, 0.25);
+    }
+  }
+
+  .tabulator-pages {
+    display: flex;
+    align-items: center;
+
+    .tabulator-page {
+      display: flex;
+      min-width: var(--sjs2-size-semantic-small, 40px);
+      padding: var(--sjs2-layout-control-action-small-box-vertical, 8px) var(--sjs2-layout-control-action-small-box-horizontal, 8px);
+      justify-content: center;
+      align-items: center;
+      gap: var(--sjs2-layout-control-action-small-box-gap, 0);
+      border-radius: var(--_ctr-survey-action-button-corner-radius, 8px);
+      background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
+
+      color: var(--sjs2-color-fg-basic-tertiary, rgba(28, 27, 32, 0.40));
+      text-align: center;
+
+      /* sjs2/typography/default-strong */
+      font-family: var(--sjs2-typography-font-family-default, "Open Sans");
+      font-size: var(--sjs2-typography-font-size-default, 16px);
+      font-style: normal;
+      font-weight: 600;
+      line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+
+      &:hover {
+        border-radius: var(--_ctr-survey-action-button-corner-radius, 8px);
+        background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
+      }
     }
   }
 
   .tabulator-page[aria-label~="Prev"] {
     @include arrow();
     transform: rotate(90deg);
-    margin-right: 20px;
   }
 
   .tabulator-page[aria-label~="Next"] {
     @include arrow();
     transform: rotate(270deg);
-    margin-left: 20px;
-    margin-right: 0;
   }
 
   .tabulator-page[aria-label~="First"] {
     @include doubleArrow();
     transform: rotate(90deg);
-    margin-right: 10px;
   }
 
   .tabulator-page[aria-label~="Last"] {
     @include doubleArrow();
     transform: rotate(270deg);
-    margin-left: 10px;
   }
 
   .tabulator-page.active {
-    font-weight: bold;
-    border-bottom: 1px solid $text-gray;
+    display: flex;
+    min-width: var(--sjs2-size-semantic-small, 40px);
+    padding: var(--sjs2-layout-control-action-small-box-vertical, 8px) var(--sjs2-layout-control-action-small-box-horizontal, 8px);
+    justify-content: center;
+    align-items: center;
+    gap: var(--sjs2-layout-control-action-small-box-gap, 0);
+
+    border-radius: var(--_ctr-survey-action-button-corner-radius, 8px);
+    border: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #D4D4D4);
+    background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0.00));
+
+    color: var(--sjs2-color-fg-basic-primary, #1C1B20);
+    text-align: center;
+
+    /* sjs2/typography/default-strong */
+    font-family: var(--sjs2-typography-font-family-default, "Open Sans");
+    font-size: var(--sjs2-typography-font-size-default, 16px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+
+    &:hover {
+      cursor: default;
+      background-color: transparent;
+    }
   }
 
   .tabulator {
-    border: var(--dsb-table-view-cell-border-width, 1px) dashed var(--dsb-table-view-cell-border-color, #DCDCDC);
-    background-color: $background-color;
+    border: none;
+    background-color: transparent;
 
     .tabulator-row .tabulator-cell {
-      padding: 20px;
-      border-top: var(--dsb-table-view-cell-border-width, 1px) dashed var(--dsb-table-view-cell-border-color, #DCDCDC);
-      border-right: var(--dsb-table-view-cell-border-width, 1px) dashed var(--dsb-table-view-cell-border-color, #DCDCDC);
+      padding: var(--sjs2-spacing-x200, 16px) var(--sjs2-spacing-x300, 24px);
+      border-top: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
+      border-right: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
     }
 
     .tabulator-header .tabulator-col {
-      border-right: var(--dsb-table-view-cell-border-width, 1px) dashed var(--dsb-table-view-cell-border-color, #DCDCDC);
+      border-right: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
     }
 
     .tabulator-header .tabulator-col .tabulator-col-content {
@@ -181,14 +303,22 @@
       padding-right: 0;
     }
 
-    .tabulator-tableholder::-webkit-scrollbar {
-      height: 10px;
-      width: 10px;
-      background-color: $scroll-color;
-    }
+    .tabulator-tableholder {
+      &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+        background-color: transparent;
+      }
 
-    .tabulator-tableholder::-webkit-scrollbar-thumb {
-      background: $main-color;
+      &::-webkit-scrollbar-thumb {
+        background-clip: padding-box;
+        border-radius: var(--ctr-scrollbar-corner-radius, 1024px);
+        background: var(--sjs2-color-utility-scrollbar, rgba(17, 16, 20, 0.15));
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
     }
   }
 }

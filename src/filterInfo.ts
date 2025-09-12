@@ -16,7 +16,7 @@ export class FilterInfo {
     );
     const filterClear = DocumentHelper.createButton(() => {
       visualizer.setSelection(undefined);
-    }, undefined, undefined, "close_16x16");
+    }, undefined, undefined, "close-16x16");
     this._htmlElement.appendChild(filterClear);
     this._htmlElement.appendChild(this.text);
   }
