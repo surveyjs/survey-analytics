@@ -16,9 +16,14 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     var options = Object.assign({}, options);
     options.allowDynamicLayout = false;
     options.dataProvider = undefined;
+    options.dataPath = this.dataNames[0];
     this._panelVisualizer = new VisualizationPanel(this.getQuestions(), [], options, undefined, false);
     this._panelVisualizer.onAfterRender.add(this.onAfterRenderPanelCallback);
     this.updateData(data);
+  }
+
+  public get contentVisualizer(): VisualizationPanel {
+    return this._panelVisualizer;
   }
 
   protected setLocale(newLocale: string) {
@@ -34,23 +39,13 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     return "panelDynamic";
   }
 
-  private updatePanelVisualizerData() {
-    let panelData: Array<any> = [];
-    this.data.forEach((dataItem) => {
-      if (dataItem[this.question.name] !== undefined) {
-        panelData = panelData.concat(dataItem[this.question.name]);
-      }
-    });
-    this._panelVisualizer.updateData(panelData);
-  }
-
   updateData(data: Array<{ [index: string]: any }>) {
     super.updateData(data);
-    this.updatePanelVisualizerData();
+    this._panelVisualizer.updateData(data);
   }
 
   protected onDataChanged() {
-    this.updatePanelVisualizerData();
+    this._panelVisualizer.updateData(this.dataProvider.filteredData);
     super.onDataChanged();
   }
 

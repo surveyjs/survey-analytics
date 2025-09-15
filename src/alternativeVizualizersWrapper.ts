@@ -26,7 +26,7 @@ export class AlternativeVisualizersWrapper
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(question, data, options);
+    super(question, data, options, "alternative");
     this.showToolbar = false;
     this.loadingData = false;
     if (!visualizers || visualizers.length < 2) {

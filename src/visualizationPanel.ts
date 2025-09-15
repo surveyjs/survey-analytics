@@ -10,8 +10,8 @@ import { FilterInfo } from "./filterInfo";
 import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
 import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
-import "./visualizationPanel.scss";
 import { VisualizationManager } from "./visualizationManager";
+import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -316,6 +316,7 @@ export class VisualizationPanel extends VisualizerBase {
     }
 
     this.buildVisualizers(questions);
+    this.updateData(this.surveyData);
 
     if (!this.haveCommercialLicense && this.isRoot) {
       this.registerToolbarItem("commercialLicense", () => {
@@ -1097,3 +1098,5 @@ export class VisualizationPanel extends VisualizerBase {
     this.destroyVisualizers();
   }
 }
+
+VisualizationManager.registerVisualizer("panel", VisualizationPanel);

@@ -1,4 +1,4 @@
-import { SurveyModel, QuestionCommentModel } from "survey-core";
+import { SurveyModel, QuestionCommentModel, ComponentCollection } from "survey-core";
 import { WordCloud } from "../src/wordcloud/wordcloud";
 import { Text } from "../src/text";
 import { SelectBase } from "../src/selectBase";
@@ -964,4 +964,90 @@ test("VisualizationPanel reset filter button respects the allowSelection option"
   // @ts-ignore
   creators = panel["toolbarItemCreators"];
   expect(creators["resetFilter"]).toBeUndefined();
+});
+
+test("custom component: single", () => {
+  ComponentCollection.Instance.add({
+    name: "customtext",
+    inheritBaseProps: ["placeholder"],
+    questionJSON: {
+      type: "text",
+      placeholder: "abc"
+    },
+  });
+
+  const survey = new SurveyModel({
+    elements: [
+      { type: "customtext", name: "q1" }
+    ]
+  });
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), [], {});
+  expect(visPanel.visualizers.length).toEqual(1);
+  expect(visPanel.visualizers[0].type).toEqual("alternative");
+  const altVis = visPanel.visualizers[0] as AlternativeVisualizersWrapper;
+  expect(altVis.getVisualizers().length).toEqual(2);
+  expect(altVis.getVisualizers()[0].type).toEqual("wordcloud");
+  expect(altVis.getVisualizers()[1].type).toEqual("text");
+
+  ComponentCollection.Instance.clear();
+});
+
+test("custom component: composite", () => {
+  ComponentCollection.Instance.add({
+    name: "test_composite",
+    elementsJSON: [
+      { type: "text", name: "q1" },
+      { type: "dropdown", name: "q2", choices: [1, 2, 3] },
+      { type: "text", inputType: "number", name: "q3" }
+    ],
+  });
+
+  const survey = new SurveyModel({
+    elements: [
+      { type: "test_composite", name: "q1" }
+    ]
+  });
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), [], {});
+  expect(visPanel.visualizers.length).toEqual(1);
+  expect(visPanel.visualizers[0].type).toEqual("panel");
+  const compositePanelVis = visPanel.visualizers[0] as VisualizationPanel;
+  expect(compositePanelVis.visualizers.length).toEqual(3);
+  expect(compositePanelVis.visualizers[0].type).toEqual("alternative");
+  expect(compositePanelVis.visualizers[1].type).toEqual("selectBase");
+  expect(compositePanelVis.visualizers[2].type).toEqual("alternative");
+
+  ComponentCollection.Instance.clear();
+});
+
+test("custom component: composite content panel visualizer data", () => {
+  ComponentCollection.Instance.add({
+    name: "test_composite",
+    elementsJSON: [
+      { type: "text", name: "q1" },
+      { type: "dropdown", name: "q2", choices: [1, 2, 3] },
+      { type: "text", inputType: "number", name: "q3" }
+    ],
+  });
+
+  const survey = new SurveyModel({
+    elements: [
+      { type: "test_composite", name: "q1" }
+    ]
+  });
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), [{
+    "q1": {
+      "q1": "testValue",
+      "q2": "another testValue",
+    }
+  }], {});
+  expect(visPanel.visualizers.length).toEqual(1);
+  expect(visPanel.visualizers[0].type).toEqual("panel");
+  const compositePanelVis = visPanel.visualizers[0] as VisualizationPanel;
+  expect(compositePanelVis.options.dataPath).toBe("q1");
+  expect(compositePanelVis["surveyData"]).toStrictEqual([{
+    "q1": "testValue", 
+    "q2": "another testValue",
+  }]);
+
+  ComponentCollection.Instance.clear();
 });
