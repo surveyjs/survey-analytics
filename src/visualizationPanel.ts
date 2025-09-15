@@ -381,6 +381,16 @@ export class VisualizationPanel extends VisualizerBase {
         );
       }, "dropdown");
     }
+
+    // if(this.isRoot && !this.theme?.isAxisLabelFontLoaded()) {
+    //   document.fonts.ready.then((fontFaceSet: FontFaceSet) => {
+    //     setTimeout(() => {
+    //       if (this.theme?.isAxisLabelFontLoaded()) {
+    //         this.refresh();
+    //       }
+    //     }, 100);
+    //   });      
+    // }
   }
   reorderVisibleElements(order: string[]): void {
     const newElements = [];

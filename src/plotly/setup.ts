@@ -85,6 +85,12 @@ export class PlotlySetup {
       ...theme.axisLabelFont,
       size: parseFloat(theme.axisLabelFont.size)
     };
+    if(axisLabelFont.size === undefined || isNaN(axisLabelFont.size)) {
+      delete axisLabelFont.size;
+    }
+    if(!theme.isAxisLabelFontLoaded()) {
+      delete axisLabelFont.family;
+    }
 
     return {
       zerolinecolor: PlotlySetup.getRgbaColor(theme.axisGridColor),
@@ -376,13 +382,11 @@ export class PlotlySetup {
       xaxis: {
         ...PlotlySetup.defaultAxisXWithGridLineConfig(model.theme),
         rangemode: "nonnegative",
-        automargin: true,
       },
       yaxis: {
         ...PlotlySetup.defaultAxisYConfig(model.theme),
         type: "category",
         orientation: "h",
-        automargin: true,
         tickmode: "array",
         tickvals: labels,
         ticktext: labels.map((label: string) => {

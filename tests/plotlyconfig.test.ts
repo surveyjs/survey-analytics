@@ -551,3 +551,30 @@ test("data is present in onPlotCreating options", async () => {
   expect(callCount).toBe(1);
   expect(lastData).toEqual([5, 2, 9]);
 });
+
+test("defaultAxisConfig fix font issues", async () => {
+  let ok = true;
+  const theme: any = {
+    axisLabelFont: {
+      family: "Arial",
+      size: "110px"
+    },
+    isAxisLabelFontLoaded: () => ok
+  };
+  expect(PlotlySetup.defaultAxisConfig(theme)).toStrictEqual({
+    "automargin": true,
+    "tickfont": {
+      "family": "Arial",
+      "size": 110,
+    },
+    "zerolinecolor": null,    
+  });
+  ok = false;
+  theme.axisLabelFont.size = "calc(8px * 1.5)";
+  expect(PlotlySetup.defaultAxisConfig(theme)).toStrictEqual({
+    "automargin": true,
+    "tickfont": {
+    },
+    "zerolinecolor": null,    
+  });
+});

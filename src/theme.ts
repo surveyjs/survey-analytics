@@ -72,6 +72,14 @@ export class DashboardTheme implements IDashboardTheme {
     return this.getCssVariableValue("--sjs2-color-bg-brand-secondary-dim");
   }
 
+  public isFontLoaded(fontFaceName: string) {
+    return !fontFaceName || document.fonts.check('1em ' + fontFaceName);
+  }
+
+  public isAxisLabelFontLoaded() {
+    return this.isFontLoaded(this.axisLabelFont?.family);
+  }
+
   public get axisLabelFont(): FontSettings {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
