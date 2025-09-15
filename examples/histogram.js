@@ -204,13 +204,13 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
 const checkbox = document.getElementById('toggle-checkbox');
 checkbox.addEventListener('change', () => {
   if (checkbox.checked) {
-    visPanel.applyTheme(SurveyTokens.dsbDarkTheme);
+    visPanel.applyTheme(SurveyAnalytics.DefaultDark);
   } else {
-    visPanel.applyTheme(SurveyTokens.dsbLightTheme);
+    visPanel.applyTheme(SurveyAnalytics.Default);
   }
 });
 
-// visPanel.applyTheme(SurveyTokens.dsbDarkTheme);
+// visPanel.applyTheme(SurveyAnalytics.DefaultDark);
 
 visPanel.showToolbar = true;
 visPanel.onAlternativeVisualizerChanged.add(function(sender, options) {

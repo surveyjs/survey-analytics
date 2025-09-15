@@ -1,4 +1,4 @@
-import { dsbLightTheme } from "sjs-design-tokens";
+import Default from "./sjs-design-tokens/default-light";
 import { DocumentHelper } from "./utils";
 
 export interface IDashboardTheme {
@@ -23,7 +23,7 @@ export class DashboardTheme implements IDashboardTheme {
     }
   }
 
-  constructor(private theme: IDashboardTheme = dsbLightTheme) {
+  constructor(private theme: IDashboardTheme = Default) {
     this.setTheme(theme);
   }
 
