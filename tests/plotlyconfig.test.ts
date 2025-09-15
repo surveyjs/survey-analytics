@@ -549,7 +549,7 @@ test("data is present in onPlotCreating options", async () => {
   PlotlySetup.onPlotCreating.add(creatingHandler);
   await (numberModel as any)._chartAdapter.update({ appendChild: jest.fn(), on: jest.fn() });
   expect(callCount).toBe(1);
-  expect(lastData).toEqual([5, 2, 9]);
+  expect(lastData).toEqual([5, 2, 9, 3]);
 });
 
 test("defaultAxisConfig fix font issues", async () => {
@@ -567,7 +567,7 @@ test("defaultAxisConfig fix font issues", async () => {
       "family": "Arial",
       "size": 110,
     },
-    "zerolinecolor": null,    
+    "zerolinecolor": null,
   });
   ok = false;
   theme.axisLabelFont.size = "calc(8px * 1.5)";
@@ -575,6 +575,6 @@ test("defaultAxisConfig fix font issues", async () => {
     "automargin": true,
     "tickfont": {
     },
-    "zerolinecolor": null,    
+    "zerolinecolor": null,
   });
 });

@@ -79,7 +79,7 @@ export class DashboardTheme implements IDashboardTheme {
   }
 
   public isFontLoaded(fontFaceName: string) {
-    return !fontFaceName || !document || !document.fonts || document.fonts.check('1em ' + fontFaceName);
+    return !fontFaceName || !document || !document.fonts || document.fonts.check("1em " + fontFaceName);
   }
 
   public isAxisLabelFontLoaded() {
@@ -130,7 +130,7 @@ export class DashboardTheme implements IDashboardTheme {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-fg-neutral-primary"),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-typography-font-size-small") || "12px",
+      size: this.getCssVariableValue("--sjs2-typography-font-size-small"),
       weight: 600
     };
   }
@@ -146,7 +146,7 @@ export class DashboardTheme implements IDashboardTheme {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-fg-basic-primary"),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-typography-font-size-large") || "32px",
+      size: this.getCssVariableValue("--sjs2-typography-font-size-large"),
       weight: 600
     };
   }
@@ -155,7 +155,7 @@ export class DashboardTheme implements IDashboardTheme {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-typography-font-size-small") || "16px",
+      size: this.getCssVariableValue("--sjs2-typography-font-size-small"),
       weight: 400
     };
   }

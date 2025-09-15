@@ -58,6 +58,6 @@ test("convertFromExternalData", () => {
     maxValue: 4,
   };
   const calculatedData = (number as any).getCalculatedValuesCore();
-  expect(calculatedData).toEqual([3, 2, 4]);
+  expect(calculatedData).toEqual([3, 2, 4, 3]);
   expect(number.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
 });

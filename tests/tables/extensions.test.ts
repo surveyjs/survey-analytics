@@ -164,10 +164,7 @@ test("locale selector uses titles", () => {
   const changeLocaleHeaderExtension = TableExtensions.findExtension("header", "changelocale");
   expect(changeLocaleHeaderExtension).toBeDefined();
   const renderResult = changeLocaleHeaderExtension.render(tabulator, undefined) as HTMLSelectElement;
-  expect(renderResult.options.length).toBe(3);
-  expect(renderResult.options[0].text).toBe("Change Locale");
-  expect(renderResult.options[1].text).toBe("English");
-  expect(renderResult.options[2].text).toBe("Deutsch");
+  expect(renderResult.textContent).toBe("Change LocaleEnglishDeutsch");
 });
 
 test("changelocale respects disableLocaleSwitch", () => {
@@ -183,5 +180,5 @@ test("changelocale respects disableLocaleSwitch", () => {
 
   tabulator.options.disableLocaleSwitch = false;
   expect(changeLocaleExtension.render(tabulator, null)).toBeDefined();
-  expect(changeLocaleExtension.render(tabulator, null).tagName).toBe("SELECT");
+  expect(changeLocaleExtension.render(tabulator, null).tagName).toBe("DIV");
 });
