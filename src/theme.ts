@@ -79,7 +79,7 @@ export class DashboardTheme implements IDashboardTheme {
   }
 
   public isFontLoaded(fontFaceName: string) {
-    return !fontFaceName || document.fonts.check('1em ' + fontFaceName);
+    return !fontFaceName || !document || !document.fonts || document.fonts.check('1em ' + fontFaceName);
   }
 
   public isAxisLabelFontLoaded() {
