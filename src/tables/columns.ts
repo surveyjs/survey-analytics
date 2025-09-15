@@ -119,7 +119,7 @@ export class CheckboxColumn extends BaseColumn<QuestionCheckboxModel> {
     selectedItems.forEach(item => {
       res.push(options.useValuesAsLabels ? item.value : item.textOrHtml);
     });
-    return res.join(table.itemsDelimeter);
+    return res.join(table.itemsDelimiter);
   }
 }
 
@@ -134,7 +134,7 @@ export class SelectBaseColumn extends BaseColumn<QuestionDropdownModel | Questio
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
     const value = options.useValuesAsLabels ? this.question.renderedValue : this.question.displayValue;
     if(Array.isArray(value)) {
-      return value.join(table.itemsDelimeter);
+      return value.join(table.itemsDelimiter);
     } else {
       return value;
     }
@@ -192,7 +192,7 @@ export class MatrixColumn extends BaseColumn<QuestionMatrixModel> {
             }
           }
           );
-          displayValue = res.join(table.itemsDelimeter);
+          displayValue = res.join(table.itemsDelimiter);
         } else {
           const choiceValue = ItemValue.getItemByValue(this.question.columns, displayValue);
           if(!!choiceValue) {

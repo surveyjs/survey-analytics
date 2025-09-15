@@ -1140,7 +1140,7 @@ test("check checkbox column with custom itemDelimiter", () => {
   };
   const survey = new SurveyModel(json);
   const data = [{ "question1": ["item1", "item2"] }];
-  let table = new TableTest(survey, data, { itemsDelimeter: " + " }, []);
+  let table = new TableTest(survey, data, { itemsDelimiter: " + " }, []);
   expect((<any>table).columns.length).toEqual(1);
   expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1 + Item 2");
 });
