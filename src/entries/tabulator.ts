@@ -27,3 +27,6 @@ export * from "../tables/table";
 export * from "../tables/tabulator";
 export { TableExtensions } from "../tables/extensions/tableextensions";
 export { DocumentHelper } from "../utils/index";
+
+export * from "../sjs-design-tokens/default-light";
+export * from "../sjs-design-tokens/default-dark";

@@ -247,10 +247,22 @@
     border: none;
     background-color: transparent;
 
+    .tabulator-table {
+      background-color: transparent;
+    }
+
     .tabulator-row .tabulator-cell {
       padding: var(--sjs2-spacing-x200, 16px) var(--sjs2-spacing-x300, 24px);
       border-top: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
       border-right: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
+
+      color: var(--sjs2-color-fg-basic-primary, #1C1B20);
+      /* sjs2/typography/default */
+      font-family: var(--sjs2-typography-font-family-default, "Open Sans");
+      font-size: var(--sjs2-typography-font-size-default, 16px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
     }
 
     .tabulator-header .tabulator-col {
@@ -266,12 +278,16 @@
     }
 
     .tabulator-header .tabulator-col.tabulator-sortable:hover {
-      background-color: white;
+      background-color: transparent;
     }
 
     .tabulator-header,
     .tabulator-header .tabulator-col {
-      background-color: white;
+      background-color: transparent;
+    }
+
+    .tabulator-col.tabulator-moving {
+      border: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
     }
 
     .tabulator-header .tabulator-col:first-child {
@@ -282,17 +298,17 @@
       display: none;
     }
 
+    .tabulator-row {
+      background: var(--sjs2-color-bg-basic-primary, #FFF);
+    }
+
     .tabulator-row.tabulator-selectable:hover {
       cursor: default;
-      background-color: $background-color;
+      background: var(--sjs2-color-bg-basic-primary-dim, rgba(28, 27, 32, 0.05));
     }
 
     .tabulator-row.tabulator-selectable.sa-table__detail-row:hover {
-      background-color: $detail-color;
-    }
-
-    .tabulator-row.tabulator-row-even {
-      background-color: $background-color;
+      background: var(--sjs2-color-bg-basic-secondary, rgba(28, 27, 32, 0.05));
     }
 
     .tabulator-header .tabulator-col .tabulator-col-content {
@@ -317,6 +333,10 @@
       }
 
       &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-corner {
         background: transparent;
       }
     }

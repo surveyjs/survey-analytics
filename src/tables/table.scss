@@ -106,7 +106,7 @@ $root-font-size: var(--root-font-size, 14px);
 }
 
 .sa-table__detail-row.sa-table__detail-row.sa-table__detail-row.sa-table__detail-row {
-  background-color: $detail-color;
+  background: var(--sjs2-color-bg-basic-secondary, rgba(28, 27, 32, 0.05));
 }
 
 .sa-table__detail-table.sa-table__detail-table {
@@ -117,7 +117,8 @@ $root-font-size: var(--root-font-size, 14px);
 }
 
 .sa-table__detail {
-  border-top: 1px solid $border-color;
+  border-top: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
+
   td {
     box-sizing: border-box;
     border-left: none;
@@ -219,6 +220,7 @@ a.sa-table__btn {
   align-items: flex-start;
   gap: var(--sjs2-spacing-x100, 8px);
   flex: 1 0 0;
+  background: var(--sjs2-color-bg-basic-primary, #FFF);
 }
 
 .sa-tabulator-column-title-text {
@@ -408,11 +410,7 @@ a.sa-table__btn {
 }
 
 .sa-table__detail-row {
-  background-color: $detail-color;
-}
-
-.sa-table__detail-table {
-  background-color: $detail-color;
+  background: var(--sjs2-color-bg-basic-secondary, rgba(28, 27, 32, 0.05));
 }
 
 .sa-table input.sa-table__row-extension {

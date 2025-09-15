@@ -40,5 +40,7 @@ export * from "../nps";
 export * from "../ranking";
 export * from "../pivot";
 export * from "../theme";
+export * from "../sjs-design-tokens/default-light";
+export * from "../sjs-design-tokens/default-dark";
 
 export { DocumentHelper } from "../utils/index";
