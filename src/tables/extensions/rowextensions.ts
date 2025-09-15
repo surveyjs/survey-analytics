@@ -33,7 +33,7 @@ TableExtensions.registerExtension({
         iconContainer.classList.remove(itemClassSelected);
       }
     };
-    iconContainer.classList = "sa-checkbox sa-table__row-extension";
+    iconContainer.className = "sa-checkbox sa-table__row-extension";
 
     if (row.getIsSelected()) {
       iconContainer.classList.add(itemClassSelected);
