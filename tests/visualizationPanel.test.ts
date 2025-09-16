@@ -1,4 +1,4 @@
-import { SurveyModel, QuestionCommentModel } from "survey-core";
+import { SurveyModel, QuestionCommentModel, ComponentCollection } from "survey-core";
 import { WordCloud } from "../src/wordcloud/wordcloud";
 import { Text } from "../src/text";
 import { SelectBase } from "../src/selectBase";
@@ -965,3 +965,4 @@ test("VisualizationPanel reset filter button respects the allowSelection option"
   creators = panel["toolbarItemCreators"];
   expect(creators["resetFilter"]).toBeUndefined();
 });
+
