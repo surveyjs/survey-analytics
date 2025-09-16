@@ -48,7 +48,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
 
     if (this.canGroupColumns) {
       var creators = VisualizationManager.getVisualizersByType("matrixdropdown-grouped");
-      this._matrixDropdownVisualizer = new creators[0](this.question as any, [], this._childOptions);
+      this._matrixDropdownVisualizer = new creators[0](this.question, [], this._childOptions);
     } else {
       const innerQuestions = this.getQuestions();
       this._matrixDropdownVisualizer = new VisualizationPanel(innerQuestions, [], this._childOptions, undefined, false);

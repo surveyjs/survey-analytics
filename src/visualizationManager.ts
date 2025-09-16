@@ -1,14 +1,10 @@
 import { Question } from "survey-core";
 
-declare type VisualizerConstructor = ((new (
+declare type VisualizerConstructor = new (
   question: Question,
   data: Array<{ [index: string]: any }>,
   options?: Object
-) => any) | (new (
-  questions: Question[],
-  data: Array<{ [index: string]: any }>,
-  options?: Object
-) => any));
+) => any;
 
 /**
  * An object with methods used to register and unregister visualizers for individual question types.

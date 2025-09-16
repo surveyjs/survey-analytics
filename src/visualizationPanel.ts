@@ -306,7 +306,7 @@ export class VisualizationPanel extends VisualizerBase {
     this._layoutEngine.onMoveCallback = (order: Array<string>) =>
       this.reorderVisibleElements(order);
 
-    this.showToolbar = true;
+    this.showToolbar = isRoot;
     if (this.options.survey) {
       localization.currentLocale = this.options.survey.locale;
     }
@@ -1098,5 +1098,3 @@ export class VisualizationPanel extends VisualizerBase {
     this.destroyVisualizers();
   }
 }
-
-VisualizationManager.registerVisualizer("panel", VisualizationPanel);

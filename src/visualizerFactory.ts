@@ -42,15 +42,9 @@ export class VisualizerFactory {
       let fallbackType = undefined;
       if(question instanceof QuestionCustomModel) {
         fallbackType = question.getDynamicType();
-        questionForCreator = question.contentQuestion;
+        // questionForCreator = question.contentQuestion;
       } else if(question instanceof QuestionCompositeModel) {
-        fallbackType = "panel";
-        const innerQuestions = [];
-        question.contentPanel.addQuestionsToList(innerQuestions);
-        questionForCreator = <any>innerQuestions;
-        optionsForCreator.allowDynamicLayout = false;
-        optionsForCreator.dataProvider = undefined;
-        optionsForCreator.dataPath = question.valueName || question.name;
+        fallbackType = "composite";
       }
       creators = VisualizationManager.getVisualizersByType(type, fallbackType);
     }
