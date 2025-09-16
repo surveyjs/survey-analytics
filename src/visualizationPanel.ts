@@ -964,13 +964,13 @@ export class VisualizationPanel extends VisualizerBase {
 
     const questionElement = DocumentHelper.createElement("div");
     questionElement.dataset.question = element.name;
+    questionElement.role = "group";
+    questionElement.setAttribute("aria-labelledby", "el_" + element.name);
 
     !!container && container.appendChild(questionElement);
 
     const questionContent = DocumentHelper.createElement("div");
     const vizualizerElement = DocumentHelper.createElement("div");
-    vizualizerElement.role = "group";
-    vizualizerElement.setAttribute("aria-labelledby", "el_" + element.name);
     const headerElement = this.createHeaderElement(element);
 
     questionElement.className = this.allowDynamicLayout
