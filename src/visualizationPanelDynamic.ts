@@ -36,10 +36,6 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     this.afterRender(this.contentContainer);
   };
 
-  public get type() {
-    return "panelDynamic";
-  }
-
   updateData(data: Array<{ [index: string]: any }>) {
     super.updateData(data);
     this._panelVisualizer.updateData(data);
