@@ -1,5 +1,5 @@
 import { Question, QuestionSelectBase, ItemValue, Event } from "survey-core";
-import { ICalculationResult, VisualizerBase } from "./visualizerBase";
+import { IAnswersData, ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DataHelper, DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
@@ -12,17 +12,10 @@ export interface IVisualizerWithSelection {
   setSelection(item: ItemValue): void;
 }
 
-export interface IAnswersData {
-  datasets: Array<Array<any>>;
-  labels: Array<string>;
-  colors: Array<string>;
-  texts: Array<Array<any>>;
-  seriesLabels: Array<string>;
-}
-
 export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData {
   const result = {
     datasets: <Array<any>>[],
+    values: <Array<string>>[],
     labels: <Array<string>>[],
     colors: <Array<string>>[],
     texts: <Array<any>>[],
@@ -654,6 +647,7 @@ export class SelectBase
 
     let answersData = {
       datasets,
+      values: this.getValues(),
       labels,
       colors,
       texts,

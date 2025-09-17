@@ -1,6 +1,6 @@
 import { Event } from "survey-core";
-import { IAnswersData, SelectBase } from "../selectBase";
-import { VisualizerBase } from "../visualizerBase";
+import { SelectBase } from "../selectBase";
+import { IAnswersData, VisualizerBase } from "../visualizerBase";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
 import { DashboardTheme } from "../theme";
@@ -233,7 +233,7 @@ export class ApexChartsSetup {
       seriesLabels,
     } = answersData;
 
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
 
     // Prepare data series
     let series: Array<any> = [];
@@ -339,7 +339,7 @@ export class ApexChartsSetup {
       seriesLabels,
     } = answersData;
 
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
     const isHistogram = model.type === "histogram";
 
     if (!isHistogram && model.type !== "pivot") {
@@ -461,7 +461,7 @@ export class ApexChartsSetup {
       seriesLabels,
     } = answersData;
 
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
     const isHistogram = model.type === "histogram";
 
     if (!isHistogram && model.type !== "pivot") {
@@ -570,7 +570,7 @@ export class ApexChartsSetup {
       seriesLabels,
     } = answersData;
 
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
 
     // Prepare data series
     let series: Array<any> = [];
@@ -663,7 +663,7 @@ export class ApexChartsSetup {
       seriesLabels,
     } = answersData;
 
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
 
     if (model.type !== "pivot") {
       ({ labels, seriesLabels, colors, texts, datasets } = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets));
@@ -778,7 +778,7 @@ export class ApexChartsSetup {
       seriesLabels,
     } = answersData;
 
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
 
     // Prepare data series
     let series: Array<any> = [];
@@ -892,7 +892,7 @@ export class ApexChartsSetup {
   static setupGauge(model: NumberModel, answersData: IAnswersData): ApexChartsOptions {
     let [level, minValue, maxValue] = answersData as any;
 
-    if (model.question.getType() === "rating") {
+    if (model.dataType === "rating") {
       const rateValues = model.question.visibleRateValues;
       maxValue = rateValues[rateValues.length - 1].value;
       minValue = rateValues[0].value;
@@ -967,7 +967,7 @@ export class ApexChartsSetup {
   static setupBullet(model: NumberModel, answersData: IAnswersData): ApexChartsOptions {
     let [level, minValue, maxValue] = answersData as any;
 
-    if (model.question.getType() === "rating") {
+    if (model.dataType === "rating") {
       const rateValues = model.question.visibleRateValues;
       maxValue = rateValues[rateValues.length - 1].value;
       minValue = rateValues[0].value;
@@ -1054,7 +1054,7 @@ export class ApexChartsSetup {
       texts,
       seriesLabels,
     } = answersData;
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
 
     const series = datasets.map((dataset: Array<number>, index: number) => {
       const seriesName = hasSeries ? seriesLabels[index] : "";

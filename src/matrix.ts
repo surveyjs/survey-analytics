@@ -1,6 +1,7 @@
 import { ItemValue, QuestionMatrixModel, Question } from "survey-core";
-import { IAnswersData, SelectBase } from "./selectBase";
+import { SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
+import { IAnswersData } from "./visualizerBase";
 
 export class Matrix extends SelectBase {
   constructor(
@@ -68,6 +69,7 @@ export class Matrix extends SelectBase {
   protected hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData {
     const result: IAnswersData = {
       datasets: <Array<Array<any>>>[],
+      values: <Array<string>>[],
       labels: <Array<string>>[],
       colors: <Array<string>>[],
       texts: <Array<Array<any>>>[],

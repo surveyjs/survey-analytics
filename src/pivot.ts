@@ -29,7 +29,7 @@ export class PivotModel extends SelectBase {
     private isRoot = true
   ) {
     super(null, data, options, name || "pivot");
-    this.questions = this.questions.filter((question) => ["matrixdropdown", "matrixdynamic", "matrix", "file", "signature", "multipletext", "comment", "html", "image"].indexOf(question.getType()) === -1);
+    this.questions = this.questions.filter((question) => ["matrixdropdown", "matrixdynamic", "matrix", "file", "signature", "multipletext", "comment", "html", "image"].indexOf(this.dataType) === -1);
     if (this.options.intervalPrecision !== undefined) {
       this._intervalPrecision = this.options.intervalPrecision;
     }
@@ -159,7 +159,7 @@ export class PivotModel extends SelectBase {
   }
 
   public getQuestionValueType(question: Question): "enum" | "date" | "number" {
-    const questionType = question.getType();
+    const questionType = this.dataType;
     if (questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
       return "date";
     } else if(questionType === "text" || questionType === "rating" || questionType === "expression" || questionType === "range") {
@@ -265,7 +265,7 @@ export class PivotModel extends SelectBase {
   }
 
   protected get needUseRateValues() {
-    return this.question.getType() == "rating" && Array.isArray(this.question["rateValues"]) && this.question["rateValues"].length > 0;
+    return this.dataType == "rating" && Array.isArray(this.question["rateValues"]) && this.question["rateValues"].length > 0;
   }
 
   public getSeriesValues(): Array<string> {
@@ -321,7 +321,7 @@ export class PivotModel extends SelectBase {
       return this.questionOptions.intervals;
     }
 
-    if(this.question.getType() == "rating") {
+    if(this.dataType == "rating") {
       if (this.needUseRateValues) {
         const rateValues = this.question["rateValues"] as ItemValue[];
         rateValues.sort((iv1, iv2) => iv1.value - iv2.value);

@@ -74,7 +74,7 @@ export class Text extends VisualizerBase {
 
   public get columns(): Array<{ name: string, title: string, type: string }> {
     const columns = [];
-    if(this.question.getType() == "multipletext") {
+    if(this.dataType == "multipletext") {
       (this.question as QuestionMultipleTextModel).items.forEach(item => {
         columns.push({ name: item.name, title: item.title, type: item.inputType });
       });

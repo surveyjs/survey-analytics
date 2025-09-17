@@ -1,4 +1,4 @@
-import { Question, QuestionCommentModel, Event, settings, hasLicense } from "survey-core";
+import { Question, QuestionCommentModel, Event, settings, hasLicense, Base } from "survey-core";
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { VisualizationManager } from "./visualizationManager";
@@ -27,6 +27,15 @@ export declare type ICalculationResult = {
   values: Array<string>,
   series?: Array<string>,
 };
+
+export interface IAnswersData {
+  datasets: Array<Array<any>>;
+  values: Array<string>;
+  labels: Array<string>;
+  colors: Array<string>;
+  texts: Array<Array<any>>;
+  seriesLabels: Array<string>;
+}
 
 export interface IDataInfo {
   name: string; // TODO - remove from this interface
@@ -394,6 +403,17 @@ export class VisualizerBase implements IDataInfo {
    */
   public get type() {
     return this._type || "visualizer";
+  }
+
+  public get dataType(): string {
+    if(this.question) {
+      if(this.question instanceof Base) {
+        return this.question.getType();
+      } else if("dataType" in this.question) {
+        return this.question["dataType"];
+      }
+    }
+    return undefined;
   }
 
   /**
@@ -919,6 +939,22 @@ export class VisualizerBase implements IDataInfo {
 
   public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
     return externalCalculatedData;
+  }
+
+  /**
+   * Returns object with all infotmation for data visualization: datasets, labels, colors, additional texts (percentage).
+   */
+  public async getAnswersData(): Promise<IAnswersData> {
+    const calculatedValues = await this.getCalculatedValues();
+    return {
+      datasets: calculatedValues.data,
+      // TODO: remove unused or add missing values
+      values: calculatedValues.values || this.getValues(),
+      labels: this.getLabels(),
+      colors: VisualizerBase.getColors(),
+      texts: calculatedValues.data,
+      seriesLabels: this.getSeriesLabels()
+    };
   }
 
   /**

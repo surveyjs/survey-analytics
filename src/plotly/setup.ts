@@ -1,6 +1,6 @@
 import { Event, QuestionRatingModel } from "survey-core";
-import { IAnswersData, SelectBase } from "../selectBase";
-import { VisualizerBase } from "../visualizerBase";
+import { SelectBase } from "../selectBase";
+import { IAnswersData, VisualizerBase } from "../visualizerBase";
 import { localization } from "../localizationManager";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
@@ -224,7 +224,7 @@ export class PlotlySetup {
       seriesLabels,
     } = answersData;
 
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
     const layoutColumns = 2;
 
     let traces: any = [];
@@ -321,7 +321,7 @@ export class PlotlySetup {
       seriesLabels,
     } = answersData;
 
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
     const isHistogram = model.type === "histogram";
 
     const traces: any = [];
@@ -434,7 +434,7 @@ export class PlotlySetup {
       seriesLabels,
     } = answersData;
 
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
     const isHistogram = model.type === "histogram";
 
     if (!isHistogram && model.type !== "pivot") {
@@ -535,7 +535,7 @@ export class PlotlySetup {
       texts,
       seriesLabels,
     } = answersData;
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
     const traces: any = [];
 
     const traceConfig: any = {
@@ -611,15 +611,15 @@ export class PlotlySetup {
   }
 
   static setupGauge(model: NumberModel, answersData: IAnswersData): PlotlyOptions {
-    let [level, minValue, maxValue] = answersData as any;
+    let value = answersData.datasets[0][answersData.values.indexOf(model.displayValueName || "average")];
+    let minValue = answersData.datasets[0][answersData.values.indexOf("min")] || 0;
+    let maxValue = answersData.datasets[0][answersData.values.indexOf("max")] || value * 1.25;
 
-    if (model.question.getType() === "rating") {
+    if (model.dataType === "rating") {
       const rateValues = model.question.visibleRateValues;
       maxValue = rateValues[rateValues.length - 1].value;
       minValue = rateValues[0].value;
     }
-
-    let value = answersData[model.getValues().indexOf(model.displayValueName)];
 
     const colors = model.generateColors(
       maxValue,
@@ -680,7 +680,7 @@ export class PlotlySetup {
       texts,
       seriesLabels,
     } = answersData;
-    const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
+    const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
     const traces: any = [];
 
     const traceConfig: any = {

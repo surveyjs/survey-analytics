@@ -29,7 +29,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
     layout: object,
     config: any
   ) {
-    if(this.model.question.getType() === "boolean") {
+    if(this.model.dataType === "boolean") {
       const colors = VisualizerBase.getColors();
       const boolColors = [
         BooleanModel.trueColor || colors[0],
@@ -77,7 +77,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
 
   public async update(chartNode: HTMLElement): Promise<any> {
     chartNode.className = "sa-visualizer--plotly";
-    const answersData = (this.model instanceof SelectBase) ? await this.model.getAnswersData() : await this.model.getCalculatedValues();
+    const answersData = await this.model.getAnswersData();
     var plotlyOptions = PlotlySetup.setup((this.model as any).chartType, this.model, answersData as any);
 
     let config: any = {

@@ -771,7 +771,7 @@ export class VisualizationPanel extends VisualizerBase {
     return (questions || []).map((question) => {
       question = Array.isArray(question) ? question[0] : question;
       return {
-        name: question.name,
+        name: question.name || question.dataName,
         displayName: this.processText(question.title),
         isVisible: true,
         isPublic: true,

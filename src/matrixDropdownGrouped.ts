@@ -1,5 +1,5 @@
 import { ItemValue, QuestionMatrixDropdownModel, Question, MatrixDropdownColumn, MatrixDropdownRowModelBase } from "survey-core";
-import { IAnswersData, SelectBase } from "./selectBase";
+import { SelectBase } from "./selectBase";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
 import { VisualizationManager } from "./visualizationManager";
 import { ICalculationResult } from "./visualizerBase";

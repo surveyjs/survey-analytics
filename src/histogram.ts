@@ -26,7 +26,7 @@ export class HistogramModel extends SelectBase {
     if (this.options.intervalPrecision !== undefined) {
       this._intervalPrecision = this.options.intervalPrecision;
     }
-    const questionType = question.getType();
+    const questionType = this.dataType;
     if (questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
       this.valueType = "date";
     } else {
@@ -111,7 +111,7 @@ export class HistogramModel extends SelectBase {
   }
 
   protected get needUseRateValues() {
-    return this.question.getType() == "rating" && Array.isArray(this.question["rateValues"]) && this.question["rateValues"].length > 0;
+    return this.dataType == "rating" && Array.isArray(this.question["rateValues"]) && this.question["rateValues"].length > 0;
   }
 
   public getValues(): Array<any> {
@@ -131,7 +131,7 @@ export class HistogramModel extends SelectBase {
       return this.questionOptions.intervals;
     }
 
-    if(this.question.getType() == "rating") {
+    if(this.dataType == "rating") {
       if (this.needUseRateValues) {
         const rateValues = this.question["rateValues"] as ItemValue[];
         rateValues.sort((iv1, iv2) => iv1.value - iv2.value);

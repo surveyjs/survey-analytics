@@ -73,7 +73,7 @@ export class ApexChartsAdapter {
 
   public async update(chartNode: HTMLElement): Promise<ApexChartsOptions> {
     const _chartType = (this.model as any).chartType;
-    const answersData = (this.model instanceof SelectBase) ? await this.model.getAnswersData() : await this.model.getCalculatedValues();
+    const answersData = await this.model.getAnswersData();
     var chartOptions = ApexChartsSetup.setup(_chartType, this.model, answersData as any);
 
     if (this.model instanceof SelectBase && this.model.supportSelection) {

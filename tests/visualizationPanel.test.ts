@@ -1065,4 +1065,6 @@ test("Create number visualizer from definition", async () => {
   let result: any = (await numberVis.getCalculatedValues()).data[0];
 
   expect(result).toStrictEqual([7.34, 1, 10, 7]);
+  expect(numberVis.name).toEqual(visualizerDefinition.dataName);
+  expect(panel.visibleElements[0].name).toEqual(visualizerDefinition.dataName);
 });
