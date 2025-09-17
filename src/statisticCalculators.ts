@@ -1,7 +1,7 @@
 import { DataProvider } from "./dataProvider";
-import { IDataInfo } from "./visualizerBase";
+import { ICalculatedDataInfo, ICalculationResult, IDataInfo } from "./visualizerBase";
 
-export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo): Array<any> {
+export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo): ICalculationResult {
   const dataNames = dataInfo.dataNames;
   const statistics: Array<Array<Array<number>>> = [];
 
@@ -62,7 +62,6 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
             });
           }
         } else {
-          // No series
           rowValues.forEach((val) => {
             const valIndex = getValueIndex(val);
             statistics[0][0][valIndex]++;
@@ -72,10 +71,14 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
     });
   });
 
-  return dataInfo.dataNames.length > 1 ? statistics : statistics[0] as any;
+  return {
+    data: dataInfo.dataNames.length > 1 ? statistics as any : statistics[0],
+    values,
+    series
+  };
 }
 
-export function histogramStatisticsCalculator(data: any, intervals: any, seriesValues: Array<string>): Array<any> {
+export function histogramStatisticsCalculator(data: any, intervals: Array<{start: number | Date, end: number | Date, label: string}>, seriesValues: Array<string>): ICalculationResult {
   const statistics: Array<Array<number>> = [];
   if (seriesValues.length === 0) {
     seriesValues.push("");
@@ -91,18 +94,26 @@ export function histogramStatisticsCalculator(data: any, intervals: any, seriesV
       }
     });
   }
-  return statistics;
+
+  const result: ICalculationResult = {
+    data: statistics,
+    values: intervals.map(i => i.label),
+  };
+  if(seriesValues.length > 1) {
+    result.series = seriesValues;
+  }
+  return result;
 }
 
-export function mathStatisticsCalculator(data: Array<any>, dataName: string) {
+export function mathStatisticsCalculator(data: Array<any>, dataInfo: ICalculatedDataInfo): ICalculationResult {
   let resultMin = Number.MAX_VALUE,
     resultMax = -Number.MAX_VALUE,
     resultAverage = 0;
   let actualAnswerCount = 0;
 
   data.forEach((rowData) => {
-    if (rowData[dataName] !== undefined) {
-      const questionValue: number = +rowData[dataName];
+    if (rowData[dataInfo.valueNames[0]] !== undefined) {
+      const questionValue: number = +rowData[dataInfo.valueNames[0]];
       actualAnswerCount++;
       resultAverage += questionValue;
       if (resultMin > questionValue) {
@@ -119,5 +130,8 @@ export function mathStatisticsCalculator(data: Array<any>, dataName: string) {
   }
   resultAverage = Math.ceil(resultAverage * 100) / 100;
 
-  return [resultAverage, resultMin, resultMax, data.length];
+  return {
+    data: [[resultAverage, resultMin, resultMax, data.length]],
+    values: ["average", "min", "max", "count"]
+  };
 }

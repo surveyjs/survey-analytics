@@ -1,5 +1,5 @@
 import { Question, ItemValue } from "survey-core";
-import { IChartAdapter, VisualizerBase } from "./visualizerBase";
+import { ICalculationResult, IChartAdapter, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
@@ -207,9 +207,9 @@ export class AlternativeVisualizersWrapper
    * @see setState
    */
   public resetState(): void {
-      super.resetState();
-      this.visualizers.forEach(visualizer => visualizer.resetState());
-      this.setVisualizer(this.visualizers[0].type, true);
+    super.resetState();
+    this.visualizers.forEach(visualizer => visualizer.resetState());
+    this.setVisualizer(this.visualizers[0].type, true);
   }
 
   getValues(): Array<any> {
@@ -220,7 +220,7 @@ export class AlternativeVisualizersWrapper
     return this.visualizer.getLabels();
   }
 
-  public getCalculatedValues(): Promise<Array<Object>> {
+  public getCalculatedValues(): Promise<ICalculationResult> {
     return this.visualizer.getCalculatedValues();
   }
 

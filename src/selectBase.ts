@@ -1,5 +1,5 @@
 import { Question, QuestionSelectBase, ItemValue, Event } from "survey-core";
-import { VisualizerBase } from "./visualizerBase";
+import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DataHelper, DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
@@ -624,7 +624,7 @@ export class SelectBase
    */
   public async getAnswersData(): Promise<IAnswersData> {
     let seriesLabels = this.getSeriesLabels();
-    let datasets = (await this.getCalculatedValues()) as number[][];
+    let datasets = (await this.getCalculatedValues()).data as number[][];
     let labels = this.getLabels();
     let colors = VisualizerBase.getColors();
     if (this.transposeData) {
@@ -665,7 +665,7 @@ export class SelectBase
     return answersData;
   }
 
-  public convertFromExternalData(externalCalculatedData: any): any[] {
+  public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
     const values = this.getValues();
     const series = this.getSeriesValues();
     const innerCalculatedData = [];
@@ -688,7 +688,11 @@ export class SelectBase
       }
       innerCalculatedData.push(seriesData);
     }
-    return innerCalculatedData;
+    return {
+      data: innerCalculatedData,
+      values,
+      series
+    };
   }
 
   protected transpose(data: Array<Array<number>>): Array<Array<number>> {

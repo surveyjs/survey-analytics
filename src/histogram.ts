@@ -3,6 +3,7 @@ import { DataProvider } from "./dataProvider";
 import { SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
 import { histogramStatisticsCalculator } from "./statisticCalculators";
+import { ICalculationResult } from "./visualizerBase";
 
 export class HistogramModel extends SelectBase {
   protected valueType: "date" | "number" = "number";
@@ -125,7 +126,7 @@ export class HistogramModel extends SelectBase {
     return !!this.questionOptions && Array.isArray(this.questionOptions.intervals);
   }
 
-  public get intervals() {
+  public get intervals(): Array<{start: number | Date, end: number | Date, label: string}> {
     if (this.hasCustomIntervals) {
       return this.questionOptions.intervals;
     }
@@ -176,11 +177,14 @@ export class HistogramModel extends SelectBase {
     return this._cachedIntervals;
   }
 
-  public convertFromExternalData(externalCalculatedData: any): any[] {
-    return [externalCalculatedData];
+  public convertFromExternalData(externalCalculatedData: Array<number>): ICalculationResult {
+    return {
+      data: [externalCalculatedData],
+      values: this.intervals.map(i => i.label)
+    };
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
+  protected getCalculatedValuesCore(): ICalculationResult {
     const continuousValues = this.getContinuousValues();
     return histogramStatisticsCalculator(this._continuousData, this.intervals, this.getSeriesValues());
   }

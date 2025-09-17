@@ -1,15 +1,12 @@
 import { Question } from "survey-core";
-import { VisualizerBase } from "./visualizerBase";
+import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 import { mathStatisticsCalculator } from "./statisticCalculators";
 
 export class NumberModel extends VisualizerBase {
-  private _resultAverage: number;
-  private _resultMin: number;
-  private _resultMax: number;
-  private _resultCount: number;
+  private _statistics: ICalculationResult;
 
   public static stepsCount = 5;
   public static generateTextsCallback: (
@@ -65,9 +62,7 @@ export class NumberModel extends VisualizerBase {
   }
 
   protected onDataChanged() {
-    this._resultAverage = undefined;
-    this._resultMin = undefined;
-    this._resultMax = undefined;
+    this._statistics = undefined;
     super.onDataChanged();
   }
 
@@ -89,9 +84,7 @@ export class NumberModel extends VisualizerBase {
   }
 
   destroy(): void {
-    this._resultAverage = undefined;
-    this._resultMin = undefined;
-    this._resultMax = undefined;
+    this._statistics = undefined;
     super.destroy();
   }
 
@@ -146,22 +139,22 @@ export class NumberModel extends VisualizerBase {
     return colors;
   }
 
-  public convertFromExternalData(externalCalculatedData: any): any[] {
-    return [externalCalculatedData.value || 0, externalCalculatedData.minValue || 0, externalCalculatedData.maxValue || 0, externalCalculatedData.count || 0];
+  public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
+    return {
+      data: [[externalCalculatedData.value || 0, externalCalculatedData.minValue || 0, externalCalculatedData.maxValue || 0, externalCalculatedData.count || 0]],
+      values: ["average", "min", "max", "count"]
+    };
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
-    if (this._resultAverage === undefined ||
-      this._resultMin === undefined ||
-      this._resultMax === undefined ||
-      this._resultCount === undefined) {
-      [this._resultAverage, this._resultMin, this._resultMax, this._resultCount] = mathStatisticsCalculator(this.surveyData, this.dataNames[0]);
+  protected getCalculatedValuesCore(): ICalculationResult {
+    if (this._statistics === undefined) {
+      this._statistics = mathStatisticsCalculator(this.surveyData, { valueNames: this.dataNames });
     }
-    return [this._resultAverage, this._resultMin, this._resultMax, this._resultCount];
+    return this._statistics;
   }
 
   public getValues(): Array<any> {
-    return ["value", "min", "max", "count"];
+    return this._statistics ? this._statistics.values : [];
   }
 }
 

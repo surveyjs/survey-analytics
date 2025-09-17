@@ -637,14 +637,14 @@ test("updateData should be called in order to update data - #269", async () => {
   let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
 
   const questionVisualizer = visPanel.visualizers[0];
-  expect(await questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 0, 2]]);
+  expect((await questionVisualizer.getCalculatedValues()).data).toEqual([[0, 1, 2, 0, 2]]);
 
   const newAnswer = { "satisfaction-score": 4, "nps-score": 9 };
   data.push(newAnswer);
-  expect(await questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 0, 2]]);
+  expect((await questionVisualizer.getCalculatedValues()).data).toEqual([[0, 1, 2, 0, 2]]);
 
   visPanel.updateData(data);
-  expect(await questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 1, 2]]);
+  expect((await questionVisualizer.getCalculatedValues()).data).toEqual([[0, 1, 2, 1, 2]]);
 });
 
 test("hide/show all elements", () => {
@@ -924,14 +924,14 @@ test("create visualizer for grouped questions", async () => {
   expect(visualizer.getSeriesLabels()).toStrictEqual([]);
   expect(visualizer.getValues()).toStrictEqual(["female", "male"]);
   expect(visualizer.getLabels()).toStrictEqual(["female", "male"]);
-  expect(await visualizer.getCalculatedValues()).toStrictEqual([[8, 4]]);
+  expect((await visualizer.getCalculatedValues()).data).toStrictEqual([[8, 4]]);
 
   visualizer.setAxisQuestions("question1", "question2");
   expect(visualizer.getSeriesValues()).toStrictEqual(["item1", "item2", "item3"]);
   expect(visualizer.getSeriesLabels()).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(visualizer.getValues()).toStrictEqual(["female", "male"]);
   expect(visualizer.getLabels()).toStrictEqual(["female", "male"]);
-  expect(await visualizer.getCalculatedValues()).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
+  expect((await visualizer.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
 });
 
 test("getCalculatedValues should return empty array", async () => {
@@ -949,7 +949,7 @@ test("getCalculatedValues should return empty array", async () => {
   const vis = new VisualizationPanel(survey.getAllQuestions(), data, {
     allowDynamicLayout: false,
   });
-  expect(await vis.getCalculatedValues()).toStrictEqual([]);
+  expect((await vis.getCalculatedValues()).data).toStrictEqual([]);
 });
 
 test("VisualizationPanel reset filter button respects the allowSelection option", () => {
@@ -1002,12 +1002,12 @@ test("Create nps visualizer from definition with dataName", async () => {
   let panel = new VisualizationPanel([visualizerDefinition], data, {});
   const nps = panel.visualizers[0];
 
-  let result: any = await nps.getCalculatedValues();
+  let result: any = (await nps.getCalculatedValues());
 
-  expect(result.total).toBe(6);
-  expect(result.detractors).toBe(1);
-  expect(result.passive).toBe(2);
-  expect(result.promoters).toBe(3);
+  expect(result).toStrictEqual({
+    "data": [[1, 2, 3, 6]],
+    "values": ["detractors", "passive", "promoters", "total"],
+  });
 
   VisualizationManager.unregisterVisualizer("nps", NpsVisualizer);
 });
@@ -1022,12 +1022,12 @@ test("Create nps visualizer from definition with questionName", async () => {
   let panel = new VisualizationPanel([visualizerDefinition], data, {});
   const nps = panel.visualizers[0];
 
-  let result: any = await nps.getCalculatedValues();
+  let result: any = (await nps.getCalculatedValues());
 
-  expect(result.total).toBe(6);
-  expect(result.detractors).toBe(1);
-  expect(result.passive).toBe(2);
-  expect(result.promoters).toBe(3);
+  expect(result).toStrictEqual({
+    "data": [[1, 2, 3, 6]],
+    "values": ["detractors", "passive", "promoters", "total"],
+  });
 
   VisualizationManager.unregisterVisualizer("nps", NpsVisualizer);
 });
@@ -1042,12 +1042,12 @@ test("Create nps visualizer from definition with question", async () => {
   let panel = new VisualizationPanel([visualizerDefinition], data, {});
   const nps = panel.visualizers[0];
 
-  let result: any = await nps.getCalculatedValues();
+  let result: any = (await nps.getCalculatedValues());
 
-  expect(result.total).toBe(6);
-  expect(result.detractors).toBe(1);
-  expect(result.passive).toBe(2);
-  expect(result.promoters).toBe(3);
+  expect(result).toStrictEqual({
+    "data": [[1, 2, 3, 6]],
+    "values": ["detractors", "passive", "promoters", "total"],
+  });
 
   VisualizationManager.unregisterVisualizer("nps", NpsVisualizer);
 });
@@ -1062,7 +1062,7 @@ test("Create number visualizer from definition", async () => {
   let panel = new VisualizationPanel([visualizerDefinition], data, {});
   const numberVis = panel.visualizers[0] as NumberModel;
 
-  let result: any = await numberVis.getCalculatedValues();
+  let result: any = (await numberVis.getCalculatedValues()).data[0];
 
   expect(result).toStrictEqual([7.34, 1, 10, 7]);
 });

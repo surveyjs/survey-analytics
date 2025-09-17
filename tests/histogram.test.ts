@@ -52,7 +52,7 @@ test("number default histogram", async () => {
   expect(number["valueType"]).toBe("number");
   expect(histValues).toMatchObject([17, 19.3, 21.6, 23.9, 26.2, 28.5, 30.8, 33.1, 35.4, 37.7]);
   expect(histLabels).toMatchObject(["17-19.3", "19.3-21.6", "21.6-23.9", "23.9-26.2", "26.2-28.5", "28.5-30.8", "30.8-33.1", "33.1-35.4", "35.4-37.7", "37.7-40"]);
-  expect(histData).toMatchObject([[3, 0, 0, 1, 0, 2, 0, 0, 0, 2]]);
+  expect(histData.data).toMatchObject([[3, 0, 0, 1, 0, 2, 0, 0, 0, 2]]);
 
   expect(number["isSupportMissingAnswers"]()).toBeFalsy();
   expect(number["isSupportAnswersOrder"]()).toBeTruthy();
@@ -85,7 +85,7 @@ test("date default histogram", async () => {
     "5/20/2018-1/31/2020",
     "1/31/2020-10/13/2021",
   ]);
-  expect(histData).toMatchObject([[2, 0, 0, 0, 2, 0, 0, 1, 0, 3]]);
+  expect(histData.data).toMatchObject([[2, 0, 0, 0, 2, 0, 0, 1, 0, 3]]);
 
   expect(date["isSupportMissingAnswers"]()).toBeFalsy();
 });
@@ -135,7 +135,7 @@ test("date default intervals", async () => {
     "1/25/2020-1/28/2020",
     "1/28/2020-1/31/2020",
   ]);
-  expect(histData).toMatchObject([[3, 3, 3, 3, 3, 3, 3, 3, 3, 4]]);
+  expect(histData.data).toMatchObject([[3, 3, 3, 3, 3, 3, 3, 3, 3, 4]]);
 });
 
 test("date empty data", async () => {
@@ -154,7 +154,7 @@ test("date empty data", async () => {
 
   expect(histIntervals.length).toBe(0);
   expect(histValues).toMatchObject([]);
-  expect(histData).toMatchObject([[]]);
+  expect(histData.data).toMatchObject([[]]);
 });
 
 test("number custom intervals", async () => {
@@ -215,7 +215,7 @@ test("number custom intervals", async () => {
     19,
     70
   ]);
-  expect(histData).toMatchObject([[
+  expect(histData.data).toMatchObject([[
     12,
     11,
     5,
@@ -255,7 +255,7 @@ test("number custom intervals for small result sets", async () => {
     19,
     70
   ]);
-  expect(histData).toMatchObject([[0, 0, 3, 5, 0]]);
+  expect(histData.data).toMatchObject([[0, 0, 3, 5, 0]]);
 });
 
 test("histogram series default algorithm data", async () => {
@@ -303,7 +303,7 @@ test("histogram series default algorithm data", async () => {
   expect(number.getSeriesLabels()).toMatchObject(series);
 
   const chartData = await number.getCalculatedValues();
-  expect(chartData).toMatchObject([
+  expect(chartData.data).toMatchObject([
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -392,7 +392,7 @@ test("histogram series intervals data", async () => {
   });
 
   const chartData = await number.getCalculatedValues();
-  expect(chartData).toMatchObject([
+  expect(chartData.data).toMatchObject([
     [1, 0, 0, 1, 0, 0, 1, 0, 0, 0],
     [1, 0, 0, 0, 1, 0, 0, 1, 0, 0],
     [1, 0, 0, 0, 1, 0, 0, 0, 1, 0],
@@ -470,7 +470,7 @@ test("histogram should use rate values", async () => {
   ]);
   expect(rating.getValues()).toEqual([1, 2, 3]);
   expect(rating.getLabels()).toEqual(["15 minutes", "30 minutes", "1 hour"]);
-  expect(await rating.getCalculatedValues()).toEqual([[0, 0, 1]]);
+  expect((await rating.getCalculatedValues()).data).toEqual([[0, 0, 1]]);
 });
 
 test("histogram intervals alignment and rounding", () => {
@@ -684,7 +684,7 @@ test("number histogram answers order", async () => {
   expect(histLabels).toMatchObject(["11.14-14.43", "14.43-17.71", "17.71-21", "21-24.29", "24.29-27.57", "27.57-30.86", "30.86-34.14", "34.14-37.43", "37.43-40.71", "40.71-44"]);
 
   const histData = await number.getCalculatedValues();
-  expect(histData).toMatchObject([[5, 3, 0, 0, 0, 0, 1, 0, 0, 1]]);
+  expect(histData.data).toMatchObject([[5, 3, 0, 0, 0, 0, 1, 0, 0, 1]]);
 });
 
 test("convertFromExternalData", () => {
@@ -698,7 +698,7 @@ test("convertFromExternalData", () => {
 
   const externalCalculatedData = [3, 0, 0, 1, 0, 2, 0, 0, 0, 2];
   const calculatedData = (histogram as any).getCalculatedValuesCore();
-  expect(calculatedData).toEqual([[3, 0, 0, 1, 0, 2, 0, 0, 0, 2]]);
+  expect(calculatedData.data).toEqual([[3, 0, 0, 1, 0, 2, 0, 0, 0, 2]]);
   expect(histogram.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
 });
 
@@ -761,7 +761,7 @@ test("rating with rateValues with wrong order", () => {
 
   const externalCalculatedData = [0, 1, 1, 1, 1, 0, 1];
   const calculatedData = (histogram as any).getCalculatedValuesCore();
-  expect(calculatedData).toEqual([externalCalculatedData]);
+  expect(calculatedData.data).toEqual([externalCalculatedData]);
   expect(histogram.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
 });
 
@@ -806,7 +806,7 @@ test("getCalculatedValues", async () => {
   });
 
   const chartData = await number.getCalculatedValues();
-  expect(chartData).toMatchObject([
+  expect(chartData.data).toMatchObject([
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -856,7 +856,7 @@ test("getCalculatedValues - 2 rows", async () => {
   });
 
   const chartData = await number.getCalculatedValues();
-  expect(chartData).toMatchObject([
+  expect(chartData.data).toMatchObject([
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
   ]);

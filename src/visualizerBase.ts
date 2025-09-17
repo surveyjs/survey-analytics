@@ -16,6 +16,18 @@ export interface IChartAdapter {
   destroy(node: HTMLElement): void;
 }
 
+export interface ICalculatedDataInfo {
+  valueNames: Array<string>;
+  seriesNames?: Array<string>;
+  getLabel?(value: string): string;
+  getSeriesLabel?(series: string): string;
+}
+export declare type ICalculationResult = {
+  data: Array<Array<number>>,
+  values: Array<string>,
+  series?: Array<string>,
+};
+
 export interface IDataInfo {
   name: string; // TODO - remove from this interface
   dataNames: Array<string>;
@@ -83,7 +95,7 @@ export class VisualizerBase implements IDataInfo {
   private _showToolbar = true;
   private _footerVisualizer: VisualizerBase = undefined;
   private _dataProvider: DataProvider = undefined;
-  private _getDataCore: (dataInfo: IDataInfo) => number[][] = undefined
+  private _getDataCore: (dataInfo: IDataInfo) => ICalculationResult = undefined
   public labelTruncateLength: number = 27;
   protected haveCommercialLicense: boolean = false;
   protected renderResult: HTMLElement = undefined;
@@ -889,9 +901,9 @@ export class VisualizerBase implements IDataInfo {
     return this.getCalculatedValuesCore();
   }
 
-  private _calculationsCache: Array<any> = undefined;
+  private _calculationsCache: ICalculationResult = undefined;
 
-  protected getCalculatedValuesCore(): Array<any> {
+  protected getCalculatedValuesCore(): ICalculationResult {
     if (!!this._getDataCore) {
       return this._getDataCore(this);
     }
@@ -905,7 +917,7 @@ export class VisualizerBase implements IDataInfo {
     contentContainer.appendChild(createLoadingIndicator());
   }
 
-  public convertFromExternalData(externalCalculatedData: any): any[] {
+  public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
     return externalCalculatedData;
   }
 
@@ -914,8 +926,8 @@ export class VisualizerBase implements IDataInfo {
    *
    * To get an array of source survey results, use the [`surveyData`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#surveyData) property.
    */
-  public getCalculatedValues(): Promise<Array<Object>> {
-    return new Promise<Array<Object>>((resolve, reject) => {
+  public getCalculatedValues(): Promise<ICalculationResult> {
+    return new Promise<ICalculationResult>((resolve, reject) => {
       if(this._calculationsCache !== undefined) {
         resolve(this._calculationsCache);
       }

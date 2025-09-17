@@ -54,7 +54,7 @@ test("getLabels method", () => {
 });
 
 test("getCalculatedValues method", async () => {
-  expect(await selectBase.getCalculatedValues()).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
+  expect((await selectBase.getCalculatedValues()).data).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
 });
 
 test("createToolbarItems", () => {
@@ -253,11 +253,11 @@ test("showMissingAnswers", async () => {
   expect(selectBase.showMissingAnswers).toBeFalsy();
   expect(selectBase.getValues()).toEqual(["father", "mother", "brother", "sister", "son", "daughter"].reverse());
   expect(selectBase.getLabels()).toEqual(["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse());
-  expect(await selectBase.getCalculatedValues()).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
+  expect((await selectBase.getCalculatedValues()).data).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
   selectBase.showMissingAnswers = true;
   expect(selectBase.getValues()).toEqual([undefined, "father", "mother", "brother", "sister", "son", "daughter"].reverse());
   expect(selectBase.getLabels()).toEqual(["Missing answers", "father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse());
-  expect(await selectBase.getCalculatedValues()).toEqual([[1, 2, 1, 0, 1, 0, 0].reverse()]);
+  expect((await selectBase.getCalculatedValues()).data).toEqual([[1, 2, 1, 0, 1, 0, 0].reverse()]);
 });
 
 test("valueName used for getCalculatedValues https://surveyjs.answerdesk.io/internal/ticket/details/T9071", async () => {
@@ -282,7 +282,7 @@ test("valueName used for getCalculatedValues https://surveyjs.answerdesk.io/inte
     }
   ];
   selectBase = new SelectBase(question, data, {});
-  expect(await selectBase.getCalculatedValues()).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
+  expect((await selectBase.getCalculatedValues()).data).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
 });
 
 test("hasHeader and correct answer text", () => {
@@ -485,9 +485,9 @@ test("convertFromExternalData", async () => {
   };
   selectBase = new SelectBase(question, data, {});
 
-  const calculatedData = (selectBase as any).getCalculatedValuesCore();
+  const calculatedData = (selectBase as any).getCalculatedValuesCore().data;
   expect(calculatedData).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
-  expect(selectBase.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
+  expect(selectBase.convertFromExternalData(externalCalculatedData).data).toStrictEqual(calculatedData);
 });
 
 test("isSupportAnswersOrder and allowSortAnswers or allowChangeAnswersOrder options", () => {

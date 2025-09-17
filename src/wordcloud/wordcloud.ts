@@ -1,5 +1,5 @@
 import { Question, Event } from "survey-core";
-import { VisualizerBase } from "../visualizerBase";
+import { ICalculationResult, VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
 import { textHelper } from "./stopwords/index";
 import { DocumentHelper } from "../utils";
@@ -27,9 +27,9 @@ export class WordCloudAdapter {
   }
 
   public async create(element: HTMLElement): Promise<any> {
-    const data = await this.model.getCalculatedValues();
+    const calculatedValues = await this.model.getCalculatedValues();
 
-    if (data.length === 0) {
+    if (calculatedValues.data.length === 0) {
       const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
         innerText: localization.getString("noResults"),
       });
@@ -44,7 +44,7 @@ export class WordCloudAdapter {
     WordCloudAdapter.onWordcloudCreating.fire(this.model, options);
     this._wordcloud = new WordCloudWidget(config);
     this._wordcloud.colors = VisualizerBase.getColors();
-    this._wordcloud.words = data;
+    this._wordcloud.words = calculatedValues.values.map((w, i) => [w, calculatedValues.data[0][i]]);
     this._wordcloud.render(element);
     return this._wordcloud;
   }
@@ -69,15 +69,15 @@ export class WordCloud extends VisualizerBase {
     this._wordcloudAdapter = new WordCloudAdapter(this);
   }
 
-  public convertFromExternalData(externalCalculatedData: any): any[] {
-    const innerCalculatedData = [];
-    Object.keys(externalCalculatedData || []).forEach(word => {
-      innerCalculatedData.push([word, externalCalculatedData[word]]);
-    });
-    return innerCalculatedData;
+  public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
+    const values = Object.keys(externalCalculatedData || {});
+    return {
+      data: [values.map(w => externalCalculatedData[w])],
+      values
+    };
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
+  protected getCalculatedValuesCore(): ICalculationResult {
     let result: { [key: string]: number } = {};
 
     let stopWords: string[] = [];
@@ -132,9 +132,11 @@ export class WordCloud extends VisualizerBase {
       }
     });
 
-    return Object.keys(result).map((key) => {
-      return [key, result[key]];
-    });
+    const values = Object.keys(result);
+    return {
+      data: [values.map(w => result[w])],
+      values
+    };
   }
 
   protected destroyContent(container: HTMLElement) {

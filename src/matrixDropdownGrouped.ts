@@ -2,6 +2,7 @@ import { ItemValue, QuestionMatrixDropdownModel, Question, MatrixDropdownColumn,
 import { IAnswersData, SelectBase } from "./selectBase";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
 import { VisualizationManager } from "./visualizationManager";
+import { ICalculationResult } from "./visualizerBase";
 
 export class MatrixDropdownGrouped extends SelectBase {
   constructor(
@@ -43,12 +44,12 @@ export class MatrixDropdownGrouped extends SelectBase {
     return false;
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
+  protected getCalculatedValuesCore(): ICalculationResult {
     const values = this.getValues();
     const series = this.getSeriesValues();
     const rows = this.matrixQuestion.rows.map(row => row.value);
 
-    const statistics = defaultStatisticsCalculator(this.surveyData, {
+    return defaultStatisticsCalculator(this.surveyData, {
       name: this.name,
       dataNames: series,
       getValues: () => values,
@@ -56,8 +57,6 @@ export class MatrixDropdownGrouped extends SelectBase {
       getSeriesValues: () => rows,
       getSeriesLabels: () => rows,
     });
-
-    return statistics.map(s => s[0]);
   }
 }
 

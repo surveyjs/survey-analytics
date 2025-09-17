@@ -57,7 +57,7 @@ test("getSeriesLabels method", () => {
 });
 
 test("getCalculatedValues method", async () => {
-  expect(await matrix.getCalculatedValues()).toEqual([
+  expect((await matrix.getCalculatedValues()).data).toEqual([
     [0, 0, 0, 0, 2, 1],
     [0, 0, 0, 1, 1, 1],
   ]);
@@ -234,7 +234,7 @@ test("convertFromExternalData", async () => {
     }
   };
   const calculatedData = (matrix as any).getCalculatedValuesCore();
-  expect(calculatedData).toEqual([
+  expect(calculatedData.data).toEqual([
     [0, 0, 0, 0, 2, 1],
     [0, 0, 0, 1, 1, 1],
   ]);

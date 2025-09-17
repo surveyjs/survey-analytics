@@ -1,7 +1,7 @@
 import { ItemValue, Question } from "survey-core";
 import { SelectBase } from "./selectBase";
 import { createCommercialLicenseLink, DocumentHelper } from "./utils";
-import { VisualizerBase } from "./visualizerBase";
+import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { VisualizationManager } from "./visualizationManager";
 
@@ -367,8 +367,12 @@ export class PivotModel extends SelectBase {
     return this._cachedIntervals;
   }
 
-  public convertFromExternalData(externalCalculatedData: any): any[] {
-    return [externalCalculatedData];
+  public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
+    return {
+      data: [externalCalculatedData],
+      values: this.getValues(),
+      series: this.getSeriesValues()
+    };
   }
 
   getSeriesValueIndexes(): { [index: string]: number } {
@@ -402,7 +406,7 @@ export class PivotModel extends SelectBase {
     }
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
+  protected getCalculatedValuesCore(): ICalculationResult {
     const statistics: Array<Array<number>> = [];
     const series = this.getSeriesValues();
     if (series.length === 0) {
@@ -448,7 +452,10 @@ export class PivotModel extends SelectBase {
         }
       });
     }
-    return statistics;
+    return {
+      data: statistics,
+      values: this.valueType === "enum" ? this.getValues() : this.intervals.map(i => i.label)
+    };
   }
 
   public getValueType(): "enum" | "date" | "number" {

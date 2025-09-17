@@ -1,6 +1,6 @@
 import { Event, Question, SurveyModel, surveyLocalization } from "survey-core";
 import { IsTouch } from "survey-core";
-import { VisualizerBase } from "./visualizerBase";
+import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 import { DocumentHelper, createCommercialLicenseLink } from "./utils/index";
@@ -390,7 +390,7 @@ export class VisualizationPanel extends VisualizerBase {
     //         this.refresh();
     //       }
     //     }, 100);
-    //   });      
+    //   });
     // }
   }
   reorderVisibleElements(order: string[]): void {
@@ -1122,8 +1122,11 @@ export class VisualizationPanel extends VisualizerBase {
       this.onPermissionsChangedCallback(this);
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
-    return [];
+  protected getCalculatedValuesCore(): ICalculationResult {
+    return {
+      data: [],
+      values: []
+    };
   }
 
   protected onThemeChanged(): void {
