@@ -30,3 +30,5 @@ export { DocumentHelper } from "../utils/index";
 
 export * from "../sjs-design-tokens/default-light";
 export * from "../sjs-design-tokens/default-dark";
+
+import "./fonts.scss";
