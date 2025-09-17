@@ -408,12 +408,26 @@ export class VisualizerBase implements IDataInfo {
    * Updates visualized data.
    * @param data A data array with survey results to be visualized.
    */
-  updateData(data: Array<{ [index: string]: any }>) {
+  updateData(data: Array<{ [index: string]: any }> | GetDataFn) {
+    const dataPath = this.options.dataPath;
+    let dataToAssign = data;
+    if (!!dataPath && Array.isArray(data)) {
+      dataToAssign = [];
+      data.forEach(dataItem => {
+        if(!!dataItem && dataItem[dataPath] !== undefined) {
+          if(Array.isArray(dataItem[dataPath])) {
+            dataToAssign = (dataToAssign as Array<any>).concat(dataItem[dataPath]);
+          } else {
+            (dataToAssign as Array<any>).push(dataItem[dataPath]);
+          }
+        }
+      });
+    }
     if (!this.options.dataProvider) {
-      this.dataProvider.data = data;
+      this.dataProvider.data = dataToAssign;
     }
     if (this.hasFooter) {
-      this.footerVisualizer.updateData(data);
+      this.footerVisualizer.updateData(dataToAssign);
     }
   }
 

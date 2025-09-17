@@ -1,4 +1,4 @@
-import { SurveyModel, QuestionCommentModel, QuestionTextModel } from "survey-core";
+import { SurveyModel, QuestionTextModel } from "survey-core";
 import { WordCloud } from "../src/wordcloud/wordcloud";
 import { Text } from "../src/text";
 import { SelectBase } from "../src/selectBase";

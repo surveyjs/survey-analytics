@@ -7,7 +7,6 @@ test("check paneldynamic visualization getQuestions() when panels count is 0", (
       {
         name: "question1",
         type: "paneldynamic",
-        isRequired: true,
         templateElements: [
           {
             type: "text",
@@ -34,7 +33,6 @@ test("check onAfterRender", () => {
       {
         name: "question1",
         type: "paneldynamic",
-        isRequired: true,
         templateElements: [
           {
             type: "text",
@@ -59,4 +57,38 @@ test("check onAfterRender", () => {
   });
   vis["_panelVisualizer"].afterRender(null);
   expect(count).toEqual(1);
+});
+
+test("check content panel visualizer data", () => {
+  const json = {
+    elements: [
+      {
+        name: "question1",
+        type: "paneldynamic",
+        templateElements: [
+          {
+            type: "text",
+            name: "question2",
+          },
+        ],
+      },
+    ],
+  };
+  const data = [
+    {
+      question1: [{ question2: "testValue" }],
+    },
+    {
+      question1: [{ question2: "another testValue" }],
+    },
+  ];
+
+  const survey = new SurveyModel(json);
+  const question = survey.getAllQuestions()[0];
+  const vis: any = new VisualizationPanelDynamic(<any>question, data, {});
+  
+  expect(vis.contentVisualizer.surveyData).toStrictEqual([
+    { "question2": "testValue", },
+    { "question2": "another testValue", },    
+  ]);
 });

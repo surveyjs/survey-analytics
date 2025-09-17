@@ -6,13 +6,10 @@ export class VisualizationMatrixDynamic extends VisualizationPanelDynamic {
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
-    options?: Object
+    options?: Object,
+    name?: string
   ) {
-    super(question, data, options);
-  }
-
-  public get type() {
-    return "matrixDynamic";
+    super(question, data, options, name || "matrixDynamic");
   }
 
   getQuestions() {

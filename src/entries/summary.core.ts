@@ -31,6 +31,7 @@ export * from "../visualizationPanelDynamic";
 export * from "../visualizationMatrixDynamic";
 export * from "../visualizationMatrixDropdown";
 export * from "../alternativeVizualizersWrapper";
+export * from "../visualizationComposite";
 
 export * from "../wordcloud/wordcloud";
 export * from "../wordcloud/stopwords/index";
