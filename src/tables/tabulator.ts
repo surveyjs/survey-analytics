@@ -56,7 +56,7 @@ export const defaultDownloadOptions = {
 
 export const defaultOptions: ITabulatorOptions = {
   tabulatorOptions: {},
-  actionsColumnWidth: 60,
+  actionsColumnWidth: 100,
   columnMinWidth: 384,
   downloadHiddenColumns: false,
   downloadButtons: ["csv"],
