@@ -78,7 +78,7 @@ export class VisualizationManager {
    */
   public static getVisualizersByType(
     visualizerType: string,
-    fallbackVisualizerType?: string    
+    fallbackVisualizerType?: string
   ): VisualizerConstructor[] {
     let vDescrs = VisualizationManager.vizualizers[visualizerType];
     if (!!fallbackVisualizerType && (!vDescrs || vDescrs.length == 0)) {

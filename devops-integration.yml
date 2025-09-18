@@ -75,6 +75,11 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
+      npm run lint
+    displayName: "run lint command"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
       npm run pwinst
     displayName: "Install chrome playwright"
 

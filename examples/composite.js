@@ -1,6 +1,7 @@
 Survey.ComponentCollection.Instance.add({
   name: "customtext",
   inheritBaseProps: ["placeholder"],
+  defaultQuestionTitle: "Custom Text Question",
   questionJSON: {
     type: "text",
     placeholder: "placeholder"
@@ -8,6 +9,7 @@ Survey.ComponentCollection.Instance.add({
 });
 Survey.ComponentCollection.Instance.add({
   name: "test_composite",
+  defaultQuestionTitle: "Composite Question",
   elementsJSON: [
     { type: "text", name: "q1", title: "Simple text question" },
     { type: "dropdown", name: "q2", choices: [1, 2, 3], title: "Simple dropdown question" },
@@ -20,8 +22,8 @@ var json = {
     {
       "name": "page1",
       "elements": [
-        { type: "customtext", name: "q1", title: "Simple composite QuestionCustomModel" },
-        { type: "test_composite", name: "q2", title: "QuestionCompositeModel shown as a panel" }
+        { type: "customtext", name: "q1" }, //, title: "Simple composite QuestionCustomModel" },
+        { type: "test_composite", name: "q2" }, //, title: "QuestionCompositeModel shown as a panel" }
       ]
     }
   ]
@@ -70,6 +72,7 @@ var options = {
   // allowTopNAnswers: true,
   // showCorrectAnswers: true
   // labelTruncateLength: 27,
+  // allowChangeVisualizerType: false
 };
 
 var survey = new Survey.SurveyModel(json);

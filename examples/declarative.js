@@ -16,15 +16,26 @@ var options = {
   // labelTruncateLength: 27,
 };
 
-SurveyAnalytics.VisualizationManager.registerVisualizer("count", SurveyAnalytics.NumberModel);
+// SurveyAnalytics.VisualizationManager.registerVisualizer("count", SurveyAnalytics.NumberModel);
+// SurveyAnalytics.VisualizationManager.registerVisualizer("nps", SurveyAnalytics.NpsVisualizer);
 
-const visualizerDefinition = {
-  visualizerType: "count",
+const visualizerDefinition1 = {
+  visualizerType: "gauge",
+  chartType: "bullet",
   dataName: "test",
-  displayValueName: "count"
+  displayValueName: "count",
+  title: "Total answers count"
 };
+
+const visualizerDefinition2 = {
+  visualizerType: "card",
+  dataName: "test",
+  displayValueName: "count",
+  title: "Total answers count"
+};
+
 const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
-let visPanel = new SurveyAnalytics.VisualizationPanel([visualizerDefinition], data, options);
+let visPanel = new SurveyAnalytics.VisualizationPanel([visualizerDefinition1, visualizerDefinition2], data, options);
 
 visPanel.showToolbar = true;
 visPanel.render(document.getElementById("summaryContainer"));

@@ -42,23 +42,25 @@ export class NumberModel extends VisualizerBase {
       this.chartType = this.questionOptions?.chartType || this.chartTypes[0];
     }
 
-    this.registerToolbarItem("changeChartType", () => {
-      if (this.chartTypes.length > 1) {
-        return DocumentHelper.createDropdown(
-          this.chartTypes.map((chartType) => {
-            return {
-              value: chartType,
-              text: localization.getString("chartType_" + chartType),
-            };
-          }),
-          (option: any) => this.chartType === option.value,
-          (e: any) => {
-            this.setChartType(e);
-          }
-        );
-      }
-      return null;
-    }, "dropdown");
+    if(this.options.allowChangeVisualizerType !== false) {
+      this.registerToolbarItem("changeChartType", () => {
+        if (this.chartTypes.length > 1) {
+          return DocumentHelper.createDropdown(
+            this.chartTypes.map((chartType) => {
+              return {
+                value: chartType,
+                text: localization.getString("chartType_" + chartType),
+              };
+            }),
+            (option: any) => this.chartType === option.value,
+            (e: any) => {
+              this.setChartType(e);
+            }
+          );
+        }
+        return null;
+      }, "dropdown");
+    }
   }
 
   protected onDataChanged() {

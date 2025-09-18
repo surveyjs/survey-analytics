@@ -11,6 +11,7 @@ import { PostponeHelper } from "../src/visualizerBase";
 import { PivotModel } from "../src/pivot";
 import { NpsVisualizer } from "../src/nps";
 import { NumberModel } from "../src/number";
+import { HistogramModel } from "../src/histogram";
 export * from "../src/number";
 export * from "../src/nps";
 
@@ -18,6 +19,7 @@ VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
 VisualizationManager.registerAltVisualizerSelector(AlternativeVisualizersWrapper);
 VisualizationManager.registerPivotVisualizer(PivotModel);
+VisualizationManager.unregisterVisualizer("number", HistogramModel);
 
 test("allowDynamicLayout option", () => {
   const json = {
@@ -1055,7 +1057,7 @@ test("Create number visualizer from definition", async () => {
   expect(panel.visibleElements[0].name.indexOf("visualizer")).toEqual(0);
 });
 
-test("Generate visualizer names", async () => {
+test("Generate visualizer names", () => {
   const visualizerDefinition1 = {
     visualizerType: "number",
     chartType: "gauge",
@@ -1084,4 +1086,42 @@ test("Generate visualizer names", async () => {
   expect(visPanel.visibleElements.length).toEqual(2);
   expect(visPanel.visibleElements[0].name).toEqual(visPanel.visualizers[0].name);
   expect(visPanel.visibleElements[1].name).toEqual(visPanel.visualizers[1].name);
+});
+
+test("allowChangeVisualizerType", () => {
+  VisualizationManager.registerVisualizer("number", HistogramModel);
+
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "question1",
+        choices: [1, 2, 3]
+      },
+      {
+        type: "text",
+        inputType: "number",
+        name: "question2"
+      },
+    ],
+  };
+
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), [], {
+    allowChangeVisualizerType: false,
+  });
+
+  expect(visPanel["visualizers"][0].type).toBe("selectBase");
+  expect(visPanel["visualizers"][0]["toolbarItemCreators"]["changeChartType"]).toBeUndefined();
+  expect(visPanel["visualizers"][1].type).toBe("alternative");
+  expect(visPanel["visualizers"][1]["toolbarItemCreators"]["changeVisualizer"]).toBeUndefined();
+
+  visPanel = new VisualizationPanel(survey.getAllQuestions(), [], {});
+
+  expect(visPanel["visualizers"][0].type).toBe("selectBase");
+  expect(visPanel["visualizers"][0]["toolbarItemCreators"]["changeChartType"]).toBeDefined();
+  expect(visPanel["visualizers"][1].type).toBe("alternative");
+  expect(visPanel["visualizers"][1]["toolbarItemCreators"]["changeVisualizer"]).toBeDefined();
+
+  VisualizationManager.unregisterVisualizer("number", HistogramModel);
 });

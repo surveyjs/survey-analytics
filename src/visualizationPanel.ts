@@ -267,6 +267,13 @@ export interface IVisualizationPanelOptions {
    * Default value: `true`
    */
   stripHtmlFromTitles?: boolean;
+
+  /**
+   * Allows users to switch between different visualizer types.
+   *
+   * Default value: `true`
+   */
+  allowChangeVisualizerType?: boolean;
 }
 
 /**
@@ -719,7 +726,7 @@ export class VisualizationPanel extends VisualizerBase {
       question = Array.isArray(question) ? question[0] : question;
       const element = this.getElement(question.name);
       if (!!element) {
-        element.displayName = this.processText(question.title);
+        element.displayName = this.getTitle(question);
       }
     });
     this.visualizers.forEach(v => {
@@ -782,7 +789,7 @@ export class VisualizationPanel extends VisualizerBase {
       }
       return {
         name: question.name,
-        displayName: this.processText(question.title),
+        displayName: this.getTitle(question),
         isVisible: true,
         isPublic: true,
       };

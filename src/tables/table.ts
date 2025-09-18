@@ -19,21 +19,21 @@ export interface ITableOptions {
 
   /**
    * Specifies whether to use question names instead of question titles as column headings.
-   * 
+   *
    * Default value: `false`
    */
   useNamesAsTitles?: boolean;
   /**
    * Specifies the delimiter used to separate multiple choice items in a list.
-   * 
+   *
    * Default value: `", "`
    */
   itemsDelimiter?: string;
   /**
    * A callback function that allows you to customize a question's display value in the table.
-   * 
+   *
    * Parameters:
-   * 
+   *
    * - `options.question`: `Question`\
    * The question for which the callback is executed.
    * - `options.displayValue`: `any`\
