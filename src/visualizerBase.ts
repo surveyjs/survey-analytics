@@ -367,9 +367,21 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
+   * Returns the visualizer's title.
+   */
+  public get title(): string {
+    return this.getTitle(this.question);
+  }
+
+  protected getTitle(question: Question): string {
+    if(question === undefined) return "";
+    return this.processText(question.locTitle?.renderedHtml ? question.locTitle.renderedHtml : question.title);
+  }
+
+  /**
    * Returns the visualizer's type.
    */
-  public get type() {
+  public get type(): string {
     return this._type || "visualizer";
   }
 
