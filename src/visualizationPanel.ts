@@ -267,6 +267,13 @@ export interface IVisualizationPanelOptions {
    * Default value: `true`
    */
   stripHtmlFromTitles?: boolean;
+
+  /**
+   * Allows users to switch between different visualizer types.
+   *
+   * Default value: `true`
+   */
+  allowChangeVisualizerType?: boolean;
 }
 
 /**

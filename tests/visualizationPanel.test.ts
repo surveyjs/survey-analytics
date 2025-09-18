@@ -966,3 +966,36 @@ test("VisualizationPanel reset filter button respects the allowSelection option"
   expect(creators["resetFilter"]).toBeUndefined();
 });
 
+test("allowChangeVisualizerType", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "question1",
+        choices: [1, 2, 3]
+      },
+      {
+        type: "text",
+        inputType: "number",
+        name: "question2"
+      },
+    ],
+  };
+
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), [], {
+    allowChangeVisualizerType: false,
+  });
+
+  expect(visPanel["visualizers"][0].type).toBe("selectBase");
+  expect(visPanel["visualizers"][0]["toolbarItemCreators"]["changeChartType"]).toBeUndefined();
+  expect(visPanel["visualizers"][1].type).toBe("alternative");
+  expect(visPanel["visualizers"][1]["toolbarItemCreators"]["changeVisualizer"]).toBeUndefined();
+
+  visPanel = new VisualizationPanel(survey.getAllQuestions(), [], {});
+
+  expect(visPanel["visualizers"][0].type).toBe("selectBase");
+  expect(visPanel["visualizers"][0]["toolbarItemCreators"]["changeChartType"]).toBeDefined();
+  expect(visPanel["visualizers"][1].type).toBe("alternative");
+  expect(visPanel["visualizers"][1]["toolbarItemCreators"]["changeVisualizer"]).toBeDefined();
+});
