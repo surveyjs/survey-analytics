@@ -74,6 +74,10 @@ steps:
     condition: ne(variables.NPM_CACHE_RESTORED, 'true')
 
   - script: |
+      npm run lint
+    displayName: "run lint command"
+
+  - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
       npm run pwinst
     displayName: "Install chrome playwright"
