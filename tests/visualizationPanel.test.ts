@@ -6,7 +6,7 @@ import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrap
 import { VisualizationPanel } from "../src/visualizationPanel";
 import { IState } from "../src/config";
 import { VisualizationManager } from "../src/visualizationManager";
-import { LayoutEngine } from "../src/layoutEngine";
+import { LayoutEngine } from "../src/layout-engine";
 import { PostponeHelper } from "../src/visualizerBase";
 import { PivotModel } from "../src/pivot";
 
@@ -14,6 +14,7 @@ VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
 VisualizationManager.registerAltVisualizerSelector(AlternativeVisualizersWrapper);
 VisualizationManager.registerPivotVisualizer(PivotModel);
+VisualizationPanel.LayoutEngine = LayoutEngine;
 
 test("allowDynamicLayout option", () => {
   const json = {
