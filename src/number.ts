@@ -38,23 +38,25 @@ export class NumberModel extends VisualizerBase {
       this.chartType = this.chartTypes[0];
     }
 
-    this.registerToolbarItem("changeChartType", () => {
-      if (this.chartTypes.length > 1) {
-        return DocumentHelper.createSelector(
-          this.chartTypes.map((chartType) => {
-            return {
-              value: chartType,
-              text: localization.getString("chartType_" + chartType),
-            };
-          }),
-          (option: any) => this.chartType === option.value,
-          (e: any) => {
-            this.setChartType(e.target.value);
-          }
-        );
-      }
-      return null;
-    });
+    if(this.options.allowChangeVisualizerType !== false) {
+      this.registerToolbarItem("changeChartType", () => {
+        if (this.chartTypes.length > 1) {
+          return DocumentHelper.createSelector(
+            this.chartTypes.map((chartType) => {
+              return {
+                value: chartType,
+                text: localization.getString("chartType_" + chartType),
+              };
+            }),
+            (option: any) => this.chartType === option.value,
+            (e: any) => {
+              this.setChartType(e.target.value);
+            }
+          );
+        }
+        return null;
+      });
+    }
   }
 
   protected onDataChanged() {

@@ -70,6 +70,7 @@ var options = {
   // allowTopNAnswers: true,
   // showCorrectAnswers: true
   // labelTruncateLength: 27,
+  // allowChangeVisualizerType: false
 };
 
 var survey = new Survey.SurveyModel(json);

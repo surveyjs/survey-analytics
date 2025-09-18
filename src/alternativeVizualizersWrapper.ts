@@ -45,18 +45,20 @@ export class AlternativeVisualizersWrapper
       }
     });
 
-    this.registerToolbarItem("changeVisualizer", () =>
-      this.visualizerSelector = DocumentHelper.createSelector(
-        this.visualizers.map((visualizer) => {
-          return {
-            value: visualizer.type,
-            text: localization.getString("visualizer_" + visualizer.type),
-          };
-        }),
-        (option: any) => this.visualizer.type === option.value,
-        (e: any) => this.setVisualizer(e.target.value)
-      ), 0
-    );
+    if(this.options.allowChangeVisualizerType !== false) {
+      this.registerToolbarItem("changeVisualizer", () =>
+        this.visualizerSelector = DocumentHelper.createSelector(
+          this.visualizers.map((visualizer) => {
+            return {
+              value: visualizer.type,
+              text: localization.getString("visualizer_" + visualizer.type),
+            };
+          }),
+          (option: any) => this.visualizer.type === option.value,
+          (e: any) => this.setVisualizer(e.target.value)
+        ), 0
+      );
+    }
 
     this.visualizer = visualizers[0];
     this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);

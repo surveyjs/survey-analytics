@@ -267,6 +267,12 @@ export interface IVisualizationPanelOptions {
    * Default value: `true`
    */
   stripHtmlFromTitles?: boolean;
+
+  /**
+   * Allows to change question visualizer type.
+   * Default value: `true`
+   */
+  allowChangeVisualizerType?: boolean;
 }
 
 /**
