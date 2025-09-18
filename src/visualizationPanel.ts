@@ -269,7 +269,8 @@ export interface IVisualizationPanelOptions {
   stripHtmlFromTitles?: boolean;
 
   /**
-   * Allows to change question visualizer type.
+   * Allows users to switch between different visualizer types.
+   * 
    * Default value: `true`
    */
   allowChangeVisualizerType?: boolean;
