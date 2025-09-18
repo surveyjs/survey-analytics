@@ -68,6 +68,7 @@ test("custom component: composite", () => {
 test("custom component: composite content panel visualizer data", () => {
   ComponentCollection.Instance.add({
     name: "test_composite",
+    defaultQuestionTitle: "Composite Question",
     elementsJSON: [
       { type: "text", name: "q1" },
       { type: "dropdown", name: "q2", choices: [1, 2, 3] },
@@ -88,10 +89,11 @@ test("custom component: composite content panel visualizer data", () => {
   }], {});
   expect(visPanel.visualizers.length).toEqual(1);
   expect(visPanel.visualizers[0].type).toEqual("composite");
+  expect(visPanel.visibleElements[0].displayName).toEqual("Composite Question");
   const compositePanelVis = (visPanel.visualizers[0] as VisualizationComposite).contentVisualizer;
   expect(compositePanelVis.options.dataPath).toBe("q1");
   expect(compositePanelVis["surveyData"]).toStrictEqual([{
-    "q1": "testValue", 
+    "q1": "testValue",
     "q2": "another testValue",
   }]);
 
