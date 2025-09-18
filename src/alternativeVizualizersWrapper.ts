@@ -200,9 +200,9 @@ export class AlternativeVisualizersWrapper
    * @see setState
    */
   public resetState(): void {
-      super.resetState();
-      this.visualizers.forEach(visualizer => visualizer.resetState());
-      this.setVisualizer(this.visualizers[0].type, true);
+    super.resetState();
+    this.visualizers.forEach(visualizer => visualizer.resetState());
+    this.setVisualizer(this.visualizers[0].type, true);
   }
 
   getValues(): Array<any> {
