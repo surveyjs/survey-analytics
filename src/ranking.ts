@@ -9,9 +9,9 @@ export class RankingModel extends SelectBase {
     question: QuestionRankingModel,
     data: Array<{ [index: string]: any }>,
     options?: any,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "ranking");
+    super(question, data, options, type || "ranking");
   }
 
   getQuestionResults() {

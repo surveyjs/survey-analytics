@@ -19,9 +19,9 @@ export class HistogramModel extends SelectBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "histogram");
+    super(question, data, options, type || "histogram");
     this._transposeData = false;
     if (this.options.intervalPrecision !== undefined) {
       this._intervalPrecision = this.options.intervalPrecision;

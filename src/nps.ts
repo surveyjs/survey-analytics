@@ -96,9 +96,9 @@ export class NpsVisualizer extends VisualizerBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "nps");
+    super(question, data, options, type || "nps");
     this._npsAdapter = new NpsAdapter(this);
   }
 
@@ -152,3 +152,4 @@ export class NpsVisualizer extends VisualizerBase {
 }
 
 // VisualizationManager.registerVisualizer("rating", NpsVisualizer);
+VisualizationManager.registerVisualizer("nps", NpsVisualizer);

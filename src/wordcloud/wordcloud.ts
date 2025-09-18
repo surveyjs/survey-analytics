@@ -63,9 +63,9 @@ export class WordCloud extends VisualizerBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "wordcloud");
+    super(question, data, options, type || "wordcloud");
     this._wordcloudAdapter = new WordCloudAdapter(this);
   }
 

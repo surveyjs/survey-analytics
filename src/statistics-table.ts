@@ -115,9 +115,9 @@ export class StatisticsTable extends SelectBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "choices");
+    super(question, data, options, type || "choices");
     this._statisticsTableAdapter = new StatisticsTableAdapter(this);
     this.showPercentages = true;
   }
@@ -148,9 +148,9 @@ export class StatisticsTableBoolean extends BooleanModel {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "options");
+    super(question, data, options, type || "options");
     this._statisticsTableAdapter = new StatisticsTableAdapter(this);
     this.showPercentages = true;
   }

@@ -8,9 +8,9 @@ export class Matrix extends SelectBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "matrix");
+    super(question, data, options, type || "matrix");
     this._transposeData = true;
     // this.getAnswersData();
   }

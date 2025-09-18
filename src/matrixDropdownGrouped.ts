@@ -9,9 +9,9 @@ export class MatrixDropdownGrouped extends SelectBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "matrixDropdownGrouped");
+    super(question, data, options, type || "matrixDropdownGrouped");
   }
 
   protected get matrixQuestion(): QuestionMatrixDropdownModel {

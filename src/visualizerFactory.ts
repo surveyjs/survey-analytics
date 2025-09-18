@@ -34,11 +34,19 @@ export class VisualizerFactory {
   ): VisualizerBase {
     let type: string;
     let question: Question;
+    let creators = [];
+    let optionsForCreator = Object.assign({}, options);
+
     if("visualizerType" in description) {
       type = description.visualizerType;
 
+      if(!!description.chartType) {
+        optionsForCreator[description["name"]] = { chartType: description.chartType };
+      }
+
       question = description.question || {
-        name: description.dataName || description.questionName,
+        name: description["name"],
+        valueName: description.dataName,
         title: description.title,
         displayValueName: description.displayValueName,
         waitForQuestionIsReady: () => {
@@ -52,10 +60,8 @@ export class VisualizerFactory {
       }
       type = question.getType();
     }
-    let creators = [];
-    let questionForCreator: Question | Question[] = question;
-    let optionsForCreator = Object.assign({}, options);
 
+    let questionForCreator: Question | Question[] = question;
     if (type === "text" && (<any>question).inputType) {
       creators = VisualizationManager.getVisualizersByType((<any>question).inputType, type);
     } else {

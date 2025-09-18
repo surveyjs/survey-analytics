@@ -99,9 +99,9 @@ export class SelectBase
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: any,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "selectBase");
+    super(question, data, options, type || "selectBase");
     if (!!question) { // TODO: move somewhere else
       (<any>question).visibleChoicesChangedCallback = () => {
         this.dataProvider.raiseDataChanged();
@@ -130,9 +130,13 @@ export class SelectBase
       if (this.getSeriesValues().length > 0 && this.chartTypes.indexOf("stackedbar") === -1) {
         this.chartTypes.push("stackedbar");
       }
+
       this._chartType = this.chartTypes[0];
       if (this.chartTypes.indexOf(this.options.defaultChartType) !== -1) {
         this._chartType = this.options.defaultChartType;
+      }
+      if (this.chartTypes.indexOf(this.questionOptions.chartType) !== -1) {
+        this._chartType = this.questionOptions.chartType;
       }
     }
 
@@ -732,7 +736,7 @@ export class SelectBase
     this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
     this._answersOrder = this.options.answersOrder || "default";
     this._topN = -1;
-    this.chartType = this.chartTypes[0];
+    this.chartType = this.questionOptions?.chartType || this.chartTypes[0];
     this.setSelection(undefined);
   }
 

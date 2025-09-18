@@ -2,6 +2,7 @@ import { Question } from "survey-core";
 
 export interface IVisualizerDescription {
   visualizerType: string;
+  chartType?: string;
   question?: Question;
   questionName?: string;
   dataName?: string;

@@ -28,9 +28,9 @@ export class NumberModel extends VisualizerBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options: { [index: string]: any } = {},
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "number");
+    super(question, data, options, type || "number");
 
     if(!!this.question.displayValueName) {
       this.displayValueName = this.question.displayValueName;
@@ -39,7 +39,7 @@ export class NumberModel extends VisualizerBase {
     if (VisualizerBase.chartAdapterType) {
       this._chartAdapter = new VisualizerBase.chartAdapterType(this);
       this.chartTypes = this._chartAdapter.getChartTypes();
-      this.chartType = this.chartTypes[0];
+      this.chartType = this.questionOptions?.chartType || this.chartTypes[0];
     }
 
     this.registerToolbarItem("changeChartType", () => {
@@ -161,3 +161,4 @@ export class NumberModel extends VisualizerBase {
 VisualizationManager.registerVisualizer("number", NumberModel, 200);
 VisualizationManager.registerVisualizer("rating", NumberModel, 200);
 VisualizationManager.registerVisualizer("expression", NumberModel);
+VisualizationManager.registerVisualizer("gauge", NumberModel);

@@ -286,6 +286,13 @@ export interface IVisualizationPanelOptions {
 export class VisualizationPanel extends VisualizerBase {
   public visualizers: Array<VisualizerBase> = [];
   private renderedQuestionsCount: number = 0;
+  private static counter = 0;
+
+  private static getVisualizerName() {
+    VisualizationPanel.counter++;
+    return "visualizer" + VisualizationPanel.counter;
+  }
+
   constructor(
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
@@ -770,8 +777,11 @@ export class VisualizationPanel extends VisualizerBase {
   protected buildElements(questions: any[]): IVisualizerPanelElement[] {
     return (questions || []).map((question) => {
       question = Array.isArray(question) ? question[0] : question;
+      if(!question.name) {
+        question.name = VisualizationPanel.getVisualizerName();
+      }
       return {
-        name: question.name || question.dataName,
+        name: question.name,
         displayName: this.processText(question.title),
         isVisible: true,
         isPublic: true,

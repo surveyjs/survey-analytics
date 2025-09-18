@@ -34,9 +34,9 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     question: QuestionMatrixDropdownModel,
     data: Array<{ [index: string]: any }>,
     options: { [index: string]: any } = {},
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "matrixDropdown");
+    super(question, data, options, type || "matrixDropdown");
     this.loadingData = false;
     this._childOptions = Object.assign({}, options);
     this._childOptions.disableLocaleSwitch = true;

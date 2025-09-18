@@ -38,6 +38,7 @@ export * from "../wordcloud/stopwords/index";
 export * from "../text";
 export * from "../statistics-table";
 export * from "../nps";
+export * from "../card";
 export * from "../ranking";
 export * from "../pivot";
 export * from "../theme";

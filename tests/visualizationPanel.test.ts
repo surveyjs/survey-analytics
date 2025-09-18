@@ -1068,3 +1068,34 @@ test("Create number visualizer from definition", async () => {
   expect(numberVis.name).toEqual(visualizerDefinition.dataName);
   expect(panel.visibleElements[0].name).toEqual(visualizerDefinition.dataName);
 });
+
+test("Generate visualizer names", async () => {
+  const visualizerDefinition1 = {
+    visualizerType: "number",
+    chartType: "gauge",
+    dataName: "test",
+    displayValueName: "count",
+    title: "Total answers count"
+  };
+
+  const visualizerDefinition2 = {
+    visualizerType: "nps",
+    dataName: "test",
+    displayValueName: "count",
+    title: "Total answers count"
+  };
+
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
+  let visPanel = new VisualizationPanel([visualizerDefinition1, visualizerDefinition2], data, {});
+
+  expect(visPanel.visualizers.length).toEqual(2);
+  expect(visPanel.visualizers[0].type).toEqual("number");
+  expect(visPanel.visualizers[0].name.indexOf("visualizer")).toEqual(0);
+  expect(visPanel.visualizers[1].type).toEqual("nps");
+  expect(visPanel.visualizers[1].name.indexOf("visualizer")).toEqual(0);
+  expect(visPanel.visualizers[0].name !== visPanel.visualizers[1].name).toBeTruthy();
+
+  expect(visPanel.visibleElements.length).toEqual(2);
+  expect(visPanel.visibleElements[0].name).toEqual(visPanel.visualizers[0].name);
+  expect(visPanel.visibleElements[1].name).toEqual(visPanel.visualizers[1].name);
+});

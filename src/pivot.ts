@@ -25,10 +25,10 @@ export class PivotModel extends SelectBase {
     private questions: Array<Question>,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string,
+    type?: string,
     private isRoot = true
   ) {
-    super(null, data, options, name || "pivot");
+    super(null, data, options, type || "pivot");
     this.questions = this.questions.filter((question) => ["matrixdropdown", "matrixdynamic", "matrix", "file", "signature", "multipletext", "comment", "html", "image"].indexOf(this.dataType) === -1);
     if (this.options.intervalPrecision !== undefined) {
       this._intervalPrecision = this.options.intervalPrecision;

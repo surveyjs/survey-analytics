@@ -66,9 +66,9 @@ export class Text extends VisualizerBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "text");
+    super(question, data, options, type || "text");
     this._textTableAdapter = new TextTableAdapter(this);
   }
 

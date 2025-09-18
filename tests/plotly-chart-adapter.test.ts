@@ -9,6 +9,7 @@ import { BooleanModel } from "../src/boolean";
 import { NumberModel } from "../src/number";
 import { VisualizerBase } from "../src/visualizerBase";
 import { BooleanPlotly } from "../src/plotly/legacy";
+import { VisualizationPanel } from "../src/visualizationPanel";
 
 VisualizerBase.chartAdapterType = PlotlyChartAdapter;
 
@@ -364,4 +365,21 @@ test("should handle null/undefined values correctly", () => {
 
   expect(traces[2].marker).toBeDefined();
   expect(traces[2].marker.colors).toBeDefined();
+});
+
+test("Use chart type from visualizerDefinition", async () => {
+  const visualizerDefinition = {
+    visualizerType: "gauge",
+    chartType: "bullet",
+    dataName: "test",
+    displayValueName: "count",
+    title: "Total answers count"
+  };
+
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
+  let visPanel = new VisualizationPanel([visualizerDefinition], data, {});
+
+  expect(visPanel.visualizers.length).toEqual(1);
+  expect(visPanel.visualizers[0].type).toEqual("number");
+  expect((visPanel.visualizers[0] as NumberModel).chartType).toEqual("bullet");
 });
