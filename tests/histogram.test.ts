@@ -740,24 +740,14 @@ test("rating with rateValues with wrong order", () => {
       }
     ],
   };
-  const retingData = [
-    {
-      "q1": 5
-    },
-    {
-      "q1": 4
-    },
-    {
-      "q1": 2,
-    },
-    {
-      "q1": 7,
-    },
-    {
-      "q1": 3,
-    }
+  const ratingData = [
+    { "q1": 5 },
+    { "q1": 4 },
+    { "q1": 2 },
+    { "q1": 7 },
+    { "q1": 3 }
   ];
-  const histogram = new HistogramModel(question, retingData);
+  const histogram = new HistogramModel(question, ratingData);
 
   const externalCalculatedData = [0, 1, 1, 1, 1, 0, 1];
   const calculatedData = (histogram as any).getCalculatedValuesCore();

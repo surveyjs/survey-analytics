@@ -162,15 +162,33 @@ test("check that getSelectedItemByText take into account other item", () => {
 
 test("getAnswersData method", async () => {
   const colors = VisualizerBase.getColors();
-  expect(await selectBase.getAnswersData()).toEqual({ "colors": colors, "datasets": [[2, 1, 0, 1, 0, 0].reverse()], "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse(), "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0].reverse()] });
+  expect(await selectBase.getAnswersData()).toEqual({
+    "colors": colors,
+    "datasets": [[2, 1, 0, 1, 0, 0].reverse()],
+    "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse(),
+    "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0].reverse()],
+    "values": ["daughter", "son", "sister", "brother", "mother", "father"],
+  });
 });
 
 test("hide empty items", async () => {
   const colors = VisualizerBase.getColors();
   expect(selectBase.hideEmptyAnswers).toBe(false);
-  expect(await selectBase.getAnswersData()).toEqual({ "colors": colors, "datasets": [[2, 1, 0, 1, 0, 0].reverse()], "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse(), "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0].reverse()] },);
+  expect(await selectBase.getAnswersData()).toEqual({
+    "colors": colors, "datasets": [[2, 1, 0, 1, 0, 0].reverse()],
+    "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse(),
+    "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0].reverse()],
+    "values": ["daughter", "son", "sister", "brother", "mother", "father"],
+  },);
   selectBase.hideEmptyAnswers = true;
-  expect(await selectBase.getAnswersData()).toEqual({ "colors": ["#ff6771", "#ffc152", "#aba1ff"], "datasets": [[2, 1, 1].reverse()], "labels": ["father_text", "mother_text", "sister_text"].reverse(), "texts": [[2, 1, 1].reverse()], "seriesLabels": [] });
+  expect(await selectBase.getAnswersData()).toEqual({
+    "colors": ["#ff6771", "#ffc152", "#aba1ff"],
+    "datasets": [[2, 1, 1].reverse()],
+    "values": ["sister", "mother", "father"],
+    "labels": ["father_text", "mother_text", "sister_text"].reverse(),
+    "texts": [[2, 1, 1].reverse()],
+    "seriesLabels": [],
+  });
 });
 
 test("change answers order", async () => {
@@ -179,11 +197,32 @@ test("change answers order", async () => {
   const color2 = "#ffc152";
   const color3 = "#aba1ff";
   expect(selectBase.answersOrder).toBe("default");
-  expect(await selectBase.getAnswersData()).toEqual({ "colors": [color1, color2, color3], "datasets": [[2, 1, 1].reverse()], "labels": ["father_text", "mother_text", "sister_text"].reverse(), "texts": [[2, 1, 1].reverse()], "seriesLabels": [] });
+  expect(await selectBase.getAnswersData()).toEqual({
+    "colors": [color1, color2, color3],
+    "datasets": [[2, 1, 1].reverse()],
+    "labels": ["father_text", "mother_text", "sister_text"].reverse(),
+    "values": ["sister", "mother", "father"],
+    "texts": [[2, 1, 1].reverse()],
+    "seriesLabels": []
+  });
   selectBase.answersOrder = "asc";
-  expect(await selectBase.getAnswersData()).toEqual({ "colors": [color3, color1, color2], "datasets": [[2, 1, 1]], "labels": ["father_text", "sister_text", "mother_text"], "seriesLabels": [], "texts": [[2, 1, 1]] });
+  expect(await selectBase.getAnswersData()).toEqual({
+    "colors": [color3, color1, color2],
+    "datasets": [[2, 1, 1]],
+    "labels": ["father_text", "sister_text", "mother_text"],
+    "values": ["father", "sister", "mother"],
+    "seriesLabels": [],
+    "texts": [[2, 1, 1]]
+  });
   selectBase.answersOrder = "desc";
-  expect(await selectBase.getAnswersData()).toEqual({ "colors": [color1, color2, color3], "datasets": [[1, 1, 2]], "labels": ["sister_text", "mother_text", "father_text"], "seriesLabels": [], "texts": [[1, 1, 2]] });
+  expect(await selectBase.getAnswersData()).toEqual({
+    "colors": [color1, color2, color3],
+    "datasets": [[1, 1, 2]],
+    "labels": ["sister_text", "mother_text", "father_text"],
+    "values": ["sister", "mother", "father"],
+    "seriesLabels": [],
+    "texts": [[1, 1, 2]]
+  });
 });
 
 test("check allowSelection option", () => {
@@ -426,6 +465,7 @@ test("hideEmptyAnswersInData", () => {
   const answersData = {
     "datasets": [[1, 2], [2, 1]],
     "labels": ["31-39", "40-50"],
+    "values": ["31-39", "40-50"],
     "colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496"],
     "texts": [[1, 2], [2, 1]],
     "seriesLabels": ["Age Group", "Gender"]
@@ -438,20 +478,36 @@ test("hideEmptyAnswersInData", () => {
   result = hideEmptyAnswersInData({
     "datasets": [[0, 1], [0, 2]],
     "labels": ["0-9", "11-20"],
+    "values": ["0-9", "11-20"],
     "colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496"],
     "texts": [[0, 1], [0, 2]],
     "seriesLabels": ["Age Group", "Gender"]
   });
-  expect(result).toStrictEqual({ "datasets": [[1], [2]], "labels": ["11-20"], "colors": ["#3999fb"], "texts": [[1], [2]], "seriesLabels": ["Age Group", "Gender"] });
+  expect(result).toStrictEqual({
+    "datasets": [[1], [2]],
+    "labels": ["11-20"],
+    "values": ["11-20"],
+    "colors": ["#3999fb"],
+    "texts": [[1], [2]],
+    "seriesLabels": ["Age Group", "Gender"]
+  });
 
   result = hideEmptyAnswersInData({
     "datasets": [[0, 0], [3, 2]],
     "labels": ["0-9", "11-20"],
+    "values": ["0-9", "11-20"],
     "colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496"],
     "texts": [[0, 0], [3, 2]],
     "seriesLabels": ["Age Group", "Gender"]
   });
-  expect(result).toStrictEqual({ "datasets": [[3, 2]], "labels": ["0-9", "11-20"], "colors": ["#86e1fb", "#3999fb"], "texts": [[3, 2]], "seriesLabels": ["Gender"] });
+  expect(result).toStrictEqual({
+    "datasets": [[3, 2]],
+    "labels": ["0-9", "11-20"],
+    "values": ["0-9", "11-20"],
+    "colors": ["#86e1fb", "#3999fb"],
+    "texts": [[3, 2]],
+    "seriesLabels": ["Gender"]
+  });
 });
 
 test("convertFromExternalData", async () => {

@@ -183,6 +183,7 @@ test("hide empty answers", async () => {
       [0, 2],
     ].reverse(),
     labels: ["Monday", "Tuesday"],
+    values: ["Monday", "Tuesday"],
     seriesLabels: ["Morning", "Afternoon"].reverse(),
     texts: [
       [2, 0],
@@ -207,6 +208,7 @@ test("hide empty answers", async () => {
     colors: ["#84CAD4", "#3a99fb"],
     datasets: [[1, 1]],
     labels: ["Monday", "Tuesday"],
+    values: ["Monday", "Tuesday"],
     seriesLabels: ["Afternoon"],
     texts: [[1, 1]],
   });

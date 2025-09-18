@@ -29,7 +29,7 @@ export class PivotModel extends SelectBase {
     private isRoot = true
   ) {
     super(null, data, options, type || "pivot");
-    this.questions = this.questions.filter((question) => ["matrixdropdown", "matrixdynamic", "matrix", "file", "signature", "multipletext", "comment", "html", "image"].indexOf(this.dataType) === -1);
+    this.questions = this.questions.filter((question) => ["matrixdropdown", "matrixdynamic", "matrix", "file", "signature", "multipletext", "comment", "html", "image"].indexOf(question.getType()) === -1);
     if (this.options.intervalPrecision !== undefined) {
       this._intervalPrecision = this.options.intervalPrecision;
     }
@@ -159,7 +159,7 @@ export class PivotModel extends SelectBase {
   }
 
   public getQuestionValueType(question: Question): "enum" | "date" | "number" {
-    const questionType = this.dataType;
+    const questionType = question.getType();
     if (questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
       return "date";
     } else if(questionType === "text" || questionType === "rating" || questionType === "expression" || questionType === "range") {

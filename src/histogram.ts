@@ -92,7 +92,7 @@ export class HistogramModel extends SelectBase {
       series.forEach(seriesValue => this._continuousData[seriesValue] = []);
       const hash = {};
       this.data.forEach(dataItem => {
-        const answerData = dataItem[this.name];
+        const answerData = dataItem[this.dataNames[0]];
         if (answerData !== undefined) {
           const seriesValue = dataItem[DataProvider.seriesMarkerKey] || "";
           // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function

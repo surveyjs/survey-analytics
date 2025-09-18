@@ -46,7 +46,7 @@ export class VisualizerFactory {
 
       question = description.question || {
         name: description["name"],
-        valueName: description.dataName,
+        valueName: description.dataName || description.questionName,
         title: description.title,
         displayValueName: description.displayValueName,
         waitForQuestionIsReady: () => {

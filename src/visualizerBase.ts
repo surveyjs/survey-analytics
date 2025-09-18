@@ -237,11 +237,11 @@ export class VisualizerBase implements IDataInfo {
    * Returns the identifier of a visualized question.
    */
   get name(): string {
-    return this.question.valueName || this.question.name;
+    return this.question.name || this.question.valueName;
   }
 
   get dataNames(): Array<string> {
-    return [this.name];
+    return [this.question.valueName || this.question.name];
   }
 
   /**
@@ -407,7 +407,7 @@ export class VisualizerBase implements IDataInfo {
 
   public get dataType(): string {
     if(this.question) {
-      if(this.question instanceof Base) {
+      if(typeof this.question.getType == "function") {
         return this.question.getType();
       } else if("dataType" in this.question) {
         return this.question["dataType"];

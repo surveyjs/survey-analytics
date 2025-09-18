@@ -50,7 +50,7 @@ export class MatrixDropdownGrouped extends SelectBase {
     const rows = this.matrixQuestion.rows.map(row => row.value);
 
     return defaultStatisticsCalculator(this.surveyData, {
-      name: this.name,
+      name: this.dataNames[0],
       dataNames: series,
       getValues: () => values,
       getLabels: () => values,

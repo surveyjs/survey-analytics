@@ -111,7 +111,7 @@ export class NpsVisualizer extends VisualizerBase {
     };
 
     this.data.forEach((row) => {
-      const rowValue: any = row[this.question.name];
+      const rowValue: any = row[this.dataNames[0]];
       const scoreValue = parseInt(rowValue);
       if (!Number.isNaN(scoreValue)) {
         if(scoreValue <= NpsVisualizer.DetractorScore) {

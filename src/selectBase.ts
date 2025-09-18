@@ -28,6 +28,7 @@ export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData 
       if (answersData.datasets[0][i] != 0) {
         result.datasets[0].push(answersData.datasets[0][i]);
         result.labels.push(answersData.labels[i]);
+        result.values.push(answersData.values[i]);
         result.colors.push(answersData.colors[i]);
         result.texts[0].push(answersData.texts[0][i]);
       }
@@ -49,6 +50,7 @@ export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData 
   for (var valueIndex = 0; valueIndex < valuesDataExistence.length; valueIndex++) {
     if (valuesDataExistence[valueIndex]) {
       result.labels.push(answersData.labels[valueIndex]);
+      result.values.push(answersData.values[valueIndex]);
       result.colors.push(answersData.colors[valueIndex]);
     }
   }
@@ -135,7 +137,7 @@ export class SelectBase
       if (this.chartTypes.indexOf(this.options.defaultChartType) !== -1) {
         this._chartType = this.options.defaultChartType;
       }
-      if (this.chartTypes.indexOf(this.questionOptions.chartType) !== -1) {
+      if (this.chartTypes.indexOf(this.questionOptions?.chartType) !== -1) {
         this._chartType = this.questionOptions.chartType;
       }
     }
@@ -622,6 +624,7 @@ export class SelectBase
   public async getAnswersData(): Promise<IAnswersData> {
     let seriesLabels = this.getSeriesLabels();
     let datasets = (await this.getCalculatedValues()).data as number[][];
+    let values = this.getValues();
     let labels = this.getLabels();
     let colors = VisualizerBase.getColors();
     if (this.transposeData) {
@@ -629,14 +632,15 @@ export class SelectBase
       const temp = seriesLabels;
       seriesLabels = labels;
       labels = temp;
+      values = this.getSeriesValues();
     }
 
     var texts = this.showPercentages ? this.getPercentages(datasets) : datasets;
 
     if (this.answersOrder == "asc" || this.answersOrder == "desc") {
       var zippedArray = this.showPercentages
-        ? DataHelper.zipArrays(labels, colors, texts[0])
-        : DataHelper.zipArrays(labels, colors);
+        ? DataHelper.zipArrays(labels, colors, values, texts[0])
+        : DataHelper.zipArrays(labels, colors, values);
       let dict = DataHelper.sortDictionary(
         zippedArray,
         datasets[0],
@@ -645,13 +649,14 @@ export class SelectBase
       let unzippedArray = DataHelper.unzipArrays(dict.keys);
       labels = unzippedArray[0];
       colors = unzippedArray[1];
-      if (this.showPercentages) texts[0] = unzippedArray[2];
+      values = unzippedArray[2];
+      if (this.showPercentages) texts[0] = unzippedArray[3];
       datasets[0] = dict.values;
     }
 
     let answersData = {
       datasets,
-      values: this.getValues(),
+      values,
       labels,
       colors,
       texts,

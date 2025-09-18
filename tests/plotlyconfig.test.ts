@@ -549,7 +549,7 @@ test("data is present in onPlotCreating options", async () => {
   PlotlySetup.onPlotCreating.add(creatingHandler);
   await (numberModel as any)._chartAdapter.update({ appendChild: jest.fn(), on: jest.fn() });
   expect(callCount).toBe(1);
-  expect(lastData.data[0]).toEqual([5, 2, 9, 3]);
+  expect(lastData.datasets[0]).toEqual([5, 2, 9, 3]);
 });
 
 test("defaultAxisConfig fix font issues", async () => {
