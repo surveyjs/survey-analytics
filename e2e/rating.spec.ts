@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { compareScreenshot } from "./helper";
+import { compareScreenshot, getListItemByText } from "./helper";
 
 test.describe("Rating common", () => {
   test.beforeEach(async ({ page }) => {
@@ -13,18 +13,20 @@ test.describe("Rating common", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const visualizerTypeSelector = questionVisualizerSelector.locator("select").filter({ hasText: /^ChartAverageHistogram$/ });
+    const visualizerTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(visualizerTypeSelector).toBeVisible();
-    const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").nth(1);
+    const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
     await expect(chartContentSelector).toBeVisible();
 
-    await expect(visualizerTypeSelector).toHaveValue("selectBase");
+    await expect(visualizerTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart");
     await compareScreenshot(page, chartContentSelector, "rating-number-chart.png");
 
-    await visualizerTypeSelector.selectOption("number");
+    await visualizerTypeSelector.click();
+    await getListItemByText(page, "Average").click();
     await compareScreenshot(page, chartContentSelector, "rating-number-average.png");
 
-    await visualizerTypeSelector.selectOption("histogram");
+    await visualizerTypeSelector.click();
+    await getListItemByText(page, "Histogram").click();
     await compareScreenshot(page, chartContentSelector, "rating-number-histogram.png");
   });
 
@@ -34,17 +36,20 @@ test.describe("Rating common", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const visualizerTypeSelector = questionVisualizerSelector.locator("select").filter({ hasText: /^ChartAverageHistogram$/ });
+    const visualizerTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(visualizerTypeSelector).toBeVisible();
-    const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").nth(1);
+    const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
     await expect(chartContentSelector).toBeVisible();
 
-    await expect(visualizerTypeSelector).toHaveValue("selectBase");
+    await expect(visualizerTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart");
     await compareScreenshot(page, chartContentSelector, "rating-string-chart.png");
 
-    await visualizerTypeSelector.selectOption("number");
+    await visualizerTypeSelector.click();
+    await getListItemByText(page, "Average").click();
     await compareScreenshot(page, chartContentSelector, "rating-string-average.png");
 
-    await visualizerTypeSelector.selectOption("histogram");
-    await compareScreenshot(page, chartContentSelector, "rating-string-histogram.png");  });
+    await visualizerTypeSelector.click();
+    await getListItemByText(page, "Histogram").click();
+    await compareScreenshot(page, chartContentSelector, "rating-string-histogram.png");
+  });
 });

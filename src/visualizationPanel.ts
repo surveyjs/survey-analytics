@@ -1,6 +1,6 @@
 import { Event, Question, SurveyModel, surveyLocalization } from "survey-core";
 import { IsTouch } from "survey-core";
-import { VisualizerBase } from "./visualizerBase";
+import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 import { DocumentHelper, createCommercialLicenseLink } from "./utils/index";
@@ -293,6 +293,13 @@ export interface IVisualizationPanelOptions {
 export class VisualizationPanel extends VisualizerBase {
   public visualizers: Array<VisualizerBase> = [];
   private renderedQuestionsCount: number = 0;
+  private static counter = 0;
+
+  private static getVisualizerName() {
+    VisualizationPanel.counter++;
+    return "visualizer" + VisualizationPanel.counter;
+  }
+
   constructor(
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
@@ -325,11 +332,35 @@ export class VisualizationPanel extends VisualizerBase {
     this.buildVisualizers(questions);
     this.updateData(this.surveyData);
 
-    if (!this.haveCommercialLicense && this.isRoot) {
-      this.registerToolbarItem("commercialLicense", () => {
-        return createCommercialLicenseLink();
-      });
-    }
+    this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
+      if (this.allowHideQuestions) {
+        const allQuestions = this._elements.map((element) => {
+          return {
+            value: element.name,
+            text: element.displayName,
+            icon: "check-24x24"
+          };
+        });
+        const selectWrapper = DocumentHelper.createActionDropdown(
+          allQuestions,
+          (option: any) => this.hiddenElements.length === 0 || this.hiddenElements.filter(el => el.name === option.value).length === 0,
+          (e: any) => {
+            if(!!e) {
+              const element = this.getElement(e);
+              if(!!element && element.isVisible) {
+                this.hideElement(e);
+              } else {
+                this.showElement(e);
+              }
+              return false;
+            }
+          },
+          localization.getString("allQuestions")
+        );
+        return selectWrapper;
+      }
+      return undefined;
+    }, "dropdown");
 
     this._supportSelection = true;
     if(this.supportSelection !== false) {
@@ -341,53 +372,9 @@ export class VisualizationPanel extends VisualizerBase {
             }
           });
         }, localization.getString("resetFilter"));
-      }, 900);
+      }, "button", 900);
     }
 
-    this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
-      if (this.allowHideQuestions) {
-        let addElementSelector: HTMLElement = undefined;
-        const addElementSelectorUpdater = (
-          panel: VisualizationPanel,
-          options: any
-        ) => {
-          const hiddenElements = this.hiddenElements;
-          const selectWrapper = DocumentHelper.createSelector(
-            [
-              <any>{
-                name: undefined,
-                displayName: localization.getString("addElement"),
-              },
-            ]
-              .concat(hiddenElements)
-              .map((element) => {
-                return {
-                  value: element.name,
-                  text: element.displayName,
-                };
-              }),
-            (option: any) => false,
-            (e: any) => {
-              this.showElement(e.target.value);
-            }
-          );
-          if(addElementSelector) {
-            toolbar.replaceChild(selectWrapper, addElementSelector);
-          }
-          addElementSelector = selectWrapper;
-
-          if (hiddenElements.length > 0) {
-            addElementSelector.style.display = undefined;
-          } else if(addElementSelector) {
-            addElementSelector.style.display = "none";
-          }
-        };
-        addElementSelectorUpdater(this, {});
-        this.onVisibleElementsChanged.add(addElementSelectorUpdater);
-        return addElementSelector;
-      }
-      return undefined;
-    });
     if (!this.options.disableLocaleSwitch && this.locales.length > 1) {
       const localeChoices = this.locales.map((element) => {
         return {
@@ -400,15 +387,25 @@ export class VisualizationPanel extends VisualizerBase {
       //   text: localization.getString("changeLocale"),
       // });
       this.registerToolbarItem("changeLocale", () => {
-        return DocumentHelper.createSelector(localeChoices,
+        return DocumentHelper.createDropdown(localeChoices,
           (option: any) => !!option.value && (this.locale || surveyLocalization.defaultLocale) === option.value,
           (e: any) => {
-            var newLocale = e.target.value;
+            var newLocale = e;
             this.locale = newLocale;
           }
         );
-      });
+      }, "dropdown");
     }
+
+    // if(this.isRoot && !this.theme?.isAxisLabelFontLoaded()) {
+    //   document.fonts.ready.then((fontFaceSet: FontFaceSet) => {
+    //     setTimeout(() => {
+    //       if (this.theme?.isAxisLabelFontLoaded()) {
+    //         this.refresh();
+    //       }
+    //     }, 100);
+    //   });
+    // }
   }
   reorderVisibleElements(order: string[]): void {
     const newElements = [];
@@ -467,6 +464,57 @@ export class VisualizationPanel extends VisualizerBase {
     this.onAlternativeVisualizerChanged.fire(sender, options);
   };
 
+  private createHeaderElement(element: IVisualizerPanelRenderedElement) {
+    const headerElement = DocumentHelper.createElement("div");
+    headerElement.className = "sa-question__header";
+
+    const dragAreaElement = DocumentHelper.createElement("div");
+    dragAreaElement.className = "sa-question__drag-area";
+    if (this.allowDynamicLayout && this.allowDragDrop) {
+      dragAreaElement.className = dragAreaElement.className + " sa-question__header--draggable";
+
+      const svgElement = document.createElement("div");
+      svgElement.className = "sa-question__drag-area-icon";
+      svgElement.appendChild(DocumentHelper.createSvgElement("draghorizontal-24x16"));
+      dragAreaElement.appendChild(svgElement);
+    }
+
+    if (this.allowHideQuestions) {
+      const hideElement = document.createElement("div");
+      hideElement.className = "sa-question__hide-action";
+      hideElement.title = localization.getString("hideButton");
+      hideElement.setAttribute("role", "button");
+      hideElement.setAttribute("tabindex", "0");
+      hideElement.appendChild(DocumentHelper.createSvgElement("close-16x16"));
+      dragAreaElement.appendChild(hideElement);
+      hideElement.addEventListener("click", (e) => {
+        setTimeout(() => this.hideElement(element.name), 0);
+      });
+      hideElement.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          this.hideElement(element.name);
+        }
+      });
+    }
+
+    const titleElement = DocumentHelper.createElement("h3");
+    titleElement.innerText = element.displayName;
+    titleElement.id = "el_" + element.name;
+    titleElement.className = questionElementClassName + "__title";
+    if (this.allowDynamicLayout && this.allowDragDrop) {
+      titleElement.className =
+        titleElement.className +
+        " " +
+        questionElementClassName +
+        "__title--draggable";
+    }
+
+    headerElement.appendChild(dragAreaElement);
+    headerElement.appendChild(titleElement);
+    return headerElement;
+  }
+
   protected onDataChanged(): void {
   }
 
@@ -502,6 +550,10 @@ export class VisualizationPanel extends VisualizerBase {
   public hideElement(elementName: string) {
     const element = this.getElement(elementName);
     this.hideElementCore(element);
+    const visualizer = this.getVisualizer(elementName);
+    if(!!visualizer && !!visualizer.getChartAdapter()) {
+      visualizer.getChartAdapter().destroy(element.renderedElement);
+    }
     this.visibleElementsChanged(element, "REMOVED");
   }
 
@@ -591,14 +643,6 @@ export class VisualizationPanel extends VisualizerBase {
         return;
       }
 
-      if (this.allowHideQuestions) {
-        visualizer.registerToolbarItem("removeQuestion", () => {
-          return DocumentHelper.createButton(() => {
-            setTimeout(() => this.hideElement(question.name), 0);
-          }, localization.getString("hideButton"));
-        }, 1000);
-      }
-
       if (this.allowMakeQuestionsPrivate) {
         visualizer.registerToolbarItem("makePrivatePublic", () => {
           const element = this.getElement(question.name);
@@ -625,7 +669,7 @@ export class VisualizationPanel extends VisualizerBase {
             doPrivate,
             state
           );
-        });
+        }, "button");
       }
 
       if (visualizer.supportSelection) {
@@ -637,7 +681,7 @@ export class VisualizationPanel extends VisualizerBase {
         visualizer.registerToolbarItem("questionFilterInfo", () => {
           filterInfo.update(visualizerWithSelection.selection);
           return filterInfo.htmlElement;
-        }, 900);
+        }, "filter", 900);
 
         visualizerWithSelection.onDataItemSelected = (
           selectedValue: any,
@@ -740,6 +784,9 @@ export class VisualizationPanel extends VisualizerBase {
   protected buildElements(questions: any[]): IVisualizerPanelElement[] {
     return (questions || []).map((question) => {
       question = Array.isArray(question) ? question[0] : question;
+      if(!question.name) {
+        question.name = VisualizationPanel.getVisualizerName();
+      }
       return {
         name: question.name,
         displayName: this.getTitle(question),
@@ -935,40 +982,36 @@ export class VisualizationPanel extends VisualizerBase {
 
     const questionElement = DocumentHelper.createElement("div");
     questionElement.dataset.question = element.name;
+    questionElement.role = "group";
+    questionElement.setAttribute("aria-labelledby", "el_" + element.name);
 
     !!container && container.appendChild(questionElement);
 
     const questionContent = DocumentHelper.createElement("div");
-    const titleElement = DocumentHelper.createElement("h3");
     const vizualizerElement = DocumentHelper.createElement("div");
-
-    titleElement.innerText = element.displayName;
+    const headerElement = this.createHeaderElement(element);
 
     questionElement.className = this.allowDynamicLayout
       ? questionElementClassName + " " + questionLayoutedElementClassName
       : questionElementClassName;
-    titleElement.className = questionElementClassName + "__title";
-    if (this.allowDynamicLayout && this.allowDragDrop) {
-      titleElement.className =
-        titleElement.className +
-        " " +
-        questionElementClassName +
-        "__title--draggable";
-    }
     questionContent.className = questionElementClassName + "__content";
-    questionContent.style.backgroundColor = this.backgroundColor;
+    // questionContent.style.backgroundColor = this.backgroundColor;
 
-    questionContent.appendChild(titleElement);
+    questionContent.appendChild(headerElement);
     questionContent.appendChild(vizualizerElement);
     questionElement.appendChild(questionContent);
 
-    visualizer.render(vizualizerElement);
+    visualizer.render(vizualizerElement, false);
 
     element.renderedElement = questionElement;
     return questionElement;
   }
 
   protected renderToolbar(container: HTMLElement) {
+    if (!this.haveCommercialLicense && this.isRoot) {
+      const banner = createCommercialLicenseLink();
+      container.appendChild(banner);
+    }
     container.className += " sa-panel__header";
     super.renderToolbar(container);
   }
@@ -1096,8 +1139,18 @@ export class VisualizationPanel extends VisualizerBase {
       this.onPermissionsChangedCallback(this);
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
-    return [];
+  protected getCalculatedValuesCore(): ICalculationResult {
+    return {
+      data: [],
+      values: []
+    };
+  }
+
+  protected onThemeChanged(): void {
+    super.onThemeChanged();
+    this.visualizers.forEach(v => {
+      v.theme = this.theme;
+    });
   }
 
   destroy() {

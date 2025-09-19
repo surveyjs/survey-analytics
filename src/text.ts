@@ -27,7 +27,7 @@ export class TextTableAdapter {
     tableNode.style.backgroundColor = this.model.backgroundColor;
     container.appendChild(tableNode);
 
-    if(this.model.columns) {
+    if(this.model.columns && this.model.columns.length > 0) {
       var row = DocumentHelper.createElement("tr");
       this.model.columns.forEach(column => {
         var td = DocumentHelper.createElement("th", "sa-text-table__cell", {
@@ -66,15 +66,15 @@ export class Text extends VisualizerBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "text");
+    super(question, data, options, type || "text");
     this._textTableAdapter = new TextTableAdapter(this);
   }
 
   public get columns(): Array<{ name: string, title: string, type: string }> {
     const columns = [];
-    if(this.question.getType() == "multipletext") {
+    if(this.dataType == "multipletext") {
       (this.question as QuestionMultipleTextModel).items.forEach(item => {
         columns.push({ name: item.name, title: item.title, type: item.inputType });
       });

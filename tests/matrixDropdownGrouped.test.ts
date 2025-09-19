@@ -81,10 +81,11 @@ test("name and dataNames property", () => {
 });
 
 test("getCalculatedValues method", async () => {
-  expect(await matrix.getCalculatedValues()).toEqual([
-    [0, 0, 0, 1, 1, 1],
-    [0, 0, 0, 1, 1, 1],
-    [0, 1, 1, 1, 0, 0],
+  const data = (await matrix.getCalculatedValues()).data;
+  expect(data).toEqual([
+    [[0, 0, 0, 1, 1, 1]],
+    [[0, 0, 0, 1, 1, 1]],
+    [[0, 1, 1, 1, 0, 0]],
   ]);
 });
 
