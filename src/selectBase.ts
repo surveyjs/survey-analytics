@@ -161,7 +161,7 @@ export class SelectBase
         return null;
       }, "dropdown");
     }
- 
+
     this.registerToolbarItem("changeAnswersOrder", () => {
       if (this.isSupportAnswersOrder()) {
         this.choicesOrderSelector = DocumentHelper.createDropdown(

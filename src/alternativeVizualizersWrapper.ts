@@ -59,7 +59,6 @@ export class AlternativeVisualizersWrapper
       );
     }
 
-
     this.visualizer = visualizers[0];
     this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
     this.visualizer.onStateChanged.add(this.onVisualizerStateChangedCallback);
