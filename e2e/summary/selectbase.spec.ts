@@ -98,12 +98,12 @@ test.describe("selectbase", () => {
     await expect(await getValuesInsideBars()).toEqual(["2", "1", "2"].reverse());
 
     // check that percentages are shown when button is clicked
-    await page.click('span:text("Show percentages")');
+    await page.getByText("Show %").click();
     const valuesInsideBars = await getValuesInsideBars();
     expect(valuesInsideBars).toEqual(["2 (40%)", "1 (20%)", "2 (40%)"]);
 
     // check that percentage are hided when button is double-clicked
-    await page.click('span:text("Hide percentages")');
+    await page.getByText("Show %").click();
     // await expect(page.locator(".trace.bars .point text")).not.toBeVisible();
     await expect(await getValuesInsideBars()).toEqual(["2", "1", "2"].reverse());
   });

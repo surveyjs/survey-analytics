@@ -91,12 +91,12 @@ test.describe("matrix", () => {
     await expect(await getValuesInsideBars(2)).toEqual(["1", "2"].reverse());
 
     // check that percentages are shown when button is clicked
-    await page.click("span:has-text('Show percentages')");
+    await page.getByText("Show %").click();
     await expect(await getValuesInsideBars(1)).toEqual(["2 (66.67%)", "1 (33.33%)"].reverse());
     await expect(await getValuesInsideBars(2)).toEqual(["1 (33.33%)", "2 (66.67%)"].reverse());
 
     // check that percentage are hidden when button is double-clicked
-    await page.click("span:has-text('Hide percentages')");
+    await page.getByText("Show %").click();
     // await expect(page.locator(".trace.bars .point text")).toHaveCount(0);
     await expect(await getValuesInsideBars(1)).toEqual(["2", "1"].reverse());
     await expect(await getValuesInsideBars(2)).toEqual(["1", "2"].reverse());
