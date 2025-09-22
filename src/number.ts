@@ -22,7 +22,7 @@ export class NumberModel extends VisualizerBase {
 
   public static showAsPercentage = false;
 
-  public displayValueName = "value";
+  public displayValueName = "average";
 
   constructor(
     question: Question,

@@ -611,7 +611,7 @@ export class PlotlySetup {
   }
 
   static setupGauge(model: NumberModel, answersData: IAnswersData): PlotlyOptions {
-    let value = answersData.datasets[0][answersData.values.indexOf(model.displayValueName || "average")];
+    let value = answersData.datasets[0][answersData.values.indexOf(model.displayValueName || "value")];
     let minValue = answersData.datasets[0][answersData.values.indexOf("min")] || 0;
     let maxValue = answersData.datasets[0][answersData.values.indexOf("max")] || value * 1.25;
 
