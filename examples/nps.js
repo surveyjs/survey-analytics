@@ -1,9 +1,3 @@
-// Disable the default Rating Scale question visualizers
-SurveyAnalytics.VisualizationManager.unregisterVisualizer("rating", SurveyAnalytics.HistogramPlotly);
-SurveyAnalytics.VisualizationManager.unregisterVisualizer("rating", SurveyAnalytics.GaugePlotly);
-// Enable the NPS Visualizer for Rating Scale questions
-SurveyAnalytics.VisualizationManager.registerVisualizer("rating", SurveyAnalytics.NpsVisualizer);
-
 var json = {
   "pages": [
     {
@@ -40,7 +34,10 @@ function generateData() {
 var dataFromServer = generateData();
 
 var vizPanel = new SurveyAnalytics.VisualizationPanel(
-    survey.getAllQuestions(),
+    [{
+      visualizerType: "nps",
+      question: survey.getAllQuestions()[0]
+    }],
     dataFromServer,
     { allowDynamicLayout: false, allowHideQuestions: false }
 );

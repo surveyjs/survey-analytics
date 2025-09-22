@@ -784,6 +784,7 @@ export class VisualizationPanel extends VisualizerBase {
   protected buildElements(questions: any[]): IVisualizerPanelElement[] {
     return (questions || []).map((question) => {
       question = Array.isArray(question) ? question[0] : question;
+      question = question.question || question;
       if(!question.name) {
         question.name = VisualizationPanel.getVisualizerName();
       }
