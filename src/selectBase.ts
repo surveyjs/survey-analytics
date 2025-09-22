@@ -626,7 +626,7 @@ export class SelectBase
    */
   public async getAnswersData(): Promise<IAnswersData> {
     let seriesLabels = this.getSeriesLabels();
-    let datasets = (await this.getCalculatedValues()).data as number[][];
+    let datasets = (await this.getCalculatedValues()).data;
     let values = this.getValues();
     let labels = this.getLabels();
     let colors = VisualizerBase.getColors();

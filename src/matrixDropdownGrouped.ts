@@ -2,7 +2,7 @@ import { ItemValue, QuestionMatrixDropdownModel, Question, MatrixDropdownColumn,
 import { SelectBase } from "./selectBase";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
 import { VisualizationManager } from "./visualizationManager";
-import { ICalculationResult } from "./visualizerBase";
+import { IAnswersData, ICalculationResult } from "./visualizerBase";
 
 export class MatrixDropdownGrouped extends SelectBase {
   constructor(
@@ -49,7 +49,7 @@ export class MatrixDropdownGrouped extends SelectBase {
     const series = this.getSeriesValues();
     const rows = this.matrixQuestion.rows.map(row => row.value);
 
-    return defaultStatisticsCalculator(this.surveyData, {
+    const statistics = defaultStatisticsCalculator(this.surveyData, {
       name: this.dataNames[0],
       dataNames: series,
       getValues: () => values,
@@ -57,6 +57,9 @@ export class MatrixDropdownGrouped extends SelectBase {
       getSeriesValues: () => rows,
       getSeriesLabels: () => rows,
     });
+
+    statistics.data = statistics.data.map(a => a[0] as any);
+    return statistics;
   }
 }
 
