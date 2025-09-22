@@ -120,7 +120,10 @@ for (const config of testConfigs) {
 
       const visualizerSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
       await expect(visualizerSelector).toBeVisible();
-      await expect(visualizerSelector.locator(".sa-dropdown-header-text")).toHaveText("Histogram");
+      await expect(visualizerSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart");
+
+      await visualizerSelector.click();
+      await getListItemByText(page, "Histogram").click();
 
       const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
       await expect(chartTypeSelector).toBeVisible();
