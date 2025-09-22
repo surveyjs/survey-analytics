@@ -22,8 +22,8 @@ export interface ICalculatedDataInfo {
   getLabel?(value: string): string;
   getSeriesLabel?(series: string): string;
 }
-export declare type ICalculationResult = {
-  data: Array<Array<number>>,
+export declare type ICalculationResult<T = number> = {
+  data: Array<Array<T>>,
   values: Array<string>,
   series?: Array<string>,
 };
@@ -965,7 +965,7 @@ export class VisualizerBase implements IDataInfo {
       labels: this.getLabels(),
       colors: VisualizerBase.getColors(),
       texts: calculatedValues.data,
-      seriesLabels: this.getSeriesLabels()
+      seriesLabels: calculatedValues.series || this.getSeriesLabels()
     };
   }
 

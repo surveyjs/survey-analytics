@@ -27,10 +27,10 @@ export class WordCloudAdapter {
   }
 
   public async create(element: HTMLElement): Promise<any> {
-    const calculatedValues = await this.model.getCalculatedValues();
+    const answersData = await this.model.getAnswersData();
 
-    if (calculatedValues.data.length === 0) {
-      const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
+    if (answersData.datasets.length === 0 || answersData.datasets[0].length === 0) {
+      var emptyTextNode = DocumentHelper.createElement("p", "", {
         innerText: localization.getString("noResults"),
       });
       element.appendChild(emptyTextNode);
@@ -44,7 +44,7 @@ export class WordCloudAdapter {
     WordCloudAdapter.onWordcloudCreating.fire(this.model, options);
     this._wordcloud = new WordCloudWidget(config);
     this._wordcloud.colors = VisualizerBase.getColors();
-    this._wordcloud.words = calculatedValues.values.map((w, i) => [w, calculatedValues.data[0][i]]);
+    this._wordcloud.words = answersData.values.map((w, i) => [w, answersData.datasets[0][i]]);
     this._wordcloud.render(element);
     return this._wordcloud;
   }
@@ -58,6 +58,7 @@ export class WordCloudAdapter {
 }
 export class WordCloud extends VisualizerBase {
   private _wordcloudAdapter: WordCloudAdapter;
+  private _values = [];
 
   constructor(
     question: Question,
@@ -70,11 +71,16 @@ export class WordCloud extends VisualizerBase {
   }
 
   public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
-    const values = Object.keys(externalCalculatedData || {});
+    this._values = Object.keys(externalCalculatedData || {});
+
     return {
-      data: [values.map(w => externalCalculatedData[w])],
-      values
+      data: [this._values.map(w => externalCalculatedData[w])],
+      values: this._values
     };
+  }
+
+  public getValues(): Array<any> {
+    return this._values;
   }
 
   protected getCalculatedValuesCore(): ICalculationResult {
@@ -132,10 +138,10 @@ export class WordCloud extends VisualizerBase {
       }
     });
 
-    const values = Object.keys(result);
+    this._values = Object.keys(result);
     return {
-      data: [values.map(w => result[w])],
-      values
+      data: [this._values.map(w => result[w])],
+      values: this._values
     };
   }
 

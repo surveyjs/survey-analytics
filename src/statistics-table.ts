@@ -21,11 +21,10 @@ export class StatisticsTableAdapter {
 
     const hasSeries = seriesLabels.length > 1;
 
-    const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
-      innerText: localization.getString("noResults"),
-    });
-
     if (datasets.length === 0 || datasets[0].length === 0) {
+      const emptyTextNode = DocumentHelper.createElement("p", "", {
+        innerText: localization.getString("noResults"),
+      });
       container.appendChild(emptyTextNode);
       return;
     }
