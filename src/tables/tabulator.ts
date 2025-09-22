@@ -283,7 +283,8 @@ export class Tabulator extends Table {
 
   private columnMovedCallback = (column: any, columns: any[]) => {
     var from = this._columns.indexOf(this.getColumnByName(column.getField()));
-    var to = columns.indexOf(column) - 1;
+    const rowExtensions = TableExtensions.getExtensions("row").filter(e => e.visibleIndex >= 0);
+    var to = columns.indexOf(column) - rowExtensions.length;
     this.moveColumn(from, to);
     this.disableColumnReorder();
   };
