@@ -890,7 +890,9 @@ export class ApexChartsSetup {
   }
 
   static setupGauge(model: NumberModel, answersData: IAnswersData): ApexChartsOptions {
-    let [level, minValue, maxValue] = answersData as any;
+    let value = answersData.datasets[0][answersData.values.indexOf(model.displayValueName || "value")];
+    let minValue = answersData.datasets[0][answersData.values.indexOf("min")] || 0;
+    let maxValue = answersData.datasets[0][answersData.values.indexOf("max")] || value * 1.25;
 
     if (model.dataType === "rating") {
       const rateValues = model.question.visibleRateValues;
@@ -899,7 +901,7 @@ export class ApexChartsSetup {
     }
 
     if (NumberModel.showAsPercentage) {
-      level = DataHelper.toPercentage(level, maxValue);
+      value = DataHelper.toPercentage(value, maxValue);
       minValue = DataHelper.toPercentage(minValue, maxValue);
       maxValue = DataHelper.toPercentage(maxValue, maxValue);
     }
@@ -930,14 +932,14 @@ export class ApexChartsSetup {
             show: true,
             offsetY: -10,
             formatter: function (val) {
-              return level.toString();
+              return value.toString();
             }
           }
         }
       }
     };
 
-    const percent = ((level - minValue) / (maxValue - minValue)) * 100;
+    const percent = ((value - minValue) / (maxValue - minValue)) * 100;
 
     const yaxis = {
       min: minValue,
@@ -965,7 +967,9 @@ export class ApexChartsSetup {
   }
 
   static setupBullet(model: NumberModel, answersData: IAnswersData): ApexChartsOptions {
-    let [level, minValue, maxValue] = answersData as any;
+    let value = answersData.datasets[0][answersData.values.indexOf(model.displayValueName || "value")];
+    let minValue = answersData.datasets[0][answersData.values.indexOf("min")] || 0;
+    let maxValue = answersData.datasets[0][answersData.values.indexOf("max")] || value * 1.25;
 
     if (model.dataType === "rating") {
       const rateValues = model.question.visibleRateValues;
@@ -974,7 +978,7 @@ export class ApexChartsSetup {
     }
 
     if (NumberModel.showAsPercentage) {
-      level = DataHelper.toPercentage(level, maxValue);
+      value = DataHelper.toPercentage(value, maxValue);
       minValue = DataHelper.toPercentage(minValue, maxValue);
       maxValue = DataHelper.toPercentage(maxValue, maxValue);
     }
@@ -1022,7 +1026,7 @@ export class ApexChartsSetup {
     const series = [{
       data: [{
         x: "",
-        y: level,
+        y: value,
         goals: [{
           value: maxValue,
           strokeWidth: 1,
@@ -1030,7 +1034,7 @@ export class ApexChartsSetup {
         }]
       }]
     }];
-    const labels = [level];
+    const labels = [value];
     const colors = [model.theme.gaugeBarColor];
 
     return {

@@ -32,6 +32,7 @@ export class ApexChartsAdapter {
 
         const _options = Object.assign({}, options, {
           series: s.series,
+          labels: s.labels
         });
         _options.title.text = s.title;
 
