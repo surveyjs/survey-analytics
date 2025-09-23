@@ -144,7 +144,7 @@ export class ApexChartsAdapter {
     };
     ApexChartsSetup.onChartCreating.fire(this.model, options);
 
-    if((_chartType=== "pie" || _chartType === "doughnut") && chartOptions.series.length > 1 && typeof chartOptions.series[0] !== "number") {
+    if((_chartType=== "pie" || _chartType === "doughnut") && chartOptions.series.length > 0 && typeof chartOptions.series[0] !== "number") {
       this.updatePieCharts(options, chartOptions, chartNode);
     } else {
       if (this._chart) {

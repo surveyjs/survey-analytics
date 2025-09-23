@@ -21,6 +21,7 @@ export * from "../visualizerFactory";
 
 export * from "../selectBase";
 export * from "../matrix";
+export * from "../matrixDropdownGrouped";
 export * from "../boolean";
 export * from "../histogram";
 export * from "../number";
