@@ -10,8 +10,8 @@ import { FilterInfo } from "./filterInfo";
 import { LayoutEngine } from "./layout-engine";
 import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
-import "./visualizationPanel.scss";
 import { VisualizationManager } from "./visualizationManager";
+import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -147,7 +147,7 @@ export interface IVisualizationPanelOptions {
   /**
    * Specifies percentage precision.
    *
-   * Default value: 0
+   * Default value: 2
    *
    * @see allowShowPercentages
    * @see showPercentages
@@ -267,6 +267,13 @@ export interface IVisualizationPanelOptions {
    * Default value: `true`
    */
   stripHtmlFromTitles?: boolean;
+
+  /**
+   * Allows users to switch between different visualizer types.
+   *
+   * Default value: `true`
+   */
+  allowChangeVisualizerType?: boolean;
 }
 
 /**
@@ -309,7 +316,7 @@ export class VisualizationPanel extends VisualizerBase {
       this._layoutEngine.onMoveCallback = (order: Array<string>) => this.reorderVisibleElements(order);
     }
 
-    this.showToolbar = true;
+    this.showToolbar = isRoot;
     if (this.options.survey) {
       localization.currentLocale = this.options.survey.locale;
     }
@@ -319,6 +326,7 @@ export class VisualizationPanel extends VisualizerBase {
     }
 
     this.buildVisualizers(questions);
+    this.updateData(this.surveyData);
 
     if (!this.haveCommercialLicense && this.isRoot) {
       this.registerToolbarItem("commercialLicense", () => {
@@ -677,7 +685,7 @@ export class VisualizationPanel extends VisualizerBase {
       question = Array.isArray(question) ? question[0] : question;
       const element = this.getElement(question.name);
       if (!!element) {
-        element.displayName = this.processText(question.title);
+        element.displayName = this.getTitle(question);
       }
     });
     this.visualizers.forEach(v => {
@@ -737,7 +745,7 @@ export class VisualizationPanel extends VisualizerBase {
       question = Array.isArray(question) ? question[0] : question;
       return {
         name: question.name,
-        displayName: this.processText(question.title),
+        displayName: this.getTitle(question),
         isVisible: true,
         isPublic: true,
       };

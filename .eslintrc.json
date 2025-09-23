@@ -11,7 +11,7 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "i18n"
+        "surveyjs/eslint-plugin-i18n"
     ],
     "rules": {
         "no-console": 2, // Remember, this means error!
@@ -146,7 +146,7 @@
             "off",
             "windows"
         ],
-        "i18n/no-russian-character": [
+        "surveyjs/eslint-plugin-i18n/only-english-or-code": [
             "error",
             {
                 "includeIdentifier": true,
@@ -156,9 +156,9 @@
     },
     "overrides": [
         {
-        "files": ["src/analytics-localization/*.ts"],
+        "files": ["src/analytics-localization/*.ts", "src/wordcloud/stopwords/*.ts"],
         "rules": {
-            "i18n/no-russian-character": "off"
+            "surveyjs/eslint-plugin-i18n/only-english-or-code": "off"
         }
         }
     ]

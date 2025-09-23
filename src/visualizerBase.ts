@@ -367,9 +367,21 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
+   * Returns the visualizer's title.
+   */
+  public get title(): string {
+    return this.getTitle(this.question);
+  }
+
+  protected getTitle(question: Question): string {
+    if(question === undefined) return "";
+    return this.processText(question.locTitle?.renderedHtml ? question.locTitle.renderedHtml : question.title);
+  }
+
+  /**
    * Returns the visualizer's type.
    */
-  public get type() {
+  public get type(): string {
     return this._type || "visualizer";
   }
 
@@ -397,12 +409,26 @@ export class VisualizerBase implements IDataInfo {
    * Updates visualized data.
    * @param data A data array with survey results to be visualized.
    */
-  updateData(data: Array<{ [index: string]: any }>) {
+  updateData(data: Array<{ [index: string]: any }> | GetDataFn) {
+    const dataPath = this.options.dataPath;
+    let dataToAssign = data;
+    if (!!dataPath && Array.isArray(data)) {
+      dataToAssign = [];
+      data.forEach(dataItem => {
+        if(!!dataItem && dataItem[dataPath] !== undefined) {
+          if(Array.isArray(dataItem[dataPath])) {
+            dataToAssign = (dataToAssign as Array<any>).concat(dataItem[dataPath]);
+          } else {
+            (dataToAssign as Array<any>).push(dataItem[dataPath]);
+          }
+        }
+      });
+    }
     if (!this.options.dataProvider) {
-      this.dataProvider.data = data;
+      this.dataProvider.data = dataToAssign;
     }
     if (this.hasFooter) {
-      this.footerVisualizer.updateData(data);
+      this.footerVisualizer.updateData(dataToAssign);
     }
   }
 
@@ -580,6 +606,7 @@ export class VisualizerBase implements IDataInfo {
         "sa-visualizer__footer-content"
       );
       footerContentElement.style.display = this.isFooterCollapsed ? "none" : "block";
+      const visibilityButtonText = localization.getString(this.isFooterCollapsed ? "showButton" : "hideButton");
 
       const visibilityButton = DocumentHelper.createButton(() => {
         if (footerContentElement.style.display === "none") {
@@ -588,13 +615,11 @@ export class VisualizerBase implements IDataInfo {
           this._footerIsCollapsed = false;
         } else {
           footerContentElement.style.display = "none";
-          visibilityButton.innerText = localization.getString(
-            this.isFooterCollapsed ? "showButton" : "hideButton"
-          );
+          visibilityButton.innerText = localization.getString("showButton");
           this._footerIsCollapsed = true;
         }
         this.footerVisualizer.invokeOnUpdate();
-      }, localization.getString("showButton") /*, "sa-toolbar__button--right"*/);
+      }, visibilityButtonText /*, "sa-toolbar__button--right"*/);
       container.appendChild(visibilityButton);
 
       container.appendChild(footerContentElement);

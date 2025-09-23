@@ -1,4 +1,4 @@
-import { Question } from "survey-core";
+import { Question, QuestionCompositeModel, QuestionCustomModel } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 
@@ -33,28 +33,32 @@ export class VisualizerFactory {
   ): VisualizerBase {
     let type = question.getType();
     let creators = [];
+    let questionForCreator: Question | Question[] = question;
+    let optionsForCreator = Object.assign({}, options);
 
     if (type === "text" && (<any>question).inputType) {
-      type = (<any>question).inputType;
-      creators = VisualizationManager.getVisualizersByType(type);
-      if(creators === undefined || creators.length == 0) {
-        type = "text";
-        creators = VisualizationManager.getVisualizersByType(type);
-      }
+      creators = VisualizationManager.getVisualizersByType((<any>question).inputType, type);
     } else {
-      creators = VisualizationManager.getVisualizersByType(type);
+      let fallbackType = undefined;
+      if(question instanceof QuestionCustomModel) {
+        fallbackType = question.getDynamicType();
+        // questionForCreator = question.contentQuestion;
+      } else if(question instanceof QuestionCompositeModel) {
+        fallbackType = "composite";
+      }
+      creators = VisualizationManager.getVisualizersByType(type, fallbackType);
     }
 
     var visualizers = creators.map(
-      (creator) => new creator(question, data, options)
+      (creator) => new creator(questionForCreator, data, optionsForCreator)
     );
     if (visualizers.length > 1) {
       const alternativesVisualizerConstructor = VisualizationManager.getAltVisualizerSelector();
       let visualizer = new alternativesVisualizerConstructor(
         visualizers,
-        question,
+        questionForCreator,
         data,
-        options
+        optionsForCreator
       );
       return visualizer;
     }

@@ -75,6 +75,11 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
+      npm run lint
+    displayName: "run lint command"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
       npm run pwinst
     displayName: "Install chrome playwright"
 
@@ -232,6 +237,16 @@ steps:
       git pull origin master
       git push origin master
     displayName: "Analytics - push updated translation to github"
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/docs"
+      Contents: |
+        surveyjs_definition.json
+      TargetFolder: "$(Build.SourcesDirectory)/survey-analytics/build"
+      OverWrite: true
+      CleanTargetFolder: false
+    displayName: "put surveyjs_definition.json into build"
 
   - task: CopyFiles@2
     inputs:

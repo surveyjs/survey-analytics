@@ -1125,3 +1125,22 @@ test("check radiogroup column with multi comments", () => {
   expect(table.columns[0].getCellData(table, data).displayValue).toBe("column1");
   expect(table.columns[1].getCellData(table, data).displayValue).toBe("column2, column3");
 });
+
+test("check checkbox column with custom itemDelimiter", () => {
+  const json = { "elements":
+         [{
+           "type": "checkbox",
+           "name": "question1",
+           "choices": [
+             { "value": "item1", text: "Item 1" },
+             { "value": "item2", text: "Item 2" },
+             { "value": "item3", text: "Item 3" }
+           ],
+         }]
+  };
+  const survey = new SurveyModel(json);
+  const data = [{ "question1": ["item1", "item2"] }];
+  let table = new TableTest(survey, data, { itemsDelimiter: " + " }, []);
+  expect((<any>table).columns.length).toEqual(1);
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1 + Item 2");
+});

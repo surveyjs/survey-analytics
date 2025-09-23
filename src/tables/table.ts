@@ -18,14 +18,26 @@ export interface ITableOptions {
   [index: string]: any;
 
   /**
-   * Set this property to true to render column headings using question names
+   * Specifies whether to use question names instead of question titles as column headings.
+   *
+   * Default value: `false`
    */
   useNamesAsTitles?: boolean;
   /**
-   * Use this event to change the display value of question in table.
-   * <br/> `sender` - the table object that fires the event.
-   * <br/> `options.question` - the question obect for which event is fired.
-   * <br/> `options.displayValue` - the question display value. You can change this option before it is displayed in the table.
+   * Specifies the delimiter used to separate multiple choice items in a list.
+   *
+   * Default value: `", "`
+   */
+  itemsDelimiter?: string;
+  /**
+   * A callback function that allows you to customize a question's display value in the table.
+   *
+   * Parameters:
+   *
+   * - `options.question`: `Question`\
+   * The question for which the callback is executed.
+   * - `options.displayValue`: `any`\
+   * The question's display value. You can modify this parameter to change the output.
    */
   onGetQuestionValue?: (options: {
     question: Question,
@@ -170,6 +182,10 @@ export abstract class Table {
 
   public get useNamesAsTitles() {
     return this._options && this._options.useNamesAsTitles === true;
+  }
+
+  public get itemsDelimiter(): string {
+    return this._options && this._options.itemsDelimiter || ", ";
   }
 
   protected buildColumns = (survey: SurveyModel) => {
@@ -345,9 +361,9 @@ export abstract class Table {
    */
   public resetState() {
     this._columns.forEach((column: IColumn, index: number) => {
-        column.fromJSON({});
-        column.visibleIndex = index;
-      }
+      column.fromJSON({});
+      column.visibleIndex = index;
+    }
     );
     this.locale = surveyLocalization.defaultLocale;
     this.currentPageSize = 5;

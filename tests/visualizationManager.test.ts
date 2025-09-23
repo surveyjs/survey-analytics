@@ -144,7 +144,6 @@ test("Create text visualizer for unregistered input types", () => {
   try {
     VisualizationManager.unregisterVisualizer("text", WordCloud);
     VisualizationManager.registerVisualizer("tel", Tel);
-    VisualizerBase.suppressVisualizerStubRendering = true;
 
     const telVisualizer = VisualizerFactory.createVisualizer({ name: "q1", getType: () => "text", inputType: "tel" } as any, []);
     expect(telVisualizer).toBeDefined();
@@ -158,7 +157,6 @@ test("Create text visualizer for unregistered input types", () => {
     expect(textWithUnknownInputTypeVisualizer).toBeDefined();
     expect(textWithUnknownInputTypeVisualizer.type).toBe("text");
   } finally {
-    VisualizerBase.suppressVisualizerStubRendering = false;
     VisualizationManager.unregisterVisualizer("tel", Tel);
     VisualizationManager.registerVisualizer("text", WordCloud);
   }

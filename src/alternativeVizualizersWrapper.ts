@@ -26,7 +26,7 @@ export class AlternativeVisualizersWrapper
     data: Array<{ [index: string]: any }>,
     options?: Object
   ) {
-    super(question, data, options);
+    super(question, data, options, "alternative");
     this.showToolbar = false;
     this.loadingData = false;
     if (!visualizers || visualizers.length < 2) {
@@ -45,18 +45,20 @@ export class AlternativeVisualizersWrapper
       }
     });
 
-    this.registerToolbarItem("changeVisualizer", () =>
-      this.visualizerSelector = DocumentHelper.createSelector(
-        this.visualizers.map((visualizer) => {
-          return {
-            value: visualizer.type,
-            text: localization.getString("visualizer_" + visualizer.type),
-          };
-        }),
-        (option: any) => this.visualizer.type === option.value,
-        (e: any) => this.setVisualizer(e.target.value)
-      ), 0
-    );
+    if(this.options.allowChangeVisualizerType !== false) {
+      this.registerToolbarItem("changeVisualizer", () =>
+        this.visualizerSelector = DocumentHelper.createSelector(
+          this.visualizers.map((visualizer) => {
+            return {
+              value: visualizer.type,
+              text: localization.getString("visualizer_" + visualizer.type),
+            };
+          }),
+          (option: any) => this.visualizer.type === option.value,
+          (e: any) => this.setVisualizer(e.target.value)
+        ), 0
+      );
+    }
 
     this.visualizer = visualizers[0];
     this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
@@ -200,9 +202,9 @@ export class AlternativeVisualizersWrapper
    * @see setState
    */
   public resetState(): void {
-      super.resetState();
-      this.visualizers.forEach(visualizer => visualizer.resetState());
-      this.setVisualizer(this.visualizers[0].type, true);
+    super.resetState();
+    this.visualizers.forEach(visualizer => visualizer.resetState());
+    this.setVisualizer(this.visualizers[0].type, true);
   }
 
   getValues(): Array<any> {
