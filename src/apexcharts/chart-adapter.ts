@@ -4,6 +4,7 @@ import { SelectBase } from "../selectBase";
 import { localization } from "../localizationManager";
 import { ApexChartsOptions, ApexChartsSetup } from "./setup";
 import { VisualizerBase } from "../visualizerBase";
+import { removeUndefinedProperties } from "../utils/utils";
 
 export const chartTypes = {
   "boolean": ["pie", "doughnut", "bar"],
@@ -36,6 +37,7 @@ export class ApexChartsAdapter {
         });
         _options.title.text = s.title;
 
+        removeUndefinedProperties(_options);
         const chart = new ApexCharts(chartDiv, _options);
         return chart;
       });
@@ -150,6 +152,7 @@ export class ApexChartsAdapter {
       if (this._chart) {
         await this._chart.updateOptions({ series: options.series });
       } else {
+        removeUndefinedProperties(options);
         this._chart = new ApexCharts(chartNode, options);
         await this._chart.render();
       }

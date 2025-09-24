@@ -342,10 +342,6 @@ export class ApexChartsSetup {
     const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
     const isHistogram = model.type === "histogram";
 
-    if (!isHistogram && model.type !== "pivot") {
-      ({ labels, seriesLabels, colors, texts, datasets } = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets));
-    }
-
     // Prepare data series
     let series: Array<any> = [];
 
@@ -664,10 +660,6 @@ export class ApexChartsSetup {
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
-
-    if (model.type !== "pivot") {
-      ({ labels, seriesLabels, colors, texts, datasets } = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets));
-    }
 
     // Prepare data series
     let series: Array<any> = [];

@@ -14,3 +14,18 @@ export function reverseAll(labels: string[], seriesLabels: string[], colors: str
   datasets = ds;
   return { labels, seriesLabels, colors, texts, datasets };
 }
+
+export function removeUndefinedProperties(obj): void {
+  if (obj === null || obj === undefined || typeof obj !== "object") {
+    return;
+  }
+  Object.keys(obj).forEach(key => {
+    if(typeof obj[key] === "object") {
+      removeUndefinedProperties(obj[key]);
+    }
+    if(obj[key] === undefined) {
+      delete obj[key];
+    }
+  });
+  return;
+}
