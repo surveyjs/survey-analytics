@@ -21,6 +21,7 @@ export * from "../visualizerFactory";
 
 export * from "../selectBase";
 export * from "../matrix";
+export * from "../matrixDropdownGrouped";
 export * from "../boolean";
 export * from "../histogram";
 export * from "../number";
@@ -38,7 +39,11 @@ export * from "../wordcloud/stopwords/index";
 export * from "../text";
 export * from "../statistics-table";
 export * from "../nps";
+export * from "../card";
 export * from "../ranking";
 export * from "../pivot";
+export * from "../theme";
+export * from "../sjs-design-tokens/default-light";
+export * from "../sjs-design-tokens/default-dark";
 
 export { DocumentHelper } from "../utils/index";

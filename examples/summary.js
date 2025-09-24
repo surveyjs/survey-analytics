@@ -77,5 +77,17 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
   data,
   options
 );
+
+const checkbox = document.getElementById('toggle-checkbox');
+checkbox.addEventListener('change', () => {
+  if (checkbox.checked) {
+    visPanel.applyTheme(SurveyAnalytics.DefaultDark);
+  } else {
+    visPanel.applyTheme(SurveyAnalytics.Default);
+  }
+});
+
+// visPanel.applyTheme(SurveyAnalytics.DefaultDark);
+// visPanel.applyTheme(SurveyAnalytics.Default);
 visPanel.showToolbar = true;
 visPanel.render(document.getElementById("summaryContainer"));

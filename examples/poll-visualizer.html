@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Poll Visualizer Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" type="text/css" href="../build/survey.analytics.css" />
+
+  <script src="./plotly.min.js"></script>
+
+  <script src="../node_modules/survey-core/survey.core.js"></script>
+  <script src="../build/survey.analytics.js"></script>
+  <style>
+    .sa-toolbar, .sa-visualizer__footer {
+    display: none;
+}
+
+.sa-poll-table {
+    width: 100%;
+    font-family: SegoeUI, Arial, sans-serif;
+    font-size: 14px;
+    color: #404040;
+    background-color: #f7f7f7;
+}
+
+.sa-poll-table__cell {
+    padding: 8px;
+    min-height: 34px;
+}
+
+.sa-poll-table__cell-value {
+    text-align: right;
+    min-width: 30px;
+}
+
+.sa-poll-table__cell-header {
+    font-weight: bold;
+}
+
+.sa-poll-sparkline {
+    min-width: 100px;
+    height: 24px;
+    border: 1px solid #1ab394;
+    border-radius: 5px;
+}
+
+.sa-poll-sparkline-value {
+    height: 100%;
+    background-color: #1ab394;
+}
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+
+  <script src="./poll-visualizer.js"></script>
+</body>
+
+</html>

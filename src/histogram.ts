@@ -3,6 +3,7 @@ import { DataProvider } from "./dataProvider";
 import { SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
 import { histogramStatisticsCalculator } from "./statisticCalculators";
+import { ICalculationResult } from "./visualizerBase";
 
 export class HistogramModel extends SelectBase {
   protected valueType: "date" | "number" = "number";
@@ -18,14 +19,14 @@ export class HistogramModel extends SelectBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "histogram");
+    super(question, data, options, type || "histogram");
     this._transposeData = false;
     if (this.options.intervalPrecision !== undefined) {
       this._intervalPrecision = this.options.intervalPrecision;
     }
-    const questionType = question.getType();
+    const questionType = this.dataType;
     if (questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
       this.valueType = "date";
     } else {
@@ -91,7 +92,7 @@ export class HistogramModel extends SelectBase {
       series.forEach(seriesValue => this._continuousData[seriesValue] = []);
       const hash = {};
       this.data.forEach(dataItem => {
-        const answerData = dataItem[this.name];
+        const answerData = dataItem[this.dataNames[0]];
         if (answerData !== undefined) {
           const seriesValue = dataItem[DataProvider.seriesMarkerKey] || "";
           // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
@@ -110,7 +111,7 @@ export class HistogramModel extends SelectBase {
   }
 
   protected get needUseRateValues() {
-    return this.question.getType() == "rating" && Array.isArray(this.question["rateValues"]) && this.question["rateValues"].length > 0;
+    return this.dataType == "rating" && Array.isArray(this.question["rateValues"]) && this.question["rateValues"].length > 0;
   }
 
   public getValues(): Array<any> {
@@ -125,12 +126,12 @@ export class HistogramModel extends SelectBase {
     return !!this.questionOptions && Array.isArray(this.questionOptions.intervals);
   }
 
-  public get intervals() {
+  public get intervals(): Array<{start: number | Date, end: number | Date, label: string}> {
     if (this.hasCustomIntervals) {
       return this.questionOptions.intervals;
     }
 
-    if(this.question.getType() == "rating") {
+    if(this.dataType == "rating") {
       if (this.needUseRateValues) {
         const rateValues = this.question["rateValues"] as ItemValue[];
         rateValues.sort((iv1, iv2) => iv1.value - iv2.value);
@@ -176,11 +177,14 @@ export class HistogramModel extends SelectBase {
     return this._cachedIntervals;
   }
 
-  public convertFromExternalData(externalCalculatedData: any): any[] {
-    return [externalCalculatedData];
+  public convertFromExternalData(externalCalculatedData: Array<number>): ICalculationResult {
+    return {
+      data: [externalCalculatedData],
+      values: this.intervals.map(i => i.label)
+    };
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
+  protected getCalculatedValuesCore(): ICalculationResult {
     const continuousValues = this.getContinuousValues();
     return histogramStatisticsCalculator(this._continuousData, this.intervals, this.getSeriesValues());
   }
