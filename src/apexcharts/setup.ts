@@ -704,22 +704,17 @@ export class ApexChartsSetup {
     // Axis settings
     const xaxis: any = {
       ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
-      axisBorder: {
-        ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme),
-      },
+      categories: labels,
+      axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme) },
     };
 
     const yaxis: any = {
-      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
-      categories: labels,
-      axisBorder: {
-        show: false,
-      },
+      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme)
     };
 
     const grid = {
       ...ApexChartsSetup.defaultGridConfig(model.theme),
-      yaxis: {
+      xaxis: {
         lines: {
           show: true
         }

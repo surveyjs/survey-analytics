@@ -9,6 +9,10 @@
     .apexcharts-tooltip-title {
       display: none;
     }
+
+    .apexcharts-tooltip-text-goals-value, .apexcharts-tooltip-text-y-value, .apexcharts-tooltip-text-z-value {
+      margin: 0;
+    }
   }
 
   .apexcharts-menu-icon.apexcharts-menu-icon svg {
