@@ -1,4 +1,4 @@
-import { QuestionDropdownModel, ItemValue, QuestionImagePickerModel, SurveyModel, ComponentCollection } from "survey-core";
+import { QuestionDropdownModel, ItemValue, QuestionImagePickerModel, SurveyModel, ComponentCollection, QuestionRatingModel } from "survey-core";
 import { SelectBase, hideEmptyAnswersInData } from "../src/selectBase";
 import { VisualizationManager } from "../src/visualizationManager";
 
@@ -391,7 +391,7 @@ test("get/set/reset state", () => {
   selectBase["chartTypes"] = ["bar", "pie"];
   const initialState = {
     "answersOrder": "default",
-    "chartType": "bar", 
+    "chartType": "bar",
     "hideEmptyAnswers": false,
     "topN": -1,
   };
@@ -569,6 +569,29 @@ test("SelectBase supportSelection and allowSelection option", () => {
   vis = new SelectBase(q, [], { allowSelection: true });
   expect(vis.supportSelection).toBe(true);
 
-    vis = new SelectBase(q, [], { allowSelection: false });
+  vis = new SelectBase(q, [], { allowSelection: false });
   expect(vis.supportSelection).toBe(false);
+});
+
+test("getSelectedItemByText works for QuestionRatingModel", () => {
+  const question = new QuestionRatingModel("q1");
+  question.fromJSON({
+    "name": "nps_score",
+    "type": "rating",
+    "title": "How you rate our sales process?",
+    "rateType": "stars",
+  });
+
+  let vis = new SelectBase(question, []);
+  let item = vis.getSelectedItemByText("2");
+  expect(item.value).toEqual(2);
+  expect(item.text).toEqual("2");
+
+  question.rateValues = [1, 2, 3, 4, 5];
+  item = vis.getSelectedItemByText("2");
+  expect(item).toEqual(question.rateValues[1]);
+
+  item = vis.getSelectedItemByText("10");
+  expect(item.value).toEqual(10);
+  expect(item.text).toEqual("10");
 });
