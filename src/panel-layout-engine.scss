@@ -78,8 +78,8 @@ sa-panel-layout__layout-item.resizing {
 }
 
 .sa-panel-layout__item-content {
-    padding: 15px;
-    height: calc(100% - 42px);
+    margin-top: 16px;
+    height: calc(100% - 80px);
     overflow: auto;
 }
 

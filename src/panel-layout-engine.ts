@@ -221,17 +221,20 @@ export class PanelLayoutEngine extends LayoutEngine {
   }
 
   positionPanels(): void {
-    const containerGridWidth = Math.floor(this.container.offsetWidth / PanelLayoutEngine.GRID_SIZE);
     const itemsPerRow = PanelLayoutEngine.DEFAULT_COL_COUNT;
+    const fullGridWidth = Math.floor(this.container.offsetWidth / PanelLayoutEngine.GRID_SIZE);
+    const containerGridWidth = fullGridWidth - fullGridWidth % itemsPerRow;
+    const itemWidth = Math.ceil(containerGridWidth / itemsPerRow) - 1;
+    const defaultItemHeight = 10;
 
     this.panels.forEach((panel, index) => {
       const row = Math.floor(index / itemsPerRow);
       const col = index % itemsPerRow;
 
-      panel.x = col * Math.floor(containerGridWidth / itemsPerRow);
-      panel.y = row * 11;
-      panel.width = Math.floor(containerGridWidth / itemsPerRow);
-      panel.height = 10;
+      panel.x = col * (itemWidth + 1);
+      panel.y = row * (defaultItemHeight + 1);
+      panel.width = itemWidth;
+      panel.height = defaultItemHeight;
 
       panel.relativeX = panel.x / containerGridWidth;
       panel.relativeWidth = panel.width / containerGridWidth;
