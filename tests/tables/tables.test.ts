@@ -18,7 +18,7 @@ const json = {
   ],
 };
 
-class TableTest extends Table {
+export class TableTest extends Table {
   applyColumnFilter() { }
   applyFilter() { }
   render() { }
