@@ -1,6 +1,7 @@
 import { SurveyModel, QuestionTextModel, ComponentCollection, QuestionCustomModel, QuestionCompositeModel } from "survey-core";
 import { Table } from "../../src/tables/table";
 import { ColumnDataType, ITableState, QuestionLocation } from "../../src/tables/config";
+import { CompositeColumnsBuilder } from "../../src/tables/columnbuilder";
 const json = {
   questions: [
     {
@@ -495,6 +496,7 @@ test("check custom question with question which is not ready", () => {
 });
 
 test("check composite question with questions which is not ready", () => {
+  CompositeColumnsBuilder.ShowAsSeparateColumns = false;
   ComponentCollection
     .Instance
     .add({
@@ -533,6 +535,7 @@ test("check composite question with questions which is not ready", () => {
   data[0]["compositeQuestion"]["innerQuestion2"] = "test_text2";
   (question.contentPanel.elements[1] as any).onReadyChanged.fire(question.contentPanel.elements[1], { isReady: true });
   expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_text1\",\"innerQuestion2\":\"test_text2\"}");
+  CompositeColumnsBuilder.ShowAsSeparateColumns = false;
 });
 
 test("Generate columns for question matrix", () => {
