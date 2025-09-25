@@ -14,6 +14,7 @@
     "build:types:core": "tsc --p tsconfig.summary.core.json && echo \"export * from './survey-analytics.types/entries/summary.core';\" >> build/survey.analytics.core.d.ts",
     "build:types:summary": "tsc --p tsconfig.summary.json && echo \"export * from './survey-analytics.types/entries/summary';\" >> build/survey.analytics.d.ts",
     "build:types:tabulator": "tsc --p tsconfig.tabulator.json && echo \"export * from './survey-analytics-tabulator.types/entries/tabulator';\" >> build/survey.analytics.tabulator.d.ts",
+    "build:types:mongo": "tsc --p tsconfig.types.mongo.json && echo \"export * from './survey-analytics.types/entries/mongo';\" >> build/survey.analytics.mongo.d.ts",
     "lint": "eslint ./src --quiet",
     "pre-push-check": "npm run lint && npm run test",
     "pwinst": "playwright install chromium"

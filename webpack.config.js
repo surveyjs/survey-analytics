@@ -73,6 +73,11 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
             "import": "./fesm/survey.analytics.core.mjs",
             "require": "./survey.analytics.core.js"
           },
+          "./survey.analytics.mongo": {
+            "types": "./survey.analytics.mongo.d.ts",
+            "import": "./fesm/survey.analytics.mongo.mjs",
+            "require": "./survey.analytics.mongo.js"
+          },
           "./*.css": "./*.css",
           "./survey.analytics.tabulator": {
             "types": "./survey.analytics.tabulator.d.ts",
