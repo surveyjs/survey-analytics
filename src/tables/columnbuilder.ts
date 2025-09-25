@@ -106,6 +106,11 @@ ColumnsBuilderFactory.Instance.registerBuilderColumn("custom", new CustomColumns
 
 export class CompositeColumnsBuilder extends DefaultColumnsBuilder<QuestionCompositeModel> {
   public static ShowAsSeparateColumns = false;
+  protected getDisplayName(question: QuestionCompositeModel, table: Table): string {
+    return table.useNamesAsTitles
+      ? question.name
+      : (question.title || "").trim() || question.name;
+  }
   protected buildColumnsCore(question: QuestionCompositeModel, table: Table): Array<IColumn> {
     if(CompositeColumnsBuilder.ShowAsSeparateColumns) {
       const innerQuestions = [];
@@ -116,6 +121,7 @@ export class CompositeColumnsBuilder extends DefaultColumnsBuilder<QuestionCompo
         const cols = builder.buildColumns(innerQuestion, table);
         cols.forEach(col => {
           col.name = question.name + "." + col.name;
+          col.displayName = this.getDisplayName(question, table) + " - " + this.getDisplayName(innerQuestion, table);
         });
         columns = columns.concat(cols);
       });

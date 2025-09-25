@@ -79,15 +79,15 @@ test("custom component: composite + CompositeColumnsBuilder.ShowAsSeparateColumn
   expect(columns.length).toBe(3);
   expect(columns[0] instanceof BaseColumn).toBeTruthy();
   expect(columns[0].name).toBe("q1.q1");
-  expect(columns[0].displayName).toBe("q1");
+  expect(columns[0].displayName).toBe("q1 - q1");
   expect(columns[0].getCellData(table, survey.data).displayValue).toBe("text");
   expect(columns[1] instanceof SingleChoiceColumn).toBeTruthy();
   expect(columns[1].name).toBe("q1.q2");
-  expect(columns[1].displayName).toBe("q2");
+  expect(columns[1].displayName).toBe("q1 - q2");
   expect(columns[1].getCellData(table, survey.data).displayValue).toBe("2");
   expect(columns[2] instanceof BaseColumn).toBeTruthy();
   expect(columns[2].name).toBe("q1.q3");
-  expect(columns[2].displayName).toBe("q3");
+  expect(columns[2].displayName).toBe("q1 - q3");
   expect(columns[2].getCellData(table, survey.data).displayValue).toBe("3");
 
   ComponentCollection.Instance.clear();
