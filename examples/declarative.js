@@ -16,22 +16,19 @@ var options = {
   // labelTruncateLength: 27,
 };
 
-// SurveyAnalytics.VisualizationManager.registerVisualizer("count", SurveyAnalytics.NumberModel);
-// SurveyAnalytics.VisualizationManager.registerVisualizer("nps", SurveyAnalytics.NpsVisualizer);
-
 const visualizerDefinition1 = {
   visualizerType: "gauge",
   chartType: "bullet",
   dataName: "test",
   displayValueName: "count",
-  title: "Total answers count"
+  title: "Total answers count - Gauge"
 };
 
 const visualizerDefinition2 = {
   visualizerType: "card",
   dataName: "test",
   displayValueName: "count",
-  title: "Total answers count"
+  title: "Total answers count - Card"
 };
 
 const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];

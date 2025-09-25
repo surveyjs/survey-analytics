@@ -1,9 +1,10 @@
-import { Question, Event } from "survey-core";
-import { ICalculationResult, VisualizerBase } from "./visualizerBase";
-import { DocumentHelper, toPrecision } from "./utils";
-import { localization } from "./localizationManager";
+import { Question } from "survey-core";
+import { ICalculationResult } from "./visualizerBase";
+import { DocumentHelper } from "./utils";
 import { NumberModel } from "./number";
 import { VisualizationManager } from "./visualizationManager";
+
+import "./card.scss";
 
 export class CardVisualizerWidget {
   private _renderedTarget: HTMLDivElement = undefined;
@@ -11,28 +12,15 @@ export class CardVisualizerWidget {
   constructor(private _model: NumberModel, private _data: ICalculationResult) {
   }
 
-  private renderCard(title: string, value: number, secondaryValue?: number) {
-    const scorePartElement = DocumentHelper.createElement("div", "sa-visualizer-nps__score-part");
-    const titleElement = DocumentHelper.createElement("div", "sa-visualizer-nps__score-part-title");
-    titleElement.innerText = localization.getString(title);
-    scorePartElement.appendChild(titleElement);
-    const valuesElement = DocumentHelper.createElement("div", "sa-visualizer-nps__score-part-values");
-    scorePartElement.appendChild(valuesElement);
-    const valueElement = DocumentHelper.createElement("div", "sa-visualizer-nps__score-part-value");
-    valueElement.innerText = "" + value;
-    valuesElement.appendChild(valueElement);
-    if(secondaryValue) {
-      const percentElement = DocumentHelper.createElement("div", "sa-visualizer-nps__score-part-percent");
-      percentElement.innerText = "" + secondaryValue;
-      valuesElement.appendChild(percentElement);
-    }
-    return scorePartElement;
-  }
   public render(target: HTMLDivElement): void {
     this._renderedTarget = target;
     let value = this._data.data[0][this._data.values.indexOf(this._model.displayValueName || "value")];
-    var element = DocumentHelper.createElement("div", "sa-visualizer-card");
-    element.appendChild(this.renderCard(this._model.displayValueName || "value", value));
+    const element = DocumentHelper.createElement("div", "sa-visualizer-card");
+    const cardContainer = DocumentHelper.createElement("div", "sa-visualizer-card-content");
+    const cardValueElement = DocumentHelper.createElement("div", "sa-visualizer-card-value");
+    cardValueElement.innerText = "" + value;
+    cardContainer.appendChild(cardValueElement);
+    element.appendChild(cardContainer);
     target.appendChild(element);
   }
 
