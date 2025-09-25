@@ -30,7 +30,8 @@ test("custom component: single", () => {
   ComponentCollection.Instance.clear();
 });
 
-test("custom component: composite", () => {
+test("custom component: composite + CompositeColumnsBuilder.ShowAsSeparateColumns = false", () => {
+  CompositeColumnsBuilder.ShowAsSeparateColumns = false;
   ComponentCollection.Instance.add({
     name: "test_composite",
     elementsJSON: [
@@ -55,10 +56,10 @@ test("custom component: composite", () => {
   expect(columns[0].getCellData(table, survey.data).displayValue).toBe("{\"q1\":\"text\",\"q2\":\"2\",\"q3\":3}");
 
   ComponentCollection.Instance.clear();
+  CompositeColumnsBuilder.ShowAsSeparateColumns = true;
 });
 
-test("custom component: composite + CompositeColumnsBuilder.ShowAsSeparateColumns", () => {
-  CompositeColumnsBuilder.ShowAsSeparateColumns = true;
+test("custom component: composite", () => {
   ComponentCollection.Instance.add({
     name: "test_composite",
     elementsJSON: [
@@ -91,5 +92,4 @@ test("custom component: composite + CompositeColumnsBuilder.ShowAsSeparateColumn
   expect(columns[2].getCellData(table, survey.data).displayValue).toBe("3");
 
   ComponentCollection.Instance.clear();
-  CompositeColumnsBuilder.ShowAsSeparateColumns = false;
 });

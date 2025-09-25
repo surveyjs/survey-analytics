@@ -105,7 +105,7 @@ export class CustomColumnsBuilder extends DefaultColumnsBuilder<QuestionCustomMo
 ColumnsBuilderFactory.Instance.registerBuilderColumn("custom", new CustomColumnsBuilder());
 
 export class CompositeColumnsBuilder extends DefaultColumnsBuilder<QuestionCompositeModel> {
-  public static ShowAsSeparateColumns = false;
+  public static ShowAsSeparateColumns = true;
   protected getDisplayName(question: QuestionCompositeModel, table: Table): string {
     return table.useNamesAsTitles
       ? question.name
