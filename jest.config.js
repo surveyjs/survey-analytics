@@ -1,5 +1,6 @@
 module.exports = {
   testEnvironment: "jsdom",
+  // testEnvironment: "node",
   reporters: [
     "default",
     ["jest-junit", {
@@ -15,7 +16,7 @@ module.exports = {
     "^.+\\.(ts|tsx)?$": ["ts-jest", {
       diagnostics: false,
       tsconfig: "tsconfig.test.json"
-    }]
+    }],
   },
   moduleNameMapper: {
     "svgbundle": "<rootDir>/tests/empty-module.js",

@@ -41,6 +41,7 @@
   "homepage": "https://surveyjs.io/",
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
+    "mongodb": "^6.20.0",
     "muuri": "^0.8.0",
     "plotly.js-dist-min": "^2.28.0",
     "survey-core": "latest",
@@ -69,6 +70,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-junit": "^16.0.0",
     "mini-css-extract-plugin": "^2.9.0",
+    "mongodb-memory-server": "^10.2.1",
     "node-uuid": "1.4.7",
     "playwright": "1.53.1",
     "puppeteer": "22.13.1",
@@ -90,6 +92,7 @@
     "webpack-merge": "^5.8.0"
   },
   "peerDependencies": {
+    "@types/mongodb": "^4.0.6",
     "@types/plotly.js-dist-min": "^2.3.0",
     "@types/tabulator-tables": "^6.2.3"
   },

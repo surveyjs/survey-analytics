@@ -106,6 +106,7 @@ module.exports = function (options) {
       ),
       "survey.analytics": path.resolve(__dirname, "./src/entries/summary"),
       "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core"),
+      "survey.analytics.mongo": path.resolve(__dirname, "./src/entries/mongo"),
     },
     resolve: {
       extensions: [".ts", ".js"],
@@ -186,6 +187,12 @@ module.exports = function (options) {
         commonjs2: "tabulator-tables",
         commonjs: "tabulator-tables",
         amd: "tabulator-tables",
+      },
+      "mongodb": {
+        root: "MongoDB",
+        commonjs2: "mongodb",
+        commonjs: "mongodb",
+        amd: "mongodb",
       },
     },
     plugins: [

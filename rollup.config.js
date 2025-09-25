@@ -19,6 +19,7 @@ const banner = [
 const input = { 
   "survey.analytics": path.resolve(__dirname, "./src/entries/summary.ts"),
   "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core.ts"),
+  "survey.analytics.mongo": path.resolve(__dirname, "./src/entries/mongo.ts"),
   "survey.analytics.tabulator": path.resolve(__dirname, "./src/entries/tabulator-es.ts"),
 };
 module.exports = (options) => {
@@ -79,7 +80,8 @@ module.exports = (options) => {
     external: [
       "survey-core",
       "plotly.js-dist-min",
-      "tabulator-tables"
+      "tabulator-tables",
+      "mongodb"
     ],
     output: [
       {
