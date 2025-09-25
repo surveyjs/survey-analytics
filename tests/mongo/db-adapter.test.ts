@@ -67,7 +67,7 @@ describe("MongoDbAdapter", () => {
       { id: "2", value: 2, type: "a" },
       { id: "3", value: 3, type: "b" }
     ]);
-    const result = await adapter.getObjectsPaginated(
+    const result = await adapter.retrievePaginated(
       "test",
       [{ field: "type", value: "a" }],
       [{ field: "value", value: "desc" }],

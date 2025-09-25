@@ -1,37 +1,8 @@
 import { Db } from "mongodb";
+import { transformers } from "./result-transformers";
+import { createPipeline } from "./pipelines";
 
-function choiceTransformationPipeline(result) {
-  let res = {};
-  let totalCount = 0;
-  result.forEach(item => {
-    res[item._id] = item.count;
-    totalCount += item.count;
-  });
-  return { data: res, totalCount: totalCount };
-}
-function numberTransformationPipeline(result) {
-  if (result.length == 0) return { value: 0, minValue: 0, maxValue: 0 };
-  return { data: { value: result[0].average, minValue: result[0].min, maxValue: result[0].max } };
-}
-function histogramTransformationPipeline(result) {
-  let res = [];
-  let totalCount = 0;
-  result.forEach(item => {
-    res.push(item.count);
-    totalCount += item.count;
-  });
-  return { data: res, intervals: result, totalCount: totalCount };
-}
-export const transformers = {
-  "boolean": choiceTransformationPipeline,
-  "radiogroup": choiceTransformationPipeline,
-  "dropdown": choiceTransformationPipeline,
-  "checkbox": choiceTransformationPipeline,
-  "tagbox": choiceTransformationPipeline,
-  "number": numberTransformationPipeline,
-  "rating": numberTransformationPipeline,
-  "histogram": histogramTransformationPipeline
-};
+export interface IFilterItem { field: string, value: any }
 
 export class MongoDbAdapter {
   constructor(private db: Db, private getId: () => string) {
@@ -50,7 +21,7 @@ export class MongoDbAdapter {
     });
   }
 
-  retrieve(collectionName: string, filter) {
+  retrieve(collectionName: string, filter: Array<IFilterItem>) {
     filter = filter || [];
     const query = {};
     filter.forEach(fi => query[fi.field] = fi.value);
@@ -89,7 +60,7 @@ export class MongoDbAdapter {
     });
   }
 
-  getObjectsPaginated(collectionName: string, filter, order, offset: number, limit: number) {
+  retrievePaginated(collectionName: string, filter, order, offset: number, limit: number) {
     filter = filter || [];
     let query = {};
     filter.forEach(fi => {
@@ -116,87 +87,8 @@ export class MongoDbAdapter {
     });
   }
 
-  retrieveSummary(collectionName: string, surveyId: string, questionId: string, questionType: string, visualizerType: string, filter) {
-    const singleChoicePipeline = [
-      { $match: { postid: surveyId } },
-      { $project: { value: "$json." + questionId } },
-      { $match: { value: { $exists: true } } },
-      {
-        $group: {
-          _id: "$value",
-          count: { $sum: 1 },
-        }
-      }
-    ];
-    const multipleChoicePipeline = [
-      { $match: { postid: surveyId } },
-      { $project: { value: "$json." + questionId } },
-      { $match: { value: { $exists: true } } },
-      { $unwind: "$value" },
-      {
-        $group: {
-          _id: "$value",
-          count: { $sum: 1 },
-        }
-      }
-    ];
-    const numberPipeline = [
-      { $match: { postid: surveyId } },
-      { $project: { value: "$json." + questionId } },
-      { $match: { value: { $exists: true } } },
-      {
-        $group: {
-          _id: null,
-          count: { $sum: 1 },
-          average: { $avg: "$value" },
-          min: { $min: "$value" },
-          max: { $max: "$value" },
-          values: { $push: "$value" }
-        }
-      }
-    ];
-    const histogramPipeline = [
-      { $match: { postid: surveyId } },
-      { $project: { value: "$json." + questionId } },
-      { $match: { value: { $exists: true } } },
-      {
-        $bucketAuto: {
-          groupBy: "$value",
-          buckets: 10,
-          output: {
-            count: { $sum: 1 },
-            minValue: { $min: "$value" },
-            maxValue: { $max: "$value" }
-          }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          start: "$minValue",
-          end: "$maxValue",
-          label: {
-            $concat: [
-              { $toString: { $round: ["$minValue", 2] } },
-              " - ",
-              { $toString: { $round: ["$maxValue", 2] } }
-            ]
-          },
-          count: 1
-        }
-      }
-    ];
-    const mongoPipelines = {
-      "boolean": singleChoicePipeline,
-      "radiogroup": singleChoicePipeline,
-      "dropdown": singleChoicePipeline,
-      "checkbox": multipleChoicePipeline,
-      "tagbox": multipleChoicePipeline,
-      "number": numberPipeline,
-      "rating": numberPipeline,
-      "histogram": histogramPipeline
-    };
-    const pipeline = mongoPipelines[visualizerType] || mongoPipelines[questionType] || [];
+  retrieveSummary(collectionName: string, surveyId: string, questionId: string, questionType: string, visualizerType: string, filter: Array<IFilterItem>) {
+    const pipeline = createPipeline(surveyId, questionId, visualizerType, questionType);
     return new Promise((resolve, reject) => {
       this.db.collection(collectionName).aggregate(pipeline).toArray()
         .then((results) => {
@@ -210,3 +102,4 @@ export class MongoDbAdapter {
     });
   }
 }
+
