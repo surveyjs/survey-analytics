@@ -105,6 +105,30 @@ export class CustomColumnsBuilder extends DefaultColumnsBuilder<QuestionCustomMo
 ColumnsBuilderFactory.Instance.registerBuilderColumn("custom", new CustomColumnsBuilder());
 
 export class CompositeColumnsBuilder extends DefaultColumnsBuilder<QuestionCompositeModel> {
+  public static ShowAsSeparateColumns = true;
+  protected getDisplayName(question: QuestionCompositeModel, table: Table): string {
+    return table.useNamesAsTitles
+      ? question.name
+      : (question.title || "").trim() || question.name;
+  }
+  protected buildColumnsCore(question: QuestionCompositeModel, table: Table): Array<IColumn> {
+    if(CompositeColumnsBuilder.ShowAsSeparateColumns) {
+      const innerQuestions = [];
+      question.contentPanel.addQuestionsToList(innerQuestions);
+      let columns: Array<IColumn> = [];
+      innerQuestions.forEach(innerQuestion => {
+        const builder = ColumnsBuilderFactory.Instance.getColumnsBuilder(innerQuestion.getType());
+        const cols = builder.buildColumns(innerQuestion, table);
+        cols.forEach(col => {
+          col.name = question.name + "." + col.name;
+          col.displayName = this.getDisplayName(question, table) + " - " + this.getDisplayName(innerQuestion, table);
+        });
+        columns = columns.concat(cols);
+      });
+      return columns;
+    }
+    return super.buildColumnsCore(question, table);
+  }
   protected createColumn(question: QuestionCompositeModel, table: Table): CompositeQuestionColumn {
     return new CompositeQuestionColumn(question, table);
   }
