@@ -9,17 +9,20 @@ var json = {
       type: "text",
       inputType: "date",
       name: "date",
+      title: "Purchase date"
     },
     {
       type: "text",
       inputType: "number",
       name: "age",
+      title: "Customer age"
     },
     { "type": "rating", "name": "question1", "rateValues": [{ "value": 1, "text": "15 minutes" }, { "value": 2, "text": "30 minutes" }, { "value": 3, "text": "1 hour" }] },
     {
       "type": "text",
       "name": "question2",
-      "inputType": "number"    
+      "title": "Bill amount",
+      "inputType": "number"
      }
   ]
 }
@@ -77,6 +80,7 @@ var data = [
   },
   {
     date: "2019-10-13",
+    "question2": 15,
     age: 25
   },
   {
@@ -84,12 +88,14 @@ var data = [
     age: 25
   },
   {
-    date: "2021-10-13",
+    date: "2021-11-13",
+    "question2": 11.14352,
     age: 25
   },
   {
     nps_score: 7,
     date: "2022-10-13",
+    "question2": 16.21,
     age: 25
   },
   {
@@ -100,36 +106,43 @@ var data = [
   {
     nps_score: 9,
     date: "2024-10-13",
+    "question2": 11.1435232232,
     age: 25
   },
   {
     nps_score: 2,
     date: "2025-10-13",
+    "question2": 11.1435232232,
     age: 25
   },
   {
     nps_score: 2,
     date: "2026-10-13",
+    "question2": 13.1435232232,
     age: 25
   },
   {
     nps_score: 3,
-    date: "2027-10-13",
+    date: "2027-10-11",
+    "question2": 14.1232432423,
     age: 25
   },
   {
     nps_score: 4,
-    date: "2028-10-13",
+    date: "2028-10-12",
+    "question2": 32.1435232,
     age: 25
   },
   {
     nps_score: 4,
-    date: "2029-10-13",
+    date: "2029-09-13",
+    "question2": 44,
     age: 25
   },
   {
     nps_score: 0,
     date: "2030-10-13",
+    "question2": 15.1232432423,
     age: 25
   },
   { "question1": 3 },
@@ -137,40 +150,18 @@ var data = [
   { "question1": 3 },
 ];
 
-data = data.concat([
-  {
-    "question2": 15.1232432423
-  }, {
-    "question2": 32.1435232
-  }, {
-    "question2": 14.1232432423
-  }, {
-    "question2": 13.1435232232
-  }, {
-    "question2": 16.21
-  }, {
-    "question2": 11.14352
-  }, {
-    "question2": 11.1435232232
-  }, {
-    "question2": 11.1435232232
-  }, {
-    "question2": 15
-  }, {
-    "question2": 44
-  },
-]);
-
 var visPanel = new SurveyAnalytics.VisualizationPanel(
   survey.getAllQuestions(),
   data,
   {
-    labelTruncateLength: 5,
+    labelTruncateLength: 10,
     allowSortAnswers: true,
-    allowShowPercentages: true,
+    // allowShowPercentages: true,
     allowHideEmptyAnswers: false,
     allowTransposeData: false,
-    allowTopNAnswers: true,
+    // allowTopNAnswers: true,
+    allowChangeIntervalsMode: true,
+    allowCumulative: true,
     age: {
       intervals: [
         { start: 0, end: 7, label: "childhood" },
