@@ -3,6 +3,115 @@ import { DataProvider } from "./dataProvider";
 import { SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
 import { histogramStatisticsCalculator } from "./statisticCalculators";
+import { DocumentHelper } from "./utils";
+import { localization } from "./localizationManager";
+
+export declare type HistogramIntervalsMode = "default" | "custom" | "years" | "quarters" | "months" | "days";
+export interface IHistogramInterval { start: number, end: number, label: string }
+
+function getQuarter(date: Date): string {
+  switch(Math.floor(date.getMonth() / 3) + 1) {
+    case 1: return "I";
+    case 2: return "II";
+    case 3: return "III";
+    case 4: return "IV";
+  }
+}
+
+export const intervalCalculators = {
+  years: (min: number, max: number) => {
+    const intervals = [];
+    let start = new Date(min);
+    start.setMonth(0);
+    start.setDate(1);
+    start.setHours(0, 0, 0, 0);
+    let startYear = start.getFullYear();
+    const end = new Date(max);
+    const endYear = end.getFullYear();
+    while (startYear <= endYear) {
+      const intervalStart = new Date(startYear, 0, 1);
+      const intervalEnd = new Date(startYear + 1, 0, 1);
+      intervals.push({
+        start: intervalStart.getTime(),
+        end: intervalEnd.getTime(),
+        label: "" + startYear
+      });
+      startYear++;
+    }
+    return intervals;
+  },
+  months: (min: number, max: number) => {
+    const intervals = [];
+    let start = new Date(min);
+    start.setDate(1);
+    start.setHours(0, 0, 0, 0);
+    let startYear = start.getFullYear();
+    let startMonth = start.getMonth();
+    const end = new Date(max);
+    const endYear = end.getFullYear();
+    const endMonth = end.getMonth();
+    while (startYear < endYear || (startYear === endYear && startMonth <= endMonth)) {
+      const intervalStart = new Date(startYear, startMonth, 1);
+      const intervalEnd = new Date(startYear, startMonth + 1, 1);
+      intervals.push({
+        start: intervalStart.getTime(),
+        end: intervalEnd.getTime(),
+        label: intervalStart.toLocaleDateString(undefined, { year: "numeric", month: "short" })
+      });
+      startMonth++;
+      if (startMonth >= 12) {
+        startMonth = 0;
+        startYear++;
+      }
+    }
+    return intervals;
+  },
+  quarters: (min: number, max: number) => {
+    const intervals = [];
+    let start = new Date(min);
+    start.setDate(1);
+    start.setHours(0, 0, 0, 0);
+    let startYear = start.getFullYear();
+    let startMonth = start.getMonth();
+    const end = new Date(max);
+    const endYear = end.getFullYear();
+    const endMonth = end.getMonth();
+    while (startYear < endYear || (startYear === endYear && startMonth <= endMonth)) {
+      const intervalStart = new Date(startYear, startMonth, 1);
+      const intervalEnd = new Date(startYear, startMonth + 3, 1);
+      intervals.push({
+        start: intervalStart.getTime(),
+        end: intervalEnd.getTime(),
+        label: getQuarter(intervalStart) + " " + intervalStart.getFullYear().toString()
+      });
+      startMonth += 3;
+      if (startMonth >= 12) {
+        startMonth = startMonth % 12;
+        startYear++;
+      }
+    }
+    return intervals;
+  },
+  days: (min: number, max: number) => {
+    const intervals = [];
+    let start = new Date(min);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(max);
+    end.setHours(0, 0, 0, 0);
+    while (start <= end) {
+      const intervalStart = new Date(start);
+      const intervalEnd = new Date(start);
+      intervalEnd.setDate(intervalEnd.getDate() + 1);
+      intervals.push({
+        start: intervalStart.getTime(),
+        end: intervalEnd.getTime(),
+        label: intervalStart.toLocaleDateString()
+      });
+      start.setDate(start.getDate() + 1);
+    }
+    return intervals;
+  }
+};
 
 export class HistogramModel extends SelectBase {
   protected valueType: "date" | "number" = "number";
@@ -30,6 +139,23 @@ export class HistogramModel extends SelectBase {
       this.valueType = "date";
     } else {
       this.valueType = "number";
+    }
+
+    if(this.options.allowChangeIntervalsMode) {
+      this.registerToolbarItem("changeIntervalsMode", () => {
+        return DocumentHelper.createSelector(
+          this.intervalModes.map((intervalModeValue) => {
+            return {
+              value: intervalModeValue,
+              text: localization.getString("intervalMode_" + intervalModeValue),
+            };
+          }),
+          (option: any) => this.intervalsMode === option.value,
+          (e: any) => {
+            this.intervalsMode = e.target.value;
+          }
+        );
+      });
     }
   }
 
@@ -158,22 +284,44 @@ export class HistogramModel extends SelectBase {
       if (continuousValues.length) {
         let start = continuousValues[0].continuous;
         const end = continuousValues[continuousValues.length - 1].continuous;
-        const intervalsCount = HistogramModel.IntervalsCount;
-        const delta = (end - start) / intervalsCount;
-        for (let i = 0; i < intervalsCount; ++i) {
-          const next = start + delta;
-          const istart = this.toPrecision(start);
-          const inext = this.toPrecision(next);
-          this._cachedIntervals.push({
-            start: istart,
-            end: i < intervalsCount - 1 ? inext : inext + delta / 100,
-            label: "" + this.getString(istart) + "-" + this.getString(inext)
-          });
-          start = next;
+        if(intervalCalculators[this.intervalsMode] !== undefined) {
+          this._cachedIntervals = intervalCalculators[this.intervalsMode](start, end);
+        } else {
+          const intervalsCount = HistogramModel.IntervalsCount;
+          const delta = (end - start) / intervalsCount;
+          for (let i = 0; i < intervalsCount; ++i) {
+            const next = start + delta;
+            const istart = this.toPrecision(start);
+            const inext = this.toPrecision(next);
+            this._cachedIntervals.push({
+              start: istart,
+              end: i < intervalsCount - 1 ? inext : inext + delta / 100,
+              label: "" + this.getString(istart) + "-" + this.getString(inext)
+            });
+            start = next;
+          }
         }
       }
     }
     return this._cachedIntervals;
+  }
+
+  public intervalModes: HistogramIntervalsMode[] = ["default", "years", "quarters", "months", "days"];
+
+  private _intervalsMode: HistogramIntervalsMode = "default";
+  public get intervalsMode(): HistogramIntervalsMode {
+    if(this.hasCustomIntervals) return "custom";
+    return this._intervalsMode;
+  }
+  public set intervalsMode(val: HistogramIntervalsMode) {
+    if (this.allowChangeIntervalsMode && this._intervalsMode !== val) {
+      this._intervalsMode = val;
+      this.onDataChanged();
+    }
+  }
+
+  public get allowChangeIntervalsMode(): boolean {
+    return !this.hasCustomIntervals && this.options.allowChangeIntervalsMode === true;
   }
 
   public convertFromExternalData(externalCalculatedData: any): any[] {
