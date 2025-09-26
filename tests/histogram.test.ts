@@ -986,6 +986,16 @@ test("histogram date year intervals", () => {
   expect(date.allowChangeIntervalsMode).toBeTruthy();
   expect(date.intervalsMode).toBe("default");
   expect(date.getLabels()).toEqual([
+    "10/13/2004-4/13/2005",
+    "4/13/2005-10/13/2005",
+    "10/13/2005-4/13/2006",
+    "4/13/2006-10/13/2006",
+    "10/13/2006-4/14/2007",
+    "4/14/2007-10/13/2007",
+    "10/13/2007-4/13/2008",
+    "4/13/2008-10/12/2008",
+    "10/12/2008-4/13/2009",
+    "4/13/2009-10/13/2009",
   ]);
 
   date.intervalsMode = "years";
@@ -1096,6 +1106,18 @@ test("histogram date different intervals", async () => {
   date.intervalsMode = "months";
   expect(date.intervalsMode).toBe("months");
   expect(date.getLabels()).toEqual([
+    "Jan 2009",
+    "Feb 2009",
+    "Mar 2009",
+    "Apr 2009",
+    "May 2009",
+    "Jun 2009",
+    "Jul 2009",
+    "Aug 2009",
+    "Sep 2009",
+    "Oct 2009",
+    "Nov 2009",
+    "Dec 2009",
   ]);
   expect(((await date.getCalculatedValues())[0] as any).length).toEqual(12);
 
