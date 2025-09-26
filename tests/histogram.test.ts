@@ -1,5 +1,5 @@
 import { SurveyModel } from "survey-core";
-import { HistogramModel } from "../src/histogram";
+import { getBestIntervalMode, HistogramModel } from "../src/histogram";
 
 const data = [
   {
@@ -1130,4 +1130,184 @@ test("histogram date different intervals", async () => {
     "IV 2009",
   ]);
   expect(((await date.getCalculatedValues())[0] as any).length).toEqual(4);
+});
+
+test("getBestIntervalMode for date histogram", () => {
+  expect(getBestIntervalMode(new Date("2020-01-01") as any, new Date("2020-01-10") as any)).toBe("days");
+  expect(getBestIntervalMode(new Date("2020-01-01") as any, new Date("2020-04-10") as any)).toBe("days");
+  expect(getBestIntervalMode(new Date("2020-01-01") as any, new Date("2020-10-10") as any)).toBe("months");
+  expect(getBestIntervalMode(new Date("2020-01-01") as any, new Date("2021-05-10") as any)).toBe("quarters");
+  expect(getBestIntervalMode(new Date("2020-01-01") as any, new Date("2025-10-10") as any)).toBe("years");
+});
+
+test("histogram date auto intervals mode", async () => {
+  var data = [
+    {
+      nps_score: 1,
+      date: "2009-10-13",
+      age: 17
+    },
+    {
+      nps_score: 1,
+      date: "2008-10-13",
+      age: 17
+    },
+    {
+      nps_score: 5,
+      date: "2007-10-13",
+      age: 17
+    },
+    {
+      nps_score: 10,
+      date: "2006-10-13",
+      age: 30
+    },
+    {
+      nps_score: 5,
+      date: "2005-10-13",
+      age: 30
+    },
+    {
+      nps_score: 5,
+      date: "2004-10-13",
+      age: 40
+    },
+    {
+      nps_score: 5,
+      date: "2004-10-13",
+      age: 40
+    },
+    {
+      nps_score: 5,
+      date: "2006-10-13",
+      age: 25
+    },
+    {
+      nps_score: 6,
+      date: "2007-10-13",
+      age: 25
+    },
+    {
+      date: "2008-10-13",
+      age: 25
+    },
+    {
+      date: "2009-10-13",
+      age: 25
+    },
+    {
+      date: "2004-10-13",
+      age: 25
+    },
+    {
+      date: "2009-10-13",
+      age: 25
+    },
+    {
+      nps_score: 7,
+      date: "2005-10-13",
+      age: 25
+    },
+    {
+      nps_score: 8,
+      date: "2007-10-13",
+      age: 25
+    },
+    {
+      nps_score: 9,
+      date: "2009-10-13",
+      age: 25
+    },
+    {
+      nps_score: 2,
+      date: "2005-10-13",
+      age: 25
+    },
+    {
+      nps_score: 2,
+      date: "2006-10-13",
+      age: 25
+    },
+    {
+      nps_score: 3,
+      date: "2007-10-13",
+      age: 25
+    },
+    {
+      nps_score: 4,
+      date: "2008-10-13",
+      age: 25
+    },
+    {
+      nps_score: 4,
+      date: "2009-10-13",
+      age: 25
+    },
+    {
+      nps_score: 0,
+      date: "2009-10-13",
+      age: 25
+    },
+    { nps_score: 0, }
+  ];
+  const question: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "date",
+    name: "date",
+  };
+  const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
+  expect(date.allowChangeIntervalsMode).toBeTruthy();
+  expect(date.intervalsMode).toBe("default");
+
+  date.intervalsMode = "auto";
+  expect(date.intervalsMode).toBe("auto");
+  expect(date.getLabels()).toEqual([
+    "2004",
+    "2005",
+    "2006",
+    "2007",
+    "2008",
+    "2009",
+  ]);
+  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(6);
+});
+
+test("changeIntervalsMode and allowCumulative toolbar items for date histogram", () => {
+  const question: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "date",
+    name: "date",
+  };
+  const date1 = new HistogramModel(question, data);
+  expect(date1.allowChangeIntervalsMode).toBeFalsy();
+  expect(date1["toolbarItemCreators"]["changeIntervalsMode"]).toBeUndefined();
+  expect(date1["toolbarItemCreators"]["showCumulative"]).toBeUndefined();
+  const date2 = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
+  expect(date2.allowChangeIntervalsMode).toBeTruthy();
+  expect(date2["toolbarItemCreators"]["changeIntervalsMode"]).toBeDefined();
+  expect(date2["toolbarItemCreators"]["showCumulative"]).toBeUndefined();
+  const date3 = new HistogramModel(question, data, { allowChangeIntervalsMode: true, allowCumulative: true });
+  expect(date3.allowChangeIntervalsMode).toBeTruthy();
+  expect(date3["toolbarItemCreators"]["changeIntervalsMode"]).toBeDefined();
+  expect(date3["toolbarItemCreators"]["showCumulative"]).toBeDefined();
+});
+
+test("allowCumulative and showCumulative for date histogram", async () => {
+  const question: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "date",
+    name: "date",
+  };
+  const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true, allowCumulative: true });
+  expect(date.allowChangeIntervalsMode).toBeTruthy();
+  expect(date.showCumulative).toBeFalsy();
+  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
+  expect((await date.getCalculatedValues())[0]).toEqual([2, 0, 0, 0, 2, 0, 0, 1, 0, 3]);
+
+  date.showCumulative = true;
+  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
+  expect((await date.getCalculatedValues())[0]).toEqual([2, 2, 2, 2, 4, 4, 4, 5, 5, 8]);
 });

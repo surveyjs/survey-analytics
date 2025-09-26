@@ -6,7 +6,7 @@ import { histogramStatisticsCalculator } from "./statisticCalculators";
 import { DocumentHelper } from "./utils";
 import { localization } from "./localizationManager";
 
-export declare type HistogramIntervalsMode = "default" | "custom" | "years" | "quarters" | "months" | "days";
+export declare type HistogramIntervalsMode = "default" | "custom" | "decades" | "years" | "quarters" | "months" | "days" | "auto";
 export interface IHistogramInterval { start: number, end: number, label: string }
 
 function getQuarter(date: Date): string {
@@ -18,7 +18,40 @@ function getQuarter(date: Date): string {
   }
 }
 
+export function getBestIntervalMode(min: number, max: number): HistogramIntervalsMode {
+  const start = new Date(min);
+  const end = new Date(max);
+  const totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+  if(totalMonths > 10 * 12) return "decades";
+  if(totalMonths > 2 * 12) return "years";
+  if(totalMonths > 1 * 12) return "quarters";
+  if(totalMonths > 4) return "months";
+  return "days";
+}
+
 export const intervalCalculators = {
+  decades: (min: number, max: number) => {
+    const intervals = [];
+    let start = new Date(min);
+    start.setFullYear(Math.floor(start.getFullYear() / 10) * 10);
+    start.setMonth(0);
+    start.setDate(1);
+    start.setHours(0, 0, 0, 0);
+    let startYear = start.getFullYear();
+    const end = new Date(max);
+    const endYear = end.getFullYear();
+    while (startYear <= endYear) {
+      const intervalStart = new Date(startYear, 0, 1);
+      const intervalEnd = new Date(startYear + 10, 0, 1);
+      intervals.push({
+        start: intervalStart.getTime(),
+        end: intervalEnd.getTime(),
+        label: "" + startYear + "s"
+      });
+      startYear += 10;
+    }
+    return intervals;
+  },
   years: (min: number, max: number) => {
     const intervals = [];
     let start = new Date(min);
@@ -119,7 +152,7 @@ export class HistogramModel extends SelectBase {
   private _continuousData: { [series: string]: Array<number> } = undefined;
   private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
   private _intervalPrecision: number = 2;
-
+  private showCumulativeBtn: HTMLElement = undefined;
   public static IntervalsCount = 10;
   public static UseIntervalsFrom = 10;
 
@@ -141,7 +174,7 @@ export class HistogramModel extends SelectBase {
       this.valueType = "number";
     }
 
-    if(this.options.allowChangeIntervalsMode) {
+    if(this.allowChangeIntervalsMode) {
       this.registerToolbarItem("changeIntervalsMode", () => {
         return DocumentHelper.createSelector(
           this.intervalModes.map((intervalModeValue) => {
@@ -155,6 +188,15 @@ export class HistogramModel extends SelectBase {
             this.intervalsMode = e.target.value;
           }
         );
+      });
+    }
+    if(this.allowChangeIntervalsMode && this.options.allowCumulative) {
+      this.registerToolbarItem("showCumulative", () => {
+        this.showCumulativeBtn = DocumentHelper.createButton(() => {
+          this.showCumulative = !this.showCumulative;
+        });
+        this.updateShowCumulativeBtn();
+        return this.showCumulativeBtn;
       });
     }
   }
@@ -284,8 +326,9 @@ export class HistogramModel extends SelectBase {
       if (continuousValues.length) {
         let start = continuousValues[0].continuous;
         const end = continuousValues[continuousValues.length - 1].continuous;
-        if(intervalCalculators[this.intervalsMode] !== undefined) {
-          this._cachedIntervals = intervalCalculators[this.intervalsMode](start, end);
+        const intervalsMode = this.intervalsMode === "auto" ? getBestIntervalMode(start, end) : this.intervalsMode;
+        if(intervalCalculators[intervalsMode] !== undefined) {
+          this._cachedIntervals = intervalCalculators[intervalsMode](start, end);
         } else {
           const intervalsCount = HistogramModel.IntervalsCount;
           const delta = (end - start) / intervalsCount;
@@ -306,7 +349,7 @@ export class HistogramModel extends SelectBase {
     return this._cachedIntervals;
   }
 
-  public intervalModes: HistogramIntervalsMode[] = ["default", "years", "quarters", "months", "days"];
+  public intervalModes: HistogramIntervalsMode[] = ["default", "decades", "years", "quarters", "months", "days", "auto"];
 
   private _intervalsMode: HistogramIntervalsMode = "default";
   public get intervalsMode(): HistogramIntervalsMode {
@@ -321,7 +364,26 @@ export class HistogramModel extends SelectBase {
   }
 
   public get allowChangeIntervalsMode(): boolean {
-    return !this.hasCustomIntervals && this.options.allowChangeIntervalsMode === true;
+    return this.valueType === "date" && !this.hasCustomIntervals && this.options.allowChangeIntervalsMode === true;
+  }
+
+  private _showCumulative: boolean = false;
+  public get showCumulative(): boolean {
+    return this._showCumulative;
+  }
+  public set showCumulative(val: boolean) {
+    this._showCumulative = val;
+    this.updateShowCumulativeBtn();
+    this.stateChanged("showCumulative", val);
+    this.refreshContent();
+  }
+
+  private updateShowCumulativeBtn() {
+    if (!!this.showCumulativeBtn) {
+      this.showCumulativeBtn.innerText = this.showCumulative
+        ? localization.getString("nonCumulative")
+        : localization.getString("cumulative");
+    }
   }
 
   public convertFromExternalData(externalCalculatedData: any): any[] {
@@ -331,6 +393,19 @@ export class HistogramModel extends SelectBase {
   protected getCalculatedValuesCore(): Array<any> {
     const continuousValues = this.getContinuousValues();
     return histogramStatisticsCalculator(this._continuousData, this.intervals, this.getSeriesValues());
+  }
+
+  public async getCalculatedValues(): Promise<Array<Object>> {
+    const values = await super.getCalculatedValues();
+    const result: Array<Array<number>> = JSON.parse(JSON.stringify(values));
+    if(this.showCumulative) {
+      for(let i = 0; i < result.length; i++) {
+        for(let j = 1; j < result[i].length; j++) {
+          result[i][j] += result[i][j - 1];
+        }
+      }
+    }
+    return result;
   }
 
   public getValueType(): "date" | "number" {
