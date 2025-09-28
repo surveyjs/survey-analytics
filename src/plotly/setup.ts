@@ -309,7 +309,7 @@ export class PlotlySetup {
       orientation: "v",
       textposition: "none",
     };
-    if (model.type === "histogram" || !hasSeries) {
+    if (!hasSeries) {
       traceConfig.width = 0.5;
       traceConfig.bargap = 0.5;
       traceConfig.mode = "markers",

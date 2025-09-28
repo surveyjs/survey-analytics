@@ -1,6 +1,6 @@
 import { ItemValue, Question } from "survey-core";
 import { DataProvider } from "./dataProvider";
-import { SelectBase } from "./selectBase";
+import { IAnswersData, SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
 import { histogramStatisticsCalculator } from "./statisticCalculators";
 import { DocumentHelper } from "./utils";
@@ -153,6 +153,7 @@ export class HistogramModel extends SelectBase {
   private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
   private _intervalPrecision: number = 2;
   private showCumulativeBtn: HTMLElement = undefined;
+  private showGroupedBtn: HTMLElement = undefined;
   public static IntervalsCount = 10;
   public static UseIntervalsFrom = 10;
 
@@ -197,6 +198,15 @@ export class HistogramModel extends SelectBase {
         });
         this.updateShowCumulativeBtn();
         return this.showCumulativeBtn;
+      });
+    }
+    if(this.allowChangeIntervalsMode && this.options.allowGroupDatePeriods) {
+      this.registerToolbarItem("showGrouped", () => {
+        this.showGroupedBtn = DocumentHelper.createButton(() => {
+          this.showGrouped = !this.showGrouped;
+        });
+        this.updateShowGroupedBtn();
+        return this.showGroupedBtn;
       });
     }
   }
@@ -259,7 +269,7 @@ export class HistogramModel extends SelectBase {
       series.forEach(seriesValue => this._continuousData[seriesValue] = []);
       const hash = {};
       this.data.forEach(dataItem => {
-        const answerData = dataItem[this.name];
+        const answerData = dataItem[this.dataNames[0]];
         if (answerData !== undefined) {
           const seriesValue = dataItem[DataProvider.seriesMarkerKey] || "";
           // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
@@ -359,6 +369,10 @@ export class HistogramModel extends SelectBase {
   public set intervalsMode(val: HistogramIntervalsMode) {
     if (this.allowChangeIntervalsMode && this._intervalsMode !== val) {
       this._intervalsMode = val;
+      if(!this.canShowGroupedDateSeries) {
+        this._showGrouped = false;
+      }
+      this.updateShowGroupedBtn();
       this.onDataChanged();
     }
   }
@@ -386,6 +400,30 @@ export class HistogramModel extends SelectBase {
     }
   }
 
+  private _showGrouped: boolean = false;
+  public get showGrouped(): boolean {
+    return this._showGrouped;
+  }
+  public set showGrouped(val: boolean) {
+    this._showGrouped = val;
+    this.updateShowGroupedBtn();
+    this.stateChanged("showGrouped", val);
+    this.refreshContent();
+  }
+
+  private updateShowGroupedBtn() {
+    if (!!this.showGroupedBtn) {
+      this.showGroupedBtn.innerText = this.showGrouped
+        ? localization.getString("ungroupDateSeries")
+        : localization.getString("groupDateSeries");
+      this.showGroupedBtn.style.display = this.canShowGroupedDateSeries ? "inline" : "none";
+    }
+  }
+
+  public get canShowGroupedDateSeries(): boolean {
+    return ["years", "quarters", "months"].indexOf(this.intervalsMode) !== -1;
+  }
+
   public convertFromExternalData(externalCalculatedData: any): any[] {
     return [externalCalculatedData];
   }
@@ -406,6 +444,94 @@ export class HistogramModel extends SelectBase {
       }
     }
     return result;
+  }
+
+  private async getGroupedDateAnswersData(): Promise<IAnswersData> {
+    let datasets = (await this.getCalculatedValues()) as number[][];
+    let colors = this.getColors();
+    let labels = this.getLabels();
+    let seriesLabels = this.getSeriesLabels();
+
+    const intervals = [].concat(this.intervals);
+    const start = new Date(intervals[0].start);
+    const end = new Date(intervals[intervals.length - 1].end);
+    const startYear = start.getFullYear();
+    const endYear = end.getFullYear();
+    if(this.intervalsMode === "years") {
+      seriesLabels = [];
+      const groupedDatasets = [];
+      for(let year = Math.floor(startYear / 10) * 10; year <= endYear; year += 10) {
+        seriesLabels.push(year.toString() + "s");
+        groupedDatasets.push(new Array(10).fill(0));
+      }
+      for(let i = 0; i < intervals.length; i++) {
+        const interval = intervals[i];
+        const intervalDate = new Date(interval.start);
+        const decade = Math.floor(intervalDate.getFullYear() / 10) * 10;
+        const yearInDecade = intervalDate.getFullYear() - decade;
+        const decadeIndex = Math.floor((decade - Math.floor(startYear / 10) * 10) / 10);
+        groupedDatasets[decadeIndex][yearInDecade] = datasets[0][i];
+      }
+      datasets = groupedDatasets;
+      labels = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    } else if(this.intervalsMode === "quarters") {
+      seriesLabels = [];
+      const groupedDatasets = [];
+      for(let year = startYear; year <= endYear; year++) {
+        seriesLabels.push(year.toString());
+        groupedDatasets.push(new Array(4).fill(0));
+      }
+      for(let i = 0; i < intervals.length; i++) {
+        const interval = intervals[i];
+        const intervalDate = new Date(interval.start);
+        const quarter = Math.floor(intervalDate.getMonth() / 3);
+        const year = intervalDate.getFullYear();
+        const yearIndex = year - startYear;
+        groupedDatasets[yearIndex][quarter] = datasets[0][i];
+      }
+      datasets = groupedDatasets;
+      labels = ["I", "II", "III", "IV"];
+    } else if(this.intervalsMode === "months") {
+      seriesLabels = [];
+      const groupedDatasets = [];
+      for(let year = startYear; year <= endYear; year++) {
+        seriesLabels.push(year.toString());
+        groupedDatasets.push(new Array(12).fill(0));
+      }
+      for(let i = 0; i < intervals.length; i++) {
+        const interval = intervals[i];
+        const intervalDate = new Date(interval.start);
+        const month = intervalDate.getMonth();
+        const year = intervalDate.getFullYear();
+        const yearIndex = year - startYear;
+        groupedDatasets[yearIndex][month] = datasets[0][i];
+      }
+      datasets = groupedDatasets;
+      labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    }
+
+    let texts = datasets;
+    return {
+      datasets,
+      labels,
+      colors,
+      texts,
+      seriesLabels,
+    };
+  }
+
+  /**
+   * Returns object with all infotmation for data visualization: datasets, labels, colors, additional texts (percentage).
+   */
+  public async getAnswersData(): Promise<IAnswersData> {
+    if(!this.showGrouped) {
+      return super.getAnswersData();
+    }
+
+    const answersData = await this.getGroupedDateAnswersData();
+    this.onAnswersDataReady.fire(this, answersData);
+
+    return answersData;
   }
 
   public getValueType(): "date" | "number" {

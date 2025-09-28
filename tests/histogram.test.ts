@@ -1311,3 +1311,145 @@ test("allowCumulative and showCumulative for date histogram", async () => {
   expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
   expect((await date.getCalculatedValues())[0]).toEqual([2, 2, 2, 2, 4, 4, 4, 5, 5, 8]);
 });
+
+test("getAnswersData with showGrouped set to true", async () => {
+  const data = [
+    {
+      nps_score: 1,
+      date: "2009-10-13",
+      age: 17
+    },
+    {
+      nps_score: 1,
+      date: "2008-10-13",
+      age: 17
+    },
+    {
+      nps_score: 5,
+      date: "2007-10-13",
+      age: 17
+    },
+    {
+      nps_score: 10,
+      date: "2006-10-13",
+      age: 30
+    },
+    {
+      nps_score: 5,
+      date: "2005-10-13",
+      age: 30
+    },
+    {
+      nps_score: 5,
+      date: "2004-10-13",
+      age: 40
+    },
+    {
+      nps_score: 5,
+      date: "2004-10-13",
+      age: 40
+    },
+    {
+      nps_score: 5,
+      date: "2006-10-13",
+      age: 25
+    },
+    {
+      nps_score: 6,
+      date: "2007-10-13",
+      age: 25
+    },
+    {
+      date: "2008-10-13",
+      age: 25
+    },
+    {
+      date: "2009-10-13",
+      age: 25
+    },
+    {
+      date: "2004-10-13",
+      age: 25
+    },
+    {
+      date: "2009-10-13",
+      age: 25
+    },
+    {
+      nps_score: 7,
+      date: "2005-10-13",
+      age: 25
+    },
+    {
+      nps_score: 8,
+      date: "2007-10-13",
+      age: 25
+    },
+    {
+      nps_score: 9,
+      date: "2009-10-13",
+      age: 25
+    },
+    {
+      nps_score: 2,
+      date: "2005-10-13",
+      age: 25
+    },
+    {
+      nps_score: 2,
+      date: "2006-10-13",
+      age: 25
+    },
+    {
+      nps_score: 3,
+      date: "2007-10-13",
+      age: 25
+    },
+    {
+      nps_score: 4,
+      date: "2008-10-13",
+      age: 25
+    },
+    {
+      nps_score: 4,
+      date: "2009-10-13",
+      age: 25
+    },
+    {
+      nps_score: 0,
+      date: "2009-10-13",
+      age: 25
+    },
+    { nps_score: 0, }
+  ];
+  const question: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "date",
+    name: "date",
+  };
+  const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
+  expect(date.intervalsMode).toBe("default");
+  expect(date.canShowGroupedDateSeries).toBeFalsy();
+  expect(date.showGrouped).toBeFalsy();
+
+  date.intervalsMode = "years";
+  expect(date.canShowGroupedDateSeries).toBeTruthy();
+
+  let answersData = await date.getAnswersData();
+  expect(answersData.datasets).toStrictEqual([[3, 3, 3, 4, 3, 6]]);
+  expect(answersData.labels).toStrictEqual(["2004", "2005", "2006", "2007", "2008", "2009"]);
+  expect(answersData.seriesLabels).toStrictEqual([]);
+
+  date.showGrouped = true;
+  answersData = await date.getAnswersData();
+  expect(answersData.datasets).toStrictEqual([[0, 0, 0, 0, 3, 3, 3, 4, 3, 6], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]);
+  expect(answersData.labels).toStrictEqual(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]);
+  expect(answersData.seriesLabels).toStrictEqual(["2000s", "2010s"]);
+
+  date.intervalsMode = "quarters";
+  answersData = await date.getAnswersData();
+  expect(answersData.datasets).toStrictEqual([[0, 0, 0, 3], [0, 0, 0, 3], [0, 0, 0, 3], [0, 0, 0, 4], [0, 0, 0, 3], [0, 0, 0, 6], [0, 0, 0, 0]]);
+  expect(answersData.labels).toStrictEqual(["I", "II", "III", "IV"]);
+  expect(answersData.seriesLabels).toStrictEqual(["2004", "2005", "2006", "2007", "2008", "2009", "2010"]);
+});
