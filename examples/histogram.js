@@ -17,6 +17,12 @@ var json = {
       name: "age",
       title: "Customer age"
     },
+    {
+      type: "text",
+      inputType: "number",
+      name: "sales",
+      title: "Sales amount"
+    },
     { "type": "rating", "name": "question1", "rateValues": [{ "value": 1, "text": "15 minutes" }, { "value": 2, "text": "30 minutes" }, { "value": 3, "text": "1 hour" }] },
     {
       "type": "text",
@@ -150,6 +156,9 @@ var data = [
   { "question1": 3 },
 ];
 
+data.forEach(function(item) { delete item.date; });
+data = data.concat(salesData);
+
 var visPanel = new SurveyAnalytics.VisualizationPanel(
   survey.getAllQuestions(),
   data,
@@ -162,6 +171,7 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
     // allowTopNAnswers: true,
     allowChangeIntervalsMode: true,
     allowCumulative: true,
+    allowGroupDatePeriods: true,
     age: {
       intervals: [
         { start: 0, end: 7, label: "childhood" },
