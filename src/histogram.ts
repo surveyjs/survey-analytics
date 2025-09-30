@@ -148,12 +148,13 @@ export const intervalCalculators = {
 
 export class HistogramModel extends SelectBase {
   protected valueType: "date" | "number" = "number";
-  private _cachedValues: Array<{ original: any, continuous: number }> = undefined;
-  private _continuousData: { [series: string]: Array<number> } = undefined;
+  private _cachedValues: Array<{ original: any, continuous: number, row: any }> = undefined;
+  private _continuousData: { [series: string]: Array<{continuous: number, row: any}> } = undefined;
   private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
   private _intervalPrecision: number = 2;
-  private showCumulativeBtn: HTMLElement = undefined;
+  private showRunningTotalsBtn: HTMLElement = undefined;
   private showGroupedBtn: HTMLElement = undefined;
+  private aggregateDataNameSelector: HTMLDivElement = undefined;
   public static IntervalsCount = 10;
   public static UseIntervalsFrom = 10;
 
@@ -187,17 +188,37 @@ export class HistogramModel extends SelectBase {
           (option: any) => this.intervalsMode === option.value,
           (e: any) => {
             this.intervalsMode = e.target.value;
-          }
+          },
+          localization.getString("intervalModeTitle")
         );
       });
     }
-    if(this.allowChangeIntervalsMode && this.options.allowCumulative) {
-      this.registerToolbarItem("showCumulative", () => {
-        this.showCumulativeBtn = DocumentHelper.createButton(() => {
-          this.showCumulative = !this.showCumulative;
+    if (this.possibleAggragateDataNames.length > 0) {
+      this.registerToolbarItem("aggregateDataName", () => {
+        const choices = this.possibleAggragateDataNames.map((dataName) => {
+          return typeof dataName === "string" ? { value: dataName, text: dataName } : dataName;
         });
-        this.updateShowCumulativeBtn();
-        return this.showCumulativeBtn;
+        choices.unshift({ value: "", text: localization.getString("noneAggregateText") }),
+
+        this.aggregateDataNameSelector = DocumentHelper.createSelector(
+          choices,
+          (option: any) => this.aggragateDataName === option.value,
+          (e) => {
+            this.aggragateDataName = e.target.value;
+          },
+          localization.getString("selectAggregateText")
+        );
+        this.updateAggregateDataNameSelector();
+        return this.aggregateDataNameSelector;
+      });
+    }
+    if(this.allowChangeIntervalsMode && this.options.allowRunningTotals) {
+      this.registerToolbarItem("showRunningTotals", () => {
+        this.showRunningTotalsBtn = DocumentHelper.createButton(() => {
+          this.showRunningTotals = !this.showRunningTotals;
+        });
+        this.updateShowRunningTotalsBtn();
+        return this.showRunningTotalsBtn;
       });
     }
     if(this.allowChangeIntervalsMode && this.options.allowGroupDatePeriods) {
@@ -208,6 +229,14 @@ export class HistogramModel extends SelectBase {
         this.updateShowGroupedBtn();
         return this.showGroupedBtn;
       });
+    }
+  }
+
+  private updateAggregateDataNameSelector() {
+    if (!!this.aggregateDataNameSelector) {
+      this.aggregateDataNameSelector.getElementsByTagName(
+        "select"
+      )[0].value = this.aggragateDataName;
     }
   }
 
@@ -273,14 +302,18 @@ export class HistogramModel extends SelectBase {
         if (answerData !== undefined) {
           const seriesValue = dataItem[DataProvider.seriesMarkerKey] || "";
           // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
-          this._continuousData[seriesValue].push(this.getContinuousValue(answerData));
+          this._continuousData[seriesValue].push({ continuous: this.getContinuousValue(answerData), row: dataItem });
           hash[answerData] = answerData;
         }
       });
-      this._cachedValues = Object.keys(hash).map(key => ({ original: hash[key], continuous: this.getContinuousValue(key) }));
+      this._cachedValues = Object.keys(hash).map(key => ({ original: hash[key], continuous: this.getContinuousValue(key), row: hash[key].row }));
       this._cachedValues.sort((a, b) => a.continuous - b.continuous);
     }
     return this._cachedValues;
+  }
+
+  protected isSupportSoftUpdateContent(): boolean {
+    return false;
   }
 
   protected isSupportMissingAnswers(): boolean {
@@ -381,22 +414,22 @@ export class HistogramModel extends SelectBase {
     return this.valueType === "date" && !this.hasCustomIntervals && this.options.allowChangeIntervalsMode === true;
   }
 
-  private _showCumulative: boolean = false;
-  public get showCumulative(): boolean {
-    return this._showCumulative;
+  private _showRunningTotals: boolean = false;
+  public get showRunningTotals(): boolean {
+    return this._showRunningTotals;
   }
-  public set showCumulative(val: boolean) {
-    this._showCumulative = val;
-    this.updateShowCumulativeBtn();
-    this.stateChanged("showCumulative", val);
+  public set showRunningTotals(val: boolean) {
+    this._showRunningTotals = val;
+    this.updateShowRunningTotalsBtn();
+    this.stateChanged("showRunningTotals", val);
     this.refreshContent();
   }
 
-  private updateShowCumulativeBtn() {
-    if (!!this.showCumulativeBtn) {
-      this.showCumulativeBtn.innerText = this.showCumulative
-        ? localization.getString("nonCumulative")
-        : localization.getString("cumulative");
+  private updateShowRunningTotalsBtn() {
+    if (!!this.showRunningTotalsBtn) {
+      this.showRunningTotalsBtn.innerText = this.showRunningTotals
+        ? localization.getString("noRunningTotals")
+        : localization.getString("runningTotals");
     }
   }
 
@@ -424,19 +457,34 @@ export class HistogramModel extends SelectBase {
     return ["years", "quarters", "months"].indexOf(this.intervalsMode) !== -1;
   }
 
+  private _aggragateDataName: string = "";
+  public get aggragateDataName(): string {
+    return this._aggragateDataName;
+  }
+  public set aggragateDataName(val: string) {
+    if (this._aggragateDataName !== val) {
+      this._aggragateDataName = val;
+      this.onDataChanged();
+    }
+  }
+
+  public get possibleAggragateDataNames(): Array<string> {
+    return this.questionOptions?.aggregateDataNames ?? [];
+  }
+
   public convertFromExternalData(externalCalculatedData: any): any[] {
     return [externalCalculatedData];
   }
 
   protected getCalculatedValuesCore(): Array<any> {
     const continuousValues = this.getContinuousValues();
-    return histogramStatisticsCalculator(this._continuousData, this.intervals, this.getSeriesValues());
+    return histogramStatisticsCalculator(this._continuousData, this.intervals, this.getSeriesValues(), [this.aggragateDataName].filter(name => !!name));
   }
 
   public async getCalculatedValues(): Promise<Array<Object>> {
     const values = await super.getCalculatedValues();
     const result: Array<Array<number>> = JSON.parse(JSON.stringify(values));
-    if(this.showCumulative) {
+    if(this.showRunningTotals) {
       for(let i = 0; i < result.length; i++) {
         for(let j = 1; j < result[i].length; j++) {
           result[i][j] += result[i][j - 1];

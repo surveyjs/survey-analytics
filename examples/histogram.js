@@ -23,7 +23,7 @@ var json = {
       name: "sales",
       title: "Sales amount"
     },
-    { "type": "rating", "name": "question1", "rateValues": [{ "value": 1, "text": "15 minutes" }, { "value": 2, "text": "30 minutes" }, { "value": 3, "text": "1 hour" }] },
+    { "type": "rating", "name": "question1", "title": "Task time estimation", "rateValues": [{ "value": 1, "text": "15 minutes" }, { "value": 2, "text": "30 minutes" }, { "value": 3, "text": "1 hour" }] },
     {
       "type": "text",
       "name": "question2",
@@ -160,17 +160,18 @@ data.forEach(function(item) { delete item.date; });
 data = data.concat(salesData);
 
 var visPanel = new SurveyAnalytics.VisualizationPanel(
+  // [survey.getQuestionByName("date")],
   survey.getAllQuestions(),
   data,
   {
     labelTruncateLength: 10,
-    allowSortAnswers: true,
+    allowSortAnswers: false,
     // allowShowPercentages: true,
-    allowHideEmptyAnswers: false,
-    allowTransposeData: false,
+    // allowHideEmptyAnswers: true,
+    // allowTransposeData: true,
     // allowTopNAnswers: true,
     allowChangeIntervalsMode: true,
-    allowCumulative: true,
+    allowRunningTotals: true,
     allowGroupDatePeriods: true,
     age: {
       intervals: [
@@ -180,15 +181,18 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
         { start: 19, end: 70, label: "adult" },
         { start: 70, end: 100, label: "old age" }
       ]
+    },
+    date: {
+      aggregateDataNames: [{ value: "sales", text: "Sales" }, "age"],
     }
   }
 );
 visPanel.showToolbar = true;
-visPanel.onAlternativeVisualizerChanged.add(function(sender, options) {
-  visPanel.visualizers.forEach(visualizer => {
-    if(typeof visualizer.setVisualizer === "function") {
-      visualizer.setVisualizer(options.visualizer.type, true);
-    }
-  });
-});
+// visPanel.onAlternativeVisualizerChanged.add(function(sender, options) {
+//   visPanel.visualizers.forEach(visualizer => {
+//     if(typeof visualizer.setVisualizer === "function") {
+//       visualizer.setVisualizer(options.visualizer.type, true);
+//     }
+//   });
+// });
 visPanel.render(document.getElementById("summaryContainer"));

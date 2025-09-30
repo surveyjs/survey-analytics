@@ -92,10 +92,13 @@ export var englishStrings = {
   intervalMode_days: "Days",
   intervalMode_custom: "Custom",
   intervalMode_auto: "Auto",
-  nonCumulative: "Ordinary",
-  cumulative: "Cumulative",
+  intervalModeTitle: "Intervals:",
+  noRunningTotals: "Ordinary",
+  runningTotals: "Running totals",
   groupDateSeries: "Group",
   ungroupDateSeries: "Ungroup",
+  noneAggregateText: "None",
+  selectAggregateText: "Aggregate:",
   license: "To use the Dashboard library in your application, a <a href='https://surveyjs.io/licensing' target='_blank'>developer license</a> is required. If you have an active license, please <a href='https://surveyjs.io/remove-alert-banner' target='_blank'>set up your license key</a> and ensure you're using the <a href='https://surveyjs.io/stay-updated/release-notes' target='_blank'>latest version</a>.",
   license2: "This banner appears because your maintenance subscription for the Dashboard library expired on {date}. You may continue using <a href='https://surveyjs.io/stay-updated/release-notes' target='_blank'>all versions released up to that date</a>. To remove this banner in the latest version, please <a href='https://surveyjs.io/manage#license-manager' target='_blank'>renew your subscription</a> and <a href='https://surveyjs.io/remove-alert-banner' target='_blank'>set up a new license key</a>."
 };

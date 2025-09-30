@@ -1273,7 +1273,7 @@ test("histogram date auto intervals mode", async () => {
   expect(((await date.getCalculatedValues())[0] as any).length).toEqual(6);
 });
 
-test("changeIntervalsMode and allowCumulative toolbar items for date histogram", () => {
+test("changeIntervalsMode and allowRunningTotals toolbar items for date histogram", () => {
   const question: any = {
     getType: () => "text",
     type: "text",
@@ -1283,31 +1283,31 @@ test("changeIntervalsMode and allowCumulative toolbar items for date histogram",
   const date1 = new HistogramModel(question, data);
   expect(date1.allowChangeIntervalsMode).toBeFalsy();
   expect(date1["toolbarItemCreators"]["changeIntervalsMode"]).toBeUndefined();
-  expect(date1["toolbarItemCreators"]["showCumulative"]).toBeUndefined();
+  expect(date1["toolbarItemCreators"]["showRunningTotals"]).toBeUndefined();
   const date2 = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
   expect(date2.allowChangeIntervalsMode).toBeTruthy();
   expect(date2["toolbarItemCreators"]["changeIntervalsMode"]).toBeDefined();
-  expect(date2["toolbarItemCreators"]["showCumulative"]).toBeUndefined();
-  const date3 = new HistogramModel(question, data, { allowChangeIntervalsMode: true, allowCumulative: true });
+  expect(date2["toolbarItemCreators"]["showRunningTotals"]).toBeUndefined();
+  const date3 = new HistogramModel(question, data, { allowChangeIntervalsMode: true, allowRunningTotals: true });
   expect(date3.allowChangeIntervalsMode).toBeTruthy();
   expect(date3["toolbarItemCreators"]["changeIntervalsMode"]).toBeDefined();
-  expect(date3["toolbarItemCreators"]["showCumulative"]).toBeDefined();
+  expect(date3["toolbarItemCreators"]["showRunningTotals"]).toBeDefined();
 });
 
-test("allowCumulative and showCumulative for date histogram", async () => {
+test("allowRunningTotals and showRunningTotals for date histogram", async () => {
   const question: any = {
     getType: () => "text",
     type: "text",
     inputType: "date",
     name: "date",
   };
-  const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true, allowCumulative: true });
+  const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true, allowRunningTotals: true });
   expect(date.allowChangeIntervalsMode).toBeTruthy();
-  expect(date.showCumulative).toBeFalsy();
+  expect(date.showRunningTotals).toBeFalsy();
   expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
   expect((await date.getCalculatedValues())[0]).toEqual([2, 0, 0, 0, 2, 0, 0, 1, 0, 3]);
 
-  date.showCumulative = true;
+  date.showRunningTotals = true;
   expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
   expect((await date.getCalculatedValues())[0]).toEqual([2, 2, 2, 2, 4, 4, 4, 5, 5, 8]);
 });
@@ -1452,4 +1452,37 @@ test("getAnswersData with showGrouped set to true", async () => {
   expect(answersData.datasets).toStrictEqual([[0, 0, 0, 3], [0, 0, 0, 3], [0, 0, 0, 3], [0, 0, 0, 4], [0, 0, 0, 3], [0, 0, 0, 6], [0, 0, 0, 0]]);
   expect(answersData.labels).toStrictEqual(["I", "II", "III", "IV"]);
   expect(answersData.seriesLabels).toStrictEqual(["2004", "2005", "2006", "2007", "2008", "2009", "2010"]);
+});
+
+test("aggregateDataNames for date histogram", async () => {
+  const question: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "date",
+    name: "date",
+  };
+  const date = new HistogramModel(question, data, {
+    allowChangeIntervalsMode: true,
+    allowRunningTotals: true, date: {
+      aggregateDataNames: ["age"],
+    } });
+  expect(date.allowChangeIntervalsMode).toBeTruthy();
+  expect(date.showRunningTotals).toBeFalsy();
+  expect(date.aggragateDataName).toBe("");
+  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
+  expect((await date.getCalculatedValues())[0]).toEqual([2, 0, 0, 0, 2, 0, 0, 1, 0, 3]);
+
+  date.showRunningTotals = true;
+  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
+  expect((await date.getCalculatedValues())[0]).toEqual([2, 2, 2, 2, 4, 4, 4, 5, 5, 8]);
+
+  expect(date.possibleAggragateDataNames).toStrictEqual(["age"]);
+  date.aggragateDataName = "age";
+  date.showRunningTotals = false;
+  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
+  expect((await date.getCalculatedValues())[0]).toEqual([80, 0, 0, 0, 60, 0, 0, 25, 0, 51]);
+
+  date.showRunningTotals = true;
+  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
+  expect((await date.getCalculatedValues())[0]).toEqual([80, 80, 80, 80, 140, 140, 140, 165, 165, 216]);
 });
