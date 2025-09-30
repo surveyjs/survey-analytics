@@ -19,7 +19,7 @@
     "pre-push-check": "npm run lint && npm run test",
     "pwinst": "playwright install chromium"
   },
-  "version": "2.3.8",
+  "version": "2.3.9",
   "name": "survey-analytics",
   "description": "SurveyJS analytics Library.",
   "main": "survey.analytics.js",
