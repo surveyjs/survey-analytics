@@ -158,6 +158,13 @@
       background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
     }
 
+    &:focus-visible {
+      border-radius: var(--sjs2-radius-control-action, 8px);
+      border: unset;
+      outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.60));
+      background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
+    }
+
     &:disabled {
       cursor: default;
       opacity: var(--sjs2-opacity-disabled, 0.25);
@@ -263,6 +270,14 @@
       font-style: normal;
       font-weight: 400;
       line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+
+      &.sa-tabulator-cell__action-details {
+        padding: var(--sjs2-spacing-x100, 8px);
+      }
+
+      &.sa-tabulator-cell__action-select {
+        padding: var(--sjs2-spacing-x200, 16px);
+      }
     }
 
     .tabulator-header .tabulator-col {

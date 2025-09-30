@@ -202,6 +202,11 @@ a.sa-table__btn {
     border-radius: var(--sjs2-radius-control-action-icon, 8px);
     background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
   }
+  &:focus-visible {
+    border-radius: var(--sjs2-radius-control-action-icon, 8px);
+    outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.60));
+    background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
+  }
   svg {
     width: 24px;
     height: 24px;
@@ -244,6 +249,11 @@ a.sa-table__btn {
   border-radius: var(--sjs2-radius-semantic-form, 8px);
   background: var(--sjs2-color-control-formbox-default-bg, #F5F5F5);
   box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0) var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px) var(--sjs2-color-control-formbox-default-border, #D4D4D4) inset;
+
+  &:focus-within {
+    background: var(--sjs2-color-control-formbox-focused-bg, #F5F5F5);
+    box-shadow: var(--sjs2-border-offset-x-form-focused, 0) var(--sjs2-border-offset-y-form-focused, 0) var(--sjs2-border-blur-form-focused, 0) var(--sjs2-border-spread-form-focused, 2px) var(--sjs2-color-control-formbox-focused-border, #19B394) inset;
+  }
 }
 
 .sa-table-filter_icon {

@@ -398,7 +398,9 @@
 .sa-button {
   outline: none;
   user-select: none;
+  cursor: pointer;
   display: flex;
+  flex-shrink: 0;
   min-width: var(--sjs2-size-semantic-small, 40px);
   padding: var(--sjs2-layout-control-action-small-box-vertical, 8px) var(--sjs2-layout-control-action-small-box-horizontal, 8px);
   justify-content: center;

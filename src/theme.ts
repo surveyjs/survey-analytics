@@ -12,22 +12,88 @@ export interface FontSettings {
   weight: number;
 }
 
+function getRGBaColor(colorValue: string): string {
+  if (!colorValue) return null;
+  if (colorValue.indexOf("rgba") === 0) {
+    return colorValue;
+  }
+
+  const canvasElement = document.createElement("canvas") as HTMLCanvasElement;
+  if (!canvasElement) return null;
+  var ctx = canvasElement.getContext("2d");
+  ctx.fillStyle = colorValue;
+
+  if (ctx.fillStyle == "#000000") {
+    ctx.fillStyle = colorValue;
+  }
+  const newStr = ctx.fillStyle;
+
+  const regex = /color\s*\(\s*srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*(?:\/\s*([\d.]+))?\s*\)/i;
+  const match = newStr.match(regex);
+
+  if (!match) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(newStr);
+    return result ? `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, 1)` : null;
+  }
+
+  const r = parseFloat(match[1]);
+  const g = parseFloat(match[2]);
+  const b = parseFloat(match[3]);
+  const alpha = match[4] ? parseFloat(match[4]) : 1;
+
+  const r255 = Math.round(r * 255);
+  const g255 = Math.round(g * 255);
+  const b255 = Math.round(b * 255);
+
+  return `rgba(${r255}, ${g255}, ${b255}, ${alpha})`;
+}
+
 export class DashboardTheme implements IDashboardTheme {
   static barGap = 0.05;
   static fontFamily = "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif";
   private _cssStyleDeclaration;
+  private _computedValuesCache: { [key: string]: string } = {};
 
   private getCssVariableValue(propertyName: string, checkIsNumber = false) {
-    if(!!this._cssStyleDeclaration) {
-      let value = this._cssStyleDeclaration.getPropertyValue(propertyName);
-      if(checkIsNumber) {
-        const numValue = parseFloat(value);
-        if(isNaN(numValue)) {
-          return undefined;
-        }
-      }
-      return value;
+    let value = undefined;
+    if (this._computedValuesCache[propertyName]) {
+      value = this._computedValuesCache[propertyName];
+    } else if(!!this._cssStyleDeclaration) {
+      value = this._cssStyleDeclaration.getPropertyValue(propertyName);
     }
+
+    if(checkIsNumber) {
+      const numValue = parseFloat(value);
+      if(isNaN(numValue)) {
+        return undefined;
+      }
+    }
+    return value;
+  }
+
+  private initComputedValuesCache(rootElement: HTMLElement) {
+    const tempElement = document.createElement("div");
+    tempElement.style.position = "absolute";
+    tempElement.style.visibility = "hidden";
+    tempElement.style.top = "0";
+    tempElement.style.left = "0";
+    rootElement.appendChild(tempElement);
+
+    Object.keys(this.cssVariables).forEach(key => {
+      let value;
+      if (key.indexOf("palette") !== -1 || key.indexOf("color") !== -1) {
+        tempElement.style.setProperty("color", `var(${key})`);
+        const computedStyle = getComputedStyle(tempElement);
+        value = computedStyle.getPropertyValue("color");
+        value = getRGBaColor(value);
+      } else if(key.indexOf("font-family") === -1 && key.indexOf("opacity") === -1 && key.indexOf("scale") === -1) {
+        tempElement.style.setProperty("width", `var(${key})`);
+        const computedStyle = getComputedStyle(tempElement);
+        value = computedStyle.getPropertyValue("width");
+      }
+      this._computedValuesCache[key] = value;
+    });
+    rootElement.removeChild(tempElement);
   }
 
   constructor(private theme: IDashboardTheme = Default) {
@@ -47,10 +113,12 @@ export class DashboardTheme implements IDashboardTheme {
     if (!!getComputedStyle) {
       this._cssStyleDeclaration = getComputedStyle(element);
     }
+    this.initComputedValuesCache(element);
   }
 
   public setTheme(theme: IDashboardTheme): void {
     this.theme = theme;
+    this._computedValuesCache = {};
     // const calculater = DocumentHelper.createElement("div");
     // document.body.appendChild(calculater);
     // this.applyThemeToElement(calculater);

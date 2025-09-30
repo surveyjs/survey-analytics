@@ -5,6 +5,7 @@ export var englishStrings = {
   groupButton: "Group By Me",
   ungroupButton: "Ungroup By Me",
   selectButton: "Select Me",
+  columnReorder: "Column reorder",
   hideColumn: "Hide column",
   showColumn: "Show column",
   makePrivateColumn: "Make column private",

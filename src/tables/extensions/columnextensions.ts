@@ -11,6 +11,7 @@ TableExtensions.registerExtension({
   render: function (table: Table, options: any) {
     const btn = DocumentHelper.createSvgButton("drag-24x24");
     btn.className = "sa-table__svg-button sa-table__drag-button";
+    btn.title = localization.getString("columnReorder");
     // const btn = DocumentHelper.createElement(
     //   "button",
     //   "sa-table__svg-button sa-table__drag-button"
@@ -34,7 +35,7 @@ TableExtensions.registerExtension({
     const descTitle = localization.getString("descOrder");
     const ascTitle = localization.getString("ascOrder");
     var btn = DocumentHelper.createSvgButton("reorder-24x24");
-    btn.title = "";
+    btn.title = localization.getString("defaultOrder");
     var direction = "asc";
     btn.onclick = () => {
       if (direction == "asc") {

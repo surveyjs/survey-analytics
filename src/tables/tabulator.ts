@@ -56,7 +56,7 @@ export const defaultDownloadOptions = {
 
 export const defaultOptions: ITabulatorOptions = {
   tabulatorOptions: {},
-  actionsColumnWidth: 100,
+  actionsColumnWidth: 56,
   columnMinWidth: 384,
   downloadHiddenColumns: false,
   downloadButtons: ["csv"],
@@ -409,7 +409,7 @@ export class Tabulator extends Table {
         minWidth: this._options.actionsColumnWidth,
         width: this._options.actionsColumnWidth,
         tooltip: (_: MouseEvent, cell: any) => {
-          return localization.getString("actionsColumn");
+          return undefined;
         }
       });
     });
@@ -577,8 +577,10 @@ export class TabulatorRow extends TableRow {
     rowExtensions = this.extensions.sortExtensions(rowExtensions);
     rowExtensions.forEach((rowExt, index) => {
       const cellAction = this.innerRow.getCells()[index].getElement();
+      cellAction.innerHTML = "";
       this.extensions.renderExtension(rowExt, cellAction, { row: this });
       cellAction.classList.add("sa-tabulator-cell__action");
+      cellAction.classList.add("sa-tabulator-cell__action-" + rowExt.name.toLowerCase());
     });
   }
 

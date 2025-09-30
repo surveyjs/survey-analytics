@@ -103,8 +103,10 @@ export class ApexChartsSetup {
       },
     };
   }
+
   static defaultAxisZerolineConfig(theme: DashboardTheme) {
     return {
+      show: false,
       color: theme.axisGridColor,
     };
   }
@@ -387,9 +389,7 @@ export class ApexChartsSetup {
 
     const yaxis: any = {
       ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
-      axisBorder: {
-        ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme)
-      },
+      axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme) },
     };
 
     const grid = {
