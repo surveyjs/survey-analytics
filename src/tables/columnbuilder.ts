@@ -109,7 +109,7 @@ export class CompositeColumnsBuilder extends DefaultColumnsBuilder<QuestionCompo
   protected getDisplayName(question: QuestionCompositeModel, table: Table): string {
     return table.useNamesAsTitles
       ? question.name
-      : (question.title || "").trim() || question.name;
+      : (question.locTitle?.renderedHtml || question.title || "").trim() || question.name;
   }
   protected buildColumnsCore(question: QuestionCompositeModel, table: Table): Array<IColumn> {
     if(CompositeColumnsBuilder.ShowAsSeparateColumns) {

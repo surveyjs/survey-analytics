@@ -341,10 +341,8 @@ export class Tabulator extends Table {
       }
       return {
         field: column.name,
-        title:
-          (question &&
-            (this._options.useNamesAsTitles ? question.name : question.title)) ||
-          column.displayName,
+        title: column.displayName ||
+          (question && (this._options.useNamesAsTitles ? question.name : question.title)),
         width: column.width,
         widthShrink: !column.width ? 1 : 0,
         visible: this.isColumnVisible(column),
