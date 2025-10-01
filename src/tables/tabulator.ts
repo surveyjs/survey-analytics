@@ -353,6 +353,7 @@ export class Tabulator extends Table {
         download: this.options.downloadHiddenColumns ? true : undefined,
         formatter,
         headerTooltip: true,
+        headerWordWrap: true,
         accessorDownload: this.accessorDownload,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(
