@@ -3,13 +3,6 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-resources:
-  repositories:
-    - repository: Service # The name used to reference this repository in the checkout step
-      type: github
-      endpoint: github.com_surveyjsdeveloper
-      name: surveyjs/service
-
 trigger:
   batch: true
   branches:
@@ -24,10 +17,6 @@ pool:
 
 steps:
   - checkout: self
-  - checkout: Service
-    persistCredentials: true
-    clean: true
-    fetchDepth: 1
 
   - task: NodeTool@0
     inputs:
