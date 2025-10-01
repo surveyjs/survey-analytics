@@ -42,7 +42,7 @@ export class NumberModel extends VisualizerBase {
       this.chartType = this.questionOptions?.chartType || this.chartTypes[0];
     }
 
-    if(this.options.allowChangeVisualizerType !== false) {
+    if(this.options.allowChangeVisualizerType !== false && !(this.questionOptions?.allowChangeVisualizerType === false)) {
       this.registerToolbarItem("changeChartType", () => {
         if (this.chartTypes.length > 1) {
           return DocumentHelper.createDropdown(

@@ -41,7 +41,10 @@ export class VisualizerFactory {
       type = description.visualizerType;
 
       if(!!description.chartType) {
-        optionsForCreator[description["name"]] = { chartType: description.chartType };
+        optionsForCreator[description["name"]] = {
+          chartType: description.chartType,
+          allowChangeVisualizerType: false
+        };
       }
 
       question = description.question || {

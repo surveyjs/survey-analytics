@@ -142,7 +142,7 @@ export class SelectBase
       }
     }
 
-    if(this.options.allowChangeVisualizerType !== false) {
+    if(this.options.allowChangeVisualizerType !== false && !(this.questionOptions?.allowChangeVisualizerType === false)) {
       this.registerToolbarItem("changeChartType", () => {
         if (this.chartTypes.length > 1) {
           return DocumentHelper.createDropdown(
