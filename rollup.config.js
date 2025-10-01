@@ -19,6 +19,7 @@ const banner = [
 const input = { 
   "survey.analytics": path.resolve(__dirname, "./src/entries/summary.ts"),
   "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core.ts"),
+  "survey.analytics.mongo": path.resolve(__dirname, "./src/entries/mongo.ts"),
   "survey.analytics.tabulator": path.resolve(__dirname, "./src/entries/tabulator-es.ts"),
   "survey.analytics.apexcharts": path.resolve(__dirname, "./src/entries/apexcharts.ts"),
 };
@@ -82,6 +83,7 @@ module.exports = (options) => {
       "plotly.js-dist-min",
       "tabulator-tables",
       "apexcharts",
+      "mongodb"
     ],
     output: [
       {

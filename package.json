@@ -17,13 +17,14 @@
     "build:types:summary": "tsc --p tsconfig.summary.json && echo \"export * from './survey-analytics.types/entries/summary';\" >> build/survey.analytics.d.ts",
     "build:types:tabulator": "tsc --p tsconfig.tabulator.json && echo \"export * from './survey-analytics-tabulator.types/entries/tabulator';\" >> build/survey.analytics.tabulator.d.ts",
     "build:types:apexcharts": "tsc --p tsconfig.apexcharts.json && echo \"export * from './survey-analytics-apexcharts.types/entries/apexcharts';\" >> build/survey.analytics.apexcharts.d.ts",
+    "build:types:mongo": "tsc --p tsconfig.types.mongo.json && echo \"export * from './survey-analytics.types/entries/mongo';\" >> build/survey.analytics.mongo.d.ts",
     "lint": "eslint ./src --quiet",
     "pre-push-check": "npm run lint && npm run test",
     "pwinst": "playwright install chromium",
     "accessibility-tests": "playwright test --project a11y --ui",
     "accessibility-tests:ci": "playwright test --project a11y --reporter dot --quiet"
   },
-  "version": "2.3.7",
+  "version": "2.3.9",
   "name": "survey-analytics",
   "description": "SurveyJS analytics Library.",
   "main": "survey.analytics.js",
@@ -46,6 +47,7 @@
   "homepage": "https://surveyjs.io/",
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
+    "mongodb": "^6.20.0",
     "muuri": "^0.8.0",
     "plotly.js-dist-min": "^2.28.0",
     "survey-core": "latest",
@@ -79,6 +81,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-junit": "^16.0.0",
     "mini-css-extract-plugin": "^2.9.0",
+    "mongodb-memory-server": "^10.2.1",
     "node-uuid": "1.4.7",
     "playwright": "1.53.1",
     "puppeteer": "22.13.1",
@@ -100,6 +103,7 @@
     "webpack-merge": "^5.8.0"
   },
   "peerDependencies": {
+    "@types/mongodb": "^4.0.6",
     "@types/plotly.js-dist-min": "^2.3.0",
     "@types/tabulator-tables": "^6.2.3"
   },

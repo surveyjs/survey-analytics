@@ -73,6 +73,11 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
             "import": "./fesm/survey.analytics.core.mjs",
             "require": "./survey.analytics.core.js"
           },
+          "./survey.analytics.mongo": {
+            "types": "./survey.analytics.mongo.d.ts",
+            "import": "./fesm/survey.analytics.mongo.mjs",
+            "require": "./survey.analytics.mongo.js"
+          },
           "./*.css": "./*.css",
           "./survey.analytics.tabulator": {
             "types": "./survey.analytics.tabulator.d.ts",
@@ -112,6 +117,7 @@ module.exports = function (options) {
       "survey.analytics": path.resolve(__dirname, "./src/entries/summary"),
       "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core"),
       "survey.analytics.apexcharts": path.resolve(__dirname, "./src/entries/apexcharts"),
+      "survey.analytics.mongo": path.resolve(__dirname, "./src/entries/mongo"),
     },
     resolve: {
       extensions: [".ts", ".js"],
@@ -198,7 +204,13 @@ module.exports = function (options) {
         commonjs2: "apexcharts",
         commonjs: "apexcharts",
         amd: "apexcharts",
-      }
+      },
+      "mongodb": {
+        root: "MongoDB",
+        commonjs2: "mongodb",
+        commonjs: "mongodb",
+        amd: "mongodb",
+      },
     },
     plugins: [
       new PascalCaseNamePlugin(),

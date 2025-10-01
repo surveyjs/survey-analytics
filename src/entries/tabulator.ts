@@ -25,6 +25,8 @@ import "../tables/extensions/detailsextensions";
 
 export * from "../tables/table";
 export * from "../tables/tabulator";
+export * from "../tables/columnbuilder";
+export * from "../tables/columns";
 export { TableExtensions } from "../tables/extensions/tableextensions";
 export { DocumentHelper } from "../utils/index";
 

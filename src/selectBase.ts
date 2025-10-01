@@ -1,4 +1,4 @@
-import { Question, QuestionSelectBase, ItemValue, Event } from "survey-core";
+import { Question, QuestionSelectBase, ItemValue, Event, QuestionRatingModel } from "survey-core";
 import { IAnswersData, ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DataHelper, DocumentHelper } from "./utils/index";
@@ -356,6 +356,10 @@ export class SelectBase
   }
 
   public getSelectedItemByText(itemText: string) {
+    if(this.question instanceof QuestionRatingModel) {
+      const rateValues = this.question.rateValues;
+      return rateValues?.filter((choice: ItemValue) => choice.text === itemText)[0] ?? new ItemValue(parseFloat(itemText), itemText);
+    }
     const selBase = <QuestionSelectBase>this.question;
     if (this.question.hasOther && itemText == selBase.otherText) {
       return selBase.otherItem;

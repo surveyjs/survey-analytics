@@ -12,10 +12,10 @@ export class VisualizationComposite extends VisualizationPanelDynamic {
     super(question, data, options, type || "composite");
   }
 
-  getQuestions() {
-    const matrixdynamic: QuestionCompositeModel = <any>this.question;
+  getQuestions(): Array<Question> {
+    const questionComposite: QuestionCompositeModel = <any>this.question;
     const innerQuestions = [];
-    matrixdynamic.contentPanel.addQuestionsToList(innerQuestions);
+    questionComposite.contentPanel.addQuestionsToList(innerQuestions);
     return innerQuestions;
   }
 }
