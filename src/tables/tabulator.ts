@@ -331,7 +331,6 @@ export class Tabulator extends Table {
 
   public getColumns(): Array<any> {
     const columns: any = this.columns.map((column, index) => {
-      let question = this._survey.getQuestionByName(column.name);
       let formatter = "plaintext";
       if (column.dataType == ColumnDataType.FileLink) {
         formatter = "html";
@@ -341,8 +340,7 @@ export class Tabulator extends Table {
       }
       return {
         field: column.name,
-        title: column.displayName ||
-          (question && (this._options.useNamesAsTitles ? question.name : question.title)),
+        title: column.displayName || column.name,
         width: column.width,
         widthShrink: !column.width ? 1 : 0,
         visible: this.isColumnVisible(column),
