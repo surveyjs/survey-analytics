@@ -71,14 +71,7 @@ export abstract class Table {
       this._options = {};
     }
 
-    this._columns = this.buildColumns(_survey);
-    this.initTableData(data);
-    localization.currentLocale = this._survey.locale;
-    this._columns = this.buildColumns(_survey);
-
-    if(_columnsData.length !== 0) {
-      this.updateColumnsFromData(this._columnsData);
-    }
+    this.initialize();
 
     this.extensions = new TableExtensions(this);
     const f = hasLicense;
@@ -94,6 +87,18 @@ export abstract class Table {
   protected currentPageNumber: number;
   protected _rows: TableRow[] = [];
   protected isColumnReorderEnabled: boolean;
+
+  protected initialize(): void {
+    this.currentPageSize = 5;
+    this.currentPageNumber = 1;
+    this._columns = this.buildColumns(this._survey);
+    this.initTableData(this.data);
+    localization.currentLocale = this._survey.locale;
+
+    if(this._columnsData.length !== 0) {
+      this.updateColumnsFromData(this._columnsData);
+    }
+  }
 
   public getTableData(): Array<any> {
     return [].concat(this.tableData || []);
@@ -346,29 +351,29 @@ export abstract class Table {
   public set state(newState: ITableState) {
     if (!newState) return;
 
+    if (typeof newState.elements !== "undefined") {
+      this.updateColumnsFromData(newState.elements);
+    }
+
     if (typeof newState.locale !== "undefined") {
       localization.currentLocale = newState.locale;
       this._survey.locale = newState.locale;
       this.initTableData(this.data);
     }
 
-    if (typeof newState.elements !== "undefined")
-      this.updateColumnsFromData(newState.elements);
-    if (typeof newState.pageSize !== "undefined")
+    if (typeof newState.pageSize !== "undefined") {
       this.currentPageSize = newState.pageSize;
+    }
+
+    this.refresh(true);
   }
   /**
    * Resets table state.
    */
-  public resetState() {
-    this._columns.forEach((column: IColumn, index: number) => {
-      column.fromJSON({});
-      column.visibleIndex = index;
-    }
-    );
-    this.locale = surveyLocalization.defaultLocale;
-    this.currentPageSize = 5;
-    this.initTableData(this.data);
+  public resetState(): void {
+    this._survey.locale = surveyLocalization.defaultLocale;
+    this.initialize();
+    this.refresh(true);
     this.onStateChanged.fire(this, this.state);
   }
 
