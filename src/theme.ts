@@ -32,6 +32,9 @@ function getRGBaColor(colorValue: string): string {
   const match = newStr.match(regex);
 
   if (!match) {
+    if (newStr.indexOf("rgba") === 0) {
+      return newStr;
+    }
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(newStr);
     return result ? `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, 1)` : null;
   }
@@ -90,6 +93,8 @@ export class DashboardTheme implements IDashboardTheme {
         tempElement.style.setProperty("width", `var(${key})`);
         const computedStyle = getComputedStyle(tempElement);
         value = computedStyle.getPropertyValue("width");
+      } else {
+        value = this._cssStyleDeclaration.getPropertyValue(key);
       }
       this._computedValuesCache[key] = value;
     });
