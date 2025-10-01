@@ -9,9 +9,9 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options: { [index: string]: any } = {},
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "panelDynamic");
+    super(question, data, options, type || "panelDynamic");
     this.loadingData = false;
     var options = Object.assign({}, options);
     options.allowHideQuestions = false;
@@ -57,7 +57,7 @@ export class VisualizationPanelDynamic extends VisualizerBase {
   }
 
   renderContent(container: HTMLElement): void {
-    this._panelVisualizer.render(container);
+    this._panelVisualizer.render(container, false);
   }
 
   public destroy() {

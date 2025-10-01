@@ -84,6 +84,11 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
             "import": "./fesm/survey.analytics.tabulator.mjs",
             "require": "./survey.analytics.tabulator.js"
           },
+          "./survey.analytics.apexcharts": {
+            "types": "./survey.analytics.apexcharts.d.ts",
+            "import": "./fesm/survey.analytics.apexcharts.mjs",
+            "require": "./survey.analytics.apexcharts.js"
+          },
         }
         packageJson.module = "fesm/survey.analytics.mjs";
         fs.writeFileSync(
@@ -111,6 +116,7 @@ module.exports = function (options) {
       ),
       "survey.analytics": path.resolve(__dirname, "./src/entries/summary"),
       "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core"),
+      "survey.analytics.apexcharts": path.resolve(__dirname, "./src/entries/apexcharts"),
       "survey.analytics.mongo": path.resolve(__dirname, "./src/entries/mongo"),
     },
     resolve: {
@@ -192,6 +198,12 @@ module.exports = function (options) {
         commonjs2: "tabulator-tables",
         commonjs: "tabulator-tables",
         amd: "tabulator-tables",
+      },
+      "apexcharts": {
+        root: "ApexCharts",
+        commonjs2: "apexcharts",
+        commonjs: "apexcharts",
+        amd: "apexcharts",
       },
       "mongodb": {
         root: "MongoDB",
