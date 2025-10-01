@@ -296,6 +296,7 @@ export abstract class Table {
   public set locale(newLocale: string) {
     this._survey.locale = newLocale;
     localization.currentLocale = newLocale;
+    this.columns.forEach(c => c.displayName = undefined);
     this.refresh(true);
     this.onStateChanged.fire(this, this.state);
   }
