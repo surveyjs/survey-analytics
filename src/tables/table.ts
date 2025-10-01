@@ -94,7 +94,6 @@ export abstract class Table {
     this._columns = this.buildColumns(this._survey);
     this.initTableData(this.data);
     localization.currentLocale = this._survey.locale;
-    this._columns = this.buildColumns(this._survey);
 
     if(this._columnsData.length !== 0) {
       this.updateColumnsFromData(this._columnsData);
