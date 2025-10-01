@@ -25,7 +25,7 @@ steps:
 
   - task: CopyFiles@2
     inputs:
-      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/"
+      SourceFolder: "$(Build.SourcesDirectory)/"
       Contents: "package.json"
       TargetFolder: "$(Build.SourcesDirectory)/Temp/"
       OverWrite: true
@@ -34,7 +34,7 @@ steps:
   - task: Cache@2
     inputs:
       key: "npm-cache-analytics | $(Build.SourcesDirectory)/Temp/package.json"
-      path: $(Build.SourcesDirectory)/survey-analytics/node_modules
+      path: $(Build.SourcesDirectory)/node_modules
       cacheHitVar: NPM_CACHE_RESTORED
     displayName: Cache NPM
 
@@ -50,16 +50,16 @@ steps:
       command: custom
       customCommand: install --legacy-peer-deps
       verbose: false
-      workingDir: $(Build.SourcesDirectory)/survey-analytics
+      workingDir: $(Build.SourcesDirectory)
     condition: ne(variables.NPM_CACHE_RESTORED, 'true')
 
   - script: |
-      cd $(Build.SourcesDirectory)/survey-analytics
+      cd $(Build.SourcesDirectory)
       npm run lint
     displayName: "run lint command"
 
   - script: |
-      cd $(Build.SourcesDirectory)/survey-analytics
+      cd $(Build.SourcesDirectory)
       npm run pwinst
     displayName: "Install chrome playwright"
 
@@ -78,7 +78,7 @@ steps:
     inputs:
       SourceFolder: "$(System.ArtifactsDirectory)/SurveyJSLibraryBuildCore/packages/survey-core"
       Contents: "**"
-      TargetFolder: "$(Build.SourcesDirectory)/survey-analytics/node_modules/survey-core"
+      TargetFolder: "$(Build.SourcesDirectory)/node_modules/survey-core"
       OverWrite: true
 
   # npm run release with version
@@ -91,24 +91,24 @@ steps:
     displayName: "Copy Build Artifact - SurveyJSVersion File"
 
   - script: |
-      cd $(Build.SourcesDirectory)/survey-analytics
+      cd $(Build.SourcesDirectory)
       npm run build
     displayName: "NPM build"
 
   - script: |
-      cd $(Build.SourcesDirectory)/survey-analytics
+      cd $(Build.SourcesDirectory)
       npm run build:types:summary:core
       npm run build:types:summary
       npm run build:types:tabulator
     displayName: "NPM build typings"
 
   - script: |
-      cd $(Build.SourcesDirectory)/survey-analytics
+      cd $(Build.SourcesDirectory)
       npm test
     displayName: "Run unit tests"
 
   - script: |
-      cd $(Build.SourcesDirectory)/survey-analytics
+      cd $(Build.SourcesDirectory)
       npm run e2e:ci
     displayName: "Run E2E tests"
 
@@ -120,7 +120,7 @@ steps:
 
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: "$(Build.SourcesDirectory)/survey-analytics/test-results"
+      PathtoPublish: "$(Build.SourcesDirectory)/test-results"
       ArtifactName: "e2e"
       publishLocation: "Container"
     condition: always()
@@ -129,7 +129,7 @@ steps:
   - task: PublishTestResults@2
     displayName: "Publish e2e test results"
     inputs:
-      searchFolder: "$(Build.SourcesDirectory)/survey-analytics/test-results"
+      searchFolder: "$(Build.SourcesDirectory)/test-results"
       testResultsFormat: "JUnit"
       testResultsFiles: "e2e-junit-results.xml"
       mergeTestResults: true
