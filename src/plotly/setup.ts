@@ -76,6 +76,7 @@ export class PlotlySetup {
     let traces: any = [];
     const traceConfig: any = {
       type: model.chartType,
+      sort: false,
       labels: labels,
       customdata: labels,
       text: labels.map((label: string) => {

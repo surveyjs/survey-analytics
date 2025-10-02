@@ -46,5 +46,6 @@ test.describe("Rating common", () => {
     await compareScreenshot(page, chartContentSelector, "rating-string-average.png");
 
     await visualizerTypeSelector.selectOption("histogram");
-    await compareScreenshot(page, chartContentSelector, "rating-string-histogram.png");  });
+    await compareScreenshot(page, chartContentSelector, "rating-string-histogram.png");
+  });
 });
