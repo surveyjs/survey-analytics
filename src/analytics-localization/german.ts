@@ -102,7 +102,7 @@ export var germanStrings = {
   // "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
-  saveDiagramAsPNG: "Diagramm als png herunterladen",
+  saveDiagramAsPNG: "Diagramm als PNG herunterladen",
   // "Hide empty answers"
   hideEmptyAnswers: "Leere Antworten ausblenden",
   // "Show empty answers"
