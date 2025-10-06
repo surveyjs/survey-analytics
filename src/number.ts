@@ -149,7 +149,7 @@ export class NumberModel extends VisualizerBase {
     if (this._resultAverage === undefined ||
       this._resultMin === undefined ||
       this._resultMax === undefined) {
-      [this._resultAverage, this._resultMin, this._resultMax] = mathStatisticsCalculator(this.surveyData, this.dataNames[0]);
+      [this._resultAverage, this._resultMin, this._resultMax] = mathStatisticsCalculator(this.surveyData, this);
     }
     return [this._resultAverage, this._resultMin, this._resultMax];
   }

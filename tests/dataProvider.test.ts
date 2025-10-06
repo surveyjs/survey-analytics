@@ -5,6 +5,8 @@ import { VisualizationManager } from "../src/visualizationManager";
 import { SelectBase } from "../src/selectBase";
 import { defaultStatisticsCalculator } from "../src/statisticCalculators";
 
+VisualizationManager.registerVisualizer("dropdown", SelectBase);
+
 const testData = [
   {
     q1: 0,
@@ -214,7 +216,6 @@ test("getData for matrix dropdown question values - pre-processed data", () => {
   ]);
 });
 
-VisualizationManager.registerVisualizer("dropdown", SelectBase);
 test("getData for matrix dropdown inner visualizers", async () => {
   const json = {
     questions: [
@@ -262,12 +263,23 @@ test("getData for matrix dropdown inner visualizers", async () => {
   const question = survey.getQuestionByName("question2");
   let visualizer = new VisualizationMatrixDropdown(<any>question, data);
 
-  const innerPanelVisualizer: any = visualizer["_matrixDropdownVisualizer"];
-  expect(await innerPanelVisualizer["visualizers"][0].getCalculatedValues()).toEqual([
+  expect(data).toStrictEqual([
+    { "question2": [{ "Column 1": "Trustworthy", "Column 2": 3, "__sa_series_name": "Lizol" }, { "Column 1": "High Quality", "Column 2": 4, "__sa_series_name": "Harpic" }] },
+    { "question2": [{ "Column 1": "Natural", "Column 2": 3, "__sa_series_name": "Lizol" }, { "Column 1": "Natural", "Column 2": 4, "__sa_series_name": "Harpic" }] },
+    { "question2": [{ "Column 1": "Natural", "Column 2": 1, "__sa_series_name": "Lizol" }, { "Column 1": "Trustworthy", "Column 2": 5, "__sa_series_name": "Harpic" }] }
+  ]);
+
+  const innerPanelVisualizer: any = visualizer["_contentVisualizer"];
+  expect(innerPanelVisualizer.dataPath).toBe("question2");
+  const column1Visualizer = innerPanelVisualizer["visualizers"][0];
+  expect(column1Visualizer.dataPath).toBe("question2");
+  expect(await column1Visualizer.getCalculatedValues()).toEqual([
     [0, 2, 1].reverse(),
     [1, 1, 1].reverse(),
   ]);
-  expect(await innerPanelVisualizer["visualizers"][1].getCalculatedValues()).toEqual([
+  const column2Visualizer = innerPanelVisualizer["visualizers"][1];
+  expect(column2Visualizer.dataPath).toBe("question2");
+  expect(await column2Visualizer.getCalculatedValues()).toEqual([
     [1, 0, 2, 0, 0].reverse(),
     [0, 0, 0, 2, 1].reverse(),
   ]);
@@ -657,4 +669,38 @@ test("getData for matrix & cellType is checkbox", () => {
   expect(result[1]).toEqual([0, 0, 1, 1, 1]);
   expect(result[2]).toEqual([0, 0, 0, 1, 1]);
   expect(result[3]).toEqual([0, 0, 0, 0, 1]);
+});
+
+test("fixDropdownData - matrixdropdown question", () => {
+  const matrixDropdownFilterTestData = [
+    { question1: "item1", question2: { Lizol: { "Column 1": "Trustworthy", "Column 2": 3 }, Harpic: { "Column 1": "High Quality", "Column 2": 4 } } },
+    { question1: "item2", question2: { Lizol: { "Column 1": "Natural", "Column 2": 2 }, Harpic: { "Column 1": "Natural", "Column 2": 1 } } },
+  ];
+  const dataProvider = new DataProvider(matrixDropdownFilterTestData);
+  expect(dataProvider.data).toEqual(matrixDropdownFilterTestData);
+
+  dataProvider.fixDropdownData(["question2"]);
+  expect(dataProvider.data).toStrictEqual([
+    { "question1": "item1", "question2": [{ "Column 1": "Trustworthy", "Column 2": 3, "__sa_series_name": "Lizol" }, { "Column 1": "High Quality", "Column 2": 4, "__sa_series_name": "Harpic" }] },
+    { "question1": "item2", "question2": [{ "Column 1": "Natural", "Column 2": 2, "__sa_series_name": "Lizol" }, { "Column 1": "Natural", "Column 2": 1, "__sa_series_name": "Harpic" }] }
+  ]);
+});
+
+test("fixDropdownData - matrixdropdown question - shouldn't change data twice", () => {
+  const matrixDropdownFilterTestData = [
+    { question1: "item1", question2: { Lizol: { "Column 1": "Trustworthy", "Column 2": 3 }, Harpic: { "Column 1": "High Quality", "Column 2": 4 } } },
+    { question1: "item2", question2: { Lizol: { "Column 1": "Natural", "Column 2": 2 }, Harpic: { "Column 1": "Natural", "Column 2": 1 } } },
+  ];
+  const dataProvider = new DataProvider(matrixDropdownFilterTestData);
+  expect(dataProvider.data).toStrictEqual(matrixDropdownFilterTestData);
+
+  const expectedFixedData = [
+    { "question1": "item1", "question2": [{ "Column 1": "Trustworthy", "Column 2": 3, "__sa_series_name": "Lizol" }, { "Column 1": "High Quality", "Column 2": 4, "__sa_series_name": "Harpic" }] },
+    { "question1": "item2", "question2": [{ "Column 1": "Natural", "Column 2": 2, "__sa_series_name": "Lizol" }, { "Column 1": "Natural", "Column 2": 1, "__sa_series_name": "Harpic" }] }
+  ];
+  dataProvider.fixDropdownData(["question2"]);
+  expect(dataProvider.data).toStrictEqual(expectedFixedData);
+
+  dataProvider.fixDropdownData(["question2"]);
+  expect(dataProvider.data).toStrictEqual(expectedFixedData);
 });

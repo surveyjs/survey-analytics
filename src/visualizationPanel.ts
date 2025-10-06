@@ -12,6 +12,7 @@ import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
 import "./visualizationPanel.scss";
+import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -323,7 +324,6 @@ export class VisualizationPanel extends VisualizerBase {
     }
 
     this.buildVisualizers(questions);
-    this.updateData(this.surveyData);
 
     if (!this.haveCommercialLicense && this.isRoot) {
       this.registerToolbarItem("commercialLicense", () => {
@@ -335,11 +335,7 @@ export class VisualizationPanel extends VisualizerBase {
     if(this.supportSelection !== false) {
       this.registerToolbarItem("resetFilter", () => {
         return DocumentHelper.createButton(() => {
-          this.visualizers.forEach((visualizer) => {
-            if (visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
-              visualizer.setSelection(undefined);
-            }
-          });
+          this.resetFilter();
         }, localization.getString("resetFilter"));
       }, 900);
     }
@@ -410,6 +406,19 @@ export class VisualizationPanel extends VisualizerBase {
       });
     }
   }
+
+  public resetFilter(): void {
+    this.dataProvider?.resetFilter();
+    this.visualizers.forEach((visualizer) => {
+      if (visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
+        visualizer.setSelection(undefined);
+      }
+      if (visualizer instanceof VisualizationPanelDynamic) {
+        visualizer.resetFilter();
+      }
+    });
+  }
+
   reorderVisibleElements(order: string[]): void {
     const newElements = [];
     order.forEach(name => {
@@ -580,12 +589,14 @@ export class VisualizationPanel extends VisualizerBase {
   private buildVisualizers(questions: Array<Question>) {
     questions.forEach((question) => {
       let visualizerOptions = Object.assign({}, this.options);
-      let visualizerData = this.surveyData;
+      if(visualizerOptions.dataProvider === undefined) {
+        visualizerOptions.dataProvider = this.dataProvider;
+      }
       let visualizer: VisualizerBase;
       if(Array.isArray(question)) {
-        visualizer = new (VisualizationManager.getPivotVisualizerConstructor() as any)(question, visualizerData, visualizerOptions, undefined, false);
+        visualizer = new (VisualizationManager.getPivotVisualizerConstructor() as any)(question, [], visualizerOptions, undefined, false);
       } else {
-        visualizer = this.createVisualizer(question, visualizerOptions, visualizerData);
+        visualizer = this.createVisualizer(question, visualizerOptions, []);
       }
       if(!visualizer) {
         return;
@@ -1011,7 +1022,20 @@ export class VisualizationPanel extends VisualizerBase {
    * @see IVisualizationPanelOptions.allowSelection
    */
   public setFilter(questionName: string, selectedValue: any) {
-    this.dataProvider.setFilter(questionName, selectedValue);
+    if(!this.dataPath) {
+      this.dataProvider.setFilter(questionName, selectedValue);
+    } else {
+      if(selectedValue !== undefined && selectedValue !== null) {
+        if(typeof selectedValue === "object" && Object.keys(selectedValue)[0]) {
+          const seriesValue = Object.keys(selectedValue)[0];
+          this.dataProvider.setFilter(this.dataPath, { [questionName]: selectedValue[seriesValue], [DataProvider.seriesMarkerKey]: seriesValue });
+        } else {
+          this.dataProvider.setFilter(this.dataPath, { [questionName]: selectedValue });
+        }
+      } else {
+        this.dataProvider.setFilter(this.dataPath, undefined);
+      }
+    }
   }
 
   public getState(): IState {

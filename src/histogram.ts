@@ -2,7 +2,7 @@ import { ItemValue, Question } from "survey-core";
 import { DataProvider } from "./dataProvider";
 import { SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
-import { histogramStatisticsCalculator } from "./statisticCalculators";
+import { getNestedDataRows, histogramStatisticsCalculator } from "./statisticCalculators";
 
 export class HistogramModel extends SelectBase {
   protected valueType: "date" | "number" = "number";
@@ -90,14 +90,17 @@ export class HistogramModel extends SelectBase {
       this._continuousData = {};
       series.forEach(seriesValue => this._continuousData[seriesValue] = []);
       const hash = {};
-      this.data.forEach(dataItem => {
-        const answerData = dataItem[this.name];
-        if (answerData !== undefined) {
-          const seriesValue = dataItem[DataProvider.seriesMarkerKey] || "";
-          // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
-          this._continuousData[seriesValue].push(this.getContinuousValue(answerData));
-          hash[answerData] = answerData;
-        }
+      this.data.forEach(dataRow => {
+        const nestedDataRows = getNestedDataRows(dataRow, this);
+        nestedDataRows.forEach(nestedDataRow => {
+          const answerData = nestedDataRow[this.dataNames[0]];
+          if (answerData !== undefined) {
+            const seriesValue = nestedDataRow[DataProvider.seriesMarkerKey] || "";
+            // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
+            this._continuousData[seriesValue].push(this.getContinuousValue(answerData));
+            hash[answerData] = answerData;
+          }
+        });
       });
       this._cachedValues = Object.keys(hash).map(key => ({ original: hash[key], continuous: this.getContinuousValue(key) }));
       this._cachedValues.sort((a, b) => a.continuous - b.continuous);
@@ -182,7 +185,7 @@ export class HistogramModel extends SelectBase {
 
   protected getCalculatedValuesCore(): Array<any> {
     const continuousValues = this.getContinuousValues();
-    return histogramStatisticsCalculator(this._continuousData, this.intervals, this.getSeriesValues());
+    return histogramStatisticsCalculator(this._continuousData, this.intervals, this);
   }
 
   public getValueType(): "date" | "number" {

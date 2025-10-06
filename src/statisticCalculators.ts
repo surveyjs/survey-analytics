@@ -31,51 +31,59 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
     return valuesIndex[val];
   };
 
-  data.forEach((row: any) => {
-    dataNames.forEach((dataName, index) => {
-      const rowValue: any = row[dataName];
-      if (rowValue !== undefined || processMissingAnswers) {
-        const rowValues = Array.isArray(rowValue) ? rowValue : [rowValue];
-        if (series.length > 0) {
-          const rowName = row[DataProvider.seriesMarkerKey];
-          if (rowName !== undefined) {
-            // Series are labelled by seriesMarkerKey in row data
-            const seriesNo = seriesIndex[rowName] || 0;
-            rowValues.forEach((val) => {
-              const valIndex = getValueIndex(val);
-              statistics[index][seriesNo][valIndex]++;
-            });
-          } else {
-            // Series are the keys in question value (matrix question)
-            // TODO: think about the de-normalization and combine with the previous case
-            rowValues.forEach((val) => {
-              series.forEach((seriesName) => {
-                if (val[seriesName] !== undefined) {
-                  const seriesNo = seriesIndex[seriesName] || 0;
-                  const values = Array.isArray(val[seriesName]) ? val[seriesName] : [val[seriesName]];
-                  values.forEach(value => {
-                    const valIndex = getValueIndex(value);
-                    statistics[index][seriesNo][valIndex]++;
-                  });
-                }
-              });
-            });
-          }
-        } else {
-          // No series
+  const processDataRow = (dataRow, dataName, index) => {
+    const rowValue = dataRow[dataName];
+    if (rowValue !== undefined || processMissingAnswers) {
+      const rowValues = Array.isArray(rowValue) ? rowValue : [rowValue];
+      if (series.length > 0) {
+        const rowName = dataRow[DataProvider.seriesMarkerKey];
+        if (rowName !== undefined) {
+          // Series are labelled by seriesMarkerKey in row data
+          const seriesNo = seriesIndex[rowName] || 0;
           rowValues.forEach((val) => {
             const valIndex = getValueIndex(val);
-            statistics[0][0][valIndex]++;
+            statistics[index][seriesNo][valIndex]++;
+          });
+        } else {
+          // Series are the keys in question value (matrix question)
+          // TODO: think about the de-normalization and combine with the previous case
+          rowValues.forEach((val) => {
+            series.forEach((seriesName) => {
+              if (val[seriesName] !== undefined) {
+                const seriesNo = seriesIndex[seriesName] || 0;
+                const values = Array.isArray(val[seriesName]) ? val[seriesName] : [val[seriesName]];
+                values.forEach(value => {
+                  const valIndex = getValueIndex(value);
+                  statistics[index][seriesNo][valIndex]++;
+                });
+              }
+            });
           });
         }
+      } else {
+        // No series
+        rowValues.forEach((val) => {
+          const valIndex = getValueIndex(val);
+          statistics[0][0][valIndex]++;
+        });
       }
+    }
+  };
+
+  data.forEach((dataRow: any) => {
+    const nestedDataRows = getNestedDataRows(dataRow, dataInfo);
+    nestedDataRows.forEach(nestedDataRow => {
+      dataNames.forEach((dataName, index) => {
+        processDataRow(nestedDataRow, dataName, index);
+      });
     });
   });
 
   return dataInfo.dataNames.length > 1 ? statistics : statistics[0] as any;
 }
 
-export function histogramStatisticsCalculator(data: any, intervals: any, seriesValues: Array<string>): Array<any> {
+export function histogramStatisticsCalculator(data: any, intervals: any, dataInfo: IDataInfo): Array<any> {
+  const seriesValues = dataInfo.getSeriesValues();
   const statistics: Array<Array<number>> = [];
   if (seriesValues.length === 0) {
     seriesValues.push("");
@@ -94,24 +102,28 @@ export function histogramStatisticsCalculator(data: any, intervals: any, seriesV
   return statistics;
 }
 
-export function mathStatisticsCalculator(data: Array<any>, dataName: string) {
+export function mathStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo) {
   let resultMin = Number.MAX_VALUE,
     resultMax = -Number.MAX_VALUE,
     resultAverage = 0;
   let actualAnswerCount = 0;
 
-  data.forEach((rowData) => {
-    if (rowData[dataName] !== undefined) {
-      const questionValue: number = +rowData[dataName];
-      actualAnswerCount++;
-      resultAverage += questionValue;
-      if (resultMin > questionValue) {
-        resultMin = questionValue;
+  data.forEach((dataRow) => {
+    const nestedDataRows = getNestedDataRows(dataRow, dataInfo);
+    nestedDataRows.forEach(nestedDataRow => {
+      const answerData = nestedDataRow[dataInfo.dataNames[0]];
+      if (answerData !== undefined) {
+        const questionValue: number = +answerData;
+        actualAnswerCount++;
+        resultAverage += questionValue;
+        if (resultMin > questionValue) {
+          resultMin = questionValue;
+        }
+        if (resultMax < questionValue) {
+          resultMax = questionValue;
+        }
       }
-      if (resultMax < questionValue) {
-        resultMax = questionValue;
-      }
-    }
+    });
   });
 
   if (actualAnswerCount > 0) {
@@ -120,4 +132,20 @@ export function mathStatisticsCalculator(data: Array<any>, dataName: string) {
   resultAverage = Math.ceil(resultAverage * 100) / 100;
 
   return [resultAverage, resultMin, resultMax];
+}
+
+export function getNestedDataRows(dataRow: any, dataInfo: IDataInfo): Array<any> {
+  let nestedDataRows = [];
+  if(!dataInfo.dataPath) {
+    nestedDataRows = [dataRow];
+  } else {
+    if(dataRow[dataInfo.dataPath] === undefined) return [];
+    if(typeof dataRow[dataInfo.dataPath] !== "object") return [];
+    if(Array.isArray(dataRow[dataInfo.dataPath])) {
+      nestedDataRows = dataRow[dataInfo.dataPath];
+    } else {
+      nestedDataRows = [dataRow[dataInfo.dataPath]];
+    }
+  }
+  return nestedDataRows;
 }

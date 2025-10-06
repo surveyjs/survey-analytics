@@ -17,6 +17,7 @@ export interface IChartAdapter {
 
 export interface IDataInfo {
   name: string; // TODO - remove from this interface
+  dataPath?: string;
   dataNames: Array<string>;
   getValues(): Array<any>;
   getLabels(): Array<string>;
@@ -218,6 +219,10 @@ export class VisualizerBase implements IDataInfo {
     return [this.name];
   }
 
+  get dataPath(): string {
+    return this.options.dataPath;
+  }
+
   /**
    * Indicates whether the visualizer displays a header. This property is `true` when a visualized question has a correct answer.
    * @see hasFooter
@@ -410,25 +415,9 @@ export class VisualizerBase implements IDataInfo {
    * @param data A data array with survey results to be visualized.
    */
   updateData(data: Array<{ [index: string]: any }> | GetDataFn) {
-    const dataPath = this.options.dataPath;
-    let dataToAssign = data;
-    if (!!dataPath && Array.isArray(data)) {
-      dataToAssign = [];
-      data.forEach(dataItem => {
-        if(!!dataItem && dataItem[dataPath] !== undefined) {
-          if(Array.isArray(dataItem[dataPath])) {
-            dataToAssign = (dataToAssign as Array<any>).concat(dataItem[dataPath]);
-          } else {
-            (dataToAssign as Array<any>).push(dataItem[dataPath]);
-          }
-        }
-      });
-    }
-    if (!this.options.dataProvider) {
-      this.dataProvider.data = dataToAssign;
-    }
+    this.dataProvider.data = data;
     if (this.hasFooter) {
-      this.footerVisualizer.updateData(dataToAssign);
+      this.footerVisualizer.updateData(data);
     }
   }
 
