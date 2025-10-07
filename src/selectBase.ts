@@ -382,16 +382,20 @@ export class SelectBase
     }
   }
 
-  setSelection(item: ItemValue) {
+  protected onSelectionChanged(item: ItemValue): void {
+    if (this.onDataItemSelected !== undefined) {
+      this.onDataItemSelected(
+        item !== undefined ? item.value : undefined,
+        item !== undefined ? item.text : ""
+      );
+    }
+    this.stateChanged("filter", this.selectedItem?.value);
+  }
+
+  setSelection(item: ItemValue): void {
     if (this.selectedItem !== item) {
       this.selectedItem = item;
-      if (this.onDataItemSelected !== undefined) {
-        this.onDataItemSelected(
-          item !== undefined ? item.value : undefined,
-          item !== undefined ? item.text : ""
-        );
-      }
-      this.stateChanged("filter", this.selectedItem?.value);
+      this.onSelectionChanged(item);
     }
   }
   get selection() {

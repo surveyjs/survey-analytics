@@ -154,6 +154,7 @@ export class HistogramModel extends SelectBase {
   private _intervalPrecision: number = 2;
   private showRunningTotalsBtn: HTMLElement = undefined;
   private showGroupedBtn: HTMLElement = undefined;
+  private changeIntervalsModeSelector: HTMLDivElement = undefined;
   private aggregateDataNameSelector: HTMLDivElement = undefined;
   public static IntervalsCount = 10;
   public static UseIntervalsFrom = 10;
@@ -178,7 +179,7 @@ export class HistogramModel extends SelectBase {
 
     if(this.allowChangeIntervalsMode) {
       this.registerToolbarItem("changeIntervalsMode", () => {
-        return DocumentHelper.createSelector(
+        this.changeIntervalsModeSelector = DocumentHelper.createSelector(
           this.intervalModes.map((intervalModeValue) => {
             return {
               value: intervalModeValue,
@@ -191,6 +192,7 @@ export class HistogramModel extends SelectBase {
           },
           localization.getString("intervalModeTitle")
         );
+        return this.changeIntervalsModeSelector;
       });
     }
     if (this.possibleAggragateDataNames.length > 0) {
@@ -229,6 +231,14 @@ export class HistogramModel extends SelectBase {
         this.updateShowGroupedBtn();
         return this.showGroupedBtn;
       });
+    }
+  }
+
+  private updateIntervalsModeSelector() {
+    if (!!this.changeIntervalsModeSelector) {
+      this.changeIntervalsModeSelector.getElementsByTagName(
+        "select"
+      )[0].value = this.intervalsMode;
     }
   }
 
@@ -286,6 +296,18 @@ export class HistogramModel extends SelectBase {
   protected onDataChanged() {
     this.reset();
     super.onDataChanged();
+  }
+
+  protected onSelectionChanged(item: ItemValue): void {
+    if (item !== undefined && this.onDataItemSelected !== undefined) {
+      if (this.valueType === "date") {
+        const currIntervalCalueIndex = this.intervalModes.indexOf(this.intervalsMode);
+        if(currIntervalCalueIndex > 0 && currIntervalCalueIndex < this.intervalModes.length - 1) {
+          this.intervalsMode = this.intervalModes[currIntervalCalueIndex + 1];
+        }
+      }
+    }
+    super.onSelectionChanged(item);
   }
 
   protected getContinuousValues() {
@@ -405,6 +427,7 @@ export class HistogramModel extends SelectBase {
       if(!this.canShowGroupedDateSeries) {
         this._showGrouped = false;
       }
+      this.updateIntervalsModeSelector();
       this.updateShowGroupedBtn();
       this.onDataChanged();
     }
