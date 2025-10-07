@@ -346,6 +346,9 @@ export class PlotlySetup {
       traces.push(trace);
     });
 
+    const maxTicks = 50;
+    const tickStep = Math.ceil(labels.length / maxTicks);
+
     const layout: any = {
       font: {
         family: "Segoe UI, sans-serif",
@@ -372,7 +375,10 @@ export class PlotlySetup {
         type: "category",
         tickmode: "array",
         tickvals: labels,
-        ticktext: labels.map((label: string) => {
+        ticktext: labels.map((label: string, index: number) => {
+          if(labels.length > maxTicks && index % tickStep !== 0) {
+            return "";
+          }
           return PlotlySetup.getTruncatedLabel(
             label,
             model.labelTruncateLength
