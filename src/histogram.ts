@@ -6,7 +6,7 @@ import { histogramStatisticsCalculator } from "./statisticCalculators";
 import { DocumentHelper } from "./utils";
 import { localization } from "./localizationManager";
 
-export declare type HistogramIntervalsMode = "auto" | "custom" | "decades" | "years" | "quarters" | "months" | "days";
+export declare type HistogramIntervalMode = "auto" | "custom" | "decades" | "years" | "quarters" | "months" | "days";
 export interface IHistogramInterval { start: number, end: number, label: string }
 
 function getQuarter(date: Date): string {
@@ -18,7 +18,7 @@ function getQuarter(date: Date): string {
   }
 }
 
-export function getBestIntervalMode(min: number, max: number): HistogramIntervalsMode {
+export function getBestIntervalMode(min: number, max: number): HistogramIntervalMode {
   const start = new Date(min);
   const end = new Date(max);
   const totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
@@ -178,7 +178,7 @@ export class HistogramModel extends SelectBase {
     }
     this._intervalsMode = this.valueType === "date" ? "auto" : "default" as any;
 
-    if(this.allowChangeIntervalsMode) {
+    if(this.allowChangeIntervals) {
       this.registerToolbarItem("changeIntervalsMode", () => {
         this.changeIntervalsModeSelector = DocumentHelper.createSelector(
           this.intervalModes.map((intervalModeValue) => {
@@ -215,7 +215,7 @@ export class HistogramModel extends SelectBase {
         return this.aggregateDataNameSelector;
       });
     }
-    if(this.allowChangeIntervalsMode && this.options.allowRunningTotals) {
+    if(this.allowChangeIntervals && this.options.allowRunningTotals) {
       this.registerToolbarItem("showRunningTotals", () => {
         this.showRunningTotalsBtn = DocumentHelper.createButton(() => {
           this.showRunningTotals = !this.showRunningTotals;
@@ -224,7 +224,7 @@ export class HistogramModel extends SelectBase {
         return this.showRunningTotalsBtn;
       });
     }
-    if(this.allowChangeIntervalsMode && this.options.allowGroupDatePeriods) {
+    if(this.allowChangeIntervals && this.options.allowCompareDatePeriods) {
       this.registerToolbarItem("showGrouped", () => {
         this.showGroupedBtn = DocumentHelper.createButton(() => {
           this.showGrouped = !this.showGrouped;
@@ -415,15 +415,15 @@ export class HistogramModel extends SelectBase {
     return this._cachedIntervals;
   }
 
-  public intervalModes: HistogramIntervalsMode[] = ["auto", "decades", "years", "quarters", "months", "days"];
+  public intervalModes: HistogramIntervalMode[] = ["auto", "decades", "years", "quarters", "months", "days"];
 
-  private _intervalsMode: HistogramIntervalsMode;
-  public get intervalsMode(): HistogramIntervalsMode {
+  private _intervalsMode: HistogramIntervalMode;
+  public get intervalsMode(): HistogramIntervalMode {
     if(this.hasCustomIntervals) return "custom";
     return this._intervalsMode;
   }
-  public set intervalsMode(val: HistogramIntervalsMode) {
-    if (this.allowChangeIntervalsMode && this._intervalsMode !== val) {
+  public set intervalsMode(val: HistogramIntervalMode) {
+    if (this.allowChangeIntervals && this._intervalsMode !== val) {
       this._intervalsMode = val;
       if(!this.canShowGroupedDateSeries) {
         this._showGrouped = false;
@@ -434,8 +434,8 @@ export class HistogramModel extends SelectBase {
     }
   }
 
-  public get allowChangeIntervalsMode(): boolean {
-    return this.valueType === "date" && !this.hasCustomIntervals && this.options.allowChangeIntervalsMode === true;
+  public get allowChangeIntervals(): boolean {
+    return this.valueType === "date" && !this.hasCustomIntervals && this.options.allowChangeIntervals === true;
   }
 
   private _showRunningTotals: boolean = false;

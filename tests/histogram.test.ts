@@ -65,7 +65,7 @@ test("date default histogram", async () => {
     inputType: "date",
     name: "date",
   };
-  const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
+  const date = new HistogramModel(question, data, { allowChangeIntervals: true });
   date.intervalsMode = "default" as any;
 
   const histValues = date.getValues();
@@ -104,10 +104,10 @@ test("date default intervals", async () => {
     dates.push({ date: currDate.toISOString() });
     currDate.setDate(currDate.getDate() + 1);
   }
-  const date = new HistogramModel(question, dates, { allowChangeIntervalsMode: true });
+  const date = new HistogramModel(question, dates, { allowChangeIntervals: true });
   date.intervalsMode = "default" as any;
   expect(date.intervalsMode).toBe("default");
-  expect(date.allowChangeIntervalsMode).toBeTruthy();
+  expect(date.allowChangeIntervals).toBeTruthy();
 
   const histValues = date.getValues();
   const histLabels = date.getLabels();
@@ -212,7 +212,7 @@ test("number custom intervals", async () => {
   const histData = await date.getCalculatedValues();
 
   expect(date.intervalsMode).toBe("custom");
-  expect(date.allowChangeIntervalsMode).toBeFalsy();
+  expect(date.allowChangeIntervals).toBeFalsy();
   expect(histIntervals.length).toBe(5);
   expect(histValues).toMatchObject([
     0,
@@ -984,9 +984,9 @@ test("histogram date year intervals", () => {
     inputType: "date",
     name: "date",
   };
-  const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
+  const date = new HistogramModel(question, data, { allowChangeIntervals: true });
   date.intervalsMode = "default" as any;
-  expect(date.allowChangeIntervalsMode).toBeTruthy();
+  expect(date.allowChangeIntervals).toBeTruthy();
   expect(date.intervalsMode).toBe("default");
   expect(date.getLabels()).toEqual([
     "10/13/2004-4/13/2005",
@@ -1087,9 +1087,9 @@ test("histogram date different intervals", async () => {
     inputType: "date",
     name: "date",
   };
-  const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
+  const date = new HistogramModel(question, data, { allowChangeIntervals: true });
   date.intervalsMode = "default" as any;
-  expect(date.allowChangeIntervalsMode).toBeTruthy();
+  expect(date.allowChangeIntervals).toBeTruthy();
   expect(date.intervalsMode).toBe("default");
 
   date.intervalsMode = "years";
@@ -1260,9 +1260,9 @@ test("histogram date auto intervals mode", async () => {
     inputType: "date",
     name: "date",
   };
-  const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
+  const date = new HistogramModel(question, data, { allowChangeIntervals: true });
   date.intervalsMode = "default" as any;
-  expect(date.allowChangeIntervalsMode).toBeTruthy();
+  expect(date.allowChangeIntervals).toBeTruthy();
   expect(date.intervalsMode).toBe("default");
 
   date.intervalsMode = "auto";
@@ -1286,15 +1286,15 @@ test("changeIntervalsMode and allowRunningTotals toolbar items for date histogra
     name: "date",
   };
   const date1 = new HistogramModel(question, data);
-  expect(date1.allowChangeIntervalsMode).toBeFalsy();
+  expect(date1.allowChangeIntervals).toBeFalsy();
   expect(date1["toolbarItemCreators"]["changeIntervalsMode"]).toBeUndefined();
   expect(date1["toolbarItemCreators"]["showRunningTotals"]).toBeUndefined();
-  const date2 = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
-  expect(date2.allowChangeIntervalsMode).toBeTruthy();
+  const date2 = new HistogramModel(question, data, { allowChangeIntervals: true });
+  expect(date2.allowChangeIntervals).toBeTruthy();
   expect(date2["toolbarItemCreators"]["changeIntervalsMode"]).toBeDefined();
   expect(date2["toolbarItemCreators"]["showRunningTotals"]).toBeUndefined();
-  const date3 = new HistogramModel(question, data, { allowChangeIntervalsMode: true, allowRunningTotals: true });
-  expect(date3.allowChangeIntervalsMode).toBeTruthy();
+  const date3 = new HistogramModel(question, data, { allowChangeIntervals: true, allowRunningTotals: true });
+  expect(date3.allowChangeIntervals).toBeTruthy();
   expect(date3["toolbarItemCreators"]["changeIntervalsMode"]).toBeDefined();
   expect(date3["toolbarItemCreators"]["showRunningTotals"]).toBeDefined();
 });
@@ -1306,9 +1306,9 @@ test("allowRunningTotals and showRunningTotals for date histogram", async () => 
     inputType: "date",
     name: "date",
   };
-  const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true, allowRunningTotals: true });
+  const date = new HistogramModel(question, data, { allowChangeIntervals: true, allowRunningTotals: true });
   date.intervalsMode = "default" as any;
-  expect(date.allowChangeIntervalsMode).toBeTruthy();
+  expect(date.allowChangeIntervals).toBeTruthy();
   expect(date.showRunningTotals).toBeFalsy();
   expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
   expect((await date.getCalculatedValues())[0]).toEqual([2, 0, 0, 0, 2, 0, 0, 1, 0, 3]);
@@ -1434,7 +1434,7 @@ test("getAnswersData with showGrouped set to true", async () => {
     inputType: "date",
     name: "date",
   };
-  const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
+  const date = new HistogramModel(question, data, { allowChangeIntervals: true });
   date.intervalsMode = "default" as any;
   expect(date.intervalsMode).toBe("default");
   expect(date.canShowGroupedDateSeries).toBeFalsy();
@@ -1469,12 +1469,12 @@ test("aggregateDataNames for date histogram", async () => {
     name: "date",
   };
   const date = new HistogramModel(question, data, {
-    allowChangeIntervalsMode: true,
+    allowChangeIntervals: true,
     allowRunningTotals: true, date: {
       aggregateDataNames: ["age"],
     } });
   date.intervalsMode = "default" as any;
-  expect(date.allowChangeIntervalsMode).toBeTruthy();
+  expect(date.allowChangeIntervals).toBeTruthy();
   expect(date.showRunningTotals).toBeFalsy();
   expect(date.aggragateDataName).toBe("");
   expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
