@@ -164,7 +164,39 @@ export var finnishStrings = {
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Ryhmät:",
   // [Auto-translated] "Not selected"
-  notSelected: "Ei valittu"
+  notSelected: "Ei valittu",
+  // [Auto-translated] "Default"
+  intervalMode_default: "Laiminlyönti",
+  // [Auto-translated] "Decades"
+  intervalMode_decades: "Vuosikymmeniä",
+  // [Auto-translated] "Years"
+  intervalMode_years: "Vuosia",
+  // [Auto-translated] "Quarters"
+  intervalMode_quarters: "Neljäsosaa",
+  // [Auto-translated] "Months"
+  intervalMode_months: "Kuukautta",
+  // [Auto-translated] "Days"
+  intervalMode_days: "Päivää",
+  // [Auto-translated] "Custom"
+  intervalMode_custom: "Tapa",
+  // [Auto-translated] "Auto"
+  intervalMode_auto: "Auto",
+  // [Auto-translated] "Intervals:"
+  intervalModeTitle: "Välein:",
+  // [Auto-translated] "Show individual values"
+  noRunningTotals: "Näytä yksittäiset arvot",
+  // [Auto-translated] "Show running totals"
+  runningTotals: "Näytä juoksevat kokonaismäärät",
+  // [Auto-translated] "Compare periods"
+  groupDateSeries: "Vertaile kausia",
+  // [Auto-translated] "View timeline"
+  ungroupDateSeries: "Näytä aikajana",
+  // [Auto-translated] "None"
+  noneAggregateText: "Ei lainkaan",
+  // [Auto-translated] "Aggregate:"
+  selectAggregateText: "Aggregaatti:",
+  // [Auto-translated] "Year ends with"
+  groupedYearsAxisTitle: "Vuosi päättyy"
 };
 
 setupLocale({ localeCode: "fi", strings: finnishStrings, nativeName: "Suomi" });

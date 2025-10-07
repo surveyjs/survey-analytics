@@ -164,7 +164,39 @@ export var japaneseStrings = {
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "グループ：",
   // [Auto-translated] "Not selected"
-  notSelected: "選択されていない"
+  notSelected: "選択されていない",
+  // [Auto-translated] "Default"
+  intervalMode_default: "デフォルト",
+  // [Auto-translated] "Decades"
+  intervalMode_decades: "数 十 年",
+  // [Auto-translated] "Years"
+  intervalMode_years: "月日",
+  // [Auto-translated] "Quarters"
+  intervalMode_quarters: "四半期",
+  // [Auto-translated] "Months"
+  intervalMode_months: "月",
+  // [Auto-translated] "Days"
+  intervalMode_days: "日",
+  // [Auto-translated] "Custom"
+  intervalMode_custom: "習慣",
+  // [Auto-translated] "Auto"
+  intervalMode_auto: "自動",
+  // [Auto-translated] "Intervals:"
+  intervalModeTitle: "間隔：",
+  // [Auto-translated] "Show individual values"
+  noRunningTotals: "個々の値を表示する",
+  // [Auto-translated] "Show running totals"
+  runningTotals: "累計を表示する",
+  // [Auto-translated] "Compare periods"
+  groupDateSeries: "期間の比較",
+  // [Auto-translated] "View timeline"
+  ungroupDateSeries: "タイムラインの表示",
+  // [Auto-translated] "None"
+  noneAggregateText: "何一つ",
+  // [Auto-translated] "Aggregate:"
+  selectAggregateText: "骨材：",
+  // [Auto-translated] "Year ends with"
+  groupedYearsAxisTitle: "年末は"
 };
 
 setupLocale({ localeCode: "ja", strings: japaneseStrings, nativeName: "日本語" });

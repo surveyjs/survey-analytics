@@ -164,7 +164,39 @@ export var frenchStrings = {
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Groupe:",
   // [Auto-translated] "Not selected"
-  notSelected: "Non sélectionné"
+  notSelected: "Non sélectionné",
+  // [Auto-translated] "Default"
+  intervalMode_default: "Faire défaut",
+  // [Auto-translated] "Decades"
+  intervalMode_decades: "Décennies",
+  // [Auto-translated] "Years"
+  intervalMode_years: "Années",
+  // [Auto-translated] "Quarters"
+  intervalMode_quarters: "Quartier",
+  // [Auto-translated] "Months"
+  intervalMode_months: "Mois",
+  // [Auto-translated] "Days"
+  intervalMode_days: "Jours",
+  // [Auto-translated] "Custom"
+  intervalMode_custom: "Coutume",
+  // [Auto-translated] "Auto"
+  intervalMode_auto: "Auto",
+  // [Auto-translated] "Intervals:"
+  intervalModeTitle: "Intervalles:",
+  // [Auto-translated] "Show individual values"
+  noRunningTotals: "Afficher les valeurs individuelles",
+  // [Auto-translated] "Show running totals"
+  runningTotals: "Afficher les totaux cumulés",
+  // [Auto-translated] "Compare periods"
+  groupDateSeries: "Comparer les périodes",
+  // [Auto-translated] "View timeline"
+  ungroupDateSeries: "Voir la chronologie",
+  // [Auto-translated] "None"
+  noneAggregateText: "Aucun",
+  // [Auto-translated] "Aggregate:"
+  selectAggregateText: "Agrégat:",
+  // [Auto-translated] "Year ends with"
+  groupedYearsAxisTitle: "L’exercice se termine avec"
 };
 
 setupLocale({ localeCode: "fr", strings: frenchStrings, nativeName: "Français" });

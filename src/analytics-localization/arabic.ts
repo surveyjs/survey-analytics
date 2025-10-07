@@ -164,7 +164,39 @@ export var arabicStrings = {
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "المجموعات:",
   // [Auto-translated] "Not selected"
-  notSelected: "غير محدد"
+  notSelected: "غير محدد",
+  // [Auto-translated] "Default"
+  intervalMode_default: "افتراضي",
+  // [Auto-translated] "Decades"
+  intervalMode_decades: "عقود",
+  // [Auto-translated] "Years"
+  intervalMode_years: "اعوام",
+  // [Auto-translated] "Quarters"
+  intervalMode_quarters: "ارباع",
+  // [Auto-translated] "Months"
+  intervalMode_months: "أشهر",
+  // [Auto-translated] "Days"
+  intervalMode_days: "أيام",
+  // [Auto-translated] "Custom"
+  intervalMode_custom: "تقليد",
+  // [Auto-translated] "Auto"
+  intervalMode_auto: "تلقائي",
+  // [Auto-translated] "Intervals:"
+  intervalModeTitle: "فترات:",
+  // [Auto-translated] "Show individual values"
+  noRunningTotals: "إظهار القيم الفردية",
+  // [Auto-translated] "Show running totals"
+  runningTotals: "إظهار الإجماليات الجارية",
+  // [Auto-translated] "Compare periods"
+  groupDateSeries: "مقارنة الفترات",
+  // [Auto-translated] "View timeline"
+  ungroupDateSeries: "عرض الجدول الزمني",
+  // [Auto-translated] "None"
+  noneAggregateText: "اي",
+  // [Auto-translated] "Aggregate:"
+  selectAggregateText: "تجميع:",
+  // [Auto-translated] "Year ends with"
+  groupedYearsAxisTitle: "ينتهي العام ب"
 };
 
 setupLocale({ localeCode: "ar", strings: arabicStrings, nativeName: "العربية" });
