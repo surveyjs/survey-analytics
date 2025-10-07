@@ -16,6 +16,8 @@ export interface IAnswersData {
   colors: Array<string>;
   texts: Array<Array<any>>;
   seriesLabels: Array<string>;
+  labelsTitle?: string;
+  valuesTitle?: string;
 }
 
 export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData {

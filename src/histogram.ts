@@ -6,7 +6,7 @@ import { histogramStatisticsCalculator } from "./statisticCalculators";
 import { DocumentHelper } from "./utils";
 import { localization } from "./localizationManager";
 
-export declare type HistogramIntervalsMode = "default" | "custom" | "decades" | "years" | "quarters" | "months" | "days" | "auto";
+export declare type HistogramIntervalsMode = "auto" | "custom" | "decades" | "years" | "quarters" | "months" | "days";
 export interface IHistogramInterval { start: number, end: number, label: string }
 
 function getQuarter(date: Date): string {
@@ -392,9 +392,9 @@ export class HistogramModel extends SelectBase {
     return this._cachedIntervals;
   }
 
-  public intervalModes: HistogramIntervalsMode[] = ["default", "decades", "years", "quarters", "months", "days", "auto"];
+  public intervalModes: HistogramIntervalsMode[] = ["auto", "decades", "years", "quarters", "months", "days"];
 
-  private _intervalsMode: HistogramIntervalsMode = "default";
+  private _intervalsMode: HistogramIntervalsMode = "auto";
   public get intervalsMode(): HistogramIntervalsMode {
     if(this.hasCustomIntervals) return "custom";
     return this._intervalsMode;
@@ -577,6 +577,17 @@ export class HistogramModel extends SelectBase {
     }
 
     const answersData = await this.getGroupedDateAnswersData();
+
+    const continuousValues = this.getContinuousValues();
+    if (continuousValues.length) {
+      let start = continuousValues[0].continuous;
+      const end = continuousValues[continuousValues.length - 1].continuous;
+      const intervalsMode = this.intervalsMode === "auto" ? getBestIntervalMode(start, end) : this.intervalsMode;
+      if(intervalsMode === "years" && this.showGrouped) {
+        answersData.labelsTitle = localization.getString("groupedYearsAxisTitle");
+      }
+    }
+
     this.onAnswersDataReady.fire(this, answersData);
 
     return answersData;

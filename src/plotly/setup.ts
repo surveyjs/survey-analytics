@@ -165,6 +165,8 @@ export class PlotlySetup {
       colors,
       texts,
       seriesLabels,
+      labelsTitle,
+      valuesTitle
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
@@ -251,6 +253,13 @@ export class PlotlySetup {
       },
     };
 
+    if(labelsTitle) {
+      layout.yaxis.title = { text: labelsTitle };
+    }
+    if(valuesTitle) {
+      layout.xaxis.title = { text: valuesTitle };
+    }
+
     if (hasSeries && model.chartType !== "stackedbar") {
       layout.height =
           (labels.length * seriesLabels.length + 1) * lineHeight +
@@ -281,6 +290,8 @@ export class PlotlySetup {
       colors,
       texts,
       seriesLabels,
+      labelsTitle,
+      valuesTitle
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
@@ -365,10 +376,17 @@ export class PlotlySetup {
           return PlotlySetup.getTruncatedLabel(
             label,
             model.labelTruncateLength
-          ) + "  ";
+          );
         }),
       },
     };
+
+    if(labelsTitle) {
+      layout.xaxis.title = { text: labelsTitle };
+    }
+    if(valuesTitle) {
+      layout.yaxis.title = { text: valuesTitle };
+    }
 
     if (model.showPercentages && model.showOnlyPercentages) {
       layout.yaxis = {
