@@ -165,6 +165,8 @@ export class PlotlySetup {
       colors,
       texts,
       seriesLabels,
+      labelsTitle,
+      valuesTitle
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
@@ -251,6 +253,13 @@ export class PlotlySetup {
       },
     };
 
+    if(labelsTitle) {
+      layout.yaxis.title = { text: labelsTitle };
+    }
+    if(valuesTitle) {
+      layout.xaxis.title = { text: valuesTitle };
+    }
+
     if (hasSeries && model.chartType !== "stackedbar") {
       layout.height =
           (labels.length * seriesLabels.length + 1) * lineHeight +
@@ -281,6 +290,8 @@ export class PlotlySetup {
       colors,
       texts,
       seriesLabels,
+      labelsTitle,
+      valuesTitle
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
@@ -310,7 +321,7 @@ export class PlotlySetup {
       orientation: "v",
       textposition: "none",
     };
-    if (model.type === "histogram" || !hasSeries) {
+    if (!hasSeries) {
       traceConfig.width = 0.5;
       traceConfig.bargap = 0.5;
       traceConfig.mode = "markers",
@@ -334,6 +345,9 @@ export class PlotlySetup {
       }
       traces.push(trace);
     });
+
+    const maxTicks = 50;
+    const tickStep = Math.ceil(labels.length / maxTicks);
 
     const layout: any = {
       font: {
@@ -361,14 +375,24 @@ export class PlotlySetup {
         type: "category",
         tickmode: "array",
         tickvals: labels,
-        ticktext: labels.map((label: string) => {
+        ticktext: labels.map((label: string, index: number) => {
+          if(labels.length > maxTicks && index % tickStep !== 0) {
+            return "";
+          }
           return PlotlySetup.getTruncatedLabel(
             label,
             model.labelTruncateLength
-          ) + "  ";
+          );
         }),
       },
     };
+
+    if(labelsTitle) {
+      layout.xaxis.title = { text: labelsTitle };
+    }
+    if(valuesTitle) {
+      layout.yaxis.title = { text: valuesTitle };
+    }
 
     if (model.showPercentages && model.showOnlyPercentages) {
       layout.yaxis = {

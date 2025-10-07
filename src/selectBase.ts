@@ -16,6 +16,8 @@ export interface IAnswersData {
   colors: Array<string>;
   texts: Array<Array<any>>;
   seriesLabels: Array<string>;
+  labelsTitle?: string;
+  valuesTitle?: string;
 }
 
 export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData {
@@ -380,16 +382,20 @@ export class SelectBase
     }
   }
 
-  setSelection(item: ItemValue) {
+  protected onSelectionChanged(item: ItemValue): void {
+    if (this.onDataItemSelected !== undefined) {
+      this.onDataItemSelected(
+        item !== undefined ? item.value : undefined,
+        item !== undefined ? item.text : ""
+      );
+    }
+    this.stateChanged("filter", this.selectedItem?.value);
+  }
+
+  setSelection(item: ItemValue): void {
     if (this.selectedItem !== item) {
       this.selectedItem = item;
-      if (this.onDataItemSelected !== undefined) {
-        this.onDataItemSelected(
-          item !== undefined ? item.value : undefined,
-          item !== undefined ? item.text : ""
-        );
-      }
-      this.stateChanged("filter", this.selectedItem?.value);
+      this.onSelectionChanged(item);
     }
   }
   get selection() {
@@ -604,22 +610,6 @@ export class SelectBase
     return percentages;
   }
 
-  protected answersDataReady(answersData: IAnswersData) {
-    let result: any = {};
-    if (this.hideEmptyAnswers) {
-      result = hideEmptyAnswersInData(answersData);
-    } else {
-      result = answersData;
-    }
-    if (this.topN > 0) {
-      result.datasets[0] = result.datasets[0].slice(-this.topN);
-      result.labels = result.labels.slice(-this.topN);
-      result.colors = result.colors.slice(-this.topN);
-      result.texts[0] = result.texts[0].slice(-this.topN);
-    }
-    return result;
-  }
-
   /**
    * Fires when answer data has been combined before they passed to draw graph.
    * options - the answers data object containing: datasets, labels, colors, additional texts (percentage).
@@ -672,7 +662,16 @@ export class SelectBase
       texts,
       seriesLabels,
     };
-    answersData = this.answersDataReady(answersData);
+
+    if (this.hideEmptyAnswers) {
+      answersData = hideEmptyAnswersInData(answersData);
+    }
+    if (this.topN > 0) {
+      answersData.datasets[0] = answersData.datasets[0].slice(-this.topN);
+      answersData.labels = answersData.labels.slice(-this.topN);
+      answersData.colors = answersData.colors.slice(-this.topN);
+      answersData.texts[0] = answersData.texts[0].slice(-this.topN);
+    }
     this.onAnswersDataReady.fire(this, answersData);
 
     return answersData;
