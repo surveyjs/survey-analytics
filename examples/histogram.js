@@ -170,9 +170,9 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
     // allowHideEmptyAnswers: true,
     // allowTransposeData: true,
     // allowTopNAnswers: true,
-    allowChangeIntervalsMode: true,
+    allowChangeIntervals: true,
     allowRunningTotals: true,
-    allowGroupDatePeriods: true,
+    allowCompareDatePeriods: true,
     age: {
       intervals: [
         { start: 0, end: 7, label: "childhood" },
