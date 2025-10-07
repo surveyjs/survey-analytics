@@ -1476,7 +1476,7 @@ test("aggregateDataNames for date histogram", async () => {
   date.intervalsMode = "default" as any;
   expect(date.allowChangeIntervals).toBeTruthy();
   expect(date.showRunningTotals).toBeFalsy();
-  expect(date.aggragateDataName).toBe("");
+  expect(date.aggregateDataName).toBe("");
   expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
   expect((await date.getCalculatedValues())[0]).toEqual([2, 0, 0, 0, 2, 0, 0, 1, 0, 3]);
 
@@ -1484,8 +1484,8 @@ test("aggregateDataNames for date histogram", async () => {
   expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
   expect((await date.getCalculatedValues())[0]).toEqual([2, 2, 2, 2, 4, 4, 4, 5, 5, 8]);
 
-  expect(date.possibleAggragateDataNames).toStrictEqual(["age"]);
-  date.aggragateDataName = "age";
+  expect(date.possibleAggregateDataNames).toStrictEqual(["age"]);
+  date.aggregateDataName = "age";
   date.showRunningTotals = false;
   expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
   expect((await date.getCalculatedValues())[0]).toEqual([80, 0, 0, 0, 60, 0, 0, 25, 0, 51]);

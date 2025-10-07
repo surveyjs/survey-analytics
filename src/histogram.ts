@@ -196,18 +196,18 @@ export class HistogramModel extends SelectBase {
         return this.changeIntervalsModeSelector;
       });
     }
-    if (this.possibleAggragateDataNames.length > 0) {
+    if (this.possibleAggregateDataNames.length > 0) {
       this.registerToolbarItem("aggregateDataName", () => {
-        const choices = this.possibleAggragateDataNames.map((dataName) => {
+        const choices = this.possibleAggregateDataNames.map((dataName) => {
           return typeof dataName === "string" ? { value: dataName, text: dataName } : dataName;
         });
         choices.unshift({ value: "", text: localization.getString("noneAggregateText") }),
 
         this.aggregateDataNameSelector = DocumentHelper.createSelector(
           choices,
-          (option: any) => this.aggragateDataName === option.value,
+          (option: any) => this.aggregateDataName === option.value,
           (e) => {
-            this.aggragateDataName = e.target.value;
+            this.aggregateDataName = e.target.value;
           },
           localization.getString("selectAggregateText")
         );
@@ -247,7 +247,7 @@ export class HistogramModel extends SelectBase {
     if (!!this.aggregateDataNameSelector) {
       this.aggregateDataNameSelector.getElementsByTagName(
         "select"
-      )[0].value = this.aggragateDataName;
+      )[0].value = this.aggregateDataName;
     }
   }
 
@@ -481,18 +481,18 @@ export class HistogramModel extends SelectBase {
     return ["years", "quarters", "months"].indexOf(this.intervalsMode) !== -1;
   }
 
-  private _aggragateDataName: string = "";
-  public get aggragateDataName(): string {
-    return this._aggragateDataName;
+  private _aggregateDataName: string = "";
+  public get aggregateDataName(): string {
+    return this._aggregateDataName;
   }
-  public set aggragateDataName(val: string) {
-    if (this._aggragateDataName !== val) {
-      this._aggragateDataName = val;
+  public set aggregateDataName(val: string) {
+    if (this._aggregateDataName !== val) {
+      this._aggregateDataName = val;
       this.onDataChanged();
     }
   }
 
-  public get possibleAggragateDataNames(): Array<string> {
+  public get possibleAggregateDataNames(): Array<string> {
     return this.questionOptions?.aggregateDataNames ?? [];
   }
 
@@ -502,7 +502,7 @@ export class HistogramModel extends SelectBase {
 
   protected getCalculatedValuesCore(): Array<any> {
     const continuousValues = this.getContinuousValues();
-    return histogramStatisticsCalculator(this._continuousData, this.intervals, this.getSeriesValues(), [this.aggragateDataName].filter(name => !!name));
+    return histogramStatisticsCalculator(this._continuousData, this.intervals, this.getSeriesValues(), [this.aggregateDataName].filter(name => !!name));
   }
 
   public async getCalculatedValues(): Promise<Array<Object>> {
