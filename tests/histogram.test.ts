@@ -65,7 +65,8 @@ test("date default histogram", async () => {
     inputType: "date",
     name: "date",
   };
-  const date = new HistogramModel(question, data);
+  const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
+  date.intervalsMode = "default" as any;
 
   const histValues = date.getValues();
   const histLabels = date.getLabels();
@@ -103,9 +104,10 @@ test("date default intervals", async () => {
     dates.push({ date: currDate.toISOString() });
     currDate.setDate(currDate.getDate() + 1);
   }
-  const date = new HistogramModel(question, dates);
+  const date = new HistogramModel(question, dates, { allowChangeIntervalsMode: true });
+  date.intervalsMode = "default" as any;
   expect(date.intervalsMode).toBe("default");
-  expect(date.allowChangeIntervalsMode).toBeFalsy();
+  expect(date.allowChangeIntervalsMode).toBeTruthy();
 
   const histValues = date.getValues();
   const histLabels = date.getLabels();
@@ -983,6 +985,7 @@ test("histogram date year intervals", () => {
     name: "date",
   };
   const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
+  date.intervalsMode = "default" as any;
   expect(date.allowChangeIntervalsMode).toBeTruthy();
   expect(date.intervalsMode).toBe("default");
   expect(date.getLabels()).toEqual([
@@ -1085,6 +1088,7 @@ test("histogram date different intervals", async () => {
     name: "date",
   };
   const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
+  date.intervalsMode = "default" as any;
   expect(date.allowChangeIntervalsMode).toBeTruthy();
   expect(date.intervalsMode).toBe("default");
 
@@ -1257,6 +1261,7 @@ test("histogram date auto intervals mode", async () => {
     name: "date",
   };
   const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
+  date.intervalsMode = "default" as any;
   expect(date.allowChangeIntervalsMode).toBeTruthy();
   expect(date.intervalsMode).toBe("default");
 
@@ -1302,6 +1307,7 @@ test("allowRunningTotals and showRunningTotals for date histogram", async () => 
     name: "date",
   };
   const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true, allowRunningTotals: true });
+  date.intervalsMode = "default" as any;
   expect(date.allowChangeIntervalsMode).toBeTruthy();
   expect(date.showRunningTotals).toBeFalsy();
   expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
@@ -1429,6 +1435,7 @@ test("getAnswersData with showGrouped set to true", async () => {
     name: "date",
   };
   const date = new HistogramModel(question, data, { allowChangeIntervalsMode: true });
+  date.intervalsMode = "default" as any;
   expect(date.intervalsMode).toBe("default");
   expect(date.canShowGroupedDateSeries).toBeFalsy();
   expect(date.showGrouped).toBeFalsy();
@@ -1466,6 +1473,7 @@ test("aggregateDataNames for date histogram", async () => {
     allowRunningTotals: true, date: {
       aggregateDataNames: ["age"],
     } });
+  date.intervalsMode = "default" as any;
   expect(date.allowChangeIntervalsMode).toBeTruthy();
   expect(date.showRunningTotals).toBeFalsy();
   expect(date.aggragateDataName).toBe("");

@@ -176,6 +176,7 @@ export class HistogramModel extends SelectBase {
     } else {
       this.valueType = "number";
     }
+    this._intervalsMode = this.valueType === "date" ? "auto" : "default" as any;
 
     if(this.allowChangeIntervalsMode) {
       this.registerToolbarItem("changeIntervalsMode", () => {
@@ -416,7 +417,7 @@ export class HistogramModel extends SelectBase {
 
   public intervalModes: HistogramIntervalsMode[] = ["auto", "decades", "years", "quarters", "months", "days"];
 
-  private _intervalsMode: HistogramIntervalsMode = "auto";
+  private _intervalsMode: HistogramIntervalsMode;
   public get intervalsMode(): HistogramIntervalsMode {
     if(this.hasCustomIntervals) return "custom";
     return this._intervalsMode;
