@@ -7,12 +7,12 @@ import { DocumentHelper, createCommercialLicenseLink } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, IState, IPermission } from "./config";
 import { FilterInfo } from "./filterInfo";
-import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
+import { LayoutEngine } from "./layout-engine";
 import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
-import "./visualizationPanel.scss";
 import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
+import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -292,6 +292,7 @@ export interface IVisualizationPanelOptions {
  * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
  */
 export class VisualizationPanel extends VisualizerBase {
+  public static LayoutEngine: new (allowed: boolean, itemSelector: string, dragEnabled?: boolean) => LayoutEngine;
   public visualizers: Array<VisualizerBase> = [];
   private renderedQuestionsCount: number = 0;
   private static counter = 0;
@@ -313,13 +314,14 @@ export class VisualizationPanel extends VisualizerBase {
 
     this._layoutEngine =
       options.layoutEngine ||
-      new MuuriLayoutEngine(
+      VisualizationPanel.LayoutEngine && new VisualizationPanel.LayoutEngine(
         this.allowDynamicLayout,
         "." + questionLayoutedElementClassName,
         this.allowDragDrop
       );
-    this._layoutEngine.onMoveCallback = (order: Array<string>) =>
-      this.reorderVisibleElements(order);
+    if(!!this._layoutEngine) {
+      this._layoutEngine.onMoveCallback = (order: Array<string>) => this.reorderVisibleElements(order);
+    }
 
     this.showToolbar = isRoot;
     if (this.options.survey) {
@@ -437,7 +439,7 @@ export class VisualizationPanel extends VisualizerBase {
     this.renderedQuestionsCount++;
     if (this.renderedQuestionsCount == this.questions.length) {
       this.renderedQuestionsCount = 0;
-      this.layoutEngine.update();
+      this.layoutEngine?.update();
       this.afterRender(this.contentContainer);
     }
   };
@@ -537,7 +539,7 @@ export class VisualizationPanel extends VisualizerBase {
     if(elementIndex >= 0) {
       options = { index: elementIndex };
     }
-    this.layoutEngine.add([questionElement], options);
+    this.layoutEngine?.add([questionElement], options);
   }
 
   public showElement(elementName: string) {
@@ -550,7 +552,7 @@ export class VisualizationPanel extends VisualizerBase {
   protected hideElementCore(element: IVisualizerPanelRenderedElement) {
     element.isVisible = false;
     if (!!element.renderedElement) {
-      this.layoutEngine.remove([element.renderedElement]);
+      this.layoutEngine?.remove([element.renderedElement]);
       this.contentContainer.removeChild(element.renderedElement);
       element.renderedElement = undefined;
     }
@@ -1035,12 +1037,12 @@ export class VisualizationPanel extends VisualizerBase {
       let questionElement = this.renderPanelElement(element, container);
     });
 
-    this.layoutEngine.start(container);
+    this.layoutEngine?.start(container);
     // !!window && window.dispatchEvent(new UIEvent("resize"));
   }
 
   protected destroyContent(container: HTMLElement) {
-    this.layoutEngine.stop();
+    this.layoutEngine?.stop();
     super.destroyContent(container);
   }
 
@@ -1056,7 +1058,7 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   public layout() {
-    this.layoutEngine.update();
+    this.layoutEngine?.update();
   }
 
   /**

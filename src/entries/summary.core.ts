@@ -47,3 +47,10 @@ export * from "../sjs-design-tokens/default-light";
 export * from "../sjs-design-tokens/default-dark";
 
 export { DocumentHelper } from "../utils/index";
+
+export * from "../layout-engine";
+export * from "../muuri-layout-engine";
+
+import { VisualizationPanel } from "../visualizationPanel";
+import { MuuriLayoutEngine } from "../muuri-layout-engine";
+VisualizationPanel.LayoutEngine = VisualizationPanel.LayoutEngine || MuuriLayoutEngine;

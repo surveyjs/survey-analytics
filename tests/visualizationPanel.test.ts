@@ -6,15 +6,15 @@ import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrap
 import { VisualizationPanel } from "../src/visualizationPanel";
 import { IState } from "../src/config";
 import { VisualizationManager } from "../src/visualizationManager";
-import { LayoutEngine } from "../src/layoutEngine";
 import { PostponeHelper } from "../src/visualizerBase";
 import { PivotModel } from "../src/pivot";
-import { NpsVisualizer } from "../src/nps";
+import { LayoutEngine } from "../src/layout-engine";
 import { NumberModel } from "../src/number";
 import { HistogramModel } from "../src/histogram";
 export * from "../src/number";
 export * from "../src/nps";
 
+VisualizationPanel.LayoutEngine = LayoutEngine;
 VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
 VisualizationManager.registerAltVisualizerSelector(AlternativeVisualizersWrapper);
