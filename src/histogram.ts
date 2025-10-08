@@ -2,7 +2,7 @@ import { ItemValue, Question } from "survey-core";
 import { DataProvider } from "./dataProvider";
 import { IAnswersData, SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
-import { histogramStatisticsCalculator } from "./statisticCalculators";
+import { getNestedDataRows, histogramStatisticsCalculator } from "./statisticCalculators";
 import { DocumentHelper } from "./utils";
 import { localization } from "./localizationManager";
 
@@ -320,14 +320,17 @@ export class HistogramModel extends SelectBase {
       this._continuousData = {};
       series.forEach(seriesValue => this._continuousData[seriesValue] = []);
       const hash = {};
-      this.data.forEach(dataItem => {
-        const answerData = dataItem[this.dataNames[0]];
-        if (answerData !== undefined) {
-          const seriesValue = dataItem[DataProvider.seriesMarkerKey] || "";
-          // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
-          this._continuousData[seriesValue].push({ continuous: this.getContinuousValue(answerData), row: dataItem });
-          hash[answerData] = answerData;
-        }
+      this.data.forEach(dataRow => {
+        const nestedDataRows = getNestedDataRows(dataRow, this);
+        nestedDataRows.forEach(nestedDataRow => {
+          const answerData = nestedDataRow[this.dataNames[0]];
+          if (answerData !== undefined) {
+            const seriesValue = nestedDataRow[DataProvider.seriesMarkerKey] || "";
+            // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
+            this._continuousData[seriesValue].push({ continuous: this.getContinuousValue(answerData), row: nestedDataRow });
+            hash[answerData] = answerData;
+          }
+        });
       });
       this._cachedValues = Object.keys(hash).map(key => ({ original: hash[key], continuous: this.getContinuousValue(key), row: hash[key].row }));
       this._cachedValues.sort((a, b) => a.continuous - b.continuous);
@@ -502,7 +505,7 @@ export class HistogramModel extends SelectBase {
 
   protected getCalculatedValuesCore(): Array<any> {
     const continuousValues = this.getContinuousValues();
-    return histogramStatisticsCalculator(this._continuousData, this.intervals, this.getSeriesValues(), [this.aggregateDataName].filter(name => !!name));
+    return histogramStatisticsCalculator(this._continuousData, this.intervals, this, [this.aggregateDataName].filter(name => !!name));
   }
 
   public async getCalculatedValues(): Promise<Array<Object>> {

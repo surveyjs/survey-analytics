@@ -81,21 +81,19 @@ test("custom component: composite content panel visualizer data", () => {
       { type: "test_composite", name: "q1" }
     ]
   });
-  let visPanel = new VisualizationPanel(survey.getAllQuestions(), [{
+  const surveyData = [{
     "q1": {
       "q1": "testValue",
       "q2": "another testValue",
     }
-  }], {});
+  }];
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), surveyData, {});
   expect(visPanel.visualizers.length).toEqual(1);
   expect(visPanel.visualizers[0].type).toEqual("composite");
   expect(visPanel.visibleElements[0].displayName).toEqual("Composite Question");
   const compositePanelVis = (visPanel.visualizers[0] as VisualizationComposite).contentVisualizer;
   expect(compositePanelVis.options.dataPath).toBe("q1");
-  expect(compositePanelVis["surveyData"]).toStrictEqual([{
-    "q1": "testValue",
-    "q2": "another testValue",
-  }]);
+  expect(compositePanelVis["surveyData"]).toStrictEqual(surveyData);
 
   ComponentCollection.Instance.clear();
 });

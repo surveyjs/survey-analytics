@@ -55,7 +55,7 @@ test("check onAfterRender", () => {
   vis.onAfterRender.add(() => {
     count++;
   });
-  vis["_panelVisualizer"].afterRender(null);
+  vis.contentVisualizer.afterRender(null);
   expect(count).toEqual(1);
 });
 
@@ -86,9 +86,6 @@ test("check content panel visualizer data", () => {
   const survey = new SurveyModel(json);
   const question = survey.getAllQuestions()[0];
   const vis: any = new VisualizationPanelDynamic(<any>question, data, {});
-  
-  expect(vis.contentVisualizer.surveyData).toStrictEqual([
-    { "question2": "testValue", },
-    { "question2": "another testValue", },    
-  ]);
+
+  expect(vis.contentVisualizer.surveyData).toStrictEqual(data);
 });

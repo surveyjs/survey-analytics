@@ -2,13 +2,12 @@ import {
   QuestionMatrixDropdownModel,
   MatrixDropdownColumn,
   ItemValue,
-  Helpers,
   QuestionSelectBase,
+  Question,
 } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanel } from "./visualizationPanel";
-import { DataProvider } from "./dataProvider";
 
 function isChoicesArraysEqual(
   choices1: Array<ItemValue>,
@@ -27,7 +26,7 @@ function isChoicesArraysEqual(
 }
 
 export class VisualizationMatrixDropdown extends VisualizerBase {
-  protected _matrixDropdownVisualizer: VisualizerBase = undefined;
+  protected _contentVisualizer: VisualizerBase = undefined;
   private readonly _childOptions;
 
   constructor(
@@ -40,21 +39,22 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     this.loadingData = false;
     this._childOptions = Object.assign({}, options);
     this._childOptions.disableLocaleSwitch = true;
-    this._childOptions.dataProvider = undefined;
     this._childOptions.allowDynamicLayout = false;
     this._childOptions.transposeData = true;
+    this._childOptions.dataProvider = this.dataProvider;
+    this._childOptions.dataPath = this.dataNames[0];
     this._childOptions.seriesValues = question.rows.map((row: ItemValue) => row.value);
     this._childOptions.seriesLabels = question.rows.map((row: ItemValue) => row.text);
 
+    this.dataProvider.fixDropdownData(this.dataNames);
     if (this.canGroupColumns) {
       var creators = VisualizationManager.getVisualizersByType("matrixdropdown-grouped");
-      this._matrixDropdownVisualizer = new creators[0](this.question, [], this._childOptions);
+      this._contentVisualizer = new creators[0](this.question, [], this._childOptions);
     } else {
       const innerQuestions = this.getQuestions();
-      this._matrixDropdownVisualizer = new VisualizationPanel(innerQuestions, [], this._childOptions, undefined, false);
+      this._contentVisualizer = new VisualizationPanel(innerQuestions, [], this._childOptions, undefined, false);
     }
-    this._matrixDropdownVisualizer.onAfterRender.add(this.onPanelAfterRenderCallback);
-    this.updateData(data);
+    this._contentVisualizer.onAfterRender.add(this.onPanelAfterRenderCallback);
   }
 
   public get canGroupColumns(): boolean {
@@ -67,43 +67,23 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
   protected setLocale(newLocale: string) {
     super.setLocale(newLocale);
     this._childOptions.seriesLabels = this.question.rows.map((row: ItemValue) => row.text);
-    this._matrixDropdownVisualizer.locale = newLocale;
+    this._contentVisualizer.locale = newLocale;
   }
 
-  public get matrixDropdownVisualizer() {
-    return this._matrixDropdownVisualizer;
+  public get contentVisualizer() {
+    return this._contentVisualizer;
   }
 
   private onPanelAfterRenderCallback = () => {
     this.afterRender(this.contentContainer);
   };
 
-  private updateDropdownVisualizerData() {
-    let panelData: Array<any> = [];
-    this.data.forEach((dataItem) => {
-      let rawDataItem = dataItem[this.question.name];
-      if (!!rawDataItem) {
-        Object.keys(rawDataItem).forEach((key) => {
-          var nestedDataItem = Object.assign({}, rawDataItem[key]);
-          nestedDataItem[DataProvider.seriesMarkerKey] = key;
-          panelData.push(nestedDataItem);
-        });
-      }
-    });
-    this._matrixDropdownVisualizer.updateData(panelData);
-  }
-
   updateData(data: Array<{ [index: string]: any }>) {
     super.updateData(data);
-    this.updateDropdownVisualizerData();
+    this.dataProvider.fixDropdownData(this.dataNames);
   }
 
-  protected onDataChanged() {
-    this.updateDropdownVisualizerData();
-    super.onDataChanged();
-  }
-
-  getQuestions() {
+  getQuestions(): Array<Question> {
     const matrixdropdown: QuestionMatrixDropdownModel = <any>this.question;
     return matrixdropdown.columns.map(
       (column: MatrixDropdownColumn) => {
@@ -117,17 +97,17 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
   }
 
   destroyContent(container: HTMLElement) {
-    this._matrixDropdownVisualizer.clear();
+    this._contentVisualizer.clear();
     super.destroyContent(this.contentContainer);
   }
 
   renderContent(container: HTMLElement): void {
-    this._matrixDropdownVisualizer.render(container);
+    this._contentVisualizer.render(container);
   }
 
   destroy() {
     super.destroy();
-    this._matrixDropdownVisualizer.onAfterRender.remove(this.onPanelAfterRenderCallback);
+    this._contentVisualizer.onAfterRender.remove(this.onPanelAfterRenderCallback);
   }
 }
 
