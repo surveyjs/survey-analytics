@@ -106,6 +106,7 @@ export async function compareScreenshot(page: Page, elementSelector: string | Lo
       elementLocator = elementSelector;
     }
     const element = elementLocator.filter({ visible: true });
+    element.scrollIntoViewIfNeeded();
     await expect.soft(element.nth(elementIndex)).toBeVisible();
     await expect.soft(element.nth(elementIndex)).toHaveScreenshot(screenshotName, {
       timeout: 10000
