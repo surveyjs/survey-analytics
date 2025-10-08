@@ -164,7 +164,39 @@ export var germanStrings = {
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Gruppen:",
   // [Auto-translated] "Not selected"
-  notSelected: "Nicht ausgewählt"
+  notSelected: "Nicht ausgewählt",
+  // [Auto-translated] "Default"
+  intervalMode_default: "Vorgabe",
+  // [Auto-translated] "Decades"
+  intervalMode_decades: "Dekaden",
+  // [Auto-translated] "Years"
+  intervalMode_years: "Jahre",
+  // [Auto-translated] "Quarters"
+  intervalMode_quarters: "Quartier",
+  // [Auto-translated] "Months"
+  intervalMode_months: "Monate",
+  // [Auto-translated] "Days"
+  intervalMode_days: "Tage",
+  // [Auto-translated] "Custom"
+  intervalMode_custom: "Gewohnheit",
+  // [Auto-translated] "Auto"
+  intervalMode_auto: "Auto",
+  // [Auto-translated] "Intervals:"
+  intervalModeTitle: "Intervalle:",
+  // [Auto-translated] "Show individual values"
+  noRunningTotals: "Einzelne Werte anzeigen",
+  // [Auto-translated] "Show running totals"
+  runningTotals: "Laufende Summen anzeigen",
+  // [Auto-translated] "Compare periods"
+  groupDateSeries: "Zeiträume vergleichen",
+  // [Auto-translated] "View timeline"
+  ungroupDateSeries: "Zeitleiste anzeigen",
+  // [Auto-translated] "None"
+  noneAggregateText: "Nichts",
+  // [Auto-translated] "Aggregate:"
+  selectAggregateText: "Aggregat:",
+  // [Auto-translated] "Year ends with"
+  groupedYearsAxisTitle: "Das Jahr endet mit"
 };
 
 setupLocale({ localeCode: "de", strings: germanStrings, nativeName: "Deutsch" });

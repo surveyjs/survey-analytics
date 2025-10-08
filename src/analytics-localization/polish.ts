@@ -164,7 +164,39 @@ export var plStrings = {
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupy:",
   // [Auto-translated] "Not selected"
-  notSelected: "Nie wybrano"
+  notSelected: "Nie wybrano",
+  // [Auto-translated] "Default"
+  intervalMode_default: "Domyślny",
+  // [Auto-translated] "Decades"
+  intervalMode_decades: "Dziesięciolecia",
+  // [Auto-translated] "Years"
+  intervalMode_years: "Lata",
+  // [Auto-translated] "Quarters"
+  intervalMode_quarters: "Kwartałów",
+  // [Auto-translated] "Months"
+  intervalMode_months: "Miesiące",
+  // [Auto-translated] "Days"
+  intervalMode_days: "Dni",
+  // [Auto-translated] "Custom"
+  intervalMode_custom: "Zwyczaj",
+  // [Auto-translated] "Auto"
+  intervalMode_auto: "Automatycznie",
+  // [Auto-translated] "Intervals:"
+  intervalModeTitle: "Odstępach czasu:",
+  // [Auto-translated] "Show individual values"
+  noRunningTotals: "Pokaż poszczególne wartości",
+  // [Auto-translated] "Show running totals"
+  runningTotals: "Pokazywanie sum bieżących",
+  // [Auto-translated] "Compare periods"
+  groupDateSeries: "Porównywanie okresów",
+  // [Auto-translated] "View timeline"
+  ungroupDateSeries: "Wyświetl oś czasu",
+  // [Auto-translated] "None"
+  noneAggregateText: "Żaden",
+  // [Auto-translated] "Aggregate:"
+  selectAggregateText: "Kruszywo:",
+  // [Auto-translated] "Year ends with"
+  groupedYearsAxisTitle: "Rok kończy się na"
 };
 
 setupLocale({ localeCode: "pl", strings: plStrings, nativeName: "Polski" });

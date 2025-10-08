@@ -164,7 +164,39 @@ export var swedishStrings = {
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupper:",
   // [Auto-translated] "Not selected"
-  notSelected: "Inte valt"
+  notSelected: "Inte valt",
+  // [Auto-translated] "Default"
+  intervalMode_default: "Standard",
+  // [Auto-translated] "Decades"
+  intervalMode_decades: "Årtionden",
+  // [Auto-translated] "Years"
+  intervalMode_years: "År",
+  // [Auto-translated] "Quarters"
+  intervalMode_quarters: "Bostad",
+  // [Auto-translated] "Months"
+  intervalMode_months: "Månader",
+  // [Auto-translated] "Days"
+  intervalMode_days: "Dagar",
+  // [Auto-translated] "Custom"
+  intervalMode_custom: "Sed",
+  // [Auto-translated] "Auto"
+  intervalMode_auto: "Bil",
+  // [Auto-translated] "Intervals:"
+  intervalModeTitle: "Mellanrum:",
+  // [Auto-translated] "Show individual values"
+  noRunningTotals: "Visa individuella värden",
+  // [Auto-translated] "Show running totals"
+  runningTotals: "Visa löpande totaler",
+  // [Auto-translated] "Compare periods"
+  groupDateSeries: "Jämför perioder",
+  // [Auto-translated] "View timeline"
+  ungroupDateSeries: "Visa tidslinjen",
+  // [Auto-translated] "None"
+  noneAggregateText: "Ingen",
+  // [Auto-translated] "Aggregate:"
+  selectAggregateText: "Aggregat:",
+  // [Auto-translated] "Year ends with"
+  groupedYearsAxisTitle: "Året slutar med"
 };
 
 setupLocale({ localeCode: "sv", strings: swedishStrings, nativeName: "Svenska" });

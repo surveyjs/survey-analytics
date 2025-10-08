@@ -82,7 +82,7 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
   return dataInfo.dataNames.length > 1 ? statistics : statistics[0] as any;
 }
 
-export function histogramStatisticsCalculator(data: any, intervals: any, dataInfo: IDataInfo): Array<any> {
+export function histogramStatisticsCalculator(data: { [series: string]: Array<{continuous: number, row: any}> }, intervals: Array<{ start: number, end: number, label: string }>, dataInfo: IDataInfo, aggregateDataNames = []): Array<any> {
   const seriesValues = dataInfo.getSeriesValues();
   const statistics: Array<Array<number>> = [];
   if (seriesValues.length === 0) {
@@ -92,8 +92,18 @@ export function histogramStatisticsCalculator(data: any, intervals: any, dataInf
     statistics.push(intervals.map(i => 0));
     data[seriesValues[i]].forEach(dataValue => {
       for (let j = 0; j < intervals.length; ++j) {
-        if (intervals[j].start <= dataValue && (dataValue < intervals[j].end || j == intervals.length - 1)) {
-          statistics[i][j]++;
+        if (intervals[j].start <= dataValue.continuous && (dataValue.continuous < intervals[j].end || j == intervals.length - 1)) {
+          if(aggregateDataNames.length > 0) {
+            aggregateDataNames.forEach(aggregateDataName => {
+              const aggregateDataValue = dataValue.row[aggregateDataName];
+              const numberValue = parseFloat(aggregateDataValue);
+              if(aggregateDataValue !== undefined && !isNaN(numberValue)) {
+                statistics[i][j] += numberValue;
+              }
+            });
+          } else {
+            statistics[i][j]++;
+          }
           break;
         }
       }
