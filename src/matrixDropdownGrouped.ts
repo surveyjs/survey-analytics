@@ -52,6 +52,7 @@ export class MatrixDropdownGrouped extends SelectBase {
     const statistics = defaultStatisticsCalculator(this.surveyData, {
       name: this.dataNames[0],
       dataNames: series,
+      dataPath: this.dataPath,
       getValues: () => values,
       getLabels: () => values,
       getSeriesValues: () => rows,

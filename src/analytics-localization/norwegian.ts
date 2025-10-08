@@ -164,7 +164,39 @@ export var norwegianStrings = {
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupper:",
   // [Auto-translated] "Not selected"
-  notSelected: "Ikke valgt"
+  notSelected: "Ikke valgt",
+  // [Auto-translated] "Default"
+  intervalMode_default: "Standard",
+  // [Auto-translated] "Decades"
+  intervalMode_decades: "Tiår",
+  // [Auto-translated] "Years"
+  intervalMode_years: "År",
+  // [Auto-translated] "Quarters"
+  intervalMode_quarters: "Kvartaler",
+  // [Auto-translated] "Months"
+  intervalMode_months: "Måneder",
+  // [Auto-translated] "Days"
+  intervalMode_days: "Dager",
+  // [Auto-translated] "Custom"
+  intervalMode_custom: "Skikk",
+  // [Auto-translated] "Auto"
+  intervalMode_auto: "Auto",
+  // [Auto-translated] "Intervals:"
+  intervalModeTitle: "Intervaller:",
+  // [Auto-translated] "Show individual values"
+  noRunningTotals: "Vis individuelle verdier",
+  // [Auto-translated] "Show running totals"
+  runningTotals: "Vis løpende totaler",
+  // [Auto-translated] "Compare periods"
+  groupDateSeries: "Sammenlign perioder",
+  // [Auto-translated] "View timeline"
+  ungroupDateSeries: "Vis tidslinje",
+  // [Auto-translated] "None"
+  noneAggregateText: "Ingen",
+  // [Auto-translated] "Aggregate:"
+  selectAggregateText: "Samlet:",
+  // [Auto-translated] "Year ends with"
+  groupedYearsAxisTitle: "Året avsluttes med"
 };
 
 setupLocale({ localeCode: "no", strings: norwegianStrings, nativeName: "Norsk" });

@@ -39,6 +39,7 @@ export interface IAnswersData {
 
 export interface IDataInfo {
   name: string; // TODO - remove from this interface
+  dataPath?: string;
   dataNames: Array<string>;
   getValues(): Array<any>;
   getLabels(): Array<string>;
@@ -242,6 +243,10 @@ export class VisualizerBase implements IDataInfo {
 
   get dataNames(): Array<string> {
     return [this.question.valueName || this.question.name];
+  }
+
+  get dataPath(): string {
+    return this.options.dataPath;
   }
 
   /**
@@ -453,25 +458,9 @@ export class VisualizerBase implements IDataInfo {
    * @param data A data array with survey results to be visualized.
    */
   updateData(data: Array<{ [index: string]: any }> | GetDataFn) {
-    const dataPath = this.options.dataPath;
-    let dataToAssign = data;
-    if (!!dataPath && Array.isArray(data)) {
-      dataToAssign = [];
-      data.forEach(dataItem => {
-        if(!!dataItem && dataItem[dataPath] !== undefined) {
-          if(Array.isArray(dataItem[dataPath])) {
-            dataToAssign = (dataToAssign as Array<any>).concat(dataItem[dataPath]);
-          } else {
-            (dataToAssign as Array<any>).push(dataItem[dataPath]);
-          }
-        }
-      });
-    }
-    if (!this.options.dataProvider) {
-      this.dataProvider.data = dataToAssign;
-    }
+    this.dataProvider.data = data;
     if (this.hasFooter) {
-      this.footerVisualizer.updateData(dataToAssign);
+      this.footerVisualizer.updateData(data);
     }
   }
 

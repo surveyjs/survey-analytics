@@ -230,6 +230,7 @@ export class PlotlySetup {
     let traces: any = [];
     const traceConfig: any = {
       type: model.chartType,
+      sort: false,
       labels: labels,
       customdata: labels,
       text: labels.map((label: string) => {
@@ -319,6 +320,8 @@ export class PlotlySetup {
       colors,
       texts,
       seriesLabels,
+      labelsTitle,
+      valuesTitle
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
@@ -407,6 +410,12 @@ export class PlotlySetup {
         layout.height = (labels.length * seriesLabels.length + 1) * lineHeight + topMargin + bottomMargin;
       }
     }
+    if(labelsTitle) {
+      layout.yaxis.title = { text: labelsTitle };
+    }
+    if(valuesTitle) {
+      layout.xaxis.title = { text: valuesTitle };
+    }
 
     if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       layout.xaxis.autorange = "reversed";
@@ -432,6 +441,8 @@ export class PlotlySetup {
       colors,
       texts,
       seriesLabels,
+      labelsTitle,
+      valuesTitle
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
@@ -471,6 +482,9 @@ export class PlotlySetup {
       traces.push(trace);
     });
 
+    const maxTicks = 50;
+    const tickStep = Math.ceil(labels.length / maxTicks);
+
     const layout: any = {
       margin: {
         t: topMargin,
@@ -495,15 +509,25 @@ export class PlotlySetup {
         type: "category",
         tickmode: "array",
         tickvals: labels,
-        ticktext: labels.map((label: string) => {
+        ticktext: labels.map((label: string, index: number) => {
+          if(labels.length > maxTicks && index % tickStep !== 0) {
+            return "";
+          }
           return PlotlySetup.getTruncatedLabel(
             label,
             model.labelTruncateLength
-          ) + "  ";
+          );
         }),
       },
       modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
     };
+
+    if(labelsTitle) {
+      layout.xaxis.title = { text: labelsTitle };
+    }
+    if(valuesTitle) {
+      layout.yaxis.title = { text: valuesTitle };
+    }
 
     if (model.showPercentages && model.showOnlyPercentages) {
       layout.yaxis = {

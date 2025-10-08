@@ -464,7 +464,7 @@ test("VisualizationMatrixDropdown stackedbar chart height", async () => {
     ],
   });
   const visualizer = new VisualizationMatrixDropdown(question, []);
-  const selectBase = (visualizer["_matrixDropdownVisualizer"] as VisualizationPanel).visualizers[0] as SelectBase;
+  const selectBase = (visualizer.contentVisualizer as VisualizationPanel).visualizers[0] as SelectBase;
   selectBase.chartType = "stackedbar";
   const config = PlotlySetup.setupBar(selectBase, await selectBase.getAnswersData());
   expect(config.layout.height).toEqual(780);
@@ -527,7 +527,7 @@ test("SelectBase null ref #394", async () => {
   const matrixDropdown: QuestionMatrixDropdownModel = survey.getQuestionByName("q1") as any;
   const sbp = new SelectBasePlotly(matrixDropdown.columns[0].templateQuestion, []); // keep it to register visualizer
   const matrixVisualizer = new VisualizationMatrixDropdown(matrixDropdown, []);
-  const innerVisPanel = matrixVisualizer["_matrixDropdownVisualizer"] as VisualizationPanel;
+  const innerVisPanel = matrixVisualizer.contentVisualizer as VisualizationPanel;
   const selectBase = innerVisPanel.getVisualizer("Colonne 1") as SelectBasePlotly;
   try {
     var plotlyOptions = PlotlySetup.setup("bar", selectBase, await selectBase.getAnswersData());

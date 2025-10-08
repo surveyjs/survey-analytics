@@ -164,7 +164,39 @@ export var italianStrings = {
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Gruppi:",
   // [Auto-translated] "Not selected"
-  notSelected: "Non selezionato"
+  notSelected: "Non selezionato",
+  // [Auto-translated] "Default"
+  intervalMode_default: "Default",
+  // [Auto-translated] "Decades"
+  intervalMode_decades: "Decenni",
+  // [Auto-translated] "Years"
+  intervalMode_years: "Anni",
+  // [Auto-translated] "Quarters"
+  intervalMode_quarters: "Quarti",
+  // [Auto-translated] "Months"
+  intervalMode_months: "Mesi",
+  // [Auto-translated] "Days"
+  intervalMode_days: "Giorni",
+  // [Auto-translated] "Custom"
+  intervalMode_custom: "Costume",
+  // [Auto-translated] "Auto"
+  intervalMode_auto: "Automatico",
+  // [Auto-translated] "Intervals:"
+  intervalModeTitle: "Intervalli:",
+  // [Auto-translated] "Show individual values"
+  noRunningTotals: "Mostra i singoli valori",
+  // [Auto-translated] "Show running totals"
+  runningTotals: "Mostra totali parziali",
+  // [Auto-translated] "Compare periods"
+  groupDateSeries: "Confronta i periodi",
+  // [Auto-translated] "View timeline"
+  ungroupDateSeries: "Visualizza la timeline",
+  // [Auto-translated] "None"
+  noneAggregateText: "Nessuno",
+  // [Auto-translated] "Aggregate:"
+  selectAggregateText: "Aggregato:",
+  // [Auto-translated] "Year ends with"
+  groupedYearsAxisTitle: "L'anno si chiude con"
 };
 
 setupLocale({ localeCode: "it", strings: italianStrings, nativeName: "Italiano" });

@@ -4,7 +4,7 @@ import { VisualizationPanel } from "./visualizationPanel";
 import { Question, QuestionPanelDynamicModel, IQuestion } from "survey-core";
 
 export class VisualizationPanelDynamic extends VisualizerBase {
-  protected _panelVisualizer: VisualizationPanel = undefined;
+  protected _contentVisualizer: VisualizationPanel = undefined;
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
@@ -16,34 +16,27 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     var options = Object.assign({}, options);
     options.allowHideQuestions = false;
     options.allowDynamicLayout = false;
-    options.dataProvider = undefined;
+    options.dataProvider = this.dataProvider;
     options.dataPath = this.dataNames[0];
-    this._panelVisualizer = new VisualizationPanel(this.getQuestions(), [], options, undefined, false);
-    this._panelVisualizer.onAfterRender.add(this.onAfterRenderPanelCallback);
-    this.updateData(data);
+    this._contentVisualizer = new VisualizationPanel(this.getQuestions(), [], options, undefined, false);
+    this._contentVisualizer.onAfterRender.add(this.onAfterRenderPanelCallback);
   }
 
   public get contentVisualizer(): VisualizationPanel {
-    return this._panelVisualizer;
+    return this._contentVisualizer;
   }
 
   protected setLocale(newLocale: string) {
     super.setLocale(newLocale);
-    this._panelVisualizer.locale = newLocale;
+    this._contentVisualizer.locale = newLocale;
   }
 
   private onAfterRenderPanelCallback = () => {
     this.afterRender(this.contentContainer);
   };
 
-  updateData(data: Array<{ [index: string]: any }>) {
-    super.updateData(data);
-    this._panelVisualizer.updateData(data);
-  }
-
-  protected onDataChanged() {
-    this._panelVisualizer.updateData(this.dataProvider.filteredData);
-    super.onDataChanged();
+  public resetFilter(): void {
+    this.contentVisualizer.resetFilter();
   }
 
   getQuestions(): IQuestion[] {
@@ -52,17 +45,17 @@ export class VisualizationPanelDynamic extends VisualizerBase {
   }
 
   destroyContent(container: HTMLElement) {
-    this._panelVisualizer.clear();
+    this._contentVisualizer.clear();
     super.destroyContent(this.contentContainer);
   }
 
   renderContent(container: HTMLElement): void {
-    this._panelVisualizer.render(container, false);
+    this._contentVisualizer.render(container, false);
   }
 
   public destroy() {
     super.destroy();
-    this._panelVisualizer.onAfterRender.remove(this.onAfterRenderPanelCallback);
+    this._contentVisualizer.onAfterRender.remove(this.onAfterRenderPanelCallback);
   }
 }
 

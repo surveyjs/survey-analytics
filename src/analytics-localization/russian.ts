@@ -164,7 +164,39 @@ export var russianStrings = {
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Группы:",
   // [Auto-translated] "Not selected"
-  notSelected: "Не выбрано"
+  notSelected: "Не выбрано",
+  // [Auto-translated] "Default"
+  intervalMode_default: "По умолчанию",
+  // [Auto-translated] "Decades"
+  intervalMode_decades: "Десятилетий",
+  // [Auto-translated] "Years"
+  intervalMode_years: "Годы",
+  // [Auto-translated] "Quarters"
+  intervalMode_quarters: "Квартира",
+  // [Auto-translated] "Months"
+  intervalMode_months: "Месяцы",
+  // [Auto-translated] "Days"
+  intervalMode_days: "Дни недели",
+  // [Auto-translated] "Custom"
+  intervalMode_custom: "Обычай",
+  // [Auto-translated] "Auto"
+  intervalMode_auto: "Авто",
+  // [Auto-translated] "Intervals:"
+  intervalModeTitle: "Интервалы:",
+  // [Auto-translated] "Show individual values"
+  noRunningTotals: "Отображение отдельных значений",
+  // [Auto-translated] "Show running totals"
+  runningTotals: "Показать промежуточные итоги",
+  // [Auto-translated] "Compare periods"
+  groupDateSeries: "Сравнение периодов",
+  // [Auto-translated] "View timeline"
+  ungroupDateSeries: "Просмотр временной шкалы",
+  // [Auto-translated] "None"
+  noneAggregateText: "Никакой",
+  // [Auto-translated] "Aggregate:"
+  selectAggregateText: "Совокупность:",
+  // [Auto-translated] "Year ends with"
+  groupedYearsAxisTitle: "Год заканчивается с"
 };
 
 setupLocale({ localeCode: "ru", strings: russianStrings, nativeName: "Русский" });

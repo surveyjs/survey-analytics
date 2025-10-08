@@ -39,7 +39,7 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
   protected getDisplayName(): string {
     return this.table.useNamesAsTitles
       ? this.question.name
-      : (this.question.title || "").trim() || this.question.name;
+      : (this.question.locTitle?.renderedHtml || this.question.title || "").trim() || this.question.name;
   }
   protected getName(): string {
     return this.question.name;

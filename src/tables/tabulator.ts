@@ -363,7 +363,6 @@ export class Tabulator extends Table {
 
   public getColumns(): Array<any> {
     const columns: any = this.columns.map((column, index) => {
-      let question = this._survey.getQuestionByName(column.name);
       let formatter = "plaintext";
       if (column.dataType == ColumnDataType.FileLink) {
         formatter = "html";
@@ -373,10 +372,7 @@ export class Tabulator extends Table {
       }
       return {
         field: column.name,
-        title:
-          (question &&
-            (this._options.useNamesAsTitles ? question.name : question.title)) ||
-          column.displayName,
+        title: column.displayName || column.name,
         width: column.width,
         widthShrink: !column.width ? 1 : 0,
         visible: this.isColumnVisible(column),
@@ -385,6 +381,7 @@ export class Tabulator extends Table {
         download: this.options.downloadHiddenColumns ? true : undefined,
         formatter,
         headerTooltip: true,
+        headerWordWrap: true,
         accessorDownload: this.accessorDownload,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {
           return this.getTitleFormatter(

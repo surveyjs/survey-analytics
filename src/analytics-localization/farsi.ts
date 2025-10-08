@@ -164,7 +164,39 @@ export var farsiStrings = {
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "گروه:",
   // [Auto-translated] "Not selected"
-  notSelected: "انتخاب نشده است"
+  notSelected: "انتخاب نشده است",
+  // [Auto-translated] "Default"
+  intervalMode_default: "پیش فرض",
+  // [Auto-translated] "Decades"
+  intervalMode_decades: "دهه",
+  // [Auto-translated] "Years"
+  intervalMode_years: "سال",
+  // [Auto-translated] "Quarters"
+  intervalMode_quarters: "چهارم",
+  // [Auto-translated] "Months"
+  intervalMode_months: "ماه‌ها",
+  // [Auto-translated] "Days"
+  intervalMode_days: "روز‌ها",
+  // [Auto-translated] "Custom"
+  intervalMode_custom: "سفارشی",
+  // [Auto-translated] "Auto"
+  intervalMode_auto: "خودکار",
+  // [Auto-translated] "Intervals:"
+  intervalModeTitle: "فواصل:",
+  // [Auto-translated] "Show individual values"
+  noRunningTotals: "نمایش ارزش های فردی",
+  // [Auto-translated] "Show running totals"
+  runningTotals: "نمایش مجموع در حال اجرا",
+  // [Auto-translated] "Compare periods"
+  groupDateSeries: "دوره ها را مقایسه کنید",
+  // [Auto-translated] "View timeline"
+  ungroupDateSeries: "مشاهده جدول زمانی",
+  // [Auto-translated] "None"
+  noneAggregateText: "هیچ کدام",
+  // [Auto-translated] "Aggregate:"
+  selectAggregateText: "مجموع:",
+  // [Auto-translated] "Year ends with"
+  groupedYearsAxisTitle: "سال به پایان می رسد با"
 };
 
 setupLocale({ localeCode: "fa", strings: farsiStrings, nativeName: "فارسی" });

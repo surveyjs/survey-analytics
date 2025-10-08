@@ -46,13 +46,16 @@ export class DataProvider {
               const filterValueType = typeof filterValue;
               const questionValue = item[key];
               if (Array.isArray(questionValue)) {
-                if (filterValueType !== "object")
+                if (filterValueType === "object") {
+                  return !questionArrayValueContainsValue(questionValue, filterValue);
+                } else {
                   return questionValue.indexOf(filterValue) == -1;
+                }
               }
               if (typeof questionValue === "object") {
                 if (filterValueType !== "object")
                   return true;
-                return !questionContainsValue(questionValue, filterValue);
+                return !questionValueContainsValue(questionValue, filterValue);
               }
               const seriesValue = item[DataProvider.seriesMarkerKey];
               if (!!seriesValue && filterValueType === "object") {
@@ -86,13 +89,45 @@ export class DataProvider {
     var filterChanged = true;
     if (selectedValue !== undefined) {
       filterChanged = this.filterValues[questionName] !== selectedValue;
-      this.filterValues[questionName] = selectedValue;
+      if (filterChanged) {
+        this.filterValues[questionName] = selectedValue;
+      }
     } else {
       filterChanged = this.filterValues[questionName] !== undefined;
-      delete this.filterValues[questionName];
+      if (filterChanged) {
+        delete this.filterValues[questionName];
+      }
     }
     if (filterChanged) {
+      this.raiseFilterChanged(questionName, selectedValue);
       this.raiseDataChanged();
+    }
+  }
+
+  /**
+   * Resets filter.
+   */
+  public resetFilter(): void {
+    if (Object.keys(this.filterValues).length === 0) {
+      return;
+    }
+    Object.keys(this.filterValues).forEach(key => delete this.filterValues[key]);
+    this.raiseFilterChanged();
+    this.raiseDataChanged();
+  }
+
+  /**
+   * Fires when data has been changed.
+   */
+  public onFilterChanged = new Event<
+    (sender: DataProvider, options: any) => any,
+    DataProvider,
+    any
+  >();
+
+  public raiseFilterChanged(questionName?: string, selectedValue?: any): void {
+    if (!this.onFilterChanged.isEmpty) {
+      this.onFilterChanged.fire(this, { questionName, selectedValue });
     }
   }
 
@@ -116,9 +151,32 @@ export class DataProvider {
     return Object.keys(this.filterValues).map(key => ({ field: key, type: "=", value: this.filterValues[key] }));
   }
 
+  public fixDropdownData(dataNames: string[]): void {
+    (this.data || []).forEach((dataItem) => {
+      let rawDataItem = dataItem[dataNames[0]];
+      if (!!rawDataItem && typeof rawDataItem === "object" && !Array.isArray(rawDataItem)) {
+        const arrayData = [];
+        Object.keys(rawDataItem).forEach((key) => {
+          var nestedDataItem = Object.assign({}, rawDataItem[key]);
+          nestedDataItem[DataProvider.seriesMarkerKey] = key;
+          arrayData.push(nestedDataItem);
+        });
+        dataItem[dataNames[0]] = arrayData;
+      }
+    });
+  }
 }
 
-function questionContainsValue(questionValue: any, filterValue: any) {
+function questionArrayValueContainsValue(questionValues: Array<any>, filterValue: any) {
+  for(let i = 0; i < questionValues.length; i ++) {
+    if(questionValueContainsValue(questionValues[i], filterValue)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function questionValueContainsValue(questionValue: any, filterValue: any) {
   const questionValueKeys = Object.keys(questionValue);
   const filterValueKeys = Object.keys(filterValue);
 

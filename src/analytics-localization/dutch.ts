@@ -164,7 +164,39 @@ export var dutchStrings = {
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Groepen:",
   // [Auto-translated] "Not selected"
-  notSelected: "Niet geselecteerd"
+  notSelected: "Niet geselecteerd",
+  // [Auto-translated] "Default"
+  intervalMode_default: "Verstek",
+  // [Auto-translated] "Decades"
+  intervalMode_decades: "Decennia",
+  // [Auto-translated] "Years"
+  intervalMode_years: "Jaren",
+  // [Auto-translated] "Quarters"
+  intervalMode_quarters: "Vertrekken",
+  // [Auto-translated] "Months"
+  intervalMode_months: "Maanden",
+  // [Auto-translated] "Days"
+  intervalMode_days: "Dagen",
+  // [Auto-translated] "Custom"
+  intervalMode_custom: "Gewoonte",
+  // [Auto-translated] "Auto"
+  intervalMode_auto: "Auto",
+  // [Auto-translated] "Intervals:"
+  intervalModeTitle: "Intervallen:",
+  // [Auto-translated] "Show individual values"
+  noRunningTotals: "Toon individuele waarden",
+  // [Auto-translated] "Show running totals"
+  runningTotals: "Toon lopende totalen",
+  // [Auto-translated] "Compare periods"
+  groupDateSeries: "Vergelijk periodes",
+  // [Auto-translated] "View timeline"
+  ungroupDateSeries: "Tijdlijn bekijken",
+  // [Auto-translated] "None"
+  noneAggregateText: "Geen",
+  // [Auto-translated] "Aggregate:"
+  selectAggregateText: "Aggregaat:",
+  // [Auto-translated] "Year ends with"
+  groupedYearsAxisTitle: "Het jaar eindigt met"
 };
 
 setupLocale({ localeCode: "nl", strings: dutchStrings, nativeName: "Nederlands" });
