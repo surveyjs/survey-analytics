@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.types.json",
+  "compilerOptions": {
+    "outDir": "build/survey-analytics-tabulator.types/"
+  },
+  "include": [
+    "src/entries/tabulator.ts"
+  ]
+}
