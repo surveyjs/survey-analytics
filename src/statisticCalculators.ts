@@ -31,7 +31,6 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
     return valuesIndex[val];
   };
 
-
   const processDataRow = (dataRow, dataName, index) => {
     const rowValue = dataRow[dataName];
     if (rowValue !== undefined || processMissingAnswers) {
