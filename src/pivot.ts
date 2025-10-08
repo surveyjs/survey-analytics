@@ -4,22 +4,16 @@ import { createCommercialLicenseLink, DocumentHelper } from "./utils";
 import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { VisualizationManager } from "./visualizationManager";
+import { HistogramModel } from "./histogram";
 
-export class PivotModel extends SelectBase {
-  protected valueType: "enum" | "date" | "number" = "enum";
-  private _cachedValues: Array<{ original: any, continuous: number, row: any }> = undefined;
-  private _continuousData: Array<{ continuous: number, row: any }> = undefined;
-  private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
-  private _intervalPrecision: number = 2;
+export class PivotModel extends HistogramModel {
+  private _pivotContinuousData: Array<{ continuous: number, row: any }> = undefined;
 
   private axisXSelector: HTMLDivElement;
   public axisXQuestionName: string;
   private axisYSelectors: Array<HTMLDivElement> = [];
   public axisYQuestionNames: Array<string> = [];
   private questionsY: Array<VisualizerBase> = [];
-
-  public static IntervalsCount = 10;
-  public static UseIntervalsFrom = 10;
 
   constructor(
     private questions: Array<Question>,
@@ -30,9 +24,6 @@ export class PivotModel extends SelectBase {
   ) {
     super(null, data, options, type || "pivot");
     this.questions = this.questions.filter((question) => ["matrixdropdown", "matrixdynamic", "matrix", "file", "signature", "multipletext", "comment", "html", "image"].indexOf(question.getType()) === -1);
-    if (this.options.intervalPrecision !== undefined) {
-      this._intervalPrecision = this.options.intervalPrecision;
-    }
 
     this.axisXQuestionName = this.questions.length > 0 ? this.questions[0].name : undefined;
     this.registerToolbarItem("axisXSelector", () =>
@@ -158,16 +149,6 @@ export class PivotModel extends SelectBase {
     return ["pie", "doughnut"].indexOf(this.chartType) === -1;
   }
 
-  public getQuestionValueType(question: Question): "enum" | "date" | "number" {
-    const questionType = question.getType();
-    if (questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
-      return "date";
-    } else if(questionType === "text" || questionType === "rating" || questionType === "expression" || questionType === "range") {
-      return "number";
-    }
-    return "enum";
-  }
-
   private setupPivot() {
     const questionX = this.questions.filter((q) => q.name === this.axisXQuestionName)[0];
     if(!questionX) {
@@ -186,57 +167,9 @@ export class PivotModel extends SelectBase {
     this.onDataChanged();
   }
 
-  private reset() {
-    this._continuousData = undefined;
-    this._cachedValues = undefined;
-    this._cachedIntervals = undefined;
-  }
-
-  public getContinuousValue(value: any): number {
-    if (this.valueType === "date") {
-      return Date.parse(value);
-    }
-    return parseFloat(value);
-  }
-
-  public getString(value: number): string {
-    if (this.valueType === "date") {
-      return new Date(value).toLocaleDateString();
-    }
-    return "" + value;
-  }
-
-  private toPrecision(value: number) {
-    const base = Math.pow(10, this._intervalPrecision);
-    return Math.round(base * value) / base;
-  }
-
-  public getSelectedItemByText(itemText: string) {
-    if (this.hasCustomIntervals || this.getContinuousValues().length > PivotModel.UseIntervalsFrom) {
-      const interval = this.intervals.filter(interval => interval.label === itemText)[0];
-      return new ItemValue(interval, interval !== undefined ? interval.label : "");
-    }
-    const labels = this.getLabels();
-    const labelIndex = labels.indexOf(itemText);
-    return new ItemValue(this.getValues()[labelIndex], labels[labelIndex]);
-  }
-
-  /**
-   * Updates visualizer data.
-   */
-  public updateData(data: Array<{ [index: string]: any }>) {
-    this.reset();
-    super.updateData(data);
-  }
-
-  protected onDataChanged() {
-    this.reset();
-    super.onDataChanged();
-  }
-
   protected getContinuousValues() {
     if (this._cachedValues === undefined) {
-      this._continuousData = [];
+      this._pivotContinuousData = [];
       if(this.valueType === "enum") {
         this._cachedValues = [];
         return this._cachedValues;
@@ -246,7 +179,7 @@ export class PivotModel extends SelectBase {
         const answerData = dataItem[this.name];
         if (answerData !== undefined) {
           // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
-          this._continuousData.push({ continuous: this.getContinuousValue(answerData), row: dataItem });
+          this._pivotContinuousData.push({ continuous: this.getContinuousValue(answerData), row: dataItem });
           hash[answerData] = { value: answerData, row: dataItem };
         }
       });
@@ -258,14 +191,6 @@ export class PivotModel extends SelectBase {
 
   protected isSupportAnswersOrder(): boolean {
     return false;
-  }
-
-  protected isSupportMissingAnswers(): boolean {
-    return false;
-  }
-
-  protected get needUseRateValues() {
-    return this.dataType == "rating" && Array.isArray(this.question["rateValues"]) && this.question["rateValues"].length > 0;
   }
 
   public getSeriesValues(): Array<string> {
@@ -296,75 +221,6 @@ export class PivotModel extends SelectBase {
       }
     });
     return seriesLabels;
-  }
-
-  public getValues(): Array<any> {
-    if(this.valueType === "enum") {
-      return super.getValues().reverse();
-    }
-    return this.intervals.map(interval => interval.start);
-  }
-
-  public getLabels(): Array<string> {
-    if(this.valueType === "enum") {
-      return super.getLabels().reverse();
-    }
-    return this.intervals.map(interval => interval.label);
-  }
-
-  public get hasCustomIntervals() {
-    return !!this.questionOptions && Array.isArray(this.questionOptions.intervals);
-  }
-
-  public get intervals() {
-    if (this.hasCustomIntervals) {
-      return this.questionOptions.intervals;
-    }
-
-    if(this.dataType == "rating") {
-      if (this.needUseRateValues) {
-        const rateValues = this.question["rateValues"] as ItemValue[];
-        rateValues.sort((iv1, iv2) => iv1.value - iv2.value);
-        return rateValues.map((rateValue, i) => ({
-          start: rateValue.value,
-          end: i < rateValues.length - 1 ? rateValues[i + 1].value : rateValue.value + 1,
-          label: rateValue.text
-        }));
-      } else {
-        const rateIntervals = [];
-        for(let i = (this.question["rateMin"] || 0); i <= (this.question["rateMax"] || (PivotModel.IntervalsCount - 1)); i += (this.question["rateStep"] || 1)) {
-          rateIntervals.push({
-            start: i,
-            end: i + 1,
-            label: "" + (!!this.question["rateMin"] && !!this.question["rateMax"] ? i : (i + "-" + (i+1)))
-          });
-        }
-        return rateIntervals;
-      }
-    }
-
-    if (this._cachedIntervals === undefined) {
-      const continuousValues = this.getContinuousValues();
-      this._cachedIntervals = [];
-      if (continuousValues.length) {
-        let start = continuousValues[0].continuous;
-        const end = continuousValues[continuousValues.length - 1].continuous;
-        const intervalsCount = PivotModel.IntervalsCount;
-        const delta = (end - start) / intervalsCount;
-        for (let i = 0; i < intervalsCount; ++i) {
-          const next = start + delta;
-          const istart = this.toPrecision(start);
-          const inext = this.toPrecision(next);
-          this._cachedIntervals.push({
-            start: istart,
-            end: i < intervalsCount - 1 ? inext : inext + delta / 100,
-            label: "" + this.getString(istart) + "-" + this.getString(inext)
-          });
-          start = next;
-        }
-      }
-    }
-    return this._cachedIntervals;
   }
 
   public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
@@ -439,7 +295,7 @@ export class PivotModel extends SelectBase {
       for (var i = 0; i < series.length; ++i) {
         statistics.push(intervals.map(i => 0));
       }
-      this._continuousData.forEach(dataValue => {
+      this._pivotContinuousData.forEach(dataValue => {
         for (let valueIndex = 0; valueIndex < intervals.length; ++valueIndex) {
           if (intervals[valueIndex].start <= dataValue.continuous && (dataValue.continuous < intervals[valueIndex].end || valueIndex == intervals.length - 1)) {
             if(this.questionsY.length === 0) {
@@ -456,14 +312,6 @@ export class PivotModel extends SelectBase {
       data: statistics,
       values: this.valueType === "enum" ? this.getValues() : this.intervals.map(i => i.label)
     };
-  }
-
-  public getValueType(): "enum" | "date" | "number" {
-    return this.valueType;
-  }
-
-  protected isSupportSoftUpdateContent(): boolean {
-    return false;
   }
 
   protected renderToolbar(container: HTMLElement) {

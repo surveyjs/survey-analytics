@@ -148,11 +148,11 @@ export const intervalCalculators = {
 };
 
 export class HistogramModel extends SelectBase {
-  protected valueType: "date" | "number" = "number";
-  private _cachedValues: Array<{ original: any, continuous: number, row: any }> = undefined;
+  protected valueType: "date" | "number" | "enum" = "number";
+  protected _cachedValues: Array<{ original: any, continuous: number, row: any }> = undefined;
   private _continuousData: { [series: string]: Array<{continuous: number, row: any}> } = undefined;
-  private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
-  private _intervalPrecision: number = 2;
+  protected _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
+  protected _intervalPrecision: number = 2;
   private showRunningTotalsBtn: HTMLElement = undefined;
   private showGroupedBtn: HTMLElement = undefined;
   private changeIntervalsModeSelector: HTMLDivElement = undefined;
@@ -171,12 +171,7 @@ export class HistogramModel extends SelectBase {
     if (this.options.intervalPrecision !== undefined) {
       this._intervalPrecision = this.options.intervalPrecision;
     }
-    const questionType = this.dataType;
-    if (questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
-      this.valueType = "date";
-    } else {
-      this.valueType = "number";
-    }
+    this.valueType = this.getQuestionValueType(this.question, "number") || this.valueType;
     this._intervalsMode = this.valueType === "date" ? "auto" : "default" as any;
 
     if(this.allowChangeIntervals) {
@@ -249,7 +244,20 @@ export class HistogramModel extends SelectBase {
     }
   }
 
-  private reset() {
+  public getQuestionValueType(question: Question, defaultValue = "enum"): "enum" | "date" | "number" {
+    if(question) {
+      const questionType = question.getType();
+      if (questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
+        return "date";
+      } else if(questionType === "text" || questionType === "rating" || questionType === "expression" || questionType === "range") {
+        return "number";
+      }
+      return defaultValue as any;
+    }
+    return undefined;
+  }
+
+  protected reset() {
     this._continuousData = undefined;
     this._cachedValues = undefined;
     this._cachedIntervals = undefined;
@@ -269,7 +277,7 @@ export class HistogramModel extends SelectBase {
     return "" + value;
   }
 
-  private toPrecision(value: number) {
+  protected toPrecision(value: number) {
     const base = Math.pow(10, this._intervalPrecision);
     return Math.round(base * value) / base;
   }
@@ -349,10 +357,16 @@ export class HistogramModel extends SelectBase {
   }
 
   public getValues(): Array<any> {
+    if(this.valueType === "enum") {
+      return super.getValues().reverse();
+    }
     return this.intervals.map(interval => interval.start);
   }
 
   public getLabels(): Array<string> {
+    if(this.valueType === "enum") {
+      return super.getLabels().reverse();
+    }
     return this.intervals.map(interval => interval.label);
   }
 
@@ -360,7 +374,7 @@ export class HistogramModel extends SelectBase {
     return !!this.questionOptions && Array.isArray(this.questionOptions.intervals);
   }
 
-  public get intervals(): Array<{start: number | Date, end: number | Date, label: string}> {
+  public get intervals(): Array<{start: number, end: number, label: string}> {
     if (this.hasCustomIntervals) {
       return this.questionOptions.intervals;
     }
@@ -623,7 +637,7 @@ export class HistogramModel extends SelectBase {
     return answersData;
   }
 
-  public getValueType(): "date" | "number" {
+  public getValueType(): "date" | "number" | "enum" {
     return this.valueType;
   }
 }
