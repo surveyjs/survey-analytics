@@ -150,7 +150,7 @@ export class NumberModel extends VisualizerBase {
 
   protected getCalculatedValuesCore(): ICalculationResult {
     if (this._statistics === undefined) {
-      this._statistics = mathStatisticsCalculator(this.surveyData, { valueNames: this.dataNames });
+      this._statistics = mathStatisticsCalculator(this.surveyData, this);
     }
     return this._statistics;
   }

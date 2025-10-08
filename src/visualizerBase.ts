@@ -17,6 +17,7 @@ export interface IChartAdapter {
 }
 
 export interface ICalculatedDataInfo {
+  dataPath?: string;
   valueNames: Array<string>;
   seriesNames?: Array<string>;
   getLabel?(value: string): string;
@@ -35,6 +36,8 @@ export interface IAnswersData {
   colors: Array<string>;
   texts: Array<Array<any>>;
   seriesLabels: Array<string>;
+  labelsTitle?: string;
+  valuesTitle?: string;
 }
 
 export interface IDataInfo {

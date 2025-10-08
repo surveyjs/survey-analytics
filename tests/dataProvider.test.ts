@@ -273,13 +273,13 @@ test("getData for matrix dropdown inner visualizers", async () => {
   expect(innerPanelVisualizer.dataPath).toBe("question2");
   const column1Visualizer = innerPanelVisualizer["visualizers"][0];
   expect(column1Visualizer.dataPath).toBe("question2");
-  expect(await column1Visualizer.getCalculatedValues()).toEqual([
+  expect((await column1Visualizer.getCalculatedValues()).data).toEqual([
     [0, 2, 1].reverse(),
     [1, 1, 1].reverse(),
   ]);
   const column2Visualizer = innerPanelVisualizer["visualizers"][1];
   expect(column2Visualizer.dataPath).toBe("question2");
-  expect(await column2Visualizer.getCalculatedValues()).toEqual([
+  expect((await column2Visualizer.getCalculatedValues()).data).toEqual([
     [1, 0, 2, 0, 0].reverse(),
     [0, 0, 0, 2, 1].reverse(),
   ]);

@@ -1085,7 +1085,7 @@ test("histogram date different intervals", async () => {
   date.intervalsMode = "years";
   expect(date.intervalsMode).toBe("years");
   expect(date.getLabels()).toEqual(["2009"]);
-  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(1);
+  expect(((await date.getCalculatedValues()).data[0] as any).length).toEqual(1);
 
   date.intervalsMode = "quarters";
   expect(date.intervalsMode).toBe("quarters");
@@ -1095,7 +1095,7 @@ test("histogram date different intervals", async () => {
     "III 2009",
     "IV 2009",
   ]);
-  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(4);
+  expect(((await date.getCalculatedValues()).data[0] as any).length).toEqual(4);
 
   date.intervalsMode = "months";
   expect(date.intervalsMode).toBe("months");
@@ -1113,7 +1113,7 @@ test("histogram date different intervals", async () => {
     "Nov 2009",
     "Dec 2009",
   ]);
-  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(12);
+  expect(((await date.getCalculatedValues()).data[0] as any).length).toEqual(12);
 
   date.intervalsMode = "quarters";
   expect(date.intervalsMode).toBe("quarters");
@@ -1123,7 +1123,7 @@ test("histogram date different intervals", async () => {
     "III 2009",
     "IV 2009",
   ]);
-  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(4);
+  expect(((await date.getCalculatedValues()).data[0] as any).length).toEqual(4);
 });
 
 test("getBestIntervalMode for date histogram", () => {
@@ -1265,7 +1265,7 @@ test("histogram date auto intervals mode", async () => {
     "2008",
     "2009",
   ]);
-  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(6);
+  expect(((await date.getCalculatedValues()).data[0] as any).length).toEqual(6);
 });
 
 test("changeIntervalsMode and allowRunningTotals toolbar items for date histogram", () => {
@@ -1300,12 +1300,12 @@ test("allowRunningTotals and showRunningTotals for date histogram", async () => 
   date.intervalsMode = "default" as any;
   expect(date.allowChangeIntervals).toBeTruthy();
   expect(date.showRunningTotals).toBeFalsy();
-  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
-  expect((await date.getCalculatedValues())[0]).toEqual([2, 0, 0, 0, 2, 0, 0, 1, 0, 3]);
+  expect(((await date.getCalculatedValues()).data[0] as any).length).toEqual(10);
+  expect((await date.getCalculatedValues()).data[0]).toEqual([2, 0, 0, 0, 2, 0, 0, 1, 0, 3]);
 
   date.showRunningTotals = true;
-  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
-  expect((await date.getCalculatedValues())[0]).toEqual([2, 2, 2, 2, 4, 4, 4, 5, 5, 8]);
+  expect(((await date.getCalculatedValues()).data[0] as any).length).toEqual(10);
+  expect((await date.getCalculatedValues()).data[0]).toEqual([2, 2, 2, 2, 4, 4, 4, 5, 5, 8]);
 });
 
 test("getAnswersData with showGrouped set to true", async () => {
@@ -1467,20 +1467,20 @@ test("aggregateDataNames for date histogram", async () => {
   expect(date.allowChangeIntervals).toBeTruthy();
   expect(date.showRunningTotals).toBeFalsy();
   expect(date.aggregateDataName).toBe("");
-  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
-  expect((await date.getCalculatedValues())[0]).toEqual([2, 0, 0, 0, 2, 0, 0, 1, 0, 3]);
+  expect(((await date.getCalculatedValues()).data[0] as any).length).toEqual(10);
+  expect((await date.getCalculatedValues()).data[0]).toEqual([2, 0, 0, 0, 2, 0, 0, 1, 0, 3]);
 
   date.showRunningTotals = true;
-  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
-  expect((await date.getCalculatedValues())[0]).toEqual([2, 2, 2, 2, 4, 4, 4, 5, 5, 8]);
+  expect(((await date.getCalculatedValues()).data[0] as any).length).toEqual(10);
+  expect((await date.getCalculatedValues()).data[0]).toEqual([2, 2, 2, 2, 4, 4, 4, 5, 5, 8]);
 
   expect(date.possibleAggregateDataNames).toStrictEqual(["age"]);
   date.aggregateDataName = "age";
   date.showRunningTotals = false;
-  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
-  expect((await date.getCalculatedValues())[0]).toEqual([80, 0, 0, 0, 60, 0, 0, 25, 0, 51]);
+  expect(((await date.getCalculatedValues()).data[0] as any).length).toEqual(10);
+  expect((await date.getCalculatedValues()).data[0]).toEqual([80, 0, 0, 0, 60, 0, 0, 25, 0, 51]);
 
   date.showRunningTotals = true;
-  expect(((await date.getCalculatedValues())[0] as any).length).toEqual(10);
-  expect((await date.getCalculatedValues())[0]).toEqual([80, 80, 80, 80, 140, 140, 140, 165, 165, 216]);
+  expect(((await date.getCalculatedValues()).data[0] as any).length).toEqual(10);
+  expect((await date.getCalculatedValues()).data[0]).toEqual([80, 80, 80, 80, 140, 140, 140, 165, 165, 216]);
 });

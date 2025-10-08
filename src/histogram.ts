@@ -2,7 +2,7 @@ import { ItemValue, Question } from "survey-core";
 import { DataProvider } from "./dataProvider";
 import { SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
-import { IAnswersData, ICalculationResult } from "./visualizerBase";
+import { IAnswersData, ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { getNestedDataRows, histogramStatisticsCalculator } from "./statisticCalculators";
 import { DocumentHelper } from "./utils";
 import { localization } from "./localizationManager";
@@ -181,7 +181,7 @@ export class HistogramModel extends SelectBase {
 
     if(this.allowChangeIntervals) {
       this.registerToolbarItem("changeIntervalsMode", () => {
-        this.changeIntervalsModeSelector = DocumentHelper.createSelector(
+        this.changeIntervalsModeSelector = DocumentHelper.createDropdown(
           this.intervalModes.map((intervalModeValue) => {
             return {
               value: intervalModeValue,
@@ -189,13 +189,13 @@ export class HistogramModel extends SelectBase {
             };
           }),
           (option: any) => this.intervalsMode === option.value,
-          (e: any) => {
-            this.intervalsMode = e.target.value;
+          (value: any) => {
+            this.intervalsMode = value;
           },
           localization.getString("intervalModeTitle")
         );
         return this.changeIntervalsModeSelector;
-      });
+      }, "dropdown");
     }
     if (this.possibleAggregateDataNames.length > 0) {
       this.registerToolbarItem("aggregateDataName", () => {
@@ -204,17 +204,17 @@ export class HistogramModel extends SelectBase {
         });
         choices.unshift({ value: "", text: localization.getString("noneAggregateText") }),
 
-        this.aggregateDataNameSelector = DocumentHelper.createSelector(
+        this.aggregateDataNameSelector = DocumentHelper.createDropdown(
           choices,
           (option: any) => this.aggregateDataName === option.value,
-          (e) => {
-            this.aggregateDataName = e.target.value;
+          (value) => {
+            this.aggregateDataName = value;
           },
           localization.getString("selectAggregateText")
         );
         this.updateAggregateDataNameSelector();
         return this.aggregateDataNameSelector;
-      });
+      }, "dropdown");
     }
     if(this.allowChangeIntervals && this.options.allowRunningTotals) {
       this.registerToolbarItem("showRunningTotals", () => {
@@ -223,7 +223,7 @@ export class HistogramModel extends SelectBase {
         });
         this.updateShowRunningTotalsBtn();
         return this.showRunningTotalsBtn;
-      });
+      }, "button");
     }
     if(this.allowChangeIntervals && this.options.allowCompareDatePeriods) {
       this.registerToolbarItem("showGrouped", () => {
@@ -232,23 +232,20 @@ export class HistogramModel extends SelectBase {
         });
         this.updateShowGroupedBtn();
         return this.showGroupedBtn;
-      });
+      }, "button");
     }
   }
 
   private updateIntervalsModeSelector() {
     if (!!this.changeIntervalsModeSelector) {
-      this.changeIntervalsModeSelector.getElementsByTagName(
-        "select"
-      )[0].value = this.intervalsMode;
+      (this.changeIntervalsModeSelector as any).setValue(this.intervalsMode);
+
     }
   }
 
   private updateAggregateDataNameSelector() {
     if (!!this.aggregateDataNameSelector) {
-      this.aggregateDataNameSelector.getElementsByTagName(
-        "select"
-      )[0].value = this.aggregateDataName;
+      (this.aggregateDataNameSelector as any).setValue(this.aggregateDataName);
     }
   }
 
@@ -322,7 +319,7 @@ export class HistogramModel extends SelectBase {
       series.forEach(seriesValue => this._continuousData[seriesValue] = []);
       const hash = {};
       this.data.forEach(dataRow => {
-        const nestedDataRows = getNestedDataRows(dataRow, this);
+        const nestedDataRows = getNestedDataRows(dataRow, this.dataPath);
         nestedDataRows.forEach(nestedDataRow => {
           const answerData = nestedDataRow[this.dataNames[0]];
           if (answerData !== undefined) {
@@ -512,22 +509,23 @@ export class HistogramModel extends SelectBase {
     return histogramStatisticsCalculator(this._continuousData, this.intervals, this, [this.aggregateDataName].filter(name => !!name));
   }
 
-  public async getCalculatedValues(): Promise<Array<Object>> {
-    const values = await super.getCalculatedValues();
-    const result: Array<Array<number>> = JSON.parse(JSON.stringify(values));
+  public async getCalculatedValues(): Promise<ICalculationResult> {
+    const result = await super.getCalculatedValues();
     if(this.showRunningTotals) {
-      for(let i = 0; i < result.length; i++) {
-        for(let j = 1; j < result[i].length; j++) {
-          result[i][j] += result[i][j - 1];
+      const resultData: Array<Array<number>> = JSON.parse(JSON.stringify(result.data));
+      for(let i = 0; i < resultData.length; i++) {
+        for(let j = 1; j < resultData[i].length; j++) {
+          resultData[i][j] += resultData[i][j - 1];
         }
       }
+      result.data = resultData;
     }
     return result;
   }
 
   private async getGroupedDateAnswersData(): Promise<IAnswersData> {
-    let datasets = (await this.getCalculatedValues()) as number[][];
-    let colors = this.getColors();
+    let datasets = ((await this.getCalculatedValues()).data) as number[][];
+    let colors = VisualizerBase.getColors();
     let labels = this.getLabels();
     let seriesLabels = this.getSeriesLabels();
 
@@ -592,6 +590,7 @@ export class HistogramModel extends SelectBase {
     let texts = datasets;
     return {
       datasets,
+      values: this.getValues(),
       labels,
       colors,
       texts,
