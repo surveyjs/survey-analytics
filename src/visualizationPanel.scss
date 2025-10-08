@@ -5,17 +5,22 @@
 .sa-pivot__header {
   display: flex;
   flex-direction: column;
-  gap: var(--sjs2-spacing-x300, 24px);;
+  padding: var(--sjs2-spacing-x300, 24px);
+  padding-bottom: 0;
 }
 
 .sa-panel__header > .sa-toolbar {
   height: 48px;
   gap: var(--sjs2-spacing-x300, 24px);
-  margin-inline: calc(var(--sjs2-spacing-x300, 24px) / 2);
   padding: var(--sjs2-spacing-x200, 16px);
   border-radius: var(--sjs2-radius-container-panel, 16px);
   background: var(--sjs2-color-bg-basic-primary, #FFF);
   box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
+}
+
+.sa-panel__content {
+  padding: var(--sjs2-spacing-x300, 24px);
+  width: calc(100% - 2 * var(--sjs2-spacing-x300, 24px));
 }
 
 .sa-grid {
@@ -45,14 +50,15 @@
 .sa-question-layouted {
   overflow: visible;
   position: absolute;
-  margin: calc(var(--sjs2-spacing-x300, 24px) / 2);
-  width: calc(100% - var(--sjs2-spacing-x300, 24px));
+  width: calc(100% - var(--sjs2-spacing-x300, 24px) * 2);
+  margin-inline-start: var(--sjs2-spacing-x300, 24px);
+  margin-top: var(--sjs2-spacing-x300, 24px);
   border-radius: var(--sjs2-radius-container-panel, 16px);
   background: var(--sjs2-color-bg-basic-primary, #FFF);
   box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
 
   @media screen and (min-width: 1400px) {
-    width: calc(50% - calc(var(--sjs2-spacing-x300, 24px) * 2));
+    width: calc(50% - var(--sjs2-spacing-x300, 24px) * 1.5);
   }
 }
 

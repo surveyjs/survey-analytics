@@ -123,7 +123,7 @@ TableExtensions.registerExtension({
 TableExtensions.registerExtension({
   location: "header",
   name: "removerows",
-  visibleIndex: 10,
+  visibleIndex: -1,
   render: function (table) {
     const btn = DocumentHelper.createButton(
       (e) => {

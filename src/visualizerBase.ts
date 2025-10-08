@@ -571,6 +571,8 @@ export class VisualizerBase implements IDataInfo {
     return !!this.question ? this.question.correctAnswer : "";
   }
 
+  protected renderBanner(container: HTMLElement) { }
+
   protected destroyToolbar(container: HTMLElement) {
     container.innerHTML = "";
   }
@@ -722,6 +724,7 @@ export class VisualizerBase implements IDataInfo {
     }
 
     targetElement.className = "sa-visualizer";
+    this.renderBanner(targetElement);
     this.toolbarContainer = DocumentHelper.createElement(
       "div",
       "sa-visualizer__toolbar"

@@ -467,12 +467,16 @@ export class PivotModel extends SelectBase {
   }
 
   protected renderToolbar(container: HTMLElement) {
+    container.className += " sa-pivot__header";
+    super.renderToolbar(container);
+  }
+
+  protected renderBanner(container: HTMLElement): void {
     if (!this.haveCommercialLicense && this.isRoot) {
       const banner = createCommercialLicenseLink();
       container.appendChild(banner);
     }
-    container.className += " sa-pivot__header";
-    super.renderToolbar(container);
+    super.renderBanner(container);
   }
 }
 

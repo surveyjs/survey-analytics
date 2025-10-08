@@ -577,6 +577,8 @@ export class SelectBase
   }
 
   getPercentages(data: Array<Array<number>>): Array<Array<number>> {
+    if(!data || !Array.isArray(data)) return [];
+
     var percentages: Array<Array<number>> = [];
     var percentagePrecision = this._percentagePrecision;
 

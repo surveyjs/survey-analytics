@@ -419,6 +419,10 @@ a.sa-table__btn {
   line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
 }
 
+.sa-table__entries-value .sa-action-dropdown-list {
+  bottom: 48px;
+}
+
 .sa-table__detail-row {
   background: var(--sjs2-color-bg-basic-secondary, rgba(28, 27, 32, 0.05));
 }

@@ -1021,11 +1021,15 @@ export class VisualizationPanel extends VisualizerBase {
     return questionElement;
   }
 
-  protected renderToolbar(container: HTMLElement) {
+  protected renderBanner(container: HTMLElement): void {
     if (!this.haveCommercialLicense && this.isRoot) {
       const banner = createCommercialLicenseLink();
       container.appendChild(banner);
     }
+    super.renderBanner(container);
+  }
+
+  protected renderToolbar(container: HTMLElement) {
     container.className += " sa-panel__header";
     super.renderToolbar(container);
   }
