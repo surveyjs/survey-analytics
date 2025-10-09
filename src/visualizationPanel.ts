@@ -447,7 +447,7 @@ export class VisualizationPanel extends VisualizerBase {
     options: any
   ) => {
     this.renderedQuestionsCount++;
-    if (this.renderedQuestionsCount == this.questions.length) {
+    if (this.renderedQuestionsCount == this.visibleElements.length) {
       this.renderedQuestionsCount = 0;
       this.layoutEngine?.update();
       this.afterRender(this.contentContainer);
