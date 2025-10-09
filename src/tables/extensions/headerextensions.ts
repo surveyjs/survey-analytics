@@ -26,96 +26,44 @@ TableExtensions.registerExtension({
   location: "header",
   name: "showcolumn",
   visibleIndex: 20,
-  destroy: function () {
-    this.onDestroy();
-  },
   render: function (table: Table): HTMLElement {
     // const dropdown = DocumentHelper.createElement(
     //   "select",
     //   "sa-table__show-column sa-table__header-extension"
     // );
 
+    const allQuestions = table.columns.map((column) => {
+      var text = column.displayName || column.name;
+      if (!!text && text.length > 20) {
+        text = text.substring(0, 20) + "...";
+      }
+      return {
+        value: column.name,
+        text: text,
+        icon: "check-24x24"
+      };
+    });
     const dropdown = DocumentHelper.createActionDropdown(
-      () => {
+      allQuestions,
+      (option: any) => {
         const hiddenColumns = table.columns.filter((column: any) => !column.isVisible);
-        const optionsValues = hiddenColumns.map(column => {
-          var text = column.displayName || column.name;
-          if (!!text && text.length > 20) {
-            text = text.substring(0, 20) + "...";
-          }
-          var option = {
-            text: text,
-            title: column.displayName,
-            value: column.name,
-          };
-          return option;
-        });
-        return optionsValues;
-      },
-      (option: any) => false,
+        return hiddenColumns.length === 0 || hiddenColumns.filter(el => el.name === option.value).length === 0; },
       (e: any) => {
         if(!!e) {
-          const val = e;
-          // e.stopPropagation();
-          if (!val) return;
-          table.setColumnVisibility(val, true);
-          return true;
+          if (!e) return;
+          const column = table.columns.filter((column: any) => column.name === e)[0];
+          table.setColumnVisibility(e, !column.isVisible);
+          return false;
         }
       },
-      localization.getString("showColumn"),
+      localization.getString("columns")
     );
     dropdown.className += " sa-table__show-column sa-table__header-extension";
-
-    function update() {
-      var hiddenColumns = table.columns.filter(
-        (column: any) => !column.isVisible
-      );
-      if (hiddenColumns.length == 0) {
-        dropdown.style.display = "none";
-        return;
-      }
-      dropdown.style.display = "inline-block";
-      (dropdown as any).__updateSelect();
-      // dropdown.innerHTML = "";
-      // var option = DocumentHelper.createElement("option", "", {
-      //   text: localization.getString("showColumn"),
-      //   disabled: true,
-      //   selected: true,
-      // });
-      // dropdown.appendChild(option);
-
-      // hiddenColumns.forEach((column: any) => {
-      //   var text = column.displayName || column.name;
-      //   if (!!text && text.length > 20) {
-      //     text = text.substring(0, 20) + "...";
-      //   }
-      //   var option = DocumentHelper.createElement("option", "", {
-      //     text: text,
-      //     title: column.displayName,
-      //     value: column.name,
-      //   });
-      //   dropdown.appendChild(option);
-      // });
-    }
-
-    dropdown.onchange = (e: any) => {
-      const val = e.target.value;
-      e.stopPropagation();
-      if (!val) return;
-      table.setColumnVisibility(val, true);
-    };
-
-    update();
-
     var onVisibilityChangedCallback = () => {
       update();
     };
 
     table.onColumnsVisibilityChanged.add(onVisibilityChangedCallback);
-
-    this.onDestroy = () => {
-      table.onColumnsVisibilityChanged.remove(onVisibilityChangedCallback);
-    };
     return dropdown;
   },
 });

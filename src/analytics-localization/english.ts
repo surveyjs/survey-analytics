@@ -8,6 +8,7 @@ export var englishStrings = {
   columnReorder: "Column reorder",
   hideColumn: "Hide column",
   showColumn: "Show column",
+  columns: "Columns",
   makePrivateColumn: "Make column private",
   makePublicColumn: "Make column public",
   moveToDetail: "Move to Detail",
