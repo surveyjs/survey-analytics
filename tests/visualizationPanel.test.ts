@@ -480,6 +480,36 @@ test("check onAfterRender", () => {
   expect(count).toEqual(1);
 });
 
+test("check onAfterRender when some questions are hidden", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+      { type: "text", name: "question3" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let visPanel = new VisualizationPanel(survey.getAllQuestions(), []);
+  var count = 0;
+  visPanel.onAfterRender.add(() => {
+    count++;
+  });
+  expect(visPanel.visualizers.map(v => v.name)).toEqual(["question1", "question2", "question3"]);
+  expect(visPanel.visualizers.length).toEqual(3);
+  expect(visPanel.visibleElements.length).toEqual(3);
+
+  visPanel.hideElement("question1");
+  expect(visPanel.visualizers.length).toEqual(3);
+  expect(visPanel.visibleElements.length).toEqual(2);
+
+  (<any>visPanel).visualizers[1].afterRender(null);
+  expect((<any>visPanel).renderedQuestionsCount).toEqual(1);
+  expect(count).toEqual(0);
+  (<any>visPanel).visualizers[2].afterRender(null);
+  expect((<any>visPanel).renderedQuestionsCount).toEqual(0);
+  expect(count).toEqual(1);
+});
+
 test("strip html tags from title", () => {
   const json = {
     elements: [
