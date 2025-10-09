@@ -296,10 +296,17 @@ export class VisualizationPanel extends VisualizerBase {
   public visualizers: Array<VisualizerBase> = [];
   private renderedQuestionsCount: number = 0;
   private static counter = 0;
+  private resetFilterButton: HTMLElement;
 
   private static getVisualizerName() {
     VisualizationPanel.counter++;
     return "visualizer" + VisualizationPanel.counter;
+  }
+
+  private updateResetFilterButtonVisibility() {
+    if(this.resetFilterButton) {
+      this.resetFilterButton.style.visibility = this.dataProvider.getFilters().length > 0 ? "visible": "hidden";
+    }
   }
 
   constructor(
@@ -367,9 +374,11 @@ export class VisualizationPanel extends VisualizerBase {
     this._supportSelection = true;
     if(this.supportSelection !== false) {
       this.registerToolbarItem("resetFilter", () => {
-        return DocumentHelper.createButton(() => {
+        this.resetFilterButton = DocumentHelper.createButton(() => {
           this.resetFilter();
         }, localization.getString("resetFilter"));
+        this.updateResetFilterButtonVisibility();
+        return this.resetFilterButton;
       }, "button", 900);
     }
 
@@ -416,6 +425,7 @@ export class VisualizationPanel extends VisualizerBase {
         visualizer.resetFilter();
       }
     });
+    this.updateResetFilterButtonVisibility();
   }
 
   reorderVisibleElements(order: string[]): void {
@@ -1086,6 +1096,7 @@ export class VisualizationPanel extends VisualizerBase {
         this.dataProvider.setFilter(this.dataPath, undefined);
       }
     }
+    this.updateResetFilterButtonVisibility();
   }
 
   public getState(): IState {
