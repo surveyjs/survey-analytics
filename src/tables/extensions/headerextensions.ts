@@ -59,11 +59,6 @@ TableExtensions.registerExtension({
       localization.getString("columns")
     );
     dropdown.className += " sa-table__show-column sa-table__header-extension";
-    var onVisibilityChangedCallback = () => {
-      update();
-    };
-
-    table.onColumnsVisibilityChanged.add(onVisibilityChangedCallback);
     return dropdown;
   },
 });
