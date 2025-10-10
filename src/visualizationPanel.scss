@@ -193,6 +193,17 @@
   background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
 }
 
+.sa-toolbar__button--disabled,
+.sa-toolbar__button--disabled:hover {
+  opacity: var(--sjs2-opacity-disabled, 0.25);  
+  background: transparent;
+  cursor: default;
+  
+  .sa-toolbar__button-text {
+    color: var(--sjs2-color-fg-state-common-disabled, rgba(28, 27, 32, 0.40));
+  }
+}
+
 .sa-toolbar__button-text {
   color: var(--sjs2-color-fg-brand-primary, #19B394);
   text-align: center;
