@@ -144,6 +144,18 @@
   }
 }
 
+.sa-question:not(.sa-question-layouted) {
+  .sa-question__header {
+    position: relative;
+  }
+
+  .sa-question__hide-action {
+    top: unset;
+    right: 0px;
+    bottom: -44px;
+  }
+}
+
 .sa-toolbar {
   display: flex;
   flex-direction: row;

@@ -298,8 +298,8 @@ export class PlotlySetup {
       modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
       colorway: colors,
       hovermode: "closest",
-      plot_bgcolor: model.backgroundColor,
-      paper_bgcolor: model.backgroundColor,
+      plot_bgcolor: "transparent",
+      paper_bgcolor: "transparent",
       showlegend: false,
     };
 
@@ -400,8 +400,8 @@ export class PlotlySetup {
         }),
       },
       modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
-      plot_bgcolor: model.backgroundColor,
-      paper_bgcolor: model.backgroundColor,
+      plot_bgcolor: "transparent",
+      paper_bgcolor: "transparent",
     };
 
     if (hasSeries) {
@@ -494,8 +494,8 @@ export class PlotlySetup {
       },
       colorway: colors,
       hovermode: "closest",
-      plot_bgcolor: model.backgroundColor,
-      paper_bgcolor: model.backgroundColor,
+      plot_bgcolor: "transparent",
+      paper_bgcolor: "transparent",
       showlegend: hasSeries,
       bargap: isHistogram ? 0 : PlotlySetup.defaultBarGap,
       yaxis: {
@@ -615,8 +615,8 @@ export class PlotlySetup {
         rangemode: "nonnegative",
       },
       modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
-      plot_bgcolor: model.backgroundColor,
-      paper_bgcolor: model.backgroundColor,
+      plot_bgcolor: "transparent",
+      paper_bgcolor: "transparent",
       showlegend: false,
     };
 
@@ -688,8 +688,8 @@ export class PlotlySetup {
         t: chartMargin,
         pad: 5
       },
-      plot_bgcolor: model.backgroundColor,
-      paper_bgcolor: model.backgroundColor,
+      plot_bgcolor: "transparent",
+      paper_bgcolor: "transparent",
       modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
     };
 
@@ -762,8 +762,8 @@ export class PlotlySetup {
       showlegend: hasSeries,
       legend: hasSeries ? PlotlySetup.defaultLegendConfig(model.theme) : undefined,
       colorway: colors,
-      plot_bgcolor: model.backgroundColor,
-      paper_bgcolor: model.backgroundColor,
+      plot_bgcolor: "transparent",
+      paper_bgcolor: "transparent",
       margin: {
         l: 50,
         r: 50,
