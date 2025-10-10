@@ -13,6 +13,20 @@ exports[`render image in details 1`] = `
       <td
         class=""
       >
+        <button
+          class="sa-table__svg-button"
+          title="Show as Column"
+        >
+          <svg>
+            <use
+              href="#sa-svg-movetovertical-24x24"
+            />
+          </svg>
+        </button>
+      </td>
+      <td
+        class=""
+      >
         q1
       </td>
       <td
@@ -21,15 +35,6 @@ exports[`render image in details 1`] = `
         <img
           src="signature"
         />
-      </td>
-      <td
-        class=""
-      >
-        <button
-          class="sa-table__btn sa-table__btn--gray"
-        >
-          Show as Column
-        </button>
       </td>
     </tr>
   </table>

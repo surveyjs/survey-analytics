@@ -1,6 +1,7 @@
 import { Question, QuestionCompositeModel, QuestionCustomModel } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
+import { IVisualizerDescription } from "./visualizerDescription";
 
 /**
  * An object that allows you to create individual visualizers without creating a [visualization panel](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel).
@@ -22,20 +23,48 @@ export class VisualizerFactory {
    * ```
    *
    * If a question has more than one [registered](https://surveyjs.io/dashboard/documentation/api-reference/visualizationmanager#registerVisualizer) visualizer, users can switch between them using a drop-down menu.
-   * @param question A question for which to create a visualizer.
+   * @param description A question for which to create a visualizer.
    * @param data A data array with survey results to be visualized.
    * @param options An object with any custom properties you need within the visualizer.
    */
   public static createVisualizer(
-    question: Question,
+    description: Question | IVisualizerDescription,
     data: Array<{ [index: string]: any }>,
     options?: { [index: string]: any }
   ): VisualizerBase {
-    let type = question.getType();
+    let type: string;
+    let question: Question;
     let creators = [];
-    let questionForCreator: Question | Question[] = question;
     let optionsForCreator = Object.assign({}, options);
 
+    if("visualizerType" in description) {
+      type = description.visualizerType;
+
+      if(!!description.chartType) {
+        optionsForCreator[description["name"]] = {
+          chartType: description.chartType,
+          allowChangeVisualizerType: false
+        };
+      }
+
+      question = description.question || {
+        name: description["name"],
+        valueName: description.dataName || description.questionName,
+        title: description.title,
+        displayValueName: description.displayValueName,
+        waitForQuestionIsReady: () => {
+          return new Promise<void>((resolve) => resolve());
+        }
+      };
+    } else {
+      question = description;
+      if(description.displayValueName !== undefined) {
+        question.displayValueName = description.displayValueName;
+      }
+      type = question.getType();
+    }
+
+    let questionForCreator: Question | Question[] = question;
     if (type === "text" && (<any>question).inputType) {
       creators = VisualizationManager.getVisualizersByType((<any>question).inputType, type);
     } else {
