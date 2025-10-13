@@ -5,8 +5,11 @@
 .sa-pivot__header {
   display: flex;
   flex-direction: column;
-  padding: var(--sjs2-spacing-x300, 24px);
-  padding-bottom: 0;
+  
+  &.sa-visualizer-toolbar--has-content {
+    padding: var(--sjs2-spacing-x300, 24px);
+    padding-bottom: 0;
+  }
 }
 
 .sa-panel__header > .sa-toolbar {

@@ -454,6 +454,15 @@ var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
   }
 );
 
+const checkbox = document.getElementById('toggle-checkbox');
+checkbox.addEventListener('change', () => {
+  if (checkbox.checked) {
+    visPanel.applyTheme(SurveyAnalyticsApexcharts.DefaultDark);
+  } else {
+    visPanel.applyTheme(SurveyAnalyticsApexcharts.Default);
+  }
+});
+
 visPanel.showToolbar = true;
 visPanel.onAlternativeVisualizerChanged.add(function(sender, options) {
   visPanel.visualizers.forEach(visualizer => {

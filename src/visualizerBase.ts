@@ -585,6 +585,7 @@ export class VisualizerBase implements IDataInfo {
       this.createToolbarItems(toolbar);
       if(!!toolbar && !!toolbar.innerHTML) {
         container.appendChild(toolbar);
+        container.classList.add("sa-visualizer-toolbar--has-content");
       }
     }
   }
@@ -600,8 +601,8 @@ export class VisualizerBase implements IDataInfo {
   protected destroyContent(container: HTMLElement) {
     if (!!this.options && typeof this.options.destroyContent === "function") {
       this.options.destroyContent(container, this);
-    } else if (this._chartAdapter) {
-      this._chartAdapter.destroy(<HTMLElement>container.children[0]);
+    } else if (this.getChartAdapter()) {
+      this.getChartAdapter().destroy(<HTMLElement>container.children[0]);
     }
     container.innerHTML = "";
   }

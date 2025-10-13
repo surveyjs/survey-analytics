@@ -266,7 +266,7 @@ export class ApexChartsSetup {
       type: model.chartType === "doughnut" ? "donut" : "pie",
       height: diameter,
       toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
-      background: model.backgroundColor
+      background: "transparent"
     };
 
     // Data label settings
@@ -375,7 +375,7 @@ export class ApexChartsSetup {
       type: "bar",
       height: height,
       toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
-      background: model.backgroundColor
+      background: "transparent"
     };
 
     // Axis settings
@@ -487,7 +487,7 @@ export class ApexChartsSetup {
     const chart: any = {
       type: "bar",
       toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
-      background: model.backgroundColor
+      background: "transparent"
     };
 
     // Axis settings
@@ -591,7 +591,7 @@ export class ApexChartsSetup {
     const chart: any = {
       type: "line",
       toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
-      background: model.backgroundColor
+      background: "transparent"
     };
 
     // Axis settings
@@ -690,7 +690,7 @@ export class ApexChartsSetup {
       stacked: true,
       height: height,
       toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
-      background: model.backgroundColor
+      background: "transparent"
     };
 
     // Axis settings
@@ -798,7 +798,7 @@ export class ApexChartsSetup {
     const chart: any = {
       type: "scatter",
       toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
-      background: model.backgroundColor
+      background: "transparent"
     };
 
     // Axis settings
@@ -896,7 +896,7 @@ export class ApexChartsSetup {
     const chart= {
       type: "radialBar",
       height: 450,
-      background: model.backgroundColor,
+      background: "transparent",
       toolbar: {
         show: false
       }
@@ -973,7 +973,7 @@ export class ApexChartsSetup {
     const chart = {
       type: "bar",
       height: 100,
-      background: model.backgroundColor,
+      background: "transparent",
       toolbar: {
         show: false
       }
@@ -1057,7 +1057,7 @@ export class ApexChartsSetup {
 
     const chart = {
       type: "radar",
-      background: model.backgroundColor,
+      background: "transparent",
       toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
     };
 

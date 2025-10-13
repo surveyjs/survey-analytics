@@ -759,7 +759,8 @@ export class VisualizationPanel extends VisualizerBase {
     });
     this.visualizers.forEach(v => {
       v.options.seriesLabels = this.options.seriesLabels;
-      v.locale = newLocale;
+      v["setLocale"](newLocale);
+      v.clear();
     });
     this.stateChanged("locale", newLocale);
   }
