@@ -43,6 +43,8 @@ export interface ITableOptions {
     question: Question,
     displayValue: any,
   }) => void;
+
+  pageSize?: number;
 }
 
 export type TabulatorFilter = { field: string, type: string, value: any };
@@ -89,7 +91,7 @@ export abstract class Table {
   protected isColumnReorderEnabled: boolean;
 
   protected initialize(): void {
-    this.currentPageSize = 5;
+    this.currentPageSize = this.options.pageSize || 5;
     this.currentPageNumber = 1;
     this._columns = this.buildColumns(this._survey);
     this.initTableData(this.data);
