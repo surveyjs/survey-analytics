@@ -24,7 +24,7 @@ export var germanStrings = {
   // "Remove rows"
   removeRows: "Zeilen entfernen",
   // "Show"
-  showLabel: "anzeigen",
+  showLabel: "Anzeigen",
   // "entries"
   entriesLabel: "Einträge",
   // "Texts in table"
@@ -36,13 +36,13 @@ export var germanStrings = {
   // "Average"
   visualizer_number: "Durchschnitt",
   // "Table"
-  visualizer_choices: "Liste",
+  visualizer_choices: "Tabelle",
   // "Chart"
   visualizer_selectBase: "Diagrammtyp",
   // [Auto-translated] "Chart"
   visualizer_matrix: "Diagramm",
-  // [Auto-translated] "Bar"
-  chartType_bar: "Stab",
+  // "Bar"
+  chartType_bar: "Balkendiagramm",
   // "Vertical Bar"
   chartType_vbar: "Balkendiagramm vertikal",
   // "Stacked Bar"
@@ -102,7 +102,7 @@ export var germanStrings = {
   // "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
-  saveDiagramAsPNG: "Diagramm als png herunterladen",
+  saveDiagramAsPNG: "Diagramm als PNG herunterladen",
   // "Hide empty answers"
   hideEmptyAnswers: "Leere Antworten ausblenden",
   // "Show empty answers"
@@ -120,7 +120,7 @@ export var germanStrings = {
   // "Show missing answers"
   showMissingAnswers: "Fehlende Antworten anzeigen",
   // "Missing answers"
-  missingAnswersLabel: "Fehlede Antworten",
+  missingAnswersLabel: "Fehlende Antworten",
   // "This question type is not visualized yet"
   noVisualizerForQuestion: "Für diesen Fragetyp gibt es noch keine Visualisierung.",
   // "There are no results yet"
@@ -141,20 +141,20 @@ export var germanStrings = {
   statistics_chart: "Diagramm",
   // "Responses"
   responses: "Antworten",
-  // [Auto-translated] "NPS"
-  visualizer_nps: "NPS (NPS)",
+  // "NPS"
+  visualizer_nps: "NPS",
   // [Auto-translated] "Chart"
   visualizer_boolean: "Diagramm",
-  // [Auto-translated] "Table"
-  visualizer_options: "Tisch",
-  // [Auto-translated] "NPS"
-  npsScore: "NPS (NPS)",
-  // [Auto-translated] "Promoters"
+  // "Table"
+  visualizer_options: "Tabelle",
+  // "NPS"
+  npsScore: "NPS",
+  // "Promoters"
   npsPromoters: "Promotoren",
-  // [Auto-translated] "Passives"
-  npsPassives: "Passive Fähigkeiten",
-  // [Auto-translated] "Detractors"
-  npsDetractors: "Kritiker",
+  // "Passives"
+  npsPassives: "Passive",
+  // "Detractors"
+  npsDetractors: "Detraktoren",
   // [Auto-translated] "Category (X Axis):"
   axisXSelectorTitle: "Kategorie (X-Achse):",
   // [Auto-translated] "Legend (Series):"
