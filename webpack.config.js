@@ -89,6 +89,11 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
             "import": "./fesm/survey.analytics.apexcharts.mjs",
             "require": "./survey.analytics.apexcharts.js"
           },
+          "./survey.analytics.plotly": {
+            "types": "./survey.analytics.plotly.d.ts",
+            "import": "./fesm/survey.analytics.plotly.mjs",
+            "require": "./survey.analytics.plotly.js"
+          },
         }
         packageJson.module = "fesm/survey.analytics.mjs";
         fs.writeFileSync(
@@ -117,6 +122,7 @@ module.exports = function (options) {
       "survey.analytics": path.resolve(__dirname, "./src/entries/summary"),
       "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core"),
       "survey.analytics.apexcharts": path.resolve(__dirname, "./src/entries/apexcharts"),
+      "survey.analytics.plotly": path.resolve(__dirname, "./src/entries/plotly"),
       "survey.analytics.mongo": path.resolve(__dirname, "./src/entries/mongo"),
     },
     resolve: {

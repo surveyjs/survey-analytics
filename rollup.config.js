@@ -22,6 +22,7 @@ const input = {
   "survey.analytics.mongo": path.resolve(__dirname, "./src/entries/mongo.ts"),
   "survey.analytics.tabulator": path.resolve(__dirname, "./src/entries/tabulator-es.ts"),
   "survey.analytics.apexcharts": path.resolve(__dirname, "./src/entries/apexcharts.ts"),
+  "survey.analytics.plotly": path.resolve(__dirname, "./src/entries/plotly.ts"),
 };
 module.exports = (options) => {
   options = options ?? {};
