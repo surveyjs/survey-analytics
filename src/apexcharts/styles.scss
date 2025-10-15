@@ -23,4 +23,40 @@
     fill: var(--sjs2-color-fg-brand-primary, #19B394);
     opacity: 1;
   }
+
+  .apexcharts-menu.apexcharts-menu-open {
+    border: var(--sjs2-border-width-x100, 1px) solid var(--sjs2-color-border-basic-secondary, #D4D4D4);
+    border-top: none;
+    border-radius: var(--sjs2-radius-container-drop, 16px);
+    background: var(--sjs2-color-utility-sheet, #FFF);
+    margin-top: 8px;
+    padding: var(--sjs2-layout-container-drop-vertical, 8px) var(--sjs2-layout-container-drop-horizontal, 8px);
+    box-shadow: var(--sjs2-shadow-size-large-offset-x, 0) var(--sjs2-shadow-size-large-offset-y, 6px) var(--sjs2-shadow-size-large-blur, 12px) var(--sjs2-shadow-size-large-spread, 4px) var(--sjs2-shadow-color-large, rgba(0, 76, 68, 0.10));
+  }
+
+  .apexcharts-menu-item.apexcharts-menu-item {
+    width: max-content;
+    min-width: calc(100% - 2 * var(--sjs2-size-x200, 16px));
+    max-width: calc(100% - 2 * var(--sjs2-size-x200, 16px));
+    padding: var(--sjs2-spacing-x150, 12px) var(--sjs2-size-x200, 16px);
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: var(--sjs2-spacing-x150, 12px);
+    border-radius: var(--sjs2-radius-control-drop-item, 8px);
+    color: var(--sjs2-color-fg-basic-primary, #1C1B20);
+    background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
+
+    /* sjs2/typography/default */
+    font-family: var(--sjs2-typography-font-family-default, "Open Sans", "Segoe UI", SegoeUI, Arial, sans-serif);
+    font-size: var(--sjs2-typography-font-size-default, 16px);
+    font-style: normal;
+    font-weight: 400;
+    line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  
+    &:hover {
+      background-color: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
+    }
+  }
 }
