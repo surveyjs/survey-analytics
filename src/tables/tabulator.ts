@@ -151,7 +151,8 @@ export class Tabulator extends Table {
       {
         data,
         layout: "fitColumns",
-        pagination: "local",
+        pagination: this.options.paginationEnabled !== false,
+        paginationMode: "local",
         paginationSize: this.currentPageSize,
         movableColumns: true,
         // maxHeight: "100%",
@@ -181,6 +182,7 @@ export class Tabulator extends Table {
       delete config.data;
       config.pagination = true;
       config.paginationMode = "remote";
+      config.paginationSize = this.currentPageSize,
       config.ajaxFiltering = true; // Tabulator v4.8
       config.filterMode = "remote"; // Tabulator v6.2
       config.ajaxSorting = true; // Tabulator v4.8
