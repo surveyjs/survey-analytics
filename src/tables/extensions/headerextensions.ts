@@ -90,6 +90,9 @@ TableExtensions.registerExtension({
   name: "showentries",
   visibleIndex: 3,
   render: function (table: Table): HTMLElement {
+    if(table.options.allowPagination === false) {
+      return DocumentHelper.createElement("div");
+    }
     function getEntriesDropdown(table: Table): HTMLElement {
       const el = <HTMLSelectElement>DocumentHelper.createElement("select");
       var optionsValues = table.paginationSizeSelector || ["1", "5", "10", "25", "50", "75", "100"];

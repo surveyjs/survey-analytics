@@ -45,6 +45,7 @@ export interface ITableOptions {
   }) => void;
 
   pageSize?: number;
+  allowPagination?: boolean;
 }
 
 export type TabulatorFilter = { field: string, type: string, value: any };
