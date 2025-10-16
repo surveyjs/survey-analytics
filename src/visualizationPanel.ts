@@ -352,6 +352,7 @@ export class VisualizationPanel extends VisualizerBase {
           return {
             value: element.name,
             text: element.displayName,
+            title: element.displayName,
             icon: "check-24x24"
           };
         });

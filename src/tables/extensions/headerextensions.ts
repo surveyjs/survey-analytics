@@ -32,7 +32,7 @@ TableExtensions.registerExtension({
     //   "sa-table__show-column sa-table__header-extension"
     // );
 
-    const allQuestions = table.columns.map((column) => {
+    const allColumns = table.columns.map((column) => {
       var text = column.displayName || column.name;
       if (!!text && text.length > 20) {
         text = text.substring(0, 20) + "...";
@@ -40,11 +40,12 @@ TableExtensions.registerExtension({
       return {
         value: column.name,
         text: text,
+        title: column.displayName || column.name,
         icon: "check-24x24"
       };
     });
     const dropdown = DocumentHelper.createActionDropdown(
-      allQuestions,
+      allColumns,
       (option: any) => {
         const hiddenColumns = table.columns.filter((column: any) => !column.isVisible);
         return hiddenColumns.length === 0 || hiddenColumns.filter(el => el.name === option.value).length === 0; },

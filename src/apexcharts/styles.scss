@@ -15,6 +15,11 @@
     }
   }
 
+  .apexcharts-tooltip-y-group.apexcharts-tooltip-y-group {
+    display: flex;
+    flex-direction: column;
+  }
+
   .apexcharts-menu-icon.apexcharts-menu-icon svg {
     fill: var(--sjs2-color-fg-brand-primary, #19B394);
     opacity: var(--sjs2-opacity-x035, 0.35);

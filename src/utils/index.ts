@@ -55,7 +55,7 @@ export class DocumentHelper {
    * @returns {HTMLElement} - Created dropdown element
    */
   public static createDropdown(
-    options: Array<{value: string, text: string, icon?: string}> | (() => Array<{value: string, text: string, icon?: string}>),
+    options: Array<{value: string, text: string, title?: string, icon?: string}> | (() => Array<{value: string, text: string, title?: string, icon?: string}>),
     isSelected: (option: {value: string, text: string, icon?: string}) => boolean,
     handler: (value: string) => void,
     placeholder = "Select...",
@@ -136,6 +136,9 @@ export class DocumentHelper {
       optionItems.forEach(option => {
         const dropdownItem = document.createElement("li");
         dropdownItem.className = className + "-item";
+        if (option.title) {
+          dropdownItem.title = option.title;
+        }
         dropdownItem.dataset.value = option.value;
         dropdownItem.setAttribute("role", "option");
         dropdownItem.setAttribute("tabindex", "-1");
@@ -343,7 +346,7 @@ export class DocumentHelper {
   }
 
   public static createActionDropdown(
-    options: Array<{value: string, text: string, icon?: string}> | (() => Array<{value: string, text: string, icon?: string}>),
+    options: Array<{value: string, text: string, title?: string, icon?: string}> | (() => Array<{value: string, text: string, title?: string, icon?: string}>),
     isSelected: (option: {value: string, text: string, icon?: string}) => boolean,
     handler: (value: string) => boolean,
     title: string | Function,
@@ -437,6 +440,9 @@ export class DocumentHelper {
       optionItems.forEach((option, index) => {
         const dropdownItem = document.createElement("li");
         dropdownItem.className = className + "-item";
+        if (option.title) {
+          dropdownItem.title = option.title;
+        }
         dropdownItem.dataset.value = option.value;
         dropdownItem.setAttribute("role", "option");
         dropdownItem.setAttribute("tabindex", "-1");
