@@ -116,6 +116,15 @@ export class Tabulator extends Table {
   private tableContainer: HTMLElement = null;
   private currentDownloadType: string = "";
 
+  protected supportSoftRefresh() {
+    return true;
+  }
+
+  protected softRefresh() {
+    if(!this.isRendered) return;
+    this.layout(true);
+  }
+
   public render(targetNode: HTMLElement | string): void {
     super.render(targetNode);
     if (typeof targetNode === "string") {
