@@ -312,10 +312,16 @@ export abstract class Table {
     return [].concat(this._survey.getUsedLocales());
   }
 
-  public refresh(hard: boolean = false) {
-    if (hard) {
-      this.initTableData(this.data);
-    }
+  protected supportSoftRefresh() {
+    return false;
+  }
+
+  protected softRefresh() {
+    this.hardRefresh();
+  }
+
+  protected hardRefresh() {
+    this.initTableData(this.data);
     if (this.isRendered) {
       this.currentPageNumber = this.getPageNumber();
       const targetNode = this.renderResult;
@@ -323,6 +329,14 @@ export abstract class Table {
       this.render(targetNode);
       this.setPageSize(this.currentPageSize);
       this.setPageNumber(this.currentPageNumber);
+    }
+  }
+
+  public refresh(hard: boolean = false) {
+    if (hard || !this.supportSoftRefresh()) {
+      this.hardRefresh();
+    } else {
+      this.softRefresh();
     }
   }
 
