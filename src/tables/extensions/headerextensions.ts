@@ -90,7 +90,7 @@ TableExtensions.registerExtension({
   name: "showentries",
   visibleIndex: 3,
   render: function (table: Table): HTMLElement {
-    if(table.options.allowPagination === false) {
+    if(table.options.paginationEnabled === false) {
       return DocumentHelper.createElement("div");
     }
     function getEntriesDropdown(table: Table): HTMLElement {

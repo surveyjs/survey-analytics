@@ -142,7 +142,7 @@ export class Tabulator extends Table {
       {
         data,
         layout: "fitColumns",
-        pagination: this.options.allowPagination !== false,
+        pagination: this.options.paginationEnabled !== false,
         paginationMode: "local",
         paginationSize: this.currentPageSize,
         movableColumns: true,
