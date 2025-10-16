@@ -133,6 +133,7 @@ test.describe("selectbase", () => {
     // check comment's table
     await page.locator(".sa-dropdown").nth(3).click();
     await getListItemByText(page, "Texts in table").click();
+    await page.waitForTimeout(100);
 
     const cells = await getTableCells();
     expect(cells).toEqual(["Comment text", "Another comment text"]);
