@@ -8,6 +8,9 @@ TableExtensions.registerExtension({
   name: "showentries",
   visibleIndex: 30,
   render: function (table: Table): HTMLElement {
+    if(table.options.paginationEnabled === false) {
+      return DocumentHelper.createElement("div");
+    }
     function getEntriesDropdown(table: Table): HTMLElement {
       /*
       const el = <HTMLSelectElement>DocumentHelper.createElement("select");
