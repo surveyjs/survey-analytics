@@ -122,7 +122,7 @@ export class Tabulator extends Table {
 
   protected softRefresh() {
     if(!this.isRendered) return;
-    this.tabulatorTables.redraw(true);
+    this.layout(true);
   }
 
   public render(targetNode: HTMLElement | string): void {
