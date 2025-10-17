@@ -27,6 +27,7 @@ export interface ApexChartsOptions {
 export class ApexChartsSetup {
   public static imageExportFormat = "png";
 
+  static defaultChartHeight = 450;
   static defaultBarGap = DashboardTheme.barGap;
 
   static defaultToolbarConfig = {
@@ -486,6 +487,7 @@ export class ApexChartsSetup {
     // Chart settings
     const chart: any = {
       type: "bar",
+      height: ApexChartsSetup.defaultChartHeight,
       toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
       background: "transparent"
     };
@@ -590,6 +592,7 @@ export class ApexChartsSetup {
     // Chart settings
     const chart: any = {
       type: "line",
+      height: ApexChartsSetup.defaultChartHeight,
       toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
       background: "transparent"
     };
@@ -797,6 +800,7 @@ export class ApexChartsSetup {
     // Chart settings
     const chart: any = {
       type: "scatter",
+      height: ApexChartsSetup.defaultChartHeight,
       toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
       background: "transparent"
     };
@@ -895,7 +899,7 @@ export class ApexChartsSetup {
 
     const chart= {
       type: "radialBar",
-      height: 450,
+      height: ApexChartsSetup.defaultChartHeight,
       background: "transparent",
       toolbar: {
         show: false
@@ -1057,6 +1061,7 @@ export class ApexChartsSetup {
 
     const chart = {
       type: "radar",
+      height: ApexChartsSetup.defaultChartHeight,
       background: "transparent",
       toolbar: { ...ApexChartsSetup.defaultToolbarConfig },
     };

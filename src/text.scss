@@ -27,10 +27,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: var(--ctr-font-default-line-height, 24px);
-  display: flex;
   padding: var(--dsb-table-cell-padding-top, 8px) var(--dsb-table-cell-padding-right-no-border, 0px) var(--dsb-table-cell-padding-bottom, 8px) var(--dsb-table-cell-padding-left-no-border, 0px);
-  flex-direction: column;
-  align-items: flex-start;
   border-bottom: var(--dsb-table-cell-border-width, 1px) dashed var(--dsb-table-cell-border-color, #DCDCDC);
 }
 
