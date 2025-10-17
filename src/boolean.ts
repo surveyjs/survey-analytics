@@ -10,9 +10,9 @@ export class BooleanModel extends SelectBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "boolean");
+    super(question, data, options, type || "boolean");
   }
 
   protected getCorrectAnswerText(): string {

@@ -112,8 +112,8 @@ function getCustomLayout(model, level, arrowColor) {
       showgrid: false,
       range: [-1, 1],
     },
-    plot_bgcolor: model.backgroundColor,
-    paper_bgcolor: model.backgroundColor,
+    plot_bgcolor: "transparent",
+    paper_bgcolor: "transparent",
   };
 }
 
