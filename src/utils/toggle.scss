@@ -1,7 +1,11 @@
 .sa-toggle-container {
   display: flex;
-  align-items: flex-start;
   gap: var(--sjs2-spacing-x100, 8px);
+
+  @media screen and (max-width: 600px) {
+    width: 100%;
+    justify-content: end;
+  }
 }
 
 .sa-toggle-element {
@@ -92,4 +96,8 @@
   font-style: normal;
   font-weight: 400;
   line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+
+  @media screen and (max-width: 600px) {
+    flex: unset;
+  }
 }

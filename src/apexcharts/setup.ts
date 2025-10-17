@@ -22,6 +22,7 @@ export interface ApexChartsOptions {
   yaxis?: any;
   grid?: any;
   title?: any;
+  responsive?: Array<any>;
 }
 
 export class ApexChartsSetup {
@@ -180,6 +181,15 @@ export class ApexChartsSetup {
     opacity: 0.8
   };
 
+  static defaultResponsive = {
+    breakpoint: 600,
+    options: {
+      legend: {
+        position: "bottom"
+      }
+    }
+  };
+
   /**
    * Fires when end user clicks on the 'save as image' button.
    */
@@ -317,6 +327,7 @@ export class ApexChartsSetup {
       plotOptions,
       dataLabels,
       legend,
+      responsive: [{ ...ApexChartsSetup.defaultResponsive }],
       tooltip,
       hasSeries
     };
@@ -441,6 +452,7 @@ export class ApexChartsSetup {
       plotOptions,
       dataLabels,
       legend,
+      responsive: [{ ...ApexChartsSetup.defaultResponsive }],
       tooltip,
       hasSeries,
       grid,
@@ -551,6 +563,7 @@ export class ApexChartsSetup {
       plotOptions,
       dataLabels,
       legend,
+      responsive: [{ ...ApexChartsSetup.defaultResponsive }],
       tooltip,
       hasSeries,
       grid,
@@ -646,6 +659,7 @@ export class ApexChartsSetup {
       plotOptions,
       dataLabels,
       legend,
+      responsive: [{ ...ApexChartsSetup.defaultResponsive }],
       tooltip,
       hasSeries,
       xaxis,
@@ -751,6 +765,7 @@ export class ApexChartsSetup {
       plotOptions,
       dataLabels,
       legend,
+      responsive: [{ ...ApexChartsSetup.defaultResponsive }],
       tooltip,
       hasSeries,
       grid,
@@ -872,6 +887,7 @@ export class ApexChartsSetup {
       plotOptions,
       dataLabels,
       legend,
+      responsive: [{ ...ApexChartsSetup.defaultResponsive }],
       tooltip,
       hasSeries,
       grid,
@@ -953,6 +969,7 @@ export class ApexChartsSetup {
       colors,
       plotOptions,
       yaxis,
+      responsive: [{ ...ApexChartsSetup.defaultResponsive }],
       // dataLabels,
     };
   }
@@ -1132,6 +1149,7 @@ export class ApexChartsSetup {
       yaxis,
       tooltip,
       legend,
+      responsive: [{ ...ApexChartsSetup.defaultResponsive }],
     };
   }
 }
