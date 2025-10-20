@@ -65,6 +65,7 @@ export class PlotlySetup {
   }
 
   static defaultLegendConfig(theme: DashboardTheme) {
+    const isMobile = window.innerWidth <= 600;
     const legendSetting = theme.legendSetting;
     const legendLabelFont = {
       ...theme.legendLabelFont,
@@ -72,6 +73,8 @@ export class PlotlySetup {
     };
 
     return {
+      yanchor: isMobile ? "top" : "auto",
+      orientation: isMobile ? "h" : "v",
       bgcolor: legendSetting.background,
       bordercolor: legendSetting.borderColor,
       borderwidth: legendSetting.borderWidth,
