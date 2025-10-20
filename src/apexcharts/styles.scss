@@ -64,4 +64,16 @@
       background-color: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
     }
   }
+
+  .apx-legend-position-bottom.apx-legend-position-bottom {
+    display: flex;
+    border-radius: var(--sjs2-radius-x050, 4px);
+    border: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #D4D4D4);
+    background: var(--sjs2-color-bg-basic-primary, #FFF);
+    padding: var(--sjs2-spacing-x250, 20px);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sjs2-spacing-x150, 12px);
+    align-self: stretch;
+  }
 }

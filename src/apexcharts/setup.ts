@@ -88,7 +88,7 @@ export class ApexChartsSetup {
     const font = theme.legendLabelFont;
     return {
       position: "right",
-      horizontalAlign: "right",
+      horizontalAlign: "left",
       verticalAlign: "top",
       fontSize: font.size,
       fontFamily: font.family,

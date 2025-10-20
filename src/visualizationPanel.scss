@@ -9,6 +9,11 @@
   &.sa-visualizer-toolbar--has-content {
     padding: var(--sjs2-spacing-x300, 24px);
     padding-bottom: 0;
+
+    @media screen and (max-width: 600px) {
+      padding: var(--sjs2-spacing-x150, 12px);
+      padding-bottom: 0;
+    }
   }
 }
 
@@ -24,6 +29,11 @@
 .sa-panel__content {
   padding: var(--sjs2-spacing-x300, 24px);
   width: calc(100% - 2 * var(--sjs2-spacing-x300, 24px));
+
+  @media screen and (max-width: 600px) { 
+    padding: var(--sjs2-spacing-x150, 12px);
+    width: calc(100% - 2 * var(--sjs2-spacing-x150, 12px));
+  }
 }
 
 .sa-grid {
@@ -48,6 +58,10 @@
 
 .sa-question__content {
   padding: 0 var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px);
+
+  @media screen and (max-width: 600px) { 
+    padding: var(--sjs2-spacing-x300, 24px) var(--sjs2-spacing-x150, 12px) var(--sjs2-spacing-x150, 12px) var(--sjs2-spacing-x150, 12px);
+  }
 }
 
 .sa-question-layouted {
@@ -62,6 +76,11 @@
 
   @media screen and (min-width: 1400px) {
     width: calc(50% - var(--sjs2-spacing-x300, 24px) * 1.5);
+  }
+  @media screen and (max-width: 600px) { 
+    margin-inline-start: var(--sjs2-spacing-x150, 12px);
+    margin-top: var(--sjs2-spacing-x150, 12px);
+    width: calc(100% - var(--sjs2-spacing-x150, 12px) * 2);
   }
 }
 
@@ -89,6 +108,10 @@
   justify-content: center;
   align-items: center;
   min-height: var(--sjs2-spacing-x400, 32px);
+
+  @media screen and (max-width: 600px) {
+    min-height: 0;
+  }
 }
 
 .sa-question__drag-area-icon {
