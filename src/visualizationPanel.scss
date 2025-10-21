@@ -7,23 +7,27 @@
   flex-direction: column;
   
   &.sa-visualizer-toolbar--has-content {
-    padding: var(--sjs2-spacing-x300, 24px);
-    padding-bottom: 0;
+    margin: var(--sjs2-spacing-x300, 24px);
+    margin-bottom: 0;
 
     @media screen and (max-width: 600px) {
-      padding: var(--sjs2-spacing-x150, 12px);
-      padding-bottom: 0;
+      margin: var(--sjs2-spacing-x150, 12px);
+      margin-bottom: 0;
     }
   }
 }
 
-.sa-panel__header > .sa-toolbar {
-  height: 48px;
-  gap: var(--sjs2-spacing-x300, 24px);
-  padding: var(--sjs2-spacing-x200, 16px);
+.sa-panel__header {
   border-radius: var(--sjs2-radius-container-panel, 16px);
   background: var(--sjs2-color-bg-basic-primary, #FFF);
   box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
+  padding: var(--sjs2-spacing-x200, 16px);
+  gap: var(--sjs2-spacing-x200, 16px);
+}
+
+.sa-panel__header > .sa-toolbar {
+  min-height: 48px;
+  gap: var(--sjs2-spacing-x300, 24px);
 }
 
 .sa-panel__content {
@@ -188,7 +192,6 @@
   flex-wrap: wrap;
   column-gap: var(--sjs2-spacing-static-x100, 8px);
   row-gap: var(--sjs2-spacing-static-x150, 12px);
-  padding-bottom: var(--sjs2-spacing-x200, 16px);
   align-items: center;
   align-self: stretch;
   user-select: none;

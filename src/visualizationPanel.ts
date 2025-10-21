@@ -13,6 +13,7 @@ import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
 import "./visualizationPanel.scss";
+import { createDateRangeWidget, DateRangeResult } from "./utils/dateRangeWidget";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -1049,6 +1050,21 @@ export class VisualizationPanel extends VisualizerBase {
   protected renderToolbar(container: HTMLElement) {
     container.className += " sa-panel__header";
     super.renderToolbar(container);
+
+    if(this.options.allowFilteringByDatePeriods) {
+      const divider = DocumentHelper.createElement("div", "sa-horizontal-divider");
+      const line = DocumentHelper.createElement("div", "sa-line");
+      divider.appendChild(line);
+      container.appendChild(divider);
+
+      const config = {
+        answersCount: 148,
+        setDateRange: (dateRange: DateRangeResult) => {
+        },
+      };
+      const dateRangeWidget = createDateRangeWidget(config as any);
+      container.appendChild(dateRangeWidget);
+    }
   }
 
   public renderContent(container: HTMLElement): void {
