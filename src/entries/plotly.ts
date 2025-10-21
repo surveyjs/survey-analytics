@@ -1,3 +1,2 @@
-export * from "../plotly/index";
-export * from "./summary.core";
+export * from "./plotly.fontless";
 import "./fonts.scss";

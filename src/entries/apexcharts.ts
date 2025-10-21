@@ -1,3 +1,2 @@
-export * from "../apexcharts/index";
-export * from "./summary.core";
+export * from "./apexcharts.fontless";
 import "./fonts.scss";
