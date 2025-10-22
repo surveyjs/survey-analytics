@@ -43,7 +43,10 @@ export class DataProvider {
           return !Object.keys(this.filterValues).some(
             (key) => {
               const filterValue = this.filterValues[key];
-              const filterValueType = typeof filterValue;
+              let filterValueType: string = typeof filterValue;
+              if(filterValueType === "object" && "start" in filterValue && "end" in filterValue) {
+                filterValueType = "range";
+              }
               const questionValue = item[key];
               if (Array.isArray(questionValue)) {
                 if (filterValueType === "object") {
@@ -61,7 +64,7 @@ export class DataProvider {
               if (!!seriesValue && filterValueType === "object") {
                 return questionValue !== filterValue[seriesValue];
               }
-              if (filterValueType === "object" && filterValue.start !== undefined && filterValue.end !== undefined) {
+              if (filterValueType === "range") {
                 let continioiusValue = typeof questionValue === "number" ? questionValue : Date.parse(questionValue);
                 if (isNaN(continioiusValue)) {
                   continioiusValue = parseFloat(questionValue);
@@ -69,7 +72,8 @@ export class DataProvider {
                     return true;
                   }
                 }
-                return continioiusValue < filterValue.start || continioiusValue >= filterValue.end;
+                return (filterValue.start !== undefined && continioiusValue < filterValue.start)
+                || (filterValue.end !== undefined && continioiusValue >= filterValue.end);
               }
               return item[key] !== this.filterValues[key];
             }
@@ -164,6 +168,10 @@ export class DataProvider {
         dataItem[dataNames[0]] = arrayData;
       }
     });
+  }
+
+  public getCount(): Promise<number> {
+    return new Promise<number>(resolve => resolve(this.filteredData.length));
   }
 }
 

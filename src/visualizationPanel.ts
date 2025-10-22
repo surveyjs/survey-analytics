@@ -12,8 +12,8 @@ import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
+import { createDateRangeWidget, IDateRange } from "./utils/dateRangeWidget";
 import "./visualizationPanel.scss";
-import { createDateRangeWidget, DateRangeResult } from "./utils/dateRangeWidget";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -1051,18 +1051,21 @@ export class VisualizationPanel extends VisualizerBase {
     container.className += " sa-panel__header";
     super.renderToolbar(container);
 
-    if(this.options.allowFilteringByDatePeriods) {
+    if(this.options.datePeriodFieldName) {
       const divider = DocumentHelper.createElement("div", "sa-horizontal-divider");
       const line = DocumentHelper.createElement("div", "sa-line");
       divider.appendChild(line);
       container.appendChild(divider);
 
       const config = {
-        answersCount: 148,
-        setDateRange: (dateRange: DateRangeResult) => {
+        setDateRange: (dateRange: IDateRange): Promise<number> => {
+          return new Promise<number>((resolve, reject) => {
+            this.dataProvider.setFilter(this.options.datePeriodFieldName, dateRange);
+            this.dataProvider.getCount().then(count => resolve(count));
+          });
         },
       };
-      const dateRangeWidget = createDateRangeWidget(config as any);
+      const dateRangeWidget = createDateRangeWidget(config);
       container.appendChild(dateRangeWidget);
     }
   }

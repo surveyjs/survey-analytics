@@ -1,61 +1,88 @@
-import { DocumentHelper } from ".";
+import { DocumentHelper, options } from ".";
 import "./dateRangeWidget.scss";
 
-export interface DateRangeResult {
-  start: number;
-  end: number;
+export interface IDateRange {
+  start?: number;
+  end?: number;
 }
-export interface DateRangeOptions {
-  answersCount?: number;
-  initStartDate?: number | Date;
-  initEndDate?: number | Date;
-  setDateRange?: (dateRange: DateRangeResult) => void;
+export interface IDateRangeOptions {
+  showTotalCount?: boolean;
+  initialRange?: IDateRange;
+  setDateRange: (dateRange: IDateRange) => Promise<number>;
 }
 
-export function createDateRangeWidget(config: DateRangeOptions): HTMLElement {
+export function createDateRangeWidget(config: IDateRangeOptions): HTMLElement {
   const container = DocumentHelper.createElement("div", "sa-date-range-container");
 
   const dateRangeEditors = DocumentHelper.createElement("div", "sa-date-range_editors");
   container.appendChild(dateRangeEditors);
 
-  const currentDateRangeResult: DateRangeResult = {
-    start: !!config.initStartDate ? (new Date(config.initStartDate)).getTime() : (new Date()).getTime(),
-    end: !!config.initStartDate ? (new Date(config.initEndDate)).getTime(): (new Date()).getTime()
-  };
-  const startDateEditor = createDateEditor(currentDateRangeResult.start, (newValue: string) => {
-    currentDateRangeResult.start = (new Date(newValue)).getTime();
-    config.setDateRange(currentDateRangeResult);
-    // TODO add validation
+  let countLabel;
+  function updateAnswersCount(answersCount: number) {
+    if(!!countLabel && answersCount !== undefined) {
+      countLabel.textContent = `${answersCount} answer(s)`;
+    }
+  }
+  function setDateRange() {
+    updateMinMaxAttributes();
+    config.setDateRange({ ...currentDateRange }).then(answersCount => updateAnswersCount(answersCount));
+  }
+  function dateEditorChangeValue() {
+    setDateRange();
+    resetChipsState(chipsContainer);
+  }
+  function updateMinMaxAttributes() {
+    if (currentDateRange.end !== undefined) {
+      startDateInput.max = new Date(currentDateRange.end).toISOString().split("T")[0];
+    } else {
+      startDateInput.removeAttribute("max");
+    }
+
+    if (currentDateRange.start !== undefined) {
+      endDateInput.min = new Date(currentDateRange.start).toISOString().split("T")[0];
+    } else {
+      endDateInput.removeAttribute("min");
+    }
+  }
+
+  const currentDateRange: IDateRange = !!config.initialRange ? config.initialRange : {};
+  const startDateEditor = createDateEditor(currentDateRange.start, (input: HTMLInputElement) => {
+    if (input.reportValidity()) {
+      currentDateRange.start = (new Date(input.value)).getTime();
+      dateEditorChangeValue();
+    }
   });
   dateRangeEditors.appendChild(startDateEditor);
+  const startDateInput = startDateEditor.querySelector("input");
 
   const separator = DocumentHelper.createElement("div", "");
   // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
   separator.textContent = "—";
   dateRangeEditors.appendChild(separator);
 
-  const endDateEditor = createDateEditor(currentDateRangeResult.end, (newValue: string) => {
-    currentDateRangeResult.end = (new Date(newValue)).getTime();
-    config.setDateRange(currentDateRangeResult);
-    // TODO add validation
+  const endDateEditor = createDateEditor(currentDateRange.end, (input: HTMLInputElement) => {
+    if (input.reportValidity()) {
+      currentDateRange.end = (new Date(input.value)).getTime();
+      dateEditorChangeValue();
+    }
   });
   dateRangeEditors.appendChild(endDateEditor);
+  const endDateInput = endDateEditor.querySelector("input");
 
   container.appendChild(createDivider());
 
   const chipsContainer = DocumentHelper.createElement("div", "sa-date-range_chips");
 
   const setFilter = (start, end) => {
-    currentDateRangeResult.start = (new Date(start)).getTime();
-    currentDateRangeResult.end = (new Date(end)).getTime();
-    config.setDateRange(currentDateRangeResult);
+    currentDateRange.start = !!start ? (new Date(start)).getTime() : undefined;
+    currentDateRange.end = !!end ? (new Date(end)).getTime() : undefined;
+    setDateRange();
     setDateIntoInput(start, startDateEditor.querySelector("input"));
     setDateIntoInput(end, endDateEditor.querySelector("input"));
   };
   const chipsConfig = {
     allTime: () => {
-      setFilter(!!config.initStartDate ? new Date(config.initStartDate) : new Date(),
-        !!config.initEndDate ? new Date(config.initEndDate) : new Date());
+      setFilter(undefined, undefined);
     },
     lastYear: () => {
       const end = new Date();
@@ -88,21 +115,27 @@ export function createDateRangeWidget(config: DateRangeOptions): HTMLElement {
 
   container.appendChild(chipsContainer);
 
-  if(config.answersCount !== undefined) {
+  if(config.showTotalCount !== false) {
     const divider2 = createDivider();
     divider2.classList.add("sa-vertical-divider2");
     container.appendChild(divider2);
     const countContainer = DocumentHelper.createElement("div", "sa-count");
-    const countLabel = DocumentHelper.createElement("div", "sa-count_text");
-    countLabel.textContent = `${config.answersCount} answer(s)`;
+    countLabel = DocumentHelper.createElement("div", "sa-count_text");
     countContainer.appendChild(countLabel);
     container.appendChild(countContainer);
   }
+
+  setFilter(currentDateRange.start, currentDateRange.end);
 
   return container;
 }
 
 function setDateIntoInput(dateValue: Date, input: HTMLInputElement) {
+  if(!dateValue) {
+    input.value = "";
+    return;
+  }
+
   const year = dateValue.getFullYear();
   const month = String(dateValue.getMonth() + 1).padStart(2, "0");
   const day = String(dateValue.getDate()).padStart(2, "0");
@@ -110,7 +143,7 @@ function setDateIntoInput(dateValue: Date, input: HTMLInputElement) {
   input.value = `${year}-${month}-${day}`;
 }
 
-function createDateEditor(dateValue: number | Date, changeHandler: (newValue: string) => void) {
+function createDateEditor(dateValue: number | Date, changeHandler: (input: HTMLInputElement) => void) {
   const dateEditor = DocumentHelper.createElement("div", "sa-date-range_editor");
   const formBox = DocumentHelper.createElement("div", "sa-date-range_editor-formbox");
   const content = DocumentHelper.createElement("div", "sa-date-range_editor-content");
@@ -124,7 +157,7 @@ function createDateEditor(dateValue: number | Date, changeHandler: (newValue: st
 
   input.onchange = (e) => {
     if (!!changeHandler) {
-      changeHandler(input.value);
+      changeHandler(input);
     }
   };
 
@@ -150,8 +183,7 @@ function createChip(text, isActive, container, clickHandler: () => {}): HTMLElem
   }
 
   chip.addEventListener("click", function() {
-    const elements = container.querySelectorAll(".sa-date-range_chip");
-    resetChipsState(elements);
+    resetChipsState(container);
     chip.classList.add(activaStateClass);
     clickHandler();
   });
@@ -169,7 +201,8 @@ function createChip(text, isActive, container, clickHandler: () => {}): HTMLElem
   return chip;
 }
 
-function resetChipsState(chips) {
+function resetChipsState(container) {
+  const chips = container.querySelectorAll(".sa-date-range_chip");
   chips.forEach(chip => {
     if (chip.classList.contains("sa-date-range_chip--active")) {
       chip.classList.remove("sa-date-range_chip--active");
