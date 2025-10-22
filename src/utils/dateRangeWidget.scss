@@ -26,6 +26,16 @@
   border-radius: var(--sjs2-radius-semantic-form, 8px);
   background: var(--sjs2-color-control-formbox-default-bg, rgba(28, 27, 32, 0.05));
   outline: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0) var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px) var(--sjs2-color-control-formbox-default-border, #D4D4D4) inset;
+
+  &:focus-visible {
+    background: var(--sjs2-color-control-formbox-focused-bg, #F5F5F5);
+    box-shadow: var(--sjs2-border-offset-x-form-focused, 0) var(--sjs2-border-offset-y-form-focused, 0) var(--sjs2-border-blur-form-focused, 0) var(--sjs2-border-spread-form-focused, 2px) var(--sjs2-color-control-formbox-focused-border, #19B394) inset;
+  }
+}
+
+.sa-date-range_editor--invalid .sa-date-range_editor-formbox {
+  background: var(--sjs2-color-control-formbox-invalid-bg, #F5F5F5);
+  box-shadow: var(--sjs2-border-offset-x-form-invalid, 0) var(--sjs2-border-offset-y-form-invalid, 0) var(--sjs2-border-blur-form-invalid, 0) var(--sjs2-border-spread-form-invalid, 2px) var(--sjs2-color-control-formbox-invalid-border, #E50A3E) inset;  
 }
 
 .sa-date-range_editor-content {
@@ -45,6 +55,7 @@
   text-overflow: ellipsis;
   background: transparent;
   border: none;
+  outline: none;
 
   /* sjs2/typography/default */
   font-family: var(--sjs2-typography-font-family-default, "Open Sans");

@@ -16,6 +16,8 @@ export interface IDateRangeOptions {
 }
 
 export class DateRangeWidget {
+  static invalidRangeEditorClassName = "sa-date-range_editor--invalid";
+
   private currentDateRange: IDateRange
 
   private startDateEditor: HTMLElement;
@@ -128,6 +130,8 @@ export class DateRangeWidget {
     this.setDateRange();
     this.setDateIntoInput(start, this.startDateInput);
     this.setDateIntoInput(end, this.endDateInput);
+    this.dateEditorRemoveInvalidClass(this.startDateEditor);
+    this.dateEditorRemoveInvalidClass(this.endDateEditor);
   }
   private getDefaultChipsConfig(): {[key: string]: any} {
     return {
@@ -177,6 +181,9 @@ export class DateRangeWidget {
       if (input.reportValidity()) {
         this.currentDateRange.start = (new Date(input.value)).getTime();
         this.dateEditorChangeValue();
+        this.dateEditorRemoveInvalidClass(this.startDateEditor);
+      } else {
+        this.startDateEditor.classList.add(DateRangeWidget.invalidRangeEditorClassName);
       }
     });
     dateRangeEditors.appendChild(this.startDateEditor);
@@ -191,6 +198,9 @@ export class DateRangeWidget {
       if (input.reportValidity()) {
         this.currentDateRange.end = (new Date(input.value)).getTime();
         this.dateEditorChangeValue();
+        this.dateEditorRemoveInvalidClass(this.endDateEditor);
+      } else {
+        this.endDateEditor.classList.add(DateRangeWidget.invalidRangeEditorClassName);
       }
     });
     dateRangeEditors.appendChild(this.endDateEditor);
@@ -219,5 +229,11 @@ export class DateRangeWidget {
     this.setFilter(this.currentDateRange.start, this.currentDateRange.end);
 
     return container;
+  }
+
+  private dateEditorRemoveInvalidClass(dateEditor: HTMLElement) {
+    if (dateEditor.classList.contains(DateRangeWidget.invalidRangeEditorClassName)) {
+      dateEditor.classList.remove(DateRangeWidget.invalidRangeEditorClassName);
+    }
   }
 }
