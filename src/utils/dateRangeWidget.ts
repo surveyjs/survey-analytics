@@ -51,19 +51,15 @@ export class DateRangeWidget {
       this.endDateInput.removeAttribute("min");
     }
   }
-  private setDateIntoInput(dateValue: Date, input: HTMLInputElement): void {
-    if (!dateValue) {
+  private setDateIntoInput(dateValue: number, input: HTMLInputElement): void {
+    if (!!dateValue) {
+      const date = new Date(dateValue);
+      input.value = date.toISOString().split("T")[0];
+    } else {
       input.value = "";
-      return;
     }
-
-    const year = dateValue.getFullYear();
-    const month = String(dateValue.getMonth() + 1).padStart(2, "0");
-    const day = String(dateValue.getDate()).padStart(2, "0");
-
-    input.value = `${year}-${month}-${day}`;
   }
-  private createDateEditor(dateValue: number | Date, changeHandler: (input: HTMLInputElement) => void): HTMLElement {
+  private createDateEditor(dateValue: number, changeHandler: (input: HTMLInputElement) => void): HTMLElement {
     const dateEditor = DocumentHelper.createElement("div", "sa-date-range_editor");
     const formBox = DocumentHelper.createElement("div", "sa-date-range_editor-formbox");
     const content = DocumentHelper.createElement("div", "sa-date-range_editor-content");
@@ -72,8 +68,7 @@ export class DateRangeWidget {
         type: "date"
       }
     );
-    const date = (new Date(dateValue));
-    this.setDateIntoInput(date, input);
+    this.setDateIntoInput(dateValue, input);
 
     input.onchange = (e) => {
       if (!!changeHandler) {
@@ -134,12 +129,8 @@ export class DateRangeWidget {
     this.setDateIntoInput(start, this.startDateInput);
     this.setDateIntoInput(end, this.endDateInput);
   }
-
-  constructor(private config: IDateRangeWidgetOptions) {
-  }
-
-  public render(): HTMLElement {
-    const chipsConfig = {
+  private getDefaultChipsConfig(): {[key: string]: any} {
+    return {
       allTime: () => {
         this.setFilter(undefined, undefined);
       },
@@ -168,8 +159,13 @@ export class DateRangeWidget {
         this.setFilter(start, end);
       },
     };
+  }
 
-    const options = <IDateRangeOptions>{ chipsConfig: chipsConfig };
+  constructor(private config: IDateRangeWidgetOptions) {
+  }
+
+  public render(): HTMLElement {
+    const options = <IDateRangeOptions>{ chipsConfig: this.getDefaultChipsConfig() };
     this.config.onBeforeRender(options);
 
     this.currentDateRange = !!options.initialRange ? options.initialRange : {};
