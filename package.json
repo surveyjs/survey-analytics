@@ -74,7 +74,7 @@
     "mini-css-extract-plugin": "^2.9.0",
     "mongodb-memory-server": "^10.2.1",
     "node-uuid": "1.4.7",
-    "playwright": "1.53.1",
+    "playwright": "1.55.1",
     "puppeteer": "22.13.1",
     "replace-in-file": "^6.3.2",
     "rollup": "^4.34.8",
