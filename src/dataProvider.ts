@@ -10,6 +10,7 @@ export class DataProvider {
 
   private _filteredData: Array<{ [index: string]: any }>;
   protected filterValues: { [index: string]: any } = {};
+  protected systemFilterValues: { [index: string]: any } = {};
 
   constructor(private _data: Array<any> | GetDataFn = []) {
   }
@@ -37,12 +38,13 @@ export class DataProvider {
 
   public get filteredData(): Array<any> {
     if (this._filteredData === undefined) {
-      let filterKeys = Object.keys(this.filterValues);
+      const filterValues = this.getFilterValues();
+      let filterKeys = Object.keys(filterValues);
       if (filterKeys.length > 0) {
         this._filteredData = this.data.filter((item) => {
-          return !Object.keys(this.filterValues).some(
+          return !filterKeys.some(
             (key) => {
-              const filterValue = this.filterValues[key];
+              const filterValue = filterValues[key];
               let filterValueType: string = typeof filterValue;
               if(filterValueType === "object" && "start" in filterValue && "end" in filterValue) {
                 filterValueType = "range";
@@ -65,6 +67,10 @@ export class DataProvider {
                 return questionValue !== filterValue[seriesValue];
               }
               if (filterValueType === "range") {
+                if(filterValue.start === undefined && filterValue.end === undefined) {
+                  return false;
+                }
+
                 let continioiusValue = typeof questionValue === "number" ? questionValue : Date.parse(questionValue);
                 if (isNaN(continioiusValue)) {
                   continioiusValue = parseFloat(questionValue);
@@ -72,10 +78,18 @@ export class DataProvider {
                     return true;
                   }
                 }
-                return (filterValue.start !== undefined && continioiusValue < filterValue.start)
-                || (filterValue.end !== undefined && continioiusValue >= filterValue.end);
+                if(filterValue.start !== undefined && filterValue.end !== undefined) {
+                  return continioiusValue < filterValue.start || continioiusValue >= filterValue.end;
+                }
+                if(filterValue.start === undefined && filterValue.end !== undefined) {
+                  return continioiusValue >= filterValue.end;
+                }
+                if(filterValue.start !== undefined && filterValue.end === undefined) {
+                  return continioiusValue < filterValue.start;
+                }
+                return false;
               }
-              return item[key] !== this.filterValues[key];
+              return item[key] !== filterValues[key];
             }
           );
         });
@@ -86,20 +100,17 @@ export class DataProvider {
     return this._filteredData;
   }
 
-  /**
-   * Sets filter by question name and value.
-   */
-  public setFilter(questionName: string, selectedValue: any): void {
+  private setFilterCore(questionName: string, selectedValue: any, filterObject: any): void {
     var filterChanged = true;
     if (selectedValue !== undefined) {
-      filterChanged = this.filterValues[questionName] !== selectedValue;
+      filterChanged = filterObject[questionName] !== selectedValue;
       if (filterChanged) {
-        this.filterValues[questionName] = selectedValue;
+        filterObject[questionName] = selectedValue;
       }
     } else {
-      filterChanged = this.filterValues[questionName] !== undefined;
+      filterChanged = filterObject[questionName] !== undefined;
       if (filterChanged) {
-        delete this.filterValues[questionName];
+        delete filterObject[questionName];
       }
     }
     if (filterChanged) {
@@ -108,16 +119,41 @@ export class DataProvider {
     }
   }
 
+  private resetFilterCore(filterObject: any): void {
+    if (Object.keys(filterObject).length === 0) {
+      return;
+    }
+    Object.keys(filterObject).forEach(key => delete filterObject[key]);
+    this.raiseFilterChanged();
+    this.raiseDataChanged();
+  }
+
+  /**
+   * Sets filter by question name and value.
+   */
+  public setSystemFilter(questionName: string, selectedValue: any): void {
+    this.setFilterCore(questionName, selectedValue, this.systemFilterValues);
+  }
+
+  /**
+   * Resets filter.
+   */
+  public resetSystemFilter(): void {
+    this.resetFilterCore(this.systemFilterValues);
+  }
+
+  /**
+   * Sets filter by question name and value.
+   */
+  public setFilter(questionName: string, selectedValue: any): void {
+    this.setFilterCore(questionName, selectedValue, this.filterValues);
+  }
+
   /**
    * Resets filter.
    */
   public resetFilter(): void {
-    if (Object.keys(this.filterValues).length === 0) {
-      return;
-    }
-    Object.keys(this.filterValues).forEach(key => delete this.filterValues[key]);
-    this.raiseFilterChanged();
-    this.raiseDataChanged();
+    this.resetFilterCore(this.filterValues);
   }
 
   /**
@@ -152,7 +188,8 @@ export class DataProvider {
   }
 
   public getFilters(): SummaryFilter[] {
-    return Object.keys(this.filterValues).map(key => ({ field: key, type: "=", value: this.filterValues[key] }));
+    const filterValues = this.getFilterValues();
+    return Object.keys(filterValues).map(key => ({ field: key, type: "=", value: filterValues[key] }));
   }
 
   public fixDropdownData(dataNames: string[]): void {
@@ -172,6 +209,11 @@ export class DataProvider {
 
   public getCount(): Promise<number> {
     return new Promise<number>(resolve => resolve(this.filteredData.length));
+  }
+
+  public getFilterValues(): {} {
+    const combinedFilterValues = Object.assign({}, this.systemFilterValues, this.filterValues);
+    return combinedFilterValues;
   }
 }
 

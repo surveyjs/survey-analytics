@@ -704,3 +704,98 @@ test("fixDropdownData - matrixdropdown question - shouldn't change data twice", 
   dataProvider.fixDropdownData(["question2"]);
   expect(dataProvider.data).toStrictEqual(expectedFixedData);
 });
+
+test("system filter by date range", () => {
+  const data = [
+    { date: "2021-10-13", age: 17 },
+    { date: "2021-10-14", age: 17 },
+    { date: "2021-10-15", age: 17 },
+    { date: "2011-10-16", age: 30 },
+    { date: "2011-10-16", age: 35 },
+    { date: "2004-10-17", age: 40 },
+    { date: "2004-10-17", age: 45 },
+    { date: "2016-10-18", age: 25 },
+  ];
+  const dataProvider = new DataProvider(data);
+
+  dataProvider.setSystemFilter("date", { start: Date.parse("2011-10-16"), end: Date.parse("2011-10-17") });
+
+  expect(
+    dataProvider.filteredData
+  ).toEqual([
+    { date: "2011-10-16", age: 30 },
+    { date: "2011-10-16", age: 35 },
+  ]);
+  expect(
+    dataProvider.getFilters()
+  ).toEqual([{ "field": "date", "type": "=", "value": { "end": 1318809600000, "start": 1318723200000 } }]);
+
+  dataProvider.setFilter("age", { start: 33, end: 37 });
+  expect(
+    dataProvider.filteredData
+  ).toEqual([
+    { date: "2011-10-16", age: 35 },
+  ]);
+  expect(
+    dataProvider.getFilters()
+  ).toEqual([{ "field": "date", "type": "=", "value": { "end": 1318809600000, "start": 1318723200000 } }, { "field": "age", "type": "=", "value": { "end": 37, "start": 33 } }]);
+
+  dataProvider.resetFilter();
+  expect(
+    dataProvider.filteredData
+  ).toEqual([
+    { date: "2011-10-16", age: 30 },
+    { date: "2011-10-16", age: 35 },
+  ]);
+  expect(
+    dataProvider.getFilters()
+  ).toEqual([{ "field": "date", "type": "=", "value": { "end": 1318809600000, "start": 1318723200000 } }]);
+
+  dataProvider.resetSystemFilter();
+  expect(
+    dataProvider.filteredData
+  ).toEqual(data);
+  expect(
+    dataProvider.getFilters()
+  ).toEqual([]);
+});
+
+test("filter by partially defined date range", () => {
+  const data = [
+    { date: "2011-10-13", age: 17 },
+    { date: "2011-10-14", age: 17 },
+    { date: "2011-10-15", age: 17 },
+    { date: "2011-10-16", age: 30 },
+    { date: "2011-10-16", age: 35 },
+    { date: "2011-10-17", age: 40 },
+    { date: "2011-10-17", age: 45 },
+    { date: "2011-10-18", age: 25 },
+  ];
+  const dataProvider = new DataProvider(data);
+
+  dataProvider.setSystemFilter("date", { start: Date.parse("2011-10-16"), end: undefined });
+  expect(
+    dataProvider.filteredData
+  ).toEqual([
+    { date: "2011-10-16", age: 30 },
+    { date: "2011-10-16", age: 35 },
+    { date: "2011-10-17", age: 40 },
+    { date: "2011-10-17", age: 45 },
+    { date: "2011-10-18", age: 25 },
+  ]);
+
+  dataProvider.setSystemFilter("date", { start: undefined, end: Date.parse("2011-10-16") });
+  expect(
+    dataProvider.filteredData
+  ).toEqual([
+    { date: "2011-10-13", age: 17 },
+    { date: "2011-10-14", age: 17 },
+    { date: "2011-10-15", age: 17 },
+  ]);
+
+  dataProvider.setSystemFilter("date", { start: undefined, end: undefined });
+  expect(
+    dataProvider.filteredData
+  ).toEqual(data);
+});
+
