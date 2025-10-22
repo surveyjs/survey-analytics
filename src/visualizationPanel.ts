@@ -12,7 +12,7 @@ import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
-import { createDateRangeWidget, IDateRange } from "./utils/dateRangeWidget";
+import { DateRangeWidget, IDateRange, IDateRangeOptions, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
 import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
@@ -1001,6 +1001,8 @@ export class VisualizationPanel extends VisualizerBase {
     this.layout();
   }
 
+  public onDatePeriodElementShown = new Event<(sender: VisualizationPanel, options: IDateRangeOptions) => any, VisualizationPanel, any>();
+
   public onPermissionsChangedCallback: any;
 
   protected renderPanelElement(
@@ -1051,22 +1053,26 @@ export class VisualizationPanel extends VisualizerBase {
     container.className += " sa-panel__header";
     super.renderToolbar(container);
 
-    if(this.options.datePeriodFieldName) {
+    if(this.isRoot && this.options.datePeriodFieldName) {
       const divider = DocumentHelper.createElement("div", "sa-horizontal-divider");
       const line = DocumentHelper.createElement("div", "sa-line");
       divider.appendChild(line);
       container.appendChild(divider);
 
-      const config = {
+      const config = <IDateRangeWidgetOptions>{
         setDateRange: (dateRange: IDateRange): Promise<number> => {
           return new Promise<number>((resolve, reject) => {
-            this.dataProvider.setFilter(this.options.datePeriodFieldName, dateRange);
+            this.dataProvider.setSystemFilter(this.options.datePeriodFieldName, dateRange);
             this.dataProvider.getCount().then(count => resolve(count));
           });
         },
+        onBeforeRender: (options: IDateRangeOptions) => {
+          this.onDatePeriodElementShown.fire(this, options);
+        }
       };
-      const dateRangeWidget = createDateRangeWidget(config);
-      container.appendChild(dateRangeWidget);
+      const dateRangeWidget = new DateRangeWidget(config);
+      const dateRangeWidgetElement = dateRangeWidget.render();
+      container.appendChild(dateRangeWidgetElement);
     }
   }
 
