@@ -1,6 +1,7 @@
 @use "globals" as *;
 
 .sa-visualizer-wrapper {
+  min-width: 450px;
   background: var(--sjs2-color-utility-surface-muted, rgba(28, 27, 32, 0.05));
 }
 

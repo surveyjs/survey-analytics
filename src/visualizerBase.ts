@@ -725,6 +725,9 @@ export class VisualizerBase implements IDataInfo {
     }
 
     targetElement.className = "sa-visualizer";
+    if (isRoot) {
+      targetElement.classList.add("sa-visualizer-wrapper");
+    }
     this.renderBanner(targetElement);
     this.toolbarContainer = DocumentHelper.createElement(
       "div",

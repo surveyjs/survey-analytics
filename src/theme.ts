@@ -114,7 +114,6 @@ export class DashboardTheme implements IDashboardTheme {
       return;
     }
 
-    element.classList.add("sa-visualizer-wrapper");
     DocumentHelper.setStyles(element, this.cssVariables);
     if (!!getComputedStyle) {
       this._cssStyleDeclaration = getComputedStyle(element);
