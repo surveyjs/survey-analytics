@@ -298,6 +298,7 @@ export class VisualizationPanel extends VisualizerBase {
   private renderedQuestionsCount: number = 0;
   private static counter = 0;
   private resetFilterButton: HTMLElement;
+  private _dateRangeWidget: DateRangeWidget;
 
   private static getVisualizerName() {
     VisualizationPanel.counter++;
@@ -544,6 +545,9 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   protected onDataChanged(): void {
+    if (this._dateRangeWidget) {
+      this.dataProvider.getCount().then(count => this._dateRangeWidget.updateAnswersCount(count));
+    }
   }
 
   protected showElementCore(element: IVisualizerPanelRenderedElement, elementIndex = -1): void {
@@ -1060,18 +1064,15 @@ export class VisualizationPanel extends VisualizerBase {
       container.appendChild(divider);
 
       const config = <IDateRangeWidgetOptions>{
-        setDateRange: (dateRange: IDateRange): Promise<number> => {
-          return new Promise<number>((resolve, reject) => {
-            this.dataProvider.setSystemFilter(this.options.datePeriodFieldName, dateRange);
-            this.dataProvider.getCount().then(count => resolve(count));
-          });
+        setDateRange: (dateRange: IDateRange): void => {
+          this.dataProvider.setSystemFilter(this.options.datePeriodFieldName, dateRange);
         },
         onBeforeRender: (options: IDateRangeOptions) => {
           this.onDatePeriodElementShown.fire(this, options);
         }
       };
-      const dateRangeWidget = new DateRangeWidget(config);
-      const dateRangeWidgetElement = dateRangeWidget.render();
+      this._dateRangeWidget = new DateRangeWidget(config);
+      const dateRangeWidgetElement = this._dateRangeWidget.render();
       container.appendChild(dateRangeWidgetElement);
     }
   }

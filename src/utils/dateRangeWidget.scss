@@ -1,10 +1,17 @@
-.sa-date-range-container {
+.sa-date-range {
   display: flex;
   align-items: center;
   align-self: stretch;
   align-content: center;
   gap: 16px var(--sjs2-spacing-x200, 16px);
   flex-wrap: wrap;
+}
+
+.sa-date-range-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
 }
 
 .sa-date-range_editors {
@@ -31,6 +38,62 @@
     background: var(--sjs2-color-control-formbox-focused-bg, #F5F5F5);
     box-shadow: var(--sjs2-border-offset-x-form-focused, 0) var(--sjs2-border-offset-y-form-focused, 0) var(--sjs2-border-blur-form-focused, 0) var(--sjs2-border-spread-form-focused, 2px) var(--sjs2-color-control-formbox-focused-border, #19B394) inset;
   }
+}
+
+.sa-range-error {
+  display: none;
+  height: 40px;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.sa-range-error_panel {
+  display: flex;
+  padding: var(--sjs2-layout-control-message-small-vertical, 8px) var(--sjs2-layout-control-message-small-horizontal, 12px);
+  align-items: center;
+  gap: var(--sjs2-layout-control-message-small-gap, 8px);
+  flex: 1 0 0;
+  align-self: stretch;
+  border-radius: var(--sjs2-radius-semantic-form, 8px);
+  background: var(--sjs2-color-control-message-error-bg, rgba(229, 10, 62, 0.10));
+
+}
+.sa-range-error_text {
+  flex: 1 0 0;
+  color: var(--sjs2-color-control-message-error-text, #1C1B20);
+
+  /* sjs2/typography/default */
+  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
+  font-size: var(--sjs2-typography-font-size-default, 16px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+}
+.sa-range-error_icon {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  use {
+    fill: var(--sjs2-color-control-message-error-icon, #C30935);
+  }
+}
+
+.sa-date-range--invalid .sa-range-error{
+  display: flex;
+  padding-top: var(--sjs2-layout-control-message-small-spacer, 8px);
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
 }
 
 .sa-date-range_editor--invalid .sa-date-range_editor-formbox {

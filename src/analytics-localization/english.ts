@@ -58,6 +58,7 @@ export var englishStrings = {
   xlsxDownloadCaption: "Excel",
   csvDownloadCaption: "CSV",
   saveDiagramAsPNG: "Download plot as a PNG file",
+  answersText: "answer(s)",
   hideEmptyAnswers: "Hide empty answers",
   showEmptyAnswers: "Show empty answers",
   "topNValueText-1": "All answers",

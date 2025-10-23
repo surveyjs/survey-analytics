@@ -1,4 +1,5 @@
 import { DocumentHelper } from ".";
+import { localization } from "../localizationManager";
 import "./dateRangeWidget.scss";
 
 export interface IDateRange {
@@ -6,7 +7,7 @@ export interface IDateRange {
   end?: number;
 }
 export interface IDateRangeWidgetOptions {
-  setDateRange: (dateRange: IDateRange) => Promise<number>;
+  setDateRange: (dateRange: IDateRange) => void;
   onBeforeRender: (options: IDateRangeOptions) => void;
 }
 export interface IDateRangeOptions {
@@ -16,25 +17,28 @@ export interface IDateRangeOptions {
 }
 
 export class DateRangeWidget {
+  static invalidRangeClassName = "sa-date-range--invalid";
   static invalidRangeEditorClassName = "sa-date-range_editor--invalid";
 
   private currentDateRange: IDateRange
 
+  private dateRangeContainer: HTMLElement;
   private startDateEditor: HTMLElement;
   private endDateEditor: HTMLElement;
   private startDateInput: HTMLInputElement;
   private endDateInput: HTMLInputElement;
   private countLabel: HTMLElement;
+  private rangeErrorMessage: HTMLElement;
   private chipsContainer: HTMLElement;
 
-  private updateAnswersCount(answersCount: number): void {
-    if (!!this.countLabel && answersCount !== undefined) {
-      this.countLabel.textContent = `${answersCount} answer(s)`;
+  private elementRemoveClassName(element: Element, className: string) {
+    if (element.classList.contains(className)) {
+      element.classList.remove(className);
     }
   }
   private setDateRange(): void {
     this.updateMinMaxAttributes();
-    this.config.setDateRange({ ...this.currentDateRange }).then(answersCount => this.updateAnswersCount(answersCount));
+    this.config.setDateRange({ ...this.currentDateRange });
   }
   private dateEditorChangeValue(): void {
     this.setDateRange();
@@ -60,6 +64,22 @@ export class DateRangeWidget {
     } else {
       input.value = "";
     }
+  }
+  private createErrorMessage(textContent?: string) {
+    const messageDiv = DocumentHelper.createElement("div", "sa-range-error");
+    const panelDiv = DocumentHelper.createElement("div", "sa-range-error_panel");
+    const errorMessageDiv = DocumentHelper.createElement("div", "sa-range-error_text");
+    errorMessageDiv.textContent = textContent;
+    this.rangeErrorMessage = errorMessageDiv;
+
+    const iconDiv = DocumentHelper.createElement("div", "sa-range-error_icon");
+    iconDiv.appendChild(DocumentHelper.createSvgElement("warning-24x24"));
+
+    messageDiv.appendChild(panelDiv);
+    panelDiv.appendChild(iconDiv);
+    panelDiv.appendChild(errorMessageDiv);
+
+    return messageDiv;
   }
   private createDateEditor(dateValue: number, changeHandler: (input: HTMLInputElement) => void): HTMLElement {
     const dateEditor = DocumentHelper.createElement("div", "sa-date-range_editor");
@@ -119,9 +139,7 @@ export class DateRangeWidget {
   private resetChipsState(container: HTMLElement): void {
     const chips = container.querySelectorAll(".sa-date-range_chip");
     chips.forEach(chip => {
-      if (chip.classList.contains("sa-date-range_chip--active")) {
-        chip.classList.remove("sa-date-range_chip--active");
-      }
+      this.elementRemoveClassName(chip, "sa-date-range_chip--active");
     });
   }
   private setFilter(start, end): void {
@@ -130,8 +148,8 @@ export class DateRangeWidget {
     this.setDateRange();
     this.setDateIntoInput(start, this.startDateInput);
     this.setDateIntoInput(end, this.endDateInput);
-    this.dateEditorRemoveInvalidClass(this.startDateEditor);
-    this.dateEditorRemoveInvalidClass(this.endDateEditor);
+    this.elementRemoveClassName(this.startDateEditor, DateRangeWidget.invalidRangeEditorClassName);
+    this.elementRemoveClassName(this.endDateEditor, DateRangeWidget.invalidRangeEditorClassName);
   }
   private getDefaultChipsConfig(): {[key: string]: any} {
     return {
@@ -173,17 +191,23 @@ export class DateRangeWidget {
     this.config.onBeforeRender(options);
 
     this.currentDateRange = !!options.initialRange ? options.initialRange : {};
-    const container = DocumentHelper.createElement("div", "sa-date-range-container");
+    const rangeElement = DocumentHelper.createElement("div", "sa-date-range");
+    const rangeContainer = DocumentHelper.createElement("div", "sa-date-range-container");
     const dateRangeEditors = DocumentHelper.createElement("div", "sa-date-range_editors");
-    container.appendChild(dateRangeEditors);
+    this.dateRangeContainer = rangeContainer;
+    rangeContainer.appendChild(dateRangeEditors);
+    rangeElement.appendChild(rangeContainer);
 
     this.startDateEditor = this.createDateEditor(this.currentDateRange.start, (input: HTMLInputElement) => {
-      if (input.reportValidity()) {
+      if (input.checkValidity()) {
         this.currentDateRange.start = (new Date(input.value)).getTime();
         this.dateEditorChangeValue();
-        this.dateEditorRemoveInvalidClass(this.startDateEditor);
+        this.elementRemoveClassName(this.startDateEditor, DateRangeWidget.invalidRangeEditorClassName);
+        this.elementRemoveClassName(this.dateRangeContainer, DateRangeWidget.invalidRangeClassName);
       } else {
         this.startDateEditor.classList.add(DateRangeWidget.invalidRangeEditorClassName);
+        this.dateRangeContainer.classList.add(DateRangeWidget.invalidRangeClassName);
+        this.rangeErrorMessage.textContent = input.validationMessage;
       }
     });
     dateRangeEditors.appendChild(this.startDateEditor);
@@ -195,15 +219,20 @@ export class DateRangeWidget {
     dateRangeEditors.appendChild(separator);
 
     this.endDateEditor = this.createDateEditor(this.currentDateRange.end, (input: HTMLInputElement) => {
-      if (input.reportValidity()) {
+      if (input.checkValidity()) {
         this.currentDateRange.end = (new Date(input.value)).getTime();
         this.dateEditorChangeValue();
-        this.dateEditorRemoveInvalidClass(this.endDateEditor);
+        this.elementRemoveClassName(this.endDateEditor, DateRangeWidget.invalidRangeEditorClassName);
+        this.elementRemoveClassName(this.dateRangeContainer, DateRangeWidget.invalidRangeClassName);
       } else {
         this.endDateEditor.classList.add(DateRangeWidget.invalidRangeEditorClassName);
+        this.dateRangeContainer.classList.add(DateRangeWidget.invalidRangeClassName);
+        this.rangeErrorMessage.textContent = input.validationMessage;
       }
     });
     dateRangeEditors.appendChild(this.endDateEditor);
+    rangeContainer.appendChild(this.createErrorMessage());
+
     this.endDateInput = this.endDateEditor.querySelector("input");
 
     if (!!options.chipsConfig && Object.keys(options.chipsConfig).length > 0) {
@@ -212,28 +241,28 @@ export class DateRangeWidget {
         this.createChip(chipLabel, index === 0, this.chipsContainer, options.chipsConfig[chipLabel]);
       });
 
-      container.appendChild(this.createDivider());
-      container.appendChild(this.chipsContainer);
+      rangeElement.appendChild(this.createDivider());
+      rangeElement.appendChild(this.chipsContainer);
     }
 
     if (options.showTotalCount !== false) {
       const divider2 = this.createDivider();
       divider2.classList.add("sa-vertical-divider2");
-      container.appendChild(divider2);
+      rangeElement.appendChild(divider2);
       const countContainer = DocumentHelper.createElement("div", "sa-count");
       this.countLabel = DocumentHelper.createElement("div", "sa-count_text");
       countContainer.appendChild(this.countLabel);
-      container.appendChild(countContainer);
+      rangeElement.appendChild(countContainer);
     }
 
     this.setFilter(this.currentDateRange.start, this.currentDateRange.end);
 
-    return container;
+    return rangeElement;
   }
 
-  private dateEditorRemoveInvalidClass(dateEditor: HTMLElement) {
-    if (dateEditor.classList.contains(DateRangeWidget.invalidRangeEditorClassName)) {
-      dateEditor.classList.remove(DateRangeWidget.invalidRangeEditorClassName);
+  public updateAnswersCount(answersCount: number): void {
+    if (!!this.countLabel && answersCount !== undefined) {
+      this.countLabel.textContent = answersCount + " " + localization.getString("answersText");
     }
   }
 }
