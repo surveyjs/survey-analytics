@@ -460,6 +460,7 @@
   }
 
   .sa-dropdown-list.sa-dropdown--opened {
-    max-width: 100%;
+    min-width: calc(100% - var(--sjs2-layout-container-drop-horizontal, 8px) * 2);
+    max-width: calc(100% - var(--sjs2-layout-container-drop-horizontal, 8px) * 2);
   }
 }

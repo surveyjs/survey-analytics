@@ -100,6 +100,10 @@
   font-style: normal;
   font-weight: 600;
   line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+
+  @media screen and (max-width: 600px) {
+    padding-inline-end: 40px;
+  }
 }
 
 .sa-question__header--draggable {
@@ -183,6 +187,11 @@
     top: unset;
     right: 0px;
     bottom: -44px;
+
+    @media screen and (max-width: 600px) {
+      top: 0;
+      bottom: unset;
+    }
   }
 }
 
