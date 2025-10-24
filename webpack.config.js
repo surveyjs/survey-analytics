@@ -38,6 +38,66 @@ PascalCaseNamePlugin.prototype.apply = function (compiler) {
   });
 };
 
+function SuppressJsForFontlessChunksPlugin(options) { }
+SuppressJsForFontlessChunksPlugin.prototype.apply = function (compiler) {
+  // compiler.hooks.emit.tap('SuppressJsForFontlessChunksPlugin', (compilation) => {
+  //   for (const chunk of compilation.chunks) {
+  //     if (chunk.name && chunk.name.includes('fontless')) {
+  //       const files = [...chunk.files]; // Create a copy to avoid modification during iteration
+  //       for (const file of files) {
+  //         console.log(file);
+  //         if (file.includes('.js')) {
+  //           delete compilation.assets[file];
+  //           chunk.files = chunk.files.filter(f => f !== file);
+  //         }
+  //       }
+  //     }
+  //   }
+  // });
+  
+  // First pass: remove from compilation in emit phase
+  compiler.hooks.emit.tap('SuppressJsForFontlessChunksPlugin', (compilation) => {
+    for (const chunk of compilation.chunks) {
+      if (chunk.name && chunk.name.includes('fontless')) {
+        const files = [...chunk.files];
+        for (const file of files) {
+          if (file.endsWith('.js') || file.includes('.js.')) {
+            delete compilation.assets[file];
+            chunk.files = chunk.files.filter(f => f !== file);
+          }
+        }
+      }
+    }
+  });
+  
+  // Second pass: clean up any remaining files after emit
+  compiler.hooks.done.tap('SuppressJsForFontlessChunksPlugin', (stats) => {
+    const fs = require('fs');
+    const path = require('path');
+    const outputPath = stats.compilation.outputOptions.path;
+    
+    if (!outputPath) return;
+    
+    for (const chunk of stats.compilation.chunks) {
+      if (chunk.name && chunk.name.includes('fontless')) {
+        const jsFilePatterns = ['.js', '.js.'];
+        const files = fs.readdirSync(outputPath).filter(file => 
+          file.includes(chunk.name) && jsFilePatterns.some(pattern => file.includes(pattern))
+        );
+        
+        for (const file of files) {
+          try {
+            fs.unlinkSync(path.join(outputPath, file));
+            console.log(`Cleaned up: ${file}`);
+          } catch (err) {
+            console.warn(`Could not delete ${file}:`, err.message);
+          }
+        }
+      }
+    }
+  });
+}
+
 const today = new Date();
 const year = today.getFullYear();
 
@@ -84,6 +144,16 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
             "import": "./fesm/survey.analytics.tabulator.mjs",
             "require": "./survey.analytics.tabulator.js"
           },
+          "./survey.analytics.apexcharts": {
+            "types": "./survey.analytics.apexcharts.d.ts",
+            "import": "./fesm/survey.analytics.apexcharts.mjs",
+            "require": "./survey.analytics.apexcharts.js"
+          },
+          "./survey.analytics.plotly": {
+            "types": "./survey.analytics.plotly.d.ts",
+            "import": "./fesm/survey.analytics.plotly.mjs",
+            "require": "./survey.analytics.plotly.js"
+          },
         }
         packageJson.module = "fesm/survey.analytics.mjs";
         fs.writeFileSync(
@@ -111,6 +181,10 @@ module.exports = function (options) {
       ),
       "survey.analytics": path.resolve(__dirname, "./src/entries/summary"),
       "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core"),
+      "survey.analytics.apexcharts": path.resolve(__dirname, "./src/entries/apexcharts"),
+      "survey.analytics.apexcharts.fontless": path.resolve(__dirname, "./src/entries/apexcharts.fontless"),
+      "survey.analytics.plotly": path.resolve(__dirname, "./src/entries/plotly"),
+      "survey.analytics.plotly.fontless": path.resolve(__dirname, "./src/entries/plotly.fontless"),
       "survey.analytics.mongo": path.resolve(__dirname, "./src/entries/mongo"),
     },
     resolve: {
@@ -193,6 +267,12 @@ module.exports = function (options) {
         commonjs: "tabulator-tables",
         amd: "tabulator-tables",
       },
+      "apexcharts": {
+        root: "ApexCharts",
+        commonjs2: "apexcharts",
+        commonjs: "apexcharts",
+        amd: "apexcharts",
+      },
       "mongodb": {
         root: "MongoDB",
         commonjs2: "mongodb",
@@ -214,6 +294,7 @@ module.exports = function (options) {
       new webpack.BannerPlugin({
         banner: banner,
       }),
+      new SuppressJsForFontlessChunksPlugin(),
     ],
     devServer: {
       static: {

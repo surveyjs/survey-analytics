@@ -4,6 +4,17 @@ import { expect, test as baseTest } from "@playwright/test";
 export const url_summary = "http://127.0.0.1:8080/examples/summarytest.html";
 export const url_tabulator = "http://127.0.0.1:8080/examples/tabulator.html";
 
+export const testConfigs = [
+  {
+    name: "plotly",
+    suffix: "",
+  },
+  // {
+  //   name: "apexcharts",
+  //   suffix: "_apexcharts",
+  // },
+];
+
 export const initSummary = async (page: Page, json: any, data, options, elements?, state?) => {
   await page.evaluate(([json, data, options, elements, state]) => {
     var model = new (window as any).Survey.SurveyModel(json);
@@ -70,6 +81,19 @@ export async function getYAxisValues(page) {
   });
 }
 
+export function getListItemByText(page, text) {
+  return page.getByRole("option", { name: text, exact: true });
+}
+
+export async function resetFocusToBody(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    if (!!document.activeElement) {
+      document.activeElement.blur();
+    }
+    document.body.focus();
+  });
+}
+
 // export const getYAxisValues = ClientFunction(() => {
 //   var yValues = [];
 //   document.querySelectorAll(".yaxislayer-above g.ytick text").forEach((el) => {
@@ -78,10 +102,18 @@ export async function getYAxisValues(page) {
 //   return yValues;
 // });
 
-export async function compareScreenshot(page: Page, elementSelector: string | Locator | undefined, screenshotName: string, elementIndex = 0): Promise<void> {
+export async function compareScreenshot(page: Page, elementSelector: string | Locator | undefined, screenshotName: string, mask?: Array<Locator>): Promise<void> {
   await page.addStyleTag({
     content: "textarea::-webkit-resizer { visibility: hidden !important; }"
   });
+
+  const options = {
+    timeout: 10000
+  };
+  if (mask) {
+    (options as any).mask = mask;
+    (options as any).maskColor = "#000000";
+  }
 
   if (!!elementSelector) {
     let elementLocator: Locator;
@@ -91,14 +123,11 @@ export async function compareScreenshot(page: Page, elementSelector: string | Lo
       elementLocator = elementSelector;
     }
     const element = elementLocator.filter({ visible: true });
-    await expect.soft(element.nth(elementIndex)).toBeVisible();
-    await expect.soft(element.nth(elementIndex)).toHaveScreenshot(screenshotName, {
-      timeout: 10000
-    });
+    element.scrollIntoViewIfNeeded();
+    await expect.soft(element.nth(0)).toBeVisible();
+    await expect.soft(element.nth(0)).toHaveScreenshot(screenshotName, options);
   } else {
-    await expect.soft(page).toHaveScreenshot(screenshotName, {
-      timeout: 10000
-    });
+    await expect.soft(page).toHaveScreenshot(screenshotName, options);
   }
 }
 
