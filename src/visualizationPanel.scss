@@ -206,6 +206,10 @@
   user-select: none;
 }
 
+.sa-question__content .sa-visualizer-toolbar--has-content {
+  padding-bottom: var(--sjs2-spacing-x200, 16px);
+}
+
 .sa-toolbar__button {
   display: flex;
   padding: var(--sjs2-layout-control-action-small-box-vertical, 8px) var(--sjs2-layout-control-action-small-box-horizontal, 8px);

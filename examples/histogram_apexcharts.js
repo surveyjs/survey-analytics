@@ -436,10 +436,8 @@ var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
   survey.getAllQuestions(),
   data,
   {
-    labelTruncateLength: 5,
     allowSortAnswers: true,
     allowShowPercentages: true,
-    allowHideEmptyAnswers: true,
     allowTransposeData: true,
     allowTopNAnswers: true,
     age: {
