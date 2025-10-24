@@ -12,6 +12,7 @@
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
+  max-width: min-content;
 }
 
 .sa-date-range_editors {
@@ -42,7 +43,6 @@
 
 .sa-range-error {
   display: none;
-  height: 40px;
   align-items: flex-start;
   align-self: stretch;
 }
@@ -50,13 +50,12 @@
 .sa-range-error_panel {
   display: flex;
   padding: var(--sjs2-layout-control-message-small-vertical, 8px) var(--sjs2-layout-control-message-small-horizontal, 12px);
-  align-items: center;
+  align-items: flex-start;
   gap: var(--sjs2-layout-control-message-small-gap, 8px);
   flex: 1 0 0;
   align-self: stretch;
   border-radius: var(--sjs2-radius-semantic-form, 8px);
   background: var(--sjs2-color-control-message-error-bg, rgba(229, 10, 62, 0.10));
-
 }
 .sa-range-error_text {
   flex: 1 0 0;
@@ -69,26 +68,8 @@
   font-weight: 400;
   line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
 }
-.sa-range-error_icon {
-  display: flex;
-  width: 24px;
-  height: 24px;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
 
-  svg {
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-  }
-
-  use {
-    fill: var(--sjs2-color-control-message-error-icon, #C30935);
-  }
-}
-
-.sa-date-range--invalid .sa-range-error{
+.sa-date-range--invalid .sa-range-error {
   display: flex;
   padding-top: var(--sjs2-layout-control-message-small-spacer, 8px);
   flex-direction: column;
@@ -131,6 +112,7 @@
 .sa-vertical-divider {
   display: flex;
   width: 1px;
+  height: 40px;
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
@@ -253,6 +235,7 @@
   padding: var(--sjs2-spacing-x100, 8px) 0;
   justify-content: center;
   align-items: center;
+  align-self: self-start;
   gap: 10px;
 }
 

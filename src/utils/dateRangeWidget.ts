@@ -72,11 +72,7 @@ export class DateRangeWidget {
     errorMessageDiv.textContent = textContent;
     this.rangeErrorMessage = errorMessageDiv;
 
-    const iconDiv = DocumentHelper.createElement("div", "sa-range-error_icon");
-    iconDiv.appendChild(DocumentHelper.createSvgElement("warning-24x24"));
-
     messageDiv.appendChild(panelDiv);
-    panelDiv.appendChild(iconDiv);
     panelDiv.appendChild(errorMessageDiv);
 
     return messageDiv;
