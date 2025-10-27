@@ -210,8 +210,7 @@ export class DateRangeWidget {
     this.startDateInput = this.startDateEditor.querySelector("input");
 
     const separator = DocumentHelper.createElement("div", "");
-    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
-    separator.textContent = "—";
+    separator.textContent = "-";
     dateRangeEditors.appendChild(separator);
 
     this.endDateEditor = this.createDateEditor(this.currentDateRange.end, (input: HTMLInputElement) => {
@@ -232,9 +231,12 @@ export class DateRangeWidget {
     this.endDateInput = this.endDateEditor.querySelector("input");
 
     if (!!options.chipsConfig && Object.keys(options.chipsConfig).length > 0) {
+      const isActive = (index) => {
+        return !options.initialRange && index === 0;
+      };
       this.chipsContainer = DocumentHelper.createElement("div", "sa-date-range_chips");
       Object.keys(options.chipsConfig).forEach((chipLabel, index) => {
-        this.createChip(chipLabel, index === 0, this.chipsContainer, options.chipsConfig[chipLabel]);
+        this.createChip(chipLabel, isActive(index), this.chipsContainer, options.chipsConfig[chipLabel]);
       });
 
       rangeElement.appendChild(this.createDivider());
