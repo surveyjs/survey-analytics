@@ -583,9 +583,10 @@ export class VisualizerBase implements IDataInfo {
         DocumentHelper.createElement("div", "sa-toolbar")
       );
       this.createToolbarItems(toolbar);
+
       if(!!toolbar && !!toolbar.innerHTML) {
         container.appendChild(toolbar);
-        container.classList.add("sa-visualizer-toolbar--has-content");
+        container.classList.add("sa-toolbar--has-content");
       }
     }
   }
