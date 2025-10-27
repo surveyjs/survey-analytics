@@ -149,7 +149,8 @@ export class ApexChartsAdapter {
     if((_chartType=== "pie" || _chartType === "doughnut") && chartOptions.series.length > 0 && typeof chartOptions.series[0] !== "number") {
       this.updatePieCharts(options, chartOptions, chartNode);
     } else {
-      if (this._chart) {
+      const availableUpdateOptions = this._chart && !!this._chart["el"] && this._chart["el"].getRootNode() === document;
+      if (availableUpdateOptions) {
         await this._chart.updateOptions({ series: options.series });
       } else {
         removeUndefinedProperties(options);
