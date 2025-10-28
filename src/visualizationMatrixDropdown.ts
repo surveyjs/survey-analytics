@@ -96,6 +96,11 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     );
   }
 
+  protected onThemeChanged(): void {
+    super.onThemeChanged();
+    this._contentVisualizer.theme = this.theme;
+  }
+
   destroyContent(container: HTMLElement) {
     this._contentVisualizer.clear();
     super.destroyContent(this.contentContainer);

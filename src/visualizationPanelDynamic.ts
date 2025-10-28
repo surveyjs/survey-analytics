@@ -44,6 +44,11 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     return paneldynamic.template.questions;
   }
 
+  protected onThemeChanged(): void {
+    super.onThemeChanged();
+    this._contentVisualizer.theme = this.theme;
+  }
+
   destroyContent(container: HTMLElement) {
     this._contentVisualizer.clear();
     super.destroyContent(this.contentContainer);
