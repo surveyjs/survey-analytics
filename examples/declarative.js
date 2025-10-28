@@ -111,18 +111,18 @@ var options = {
 };
 
 const visualizerDefinition1 = {
+  visualizerType: "card",
+  dataName: "test",
+  displayValueName: "count",
+  title: "Total answers count - Card"
+};
+
+const visualizerDefinition2 = {
   visualizerType: "gauge",
   chartType: "bullet",
   dataName: "test",
   displayValueName: "count",
   title: "Total answers count - Gauge bullet"
-};
-
-const visualizerDefinition2 = {
-  visualizerType: "card",
-  dataName: "test",
-  displayValueName: "count",
-  title: "Total answers count - Card"
 };
 
 const visualizerDefinition3 = {
@@ -133,7 +133,7 @@ const visualizerDefinition3 = {
 };
 
 const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
-let visPanel = new SurveyAnalytics.VisualizationPanel([visualizerDefinition2, visualizerDefinition1], data, options);
+let visPanel = new SurveyAnalytics.VisualizationPanel([visualizerDefinition1, visualizerDefinition2, visualizerDefinition3], data, options);
 
 
 visPanel.showToolbar = true;
