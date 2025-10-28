@@ -198,7 +198,6 @@ export class DashboardTheme implements IDashboardTheme {
       borderWidth: this.getCssVariableValue("--sjs2-border-width-default"),
       borderColor: this.getCssVariableValue("--sjs2-color-border-basic-secondary"),
       borderRadius: this.getCssVariableValue("--sjs2-radius-x250"),
-      background: this.getCssVariableValue("--sjs2-color-bg-basic-primary"),
     };
   }
 

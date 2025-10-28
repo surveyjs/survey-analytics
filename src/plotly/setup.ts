@@ -75,7 +75,6 @@ export class PlotlySetup {
     return {
       yanchor: isMobile ? "top" : "auto",
       orientation: isMobile ? "h" : "v",
-      bgcolor: legendSetting.background,
       bordercolor: legendSetting.borderColor,
       borderwidth: legendSetting.borderWidth,
       itemwidth: 20,
