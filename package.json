@@ -25,7 +25,7 @@
     "accessibility-tests": "playwright test --project a11y --ui",
     "accessibility-tests:ci": "playwright test --project a11y --reporter dot --quiet"
   },
-  "version": "2.3.11",
+  "version": "2.3.12",
   "name": "survey-analytics",
   "description": "SurveyJS analytics Library.",
   "main": "survey.analytics.js",
