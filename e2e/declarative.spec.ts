@@ -10,7 +10,7 @@ test.describe("Declarative common", () => {
   test("Total answers count visualizer", async ({ page }) => {
     const questionTitleSelector = page.locator("h3").filter({ hasText: "Total answers count - Card" });
     await expect(questionTitleSelector).toBeVisible();
-    const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
+    const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..").first();
 
     await compareScreenshot(page, questionVisualizerSelector, "total-answer-count.png");
   });

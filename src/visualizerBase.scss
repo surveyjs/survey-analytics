@@ -18,11 +18,6 @@
   font-family: $font-family;
   display: inline-block;
   width: 100%;
-  padding: var(--sjs2-spacing-x300, 24px);
-
-  @media screen and (max-width: 600px) { 
-    padding: var(--sjs2-spacing-x150, 12px);
-  }
 }
 
 .sa-visualizer__footer {
