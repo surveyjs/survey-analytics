@@ -78,5 +78,15 @@ var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
   data,
   options
 );
+
+const checkbox = document.getElementById('toggle-checkbox');
+checkbox.addEventListener('change', () => {
+  if (checkbox.checked) {
+    visPanel.applyTheme(SurveyAnalyticsApexcharts.DefaultDark);
+  } else {
+    visPanel.applyTheme(SurveyAnalyticsApexcharts.Default);
+  }
+});
+
 visPanel.showToolbar = true;
 visPanel.render(document.getElementById("summaryContainer"));

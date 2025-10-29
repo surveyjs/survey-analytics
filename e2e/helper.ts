@@ -9,10 +9,10 @@ export const testConfigs = [
     name: "plotly",
     suffix: "",
   },
-  // {
-  //   name: "apexcharts",
-  //   suffix: "_apexcharts",
-  // },
+  {
+    name: "apexcharts",
+    suffix: "_apexcharts",
+  },
 ];
 
 export const initSummary = async (page: Page, json: any, data, options, elements?, state?) => {
