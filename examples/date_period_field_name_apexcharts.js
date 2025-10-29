@@ -11,10 +11,10 @@ var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
   options
 );
 visPanel.onDatePeriodElementShown.add((sender, options) => {
-  // options.initialRange = {
-  //   start: Date.parse("2025-10-15"),
-  //   end: Date.parse("2025-10-15")
-  // };
+  options.initialRange = {
+    start: Date.parse("2025-10-15"),
+    end: Date.parse("2025-10-15")
+  };
   // options.showTotalCount = false;
   // options.chipsConfig = null;
 });
