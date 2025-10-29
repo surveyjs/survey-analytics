@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { compareScreenshot } from "./helper";
 
-process.env.SNAPSHOT_SUFFIX = "";
+process.env.SNAPSHOT_SUFFIX = undefined;
 
 test.describe("Declarative common", () => {
   test.beforeEach(async ({ page }) => {

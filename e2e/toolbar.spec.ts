@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import { compareScreenshot, resetFocusToBody } from "./helper";
 
-process.env.SNAPSHOT_SUFFIX = "";
+process.env.SNAPSHOT_SUFFIX = undefined;
 
 test.describe("Toolbar visualizers", () => {
   test("Toolbar visualizer", async ({ page }) => {

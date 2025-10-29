@@ -6,7 +6,7 @@ for (const config of testConfigs) {
 
   test.describe(`Pivot chart ${config.name}`, () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto(`http://localhost:8080/examples/pivot${config.suffix}.html`);
+      await page.goto(`http://localhost:8080/examples/pivot${config.suffix || ""}.html`);
       await page.setViewportSize({ width: 1000, height: 800 });
     });
 

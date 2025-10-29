@@ -9,7 +9,7 @@ for (const config of testConfigs) {
     });
 
     test("matrix one row", async ({ page }) => {
-      await page.goto(`http://localhost:8080/examples/matrix-one-row${config.suffix}.html`);
+      await page.goto(`http://localhost:8080/examples/matrix-one-row${config.suffix || ""}.html`);
       await page.setViewportSize({ width: 800, height: 1000 });
       const questionTitleSelector = page.locator("h3").filter({ hasText: "Please indicate if you agree or disagree with the following statements" });
       await expect(questionTitleSelector).toBeVisible();
@@ -43,7 +43,7 @@ for (const config of testConfigs) {
     });
 
     test("matrix dropdown grouped", async ({ page }) => {
-      await page.goto(`http://localhost:8080/examples/matrixdropdown-grouped${config.suffix}.html`);
+      await page.goto(`http://localhost:8080/examples/matrixdropdown-grouped${config.suffix || ""}.html`);
       await page.setViewportSize({ width: 800, height: 1000 });
       const questionTitleSelector = page.locator("h3").filter({ hasText: "Please select the top 3 processes that you perceived as most difficult or troublesome." });
       await expect(questionTitleSelector).toBeVisible();
