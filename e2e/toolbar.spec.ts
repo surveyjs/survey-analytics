@@ -1,6 +1,8 @@
 import { test } from "@playwright/test";
 import { compareScreenshot, resetFocusToBody } from "./helper";
 
+process.env.SNAPSHOT_SUFFIX = "";
+
 test.describe("Toolbar visualizers", () => {
   test("Toolbar visualizer", async ({ page }) => {
     await page.goto("http://localhost:8080/examples/histogram_apexcharts.html");
