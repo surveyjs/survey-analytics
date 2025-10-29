@@ -356,10 +356,6 @@ export class ApexChartsSetup {
     const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
     const isHistogram = model.type === "histogram";
 
-    const reversedAnswersData = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets);
-    labels = reversedAnswersData.labels;
-    datasets = reversedAnswersData.datasets;
-
     // Prepare data series
     let series: Array<any> = [];
 
@@ -681,10 +677,6 @@ export class ApexChartsSetup {
     } = answersData;
 
     const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
-
-    const reversedAnswersData = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets);
-    labels = reversedAnswersData.labels;
-    datasets = reversedAnswersData.datasets;
 
     // Prepare data series
     let series: Array<any> = [];
