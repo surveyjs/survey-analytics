@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import { compareScreenshot, getListItemByText, testConfigs } from "./helper";
 
 for (const config of testConfigs) {
+  process.env.SNAPSHOT_SUFFIX = undefined;
   process.env.SNAPSHOT_SUFFIX = config.suffix;
 
   test.describe(`Matrixes visualizer ${config.name}`, () => {
