@@ -6,7 +6,7 @@ for (const config of testConfigs) {
 
   test.describe(`Summary common ${config.name}`, () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto(`http://localhost:8080/examples/summary${config.suffix || ""}.html`);
+      await page.goto(`http://localhost:8080/examples/summary${config.suffix}.html`);
       await page.setViewportSize({ width: 800, height: 1000 });
     });
 

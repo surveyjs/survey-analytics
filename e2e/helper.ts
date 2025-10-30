@@ -7,7 +7,7 @@ export const url_tabulator = "http://127.0.0.1:8080/examples/tabulator.html";
 export const testConfigs = [
   {
     name: "plotly",
-    suffix: undefined,
+    suffix: "",
   },
   {
     name: "apexcharts",
