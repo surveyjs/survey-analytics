@@ -6,7 +6,7 @@ process.env.SNAPSHOT_SUFFIX = "";
 
 test.describe("Toolbar visualizers", () => {
   test("Toolbar visualizer", async ({ page }) => {
-    await page.goto("http://localhost:8080/examples/histogram_apexcharts.html");
+    await page.goto("http://localhost:8080/examples/apexcharts/histogram.html");
 
     const visLocator = page.locator(".sa-question__content").first();
     const dropdownPopupLocator = page.locator(".sa-dropdown-list.sa-dropdown--opened").filter({ visible: true }).first();
@@ -30,7 +30,7 @@ test.describe("Toolbar visualizers", () => {
   });
 
   test("Toolbar visualizer if disable the layout engine", async ({ page }) => {
-    await page.goto("http://localhost:8080/examples/disable_layout_engine_apexcharts.html");
+    await page.goto("http://localhost:8080/examples/apexcharts/disable_layout_engine.html");
 
     const visLocator = page.locator(".sa-question__content").first();
     const mask = [
@@ -45,7 +45,7 @@ test.describe("Toolbar visualizers", () => {
   });
 
   test("Custom date range toolbar", async ({ page }) => {
-    await page.goto("http://localhost:8080/examples/date_period_field_name_apexcharts.html");
+    await page.goto("http://localhost:8080/examples/apexcharts/date_period_field_name.html");
 
     const toolbarLocator = page.locator(".sa-panel__header").first();
 
@@ -60,7 +60,7 @@ test.describe("Toolbar visualizers", () => {
   });
 
   test("Custom date range toolbar with validation error", async ({ page }) => {
-    await page.goto("http://localhost:8080/examples/date_period_field_name_apexcharts.html");
+    await page.goto("http://localhost:8080/examples/apexcharts/date_period_field_name.html");
 
     const toolbarLocator = page.locator(".sa-panel__header").first();
     const dateInput = page.locator(".sa-date-range_editor input").first();

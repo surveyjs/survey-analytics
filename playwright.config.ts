@@ -32,15 +32,26 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
   },
-  snapshotPathTemplate: `{testDir}/{testFilePath}-snapshots${process.env.SNAPSHOT_SUFFIX || ""}/{arg}{ext}`,
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "http://localhost:8080/examples/1",
+      },
+      snapshotPathTemplate: "{testDir}/{testFilePath}-snapshots/{arg}{ext}",
     },
-
+    {
+      name: "chromium+apexCharts",
+      testDir: "./e2e/charts",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "http://localhost:8080/examples/apexcharts/2",
+      },
+      snapshotPathTemplate: "{testDir}/{testFilePath}-snapshots_apexcharts/{arg}{ext}",
+    },
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },

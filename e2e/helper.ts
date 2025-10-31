@@ -4,17 +4,6 @@ import { expect, test as baseTest } from "@playwright/test";
 export const url_summary = "http://127.0.0.1:8080/examples/summarytest.html";
 export const url_tabulator = "http://127.0.0.1:8080/examples/tabulator.html";
 
-export const testConfigs = [
-  {
-    name: "plotly",
-    suffix: "",
-  },
-  {
-    name: "apexcharts",
-    suffix: "_apexcharts",
-  },
-];
-
 export const initSummary = async (page: Page, json: any, data, options, elements?, state?) => {
   await page.evaluate(([json, data, options, elements, state]) => {
     var model = new (window as any).Survey.SurveyModel(json);
