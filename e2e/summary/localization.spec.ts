@@ -62,6 +62,7 @@ test.describe("localization", () => {
     await getListItemByText(page, "English").click();
 
     // Check Y axis values in English
+    await page.waitForTimeout(500);
     const yAxisValuesEn = await getYAxisValues(page);
     expect(yAxisValuesEn).toEqual(json.questions[0].choices.map((choice) => choice.text.default + "  ").reverse());
 
