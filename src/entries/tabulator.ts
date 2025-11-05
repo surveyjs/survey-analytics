@@ -30,7 +30,7 @@ export * from "../tables/columns";
 export { TableExtensions } from "../tables/extensions/tableextensions";
 export { DocumentHelper } from "../utils/index";
 
-export * from "../sjs-design-tokens/default-light";
-export * from "../sjs-design-tokens/default-dark";
+export * from "../themes/default-light";
+export * from "../themes/default-dark";
 
 import "./fonts.scss";

@@ -1,5 +1,5 @@
-import Default from "./sjs-design-tokens/default-light";
 import { DocumentHelper } from "./utils";
+import Default from "./themes/default-light";
 
 export interface IDashboardTheme {
   cssVariables?: { [index: string]: string | any };
