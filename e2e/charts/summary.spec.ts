@@ -54,11 +54,11 @@ test.describe("Summary common", () => {
     await expect(chartContentSelector).toBeVisible();
 
     await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Pie");
-    await compareScreenshot(page, chartContentSelector, "boolean-simple-bar.png");
+    await compareScreenshot(page, chartContentSelector, "boolean-simple-pie.png");
 
     await chartTypeSelector.click();
     await getListItemByText(page, "Bar").click();
-    await compareScreenshot(page, chartContentSelector, "boolean-simple-pie.png");
+    await compareScreenshot(page, chartContentSelector, "boolean-simple-bar.png");
 
     await chartTypeSelector.click();
     await getListItemByText(page, "Doughnut").click();
