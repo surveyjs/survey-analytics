@@ -3,12 +3,11 @@ import { compareScreenshot, getListItemByText } from "./helper";
 
 test.describe("Summary common", () => {
   test.beforeEach(async ({ page }) => {
+    await page.goto("http://localhost:8080/examples/apexcharts/summary.html");
+    await page.setViewportSize({ width: 800, height: 1000 });
   });
 
   test("text simple cases", async ({ page }) => {
-    await page.goto("summary.html");
-    await page.setViewportSize({ width: 800, height: 1000 });
-
     const questionTitleSelector = page.locator("h3").filter({ hasText: "What's your favorite functionality / add-on?" });
     await expect(questionTitleSelector).toBeVisible();
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
@@ -28,9 +27,6 @@ test.describe("Summary common", () => {
   });
 
   test("boolean simple cases", async ({ page }) => {
-    await page.goto("summary.html");
-    await page.setViewportSize({ width: 800, height: 1000 });
-
     const questionTitleSelector = page.locator("h3").filter({ hasText: "Please answer the question" });
     await expect(questionTitleSelector).toBeVisible();
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
