@@ -123,7 +123,7 @@ export class DateRangeWidget {
     const box = DocumentHelper.createElement("div", "sa-date-range_chip-box");
     const labelContainer = DocumentHelper.createElement("div", "sa-date-range_chip-label");
     const labelText = DocumentHelper.createElement("div", "sa-date-range_chip-text");
-    labelText.textContent = text;
+    labelText.textContent = localization.getString("reportingPeriod" + text.charAt(0).toUpperCase() + text.slice(1));
 
     labelContainer.appendChild(labelText);
     box.appendChild(labelContainer);
@@ -149,7 +149,7 @@ export class DateRangeWidget {
   }
   private getDefaultChipsConfig(): {[key: string]: any} {
     return {
-      allTime: () => {
+      resetRange: () => {
         this.setFilter(undefined, undefined);
       },
       lastYear: () => {
