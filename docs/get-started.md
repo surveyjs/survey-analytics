@@ -1,6 +1,6 @@
 ---
-title: Add SurveyJS Dashboard to Your JavaScript Application
-description: Learn how to add SurveyJS Dashboard to your application with this comprehensive step-by-step tutorial. Enhance your self-hosted surveying tool with powerful survey analytics capabilities.
+title: SurveyJS Dashboard – Real-Time Survey Data Visualisation and Analysis
+description: Get started with SurveyJS Dashboard to visualize and analyze survey results in real time. Render interactive charts and tables, apply filtering and pagination, and create custom data visualizers.
 ---
 
 # Get Started with SurveyJS Dashboard
