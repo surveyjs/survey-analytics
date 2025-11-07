@@ -92,7 +92,7 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)
-      npm run build
+      npm run build:all
     displayName: "NPM build"
 
   - script: |
