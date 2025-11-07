@@ -30,5 +30,4 @@ export * from "../tables/columns";
 export { TableExtensions } from "../tables/extensions/tableextensions";
 export { DocumentHelper } from "../utils/index";
 
-
 import "./fonts.scss";
