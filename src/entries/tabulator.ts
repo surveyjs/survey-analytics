@@ -30,7 +30,5 @@ export * from "../tables/columns";
 export { TableExtensions } from "../tables/extensions/tableextensions";
 export { DocumentHelper } from "../utils/index";
 
-export * from "../themes/default-light";
-export * from "../themes/default-dark";
 
 import "./fonts.scss";

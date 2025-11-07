@@ -43,8 +43,6 @@ export * from "../card";
 export * from "../ranking";
 export * from "../pivot";
 export * from "../theme";
-export * from "../themes/default-light";
-export * from "../themes/default-dark";
 
 export { DocumentHelper } from "../utils/index";
 

@@ -209,13 +209,13 @@ var visPanel = new SurveyAnalytics.VisualizationPanel(
 const checkbox = document.getElementById('toggle-checkbox');
 checkbox.addEventListener('change', () => {
   if (checkbox.checked) {
-    visPanel.applyTheme(SurveyAnalytics.DefaultDark);
+    visPanel.applyTheme(SurveyAnalyticsTheme.DefaultDark);
   } else {
-    visPanel.applyTheme(SurveyAnalytics.Default);
+    visPanel.applyTheme(SurveyAnalyticsTheme.DefaultLight);
   }
 });
 
-// visPanel.applyTheme(SurveyAnalytics.DefaultDark);
+// visPanel.applyTheme(SurveyAnalyticsTheme.DefaultDark);
 
 visPanel.showToolbar = true;
 // visPanel.onAlternativeVisualizerChanged.add(function(sender, options) {

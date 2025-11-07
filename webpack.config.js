@@ -243,7 +243,9 @@ module.exports = function (options) {
     output: {
       path: buildPath,
       filename: "[name]" + (options.buildType === "prod" ? ".min" : "") + ".js",
-      library: "[pc-name]",
+      library: {
+        root: options.libraryName || "[pc-name]",
+      },
       libraryTarget: "umd",
       umdNamedDefine: true,
       globalObject: 'this'

@@ -62,13 +62,13 @@ var surveyAnalyticsDataTables = new SurveyAnalyticsTabulator.Tabulator(
 const checkbox = document.getElementById('toggle-checkbox');
 checkbox.addEventListener('change', () => {
   if (checkbox.checked) {
-    surveyAnalyticsTabulator.applyTheme(SurveyAnalyticsTabulator.DefaultDark);
+    surveyAnalyticsTabulator.applyTheme(SurveyAnalyticsTheme.DefaultDark);
   } else {
-    surveyAnalyticsTabulator.applyTheme(SurveyAnalyticsTabulator.Default);
+    surveyAnalyticsTabulator.applyTheme(SurveyAnalyticsTheme.DefaultLight);
   }
 });
-// surveyAnalyticsTabulator.applyTheme(SurveyAnalyticsTabulator.DefaultDark);
-// surveyAnalyticsTabulator.applyTheme(SurveyAnalyticsTabulator.Default);
+// surveyAnalyticsTabulator.applyTheme(SurveyAnalyticsTheme.DefaultDark);
+// surveyAnalyticsTabulator.applyTheme(SurveyAnalyticsTheme.DefaultLight);
 
 SurveyAnalyticsTabulator.TableExtensions.findExtension(
   "row",
