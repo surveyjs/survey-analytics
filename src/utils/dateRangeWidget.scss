@@ -221,6 +221,7 @@
 .sa-date-range_chip--active .sa-date-range_chip-label {
   color: var(--sjs2-color-fg-basic-primary, #1C1B20);
   text-align: center;
+  user-select: none;
 
   /* sjs2/typography/default-strong */
   font-family: var(--sjs2-typography-font-family-default, "Open Sans");

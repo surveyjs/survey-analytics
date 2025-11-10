@@ -5,7 +5,7 @@ import { localization } from "../localizationManager";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
 import { DashboardTheme } from "../theme";
-import { reverseAll } from "../utils/utils";
+import { isAllZeros, reverseAll } from "../utils/utils";
 
 export interface PlotlyOptions {
   traces: Array<any>;
@@ -169,6 +169,22 @@ export class PlotlySetup {
     return font;
   }
 
+  static noDataAnnotations(theme: DashboardTheme): any {
+    return [{
+      text: localization.getString("noData"),
+      x: 0.5,
+      y: 0.5,
+      xref: "paper",
+      yref: "paper",
+      showarrow: false,
+      font: {
+        size: 14,
+        color: "black",
+        fontFamily: DashboardTheme.fontFamily
+      }
+    }];
+  }
+
   /**
    * Fires when end user clicks on the 'save as image' button.
    */
@@ -261,13 +277,12 @@ export class PlotlySetup {
     }
 
     datasets.forEach((dataset: Array<number>, index: number) => {
-      const isNotEmpty = dataset.some((value: number) => value != 0);
       let pieTexts = traceConfig.text;
       if(model.showPercentages) {
         const percentages = model.getPercentages([dataset])[0];
         pieTexts = labels.map((l, li) => (model.showOnlyPercentages ? percentages[li] : PlotlySetup.getTruncatedLabel(l, model.labelTruncateLength) + "<br>" + percentages[li]) + "%");
       }
-      if(isNotEmpty) {
+      if(!isAllZeros(dataset)) {
         traces.push(
           Object.assign({}, traceConfig, {
             values: dataset,
@@ -305,9 +320,29 @@ export class PlotlySetup {
       showlegend: false,
     };
 
-    if (hasSeries) {
-      layout.annotations = [];
-      layout.grid = { rows: Math.ceil(traces.length / layoutColumns), columns: layoutColumns };
+    if (traces.length > 0) {
+      if (hasSeries) {
+        layout.annotations = [];
+        layout.grid = { rows: Math.ceil(traces.length / layoutColumns), columns: layoutColumns };
+      }
+    } else {
+      traces = [{
+        type: "pie",
+        labels: [],
+        values: [],
+        hoverinfo: "none",
+        textinfo: "none",
+        marker: {
+          colors: [],
+          line: {
+            color: "transparent",
+            width: 2
+          }
+        },
+        hole: 0.4,
+        rotation: 0
+      }];
+      layout.annotations = PlotlySetup.noDataAnnotations(model.theme);
     }
     return { traces, layout, hasSeries };
   }

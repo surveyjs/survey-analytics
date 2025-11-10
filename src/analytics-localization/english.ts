@@ -59,6 +59,7 @@ export var englishStrings = {
   csvDownloadCaption: "CSV",
   saveDiagramAsPNG: "Download plot as a PNG file",
   answersText: "answer(s)",
+  noData: "No data",
   reportingPeriodResetRange: "Reset range",
   reportingPeriodLastYear: "Past 12 months",
   reportingPeriodLastQuarter: "Past 90 days",

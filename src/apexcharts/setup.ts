@@ -4,7 +4,7 @@ import { IAnswersData, VisualizerBase } from "../visualizerBase";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
 import { DashboardTheme } from "../theme";
-import { reverseAll } from "../utils/utils";
+import { isAllZeros, reverseAll } from "../utils/utils";
 import { localization } from "../localizationManager";
 
 import "./styles.scss";
@@ -22,6 +22,7 @@ export interface ApexChartsOptions {
   yaxis?: any;
   grid?: any;
   title?: any;
+  noData?: any;
   responsive?: Array<any>;
 }
 
@@ -171,6 +172,21 @@ export class ApexChartsSetup {
     };
   }
 
+  static defaultNoDataConfig(theme: DashboardTheme) {
+    return {
+      text: localization.getString("noData"),
+      align: "center",
+      verticalAlign: "middle",
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: "black",
+        fontSize: "14px",
+        fontFamily: DashboardTheme.fontFamily
+      }
+    };
+  }
+
   static defaultStrokeConfig = {
     width: 2,
     curve: "smooth"
@@ -255,8 +271,7 @@ export class ApexChartsSetup {
     if (hasSeries) {
       // For matrix questions or multiple series
       datasets.forEach((dataset: Array<number>, index: number) => {
-        const isNotEmpty = dataset.some((value: number) => value != 0);
-        if(isNotEmpty) {
+        if(!isAllZeros(dataset)) {
           chartCount += 1;
           series.push({
             series: dataset,
@@ -267,7 +282,9 @@ export class ApexChartsSetup {
       });
     } else {
       // For simple questions
-      series = datasets[0];
+      if (!isAllZeros(datasets[0])) {
+        series = datasets[0];
+      }
     }
 
     const diameter = labels.length < 10 ? labels.length * 50 + 100 : 550;
@@ -327,6 +344,7 @@ export class ApexChartsSetup {
       plotOptions,
       dataLabels,
       legend,
+      noData: ApexChartsSetup.defaultNoDataConfig(model.theme),
       responsive: [{ ...ApexChartsSetup.defaultResponsive }],
       tooltip,
       hasSeries

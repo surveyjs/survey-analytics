@@ -29,3 +29,7 @@ export function removeUndefinedProperties(obj): void {
   });
   return;
 }
+
+export function isAllZeros(arr: Array<number>): boolean {
+  return arr.every(num => num === 0);
+}
