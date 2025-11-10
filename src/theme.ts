@@ -214,6 +214,15 @@ export class DashboardTheme implements IDashboardTheme {
     };
   }
 
+  public get noDataFont(): FontSettings {
+    return <FontSettings>{
+      color: this.getCssVariableValue("--sjs2-color-fg-basic-secondary"),
+      family: this.defaultFontFamily,
+      size: this.getCssVariableValue("--sjs2-typography-font-size-default", true),
+      weight: 400
+    };
+  }
+
   public get gaugeBackground() {
     return this.getCssVariableValue("--sjs2-color-bg-basic-secondary");
   }

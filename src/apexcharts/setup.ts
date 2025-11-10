@@ -173,6 +173,7 @@ export class ApexChartsSetup {
   }
 
   static defaultNoDataConfig(theme: DashboardTheme) {
+    const font = theme.noDataFont;
     return {
       text: localization.getString("noData"),
       align: "center",
@@ -180,9 +181,9 @@ export class ApexChartsSetup {
       offsetX: 0,
       offsetY: 0,
       style: {
-        color: "black",
-        fontSize: "14px",
-        fontFamily: DashboardTheme.fontFamily
+        color: font.color,
+        fontSize: font.size,
+        fontFamily: font.family
       }
     };
   }

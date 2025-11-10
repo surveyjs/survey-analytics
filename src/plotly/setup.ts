@@ -170,6 +170,11 @@ export class PlotlySetup {
   }
 
   static noDataAnnotations(theme: DashboardTheme): any {
+    const font = {
+      ...theme.noDataFont,
+      size: parseFloat(theme.noDataFont.size)
+    };
+
     return [{
       text: localization.getString("noData"),
       x: 0.5,
@@ -178,9 +183,10 @@ export class PlotlySetup {
       yref: "paper",
       showarrow: false,
       font: {
-        size: 14,
-        color: "black",
-        fontFamily: DashboardTheme.fontFamily
+        size: font.size,
+        color: font.color,
+        fontFamily: font.family,
+        weight: font.weight
       }
     }];
   }
