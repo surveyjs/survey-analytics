@@ -1,7 +1,6 @@
 {
   "version": "2.3.14",
   "name": "survey-analytics",
-  "description": "SurveyJS analytics Library.",
   "homepage": "https://surveyjs.io/",
   "author": "DevSoft Baltic OU <info@devsoftbaltic.com>",
   "license": "SEE LICENSE IN LICENSE.pdf"
