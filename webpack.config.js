@@ -86,6 +86,30 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
           },
         }
         packageJson.module = "fesm/survey.analytics.mjs";
+        packageJson.homepage = "https://surveyjs.io/";
+        packageJson.author = "DevSoft Baltic OÜ <info@devsoftbaltic.com>";
+        packageJson.license = "SEE LICENSE IN LICENSE.pdf";
+        packageJson.licenseUrl = "https://surveyjs.io/licensing";
+        packageJson.description = "SurveyJS Dashboard is a UI component for visualizing and analyzing survey data. It interprets the form JSON schema to identify question types and renders collected responses using interactive charts and tables.";
+        packageJson.keywords = [
+          "survey",
+          "form",
+          "surveyjs",
+          "dashboard",
+          "analytics",
+          "data-visualization",
+          "charts",
+          "tables",
+          "survey-results",
+          "survey-data",
+          "survey-analysis",
+          "json",
+          "data-analysis",
+          "survey-library",
+          "reporting",
+          "data-management",
+          "visualize-survey"
+        ];
         fs.writeFileSync(
           buildPath + "package.json",
           JSON.stringify(packageJson, null, 2),
