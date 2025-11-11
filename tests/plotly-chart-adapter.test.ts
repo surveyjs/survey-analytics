@@ -8,7 +8,7 @@ import { SelectBase } from "../src/selectBase";
 import { BooleanModel } from "../src/boolean";
 import { NumberModel } from "../src/number";
 import { VisualizerBase } from "../src/visualizerBase";
-import { BooleanPlotly } from "../src/plotly/legacy";
+import { BooleanPlotly, SelectBasePlotly } from "../src/plotly/legacy";
 
 VisualizerBase.chartAdapterType = PlotlyChartAdapter;
 
@@ -364,4 +364,27 @@ test("should handle null/undefined values correctly", () => {
 
   expect(traces[2].marker).toBeDefined();
   expect(traces[2].marker.colors).toBeDefined();
+});
+
+test("Determine the default charts", () => {
+  const originalTypes = SelectBasePlotly.types;
+  var selectQuestion = new QuestionDropdownModel("q1");
+  selectQuestion.choices = [
+    { value: "option1", text: "Option 1" },
+    { value: "option2", text: "Option 2" }
+  ];
+  var selectData = [
+    { q1: "option1" },
+    { q1: "option2" },
+    { q1: "option1" }
+  ];
+  mockModel = new SelectBase(selectQuestion, selectData, {});
+  adapter = new PlotlyChartAdapter(mockModel);
+
+  expect(adapter.getChartTypes()).toStrictEqual(["bar", "vbar", "pie", "doughnut"]);
+
+  SelectBasePlotly.types = ["pie", "bar", "scatter"];
+  expect(adapter.getChartTypes()).toStrictEqual(["pie", "bar", "scatter"]);
+
+  SelectBasePlotly.types = originalTypes;
 });
