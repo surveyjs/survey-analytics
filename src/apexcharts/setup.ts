@@ -738,9 +738,13 @@ export class ApexChartsSetup {
     };
 
     // Axis settings
+    const maxValue = Math.max(...series[0].data.map((_, index) =>
+      series.reduce((sum, s) => sum + s.data[index], 0)
+    ));
     const xaxis: any = {
       ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
       categories: labels,
+      max: Math.ceil(maxValue),
       axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme) },
     };
 
