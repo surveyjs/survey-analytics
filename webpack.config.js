@@ -44,7 +44,7 @@ const year = today.getFullYear();
 var banner = [
   "surveyjs - SurveyJS Dashboard library v" + packageJson.version,
   "Copyright (c) 2015-" + year + " Devsoft Baltic OÜ  - http://surveyjs.io/",
-  "License: MIT (http://www.opensource.org/licenses/mit-license.php)",
+  "License: SEE LICENSE IN LICENSE",
 ].join("\n");
 
 function getPercentageHandler(emitNonSourceFiles, buildPath) {
@@ -88,7 +88,7 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
         packageJson.module = "fesm/survey.analytics.mjs";
         packageJson.homepage = "https://surveyjs.io/";
         packageJson.author = "DevSoft Baltic OÜ <info@devsoftbaltic.com>";
-        packageJson.license = "SEE LICENSE IN LICENSE.pdf";
+        packageJson.license = "SEE LICENSE IN LICENSE";
         packageJson.licenseUrl = "https://surveyjs.io/licensing";
         packageJson.description = "SurveyJS Dashboard is a UI component for visualizing and analyzing survey data. It interprets the form JSON schema to identify question types and renders collected responses using interactive charts and tables.";
         packageJson.keywords = [
