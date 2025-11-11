@@ -3,7 +3,7 @@ import { ItemValue } from "survey-core";
 import { SelectBase } from "../selectBase";
 import { localization } from "../localizationManager";
 import { ApexChartsOptions, ApexChartsSetup } from "./setup";
-import { VisualizerBase } from "../visualizerBase";
+import { IChartAdapter, VisualizerBase } from "../visualizerBase";
 import { removeUndefinedProperties } from "../utils/utils";
 
 export const chartTypes = {
@@ -17,7 +17,7 @@ export const chartTypes = {
   "ranking": ["bar", "vbar", "pie", "doughnut", "radar"],
 };
 
-export class ApexChartsAdapter {
+export class ApexChartsAdapter implements IChartAdapter {
   private _chart: ApexCharts = undefined;
   private _pieCharts: ApexCharts[] = undefined;
 
