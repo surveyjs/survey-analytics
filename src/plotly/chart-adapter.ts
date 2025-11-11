@@ -8,15 +8,15 @@ import { VisualizerBase, IChartAdapter } from "../visualizerBase";
 import { BooleanModel } from "../boolean";
 import { BooleanPlotly, GaugePlotly, HistogramPlotly, MatrixDropdownGroupedPlotly, MatrixPlotly, PivotPlotly, SelectBasePlotly } from "./legacy";
 
-export const plotlyChartTypes = {
-  "boolean": BooleanPlotly.types,
-  "number": GaugePlotly.types,
-  "selectBase": SelectBasePlotly.types,
-  "histogram": HistogramPlotly.types,
-  "matrix": MatrixPlotly.types,
-  "matrixDropdownGrouped": MatrixDropdownGroupedPlotly.types,
-  "pivot": PivotPlotly.types,
-  "ranking": [].concat(SelectBasePlotly.types).concat(["radar"]),
+export const plotlyChartTypes: { [key: string]: () => Array<string> } = {
+  "boolean": () => BooleanPlotly.types,
+  "number": () => GaugePlotly.types,
+  "selectBase": () => SelectBasePlotly.types,
+  "histogram": () => HistogramPlotly.types,
+  "matrix": () => MatrixPlotly.types,
+  "matrixDropdownGrouped": () => MatrixDropdownGroupedPlotly.types,
+  "pivot": () => PivotPlotly.types,
+  "ranking": () => [].concat(SelectBasePlotly.types).concat(["radar"]),
 };
 
 export class PlotlyChartAdapter implements IChartAdapter {
@@ -66,8 +66,11 @@ export class PlotlyChartAdapter implements IChartAdapter {
 
   getChartTypes(): string[] {
     const visualizerType = this.model.type;
-    const chartCtypes = plotlyChartTypes[visualizerType];
-    return chartCtypes || [];
+    let chartCtypes = [];
+    if (plotlyChartTypes[visualizerType]) {
+      chartCtypes = plotlyChartTypes[visualizerType]();
+    }
+    return chartCtypes;
   }
 
   public async create(chartNode: HTMLElement): Promise<any> {
