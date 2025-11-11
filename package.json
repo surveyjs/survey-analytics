@@ -1,30 +1,6 @@
 {
   "version": "2.3.14",
   "name": "survey-analytics",
-  "homepage": "https://surveyjs.io/",
-  "author": "DevSoft Baltic OU <info@devsoftbaltic.com>",
-  "license": "SEE LICENSE IN LICENSE.pdf"
-  "licenseUrl": "https://surveyjs.io/licensing",
-  "description": "SurveyJS Dashboard is a UI component for visualizing and analyzing survey data. It interprets the form JSON schema to identify question types and renders collected responses using interactive charts and tables.",
-  "keywords": [
-    "survey",
-    "form",
-    "surveyjs",
-    "dashboard",
-    "analytics",
-    "data-visualization",
-    "charts",
-    "tables",
-    "survey-results",
-    "survey-data",
-    "survey-analysis",
-    "json",
-    "data-analysis",
-    "survey-library",
-    "reporting",
-    "data-management",
-    "visualize-survey"
-],
   "scripts": {
     "start": "webpack-dev-server --env buildType=dev",
     "test": "jest",
