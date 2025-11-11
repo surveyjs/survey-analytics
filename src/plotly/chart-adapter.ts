@@ -7,7 +7,7 @@ import { VisualizerBase, IChartAdapter } from "../visualizerBase";
 import { BooleanModel } from "../boolean";
 import { BooleanPlotly, GaugePlotly, HistogramPlotly, MatrixDropdownGroupedPlotly, MatrixPlotly, PivotPlotly, SelectBasePlotly } from "./legacy";
 
-export const plotlyChartTypes = {
+export const chartTypes = {
   "boolean": BooleanPlotly.types,
   "number": GaugePlotly.types,
   "selectBase": SelectBasePlotly.types,
@@ -65,7 +65,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
 
   getChartTypes(): string[] {
     const visualizerType = this.model.type;
-    const chartCtypes = plotlyChartTypes[visualizerType];
+    const chartCtypes = chartTypes[visualizerType];
     return chartCtypes || [];
   }
 
