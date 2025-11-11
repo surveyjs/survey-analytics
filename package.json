@@ -29,19 +29,10 @@
   ],
   "typings": "survey.analytics.d.ts",
   "private": false,
-  "keywords": [
-    "Survey",
-    "JavaScript",
-    "Library",
-    "SurveyJS",
-    "Analytics"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/surveyjs/survey-analytics.git"
   },
-  "homepage": "https://surveyjs.io/",
-  "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "mongodb": "^6.20.0",
     "muuri": "^0.8.0",
