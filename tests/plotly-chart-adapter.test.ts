@@ -2,7 +2,7 @@ jest.mock("plotly.js", () => { }, { virtual: true });
 jest.mock("plotly.js-dist-min", () => ({ default: { Icons: {}, react: () => { } } }), { virtual: true });
 (<any>global).URL.createObjectURL = jest.fn();
 
-import { PlotlyChartAdapter } from "../src/plotly/chart-adapter";
+import { chartTypes, PlotlyChartAdapter } from "../src/plotly/chart-adapter";
 import { QuestionBooleanModel, QuestionDropdownModel, QuestionRatingModel } from "survey-core";
 import { SelectBase } from "../src/selectBase";
 import { BooleanModel } from "../src/boolean";
@@ -382,4 +382,27 @@ test("Use chart type from visualizerDefinition", async () => {
   expect(visPanel.visualizers.length).toEqual(1);
   expect(visPanel.visualizers[0].type).toEqual("number");
   expect((visPanel.visualizers[0] as NumberModel).chartType).toEqual("bullet");
+});
+
+test("Determine the default charts", () => {
+  const originalTypes = chartTypes["selectBase"];
+  var selectQuestion = new QuestionDropdownModel("q1");
+  selectQuestion.choices = [
+    { value: "option1", text: "Option 1" },
+    { value: "option2", text: "Option 2" }
+  ];
+  var selectData = [
+    { q1: "option1" },
+    { q1: "option2" },
+    { q1: "option1" }
+  ];
+  mockModel = new SelectBase(selectQuestion, selectData, {});
+  adapter = new PlotlyChartAdapter(mockModel);
+
+  expect(adapter.getChartTypes()).toStrictEqual(["bar", "vbar", "pie", "doughnut"]);
+
+  chartTypes["selectBase"] = ["pie", "bar", "scatter"];
+  expect(adapter.getChartTypes()).toStrictEqual(["pie", "bar", "scatter"]);
+
+  chartTypes["selectBase"] = originalTypes;
 });

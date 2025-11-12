@@ -5,17 +5,17 @@ import Plotly from "plotly.js-dist-min";
 import { PlotlySetup } from "./setup";
 import { VisualizerBase, IChartAdapter } from "../visualizerBase";
 import { BooleanModel } from "../boolean";
-import { BooleanPlotly, GaugePlotly, HistogramPlotly, MatrixDropdownGroupedPlotly, MatrixPlotly, PivotPlotly, SelectBasePlotly } from "./legacy";
+import { SelectBasePlotly } from "./legacy";
 
 export const chartTypes = {
-  "boolean": BooleanPlotly.types,
-  "number": GaugePlotly.types,
-  "selectBase": SelectBasePlotly.types,
-  "histogram": HistogramPlotly.types,
-  "matrix": MatrixPlotly.types,
-  "matrixDropdownGrouped": MatrixDropdownGroupedPlotly.types,
-  "pivot": PivotPlotly.types,
-  "ranking": [].concat(SelectBasePlotly.types).concat(["radar"]),
+  "boolean": ["pie", "doughnut", "bar"],
+  "number": ["gauge", "bullet"],
+  "selectBase": ["bar", "vbar", "pie", "doughnut"],
+  "histogram": ["vbar", "bar"],
+  "matrix": ["bar", "stackedbar", "pie", "doughnut"],
+  "matrixDropdownGrouped": ["stackedbar", "bar", "pie", "doughnut"],
+  "pivot": ["vbar", "bar", "line", "stackedbar", "pie", "doughnut"], // ["vbar", "bar"]
+  "ranking": ["bar", "vbar", "pie", "doughnut", "radar"],
 };
 
 export class PlotlyChartAdapter implements IChartAdapter {
