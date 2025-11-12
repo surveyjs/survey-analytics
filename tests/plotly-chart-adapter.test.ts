@@ -8,7 +8,6 @@ import { SelectBase } from "../src/selectBase";
 import { BooleanModel } from "../src/boolean";
 import { NumberModel } from "../src/number";
 import { VisualizerBase } from "../src/visualizerBase";
-import { BooleanPlotly } from "../src/plotly/legacy";
 import { VisualizationPanel } from "../src/visualizationPanel";
 
 VisualizerBase.chartAdapterType = PlotlyChartAdapter;
@@ -155,7 +154,7 @@ test("should add color for missing answers if showMissingAnswers is enabled", ()
 });
 
 test("should not modify traces if chartType is not supported", () => {
-  BooleanPlotly.types.push("line");
+  chartTypes["boolean"].push("line");
 
   var booleanQuestion = new QuestionBooleanModel("q1");
   booleanQuestion.labelTrue = "Yes";
@@ -179,7 +178,7 @@ test("should not modify traces if chartType is not supported", () => {
 
   expect(traces).toEqual(originalTraces);
 
-  BooleanPlotly.types.pop();
+  chartTypes["boolean"].pop();
 });
 
 test("should create marker object if it doesn't exist", () => {
