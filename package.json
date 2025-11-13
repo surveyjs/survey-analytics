@@ -1,4 +1,6 @@
 {
+  "version": "2.3.15",
+  "name": "survey-analytics",
   "scripts": {
     "start": "webpack-dev-server --env buildType=dev",
     "test": "jest",
@@ -21,28 +23,16 @@
     "pre-push-check": "npm run lint && npm run test",
     "pwinst": "playwright install chromium"
   },
-  "version": "2.3.15",
-  "name": "survey-analytics",
-  "description": "SurveyJS analytics Library.",
   "main": "survey.analytics.js",
   "files": [
     "**/*"
   ],
   "typings": "survey.analytics.d.ts",
   "private": false,
-  "keywords": [
-    "Survey",
-    "JavaScript",
-    "Library",
-    "SurveyJS",
-    "Analytics"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/surveyjs/survey-analytics.git"
   },
-  "homepage": "https://surveyjs.io/",
-  "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "mongodb": "^6.20.0",
     "muuri": "^0.8.0",
