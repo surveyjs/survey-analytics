@@ -19,6 +19,7 @@ import "../analytics-localization/swedish";
 //extensions
 import "../tables/extensions/rowextensions";
 import "../tables/extensions/headerextensions";
+import "../tables/extensions/footerextensions";
 import "../tables/extensions/columnextensions";
 import "../tables/extensions/detailsextensions";
 
@@ -28,3 +29,5 @@ export * from "../tables/columnbuilder";
 export * from "../tables/columns";
 export { TableExtensions } from "../tables/extensions/tableextensions";
 export { DocumentHelper } from "../utils/index";
+
+import "./fonts.scss";

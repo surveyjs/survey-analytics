@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.types.json",
+  "compilerOptions": {
+    "outDir": "build/survey-analytics-plotly.types/"
+  },
+  "include": [
+    "src/entries/plotly.ts"
+  ]
+}
