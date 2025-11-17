@@ -93,6 +93,7 @@ export class SelectBase
   private _topN = -1;
   public static topNValuesDefaults = [-1, 5, 10, 20];
   public topNValues = [].concat(SelectBase.topNValuesDefaults);
+  public legendPosition: "left" | "right" | "top" | "bottom" = "right";
   protected _transposeData: boolean = false;
   private _showMissingAnswers: boolean = false;
   private missingAnswersBtn: HTMLElement = undefined;

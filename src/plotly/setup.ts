@@ -64,17 +64,29 @@ export class PlotlySetup {
     };
   }
 
-  static defaultLegendConfig(theme: DashboardTheme) {
+  static defaultLegendConfig(model: SelectBase) {
     const isMobile = window.innerWidth <= 600;
-    const legendSetting = theme.legendSetting;
+    const legendSetting = model.theme.legendSetting;
     const legendLabelFont = {
-      ...theme.legendLabelFont,
-      size: parseFloat(theme.legendLabelFont.size)
+      ...model.theme.legendLabelFont,
+      size: parseFloat(model.theme.legendLabelFont.size)
     };
 
+    const positions = {
+      "left": { x: -0.15, y: 1, xanchor: "right", yanchor: "top", orientation: "v", },
+      "right": { x: 1, y: 1, xanchor: "left", yanchor: "top", orientation: "v", },
+      "top": { x: 0.5, y: 1, xanchor: "right", yanchor: "bottom", orientation: "h", },
+      "bottom": { x: 0.5, y: -0.1, xanchor: "right", yanchor: "top", orientation: "h", }
+    };
+
+    const legendPosition = positions[model.legendPosition] || positions["right"];
+
     return {
-      yanchor: isMobile ? "top" : "auto",
-      orientation: isMobile ? "h" : "v",
+      orientation: isMobile ? "h" : legendPosition.orientation,
+      xanchor: isMobile ? "auto" : legendPosition.xanchor,
+      yanchor: isMobile ? "top" : legendPosition.yanchor,
+      x: legendPosition.x,
+      y: legendPosition.y,
       bordercolor: legendSetting.borderColor,
       borderwidth: legendSetting.borderWidth,
       itemwidth: 20,
@@ -448,7 +460,7 @@ export class PlotlySetup {
     };
 
     if (hasSeries) {
-      layout.legend = PlotlySetup.defaultLegendConfig(model.theme);
+      layout.legend = PlotlySetup.defaultLegendConfig(model);
       if (model.chartType !== "stackedbar") {
         layout.height = (labels.length * seriesLabels.length + 1) * lineHeight + topMargin + bottomMargin;
       }
@@ -463,7 +475,7 @@ export class PlotlySetup {
     if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       layout.xaxis.autorange = "reversed";
       layout.yaxis.side = "right";
-      const legendSettings = Object.assign({}, PlotlySetup.defaultLegendConfig(model.theme), {
+      const legendSettings = Object.assign({}, PlotlySetup.defaultLegendConfig(model), {
         x: 0,
         y: 1,
         xanchor: "left",
@@ -665,7 +677,7 @@ export class PlotlySetup {
 
     if (hasSeries) {
       layout.showlegend = true;
-      layout.legend = PlotlySetup.defaultLegendConfig(model.theme);
+      layout.legend = PlotlySetup.defaultLegendConfig(model);
       layout.height = undefined;
 
       labels.forEach((label, index) => {
@@ -803,7 +815,7 @@ export class PlotlySetup {
         }
       },
       showlegend: hasSeries,
-      legend: hasSeries ? PlotlySetup.defaultLegendConfig(model.theme) : undefined,
+      legend: hasSeries ? PlotlySetup.defaultLegendConfig(model) : undefined,
       colorway: colors,
       plot_bgcolor: "transparent",
       paper_bgcolor: "transparent",

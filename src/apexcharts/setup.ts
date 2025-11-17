@@ -85,10 +85,11 @@ export class ApexChartsSetup {
     };
   }
 
-  static defaultLegendConfig(theme: DashboardTheme) {
-    const font = theme.legendLabelFont;
+  static defaultLegendConfig(model: SelectBase) {
+    const font = model.theme.legendLabelFont;
+
     return {
-      position: "right",
+      position: model.legendPosition,
       horizontalAlign: "left",
       verticalAlign: "top",
       fontSize: font.size,
@@ -438,7 +439,7 @@ export class ApexChartsSetup {
 
     // Legend settings
     const legend: any = {
-      ...ApexChartsSetup.defaultLegendConfig(model.theme),
+      ...ApexChartsSetup.defaultLegendConfig(model),
       show: hasSeries,
     };
 
@@ -549,7 +550,7 @@ export class ApexChartsSetup {
 
     // Legend settings
     const legend: any = {
-      ...ApexChartsSetup.defaultLegendConfig(model.theme),
+      ...ApexChartsSetup.defaultLegendConfig(model),
       show: hasSeries,
     };
 
@@ -650,7 +651,7 @@ export class ApexChartsSetup {
 
     // Legend settings
     const legend: any = {
-      ...ApexChartsSetup.defaultLegendConfig(model.theme),
+      ...ApexChartsSetup.defaultLegendConfig(model),
       show: hasSeries,
     };
 
@@ -763,7 +764,7 @@ export class ApexChartsSetup {
 
     // Legend settings
     const legend: any = {
-      ...ApexChartsSetup.defaultLegendConfig(model.theme),
+      ...ApexChartsSetup.defaultLegendConfig(model),
       show: hasSeries,
     };
 
@@ -877,7 +878,7 @@ export class ApexChartsSetup {
 
     // Legend settings
     const legend: any = {
-      ...ApexChartsSetup.defaultLegendConfig(model.theme),
+      ...ApexChartsSetup.defaultLegendConfig(model),
       show: hasSeries,
     };
 
@@ -1148,7 +1149,7 @@ export class ApexChartsSetup {
     };
 
     const legend = {
-      ...ApexChartsSetup.defaultLegendConfig(model.theme),
+      ...ApexChartsSetup.defaultLegendConfig(model),
       show: hasSeries,
       markers: {
         width: 12,
