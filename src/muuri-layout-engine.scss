@@ -1,0 +1,23 @@
+.muuri {
+  .sa-question-layouted {
+    position: absolute;
+  }
+
+  .sa-question__title--draggable {
+    cursor: move;
+    &:after {
+      content: " ";
+      display: block;
+      float: right;
+      width: 15px;
+      height: 15px;
+      background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg%3E%3Cpolygon style='fill: %231ab394' points='13,5 12,6 13,7 9,7 9,3 10,4 11,3 8,0 5,3 6,4 7,3 7,7 3,7 4,6 3,5 0,8 3,11 4,10 3,9 7,9 7,13 6,12 5,13 8,16 11,13 10,12 9,13 9,9 13,9 12,10 13,11 16,8 '/%3E%3C/g%3E%3C/svg%3E ");
+    }
+  }
+
+  [dir="rtl"] .sa-question__title--draggable, [style*="direction: rtl"] .sa-question__title--draggable, [style*="direction:rtl"] .sa-question__title--draggable {
+    &:after {
+      float: left;
+    }
+  }
+}

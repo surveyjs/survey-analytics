@@ -42,3 +42,11 @@ export * from "../ranking";
 export * from "../pivot";
 
 export { DocumentHelper } from "../utils/index";
+
+export * from "../layout-engine";
+export * from "../muuri-layout-engine";
+export * from "../panel-layout-engine";
+
+import { VisualizationPanel } from "../visualizationPanel";
+import { MuuriLayoutEngine } from "../muuri-layout-engine";
+VisualizationPanel.LayoutEngine = VisualizationPanel.LayoutEngine || MuuriLayoutEngine;
