@@ -450,7 +450,7 @@ export class HistogramModel extends SelectBase {
   }
 
   public get allowChangeIntervals(): boolean {
-    return this.valueType === "date" && !this.hasCustomIntervals && this.options.allowChangeIntervals === true;
+    return this.valueType === "date" && !this.hasCustomIntervals && this.options.allowChangeIntervals !== false;
   }
 
   private _showRunningTotals: boolean = false;

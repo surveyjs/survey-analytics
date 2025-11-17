@@ -1276,14 +1276,14 @@ test("changeIntervalsMode and allowRunningTotals toolbar items for date histogra
     name: "date",
   };
   const date1 = new HistogramModel(question, data);
-  expect(date1.allowChangeIntervals).toBeFalsy();
-  expect(date1["toolbarItemCreators"]["changeIntervalsMode"]).toBeUndefined();
+  expect(date1.allowChangeIntervals).toBeTruthy();
+  expect(date1["toolbarItemCreators"]["changeIntervalsMode"]).toBeDefined();
   expect(date1["toolbarItemCreators"]["showRunningTotals"]).toBeUndefined();
-  const date2 = new HistogramModel(question, data, { allowChangeIntervals: true });
-  expect(date2.allowChangeIntervals).toBeTruthy();
-  expect(date2["toolbarItemCreators"]["changeIntervalsMode"]).toBeDefined();
+  const date2 = new HistogramModel(question, data, { allowChangeIntervals: false });
+  expect(date2.allowChangeIntervals).toBeFalsy();
+  expect(date2["toolbarItemCreators"]["changeIntervalsMode"]).toBeUndefined();
   expect(date2["toolbarItemCreators"]["showRunningTotals"]).toBeUndefined();
-  const date3 = new HistogramModel(question, data, { allowChangeIntervals: true, allowRunningTotals: true });
+  const date3 = new HistogramModel(question, data, { allowRunningTotals: true });
   expect(date3.allowChangeIntervals).toBeTruthy();
   expect(date3["toolbarItemCreators"]["changeIntervalsMode"]).toBeDefined();
   expect(date3["toolbarItemCreators"]["showRunningTotals"]).toBeDefined();
