@@ -93,7 +93,7 @@ export class SelectBase
   private _topN = -1;
   public static topNValuesDefaults = [-1, 5, 10, 20];
   public topNValues = [].concat(SelectBase.topNValuesDefaults);
-  public legendPosition: "left" | "right" | "top" | "bottom" = "right";
+  public _legendPosition: "left" | "right" | "top" | "bottom";
   protected _transposeData: boolean = false;
   private _showMissingAnswers: boolean = false;
   private missingAnswersBtn: HTMLElement = undefined;
@@ -510,6 +510,14 @@ export class SelectBase
     this.dataProvider.raiseDataChanged(this.name);
     this.refreshContent();
     this.stateChanged("showMissingAnsewrs", value);
+  }
+
+  public get legendPosition(): "left" | "right" | "top" | "bottom" {
+    return this._legendPosition || this.options.legendPosition || "right";
+  }
+
+  public set legendPosition(value: "left" | "right" | "top" | "bottom") {
+    this._legendPosition = value;
   }
 
   refreshContent() {

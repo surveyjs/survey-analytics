@@ -276,6 +276,7 @@ export interface IVisualizationPanelOptions {
    * Default value: `true`
    */
   allowChangeVisualizerType?: boolean;
+  legendPosition?: "left" | "right" | "top" | "bottom";
 }
 
 /**
