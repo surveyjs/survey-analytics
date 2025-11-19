@@ -76,4 +76,13 @@
     gap: var(--sjs2-spacing-x150, 12px);
     align-self: stretch;
   }
+
+  .sa-pie-charts {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .sa-pie-chart {
+    width: 50%;
+  }
 }

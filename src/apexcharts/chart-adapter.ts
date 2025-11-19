@@ -25,10 +25,11 @@ export class ApexChartsAdapter implements IChartAdapter {
     if (this._pieCharts) {
       this._pieCharts.forEach((chart) => chart.updateOptions(options));
     } else {
-      chartNode.style.cssText = "display: grid; grid-template-columns: repeat(2, 1fr);";
+      chartNode.classList.add("sa-pie-charts");
       this._pieCharts = chartOptions.series.map((s, i) => {
         const chartDiv = document.createElement("div");
         chartDiv.id = "sa-chart" + i;
+        chartDiv.classList.add("sa-pie-chart");
         chartNode.appendChild(chartDiv);
 
         const _options = Object.assign({}, options, {
@@ -146,7 +147,7 @@ export class ApexChartsAdapter implements IChartAdapter {
     };
     ApexChartsSetup.onChartCreating.fire(this.model, options);
 
-    if((_chartType=== "pie" || _chartType === "doughnut") && chartOptions.series.length > 0 && typeof chartOptions.series[0] !== "number") {
+    if((_chartType === "pie" || _chartType === "doughnut") && chartOptions.series.length > 0 && typeof chartOptions.series[0] !== "number") {
       this.updatePieCharts(options, chartOptions, chartNode);
     } else {
       const availableUpdateOptions = this._chart && !!this._chart["el"] && this._chart["el"].getRootNode() === document;
