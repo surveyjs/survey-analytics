@@ -283,7 +283,7 @@ export class AppComponent implements AfterViewInit {
 
 SurveyJS Dashboard is not available for free commercial use. To integrate it into your application, you must purchase a [commercial license](https://surveyjs.io/licensing) for the software developer(s) who will be working with the Dashboard APIs and implementing the integration. If you use SurveyJS Dashboard without a license, an alert banner will appear at the top of the Table View interface:
 
-<img src="../images/alert-banner-table-view.png" alt="SurveyJS Table View: Alert banner" width="1544" height="864">
+<img src="images/alert-banner-table-view.png" alt="SurveyJS Table View: Alert banner" width="1544" height="864">
 
 After purchasing a license, follow the steps below to activate it and remove the alert banner:
 
@@ -343,7 +343,7 @@ export class AppComponent implements AfterViewInit {
 
 To view the application, run `ng serve` in a command line and open [http://localhost:4200/](http://localhost:4200/) in your browser. If you do everything correctly, you should see the following result:
 
-<img src="../images/export-to-pdf-xlsx-csv.png" alt="SurveyJS Table View: Export survey data to PDF, XLSX, and CSV" width="1544" height="756">
+<img src="images/export-to-pdf-xlsx-csv.png" alt="SurveyJS Table View: Export survey data to PDF, XLSX, and CSV" width="1544" height="756">
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/dashboard-table-view/angular (linkStyle))
 
