@@ -5,11 +5,11 @@ test("result resultMin resultMax", async () => {
   const data = [{ test: 0 }, { test: 50 }, { test: 100 }];
   const number = new NumberModel(question, data);
 
-  let [level, minValue, maxValue] = await number.getCalculatedValues() as any;
-
-  expect(level).toBe(50);
-  expect(minValue).toBe(0);
-  expect(maxValue).toBe(100);
+  let result = await number.getCalculatedValues();
+  expect(result).toStrictEqual({
+    "data": [[50, 0, 100, 3]],
+    "values": ["average", "min", "max", "count"],
+  });
 });
 
 test("result resultMin resultMax for negatives", async () => {
@@ -17,11 +17,11 @@ test("result resultMin resultMax for negatives", async () => {
   const data = [{ test: -10 }, { test: -50 }, { test: -100 }];
   const number = new NumberModel(question, data);
 
-  let [level, minValue, maxValue] = await number.getCalculatedValues() as any;
-
-  expect(level).toBe(-53.33);
-  expect(minValue).toBe(-100);
-  expect(maxValue).toBe(-10);
+  let result = await number.getCalculatedValues();
+  expect(result).toStrictEqual({
+    "data": [[-53.33, -100, -10, 3]],
+    "values": ["average", "min", "max", "count"],
+  });
 });
 
 test("result average", async () => {
@@ -29,11 +29,11 @@ test("result average", async () => {
   const data = [{ }, { test: 2 }, { test: 4 }];
   const number = new NumberModel(question, data);
 
-  let [level, minValue, maxValue] = await number.getCalculatedValues() as any;
-
-  expect(level).toBe(3);
-  expect(minValue).toBe(2);
-  expect(maxValue).toBe(4);
+  let result = await number.getCalculatedValues();
+  expect(result).toStrictEqual({
+    "data": [[3, 2, 4, 3]],
+    "values": ["average", "min", "max", "count"],
+  });
 });
 
 test("result average for strings", async () => {
@@ -41,11 +41,11 @@ test("result average for strings", async () => {
   const data = [{ }, { test: "2" }, { test: "4" }];
   const number = new NumberModel(question, data);
 
-  let [level, minValue, maxValue] = await number.getCalculatedValues() as any;
-
-  expect(level).toBe(3);
-  expect(minValue).toBe(2);
-  expect(maxValue).toBe(4);
+  let result = await number.getCalculatedValues();
+  expect(result).toStrictEqual({
+    "data": [[3, 2, 4, 3]],
+    "values": ["average", "min", "max", "count"],
+  });
 });
 
 test("convertFromExternalData", () => {
@@ -56,8 +56,9 @@ test("convertFromExternalData", () => {
     minValue: 2,
     value: 3,
     maxValue: 4,
+    count: 3
   };
   const calculatedData = (number as any).getCalculatedValuesCore();
-  expect(calculatedData).toEqual([3, 2, 4]);
+  expect(calculatedData.data[0]).toEqual([3, 2, 4, 3]);
   expect(number.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
 });
