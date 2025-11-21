@@ -1,3 +1,6 @@
-node_modules
-dist
-**/*.js
+.vscode/
+build/
+doc_generator/
+node_modules/
+examples/
+*.config.js
