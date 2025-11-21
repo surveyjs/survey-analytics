@@ -75,6 +75,7 @@ test("convertFromExternalData", () => {
   const calculatedData = (wc as any).getCalculatedValuesCore();
   expect(calculatedData).toEqual({
     data: [[2, 2, 1, 1]],
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
     values: ["großmutter", "string", "one1", "two2"],
   });
   expect(wc.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);

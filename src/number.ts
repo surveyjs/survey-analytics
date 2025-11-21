@@ -36,7 +36,7 @@ export class NumberModel extends VisualizerBase {
       this.displayValueName = this.question.displayValueName;
     }
 
-    if (VisualizerBase.chartAdapterType) {
+    if(VisualizerBase.chartAdapterType) {
       this._chartAdapter = new VisualizerBase.chartAdapterType(this);
       this.chartTypes = this._chartAdapter.getChartTypes();
       this.chartType = this.questionOptions?.chartType || this.chartTypes[0];
@@ -44,7 +44,7 @@ export class NumberModel extends VisualizerBase {
 
     if(this.options.allowChangeVisualizerType !== false && !(this.questionOptions?.allowChangeVisualizerType === false)) {
       this.registerToolbarItem("changeChartType", () => {
-        if (this.chartTypes.length > 1) {
+        if(this.chartTypes.length > 1) {
           return DocumentHelper.createDropdown(
             this.chartTypes.map((chartType) => {
               return {
@@ -71,13 +71,13 @@ export class NumberModel extends VisualizerBase {
   protected onChartTypeChanged() {}
 
   protected setChartType(chartType: string) {
-    if (
+    if(
       this.chartTypes.indexOf(chartType) !== -1 &&
       this.chartType !== chartType
     ) {
       this.chartType = chartType;
       this.onChartTypeChanged();
-      if (!!this.contentContainer) {
+      if(!!this.contentContainer) {
         this.destroyContent(this.contentContainer);
         this.renderContent(this.contentContainer);
       }
@@ -93,7 +93,7 @@ export class NumberModel extends VisualizerBase {
   generateText(maxValue: number, minValue: number, stepsCount: number): string[] {
     let texts: any = [];
 
-    if (stepsCount === 5) {
+    if(stepsCount === 5) {
       texts = [
         "very high (" + maxValue + ")",
         "high",
@@ -103,13 +103,13 @@ export class NumberModel extends VisualizerBase {
       ];
     } else {
       texts.push(maxValue);
-      for (let i = 0; i < stepsCount - 2; i++) {
+      for(let i = 0; i < stepsCount - 2; i++) {
         texts.push("");
       }
       texts.push(minValue);
     }
 
-    if (!!NumberModel.generateTextsCallback) {
+    if(!!NumberModel.generateTextsCallback) {
       return NumberModel.generateTextsCallback(
         this.question,
         maxValue,
@@ -124,7 +124,7 @@ export class NumberModel extends VisualizerBase {
 
   generateValues(maxValue: number, stepsCount: number): number[] {
     const values = [];
-    for (let i = 0; i < stepsCount; i++) {
+    for(let i = 0; i < stepsCount; i++) {
       values.push(maxValue / stepsCount);
     }
     values.push(maxValue);
@@ -134,7 +134,7 @@ export class NumberModel extends VisualizerBase {
   generateColors(maxValue: number, minValue: number, stepsCount: number): string[] {
     const palette = VisualizerBase.getColors();
     const colors = [];
-    for (let i = 0; i < stepsCount; i++) {
+    for(let i = 0; i < stepsCount; i++) {
       colors.push(palette[i]);
     }
     colors.push("rgba(255, 255, 255, 0)");
@@ -149,7 +149,7 @@ export class NumberModel extends VisualizerBase {
   }
 
   protected getCalculatedValuesCore(): ICalculationResult {
-    if (this._statistics === undefined) {
+    if(this._statistics === undefined) {
       this._statistics = mathStatisticsCalculator(this.surveyData, this);
     }
     return this._statistics;

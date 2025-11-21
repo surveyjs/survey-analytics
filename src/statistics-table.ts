@@ -21,7 +21,7 @@ export class StatisticsTableAdapter {
 
     const hasSeries = seriesLabels.length > 1;
 
-    if (datasets.length === 0 || datasets[0].length === 0) {
+    if(datasets.length === 0 || datasets[0].length === 0) {
       const emptyTextNode = DocumentHelper.createElement("p", "", {
         innerText: localization.getString("noResults"),
       });

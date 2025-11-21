@@ -14,7 +14,7 @@ export class AlternativeVisualizersWrapper
   private visualizerSelector: HTMLDivElement;
 
   private updateVisualizerSelector() {
-    if (!!this.visualizerSelector) {
+    if(!!this.visualizerSelector) {
       (this.visualizerSelector as any).setValue(this.visualizer.type);
     }
   }
@@ -28,7 +28,7 @@ export class AlternativeVisualizersWrapper
     super(question, data, options, "alternative");
     this.showToolbar = false;
     this.loadingData = false;
-    if (!visualizers || visualizers.length < 2) {
+    if(!visualizers || visualizers.length < 2) {
       throw new Error(
         "VisualizerArrayWrapper works with visualizers collection only."
       );
@@ -36,7 +36,7 @@ export class AlternativeVisualizersWrapper
     this.visualizers.forEach((visualizer) => {
       visualizer.onUpdate = () => this.invokeOnUpdate();
       visualizer.onGetToolbarItemCreators = () => this.toolbarItemCreators;
-      if (visualizer.supportSelection) {
+      if(visualizer.supportSelection) {
         this._supportSelection = true;
         this.visualizersWithSelection.push(
           <IVisualizerWithSelection>(<any>visualizer)
@@ -111,9 +111,9 @@ export class AlternativeVisualizersWrapper
   **/
   public setVisualizer(type: string, quiet = false): void {
     const visualizerCandidate = this.visualizers.filter((v) => v.type === type)[0];
-    if (!!visualizerCandidate && visualizerCandidate !== this.visualizer) {
+    if(!!visualizerCandidate && visualizerCandidate !== this.visualizer) {
       let isFooterCollapsed;
-      if (!!this.visualizer) {
+      if(!!this.visualizer) {
         isFooterCollapsed = this.visualizer.isFooterCollapsed;
         this.visualizer.onStateChanged.remove(this.onVisualizerStateChangedCallback);
         this.visualizer.onAfterRender.remove(this.onAfterVisualizerRenderCallback);
@@ -124,7 +124,7 @@ export class AlternativeVisualizersWrapper
       this.refresh();
       this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
       this.visualizer.onStateChanged.add(this.onVisualizerStateChangedCallback);
-      if (!quiet) {
+      if(!quiet) {
         this.onVisualizerChanged.fire(this, { visualizer: this.visualizer });
         this.stateChanged("visualizer", type);
       }

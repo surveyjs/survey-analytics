@@ -228,8 +228,8 @@ export class ApexChartsSetup {
   >();
 
   static dataListFormatter(model: SelectBase, text: string, value: string): string {
-    if (model.showPercentages) {
-      if (model.showOnlyPercentages) {
+    if(model.showPercentages) {
+      if(model.showOnlyPercentages) {
         return text + "%";
       } else {
         return value + " (" + text + "%)";
@@ -270,7 +270,7 @@ export class ApexChartsSetup {
     let series: Array<any> = [];
     let chartCount = 1;
 
-    if (hasSeries) {
+    if(hasSeries) {
       // For matrix questions or multiple series
       datasets.forEach((dataset: Array<number>, index: number) => {
         if(!isAllZeros(dataset)) {
@@ -284,7 +284,7 @@ export class ApexChartsSetup {
       });
     } else {
       // For simple questions
-      if (!isAllZeros(datasets[0])) {
+      if(!isAllZeros(datasets[0])) {
         series = datasets[0];
       }
     }
@@ -334,7 +334,7 @@ export class ApexChartsSetup {
       return [seriesName, val.toFixed(model.percentagePrecision) + "%"];
     };
 
-    const legend= {
+    const legend = {
       show: false,
     };
 
@@ -352,7 +352,7 @@ export class ApexChartsSetup {
       hasSeries
     };
 
-    if (hasSeries) {
+    if(hasSeries) {
       options.title = {
         align: "center",
         style: {
@@ -383,7 +383,7 @@ export class ApexChartsSetup {
     // Prepare data series
     let series: Array<any> = [];
 
-    if (hasSeries) {
+    if(hasSeries) {
       // For matrix questions or multiple series
       datasets.forEach((dataset: Array<number>, index: number) => {
         series.push({
@@ -456,7 +456,7 @@ export class ApexChartsSetup {
       bar: {
         horizontal: true,
         distributed: !isHistogram && !hasSeries,
-        barHeight: isHistogram ? "100%": (1 - ApexChartsSetup.defaultBarGap) * 100 + "%",
+        barHeight: isHistogram ? "100%" : (1 - ApexChartsSetup.defaultBarGap) * 100 + "%",
       }
     };
 
@@ -464,7 +464,7 @@ export class ApexChartsSetup {
     const tooltip: any = ApexChartsSetup.defaultTooltipConfig(model.theme);
 
     // RTL language handling
-    if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
+    if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       chart.direction = "rtl";
     }
 
@@ -497,14 +497,14 @@ export class ApexChartsSetup {
     const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
     const isHistogram = model.type === "histogram";
 
-    if (!isHistogram && model.type !== "pivot") {
+    if(!isHistogram && model.type !== "pivot") {
       ({ labels, seriesLabels, colors, texts, datasets } = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets));
     }
 
     // Prepare data series
     let series: Array<any> = [];
 
-    if (hasSeries) {
+    if(hasSeries) {
       // For matrix questions or multiple series
       datasets.forEach((dataset: Array<number>, index: number) => {
         series.push({
@@ -567,7 +567,7 @@ export class ApexChartsSetup {
       bar: {
         horizontal: false,
         distributed: !isHistogram && !hasSeries,
-        columnWidth: isHistogram ? "100%": (1 - ApexChartsSetup.defaultBarGap) * 100 + "%",
+        columnWidth: isHistogram ? "100%" : (1 - ApexChartsSetup.defaultBarGap) * 100 + "%",
       }
     };
 
@@ -575,7 +575,7 @@ export class ApexChartsSetup {
     const tooltip: any = ApexChartsSetup.defaultTooltipConfig(model.theme);
 
     // RTL language handling
-    if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
+    if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       chart.direction = "rtl";
     }
 
@@ -610,7 +610,7 @@ export class ApexChartsSetup {
     // Prepare data series
     let series: Array<any> = [];
 
-    if (hasSeries) {
+    if(hasSeries) {
       // For matrix questions or multiple series
       datasets.forEach((dataset: Array<number>, index: number) => {
         series.push({
@@ -671,7 +671,7 @@ export class ApexChartsSetup {
     const tooltip: any = ApexChartsSetup.defaultTooltipConfig(model.theme);
 
     // RTL language handling
-    if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
+    if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       chart.direction = "rtl";
     }
 
@@ -709,7 +709,7 @@ export class ApexChartsSetup {
     // Prepare data series
     let series: Array<any> = [];
 
-    if (hasSeries) {
+    if(hasSeries) {
       // For matrix questions or multiple series
       datasets.forEach((dataset: Array<number>, index: number) => {
         series.push({
@@ -785,7 +785,7 @@ export class ApexChartsSetup {
     const tooltip: any = ApexChartsSetup.defaultTooltipConfig(model.theme);
 
     // RTL language handling
-    if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
+    if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       chart.direction = "rtl";
     }
 
@@ -820,7 +820,7 @@ export class ApexChartsSetup {
     // Prepare data series
     let series: Array<any> = [];
 
-    if (hasSeries) {
+    if(hasSeries) {
       // For matrix questions or multiple series
       datasets.forEach((dataset: Array<number>, index: number) => {
         const scatterData = dataset.map((value: number, valueIndex: number) => ({
@@ -907,7 +907,7 @@ export class ApexChartsSetup {
     };
 
     // RTL language handling
-    if (["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
+    if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
       chart.direction = "rtl";
     }
 
@@ -933,19 +933,19 @@ export class ApexChartsSetup {
     let minValue = answersData.datasets[0][answersData.values.indexOf("min")] || 0;
     let maxValue = answersData.datasets[0][answersData.values.indexOf("max")] || value * 1.25;
 
-    if (model.dataType === "rating") {
+    if(model.dataType === "rating") {
       const rateValues = model.question.visibleRateValues;
       maxValue = rateValues[rateValues.length - 1].value;
       minValue = rateValues[0].value;
     }
 
-    if (NumberModel.showAsPercentage) {
+    if(NumberModel.showAsPercentage) {
       value = DataHelper.toPercentage(value, maxValue);
       minValue = DataHelper.toPercentage(minValue, maxValue);
       maxValue = DataHelper.toPercentage(maxValue, maxValue);
     }
 
-    const chart= {
+    const chart = {
       type: "radialBar",
       height: ApexChartsSetup.defaultChartHeight,
       background: "transparent",
@@ -1011,13 +1011,13 @@ export class ApexChartsSetup {
     let minValue = answersData.datasets[0][answersData.values.indexOf("min")] || 0;
     let maxValue = answersData.datasets[0][answersData.values.indexOf("max")] || value * 1.25;
 
-    if (model.dataType === "rating") {
+    if(model.dataType === "rating") {
       const rateValues = model.question.visibleRateValues;
       maxValue = rateValues[rateValues.length - 1].value;
       minValue = rateValues[0].value;
     }
 
-    if (NumberModel.showAsPercentage) {
+    if(NumberModel.showAsPercentage) {
       value = DataHelper.toPercentage(value, maxValue);
       minValue = DataHelper.toPercentage(minValue, maxValue);
       maxValue = DataHelper.toPercentage(maxValue, maxValue);
@@ -1137,7 +1137,7 @@ export class ApexChartsSetup {
     };
     xaxis.labels.style.colors = Array(labels.length).fill(model.theme.axisLabelFont.color) as any;
 
-    const yaxis= {
+    const yaxis = {
       show: true,
       labels: {
         show: true,

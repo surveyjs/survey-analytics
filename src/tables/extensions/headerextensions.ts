@@ -34,7 +34,7 @@ TableExtensions.registerExtension({
 
     const allColumns = table.columns.map((column) => {
       var text = column.displayName || column.name;
-      if (!!text && text.length > 20) {
+      if(!!text && text.length > 20) {
         text = text.substring(0, 20) + "...";
       }
       return {
@@ -48,10 +48,11 @@ TableExtensions.registerExtension({
       allColumns,
       (option: any) => {
         const hiddenColumns = table.columns.filter((column: any) => !column.isVisible);
-        return hiddenColumns.length === 0 || hiddenColumns.filter(el => el.name === option.value).length === 0; },
+        return hiddenColumns.length === 0 || hiddenColumns.filter(el => el.name === option.value).length === 0;
+      },
       (e: any) => {
         if(!!e) {
-          if (!e) return;
+          if(!e) return;
           const column = table.columns.filter((column: any) => column.name === e)[0];
           table.setColumnVisibility(e, !column.isVisible);
           return false;
@@ -72,7 +73,7 @@ TableExtensions.registerExtension({
     const btn = DocumentHelper.createButton(
       (e) => {
         table.getCreatedRows().forEach(function (row) {
-          if (row.getIsSelected()) {
+          if(row.getIsSelected()) {
             row.remove();
           }
         });
@@ -101,7 +102,7 @@ TableExtensions.registerExtension({
   visibleIndex: 40,
   render: function (table) {
     var locales = table.getLocales();
-    if (table.options.disableLocaleSwitch || locales.length < 2) return null;
+    if(table.options.disableLocaleSwitch || locales.length < 2) return null;
     /*
     const el = <HTMLSelectElement>(
       DocumentHelper.createElement("select", "sa-table__header-extension", {})

@@ -108,7 +108,7 @@ export class VisualizerBase implements IDataInfo {
   private _showToolbar = true;
   private _footerVisualizer: VisualizerBase = undefined;
   private _dataProvider: DataProvider = undefined;
-  private _getDataCore: (dataInfo: IDataInfo) => ICalculationResult = undefined
+  private _getDataCore: (dataInfo: IDataInfo) => ICalculationResult = undefined;
   public labelTruncateLength: number = 27;
   protected haveCommercialLicense: boolean = false;
   protected renderResult: HTMLElement = undefined;
@@ -222,7 +222,7 @@ export class VisualizerBase implements IDataInfo {
     this._dataProvider.onDataChanged.add(() => this.onDataChanged());
     this.loadingData = !!this._dataProvider.dataFn;
 
-    if (typeof options.labelTruncateLength !== "undefined") {
+    if(typeof options.labelTruncateLength !== "undefined") {
       this.labelTruncateLength = options.labelTruncateLength;
     }
   }
@@ -257,7 +257,7 @@ export class VisualizerBase implements IDataInfo {
    * @see hasFooter
    */
   get hasHeader(): boolean {
-    if (!this.options || !this.options.showCorrectAnswers) {
+    if(!this.options || !this.options.showCorrectAnswers) {
       return false;
     }
     return !!this.question && !!this.question.correctAnswer;
@@ -275,7 +275,7 @@ export class VisualizerBase implements IDataInfo {
 
   protected createVisualizer<T = VisualizerBase>(question: Question, options?: { [index: string]: any }, data?: any[]): T {
     let visualizerOptions = Object.assign({}, options || this.options);
-    if (visualizerOptions.dataProvider === undefined) {
+    if(visualizerOptions.dataProvider === undefined) {
       visualizerOptions.dataProvider = this.dataProvider;
     }
     return VisualizerFactory.createVisualizer(question, data || this.data, visualizerOptions) as T;
@@ -286,10 +286,10 @@ export class VisualizerBase implements IDataInfo {
    * @see hasFooter
    */
   get footerVisualizer(): VisualizerBase {
-    if (!this.hasFooter) {
+    if(!this.hasFooter) {
       return undefined;
     }
-    if (!this._footerVisualizer) {
+    if(!this._footerVisualizer) {
       const question = new QuestionCommentModel(
         this.question.name + (settings || {}).commentPrefix
       );
@@ -462,7 +462,7 @@ export class VisualizerBase implements IDataInfo {
    */
   updateData(data: Array<{ [index: string]: any }> | GetDataFn) {
     this.dataProvider.data = data;
-    if (this.hasFooter) {
+    if(this.hasFooter) {
       this.footerVisualizer.updateData(data);
     }
   }
@@ -478,7 +478,7 @@ export class VisualizerBase implements IDataInfo {
    * @see clear
    */
   destroy() {
-    if (!!this.renderResult) {
+    if(!!this.renderResult) {
       this.clear();
       this.toolbarContainer = undefined;
       this.headerContainer = undefined;
@@ -487,7 +487,7 @@ export class VisualizerBase implements IDataInfo {
       this.renderResult.innerHTML = "";
       this.renderResult = undefined;
     }
-    if (!!this._footerVisualizer) {
+    if(!!this._footerVisualizer) {
       this._footerVisualizer.destroy();
       this._footerVisualizer.onUpdate = undefined;
       this._footerVisualizer = undefined;
@@ -500,16 +500,16 @@ export class VisualizerBase implements IDataInfo {
    * If you want to empty and delete the visualizer and all its elements from the DOM, call the [`destroy()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#destroy) method instead.
    */
   public clear() {
-    if (!!this.toolbarContainer) {
+    if(!!this.toolbarContainer) {
       this.destroyToolbar(this.toolbarContainer);
     }
-    if (!!this.headerContainer) {
+    if(!!this.headerContainer) {
       this.destroyHeader(this.headerContainer);
     }
-    if (!!this.contentContainer) {
+    if(!!this.contentContainer) {
       this.destroyContent(this.contentContainer);
     }
-    if (!!this.footerContainer) {
+    if(!!this.footerContainer) {
       this.destroyFooter(this.footerContainer);
     }
   }
@@ -523,7 +523,7 @@ export class VisualizerBase implements IDataInfo {
       const item = toolbarItemCreators[toolbarItemName];
       const type = item.type;
 
-      if (!groupedItems[type]) {
+      if(!groupedItems[type]) {
         groupedItems[type] = [];
       }
 
@@ -561,7 +561,7 @@ export class VisualizerBase implements IDataInfo {
 
     toolbarItemCreators.forEach((item) => {
       let toolbarItem = item.creator(toolbar);
-      if (!!toolbarItem) {
+      if(!!toolbarItem) {
         toolbar.appendChild(toolbarItem);
       }
     });
@@ -578,7 +578,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected renderToolbar(container: HTMLElement) {
-    if (this.showToolbar) {
+    if(this.showToolbar) {
       const toolbar = <HTMLDivElement>(
         DocumentHelper.createElement("div", "sa-toolbar")
       );
@@ -592,7 +592,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected destroyHeader(container: HTMLElement) {
-    if (!!this.options && typeof this.options.destroyHeader === "function") {
+    if(!!this.options && typeof this.options.destroyHeader === "function") {
       this.options.destroyHeader(container, this);
     } else {
       container.innerHTML = "";
@@ -600,16 +600,16 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected destroyContent(container: HTMLElement) {
-    if (!!this.options && typeof this.options.destroyContent === "function") {
+    if(!!this.options && typeof this.options.destroyContent === "function") {
       this.options.destroyContent(container, this);
-    } else if (this.getChartAdapter()) {
+    } else if(this.getChartAdapter()) {
       this.getChartAdapter().destroy(<HTMLElement>container.children[0]);
     }
     container.innerHTML = "";
   }
 
   protected renderHeader(container: HTMLElement) {
-    if (!!this.options && typeof this.options.renderHeader === "function") {
+    if(!!this.options && typeof this.options.renderHeader === "function") {
       this.options.renderHeader(container, this);
     } else {
       const correctAnswerElement = DocumentHelper.createElement(
@@ -644,7 +644,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected renderContent(container: HTMLElement): void {
-    if (!!this.options && typeof this.options.renderContent === "function") {
+    if(!!this.options && typeof this.options.renderContent === "function") {
       const rendered = this.options.renderContent(container, this);
       if(rendered !== false) {
         this.afterRender(container);
@@ -673,7 +673,7 @@ export class VisualizerBase implements IDataInfo {
 
   protected renderFooter(container: HTMLElement) {
     container.innerHTML = "";
-    if (this.hasFooter) {
+    if(this.hasFooter) {
       const footerTitleElement = DocumentHelper.createElement(
         "h4",
         "sa-visualizer__footer-title",
@@ -689,7 +689,7 @@ export class VisualizerBase implements IDataInfo {
       const visibilityButtonText = localization.getString(this.isFooterCollapsed ? "showButton" : "hideButton");
 
       const visibilityButton = DocumentHelper.createButton(() => {
-        if (footerContentElement.style.display === "none") {
+        if(footerContentElement.style.display === "none") {
           footerContentElement.style.display = "block";
           (visibilityButton as any).setText(localization.getString("hideButton"));
           this._footerIsCollapsed = false;
@@ -713,7 +713,7 @@ export class VisualizerBase implements IDataInfo {
    * @param targetElement An `HTMLElement` or an `id` of a page element in which you want to render the visualizer.
    */
   render(targetElement: HTMLElement | string, isRoot = true) {
-    if (typeof targetElement === "string") {
+    if(typeof targetElement === "string") {
       targetElement = document.getElementById(targetElement);
     }
     this.renderResult = targetElement;
@@ -726,7 +726,7 @@ export class VisualizerBase implements IDataInfo {
     }
 
     targetElement.className = "sa-visualizer";
-    if (isRoot) {
+    if(isRoot) {
       targetElement.classList.add("sa-visualizer-wrapper");
     }
     this.renderBanner(targetElement);
@@ -737,7 +737,7 @@ export class VisualizerBase implements IDataInfo {
     targetElement.appendChild(this.toolbarContainer);
     this.renderToolbar(this.toolbarContainer);
 
-    if (this.hasHeader) {
+    if(this.hasHeader) {
       this.headerContainer = DocumentHelper.createElement(
         "div",
         "sa-visualizer__header"
@@ -763,7 +763,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   public updateToolbar(): void {
-    if (!!this.toolbarContainer) {
+    if(!!this.toolbarContainer) {
       PostponeHelper.postpone(() => {
         this.destroyToolbar(this.toolbarContainer);
         this.renderToolbar(this.toolbarContainer);
@@ -795,20 +795,20 @@ export class VisualizerBase implements IDataInfo {
    * Re-renders the visualizer and its content.
    */
   public refresh(): void {
-    if (!!this.headerContainer) {
+    if(!!this.headerContainer) {
       PostponeHelper.postpone(() => {
         this.destroyHeader(this.headerContainer);
         this.renderHeader(this.headerContainer);
         this.invokeOnUpdate();
       });
     }
-    if (!!this.contentContainer) {
+    if(!!this.contentContainer) {
       PostponeHelper.postpone(() => {
         this.updateContent();
         this.invokeOnUpdate();
       });
     }
-    if (!!this.footerContainer) {
+    if(!!this.footerContainer) {
       PostponeHelper.postpone(() => {
         this.destroyFooter(this.footerContainer);
         this.renderFooter(this.footerContainer);
@@ -818,7 +818,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   protected processText(text: string): string {
-    if (this.options.stripHtmlFromTitles !== false) {
+    if(this.options.stripHtmlFromTitles !== false) {
       let originalText = text || "";
       let processedText = originalText.replace(/(<([^>]+)>)/gi, "");
       return processedText;
@@ -841,11 +841,11 @@ export class VisualizerBase implements IDataInfo {
   }
   protected setBackgroundColorCore(color: string) {
     this._backgroundColor = color;
-    if (this.footerVisualizer) this.footerVisualizer.backgroundColor = color;
+    if(this.footerVisualizer)this.footerVisualizer.backgroundColor = color;
   }
 
   protected onThemeChanged(): void {
-    if (this.footerVisualizer) {
+    if(this.footerVisualizer) {
       this.footerVisualizer.theme = this.theme;
     }
   }
@@ -901,7 +901,7 @@ export class VisualizerBase implements IDataInfo {
 
     let manyColors: any = [];
 
-    for (let index = 0; index < count; index++) {
+    for(let index = 0; index < count; index++) {
       manyColors = manyColors.concat(colors);
     }
 
@@ -917,9 +917,9 @@ export class VisualizerBase implements IDataInfo {
     return this._showToolbar;
   }
   set showToolbar(newValue: boolean) {
-    if (newValue != this._showToolbar) {
+    if(newValue != this._showToolbar) {
       this._showToolbar = newValue;
-      if (!!this.toolbarContainer) {
+      if(!!this.toolbarContainer) {
         this.destroyToolbar(this.toolbarContainer);
         this.renderToolbar(this.toolbarContainer);
       }
@@ -936,7 +936,7 @@ export class VisualizerBase implements IDataInfo {
   private _calculationsCache: ICalculationResult = undefined;
 
   protected getCalculatedValuesCore(): ICalculationResult {
-    if (!!this._getDataCore) {
+    if(!!this._getDataCore) {
       return this._getDataCore(this);
     }
 
@@ -1061,7 +1061,7 @@ export class VisualizerBase implements IDataInfo {
    */
   public get locale(): string {
     var survey = this.options.survey;
-    if (!!survey) {
+    if(!!survey) {
       return survey.locale;
     }
     return localization.currentLocale;
@@ -1076,7 +1076,7 @@ export class VisualizerBase implements IDataInfo {
   protected setLocale(newLocale: string): void {
     localization.currentLocale = newLocale;
     var survey = this.options.survey;
-    if (!!survey && survey.locale !== newLocale) {
+    if(!!survey && survey.locale !== newLocale) {
       survey.locale = newLocale;
     }
   }

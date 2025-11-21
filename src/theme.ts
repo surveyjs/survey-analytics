@@ -13,17 +13,17 @@ export interface FontSettings {
 }
 
 function getRGBaColor(colorValue: string): string {
-  if (!colorValue) return null;
-  if (colorValue.indexOf("rgba") === 0) {
+  if(!colorValue) return null;
+  if(colorValue.indexOf("rgba") === 0) {
     return colorValue;
   }
 
   const canvasElement = document.createElement("canvas") as HTMLCanvasElement;
-  if (!canvasElement) return null;
+  if(!canvasElement) return null;
   var ctx = canvasElement.getContext("2d");
   ctx.fillStyle = colorValue;
 
-  if (ctx.fillStyle == "#000000") {
+  if(ctx.fillStyle == "#000000") {
     ctx.fillStyle = colorValue;
   }
   const newStr = ctx.fillStyle;
@@ -31,8 +31,8 @@ function getRGBaColor(colorValue: string): string {
   const regex = /color\s*\(\s*srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*(?:\/\s*([\d.]+))?\s*\)/i;
   const match = newStr.match(regex);
 
-  if (!match) {
-    if (newStr.indexOf("rgba") === 0) {
+  if(!match) {
+    if(newStr.indexOf("rgba") === 0) {
       return newStr;
     }
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(newStr);
@@ -59,7 +59,7 @@ export class DashboardTheme implements IDashboardTheme {
 
   private getCssVariableValue(propertyName: string, checkIsNumber = false) {
     let value = undefined;
-    if (this._computedValuesCache[propertyName]) {
+    if(this._computedValuesCache[propertyName]) {
       value = this._computedValuesCache[propertyName];
     } else if(!!this._cssStyleDeclaration) {
       value = this._cssStyleDeclaration.getPropertyValue(propertyName);
@@ -84,7 +84,7 @@ export class DashboardTheme implements IDashboardTheme {
 
     Object.keys(this.cssVariables).forEach(key => {
       let value;
-      if (key.indexOf("palette") !== -1 || key.indexOf("color") !== -1) {
+      if(key.indexOf("palette") !== -1 || key.indexOf("color") !== -1) {
         tempElement.style.setProperty("color", `var(${key})`);
         const computedStyle = getComputedStyle(tempElement);
         value = computedStyle.getPropertyValue("color");
@@ -115,7 +115,7 @@ export class DashboardTheme implements IDashboardTheme {
     }
 
     DocumentHelper.setStyles(element, this.cssVariables);
-    if (!!getComputedStyle) {
+    if(!!getComputedStyle) {
       this._cssStyleDeclaration = getComputedStyle(element);
     }
     this.initComputedValuesCache(element);

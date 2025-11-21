@@ -12,7 +12,7 @@ export class TextTableAdapter {
   public async create(container: HTMLElement): Promise<void> {
     const answersData = await this.model.getAnswersData();
 
-    if (answersData.datasets.length === 0 || answersData.datasets[0].length === 0) {
+    if(answersData.datasets.length === 0 || answersData.datasets[0].length === 0) {
       var emptyTextNode = DocumentHelper.createElement("p", "", {
         innerText: localization.getString("noResults"),
       });
@@ -40,7 +40,7 @@ export class TextTableAdapter {
 
     answersData.datasets.forEach((rowData) => {
       var row = DocumentHelper.createElement("tr");
-      for (var i = 0; i < answersData.seriesLabels.length; i++) {
+      for(var i = 0; i < answersData.seriesLabels.length; i++) {
         const column = this.model.columns[i];
         var td = DocumentHelper.createElement("td", "sa-text-table__cell" + (column?.type == "number" ? " sa-text-table__cell--number" : ""), {
           textContent: rowData[i],
@@ -93,11 +93,11 @@ export class Text extends VisualizerBase {
     this.surveyData.forEach((row) => {
       const rowValue: any = row[this.question.name];
       let dataStrings: Array<string> = [];
-      if (!!rowValue) {
-        if (Array.isArray(rowValue)) {
+      if(!!rowValue) {
+        if(Array.isArray(rowValue)) {
           dataStrings = dataStrings.concat(rowValue);
         } else {
-          if (typeof rowValue === "object") {
+          if(typeof rowValue === "object") {
             Object.keys(rowValue).forEach((key) =>
               dataStrings.push(rowValue[key])
             );
@@ -106,7 +106,7 @@ export class Text extends VisualizerBase {
           }
         }
         result.push(dataStrings);
-        if (dataStrings.length > columnCount) {
+        if(dataStrings.length > columnCount) {
           columnCount = dataStrings.length;
         }
       }

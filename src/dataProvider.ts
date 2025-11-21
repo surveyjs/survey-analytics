@@ -37,10 +37,10 @@ export class DataProvider {
   }
 
   public get filteredData(): Array<any> {
-    if (this._filteredData === undefined) {
+    if(this._filteredData === undefined) {
       const filterValues = this.getFilterValues();
       let filterKeys = Object.keys(filterValues);
-      if (filterKeys.length > 0) {
+      if(filterKeys.length > 0) {
         this._filteredData = this.data.filter((item) => {
           return !filterKeys.some(
             (key) => {
@@ -50,31 +50,31 @@ export class DataProvider {
                 filterValueType = "range";
               }
               const questionValue = item[key];
-              if (Array.isArray(questionValue)) {
-                if (filterValueType === "object") {
+              if(Array.isArray(questionValue)) {
+                if(filterValueType === "object") {
                   return !questionArrayValueContainsValue(questionValue, filterValue);
                 } else {
                   return questionValue.indexOf(filterValue) == -1;
                 }
               }
-              if (typeof questionValue === "object") {
-                if (filterValueType !== "object")
+              if(typeof questionValue === "object") {
+                if(filterValueType !== "object")
                   return true;
                 return !questionValueContainsValue(questionValue, filterValue);
               }
               const seriesValue = item[DataProvider.seriesMarkerKey];
-              if (!!seriesValue && filterValueType === "object") {
+              if(!!seriesValue && filterValueType === "object") {
                 return questionValue !== filterValue[seriesValue];
               }
-              if (filterValueType === "range") {
+              if(filterValueType === "range") {
                 if(filterValue.start === undefined && filterValue.end === undefined) {
                   return false;
                 }
 
                 let continioiusValue = typeof questionValue === "number" ? questionValue : Date.parse(questionValue);
-                if (isNaN(continioiusValue)) {
+                if(isNaN(continioiusValue)) {
                   continioiusValue = parseFloat(questionValue);
-                  if (isNaN(continioiusValue)) {
+                  if(isNaN(continioiusValue)) {
                     return true;
                   }
                 }
@@ -102,25 +102,25 @@ export class DataProvider {
 
   private setFilterCore(questionName: string, selectedValue: any, filterObject: any): void {
     var filterChanged = true;
-    if (selectedValue !== undefined) {
+    if(selectedValue !== undefined) {
       filterChanged = filterObject[questionName] !== selectedValue;
-      if (filterChanged) {
+      if(filterChanged) {
         filterObject[questionName] = selectedValue;
       }
     } else {
       filterChanged = filterObject[questionName] !== undefined;
-      if (filterChanged) {
+      if(filterChanged) {
         delete filterObject[questionName];
       }
     }
-    if (filterChanged) {
+    if(filterChanged) {
       this.raiseFilterChanged(questionName, selectedValue);
       this.raiseDataChanged();
     }
   }
 
   private resetFilterCore(filterObject: any): void {
-    if (Object.keys(filterObject).length === 0) {
+    if(Object.keys(filterObject).length === 0) {
       return;
     }
     Object.keys(filterObject).forEach(key => delete filterObject[key]);
@@ -166,7 +166,7 @@ export class DataProvider {
   >();
 
   public raiseFilterChanged(questionName?: string, selectedValue?: any): void {
-    if (!this.onFilterChanged.isEmpty) {
+    if(!this.onFilterChanged.isEmpty) {
       this.onFilterChanged.fire(this, { questionName, selectedValue });
     }
   }
@@ -182,7 +182,7 @@ export class DataProvider {
 
   public raiseDataChanged(questionName?: string): void {
     this._filteredData = undefined;
-    if (!this.onDataChanged.isEmpty) {
+    if(!this.onDataChanged.isEmpty) {
       this.onDataChanged.fire(this, { questionName });
     }
   }
@@ -195,7 +195,7 @@ export class DataProvider {
   public fixDropdownData(dataNames: string[]): void {
     (this.data || []).forEach((dataItem) => {
       let rawDataItem = dataItem[dataNames[0]];
-      if (!!rawDataItem && typeof rawDataItem === "object" && !Array.isArray(rawDataItem)) {
+      if(!!rawDataItem && typeof rawDataItem === "object" && !Array.isArray(rawDataItem)) {
         const arrayData = [];
         Object.keys(rawDataItem).forEach((key) => {
           var nestedDataItem = Object.assign({}, rawDataItem[key]);
@@ -230,10 +230,10 @@ function questionValueContainsValue(questionValue: any, filterValue: any) {
   const questionValueKeys = Object.keys(questionValue);
   const filterValueKeys = Object.keys(filterValue);
 
-  if (filterValueKeys.length > questionValueKeys.length) return false;
+  if(filterValueKeys.length > questionValueKeys.length) return false;
 
-  for (var key of filterValueKeys) {
-    if (filterValue[key] != questionValue[key]) return false;
+  for(var key of filterValueKeys) {
+    if(filterValue[key] != questionValue[key]) return false;
   }
 
   return true;

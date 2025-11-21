@@ -41,7 +41,7 @@ export const intervalCalculators = {
     let startYear = start.getFullYear();
     const end = new Date(max);
     const endYear = end.getFullYear();
-    while (startYear <= endYear) {
+    while(startYear <= endYear) {
       const intervalStart = new Date(startYear, 0, 1);
       const intervalEnd = new Date(startYear + 10, 0, 1);
       intervals.push({
@@ -62,7 +62,7 @@ export const intervalCalculators = {
     let startYear = start.getFullYear();
     const end = new Date(max);
     const endYear = end.getFullYear();
-    while (startYear <= endYear) {
+    while(startYear <= endYear) {
       const intervalStart = new Date(startYear, 0, 1);
       const intervalEnd = new Date(startYear + 1, 0, 1);
       intervals.push({
@@ -84,7 +84,7 @@ export const intervalCalculators = {
     const end = new Date(max);
     const endYear = end.getFullYear();
     const endMonth = end.getMonth();
-    while (startYear < endYear || (startYear === endYear && startMonth <= endMonth)) {
+    while(startYear < endYear || (startYear === endYear && startMonth <= endMonth)) {
       const intervalStart = new Date(startYear, startMonth, 1);
       const intervalEnd = new Date(startYear, startMonth + 1, 1);
       intervals.push({
@@ -93,7 +93,7 @@ export const intervalCalculators = {
         label: intervalStart.toLocaleDateString(undefined, { year: "numeric", month: "short" })
       });
       startMonth++;
-      if (startMonth >= 12) {
+      if(startMonth >= 12) {
         startMonth = 0;
         startYear++;
       }
@@ -110,7 +110,7 @@ export const intervalCalculators = {
     const end = new Date(max);
     const endYear = end.getFullYear();
     const endMonth = end.getMonth();
-    while (startYear < endYear || (startYear === endYear && startMonth <= endMonth)) {
+    while(startYear < endYear || (startYear === endYear && startMonth <= endMonth)) {
       const intervalStart = new Date(startYear, startMonth, 1);
       const intervalEnd = new Date(startYear, startMonth + 3, 1);
       intervals.push({
@@ -119,7 +119,7 @@ export const intervalCalculators = {
         label: getQuarter(intervalStart) + " " + intervalStart.getFullYear().toString()
       });
       startMonth += 3;
-      if (startMonth >= 12) {
+      if(startMonth >= 12) {
         startMonth = startMonth % 12;
         startYear++;
       }
@@ -132,7 +132,7 @@ export const intervalCalculators = {
     start.setHours(0, 0, 0, 0);
     const end = new Date(max);
     end.setHours(0, 0, 0, 0);
-    while (start <= end) {
+    while(start <= end) {
       const intervalStart = new Date(start);
       const intervalEnd = new Date(start);
       intervalEnd.setDate(intervalEnd.getDate() + 1);
@@ -168,7 +168,7 @@ export class HistogramModel extends SelectBase {
   ) {
     super(question, data, options, type || "histogram");
     this._transposeData = false;
-    if (this.options.intervalPrecision !== undefined) {
+    if(this.options.intervalPrecision !== undefined) {
       this._intervalPrecision = this.options.intervalPrecision;
     }
     this.valueType = this.getQuestionValueType(this.question, "number") || this.valueType;
@@ -192,7 +192,7 @@ export class HistogramModel extends SelectBase {
         return this.changeIntervalsModeSelector;
       }, "dropdown");
     }
-    if (this.possibleAggregateDataNames.length > 0) {
+    if(this.possibleAggregateDataNames.length > 0) {
       this.registerToolbarItem("aggregateDataName", () => {
         const choices = this.possibleAggregateDataNames.map((dataName) => {
           return typeof dataName === "string" ? { value: dataName, text: dataName } : dataName;
@@ -232,14 +232,14 @@ export class HistogramModel extends SelectBase {
   }
 
   private updateIntervalsModeSelector() {
-    if (!!this.changeIntervalsModeSelector) {
+    if(!!this.changeIntervalsModeSelector) {
       (this.changeIntervalsModeSelector as any).setValue(this.intervalsMode);
 
     }
   }
 
   private updateAggregateDataNameSelector() {
-    if (!!this.aggregateDataNameSelector) {
+    if(!!this.aggregateDataNameSelector) {
       (this.aggregateDataNameSelector as any).setValue(this.aggregateDataName);
     }
   }
@@ -247,7 +247,7 @@ export class HistogramModel extends SelectBase {
   public getQuestionValueType(question: Question, defaultValue = "enum"): "enum" | "date" | "number" {
     if(question) {
       const questionType = question.getType();
-      if (questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
+      if(questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
         return "date";
       } else if(questionType === "text" || questionType === "rating" || questionType === "expression" || questionType === "range") {
         return "number";
@@ -264,14 +264,14 @@ export class HistogramModel extends SelectBase {
   }
 
   public getContinuousValue(value: any): number {
-    if (this.valueType === "date") {
+    if(this.valueType === "date") {
       return Date.parse(value);
     }
     return parseFloat(value);
   }
 
   public getString(value: number): string {
-    if (this.valueType === "date") {
+    if(this.valueType === "date") {
       return new Date(value).toLocaleDateString();
     }
     return "" + value;
@@ -283,7 +283,7 @@ export class HistogramModel extends SelectBase {
   }
 
   public getSelectedItemByText(itemText: string) {
-    if (this.hasCustomIntervals || this.getContinuousValues().length > HistogramModel.UseIntervalsFrom) {
+    if(this.hasCustomIntervals || this.getContinuousValues().length > HistogramModel.UseIntervalsFrom) {
       const interval = this.intervals.filter(interval => interval.label === itemText)[0];
       return new ItemValue(interval, interval !== undefined ? interval.label : "");
     }
@@ -306,8 +306,8 @@ export class HistogramModel extends SelectBase {
   }
 
   protected onSelectionChanged(item: ItemValue): void {
-    if (item !== undefined && this.onDataItemSelected !== undefined) {
-      if (this.valueType === "date") {
+    if(item !== undefined && this.onDataItemSelected !== undefined) {
+      if(this.valueType === "date") {
         const currIntervalCalueIndex = this.intervalModes.indexOf(this.intervalsMode);
         if(currIntervalCalueIndex > 0 && currIntervalCalueIndex < this.intervalModes.length - 1) {
           this.intervalsMode = this.intervalModes[currIntervalCalueIndex + 1];
@@ -318,9 +318,9 @@ export class HistogramModel extends SelectBase {
   }
 
   protected getContinuousValues() {
-    if (this._cachedValues === undefined) {
+    if(this._cachedValues === undefined) {
       const series = this.getSeriesValues();
-      if (series.length === 0) {
+      if(series.length === 0) {
         series.push("");
       }
       this._continuousData = {};
@@ -330,7 +330,7 @@ export class HistogramModel extends SelectBase {
         const nestedDataRows = getNestedDataRows(dataRow, this.dataPath);
         nestedDataRows.forEach(nestedDataRow => {
           const answerData = nestedDataRow[this.dataNames[0]];
-          if (answerData !== undefined) {
+          if(answerData !== undefined) {
             const seriesValue = nestedDataRow[DataProvider.seriesMarkerKey] || "";
             // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
             this._continuousData[seriesValue].push({ continuous: this.getContinuousValue(answerData), row: nestedDataRow });
@@ -375,12 +375,12 @@ export class HistogramModel extends SelectBase {
   }
 
   public get intervals(): Array<{start: number, end: number, label: string}> {
-    if (this.hasCustomIntervals) {
+    if(this.hasCustomIntervals) {
       return this.questionOptions.intervals;
     }
 
     if(this.dataType == "rating") {
-      if (this.needUseRateValues) {
+      if(this.needUseRateValues) {
         const rateValues = this.question["rateValues"] as ItemValue[];
         rateValues.sort((iv1, iv2) => iv1.value - iv2.value);
         return rateValues.map((rateValue, i) => ({
@@ -394,17 +394,17 @@ export class HistogramModel extends SelectBase {
           rateIntervals.push({
             start: i,
             end: i + 1,
-            label: "" + (!!this.question["rateMin"] && !!this.question["rateMax"] ? i : (i + "-" + (i+1)))
+            label: "" + (!!this.question["rateMin"] && !!this.question["rateMax"] ? i : (i + "-" + (i + 1)))
           });
         }
         return rateIntervals;
       }
     }
 
-    if (this._cachedIntervals === undefined) {
+    if(this._cachedIntervals === undefined) {
       const continuousValues = this.getContinuousValues();
       this._cachedIntervals = [];
-      if (continuousValues.length) {
+      if(continuousValues.length) {
         let start = continuousValues[0].continuous;
         const end = continuousValues[continuousValues.length - 1].continuous;
         const intervalsMode = this.intervalsMode === "auto" ? getBestIntervalMode(start, end) : this.intervalsMode;
@@ -413,7 +413,7 @@ export class HistogramModel extends SelectBase {
         } else {
           const intervalsCount = HistogramModel.IntervalsCount;
           const delta = (end - start) / intervalsCount;
-          for (let i = 0; i < intervalsCount; ++i) {
+          for(let i = 0; i < intervalsCount; ++i) {
             const next = start + delta;
             const istart = this.toPrecision(start);
             const inext = this.toPrecision(next);
@@ -438,7 +438,7 @@ export class HistogramModel extends SelectBase {
     return this._intervalsMode;
   }
   public set intervalsMode(val: HistogramIntervalMode) {
-    if (this.allowChangeIntervals && this._intervalsMode !== val) {
+    if(this.allowChangeIntervals && this._intervalsMode !== val) {
       this._intervalsMode = val;
       if(!this.canShowGroupedDateSeries) {
         this._showGrouped = false;
@@ -465,7 +465,7 @@ export class HistogramModel extends SelectBase {
   }
 
   private updateShowRunningTotalsBtn() {
-    if (!!this.showRunningTotalsBtn) {
+    if(!!this.showRunningTotalsBtn) {
       this.showRunningTotalsBtn.innerText = this.showRunningTotals
         ? localization.getString("noRunningTotals")
         : localization.getString("runningTotals");
@@ -484,7 +484,7 @@ export class HistogramModel extends SelectBase {
   }
 
   private updateShowGroupedBtn() {
-    if (!!this.showGroupedBtn) {
+    if(!!this.showGroupedBtn) {
       this.showGroupedBtn.innerText = this.showGrouped
         ? localization.getString("ungroupDateSeries")
         : localization.getString("groupDateSeries");
@@ -501,7 +501,7 @@ export class HistogramModel extends SelectBase {
     return this._aggregateDataName;
   }
   public set aggregateDataName(val: string) {
-    if (this._aggregateDataName !== val) {
+    if(this._aggregateDataName !== val) {
       this._aggregateDataName = val;
       this.onDataChanged();
     }
@@ -623,7 +623,7 @@ export class HistogramModel extends SelectBase {
     const answersData = await this.getGroupedDateAnswersData();
 
     const continuousValues = this.getContinuousValues();
-    if (continuousValues.length) {
+    if(continuousValues.length) {
       let start = continuousValues[0].continuous;
       const end = continuousValues[continuousValues.length - 1].continuous;
       const intervalsMode = this.intervalsMode === "auto" ? getBestIntervalMode(start, end) : this.intervalsMode;

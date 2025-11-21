@@ -11,9 +11,13 @@
     },
     "plugins": [
         "@typescript-eslint",
+        "surveyjs",
         "surveyjs/eslint-plugin-i18n"
     ],
     "rules": {
+        "surveyjs/no-test-only": 2,
+        "surveyjs/no-test-debug": 2,
+        "surveyjs/no-imports-from-entries": 2,
         "no-console": 2, // Remember, this means error!
         "indent": [
             "error",
@@ -27,6 +31,8 @@
             }
         ],
         "no-trailing-spaces": "error",
+        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "space-infix-ops": "error",
         "no-multi-spaces": "error",
         "block-spacing": "error",
         "comma-spacing": "error",
@@ -49,18 +55,18 @@
             "never"
         ],
         "computed-property-spacing": "error",
-        // "keyword-spacing": ["error", { 
-        // 	"overrides": { 
-        // 		"if": { "after": false }, 
-        // 		"for": { "after": false }, 
-        // 		"while": { "after": false }, 
-        // 		"switch": { "after": false },
-        // 		//"this": { "after": false, "before": false },
-        // 		"new": { "before": false },
-        // 		"function":  { "after": false, "before": false },
-        // 		"catch": { "after": false }
-        // 	} 
-        // }],
+        "keyword-spacing": ["error", { 
+        	"overrides": { 
+        		"if": { "after": false }, 
+        		"for": { "after": false }, 
+        		"while": { "after": false }, 
+        		"switch": { "after": false },
+        		"this": { "after": false, "before": false },
+        		"new": { "before": false },
+        		"function":  { "after": false, "before": false },
+        		"catch": { "after": false }
+        	} 
+        }],
         "no-multiple-empty-lines": [
             "error",
             {
@@ -73,7 +79,6 @@
             "error",
             "always"
         ],
-        "semi": "error",
         "no-extra-semi": [
             "error"
         ],

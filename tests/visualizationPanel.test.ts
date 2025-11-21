@@ -1,3 +1,4 @@
+/* eslint-disable surveyjs/eslint-plugin-i18n/only-english-or-code */
 import { SurveyModel, QuestionTextModel } from "survey-core";
 import { WordCloud } from "../src/wordcloud/wordcloud";
 import { Text } from "../src/text";
@@ -988,7 +989,6 @@ test("getCalculatedValues should return empty array", async () => {
 test("VisualizationPanel reset filter button respects the allowSelection option", () => {
   let panel = new VisualizationPanel([], [], {});
   expect(panel.supportSelection).toBeTruthy();
-  // @ts-ignore
   let creators = panel["toolbarItemCreators"];
   expect(creators["resetFilter"]).toBeDefined();
 
@@ -999,7 +999,6 @@ test("VisualizationPanel reset filter button respects the allowSelection option"
 
   panel = new VisualizationPanel([], [], { allowSelection: false });
   expect(panel.supportSelection).toBeFalsy();
-  // @ts-ignore
   creators = panel["toolbarItemCreators"];
   expect(creators["resetFilter"]).toBeUndefined();
 });

@@ -137,7 +137,7 @@ test("getPercentages percentagePrecision option", async () => {
   let percentages = matrixVizualizer.getPercentages(datasets);
   let result = 0;
 
-  for (let index = 0; index < percentages.length; index++) {
+  for(let index = 0; index < percentages.length; index++) {
     result += percentages[index][0];
   }
 
@@ -149,7 +149,7 @@ test("getPercentages percentagePrecision option", async () => {
   percentages = matrixVizualizer.getPercentages(datasets);
   result = 0;
 
-  for (let index = 0; index < percentages.length; index++) {
+  for(let index = 0; index < percentages.length; index++) {
     result += percentages[index][0];
   }
 

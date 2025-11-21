@@ -18,7 +18,7 @@ import "./visualizationPanel.scss";
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
 
-if (!!document) {
+if(!!document) {
   const templateHolder = document.createElement("div");
   templateHolder.style.display = "none";
   templateHolder.innerHTML = svgTemplate;
@@ -339,18 +339,18 @@ export class VisualizationPanel extends VisualizerBase {
     }
 
     this.showToolbar = isRoot;
-    if (this.options.survey) {
+    if(this.options.survey) {
       localization.currentLocale = this.options.survey.locale;
     }
 
-    if (_elements === undefined) {
+    if(_elements === undefined) {
       this._elements = this.buildElements(questions);
     }
 
     this.buildVisualizers(questions);
 
     this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
-      if (this.allowHideQuestions) {
+      if(this.allowHideQuestions) {
         const allQuestions = this._elements.map((element) => {
           return {
             value: element.name,
@@ -391,7 +391,7 @@ export class VisualizationPanel extends VisualizerBase {
       }, "button", 900);
     }
 
-    if (!this.options.disableLocaleSwitch && this.locales.length > 1) {
+    if(!this.options.disableLocaleSwitch && this.locales.length > 1) {
       const localeChoices = this.locales.map((element) => {
         return {
           value: element,
@@ -427,10 +427,10 @@ export class VisualizationPanel extends VisualizerBase {
   public resetFilter(): void {
     this.dataProvider?.resetFilter();
     this.visualizers.forEach((visualizer) => {
-      if (visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
+      if(visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
         visualizer.setSelection(undefined);
       }
-      if (visualizer instanceof VisualizationPanelDynamic) {
+      if(visualizer instanceof VisualizationPanelDynamic) {
         visualizer.resetFilter();
       }
     });
@@ -456,7 +456,7 @@ export class VisualizationPanel extends VisualizerBase {
     options: any
   ) => {
     this.renderedQuestionsCount++;
-    if (this.renderedQuestionsCount == this.visibleElements.length) {
+    if(this.renderedQuestionsCount == this.visibleElements.length) {
       this.renderedQuestionsCount = 0;
       this.layoutEngine?.update();
       this.afterRender(this.contentContainer);
@@ -500,7 +500,7 @@ export class VisualizationPanel extends VisualizerBase {
 
     const dragAreaElement = DocumentHelper.createElement("div");
     dragAreaElement.className = "sa-question__drag-area";
-    if (this.allowDynamicLayout && this.allowDragDrop) {
+    if(this.allowDynamicLayout && this.allowDragDrop) {
       dragAreaElement.className = dragAreaElement.className + " sa-question__header--draggable";
 
       const svgElement = document.createElement("div");
@@ -509,7 +509,7 @@ export class VisualizationPanel extends VisualizerBase {
       dragAreaElement.appendChild(svgElement);
     }
 
-    if (this.allowHideQuestions) {
+    if(this.allowHideQuestions) {
       const hideElement = document.createElement("div");
       hideElement.className = "sa-question__hide-action";
       hideElement.title = localization.getString("hideButton");
@@ -521,7 +521,7 @@ export class VisualizationPanel extends VisualizerBase {
         setTimeout(() => this.hideElement(element.name), 0);
       });
       hideElement.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
+        if(e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           this.hideElement(element.name);
         }
@@ -532,7 +532,7 @@ export class VisualizationPanel extends VisualizerBase {
     titleElement.innerText = element.displayName;
     titleElement.id = "el_" + element.name;
     titleElement.className = questionElementClassName + "__title";
-    if (this.allowDynamicLayout && this.allowDragDrop) {
+    if(this.allowDynamicLayout && this.allowDragDrop) {
       titleElement.className =
         titleElement.className +
         " " +
@@ -546,7 +546,7 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   protected onDataChanged(): void {
-    if (this._dateRangeWidget) {
+    if(this._dateRangeWidget) {
       this.dataProvider.getCount().then(count => this._dateRangeWidget.updateAnswersCount(count));
     }
   }
@@ -573,7 +573,7 @@ export class VisualizationPanel extends VisualizerBase {
 
   protected hideElementCore(element: IVisualizerPanelRenderedElement) {
     element.isVisible = false;
-    if (!!element.renderedElement) {
+    if(!!element.renderedElement) {
       this.layoutEngine?.remove([element.renderedElement]);
       this.contentContainer.removeChild(element.renderedElement);
       element.renderedElement = undefined;
@@ -678,7 +678,7 @@ export class VisualizationPanel extends VisualizerBase {
         return;
       }
 
-      if (this.allowMakeQuestionsPrivate) {
+      if(this.allowMakeQuestionsPrivate) {
         visualizer.registerToolbarItem("makePrivatePublic", () => {
           const element = this.getElement(question.name);
 
@@ -707,7 +707,7 @@ export class VisualizationPanel extends VisualizerBase {
         }, "button");
       }
 
-      if (visualizer.supportSelection) {
+      if(visualizer.supportSelection) {
         const visualizerWithSelection = <IVisualizerWithSelection>(
           (<any>visualizer)
         );
@@ -731,7 +731,7 @@ export class VisualizationPanel extends VisualizerBase {
       visualizer.onAfterRender.add(this.onAfterRenderQuestionCallback);
       visualizer.onStateChanged.add(this.onStateChangedCallback);
 
-      if (visualizer instanceof AlternativeVisualizersWrapper) {
+      if(visualizer instanceof AlternativeVisualizersWrapper) {
         visualizer.onVisualizerChanged.add(this.onAlternativeVisualizerChangedCallback);
       }
 
@@ -742,10 +742,10 @@ export class VisualizationPanel extends VisualizerBase {
   private destroyVisualizers() {
     this.visualizers.forEach((visualizer) => {
       visualizer.onUpdate = undefined;
-      if (visualizer instanceof SelectBase) {
+      if(visualizer instanceof SelectBase) {
         visualizer.onDataItemSelected = undefined;
       }
-      if (visualizer instanceof AlternativeVisualizersWrapper) {
+      if(visualizer instanceof AlternativeVisualizersWrapper) {
         visualizer.onVisualizerChanged.remove(this.onAlternativeVisualizerChangedCallback);
       }
       visualizer.onStateChanged.remove(this.onStateChangedCallback);
@@ -760,7 +760,7 @@ export class VisualizationPanel extends VisualizerBase {
     (this.questions || []).forEach((question) => {
       question = Array.isArray(question) ? question[0] : question;
       const element = this.getElement(question.name);
-      if (!!element) {
+      if(!!element) {
         element.displayName = this.getTitle(question);
       }
     });
@@ -887,7 +887,7 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   protected get locales() {
-    if (this.options.survey) return this.options.survey.getUsedLocales();
+    if(this.options.survey) return this.options.survey.getUsedLocales();
     return [];
   }
 
@@ -976,26 +976,26 @@ export class VisualizationPanel extends VisualizerBase {
     element: IVisualizerPanelElement,
     reason: string
   ): void {
-    if (reason === "SHOWN" && !this.onElementShown.isEmpty) {
+    if(reason === "SHOWN" && !this.onElementShown.isEmpty) {
       this.onElementShown.fire(this, {
         elements: this._elements,
         element: element
       });
     }
-    if (reason === "REMOVED" && !this.onElementHidden.isEmpty) {
+    if(reason === "REMOVED" && !this.onElementHidden.isEmpty) {
       this.onElementHidden.fire(this, {
         elements: this._elements,
         element: element
       });
     }
-    if (reason === "MOVED" && !this.onElementMoved.isEmpty) {
+    if(reason === "MOVED" && !this.onElementMoved.isEmpty) {
       this.onElementMoved.fire(this, {
         elements: this._elements,
         element: element
       });
     }
 
-    if (!this.onVisibleElementsChanged.isEmpty) {
+    if(!this.onVisibleElementsChanged.isEmpty) {
       this.onVisibleElementsChanged.fire(this, {
         elements: this._elements,
         changed: element,
@@ -1047,7 +1047,7 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   protected renderBanner(container: HTMLElement): void {
-    if (!this.haveCommercialLicense && this.isRoot) {
+    if(!this.haveCommercialLicense && this.isRoot) {
       const banner = createCommercialLicenseLink();
       container.appendChild(banner);
     }
@@ -1098,7 +1098,7 @@ export class VisualizationPanel extends VisualizerBase {
    * Redraws the `VisualizationPanel` and all its content.
    */
   public refresh() {
-    if (!!this.toolbarContainer) {
+    if(!!this.toolbarContainer) {
       this.destroyToolbar(this.toolbarContainer);
       this.renderToolbar(this.toolbarContainer);
     }
@@ -1139,7 +1139,7 @@ export class VisualizationPanel extends VisualizerBase {
       elements: [].concat(this._elements.map(element => {
         const visualizer = this.getVisualizer(element.name);
         const elementState = { ...element, ...visualizer?.getState() };
-        if (elementState.renderedElement !== undefined) {
+        if(elementState.renderedElement !== undefined) {
           delete elementState.renderedElement;
         }
         return elementState;
@@ -1157,20 +1157,20 @@ export class VisualizationPanel extends VisualizerBase {
     return this.getState();
   }
   public set state(newState: IState) {
-    if (!newState) return;
+    if(!newState) return;
     this._settingState = true;
     try {
 
-      if (Array.isArray(newState.elements)) {
+      if(Array.isArray(newState.elements)) {
         const questionNames = this.questions.map(q => Array.isArray(q) ? q[0].name : q.name);
         this._elements = [].concat(newState.elements.filter(e => (questionNames.indexOf(e.name) !== -1)));
       }
 
-      if (typeof newState.locale !== "undefined") this.setLocale(newState.locale);
+      if(typeof newState.locale !== "undefined")this.setLocale(newState.locale);
 
       this._elements.forEach(elementState => {
         const visualizer = this.getVisualizer(elementState.name);
-        if (visualizer !== undefined) {
+        if(visualizer !== undefined) {
           visualizer.setState(elementState);
         }
       });
@@ -1203,7 +1203,7 @@ export class VisualizationPanel extends VisualizerBase {
   public set permissions(permissions: IPermission[]) {
     const updatedElements = this._elements.map((element) => {
       permissions.forEach((permission) => {
-        if (permission.name === element.name)
+        if(permission.name === element.name)
           element.isPublic = permission.isPublic;
       });
 

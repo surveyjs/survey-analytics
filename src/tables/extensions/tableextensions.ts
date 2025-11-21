@@ -15,7 +15,7 @@ export class TableExtensions {
 
   public render(targetNode: HTMLElement, location: string, options?: any) {
     var extensions = TableExtensions.extensions[location];
-    if (!!extensions) {
+    if(!!extensions) {
       extensions = this.sortExtensions(extensions);
       extensions.forEach((extension) => {
         this.renderExtension(extension, targetNode, options);
@@ -24,9 +24,9 @@ export class TableExtensions {
   }
 
   public renderExtension(extension: ITableExtension, targetNode: HTMLElement, options?: any) {
-    if (!!extension.render && this.table.allowExtension(extension)) {
+    if(!!extension.render && this.table.allowExtension(extension)) {
       var action = extension.render(this.table, options);
-      if (!!action) {
+      if(!!action) {
         targetNode.appendChild(action);
         this.renderedExtensions.push(extension);
       }
@@ -35,13 +35,13 @@ export class TableExtensions {
 
   public destroy() {
     this.renderedExtensions.forEach((extension) => {
-      if (!!extension.destroy) extension.destroy();
+      if(!!extension.destroy) extension.destroy();
     });
     this.renderedExtensions = [];
   }
 
   public static registerExtension(extension: ITableExtension) {
-    if (!this.extensions[extension.location])
+    if(!this.extensions[extension.location])
       this.extensions[extension.location] = [];
     this.extensions[extension.location].push(extension);
   }
@@ -76,7 +76,7 @@ export class TableExtensions {
     location: string,
     actionName: string
   ): ITableExtension {
-    if (!this.extensions[location]) return null;
+    if(!this.extensions[location]) return null;
     var extension = this.extensions[location].filter(function (
       extension: ITableExtension
     ) {
@@ -86,12 +86,12 @@ export class TableExtensions {
   }
 
   public static getExtensions(location: string): Array<ITableExtension> {
-    if (!this.extensions[location]) return [];
+    if(!this.extensions[location]) return [];
     return this.extensions[location].slice(0);
   }
 
   public sortExtensions(extensions: Array<ITableExtension>) {
-    if (!Array.isArray(extensions)) return;
+    if(!Array.isArray(extensions)) return;
     return []
       .concat(extensions.filter((extension) => extension.visibleIndex >= 0))
       .sort((firstExtension, secondExtension) => {

@@ -10,7 +10,7 @@ import { TableExtensions } from "./extensions/tableextensions";
 import { DashboardTheme, IDashboardTheme } from "../theme";
 import "./tabulator.scss";
 
-if (!!document) {
+if(!!document) {
   const templateHolder = document.createElement("div");
   templateHolder.style.display = "none";
   templateHolder.innerHTML = svgTemplate;
@@ -69,7 +69,7 @@ export const defaultOptions: ITabulatorOptions = {
           .filter((col: any) => col.isVisible()).length -
           1) *
         186.72;
-      if (minWidth > 841.89) {
+      if(minWidth > 841.89) {
         options.jsPDF = { format: [595.28, minWidth] };
       }
     },
@@ -78,7 +78,7 @@ export const defaultOptions: ITabulatorOptions = {
 
 const escapeCellFormula = (field: string) => {
   const formulaPrefix = ["=", "+", "-", "@", String.fromCharCode(0x09), String.fromCharCode(0x0d)];
-  if (formulaPrefix.some(prefix => field.startsWith(prefix))) {
+  if(formulaPrefix.some(prefix => field.startsWith(prefix))) {
     return "'" + field;
   } else {
     return field;
@@ -131,7 +131,7 @@ export class Tabulator extends Table {
 
   public render(targetNode: HTMLElement | string): void {
     super.render(targetNode);
-    if (typeof targetNode === "string") {
+    if(typeof targetNode === "string") {
       targetNode = document.getElementById(targetNode);
     }
     targetNode.className += " sa-table sa-tabulator";
@@ -324,22 +324,22 @@ export class Tabulator extends Table {
       const columnDefinition = columnComponent.getDefinition();
       const questionName = columnDefinition.field;
       const column = this.columns.filter(col => col.name === questionName)[0];
-      if (!!column && rowComponent) {
+      if(!!column && rowComponent) {
         const dataRow = rowComponent.getData().surveyOriginalData;
         const dataCell = dataRow[questionName];
-        if (column.dataType === ColumnDataType.Image) {
+        if(column.dataType === ColumnDataType.Image) {
           return questionName;
         }
-        if (column.dataType === ColumnDataType.FileLink && Array.isArray(dataCell)) {
+        if(column.dataType === ColumnDataType.FileLink && Array.isArray(dataCell)) {
           return (dataCell || []).map(f => f.name).join(", ");
         }
       }
     }
-    if (this.currentDownloadType === "csv" || this.currentDownloadType === "xlsx") {
+    if(this.currentDownloadType === "csv" || this.currentDownloadType === "xlsx") {
       return escapeCellFormula(cellData);
     }
     return cellData;
-  }
+  };
 
   private getTitleFormatter(
     cell: any,
@@ -359,7 +359,7 @@ export class Tabulator extends Table {
     container.appendChild(title);
     container.appendChild(containerFilter);
     ["mousemove", "mousedown"].forEach(eventName => actionContainer.addEventListener(eventName, (event) => {
-      if (!this.isColumnReorderEnabled) {
+      if(!this.isColumnReorderEnabled) {
         event.stopPropagation();
       }
     }));
@@ -375,10 +375,10 @@ export class Tabulator extends Table {
   public getColumns(): Array<any> {
     const columns: any = this.columns.map((column, index) => {
       let formatter = "plaintext";
-      if (column.dataType == ColumnDataType.FileLink) {
+      if(column.dataType == ColumnDataType.FileLink) {
         formatter = "html";
       }
-      if (column.dataType == ColumnDataType.Image) {
+      if(column.dataType == ColumnDataType.Image) {
         formatter = "image";
       }
       return {
@@ -428,8 +428,8 @@ export class Tabulator extends Table {
 
   public setColumnVisibility(columnName: string, isVisible: boolean): void {
     super.setColumnVisibility(columnName, isVisible);
-    if (this.isRendered) {
-      if (isVisible) {
+    if(this.isRendered) {
+      if(isVisible) {
         this.tabulatorTables.showColumn(columnName);
       } else {
         this.tabulatorTables.hideColumn(columnName);
@@ -440,8 +440,8 @@ export class Tabulator extends Table {
 
   public setColumnLocation(columnName: string, location: QuestionLocation): void {
     super.setColumnLocation(columnName, location);
-    if (this.isRendered) {
-      if (location == QuestionLocation.Row)
+    if(this.isRendered) {
+      if(location == QuestionLocation.Row)
         this.tabulatorTables.hideColumn(columnName);
       else this.tabulatorTables.showColumn(columnName);
       this.layout();
@@ -450,7 +450,7 @@ export class Tabulator extends Table {
 
   public setColumnWidth(columnName: string, width: number): void {
     super.setColumnWidth(columnName, width);
-    if (this.isRendered) {
+    if(this.isRendered) {
       const column = this.tabulatorTables.getColumn(columnName);
       if(!!column) {
         const definition = column.getDefinition();
@@ -471,8 +471,8 @@ export class Tabulator extends Table {
 
   public applyFilter(value: string): void {
     var customFilter = (data: any, filterParams: any) => {
-      for (var key in data) {
-        if (
+      for(var key in data) {
+        if(
           data[key] &&
           typeof data[key] === "string" &&
           data[key].toLowerCase().includes(filterParams.value.toLowerCase())
@@ -488,7 +488,7 @@ export class Tabulator extends Table {
   }
 
   public getPageNumber(): number {
-    if (!this.isRendered) {
+    if(!this.isRendered) {
       return 1;
     }
     const pageNumber = this.tabulatorTables.getPage();
@@ -497,14 +497,14 @@ export class Tabulator extends Table {
 
   public setPageNumber(value: number): void {
     super.setPageNumber(value);
-    if (this.isRendered) {
+    if(this.isRendered) {
       this.tabulatorTables.setPage(value);
     }
   }
 
   public setPageSize(value: number): void {
     super.setPageSize(value);
-    if (this.isRendered) {
+    if(this.isRendered) {
       this.tabulatorTables.setPageSize(value);
     }
   }
@@ -515,7 +515,7 @@ export class Tabulator extends Table {
       this._options.downloadOptions[type] || defaultOptions.downloadOptions[type]
     );
     const onDownloadCallback = this._options.onDownloadCallbacks[type];
-    if (!!onDownloadCallback) onDownloadCallback(this, options);
+    if(!!onDownloadCallback) onDownloadCallback(this, options);
     return options;
   }
 

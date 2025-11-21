@@ -38,7 +38,7 @@ TableExtensions.registerExtension({
     btn.title = localization.getString("defaultOrder");
     var direction = "asc";
     btn.onclick = () => {
-      if (direction == "asc") {
+      if(direction == "asc") {
         btn.title = descTitle;
         direction = "desc";
       } else {
@@ -125,7 +125,7 @@ TableExtensions.registerExtension({
     };
 
     function updateState(column: IColumn) {
-      if (column.isPublic) {
+      if(column.isPublic) {
         button.className = "sa-table__svg-button";
         button.title = localization.getString("makePrivateColumn");
         makePrivateSvg.style.display = "none";

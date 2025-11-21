@@ -100,7 +100,7 @@ test("date default intervals", async () => {
   };
   const dates = [];
   const currDate = new Date(2020, 0);
-  for (let i = 0; i < 31; i++) {
+  for(let i = 0; i < 31; i++) {
     dates.push({ date: currDate.toISOString() });
     currDate.setDate(currDate.getDate() + 1);
   }
@@ -718,31 +718,31 @@ test("rating with rateValues with wrong order", () => {
     "rateValues": [
       {
         "value": 7,
-        "text": "7 - Very ​satisfied​"
+        "text": "7 - Very satisfied"
       },
       {
         "value": 6,
-        "text": "6 - Quite ​satisfied"
+        "text": "6 - Quite satisfied"
       },
       {
         "value": 5,
-        "text": "5 - Somewhat satisfied"
+        "text": "5 - Somewhat satisfied"
       },
       {
         "value": 4,
-        "text": "4 - Neutral​"
+        "text": "4 - Neutral"
       },
       {
         "value": 3,
-        "text": "3 - Somewhat dissatisfied​"
+        "text": "3 - Somewhat dissatisfied"
       },
       {
         "value": 2,
-        "text": "2 - Quite ​dissatisfied​"
+        "text": "2 - Quite dissatisfied"
       },
       {
         "value": 1,
-        "text": "1 - Very dissatisfied"
+        "text": "1 - Very dissatisfied"
       }
     ],
   };

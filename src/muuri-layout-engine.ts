@@ -32,7 +32,7 @@ export class MuuriLayoutEngine extends LayoutEngine {
   }
   protected updateCore() {
     if(!this._muuri) return;
-    if (this._layoutingTimer !== undefined) {
+    if(this._layoutingTimer !== undefined) {
       clearTimeout(this._layoutingTimer);
     }
     this._layoutingTimer = setTimeout(() => {
@@ -44,9 +44,9 @@ export class MuuriLayoutEngine extends LayoutEngine {
   }
 
   add(elements: Array<HTMLElement>, options?: any) {
-    if (this._allowed) this._muuri.add(elements, options);
+    if(this._allowed)this._muuri.add(elements, options);
   }
   remove(elements: Array<HTMLElement>, options?: any) {
-    if (this._allowed) this._muuri.remove(elements, options);
+    if(this._allowed)this._muuri.remove(elements, options);
   }
 }

@@ -16,7 +16,7 @@ export function reverseAll(labels: string[], seriesLabels: string[], colors: str
 }
 
 export function removeUndefinedProperties(obj): void {
-  if (obj === null || obj === undefined || typeof obj !== "object") {
+  if(obj === null || obj === undefined || typeof obj !== "object") {
     return;
   }
   Object.keys(obj).forEach(key => {

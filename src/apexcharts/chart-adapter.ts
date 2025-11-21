@@ -22,7 +22,7 @@ export class ApexChartsAdapter implements IChartAdapter {
   private _pieCharts: ApexCharts[] = undefined;
 
   private updatePieCharts(options: any, chartOptions: ApexChartsOptions, chartNode: HTMLElement): void {
-    if (this._pieCharts) {
+    if(this._pieCharts) {
       this._pieCharts.forEach((chart) => chart.updateOptions(options));
     } else {
       chartNode.classList.add("sa-pie-charts");
@@ -80,15 +80,15 @@ export class ApexChartsAdapter implements IChartAdapter {
     const answersData = await this.model.getAnswersData();
     var chartOptions = ApexChartsSetup.setup(_chartType, this.model, answersData as any);
 
-    if (this.model instanceof SelectBase && this.model.supportSelection) {
+    if(this.model instanceof SelectBase && this.model.supportSelection) {
       const _model = this.model as SelectBase;
       chartOptions.chart.events = {
         dataPointMouseEnter: function () { chartNode.style.cursor = "pointer"; },
         dataPointMouseLeave: function () { chartNode.style.cursor = ""; },
         dataPointSelection: function(event, chartContext, opts) {
-          if (opts.dataPointIndex !== undefined && opts.seriesIndex !== undefined) {
+          if(opts.dataPointIndex !== undefined && opts.seriesIndex !== undefined) {
             let itemText = "";
-            if (!chartOptions.hasSeries) {
+            if(!chartOptions.hasSeries) {
               itemText = config.labels[opts.dataPointIndex];
               const item: ItemValue = _model.getSelectedItemByText(itemText);
               _model.setSelection(item);
@@ -151,7 +151,7 @@ export class ApexChartsAdapter implements IChartAdapter {
       this.updatePieCharts(options, chartOptions, chartNode);
     } else {
       const availableUpdateOptions = this._chart && !!this._chart["el"] && this._chart["el"].getRootNode() === document;
-      if (availableUpdateOptions) {
+      if(availableUpdateOptions) {
         await this._chart.updateOptions({ series: options.series });
       } else {
         removeUndefinedProperties(options);
@@ -164,11 +164,11 @@ export class ApexChartsAdapter implements IChartAdapter {
   }
 
   public destroy(node: HTMLElement): void {
-    if (this._chart) {
+    if(this._chart) {
       this._chart.destroy();
       this._chart = undefined;
     }
-    if (this._pieCharts) {
+    if(this._pieCharts) {
       this._pieCharts.forEach(ch => ch.destroy());
       this._pieCharts = undefined;
     }

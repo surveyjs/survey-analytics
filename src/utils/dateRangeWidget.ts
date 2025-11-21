@@ -20,7 +20,7 @@ export class DateRangeWidget {
   static invalidRangeClassName = "sa-date-range--invalid";
   static invalidRangeEditorClassName = "sa-date-range_editor--invalid";
 
-  private currentDateRange: IDateRange
+  private currentDateRange: IDateRange;
 
   private dateRangeContainer: HTMLElement;
   private startDateEditor: HTMLElement;
@@ -32,7 +32,7 @@ export class DateRangeWidget {
   private chipsContainer: HTMLElement;
 
   private elementRemoveClassName(element: Element, className: string) {
-    if (element.classList.contains(className)) {
+    if(element.classList.contains(className)) {
       element.classList.remove(className);
     }
   }
@@ -45,20 +45,20 @@ export class DateRangeWidget {
     this.resetChipsState(this.chipsContainer);
   }
   private updateMinMaxAttributes(): void {
-    if (this.currentDateRange.end !== undefined) {
+    if(this.currentDateRange.end !== undefined) {
       this.startDateInput.max = new Date(this.currentDateRange.end).toISOString().split("T")[0];
     } else {
       this.startDateInput.removeAttribute("max");
     }
 
-    if (this.currentDateRange.start !== undefined) {
+    if(this.currentDateRange.start !== undefined) {
       this.endDateInput.min = new Date(this.currentDateRange.start).toISOString().split("T")[0];
     } else {
       this.endDateInput.removeAttribute("min");
     }
   }
   private setDateIntoInput(dateValue: number, input: HTMLInputElement): void {
-    if (!!dateValue) {
+    if(!!dateValue) {
       const date = new Date(dateValue);
       input.value = date.toISOString().split("T")[0];
     } else {
@@ -89,7 +89,7 @@ export class DateRangeWidget {
     this.setDateIntoInput(dateValue, input);
 
     input.onchange = (e) => {
-      if (!!changeHandler) {
+      if(!!changeHandler) {
         changeHandler(input);
       }
     };
@@ -109,7 +109,7 @@ export class DateRangeWidget {
   private createChip(text: string, isActive: boolean, container: HTMLElement, clickHandler: () => {}): HTMLElement {
     const activaStateClass = "sa-date-range_chip--active";
     const chip = DocumentHelper.createElement("div", "sa-date-range_chip");
-    if (isActive) {
+    if(isActive) {
       chip.classList.add(activaStateClass);
     }
 
@@ -195,7 +195,7 @@ export class DateRangeWidget {
     rangeElement.appendChild(rangeContainer);
 
     this.startDateEditor = this.createDateEditor(this.currentDateRange.start, (input: HTMLInputElement) => {
-      if (input.checkValidity()) {
+      if(input.checkValidity()) {
         this.currentDateRange.start = (new Date(input.value)).getTime();
         this.dateEditorChangeValue();
         this.elementRemoveClassName(this.startDateEditor, DateRangeWidget.invalidRangeEditorClassName);
@@ -214,7 +214,7 @@ export class DateRangeWidget {
     dateRangeEditors.appendChild(separator);
 
     this.endDateEditor = this.createDateEditor(this.currentDateRange.end, (input: HTMLInputElement) => {
-      if (input.checkValidity()) {
+      if(input.checkValidity()) {
         this.currentDateRange.end = (new Date(input.value)).getTime();
         this.dateEditorChangeValue();
         this.elementRemoveClassName(this.endDateEditor, DateRangeWidget.invalidRangeEditorClassName);
@@ -230,7 +230,7 @@ export class DateRangeWidget {
 
     this.endDateInput = this.endDateEditor.querySelector("input");
 
-    if (!!options.chipsConfig && Object.keys(options.chipsConfig).length > 0) {
+    if(!!options.chipsConfig && Object.keys(options.chipsConfig).length > 0) {
       const isActive = (index) => {
         return !options.initialRange && index === 0;
       };
@@ -243,7 +243,7 @@ export class DateRangeWidget {
       rangeElement.appendChild(this.chipsContainer);
     }
 
-    if (options.showTotalCount !== false) {
+    if(options.showTotalCount !== false) {
       const divider2 = this.createDivider();
       divider2.classList.add("sa-vertical-divider2");
       rangeElement.appendChild(divider2);
@@ -259,7 +259,7 @@ export class DateRangeWidget {
   }
 
   public updateAnswersCount(answersCount: number): void {
-    if (!!this.countLabel && answersCount !== undefined) {
+    if(!!this.countLabel && answersCount !== undefined) {
       this.countLabel.textContent = answersCount + " " + localization.getString("answersText");
     }
   }

@@ -27,7 +27,7 @@ TableExtensions.registerExtension({
     const iconContainer = DocumentHelper.createSvgButton("check-24x24");
     iconContainer.onclick = () => {
       row.toggleSelect();
-      if (row.getIsSelected()) {
+      if(row.getIsSelected()) {
         iconContainer.classList.add(itemClassSelected);
       } else {
         iconContainer.classList.remove(itemClassSelected);
@@ -35,7 +35,7 @@ TableExtensions.registerExtension({
     };
     iconContainer.className = "sa-checkbox sa-table__row-extension";
 
-    if (row.getIsSelected()) {
+    if(row.getIsSelected()) {
       iconContainer.classList.add(itemClassSelected);
     }
 

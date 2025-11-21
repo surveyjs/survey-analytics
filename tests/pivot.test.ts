@@ -558,8 +558,8 @@ test("getContinuousValues with number type processes data correctly", () => {
   expect(continuousValues[0]).toHaveProperty("row");
 
   // Values should be sorted
-  for (let i = 1; i < continuousValues.length; i++) {
-    expect(continuousValues[i].continuous).toBeGreaterThanOrEqual(continuousValues[i-1].continuous);
+  for(let i = 1; i < continuousValues.length; i++) {
+    expect(continuousValues[i].continuous).toBeGreaterThanOrEqual(continuousValues[i - 1].continuous);
   }
 });
 

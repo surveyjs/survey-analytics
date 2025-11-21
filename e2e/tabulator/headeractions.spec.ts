@@ -1,3 +1,4 @@
+/* eslint-disable surveyjs/eslint-plugin-i18n/only-english-or-code */
 import { test, expect } from "@playwright/test";
 import { url_tabulator, initTabulator, getListItemByText } from "../helper";
 

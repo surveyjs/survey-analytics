@@ -16,9 +16,9 @@ export class DocumentHelper {
     const updateTitle = () => {
       const titleText = !!title && (typeof title == "string" ? title : title());
       titleElement.innerText = titleText;
-      if (!!titleText) {
+      if(!!titleText) {
         selectWrapper.insertBefore(titleElement, select);
-      } else if (titleElement.parentElement === selectWrapper) {
+      } else if(titleElement.parentElement === selectWrapper) {
         selectWrapper.removeChild(titleElement);
       }
     };
@@ -77,9 +77,9 @@ export class DocumentHelper {
     const updateTitle = () => {
       const titleText = !!title && (typeof title == "string" ? title : title());
       titleElement.innerText = titleText;
-      if (!!titleText) {
+      if(!!titleText) {
         dropdownElement.insertBefore(titleElement, dropdownContainer);
-      } else if (titleElement.parentElement === dropdownElement) {
+      } else if(titleElement.parentElement === dropdownElement) {
         dropdownElement.removeChild(titleElement);
       }
     };
@@ -95,13 +95,13 @@ export class DocumentHelper {
       optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
       selectedOption = optionItems.find(option => isSelected(option));
 
-      if (selectedOption) {
+      if(selectedOption) {
         dropdownHeader.setAttribute("aria-label", `Selected: ${selectedOption.text}`);
       } else {
         dropdownHeader.setAttribute("aria-label", placeholder);
       }
 
-      if (selectedOption?.icon) {
+      if(selectedOption?.icon) {
         const headerIcon = document.createElement("div");
         headerIcon.className = className + "-header-icon";
         headerIcon.innerHTML = selectedOption.icon;
@@ -136,7 +136,7 @@ export class DocumentHelper {
       optionItems.forEach(option => {
         const dropdownItem = document.createElement("li");
         dropdownItem.className = className + "-item";
-        if (option.title) {
+        if(option.title) {
           dropdownItem.title = option.title;
         }
         dropdownItem.dataset.value = option.value;
@@ -144,7 +144,7 @@ export class DocumentHelper {
         dropdownItem.setAttribute("tabindex", "-1");
         dropdownItem.id = `${className}-item-${option.value}`;
 
-        if (option.icon) {
+        if(option.icon) {
           const iconContainer = document.createElement("div");
           iconContainer.className = className + "-icon";
           iconContainer.appendChild(DocumentHelper.createSvgElement(option.icon));
@@ -155,7 +155,7 @@ export class DocumentHelper {
         textSpan.textContent = option.text;
         dropdownItem.appendChild(textSpan);
 
-        if (isSelected(option)) {
+        if(isSelected(option)) {
           dropdownItem.classList.add(itemClassSelected);
           dropdownItem.setAttribute("aria-selected", "true");
         } else {
@@ -185,7 +185,7 @@ export class DocumentHelper {
     };
     // Function to close dropdown when clicking outside
     const handleClickOutside = (event) => {
-      if (!dropdownElement.contains(event.target)) {
+      if(!dropdownElement.contains(event.target)) {
         dropdownHeader.classList.remove(dropdownOpenedClass);
         dropdownList.classList.remove(dropdownOpenedClass);
         dropdownHeader.setAttribute("aria-expanded", "false");
@@ -199,7 +199,7 @@ export class DocumentHelper {
       dropdownList.classList.toggle(dropdownOpenedClass);
       dropdownHeader.setAttribute("aria-expanded", isOpened ? "true" : "false");
 
-      if (!isOpened) {
+      if(!isOpened) {
         currentFocusIndex = -1;
       }
     });
@@ -208,15 +208,15 @@ export class DocumentHelper {
 
     const focusItem = (index: number) => {
       const items = dropdownList.querySelectorAll("." + className + "-item");
-      if (items.length === 0) return;
+      if(items.length === 0) return;
 
       items.forEach(item => {
         item.classList.remove(className + "-item--focused");
         item.setAttribute("aria-selected", "false");
       });
 
-      if (index < 0) index = items.length - 1;
-      if (index >= items.length) index = 0;
+      if(index < 0) index = items.length - 1;
+      if(index >= items.length) index = 0;
 
       currentFocusIndex = index;
       const itemToFocus = items[currentFocusIndex] as HTMLElement;
@@ -226,8 +226,8 @@ export class DocumentHelper {
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!dropdownHeader.classList.contains(dropdownOpenedClass)) {
-        if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
+      if(!dropdownHeader.classList.contains(dropdownOpenedClass)) {
+        if(e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
           e.preventDefault();
           dropdownHeader.classList.add(dropdownOpenedClass);
           dropdownList.classList.add(dropdownOpenedClass);
@@ -238,9 +238,9 @@ export class DocumentHelper {
       }
 
       const items = dropdownList.querySelectorAll("." + className + "-item");
-      if (items.length === 0) return;
+      if(items.length === 0) return;
 
-      switch (e.key) {
+      switch(e.key) {
         case "ArrowDown":
           e.preventDefault();
           focusItem(currentFocusIndex + 1);
@@ -251,12 +251,12 @@ export class DocumentHelper {
           break;
         case "Enter":
           e.preventDefault();
-          if (currentFocusIndex >= 0 && currentFocusIndex < items.length) {
+          if(currentFocusIndex >= 0 && currentFocusIndex < items.length) {
             const selectedItem = items[currentFocusIndex] as HTMLElement;
             const value = selectedItem.dataset.value;
-            if (value) {
+            if(value) {
               const option = optionItems.find(opt => opt.value === value);
-              if (option) {
+              if(option) {
                 selectedOption = option;
                 handler(option.value);
                 updateHeader();
@@ -297,7 +297,7 @@ export class DocumentHelper {
       const optionsSource = options || [];
       const optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
       const optionToSelect = optionItems.find(opt => opt.value === value);
-      if (optionToSelect) {
+      if(optionToSelect) {
         selectedOption = optionToSelect;
         updateHeader();
 
@@ -305,7 +305,7 @@ export class DocumentHelper {
         dropdownList.querySelectorAll("." + className + "-item").forEach(item => {
           item.classList.remove(itemClassSelected);
           item.setAttribute("aria-selected", "false");
-          if ((item as any)?.dataset?.value === value) {
+          if((item as any)?.dataset?.value === value) {
             item.classList.add(itemClassSelected);
             item.setAttribute("aria-selected", "true");
           }
@@ -313,7 +313,7 @@ export class DocumentHelper {
 
         // Call handler
         // handler(value);
-      } else if (value === null || value === undefined) {
+      } else if(value === null || value === undefined) {
         // Reset to placeholder
         selectedOption = null;
         updateHeader();
@@ -380,7 +380,7 @@ export class DocumentHelper {
     headerContent.appendChild(headerText);
     dropdownHeader.appendChild(headerContent);
 
-    if (showArrow) {
+    if(showArrow) {
       const arrowElement = document.createElement("div");
       arrowElement.className = className + "-arrow";
       arrowElement.appendChild(DocumentHelper.createSvgElement("chevrondown-24x24"));
@@ -405,14 +405,14 @@ export class DocumentHelper {
 
     const focusItem = (index: number) => {
       const items = dropdownList.querySelectorAll("." + className + "-item");
-      if (items.length === 0) return;
+      if(items.length === 0) return;
 
       items.forEach(item => {
         item.classList.remove(className + "-item--focused");
       });
 
-      if (index < 0) index = items.length - 1;
-      if (index >= items.length) index = 0;
+      if(index < 0) index = items.length - 1;
+      if(index >= items.length) index = 0;
 
       currentFocusIndex = index;
       const itemToFocus = items[currentFocusIndex] as HTMLElement;
@@ -440,7 +440,7 @@ export class DocumentHelper {
       optionItems.forEach((option, index) => {
         const dropdownItem = document.createElement("li");
         dropdownItem.className = className + "-item";
-        if (option.title) {
+        if(option.title) {
           dropdownItem.title = option.title;
         }
         dropdownItem.dataset.value = option.value;
@@ -448,7 +448,7 @@ export class DocumentHelper {
         dropdownItem.setAttribute("tabindex", "-1");
         dropdownItem.id = `${className}-item-${option.value}`;
 
-        if (option.icon) {
+        if(option.icon) {
           const iconContainer = document.createElement("div");
           iconContainer.className = className + "-icon";
           iconContainer.appendChild(DocumentHelper.createSvgElement(option.icon));
@@ -459,7 +459,7 @@ export class DocumentHelper {
         textSpan.textContent = option.text;
         dropdownItem.appendChild(textSpan);
 
-        if (isSelected(option)) {
+        if(isSelected(option)) {
           dropdownItem.classList.add(itemClassSelected);
           dropdownItem.setAttribute("aria-selected", "true");
         } else {
@@ -467,13 +467,13 @@ export class DocumentHelper {
         }
 
         dropdownItem.addEventListener("click", (e) => {
-          if (handler(option.value)) {
+          if(handler(option.value)) {
             hidePopup();
           }
           e.preventDefault();
           e.stopPropagation();
 
-          if (isSelected(option)) {
+          if(isSelected(option)) {
             dropdownItem.classList.add(itemClassSelected);
             dropdownItem.setAttribute("aria-selected", "true");
           } else {
@@ -489,8 +489,8 @@ export class DocumentHelper {
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!dropdownHeader.classList.contains(dropdownOpenedClass)) {
-        if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
+      if(!dropdownHeader.classList.contains(dropdownOpenedClass)) {
+        if(e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
           e.preventDefault();
           dropdownHeader.classList.add(dropdownOpenedClass);
           dropdownList.classList.add(dropdownOpenedClass);
@@ -500,9 +500,9 @@ export class DocumentHelper {
       }
 
       const items = dropdownList.querySelectorAll("." + className + "-item");
-      if (items.length === 0) return;
+      if(items.length === 0) return;
 
-      switch (e.key) {
+      switch(e.key) {
         case "ArrowDown":
           e.preventDefault();
           focusItem(currentFocusIndex + 1);
@@ -514,17 +514,17 @@ export class DocumentHelper {
         case "Enter":
         case " ":
           e.preventDefault();
-          if (currentFocusIndex >= 0 && currentFocusIndex < items.length) {
+          if(currentFocusIndex >= 0 && currentFocusIndex < items.length) {
             const selectedItem = items[currentFocusIndex] as HTMLElement;
             const value = selectedItem.dataset.value;
-            if (value) {
+            if(value) {
               const option = optionItems.find(opt => opt.value === value);
-              if (option) {
-                if (handler(option.value)) {
+              if(option) {
+                if(handler(option.value)) {
                   hidePopup();
                 }
 
-                if (isSelected(option)) {
+                if(isSelected(option)) {
                   selectedItem.classList.add(itemClassSelected);
                   selectedItem.setAttribute("aria-selected", "true");
                 } else {
@@ -545,7 +545,7 @@ export class DocumentHelper {
     };
 
     const handleClickOutside = (event) => {
-      if (!dropdownElement.contains(event.target)) {
+      if(!dropdownElement.contains(event.target)) {
         hidePopup();
       }
     };
@@ -556,7 +556,7 @@ export class DocumentHelper {
       dropdownList.classList.toggle(dropdownOpenedClass);
       dropdownHeader.setAttribute("aria-expanded", isOpened ? "true" : "false");
 
-      if (!isOpened) {
+      if(!isOpened) {
         currentFocusIndex = -1;
       }
 
@@ -577,7 +577,7 @@ export class DocumentHelper {
 
       dropdownList.querySelectorAll("." + className + "-item").forEach(item => {
         const itemValue = (item as any)?.dataset?.value;
-        if (itemValue && values.indexOf(itemValue) !== -1) {
+        if(itemValue && values.indexOf(itemValue) !== -1) {
           item.classList.add(itemClassSelected);
           item.setAttribute("aria-selected", "true");
         } else {
@@ -611,11 +611,11 @@ export class DocumentHelper {
    * @param {HTMLElement} dropdownElement - Root dropdown element
    */
   public static destroyDropdown(dropdownElement: any) {
-    if (dropdownElement && dropdownElement._handleClickOutside) {
+    if(dropdownElement && dropdownElement._handleClickOutside) {
       document.removeEventListener("click", dropdownElement._handleClickOutside);
       dropdownElement._handleClickOutside = null;
     }
-    if (dropdownElement && dropdownElement.parentNode) {
+    if(dropdownElement && dropdownElement.parentNode) {
       dropdownElement.parentNode.removeChild(dropdownElement);
     }
   }
@@ -643,7 +643,7 @@ export class DocumentHelper {
     buttonElement.setAttribute("role", "button");
     buttonElement.setAttribute("tabindex", "0");
 
-    if (icon) {
+    if(icon) {
       const svgElement = document.createElement("div");
       svgElement.className = className + "-icon";
       svgElement.appendChild(DocumentHelper.createSvgElement(icon));
@@ -663,7 +663,7 @@ export class DocumentHelper {
     });
 
     buttonElement.addEventListener("keydown", function(e) {
-      if (e.key === "Enter" || e.key === " ") {
+      if(e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         handler(e);
       }
@@ -673,7 +673,7 @@ export class DocumentHelper {
   }
 
   public static setStyles(element: HTMLElement, styles: Record<string, any>): void {
-    if (!element || !styles) return;
+    if(!element || !styles) return;
 
     Object.keys(styles).forEach(property => {
       element.style.setProperty(property, styles[property]);
@@ -687,7 +687,7 @@ export class DocumentHelper {
   ): HTMLElement {
     var el = document.createElement(tagName);
     el.className = className;
-    if (!!attrs) {
+    if(!!attrs) {
       Object.keys(attrs).forEach(function (key) {
         (<any>el)[key] = attrs[key];
       });
@@ -718,7 +718,7 @@ export class DocumentHelper {
       DocumentHelper.createElement("button", "sa-table__svg-button")
     );
     btn.appendChild(DocumentHelper.createSvgElement(path));
-    if (title) {
+    if(title) {
       btn.title = title;
     }
     return btn;
@@ -739,13 +739,13 @@ export class DocumentHelper {
     const button = DocumentHelper.createElement("button", className);
 
     const toggle = (e: any) => {
-      if (state === "first") {
+      if(state === "first") {
         state = "second";
         button.title = text2;
         button.removeChild(svg1);
         button.appendChild(svg2);
         handler2(e);
-      } else if (state === "second") {
+      } else if(state === "second") {
         state = "first";
         button.title = text1;
         button.removeChild(svg2);
@@ -754,10 +754,10 @@ export class DocumentHelper {
       }
     };
 
-    if (state === "first") {
+    if(state === "first") {
       button.title = text1;
       button.appendChild(svg1);
-    } else if ((state = "second")) {
+    } else if((state = "second")) {
       button.title = text2;
       button.appendChild(svg2);
     }
@@ -794,7 +794,7 @@ export class DocumentHelper {
     const editor = document.createElement("div");
     editor.className = className;
 
-    if (showIcon) {
+    if(showIcon) {
       const iconContainer = DocumentHelper.createElement("div", className + "_icon");
       const searchIcon = DocumentHelper.createSvgElement("search-24x24");
 
@@ -809,7 +809,7 @@ export class DocumentHelper {
       }
     );
     input.onchange = (e) => {
-      if (!!options.onchange) {
+      if(!!options.onchange) {
         options.onchange(input.value);
       }
     };
@@ -829,7 +829,7 @@ export function allowDomRendering() {
 
 function getLicenseText(): string {
   const d: any = !!glc ? glc(1) : false;
-  if (!!d && d.toLocaleDateString) return localization.getString("license2").replace("{date}", d.toLocaleDateString());
+  if(!!d && d.toLocaleDateString) return localization.getString("license2").replace("{date}", d.toLocaleDateString());
   return localization.getString("license");
 }
 
@@ -870,7 +870,7 @@ export function createLoadingIndicator() {
 export class DataHelper {
   public static zipArrays(...arrays: any[]): any[][] {
     let zipArray: any[] = [];
-    for (let i = 0; i < arrays[0].length; i++) {
+    for(let i = 0; i < arrays[0].length; i++) {
       zipArray[i] = [];
       arrays.forEach((arr) => {
         zipArray[i].push(arr[i]);
@@ -883,7 +883,7 @@ export class DataHelper {
     let arrays: any[][] = [];
     zipArray.forEach((value, i) => {
       value.forEach((val, j) => {
-        if (!arrays[j]) arrays[j] = [];
+        if(!arrays[j]) arrays[j] = [];
         arrays[j][i] = val;
       });
     });

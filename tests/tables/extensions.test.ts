@@ -138,7 +138,7 @@ test("check rendering extension with render's null return value", () => {
         document.createElement("extensionsContainer"),
         "header"
       );
-    } catch {
+    } catch{
       throw new Error("tried to append null child");
     }
   }).not.toThrow(Error);

@@ -276,7 +276,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 SurveyJS Dashboard is not available for free commercial use. To integrate it into your application, you must purchase a [commercial license](https://surveyjs.io/licensing) for the software developer(s) who will be working with the Dashboard APIs and implementing the integration. If you use SurveyJS Dashboard without a license, an alert banner will appear at the top of the Table View interface:
 
-<img src="../images/alert-banner-table-view.png" alt="SurveyJS Table View: Alert banner" width="1544" height="864">
+<img src="images/alert-banner-table-view.png" alt="SurveyJS Table View: Alert banner" width="1544" height="864">
 
 After purchasing a license, follow the steps below to activate it and remove the alert banner:
 

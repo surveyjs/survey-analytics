@@ -18,7 +18,7 @@ export class LayoutEngine {
    * This method should arrange visualization items based on the available screen space and allow users to reorder them via drag and drop.
    */
   start(container: HTMLElement) {
-    if (this._allowed) {
+    if(this._allowed) {
       this.startCore(container);
     }
   }
@@ -26,7 +26,7 @@ export class LayoutEngine {
    * Disables the dynamic layout.
    */
   stop() {
-    if (this._allowed) {
+    if(this._allowed) {
       this.stopCore();
     }
   }
@@ -34,7 +34,7 @@ export class LayoutEngine {
    * Updates the dynamic layout.
    */
   update() {
-    if (this._allowed) {
+    if(this._allowed) {
       this.updateCore();
     }
   }

@@ -129,7 +129,7 @@ export abstract class Table {
 
   public onColumnsLocationChanged = new TableEvent();
 
-  public onRowRemoved =new TableEvent();
+  public onRowRemoved = new TableEvent();
 
   public renderDetailActions: (
     container: HTMLElement,
@@ -151,11 +151,11 @@ export abstract class Table {
   public abstract sortByColumn(columnName: string, direction: string): void;
 
   public render(targetNode: HTMLElement | string): void {
-    if (typeof targetNode === "string") {
+    if(typeof targetNode === "string") {
       targetNode = document.getElementById(targetNode);
     }
     targetNode.innerHTML = "";
-    if (!this.haveCommercialLicense) {
+    if(!this.haveCommercialLicense) {
       targetNode.appendChild(createCommercialLicenseLink());
     }
   }
@@ -225,7 +225,7 @@ export abstract class Table {
   }
 
   public isColumnVisible(column: IColumn) {
-    if (column.location !== QuestionLocation.Column) return false;
+    if(column.location !== QuestionLocation.Column) return false;
     return column.isVisible;
   }
 
@@ -255,7 +255,7 @@ export abstract class Table {
     this._survey.data = item;
     this._columns.forEach((column) => {
       const opt = column.getCellData(this, item);
-      if (typeof this._options.onGetQuestionValue === "function") {
+      if(typeof this._options.onGetQuestionValue === "function") {
         this._options.onGetQuestionValue(opt);
       }
       dataItem[column.name] = opt.displayValue;
@@ -337,7 +337,7 @@ export abstract class Table {
 
   protected hardRefresh() {
     this.initTableData(this.data);
-    if (this.isRendered) {
+    if(this.isRendered) {
       this.currentPageNumber = this.getPageNumber();
       const targetNode = this.renderResult;
       this.destroy();
@@ -348,7 +348,7 @@ export abstract class Table {
   }
 
   public refresh(hard: boolean = false) {
-    if (hard || !this.supportSoftRefresh()) {
+    if(hard || !this.supportSoftRefresh()) {
       this.hardRefresh();
     } else {
       this.softRefresh();
@@ -380,19 +380,19 @@ export abstract class Table {
    * Table state setter.
    */
   public set state(newState: ITableState) {
-    if (!newState) return;
+    if(!newState) return;
 
-    if (typeof newState.elements !== "undefined") {
+    if(typeof newState.elements !== "undefined") {
       this.updateColumnsFromData(newState.elements);
     }
 
-    if (typeof newState.locale !== "undefined") {
+    if(typeof newState.locale !== "undefined") {
       localization.currentLocale = newState.locale;
       this._survey.locale = newState.locale;
       this.initTableData(this.data);
     }
 
-    if (typeof newState.pageSize !== "undefined") {
+    if(typeof newState.pageSize !== "undefined") {
       this.currentPageSize = newState.pageSize;
     }
 
@@ -451,7 +451,7 @@ export abstract class Table {
   public set permissions(permissions: IPermission[]) {
     const updatedElements = this._columns.map((column: IColumn) => {
       permissions.forEach((permission) => {
-        if (permission.name === column.name)
+        if(permission.name === column.name)
           column.isPublic = permission.isPublic;
       });
 
@@ -535,7 +535,7 @@ export abstract class TableRow {
   }
 
   public toggleDetails() {
-    if (this.isDetailsExpanded) {
+    if(this.isDetailsExpanded) {
       this.closeDetails();
     } else this.openDetails();
   }

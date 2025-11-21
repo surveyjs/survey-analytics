@@ -65,7 +65,7 @@ export class VisualizerFactory {
     }
 
     let questionForCreator: Question | Question[] = question;
-    if (type === "text" && (<any>question).inputType) {
+    if(type === "text" && (<any>question).inputType) {
       creators = VisualizationManager.getVisualizersByType((<any>question).inputType, type);
     } else {
       let fallbackType = undefined;
@@ -81,7 +81,7 @@ export class VisualizerFactory {
     var visualizers = creators.map(
       (creator) => new creator(questionForCreator, data, optionsForCreator)
     );
-    if (visualizers.length > 1) {
+    if(visualizers.length > 1) {
       const alternativesVisualizerConstructor = VisualizationManager.getAltVisualizerSelector();
       let visualizer = new alternativesVisualizerConstructor(
         visualizers,

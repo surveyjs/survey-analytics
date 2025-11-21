@@ -62,7 +62,7 @@ test("check unregisterVisualizer function", () => {
   }
   function generateData() {
     const data: Array<any> = [];
-    for (let index = 0; index < 1000; index++) {
+    for(let index = 0; index < 1000; index++) {
       data.push({ nps: (index % 2) ? randomIntFromInterval(0, 10) : randomIntFromInterval(8, 10) });
     }
     return data;

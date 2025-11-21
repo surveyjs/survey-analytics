@@ -29,7 +29,7 @@ export class WordCloudAdapter {
   public async create(element: HTMLElement): Promise<any> {
     const answersData = await this.model.getAnswersData();
 
-    if (answersData.datasets.length === 0 || answersData.datasets[0].length === 0) {
+    if(answersData.datasets.length === 0 || answersData.datasets[0].length === 0) {
       var emptyTextNode = DocumentHelper.createElement("p", "", {
         innerText: localization.getString("noResults"),
       });
@@ -88,7 +88,7 @@ export class WordCloud extends VisualizerBase {
 
     let stopWords: string[] = [];
     const locale = localization.currentLocale;
-    if (locale) {
+    if(locale) {
       stopWords = textHelper.getStopWords(locale);
     } else {
       stopWords = textHelper.getStopWords();
@@ -96,7 +96,7 @@ export class WordCloud extends VisualizerBase {
     const clearWordRegexp = new RegExp("[.,\/#!$%\^\*;:{}=\-_`~()]", "g");
 
     const stopTheWord = (word: string) => {
-      if (stopWords.indexOf(word) !== -1) {
+      if(stopWords.indexOf(word) !== -1) {
         return "";
       }
       return word;
@@ -106,12 +106,12 @@ export class WordCloud extends VisualizerBase {
       row = "" + row;
       // if (row.length > 15) row = row.substring(0, 14) + "...";
 
-      if (!!row) {
+      if(!!row) {
         row.split(" ").forEach((word) => {
           let clearedWord = (word || "").toLowerCase().replace(clearWordRegexp, "");
           clearedWord = stopTheWord(clearedWord);
-          if (!!clearedWord) {
-            if (!result[clearedWord]) {
+          if(!!clearedWord) {
+            if(!result[clearedWord]) {
               result[clearedWord] = 1;
             } else {
               result[clearedWord]++;
@@ -123,11 +123,11 @@ export class WordCloud extends VisualizerBase {
 
     this.surveyData.forEach((row) => {
       const rowValue: any = row[this.question.name];
-      if (!!rowValue) {
-        if (Array.isArray(rowValue)) {
+      if(!!rowValue) {
+        if(Array.isArray(rowValue)) {
           rowValue.forEach(processString);
         } else {
-          if (typeof rowValue === "object") {
+          if(typeof rowValue === "object") {
             Object.keys(rowValue).forEach((key) =>
               processString(rowValue[key])
             );

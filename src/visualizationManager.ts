@@ -30,7 +30,7 @@ export class VisualizationManager {
     index = Number.MAX_VALUE
   ) {
     let visualizers = VisualizationManager.vizualizers[questionType];
-    if (!visualizers) {
+    if(!visualizers) {
       visualizers = [];
       VisualizationManager.vizualizers[questionType] = visualizers;
     }
@@ -51,11 +51,11 @@ export class VisualizationManager {
     questionTypes.forEach(qType => {
       if(constructor) {
         let visualizers = VisualizationManager.vizualizers[qType];
-        if (!!visualizers) {
+        if(!!visualizers) {
           const vDescr = visualizers.filter(v => v.ctor === constructor)[0];
           if(!!vDescr) {
             let index = visualizers.indexOf(vDescr);
-            if (index !== -1) {
+            if(index !== -1) {
               visualizers.splice(index, 1);
             }
           }
@@ -81,10 +81,10 @@ export class VisualizationManager {
     fallbackVisualizerType?: string
   ): VisualizerConstructor[] {
     let vDescrs = VisualizationManager.vizualizers[visualizerType];
-    if (!!fallbackVisualizerType && (!vDescrs || vDescrs.length == 0)) {
+    if(!!fallbackVisualizerType && (!vDescrs || vDescrs.length == 0)) {
       vDescrs = VisualizationManager.vizualizers[fallbackVisualizerType];
     }
-    if (!vDescrs) {
+    if(!vDescrs) {
       if(VisualizationManager.defaultVisualizer.suppressVisualizerStubRendering) {
         return [];
       }

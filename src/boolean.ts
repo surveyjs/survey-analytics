@@ -17,10 +17,10 @@ export class BooleanModel extends SelectBase {
 
   protected getCorrectAnswerText(): string {
     const correctAnswerValue = this.booleanQuestion.correctAnswer;
-    if (this.booleanQuestion.valueTrue !== undefined && this.booleanQuestion.valueTrue === correctAnswerValue || !!correctAnswerValue) {
+    if(this.booleanQuestion.valueTrue !== undefined && this.booleanQuestion.valueTrue === correctAnswerValue || !!correctAnswerValue) {
       return this.booleanQuestion.locLabelTrue.textOrHtml;
     }
-    if (this.booleanQuestion.valueFalse !== undefined && this.booleanQuestion.valueFalse === correctAnswerValue || !correctAnswerValue) {
+    if(this.booleanQuestion.valueFalse !== undefined && this.booleanQuestion.valueFalse === correctAnswerValue || !correctAnswerValue) {
       return this.booleanQuestion.locLabelFalse.textOrHtml;
     }
     return correctAnswerValue;
@@ -48,7 +48,7 @@ export class BooleanModel extends SelectBase {
         ? this.booleanQuestion.valueFalse
         : false,
     ];
-    if (this.showMissingAnswers) {
+    if(this.showMissingAnswers) {
       values.push(undefined);
     }
     return values;
@@ -56,13 +56,13 @@ export class BooleanModel extends SelectBase {
 
   getLabels(): Array<string> {
     var labels = [].concat(this.getValues());
-    if (this.booleanQuestion.labelTrue !== undefined) {
+    if(this.booleanQuestion.labelTrue !== undefined) {
       labels[0] = this.booleanQuestion.locLabelTrue.textOrHtml;
     }
-    if (this.booleanQuestion.labelFalse !== undefined) {
+    if(this.booleanQuestion.labelFalse !== undefined) {
       labels[1] = this.booleanQuestion.locLabelFalse.textOrHtml;
     }
-    if (this.showMissingAnswers) {
+    if(this.showMissingAnswers) {
       labels[2] = localization.getString("missingAnswersLabel");
     }
     return labels;

@@ -42,7 +42,7 @@ export class ToggleWidget {
     });
 
     this.toggleElement.addEventListener("keydown", (e) => {
-      if (e.key === " " || e.key === "Enter") {
+      if(e.key === " " || e.key === "Enter") {
         e.preventDefault();
         this.toggle();
       }
@@ -56,7 +56,7 @@ export class ToggleWidget {
   }
 
   updateView() {
-    if (this.isActive) {
+    if(this.isActive) {
       this.toggleElement.classList.add("active");
       this.toggleElement.setAttribute("aria-checked", "true");
     } else {
@@ -66,7 +66,7 @@ export class ToggleWidget {
   }
 
   setState(state) {
-    if (this.isActive !== state) {
+    if(this.isActive !== state) {
       this.isActive = state;
       this.updateView();
     }

@@ -1,5 +1,5 @@
 {
-  "version": "2.3.15",
+  "version": "2.3.16",
   "name": "survey-analytics",
   "scripts": {
     "start": "webpack-dev-server --env buildType=dev",
@@ -26,11 +26,13 @@
     "build:types:plotly": "tsc --p tsconfig.types.plotly.json && echo \"export * from './survey-analytics-plotly.types/entries/plotly';\" >> build/survey.analytics.plotly.d.ts",
     "build:types:mongo": "tsc --p tsconfig.types.mongo.json && echo \"export * from './survey-analytics.types/entries/mongo';\" >> build/survey.analytics.mongo.d.ts",
     "build:themes": "webpack --config ./webpack.themes.config.js --env buildType=dev --env emitDeclarations && webpack --config ./webpack.themes.config.js --env buildType=prod && rollup -c rollup.themes.config.js",
-    "lint": "eslint ./src --quiet",
-    "pre-push-check": "npm run lint && npm run test",
-    "pwinst": "playwright install chromium",
     "accessibility-tests": "playwright test --project a11y --ui",
-    "accessibility-tests:ci": "playwright test --project a11y --reporter dot --quiet"
+    "accessibility-tests:ci": "playwright test --project a11y --reporter dot --quiet",
+    "lint": "eslint . --ext .js,.cjs,.mjs,.ts,.cts,.mts --max-warnings=0",
+    "lint:fix": "eslint . --ext .js,.cjs,.mjs,.ts,.cts,.mts --max-warnings=0 --fix",
+    "pre-push-check": "npm run lint",
+    "prepare": "husky install",
+    "pwinst": "playwright install chromium"
   },
   "main": "survey.analytics.js",
   "files": [
@@ -43,35 +45,39 @@
     "url": "https://github.com/surveyjs/survey-analytics.git"
   },
   "dependencies": {
+    "survey-core": "../survey-library/packages/survey-core/build",
     "mongodb": "^6.20.0",
     "muuri": "^0.8.0",
     "plotly.js-dist-min": "^2.28.0",
-    "survey-core": "latest",
     "tabulator-tables": "^6.2.5",
     "apexcharts": "^4.7.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@playwright/test": "1.53.1",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-typescript": "^12.1.2",
+    "@rushstack/eslint-patch": "^1.1.4",
     "@types/jest": "^26.0.24",
     "@types/jquery": "3.3.29",
     "@types/node": "7.0.4",
     "@types/minimatch": "5.1.2",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
     "axe-core": "^4.8.2",
     "axe-playwright": "^2.1.0",
     "axe-testcafe": "^3.0.0",
     "concurrently": "^5.3.0",
     "css-loader": "^7.1.2",
-    "eslint": "^7.32.0",
+    "lint-staged": "^15.4.3",
+    "eslint": "^8.57.0",
     "eslint-plugin-surveyjs": "git+https://github.com/surveyjs/eslint-surveyjs.git",
     "html-loader": "^5.0.0",
     "http-server": "^14.1.1",
-    "husky": "^8.0.3",
+    "husky": "^9.1.7",
     "jest": "^29.7.0",
     "jest-canvas-mock": "^2.3.1",
     "jest-environment-jsdom": "^29.7.0",
@@ -112,5 +118,10 @@
     "hooks": {
       "pre-push": "npm run pre-push-check"
     }
+  },
+  "lint-staged": {
+    "**/*.{js,cjs,mjs,ts,cts,mts}": [
+      "eslint --fix"
+    ]
   }
 }

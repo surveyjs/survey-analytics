@@ -20,19 +20,19 @@ export class PlotlySetup {
 
   static getRgbaColor(propertyValue: any): string {
     let str = propertyValue;
-    if (!str) return null;
+    if(!str) return null;
     const canvasElement = document.createElement("canvas") as HTMLCanvasElement;
-    if (!canvasElement) return null;
+    if(!canvasElement) return null;
     const ctx = canvasElement.getContext("2d");
     ctx.fillStyle = str;
 
-    if (ctx.fillStyle == "#000000") {
+    if(ctx.fillStyle == "#000000") {
       ctx.fillStyle = propertyValue;
     }
     const newStr = ctx.fillStyle as string;
     const match = newStr.match(/color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*\/\s*([\d.]+)\)/);
 
-    if (!match) {
+    if(!match) {
       return newStr;
     }
 
@@ -243,9 +243,9 @@ export class PlotlySetup {
     const truncateSymbols = "...";
     const truncateSymbolsLength = truncateSymbols.length;
 
-    if (!labelTruncateLength) return label;
-    if (labelTruncateLength === -1) return label;
-    if (label.length <= labelTruncateLength + truncateSymbolsLength)
+    if(!labelTruncateLength) return label;
+    if(labelTruncateLength === -1) return label;
+    if(label.length <= labelTruncateLength + truncateSymbolsLength)
       return label;
 
     return label.substring(0, labelTruncateLength) + truncateSymbols;
@@ -282,12 +282,12 @@ export class PlotlySetup {
       hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
 
-    if (model.chartType === "doughnut") {
+    if(model.chartType === "doughnut") {
       traceConfig.type = "pie";
       traceConfig.hole = 0.4;
     }
 
-    if (!hasSeries) {
+    if(!hasSeries) {
       traceConfig.mode = "markers";
       traceConfig.marker = { color: colors };
       traceConfig.marker.symbol = "circle";
@@ -338,8 +338,8 @@ export class PlotlySetup {
       showlegend: false,
     };
 
-    if (traces.length > 0) {
-      if (hasSeries) {
+    if(traces.length > 0) {
+      if(hasSeries) {
         layout.annotations = [];
         layout.grid = { rows: Math.ceil(traces.length / layoutColumns), columns: layoutColumns };
       }
@@ -395,7 +395,7 @@ export class PlotlySetup {
       insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
       hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
-    if (!hasSeries && !isHistogram) {
+    if(!hasSeries && !isHistogram) {
       traceConfig.mode = "markers";
       traceConfig.marker = { color: colors };
     }
@@ -415,7 +415,7 @@ export class PlotlySetup {
           }
         }),
       });
-      if (model.showPercentages) {
+      if(model.showPercentages) {
         let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
         trace.texttemplate = texttemplate;
       }
@@ -459,9 +459,9 @@ export class PlotlySetup {
       paper_bgcolor: "transparent",
     };
 
-    if (hasSeries) {
+    if(hasSeries) {
       layout.legend = PlotlySetup.defaultLegendConfig(model);
-      if (model.chartType !== "stackedbar") {
+      if(model.chartType !== "stackedbar") {
         layout.height = (labels.length * seriesLabels.length + 1) * lineHeight + topMargin + bottomMargin;
       }
     }
@@ -503,7 +503,7 @@ export class PlotlySetup {
     const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
     const isHistogram = model.type === "histogram";
 
-    if (!isHistogram && model.type !== "pivot") {
+    if(!isHistogram && model.type !== "pivot") {
       ({ labels, seriesLabels, colors, texts, datasets } = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets));
     }
 
@@ -519,7 +519,7 @@ export class PlotlySetup {
       hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
 
-    if (!hasSeries && !isHistogram) {
+    if(!hasSeries && !isHistogram) {
       traceConfig.mode = "markers";
       traceConfig.marker = { color: colors };
     }
@@ -530,7 +530,7 @@ export class PlotlySetup {
         name: hasSeries ? seriesLabels[index] : labels[index],
         text: texts[index],
       });
-      if (model.showPercentages) {
+      if(model.showPercentages) {
         let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
         trace.texttemplate = texttemplate;
       }
@@ -584,7 +584,7 @@ export class PlotlySetup {
       layout.yaxis.title = { text: valuesTitle };
     }
 
-    if (model.showPercentages && model.showOnlyPercentages) {
+    if(model.showPercentages && model.showOnlyPercentages) {
       layout.yaxis = {
         ...PlotlySetup.defaultAxisYWithGridLineConfig(model.theme),
         tickformat: ".0%",
@@ -633,7 +633,7 @@ export class PlotlySetup {
       marker: <any>{},
     };
 
-    if (!hasSeries) {
+    if(!hasSeries) {
       traceConfig.marker.symbol = "circle";
       traceConfig.marker.size = 16;
     }
@@ -675,7 +675,7 @@ export class PlotlySetup {
       showlegend: false,
     };
 
-    if (hasSeries) {
+    if(hasSeries) {
       layout.showlegend = true;
       layout.legend = PlotlySetup.defaultLegendConfig(model);
       layout.height = undefined;
@@ -694,7 +694,7 @@ export class PlotlySetup {
     let minValue = answersData.datasets[0][answersData.values.indexOf("min")] || 0;
     let maxValue = answersData.datasets[0][answersData.values.indexOf("max")] || value * 1.25;
 
-    if (model.dataType === "rating") {
+    if(model.dataType === "rating") {
       const rateValues = model.question.visibleRateValues;
       maxValue = rateValues[rateValues.length - 1].value;
       minValue = rateValues[0].value;
@@ -706,7 +706,7 @@ export class PlotlySetup {
       NumberModel.stepsCount
     );
 
-    if (NumberModel.showAsPercentage) {
+    if(NumberModel.showAsPercentage) {
       value = DataHelper.toPercentage(value, maxValue);
       minValue = DataHelper.toPercentage(minValue, maxValue);
       maxValue = DataHelper.toPercentage(maxValue, maxValue);
