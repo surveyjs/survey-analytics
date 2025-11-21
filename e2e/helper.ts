@@ -8,7 +8,7 @@ export const initSummary = async (page: Page, json: any, data, options, elements
   await page.evaluate(([json, data, options, elements, state]) => {
     var model = new (window as any).Survey.SurveyModel(json);
     (window as any).survey = model;
-    if (!!(window as any).visPanel) {
+    if(!!(window as any).visPanel) {
       (window as any).visPanel.destroy();
     }
     var options = options || {};
@@ -53,9 +53,9 @@ export function RGBToHex(rgb): string {
     g = (+rgb[1]).toString(16),
     b = (+rgb[2]).toString(16);
 
-  if (r.length == 1) r = "0" + r;
-  if (g.length == 1) g = "0" + g;
-  if (b.length == 1) b = "0" + b;
+  if(r.length == 1) r = "0" + r;
+  if(g.length == 1) g = "0" + g;
+  if(b.length == 1) b = "0" + b;
 
   return "#" + r + g + b;
 }
@@ -83,7 +83,7 @@ export async function compareScreenshot(page: Page, elementSelector: string | Lo
     content: "textarea::-webkit-resizer { visibility: hidden !important; }"
   });
 
-  if (!!elementSelector) {
+  if(!!elementSelector) {
     let elementLocator: Locator;
     if(typeof elementSelector == "string") {
       elementLocator = page.locator(elementSelector);
@@ -110,7 +110,7 @@ export const test = baseTest.extend<{page: void, skipJSErrors: boolean}>({
       errors.push(error);
     });
     await use(page);
-    if (!skipJSErrors) {
+    if(!skipJSErrors) {
       expect(errors).toHaveLength(0);
     }
   }

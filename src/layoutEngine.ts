@@ -20,7 +20,7 @@ export class LayoutEngine {
    * This method should arrange visualization items based on the available screen space and allow users to reorder them via drag and drop.
    */
   start(container: HTMLElement) {
-    if (this._allowed) {
+    if(this._allowed) {
       this.startCore(container);
     }
   }
@@ -28,7 +28,7 @@ export class LayoutEngine {
    * Disables the dynamic layout.
    */
   stop() {
-    if (this._allowed) {
+    if(this._allowed) {
       this.stopCore();
     }
   }
@@ -36,7 +36,7 @@ export class LayoutEngine {
    * Updates the dynamic layout.
    */
   update() {
-    if (this._allowed) {
+    if(this._allowed) {
       this.updateCore();
     }
   }
@@ -82,7 +82,7 @@ export class MuuriLayoutEngine extends LayoutEngine {
   }
   protected updateCore() {
     if(!this._muuri) return;
-    if (this._layoutingTimer !== undefined) {
+    if(this._layoutingTimer !== undefined) {
       clearTimeout(this._layoutingTimer);
     }
     this._layoutingTimer = setTimeout(() => {
@@ -94,9 +94,9 @@ export class MuuriLayoutEngine extends LayoutEngine {
   }
 
   add(elements: Array<HTMLElement>, options?: any) {
-    if (this._allowed) this._muuri.add(elements, options);
+    if(this._allowed)this._muuri.add(elements, options);
   }
   remove(elements: Array<HTMLElement>, options?: any) {
-    if (this._allowed) this._muuri.remove(elements, options);
+    if(this._allowed)this._muuri.remove(elements, options);
   }
 }

@@ -48,7 +48,7 @@ export class WordCloudWidget {
     return element;
   }
   private isIntersectWithPlaced(currentWordRect: DOMRect) {
-    for(var i = 0; i < this._placedWords.length; i+=1) {
+    for(var i = 0; i < this._placedWords.length; i += 1) {
       var existingWordRect = this._placedWords[i].rect;
       if(!(currentWordRect.right + this._options.xWordPadding < existingWordRect.left - this._options.xWordPadding ||
            currentWordRect.left - this._options.xWordPadding > existingWordRect.right + this._options.xWordPadding ||
@@ -67,19 +67,19 @@ export class WordCloudWidget {
     let yMin = currentPoint.y;
     let yMax = currentPoint.y;
     const displayWordsCount = Math.min(this._options.topN, this.words.length);
-    for (var i = 0; i < displayWordsCount; i += 1) {
+    for(var i = 0; i < displayWordsCount; i += 1) {
       var wordElement = this.createWordElement(this.words[i][0], this.words[i][1], i);
       cloudElement.appendChild(wordElement);
-      for (var j = 0; j < this._options.spiralLimit; j++) {
+      for(var j = 0; j < this._options.spiralLimit; j++) {
         const angle = this._options.spiralResolution * j;
         currentPoint.x = (1 + angle) * Math.cos(angle);
         currentPoint.y = (1 + angle) * Math.sin(angle);
-        const left = startPoint.x + currentPoint.x - wordElement.offsetWidth/2;
-        const top = startPoint.y + currentPoint.y - wordElement.offsetHeight/2;
+        const left = startPoint.x + currentPoint.x - wordElement.offsetWidth / 2;
+        const top = startPoint.y + currentPoint.y - wordElement.offsetHeight / 2;
         wordElement.style.left = left + "px";
         wordElement.style.top = top + "px";
         const wordRect = wordElement.getBoundingClientRect();
-        if (!this.isIntersectWithPlaced(wordRect)) {
+        if(!this.isIntersectWithPlaced(wordRect)) {
           this._placedWords.push({
             element: wordElement,
             rect: wordRect,
@@ -89,11 +89,11 @@ export class WordCloudWidget {
           break;
         }
       }
-      const yMinProbe = currentPoint.y - wordElement.offsetHeight/2;
+      const yMinProbe = currentPoint.y - wordElement.offsetHeight / 2;
       if(yMin > yMinProbe) {
         yMin = yMinProbe;
       }
-      const yMaxProbe = currentPoint.y + wordElement.offsetHeight/2;
+      const yMaxProbe = currentPoint.y + wordElement.offsetHeight / 2;
       if(yMax < yMaxProbe) {
         yMax = yMaxProbe;
       }

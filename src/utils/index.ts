@@ -16,9 +16,9 @@ export class DocumentHelper {
     const updateTitle = () => {
       const titleText = !!title && (typeof title == "string" ? title : title());
       titleElement.innerText = titleText;
-      if (!!titleText) {
+      if(!!titleText) {
         selectWrapper.insertBefore(titleElement, select);
-      } else if (titleElement.parentElement === selectWrapper) {
+      } else if(titleElement.parentElement === selectWrapper) {
         selectWrapper.removeChild(titleElement);
       }
     };
@@ -64,7 +64,7 @@ export class DocumentHelper {
   ): HTMLElement {
     var el = document.createElement(tagName);
     el.className = className;
-    if (!!attrs) {
+    if(!!attrs) {
       Object.keys(attrs).forEach(function (key) {
         (<any>el)[key] = attrs[key];
       });
@@ -113,13 +113,13 @@ export class DocumentHelper {
     const button = DocumentHelper.createElement("button", className);
 
     const toggle = (e: any) => {
-      if (state === "first") {
+      if(state === "first") {
         state = "second";
         button.title = text2;
         button.removeChild(svg1);
         button.appendChild(svg2);
         handler2(e);
-      } else if (state === "second") {
+      } else if(state === "second") {
         state = "first";
         button.title = text1;
         button.removeChild(svg2);
@@ -128,10 +128,10 @@ export class DocumentHelper {
       }
     };
 
-    if (state === "first") {
+    if(state === "first") {
       button.title = text1;
       button.appendChild(svg1);
-    } else if ((state = "second")) {
+    } else if((state = "second")) {
       button.title = text2;
       button.appendChild(svg2);
     }
@@ -168,7 +168,7 @@ export function allowDomRendering() {
 
 function getLicenseText(): string {
   const d: any = !!glc ? glc(1) : false;
-  if (!!d && d.toLocaleDateString) return localization.getString("license2").replace("{date}", d.toLocaleDateString());
+  if(!!d && d.toLocaleDateString) return localization.getString("license2").replace("{date}", d.toLocaleDateString());
   return localization.getString("license");
 }
 
@@ -209,7 +209,7 @@ export function createLoadingIndicator() {
 export class DataHelper {
   public static zipArrays(...arrays: any[]): any[][] {
     let zipArray: any[] = [];
-    for (let i = 0; i < arrays[0].length; i++) {
+    for(let i = 0; i < arrays[0].length; i++) {
       zipArray[i] = [];
       arrays.forEach((arr) => {
         zipArray[i].push(arr[i]);
@@ -222,7 +222,7 @@ export class DataHelper {
     let arrays: any[][] = [];
     zipArray.forEach((value, i) => {
       value.forEach((val, j) => {
-        if (!arrays[j]) arrays[j] = [];
+        if(!arrays[j]) arrays[j] = [];
         arrays[j][i] = val;
       });
     });

@@ -32,9 +32,9 @@ export var localization = {
     var loc = this.currentLocale
       ? this.locales[this.currentLocale]
       : this.locales[this.defaultLocale];
-    if (!loc || !loc[strName]) loc = this.locales[this.defaultLocale];
+    if(!loc || !loc[strName]) loc = this.locales[this.defaultLocale];
     var result = loc[strName];
-    if (result === undefined) {
+    if(result === undefined) {
       result = this.locales["en"][strName] || strName;
     }
     return result;
@@ -42,12 +42,12 @@ export var localization = {
   getLocales: function (): Array<string> {
     var res = [];
     res.push("");
-    if (this.supportedLocales && this.supportedLocales.length > 0) {
-      for (var i = 0; i < this.supportedLocales.length; i++) {
+    if(this.supportedLocales && this.supportedLocales.length > 0) {
+      for(var i = 0; i < this.supportedLocales.length; i++) {
         res.push(this.supportedLocales[i]);
       }
     } else {
-      for (var key in this.locales) {
+      for(var key in this.locales) {
         res.push(key);
       }
     }
@@ -60,7 +60,7 @@ export var surveyStrings = englishStrings;
 export function setupLocale(localeConfig: { localeCode: string, strings: any, nativeName?: string }): void {
   const loc = localeConfig.localeCode;
   localization.setupLocale(loc, localeConfig.strings);
-  if (localeConfig.nativeName) {
+  if(localeConfig.nativeName) {
     localization.localeNames[loc] = localeConfig.nativeName;
   }
 }

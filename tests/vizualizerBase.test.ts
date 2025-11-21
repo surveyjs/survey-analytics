@@ -134,7 +134,7 @@ test("VisualizerBase supportSelection and allowSelection option", () => {
   vis = new VisualizerBase(q, [], { allowSelection: true });
   expect(vis.supportSelection).toBe(false);
 
-    vis = new VisualizerBase(q, [], { allowSelection: false });
+  vis = new VisualizerBase(q, [], { allowSelection: false });
   expect(vis.supportSelection).toBe(false);
 });
 

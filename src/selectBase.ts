@@ -31,8 +31,8 @@ export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData 
   if(answersData.seriesLabels.length === 0) {
     result.datasets.push([]);
     result.texts.push([]);
-    for (var i = 0; i < answersData.datasets[0].length; i++) {
-      if (answersData.datasets[0][i] != 0) {
+    for(var i = 0; i < answersData.datasets[0].length; i++) {
+      if(answersData.datasets[0][i] != 0) {
         result.datasets[0].push(answersData.datasets[0][i]);
         result.labels.push(answersData.labels[i]);
         result.colors.push(answersData.colors[i]);
@@ -45,31 +45,31 @@ export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData 
   seriesDataExistence.length = answersData.seriesLabels.length;
   const valuesDataExistence = <Array<boolean>>[];
   valuesDataExistence.length = answersData.labels.length;
-  for (var seriesIndex = 0; seriesIndex < answersData.seriesLabels.length; seriesIndex++) {
-    for (var valueIndex = 0; valueIndex < answersData.labels.length; valueIndex++) {
-      if (answersData.datasets[seriesIndex][valueIndex] != 0) {
+  for(var seriesIndex = 0; seriesIndex < answersData.seriesLabels.length; seriesIndex++) {
+    for(var valueIndex = 0; valueIndex < answersData.labels.length; valueIndex++) {
+      if(answersData.datasets[seriesIndex][valueIndex] != 0) {
         seriesDataExistence[seriesIndex] = true;
         valuesDataExistence[valueIndex] = true;
       }
     }
   }
-  for (var valueIndex = 0; valueIndex < valuesDataExistence.length; valueIndex++) {
-    if (valuesDataExistence[valueIndex]) {
+  for(var valueIndex = 0; valueIndex < valuesDataExistence.length; valueIndex++) {
+    if(valuesDataExistence[valueIndex]) {
       result.labels.push(answersData.labels[valueIndex]);
       result.colors.push(answersData.colors[valueIndex]);
     }
   }
-  for (var seriesIndex = 0; seriesIndex < answersData.seriesLabels.length; seriesIndex++) {
-    if (seriesDataExistence[seriesIndex]) {
+  for(var seriesIndex = 0; seriesIndex < answersData.seriesLabels.length; seriesIndex++) {
+    if(seriesDataExistence[seriesIndex]) {
       result.seriesLabels.push(answersData.seriesLabels[seriesIndex]);
     }
   }
-  for (var seriesIndex = 0; seriesIndex < answersData.datasets.length; seriesIndex++) {
-    if (seriesDataExistence[seriesIndex]) {
+  for(var seriesIndex = 0; seriesIndex < answersData.datasets.length; seriesIndex++) {
+    if(seriesDataExistence[seriesIndex]) {
       const dataset = [];
       const texts = [];
-      for (var valueIndex = 0; valueIndex < answersData.labels.length; valueIndex++) {
-        if (valuesDataExistence[valueIndex]) {
+      for(var valueIndex = 0; valueIndex < answersData.labels.length; valueIndex++) {
+        if(valuesDataExistence[valueIndex]) {
           dataset.push(answersData.datasets[seriesIndex][valueIndex]);
           texts.push(answersData.texts[seriesIndex][valueIndex]);
         }
@@ -109,7 +109,7 @@ export class SelectBase
     name?: string
   ) {
     super(question, data, options, name || "selectBase");
-    if (!!question) { // TODO: move somewhere else
+    if(!!question) { // TODO: move somewhere else
       (<any>question).visibleChoicesChangedCallback = () => {
         this.dataProvider.raiseDataChanged();
       };
@@ -117,10 +117,10 @@ export class SelectBase
     this._supportSelection = true;
     this._showOnlyPercentages = this.options.showOnlyPercentages === true;
 
-    if (this.options.percentagePrecision) {
+    if(this.options.percentagePrecision) {
       this._percentagePrecision = this.options.percentagePrecision;
     }
-    if (this.options.transposeData !== undefined) {
+    if(this.options.transposeData !== undefined) {
       this._transposeData = this.options.transposeData;
     }
 
@@ -131,21 +131,21 @@ export class SelectBase
     if(this.options.allowExperimentalFeatures) {
     // this.chartTypes.splice(1, 0, "vbar");
     }
-    if (VisualizerBase.chartAdapterType) {
+    if(VisualizerBase.chartAdapterType) {
       this._chartAdapter = new VisualizerBase.chartAdapterType(this);
       this.chartTypes = this._chartAdapter.getChartTypes();
-      if (this.getSeriesValues().length > 0 && this.chartTypes.indexOf("stackedbar") === -1) {
+      if(this.getSeriesValues().length > 0 && this.chartTypes.indexOf("stackedbar") === -1) {
         this.chartTypes.push("stackedbar");
       }
       this._chartType = this.chartTypes[0];
-      if (this.chartTypes.indexOf(this.options.defaultChartType) !== -1) {
+      if(this.chartTypes.indexOf(this.options.defaultChartType) !== -1) {
         this._chartType = this.options.defaultChartType;
       }
     }
 
     if(this.options.allowChangeVisualizerType !== false) {
       this.registerToolbarItem("changeChartType", () => {
-        if (this.chartTypes.length > 1) {
+        if(this.chartTypes.length > 1) {
           return DocumentHelper.createSelector(
             this.chartTypes.map((chartType) => {
               return {
@@ -164,7 +164,7 @@ export class SelectBase
     }
 
     this.registerToolbarItem("changeAnswersOrder", () => {
-      if (this.isSupportAnswersOrder()) {
+      if(this.isSupportAnswersOrder()) {
         this.choicesOrderSelector = DocumentHelper.createSelector(
           [
             { text: localization.getString("defaultOrder"), value: "default" },
@@ -181,7 +181,7 @@ export class SelectBase
       return this.choicesOrderSelector;
     });
     this.registerToolbarItem("showPercentages", () => {
-      if (
+      if(
         this.options.allowShowPercentages &&
         (this.chartTypes.indexOf("bar") !== -1 ||
           this.chartTypes.indexOf("stackedbar") !== -1)
@@ -194,7 +194,7 @@ export class SelectBase
       }
     });
     this.registerToolbarItem("hideEmptyAnswers", () => {
-      if (this.options.allowHideEmptyAnswers) {
+      if(this.options.allowHideEmptyAnswers) {
         this.emptyAnswersBtn = DocumentHelper.createButton(() => {
           this.hideEmptyAnswers = !this._hideEmptyAnswers;
         });
@@ -203,7 +203,7 @@ export class SelectBase
       return this.emptyAnswersBtn;
     }, 1000);
     this.registerToolbarItem("topNAnswers", () => {
-      if (
+      if(
         this.options.allowTopNAnswers &&
         this.getSeriesValues().length === 0
       ) {
@@ -224,7 +224,7 @@ export class SelectBase
       return this.topNSelector;
     });
     this.registerToolbarItem("transposeData", () => {
-      if (this.options.allowTransposeData) {
+      if(this.options.allowTransposeData) {
         this.transposeDataBtn = DocumentHelper.createButton(() => {
           this.transposeData = !this.transposeData;
         });
@@ -233,7 +233,7 @@ export class SelectBase
       return this.transposeDataBtn;
     });
     this.registerToolbarItem("showMissingAnswers", () => {
-      if (this.isSupportMissingAnswers() && this.options.allowShowMissingAnswers) {
+      if(this.isSupportMissingAnswers() && this.options.allowShowMissingAnswers) {
         this.missingAnswersBtn = DocumentHelper.createButton(() => {
           this.showMissingAnswers = !this._showMissingAnswers;
         });
@@ -256,11 +256,11 @@ export class SelectBase
   }
 
   private updateEmptyAnswersBtn() {
-    if (!!this.emptyAnswersBtn) {
+    if(!!this.emptyAnswersBtn) {
       this.emptyAnswersBtn.innerText = this._hideEmptyAnswers
         ? localization.getString("showEmptyAnswers")
         : localization.getString("hideEmptyAnswers");
-      if (this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "line" || this.chartType == "scatter") {
+      if(this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "line" || this.chartType == "scatter") {
         this.emptyAnswersBtn.style.display = "inline";
       } else {
         this.emptyAnswersBtn.style.display = "none";
@@ -269,11 +269,11 @@ export class SelectBase
   }
 
   private updateTransposeDataBtn() {
-    if (!!this.transposeDataBtn) {
+    if(!!this.transposeDataBtn) {
       this.transposeDataBtn.innerText = this.transposeData
         ? localization.getString("showPerColumns")
         : localization.getString("showPerValues");
-      if (this.getSeriesValues().length > 0) {
+      if(this.getSeriesValues().length > 0) {
         this.transposeDataBtn.style.display = "inline";
       } else {
         this.transposeDataBtn.style.display = "none";
@@ -282,8 +282,8 @@ export class SelectBase
   }
 
   private updateOrderSelector() {
-    if (!!this.choicesOrderSelector) {
-      if (
+    if(!!this.choicesOrderSelector) {
+      if(
         this.chartType == "bar" ||
         this.chartType == "vbar" ||
         this.chartType == "line" ||
@@ -302,11 +302,11 @@ export class SelectBase
   }
 
   private updateShowPercentageBtn() {
-    if (!!this.showPercentageBtn) {
+    if(!!this.showPercentageBtn) {
       this.showPercentageBtn.innerText = this._showPercentages
         ? localization.getString("hidePercentages")
         : localization.getString("showPercentages");
-      if (this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "stackedbar") {
+      if(this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "stackedbar") {
         this.showPercentageBtn.style.display = "inline";
       } else {
         this.showPercentageBtn.style.display = "none";
@@ -315,7 +315,7 @@ export class SelectBase
   }
 
   private updateTopNSelector() {
-    if (!!this.topNSelector) {
+    if(!!this.topNSelector) {
       this.topNSelector.getElementsByTagName("select")[0].value = <any>(
         this._topN
       );
@@ -323,7 +323,7 @@ export class SelectBase
   }
 
   private updateMissingAnswersBtn() {
-    if (!!this.missingAnswersBtn) {
+    if(!!this.missingAnswersBtn) {
       this.missingAnswersBtn.innerText = this._showMissingAnswers
         ? localization.getString("hideMissingAnswers")
         : localization.getString("showMissingAnswers");
@@ -339,7 +339,7 @@ export class SelectBase
   }
 
   protected setChartType(chartType: string) {
-    if (
+    if(
       this.chartTypes.indexOf(chartType) !== -1 &&
       this._chartType !== chartType
     ) {
@@ -373,7 +373,7 @@ export class SelectBase
       return rateValues?.filter((choice: ItemValue) => choice.text === itemText)[0] ?? new ItemValue(parseFloat(itemText), itemText);
     }
     const selBase = <QuestionSelectBase>this.question;
-    if (this.question.hasOther && itemText == selBase.otherText) {
+    if(this.question.hasOther && itemText == selBase.otherText) {
       return selBase.otherItem;
     } else {
       return selBase.choices.filter(
@@ -383,7 +383,7 @@ export class SelectBase
   }
 
   protected onSelectionChanged(item: ItemValue): void {
-    if (this.onDataItemSelected !== undefined) {
+    if(this.onDataItemSelected !== undefined) {
       this.onDataItemSelected(
         item !== undefined ? item.value : undefined,
         item !== undefined ? item.text : ""
@@ -393,7 +393,7 @@ export class SelectBase
   }
 
   setSelection(item: ItemValue): void {
-    if (this.selectedItem !== item) {
+    if(this.selectedItem !== item) {
       this.selectedItem = item;
       this.onSelectionChanged(item);
     }
@@ -520,7 +520,7 @@ export class SelectBase
   }
 
   refreshContent() {
-    if (!!this.contentContainer) {
+    if(!!this.contentContainer) {
       this.destroyContent(this.contentContainer);
       this.renderContent(this.contentContainer);
     }
@@ -546,39 +546,39 @@ export class SelectBase
       (choice) => choice.value
     );
 
-    if ((<QuestionSelectBase>this.question).hasNone) {
+    if((<QuestionSelectBase>this.question).hasNone) {
       values.push((<QuestionSelectBase>this.question).noneItem.value);
     }
-    if (this.question.hasOther) {
+    if(this.question.hasOther) {
       values.push("other");
     }
-    if (this.showMissingAnswers) {
+    if(this.showMissingAnswers) {
       values.unshift(undefined);
     }
-    if (this.showValuesInOriginalOrder) {
+    if(this.showValuesInOriginalOrder) {
       return values.reverse();
     }
     return values;
   }
 
   getLabels(): Array<string> {
-    if (this.options.useValuesAsLabels) {
+    if(this.options.useValuesAsLabels) {
       return this.getValues();
     }
     const labels: Array<string> = this.valuesSource().map((choice) =>
       ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value)
     );
     const selBase = <QuestionSelectBase>this.question;
-    if (selBase.hasNone) {
+    if(selBase.hasNone) {
       labels.push(selBase.noneText);
     }
-    if (selBase.hasOther) {
+    if(selBase.hasOther) {
       labels.push(selBase.otherText);
     }
-    if (this.showMissingAnswers) {
+    if(this.showMissingAnswers) {
       labels.unshift(localization.getString("missingAnswersLabel"));
     }
-    if (this.showValuesInOriginalOrder) {
+    if(this.showValuesInOriginalOrder) {
       return labels.reverse();
     }
     return labels;
@@ -588,20 +588,20 @@ export class SelectBase
     var percentages: Array<Array<number>> = [];
     var percentagePrecision = this._percentagePrecision;
 
-    if (data.length < 2) {
+    if(data.length < 2) {
       var sum = data[0].reduce((sum, val) => sum + val, 0);
       percentages[0] = data[0].map((val) => {
         var value = percentagePrecision ? + (val / sum * 100).toFixed(percentagePrecision) : Math.round(val / sum * 100);
         return sum && value;
       });
     } else {
-      for (var i = 0; i < data[0].length; i++) {
+      for(var i = 0; i < data[0].length; i++) {
         var sum = 0;
-        for (var j = 0; j < data.length; j++) {
+        for(var j = 0; j < data.length; j++) {
           sum += data[j][i];
         }
-        for (var j = 0; j < data.length; j++) {
-          if (!Array.isArray(percentages[j])) percentages[j] = [];
+        for(var j = 0; j < data.length; j++) {
+          if(!Array.isArray(percentages[j])) percentages[j] = [];
           var value = percentagePrecision ? + (data[j][i] / sum * 100).toFixed(percentagePrecision) : Math.round(data[j][i] / sum * 100);
           percentages[j][i] = sum && value;
         }
@@ -630,7 +630,7 @@ export class SelectBase
     let labels = this.getLabels();
     let colors = this.getColors();
 
-    if (this.transposeData) {
+    if(this.transposeData) {
       datasets = this.transpose(datasets);
       const temp = seriesLabels;
       seriesLabels = labels;
@@ -639,7 +639,7 @@ export class SelectBase
 
     var texts = this.showPercentages ? this.getPercentages(datasets) : datasets;
 
-    if (this.answersOrder == "asc" || this.answersOrder == "desc") {
+    if(this.answersOrder == "asc" || this.answersOrder == "desc") {
       var zippedArray = this.showPercentages
         ? DataHelper.zipArrays(labels, colors, texts[0])
         : DataHelper.zipArrays(labels, colors);
@@ -651,7 +651,7 @@ export class SelectBase
       let unzippedArray = DataHelper.unzipArrays(dict.keys);
       labels = unzippedArray[0];
       colors = unzippedArray[1];
-      if (this.showPercentages) texts[0] = unzippedArray[2];
+      if(this.showPercentages) texts[0] = unzippedArray[2];
       datasets[0] = dict.values;
     }
 
@@ -663,10 +663,10 @@ export class SelectBase
       seriesLabels,
     };
 
-    if (this.hideEmptyAnswers) {
+    if(this.hideEmptyAnswers) {
       answersData = hideEmptyAnswersInData(answersData);
     }
-    if (this.topN > 0) {
+    if(this.topN > 0) {
       answersData.datasets[0] = answersData.datasets[0].slice(-this.topN);
       answersData.labels = answersData.labels.slice(-this.topN);
       answersData.colors = answersData.colors.slice(-this.topN);
@@ -682,9 +682,9 @@ export class SelectBase
     const series = this.getSeriesValues();
     const innerCalculatedData = [];
     if(series.length > 0) {
-      for(let j=0; j<series.length; j++) {
+      for(let j = 0; j < series.length; j++) {
         const seriesData = [];
-        for(let i=0; i<values.length; i++) {
+        for(let i = 0; i < values.length; i++) {
           if(!!externalCalculatedData[series[j]]) {
             seriesData.push(externalCalculatedData[series[j]][values[i]] || 0);
           } else {
@@ -695,7 +695,7 @@ export class SelectBase
       }
     } else {
       const seriesData = [];
-      for(let i=0; i<values.length; i++) {
+      for(let i = 0; i < values.length; i++) {
         seriesData.push(externalCalculatedData[values[i]] || 0);
       }
       innerCalculatedData.push(seriesData);
@@ -706,11 +706,11 @@ export class SelectBase
   protected transpose(data: Array<Array<number>>): Array<Array<number>> {
     const dim2 = data[0].length;
     const result = new Array<Array<number>>(dim2);
-    for (let i = 0; i < dim2; ++i)
+    for(let i = 0; i < dim2; ++i)
       result[i] = new Array<number>(data.length);
 
-    for (let i = 0; i < data.length; ++i)
-      for (let j = 0; j < dim2; ++j) {
+    for(let i = 0; i < data.length; ++i)
+      for(let j = 0; j < dim2; ++j) {
         result[j][i] = data[i][j];
       }
     return result;
@@ -729,7 +729,7 @@ export class SelectBase
   }
   public setState(state: any): void {
     SelectBase._stateProperties.forEach(propertyName => {
-      if (state[propertyName] !== undefined) {
+      if(state[propertyName] !== undefined) {
         (<any>this)[propertyName] = state[propertyName];
       }
     });

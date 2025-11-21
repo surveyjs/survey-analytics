@@ -64,7 +64,7 @@ export class MongoDbAdapter {
     filter = filter || [];
     let query = {};
     filter.forEach(fi => {
-      if (!!fi.value) {
+      if(!!fi.value) {
         let val = fi.value;
         query[fi.field] = val;
       }

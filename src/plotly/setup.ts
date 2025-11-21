@@ -53,9 +53,9 @@ export class PlotlySetup {
     const truncateSymbols = "...";
     const truncateSymbolsLength = truncateSymbols.length;
 
-    if (!labelTruncateLength) return label;
-    if (labelTruncateLength === -1) return label;
-    if (label.length <= labelTruncateLength + truncateSymbolsLength)
+    if(!labelTruncateLength) return label;
+    if(labelTruncateLength === -1) return label;
+    if(label.length <= labelTruncateLength + truncateSymbolsLength)
       return label;
 
     return label.substring(0, labelTruncateLength) + truncateSymbols;
@@ -90,12 +90,12 @@ export class PlotlySetup {
       texttemplate: "%{text}"
     };
 
-    if (model.chartType === "doughnut") {
+    if(model.chartType === "doughnut") {
       traceConfig.type = "pie";
       traceConfig.hole = 0.4;
     }
 
-    if (!hasSeries) {
+    if(!hasSeries) {
       traceConfig.mode = "markers",
       traceConfig.marker = { color: colors };
       traceConfig.marker.symbol = "circle";
@@ -148,7 +148,7 @@ export class PlotlySetup {
       showlegend: false,
     };
 
-    if (hasSeries) {
+    if(hasSeries) {
       layout.annotations = [];
       layout.grid = { rows: Math.ceil(traces.length / layoutColumns), columns: layoutColumns };
     }
@@ -180,7 +180,7 @@ export class PlotlySetup {
       orientation: "h",
       textposition: "none",
     };
-    if (!hasSeries) {
+    if(!hasSeries) {
       traceConfig.width = 0.5;
       traceConfig.bargap = 0.5;
       traceConfig.mode = "markers",
@@ -203,7 +203,7 @@ export class PlotlySetup {
           }
         }),
       });
-      if (model.showPercentages) {
+      if(model.showPercentages) {
         let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
         trace.textposition = "inside";
         trace.texttemplate = texttemplate;
@@ -260,7 +260,7 @@ export class PlotlySetup {
       layout.xaxis.title = { text: valuesTitle };
     }
 
-    if (hasSeries && model.chartType !== "stackedbar") {
+    if(hasSeries && model.chartType !== "stackedbar") {
       layout.height =
           (labels.length * seriesLabels.length + 1) * lineHeight +
           topMargin +
@@ -296,7 +296,7 @@ export class PlotlySetup {
 
     const hasSeries = seriesLabels.length > 1 || model.question.getType() === "matrix";
 
-    if (model.type !== "histogram" && model.type !== "pivot") {
+    if(model.type !== "histogram" && model.type !== "pivot") {
       labels = [].concat(labels).reverse();
       seriesLabels = [].concat(seriesLabels).reverse();
       colors = [].concat(colors.slice(0, hasSeries ? seriesLabels.length : labels.length)).reverse();
@@ -321,7 +321,7 @@ export class PlotlySetup {
       orientation: "v",
       textposition: "none",
     };
-    if (!hasSeries) {
+    if(!hasSeries) {
       traceConfig.width = 0.5;
       traceConfig.bargap = 0.5;
       traceConfig.mode = "markers",
@@ -334,11 +334,11 @@ export class PlotlySetup {
         name: hasSeries ? seriesLabels[index] : labels[index],
         text: texts[index],
       });
-      if (model.showPercentages) {
+      if(model.showPercentages) {
         let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
         trace.textposition = "inside";
         trace.texttemplate = texttemplate;
-        if (!hasSeries) {
+        if(!hasSeries) {
           trace.width = 0.9;
           trace.bargap = 0.1;
         }
@@ -394,7 +394,7 @@ export class PlotlySetup {
       layout.yaxis.title = { text: valuesTitle };
     }
 
-    if (model.showPercentages && model.showOnlyPercentages) {
+    if(model.showPercentages && model.showOnlyPercentages) {
       layout.yaxis = {
         automargin: true,
         tickformat: ".0%",
@@ -444,7 +444,7 @@ export class PlotlySetup {
       marker: <any>{},
     };
 
-    if (!hasSeries) {
+    if(!hasSeries) {
       traceConfig.marker.symbol = "circle";
       traceConfig.marker.size = 16;
     }
@@ -490,7 +490,7 @@ export class PlotlySetup {
       showlegend: false,
     };
 
-    if (hasSeries) {
+    if(hasSeries) {
       layout.showlegend = true;
       layout.height = undefined;
 
@@ -506,7 +506,7 @@ export class PlotlySetup {
   static setupGauge(model: NumberModel, answersData: IAnswersData): PlotlyOptions {
     let [level, minValue, maxValue] = answersData as any;
 
-    if (model.question.getType() === "rating") {
+    if(model.question.getType() === "rating") {
       const rateValues = model.question.visibleRateValues;
       maxValue = rateValues[rateValues.length - 1].value;
       minValue = rateValues[0].value;
@@ -518,7 +518,7 @@ export class PlotlySetup {
       NumberModel.stepsCount
     );
 
-    if (NumberModel.showAsPercentage) {
+    if(NumberModel.showAsPercentage) {
       level = DataHelper.toPercentage(level, maxValue);
       minValue = DataHelper.toPercentage(minValue, maxValue);
       maxValue = DataHelper.toPercentage(maxValue, maxValue);
