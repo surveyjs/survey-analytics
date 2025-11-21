@@ -25,7 +25,7 @@ export class StatisticsTableAdapter {
       innerText: localization.getString("noResults"),
     });
 
-    if (datasets.length === 0 || datasets[0].length === 0) {
+    if(datasets.length === 0 || datasets[0].length === 0) {
       container.appendChild(emptyTextNode);
       return;
     }

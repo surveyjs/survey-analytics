@@ -36,36 +36,36 @@ export class DataProvider {
   }
 
   public get filteredData(): Array<any> {
-    if (this._filteredData === undefined) {
+    if(this._filteredData === undefined) {
       let filterKeys = Object.keys(this.filterValues);
-      if (filterKeys.length > 0) {
+      if(filterKeys.length > 0) {
         this._filteredData = this.data.filter((item) => {
           return !Object.keys(this.filterValues).some(
             (key) => {
               const filterValue = this.filterValues[key];
               const filterValueType = typeof filterValue;
               const questionValue = item[key];
-              if (Array.isArray(questionValue)) {
-                if (filterValueType === "object") {
+              if(Array.isArray(questionValue)) {
+                if(filterValueType === "object") {
                   return !questionArrayValueContainsValue(questionValue, filterValue);
                 } else {
                   return questionValue.indexOf(filterValue) == -1;
                 }
               }
-              if (typeof questionValue === "object") {
-                if (filterValueType !== "object")
+              if(typeof questionValue === "object") {
+                if(filterValueType !== "object")
                   return true;
                 return !questionValueContainsValue(questionValue, filterValue);
               }
               const seriesValue = item[DataProvider.seriesMarkerKey];
-              if (!!seriesValue && filterValueType === "object") {
+              if(!!seriesValue && filterValueType === "object") {
                 return questionValue !== filterValue[seriesValue];
               }
-              if (filterValueType === "object" && filterValue.start !== undefined && filterValue.end !== undefined) {
+              if(filterValueType === "object" && filterValue.start !== undefined && filterValue.end !== undefined) {
                 let continioiusValue = typeof questionValue === "number" ? questionValue : Date.parse(questionValue);
-                if (isNaN(continioiusValue)) {
+                if(isNaN(continioiusValue)) {
                   continioiusValue = parseFloat(questionValue);
-                  if (isNaN(continioiusValue)) {
+                  if(isNaN(continioiusValue)) {
                     return true;
                   }
                 }
@@ -87,18 +87,18 @@ export class DataProvider {
    */
   public setFilter(questionName: string, selectedValue: any): void {
     var filterChanged = true;
-    if (selectedValue !== undefined) {
+    if(selectedValue !== undefined) {
       filterChanged = this.filterValues[questionName] !== selectedValue;
-      if (filterChanged) {
+      if(filterChanged) {
         this.filterValues[questionName] = selectedValue;
       }
     } else {
       filterChanged = this.filterValues[questionName] !== undefined;
-      if (filterChanged) {
+      if(filterChanged) {
         delete this.filterValues[questionName];
       }
     }
-    if (filterChanged) {
+    if(filterChanged) {
       this.raiseFilterChanged(questionName, selectedValue);
       this.raiseDataChanged();
     }
@@ -108,7 +108,7 @@ export class DataProvider {
    * Resets filter.
    */
   public resetFilter(): void {
-    if (Object.keys(this.filterValues).length === 0) {
+    if(Object.keys(this.filterValues).length === 0) {
       return;
     }
     Object.keys(this.filterValues).forEach(key => delete this.filterValues[key]);
@@ -126,7 +126,7 @@ export class DataProvider {
   >();
 
   public raiseFilterChanged(questionName?: string, selectedValue?: any): void {
-    if (!this.onFilterChanged.isEmpty) {
+    if(!this.onFilterChanged.isEmpty) {
       this.onFilterChanged.fire(this, { questionName, selectedValue });
     }
   }
@@ -142,7 +142,7 @@ export class DataProvider {
 
   public raiseDataChanged(questionName?: string): void {
     this._filteredData = undefined;
-    if (!this.onDataChanged.isEmpty) {
+    if(!this.onDataChanged.isEmpty) {
       this.onDataChanged.fire(this, { questionName });
     }
   }
@@ -154,7 +154,7 @@ export class DataProvider {
   public fixDropdownData(dataNames: string[]): void {
     (this.data || []).forEach((dataItem) => {
       let rawDataItem = dataItem[dataNames[0]];
-      if (!!rawDataItem && typeof rawDataItem === "object" && !Array.isArray(rawDataItem)) {
+      if(!!rawDataItem && typeof rawDataItem === "object" && !Array.isArray(rawDataItem)) {
         const arrayData = [];
         Object.keys(rawDataItem).forEach((key) => {
           var nestedDataItem = Object.assign({}, rawDataItem[key]);
@@ -180,10 +180,10 @@ function questionValueContainsValue(questionValue: any, filterValue: any) {
   const questionValueKeys = Object.keys(questionValue);
   const filterValueKeys = Object.keys(filterValue);
 
-  if (filterValueKeys.length > questionValueKeys.length) return false;
+  if(filterValueKeys.length > questionValueKeys.length) return false;
 
-  for (var key of filterValueKeys) {
-    if (filterValue[key] != questionValue[key]) return false;
+  for(var key of filterValueKeys) {
+    if(filterValue[key] != questionValue[key]) return false;
   }
 
   return true;

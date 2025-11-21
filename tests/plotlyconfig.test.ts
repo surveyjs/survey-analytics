@@ -553,7 +553,7 @@ test("SelectBase null ref #394", async () => {
   try {
     var plotlyOptions = PlotlySetup.setup("bar", selectBase, await selectBase.getAnswersData());
     expect(plotlyOptions).toBeDefined();
-  } catch (e) {
+  } catch(e) {
     expect(e).toBeUndefined();
   }
 });

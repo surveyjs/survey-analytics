@@ -9,7 +9,7 @@ function getIconSymbolTemplate(iconId: string, iconSvg: string): string {
   iconSvg = iconSvg.trim();
   const str = iconSvg.toLowerCase();
 
-  if (str.substring(0, startStr.length) === startStr &&
+  if(str.substring(0, startStr.length) === startStr &&
     str.substring(str.length - endStr.length, str.length) === endStr) {
     return "<symbol " +
     "id=\"" + iconPrefix + iconId + "\" " +

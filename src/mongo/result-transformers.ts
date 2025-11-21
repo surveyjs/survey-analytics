@@ -8,7 +8,7 @@ function choiceTransformationPipeline(result) {
   return { data: res, totalCount: totalCount };
 }
 function numberTransformationPipeline(result) {
-  if (result.length == 0) return { value: 0, minValue: 0, maxValue: 0 };
+  if(result.length == 0) return { value: 0, minValue: 0, maxValue: 0 };
   return { data: { value: result[0].average, minValue: result[0].min, maxValue: result[0].max } };
 }
 function histogramTransformationPipeline(result) {

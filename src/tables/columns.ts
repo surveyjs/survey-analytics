@@ -69,8 +69,8 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
     let displayValue = this.getDisplayValueCore(data);
     const question = this.question;
 
-    if (!!question) {
-      if (options.useValuesAsLabels) {
+    if(!!question) {
+      if(options.useValuesAsLabels) {
         displayValue = question.value;
       } else {
         displayValue = question.displayValue;
@@ -217,7 +217,7 @@ export class FileColumn extends BaseColumn<QuestionFileModel> {
   }
   protected getDisplayValue(data: any, table: Table, options: ITableOptions) {
     let displayValue = this.getDisplayValueCore(data);
-    if (Array.isArray(displayValue)) {
+    if(Array.isArray(displayValue)) {
       displayValue = Table.showFilesAsImages ? createImagesContainer(
         displayValue
       ).outerHTML : createLinksContainer(

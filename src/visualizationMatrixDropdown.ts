@@ -13,9 +13,9 @@ function isChoicesArraysEqual(
   choices1: Array<ItemValue>,
   choices2: Array<ItemValue>
 ): boolean {
-  if (choices1.length !== choices2.length) return false;
-  for (let i = 0; i < choices1.length; i++) {
-    if (
+  if(choices1.length !== choices2.length) return false;
+  for(let i = 0; i < choices1.length; i++) {
+    if(
       choices1[i].value !== choices2[i].value ||
       choices1[i].text !== choices2[i].text
     ) {
@@ -47,7 +47,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     this._childOptions.seriesLabels = question.rows.map((row: ItemValue) => row.text);
 
     this.dataProvider.fixDropdownData(this.dataNames);
-    if (this.canGroupColumns) {
+    if(this.canGroupColumns) {
       var creators = VisualizationManager.getVisualizersByType("matrixdropdown-grouped");
       this._contentVisualizer = new creators[0](this.question, [], this._childOptions);
     } else {
@@ -88,7 +88,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     return matrixdropdown.columns.map(
       (column: MatrixDropdownColumn) => {
         const cellQuestion: any = column.templateQuestion;
-        if (Array.isArray(cellQuestion.choices) && cellQuestion.choices.length === 0) {
+        if(Array.isArray(cellQuestion.choices) && cellQuestion.choices.length === 0) {
           cellQuestion.choices = matrixdropdown.choices;
         }
         return cellQuestion;

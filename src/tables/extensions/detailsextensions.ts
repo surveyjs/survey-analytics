@@ -47,7 +47,7 @@ export class Details {
     var td = DocumentHelper.createElement("td", "", { colSpan: 3 });
     var extensions = new TableExtensions(this.table);
     extensions.render(td, "details", { row: this.row });
-    if (td.children.length != 0) {
+    if(td.children.length != 0) {
       row.appendChild(td);
       rows.push(row);
     }
@@ -73,7 +73,7 @@ export class Details {
   };
 
   public close() {
-    if (!!this.detailsTable.parentNode) {
+    if(!!this.detailsTable.parentNode) {
       this.detailsTable.parentNode.removeChild(this.detailsTable);
     }
   }

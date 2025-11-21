@@ -42,7 +42,7 @@ export class RankingModel extends SelectBase {
   }
 
   applyResultToPlotlyData(result: any[], plotlyData: any, choices: any) {
-    if (!result || !plotlyData || !choices) return;
+    if(!result || !plotlyData || !choices) return;
 
     result.forEach((resultValue: any, resultValueIndex: number, result: any[]) => {
       let index = choices.indexOf(resultValue);

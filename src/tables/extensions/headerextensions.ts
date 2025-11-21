@@ -36,7 +36,7 @@ TableExtensions.registerExtension({
       var hiddenColumns = table.columns.filter(
         (column: any) => !column.isVisible
       );
-      if (hiddenColumns.length == 0) {
+      if(hiddenColumns.length == 0) {
         dropdown.style.display = "none";
         return;
       }
@@ -51,7 +51,7 @@ TableExtensions.registerExtension({
 
       hiddenColumns.forEach((column: any) => {
         var text = column.displayName || column.name;
-        if (!!text && text.length > 20) {
+        if(!!text && text.length > 20) {
           text = text.substring(0, 20) + "...";
         }
         var option = DocumentHelper.createElement("option", "", {
@@ -66,7 +66,7 @@ TableExtensions.registerExtension({
     dropdown.onchange = (e: any) => {
       const val = e.target.value;
       e.stopPropagation();
-      if (!val) return;
+      if(!val) return;
       table.setColumnVisibility(val, true);
     };
 
@@ -151,7 +151,7 @@ TableExtensions.registerExtension({
     );
     btn.onclick = function () {
       table.getCreatedRows().forEach(function (row) {
-        if (row.getIsSelected()) {
+        if(row.getIsSelected()) {
           row.remove();
         }
       });
@@ -166,7 +166,7 @@ TableExtensions.registerExtension({
   visibleIndex: 1,
   render: function (table) {
     var locales = table.getLocales();
-    if (table.options.disableLocaleSwitch || locales.length < 2) return null;
+    if(table.options.disableLocaleSwitch || locales.length < 2) return null;
     const el = <HTMLSelectElement>(
       DocumentHelper.createElement("select", "sa-table__header-extension", {})
     );

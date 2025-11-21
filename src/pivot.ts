@@ -30,7 +30,7 @@ export class PivotModel extends SelectBase {
   ) {
     super(null, data, options, name || "pivot");
     this.questions = this.questions.filter((question) => ["matrixdropdown", "matrixdynamic", "matrix", "file", "signature", "multipletext", "comment", "html", "image"].indexOf(question.getType()) === -1);
-    if (this.options.intervalPrecision !== undefined) {
+    if(this.options.intervalPrecision !== undefined) {
       this._intervalPrecision = this.options.intervalPrecision;
     }
 
@@ -83,7 +83,7 @@ export class PivotModel extends SelectBase {
   public onAxisYSelectorChanged(index: number, value: any): void {
     this.axisYQuestionNames[index] = value;
 
-    if (index < this.axisYSelectors.length - 1) {
+    if(index < this.axisYSelectors.length - 1) {
       if(!value) {
         for(let i = index + 1; i < this.axisYSelectors.length; ++i) {
           this.unregisterToolbarItem("axisYSelector" + i);
@@ -106,7 +106,7 @@ export class PivotModel extends SelectBase {
     const selectedQuestions = [this.axisXQuestionName];
     for(let i = 0; i < this.axisYQuestionNames.length; ++i) {
       const questionName = this.axisYQuestionNames[i];
-      if (selectedQuestions.indexOf(questionName) !== -1) {
+      if(selectedQuestions.indexOf(questionName) !== -1) {
         this.onAxisYSelectorChanged(i, undefined);
         break;
       } else {
@@ -146,7 +146,7 @@ export class PivotModel extends SelectBase {
   protected setChartType(chartType: string) {
     const prev2Dchart = this.isXYChart();
     super.setChartType(chartType);
-    if (prev2Dchart !== this.isXYChart()) {
+    if(prev2Dchart !== this.isXYChart()) {
       this.updateToolbar();
     }
   }
@@ -157,7 +157,7 @@ export class PivotModel extends SelectBase {
 
   public getQuestionValueType(question: Question): "enum" | "date" | "number" {
     const questionType = question.getType();
-    if (questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
+    if(questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
       return "date";
     } else if(questionType === "text" || questionType === "rating" || questionType === "expression" || questionType === "range") {
       return "number";
@@ -190,14 +190,14 @@ export class PivotModel extends SelectBase {
   }
 
   public getContinuousValue(value: any): number {
-    if (this.valueType === "date") {
+    if(this.valueType === "date") {
       return Date.parse(value);
     }
     return parseFloat(value);
   }
 
   public getString(value: number): string {
-    if (this.valueType === "date") {
+    if(this.valueType === "date") {
       return new Date(value).toLocaleDateString();
     }
     return "" + value;
@@ -209,7 +209,7 @@ export class PivotModel extends SelectBase {
   }
 
   public getSelectedItemByText(itemText: string) {
-    if (this.hasCustomIntervals || this.getContinuousValues().length > PivotModel.UseIntervalsFrom) {
+    if(this.hasCustomIntervals || this.getContinuousValues().length > PivotModel.UseIntervalsFrom) {
       const interval = this.intervals.filter(interval => interval.label === itemText)[0];
       return new ItemValue(interval, interval !== undefined ? interval.label : "");
     }
@@ -232,7 +232,7 @@ export class PivotModel extends SelectBase {
   }
 
   protected getContinuousValues() {
-    if (this._cachedValues === undefined) {
+    if(this._cachedValues === undefined) {
       this._continuousData = [];
       if(this.valueType === "enum") {
         this._cachedValues = [];
@@ -241,7 +241,7 @@ export class PivotModel extends SelectBase {
       const hash = {};
       this.data.forEach(dataItem => {
         const answerData = dataItem[this.name];
-        if (answerData !== undefined) {
+        if(answerData !== undefined) {
           // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
           this._continuousData.push({ continuous: this.getContinuousValue(answerData), row: dataItem });
           hash[answerData] = { value: answerData, row: dataItem };
@@ -271,7 +271,7 @@ export class PivotModel extends SelectBase {
     }
     const seriesValues = [];
     this.questionsY.forEach(q => {
-      if (this.getQuestionValueType(q.question) === "enum") {
+      if(this.getQuestionValueType(q.question) === "enum") {
         seriesValues.push.apply(seriesValues, q.getValues().reverse());
       } else {
         seriesValues.push(q.question.name);
@@ -286,7 +286,7 @@ export class PivotModel extends SelectBase {
     }
     const seriesLabels = [];
     this.questionsY.forEach(q => {
-      if (this.getQuestionValueType(q.question) === "enum") {
+      if(this.getQuestionValueType(q.question) === "enum") {
         seriesLabels.push.apply(seriesLabels, q.getLabels().reverse());
       } else {
         seriesLabels.push(q.question.title || q.question.name);
@@ -314,12 +314,12 @@ export class PivotModel extends SelectBase {
   }
 
   public get intervals() {
-    if (this.hasCustomIntervals) {
+    if(this.hasCustomIntervals) {
       return this.questionOptions.intervals;
     }
 
     if(this.question.getType() == "rating") {
-      if (this.needUseRateValues) {
+      if(this.needUseRateValues) {
         const rateValues = this.question["rateValues"] as ItemValue[];
         rateValues.sort((iv1, iv2) => iv1.value - iv2.value);
         return rateValues.map((rateValue, i) => ({
@@ -333,22 +333,22 @@ export class PivotModel extends SelectBase {
           rateIntervals.push({
             start: i,
             end: i + 1,
-            label: "" + (!!this.question["rateMin"] && !!this.question["rateMax"] ? i : (i + "-" + (i+1)))
+            label: "" + (!!this.question["rateMin"] && !!this.question["rateMax"] ? i : (i + "-" + (i + 1)))
           });
         }
         return rateIntervals;
       }
     }
 
-    if (this._cachedIntervals === undefined) {
+    if(this._cachedIntervals === undefined) {
       const continuousValues = this.getContinuousValues();
       this._cachedIntervals = [];
-      if (continuousValues.length) {
+      if(continuousValues.length) {
         let start = continuousValues[0].continuous;
         const end = continuousValues[continuousValues.length - 1].continuous;
         const intervalsCount = PivotModel.IntervalsCount;
         const delta = (end - start) / intervalsCount;
-        for (let i = 0; i < intervalsCount; ++i) {
+        for(let i = 0; i < intervalsCount; ++i) {
           const next = start + delta;
           const istart = this.toPrecision(start);
           const inext = this.toPrecision(next);
@@ -371,7 +371,7 @@ export class PivotModel extends SelectBase {
   getSeriesValueIndexes(): { [index: string]: number } {
     const seriesValueIndexes = {};
     let valueIndex = 0;
-    for (var i = 0; i < this.questionsY.length; ++i) {
+    for(var i = 0; i < this.questionsY.length; ++i) {
       const questionValueType = this.getQuestionValueType(this.questionsY[i].question);
       if(questionValueType === "enum") {
         this.questionsY[i].getValues().reverse().forEach((value) => {
@@ -385,10 +385,10 @@ export class PivotModel extends SelectBase {
   }
 
   public updateStatisticsSeriesValue(statistics: Array<Array<number>>, dataRow: { [index: string]: any }, valueIndex: number, seriesValueIndexes: { [index: string]: number }): void {
-    for (let j = 0; j < this.questionsY.length; ++j) {
-      if (dataRow[this.questionsY[j].name] !== undefined) {
+    for(let j = 0; j < this.questionsY.length; ++j) {
+      if(dataRow[this.questionsY[j].name] !== undefined) {
         const questionValueType = this.getQuestionValueType(this.questionsY[j].question);
-        if (questionValueType === "enum" || questionValueType === "date") {
+        if(questionValueType === "enum" || questionValueType === "date") {
           const seriesValueIndex = seriesValueIndexes[this.questionsY[j].name + "_" + dataRow[this.questionsY[j].name]];
           statistics[seriesValueIndex][valueIndex]++;
         } else {
@@ -402,22 +402,22 @@ export class PivotModel extends SelectBase {
   protected getCalculatedValuesCore(): Array<any> {
     const statistics: Array<Array<number>> = [];
     const series = this.getSeriesValues();
-    if (series.length === 0) {
+    if(series.length === 0) {
       series.push("");
     }
     const seriesValueIndexes = this.getSeriesValueIndexes();
-    if (this.valueType === "enum") {
+    if(this.valueType === "enum") {
       const values = this.getValues();
       const valueIndexes = {};
       values.forEach((value, index) => {
         valueIndexes[value] = index;
       });
-      for (var i = 0; i < series.length; ++i) {
+      for(var i = 0; i < series.length; ++i) {
         statistics.push(values.map(i => 0));
       }
       this.data.forEach(dataRow => {
         const answerData = dataRow[this.name];
-        if (answerData !== undefined && valueIndexes[answerData] !== undefined) {
+        if(answerData !== undefined && valueIndexes[answerData] !== undefined) {
           const valueIndex = valueIndexes[answerData];
           if(this.questionsY.length === 0) {
             statistics[0][valueIndex]++;
@@ -429,12 +429,12 @@ export class PivotModel extends SelectBase {
     } else {
       const continuousValues = this.getContinuousValues();
       const intervals = this.intervals;
-      for (var i = 0; i < series.length; ++i) {
+      for(var i = 0; i < series.length; ++i) {
         statistics.push(intervals.map(i => 0));
       }
       this._continuousData.forEach(dataValue => {
-        for (let valueIndex = 0; valueIndex < intervals.length; ++valueIndex) {
-          if (intervals[valueIndex].start <= dataValue.continuous && (dataValue.continuous < intervals[valueIndex].end || valueIndex == intervals.length - 1)) {
+        for(let valueIndex = 0; valueIndex < intervals.length; ++valueIndex) {
+          if(intervals[valueIndex].start <= dataValue.continuous && (dataValue.continuous < intervals[valueIndex].end || valueIndex == intervals.length - 1)) {
             if(this.questionsY.length === 0) {
               statistics[0][valueIndex]++;
             } else {
@@ -457,7 +457,7 @@ export class PivotModel extends SelectBase {
   }
 
   protected renderToolbar(container: HTMLElement) {
-    if (!this.haveCommercialLicense && this.isRoot) {
+    if(!this.haveCommercialLicense && this.isRoot) {
       const banner = createCommercialLicenseLink();
       container.appendChild(banner);
     }

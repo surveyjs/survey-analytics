@@ -15,7 +15,7 @@ export class TextTableAdapter {
       innerText: localization.getString("noResults"),
     });
 
-    if (data.length === 0) {
+    if(data.length === 0) {
       container.appendChild(emptyTextNode);
       return;
     }
@@ -40,7 +40,7 @@ export class TextTableAdapter {
 
     data.forEach((rowData) => {
       var row = DocumentHelper.createElement("tr");
-      for (var i = 0; i < columnCount; i++) {
+      for(var i = 0; i < columnCount; i++) {
         const column = this.model.columns[i];
         var td = DocumentHelper.createElement("td", "sa-text-table__cell" + (column?.type == "number" ? " sa-text-table__cell--number" : ""), {
           textContent: rowData[i],
@@ -89,11 +89,11 @@ export class Text extends VisualizerBase {
     this.surveyData.forEach((row) => {
       const rowValue: any = row[this.question.name];
       let dataStrings: Array<string> = [];
-      if (!!rowValue) {
-        if (Array.isArray(rowValue)) {
+      if(!!rowValue) {
+        if(Array.isArray(rowValue)) {
           dataStrings = dataStrings.concat(rowValue);
         } else {
-          if (typeof rowValue === "object") {
+          if(typeof rowValue === "object") {
             Object.keys(rowValue).forEach((key) =>
               dataStrings.push(rowValue[key])
             );
@@ -102,7 +102,7 @@ export class Text extends VisualizerBase {
           }
         }
         result.push(dataStrings);
-        if (dataStrings.length > columnCount) {
+        if(dataStrings.length > columnCount) {
           columnCount = dataStrings.length;
         }
       }

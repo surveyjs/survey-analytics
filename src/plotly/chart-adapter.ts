@@ -41,16 +41,16 @@ export class PlotlyChartAdapter implements IChartAdapter {
       }
 
       const chartType = (this.model as any).chartType;
-      if (chartType === "pie" || chartType === "doughnut") {
+      if(chartType === "pie" || chartType === "doughnut") {
         traces.forEach((trace: any) => {
-          if (!trace) return;
-          if (!trace.marker) trace.marker = {};
+          if(!trace) return;
+          if(!trace.marker) trace.marker = {};
           trace.marker.colors = boolColors;
         });
-      } else if (chartType === "bar") {
+      } else if(chartType === "bar") {
         traces.forEach((trace: any) => {
-          if (!trace) return;
-          if (!trace.marker) trace.marker = {};
+          if(!trace) return;
+          if(!trace.marker) trace.marker = {};
           trace.marker.color = boolColors;
         });
       }
@@ -67,7 +67,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
   getChartTypes(): string[] {
     const visualizerType = this.model.type;
     let chartCtypes = [];
-    if (plotlyChartTypes[visualizerType]) {
+    if(plotlyChartTypes[visualizerType]) {
       chartCtypes = plotlyChartTypes[visualizerType]();
     }
     return chartCtypes;
@@ -79,9 +79,9 @@ export class PlotlyChartAdapter implements IChartAdapter {
     if(this.model instanceof SelectBase && this.model.supportSelection) {
       const _model = this.model as SelectBase;
       (<any>chartNode)["on"]("plotly_click", (data: any) => {
-        if (data.points.length > 0) {
+        if(data.points.length > 0) {
           let itemText = "";
-          if (!plotlyOptions.hasSeries) {
+          if(!plotlyOptions.hasSeries) {
             itemText = Array.isArray(data.points[0].customdata)
               ? data.points[0].customdata[0]
               : data.points[0].customdata;
@@ -152,7 +152,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
         },
       ],
     };
-    if (SelectBasePlotly.displayModeBar !== undefined) {
+    if(SelectBasePlotly.displayModeBar !== undefined) {
       config.displayModeBar = SelectBasePlotly.displayModeBar;
     }
 

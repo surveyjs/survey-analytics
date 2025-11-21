@@ -75,6 +75,7 @@ test("convertFromExternalData", () => {
   };
   const calculatedData = (wc as any).getCalculatedValuesCore();
   expect(calculatedData).toEqual([
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
     ["großmutter", 2],
     ["string", 2],
     ["one1", 1],
