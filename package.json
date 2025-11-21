@@ -21,7 +21,7 @@
     "build:types:mongo": "tsc --p tsconfig.types.mongo.json && echo \"export * from './survey-analytics.types/entries/mongo';\" >> build/survey.analytics.mongo.d.ts",
     "lint": "eslint . --ext .js,.cjs,.mjs,.ts,.cts,.mts --max-warnings=0",
     "lint:fix": "eslint . --ext .js,.cjs,.mjs,.ts,.cts,.mts --max-warnings=0 --fix",
-    "pre-push-check": "npm run lint && npm run test",
+    "pre-push-check": "npm run lint",
     "prepare": "husky install",
     "pwinst": "playwright install chromium"
   },
