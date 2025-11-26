@@ -57,8 +57,9 @@
       ]
     },
     {
-      "Name": "api",
+      "Name": "api-reference",
       "Title": "Dashboard API",
+      "UseInPath":  true,
       "Items": [
         {
           "Name": "visualizationpanel",
