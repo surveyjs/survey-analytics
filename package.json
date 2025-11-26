@@ -22,7 +22,6 @@
     "lint": "eslint . --ext .js,.cjs,.mjs,.ts,.cts,.mts --max-warnings=0",
     "lint:fix": "eslint . --ext .js,.cjs,.mjs,.ts,.cts,.mts --max-warnings=0 --fix",
     "pre-push-check": "npm run lint",
-    "prepare": "husky install",
     "pwinst": "playwright install chromium"
   },
   "main": "survey.analytics.js",
