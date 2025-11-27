@@ -8,13 +8,13 @@ export var frenchStrings = {
   // "Select Me"
   selectButton: "Sélectionner",
   // "Hide column"
-  hideColumn: "Masquer colonne",
+  hideColumn: "Masquer la colonne",
   // "Show column"
-  showColumn: "Afficher colonne",
+  showColumn: "Afficher la colonne",
   // "Make column private"
-  makePrivateColumn: "Rendre la colonne privé",
+  makePrivateColumn: "Rendre la colonne privée",
   // "Make column public"
-  makePublicColumn: "Rendre la colonne public",
+  makePublicColumn: "Rendre la colonne publique",
   // "Move to Detail"
   moveToDetail: "Déplacer vers détails",
   // "Show as Column"
@@ -22,15 +22,15 @@ export var frenchStrings = {
   // "Search..."
   filterPlaceholder: "Rechercher...",
   // "Remove rows"
-  removeRows: "Supprimer colonne",
+  removeRows: "Supprimer les lignes",
   // "Show"
   showLabel: "Afficher",
   // "entries"
   entriesLabel: "entrées",
   // "Texts in table"
-  visualizer_text: "Textes en table",
+  visualizer_text: "Textes dans le tableau",
   // "Wordcloud"
-  visualizer_wordcloud: "Nuages de mots",
+  visualizer_wordcloud: "Nuage de mots",
   // "Histogram"
   visualizer_histogram: "Histogramme",
   // "Average"
@@ -42,7 +42,7 @@ export var frenchStrings = {
   // [Auto-translated] "Chart"
   visualizer_matrix: "Graphique",
   // [Auto-translated] "Bar"
-  chartType_bar: "Bar",
+  chartType_bar: "Barre",
   // "Vertical Bar"
   chartType_vbar: "Barre verticale",
   // "Stacked Bar"
@@ -52,9 +52,9 @@ export var frenchStrings = {
   // "Pie"
   chartType_pie: "Secteurs",
   // "Scatter"
-  chartType_scatter: "Nuages de points",
+  chartType_scatter: "Nuage de points",
   // "Gauge"
-  chartType_gauge: "Gauge",
+  chartType_gauge: "Cadran",
   // "Bullet"
   chartType_bullet: "Bulles",
   // [Auto-translated] "Line"
@@ -72,7 +72,7 @@ export var frenchStrings = {
   // "Filter"
   filter: "Filtre",
   // "Reset Filter"
-  resetFilter: "Rafraichir Filtres",
+  resetFilter: "Réinitialiser le Filtre",
   // "Change Locale"
   changeLocale: "Changer les paramètres régionaux",
   // "Clear"
@@ -80,7 +80,7 @@ export var frenchStrings = {
   // "Choose question to show..."
   addElement: "Choisir la question à afficher...",
   // "Default Order"
-  defaultOrder: "Defaut",
+  defaultOrder: "Ordre par défaut",
   // "Ascending"
   ascOrder: "Ascendant",
   // "Descending"
@@ -90,7 +90,7 @@ export var frenchStrings = {
   // [Auto-translated] "Actions"
   actionsColumn: "Actions",
   // "Other items and comments"
-  otherCommentTitle: "Autre élément et commentaires",
+  otherCommentTitle: "Autres éléments et commentaires",
   // "Show percentages"
   showPercentages: "Afficher les pourcentages",
   // "Hide percentages"
@@ -98,11 +98,11 @@ export var frenchStrings = {
   // "PDF"
   pdfDownloadCaption: "PDF",
   // "Excel"
-  xlsxDownloadCaption: "Exceller",
+  xlsxDownloadCaption: "Fichier Excel",
   // "CSV"
   csvDownloadCaption: "Fichier CSV",
   // "Download plot as a PNG file"
-  saveDiagramAsPNG: "Sauver en png",
+  saveDiagramAsPNG: "Sauvegarder en PNG",
   // "Hide empty answers"
   hideEmptyAnswers: "Masquer les réponses vides",
   // "Show empty answers"
@@ -162,23 +162,23 @@ export var frenchStrings = {
   // [Auto-translated] "Segments:"
   axisXAlternativeSelectorTitle: "Segments:",
   // [Auto-translated] "Groups:"
-  axisYAlternativeSelectorTitle: "Groupe:",
+  axisYAlternativeSelectorTitle: "Groupes:",
   // [Auto-translated] "Not selected"
   notSelected: "Non sélectionné",
   // [Auto-translated] "Default"
-  intervalMode_default: "Faire défaut",
+  intervalMode_default: "Par défaut",
   // [Auto-translated] "Decades"
   intervalMode_decades: "Décennies",
   // [Auto-translated] "Years"
   intervalMode_years: "Années",
   // [Auto-translated] "Quarters"
-  intervalMode_quarters: "Quartier",
+  intervalMode_quarters: "Trimestres",
   // [Auto-translated] "Months"
   intervalMode_months: "Mois",
   // [Auto-translated] "Days"
   intervalMode_days: "Jours",
   // [Auto-translated] "Custom"
-  intervalMode_custom: "Coutume",
+  intervalMode_custom: "Personnalisé",
   // [Auto-translated] "Auto"
   intervalMode_auto: "Auto",
   // [Auto-translated] "Intervals:"
