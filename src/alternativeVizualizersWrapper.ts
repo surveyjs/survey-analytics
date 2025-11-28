@@ -1,10 +1,11 @@
 import { Question, ItemValue } from "survey-core";
-import { VisualizerBase } from "./visualizerBase";
+import { ICalculationResult, IChartAdapter, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 import { IVisualizerWithSelection } from "./selectBase";
 import { Event } from "survey-core";
+import { IDashboardTheme } from "./theme";
 
 export class AlternativeVisualizersWrapper
   extends VisualizerBase
@@ -14,9 +15,7 @@ export class AlternativeVisualizersWrapper
 
   private updateVisualizerSelector() {
     if(!!this.visualizerSelector) {
-      this.visualizerSelector.getElementsByTagName(
-        "select"
-      )[0].value = this.visualizer.type;
+      (this.visualizerSelector as any).setValue(this.visualizer.type);
     }
   }
 
@@ -47,7 +46,7 @@ export class AlternativeVisualizersWrapper
 
     if(this.options.allowChangeVisualizerType !== false) {
       this.registerToolbarItem("changeVisualizer", () =>
-        this.visualizerSelector = DocumentHelper.createSelector(
+        this.visualizerSelector = DocumentHelper.createDropdown(
           this.visualizers.map((visualizer) => {
             return {
               value: visualizer.type,
@@ -55,8 +54,8 @@ export class AlternativeVisualizersWrapper
             };
           }),
           (option: any) => this.visualizer.type === option.value,
-          (e: any) => this.setVisualizer(e.target.value)
-        ), 0
+          (e: any) => this.setVisualizer(e)
+        ), "dropdown", 0
       );
     }
 
@@ -66,12 +65,20 @@ export class AlternativeVisualizersWrapper
   }
 
   protected visualizerContainer: HTMLElement;
+
+  protected onDataChanged(): void {
+  }
+
   public get hasFooter(): boolean {
     return false;
   }
 
   public getVisualizers() {
     return this.visualizers;
+  }
+
+  public getChartAdapter(): IChartAdapter {
+    return this.visualizer.getChartAdapter();
   }
 
   private visualizersWithSelection: Array<IVisualizerWithSelection> = [];
@@ -156,7 +163,7 @@ export class AlternativeVisualizersWrapper
 
   protected renderContent(container: HTMLElement): void {
     this.visualizerContainer = container;
-    this.visualizer.render(this.visualizerContainer);
+    this.visualizer.render(this.visualizerContainer, false);
   }
 
   protected setBackgroundColorCore(color: string) {
@@ -215,8 +222,15 @@ export class AlternativeVisualizersWrapper
     return this.visualizer.getLabels();
   }
 
-  public getCalculatedValues(): Promise<Array<Object>> {
+  public getCalculatedValues(): Promise<ICalculationResult> {
     return this.visualizer.getCalculatedValues();
+  }
+
+  protected onThemeChanged(): void {
+    super.onThemeChanged();
+    this.visualizers.forEach(v => {
+      v.theme = this.theme;
+    });
   }
 
   destroy() {
