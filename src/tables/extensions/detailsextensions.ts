@@ -34,10 +34,11 @@ export class Details {
         var td2 = DocumentHelper.createElement("td");
         td2.textContent = this.row.getRowData()[column.name];
         if(column.dataType === ColumnDataType.Image) {
-          td2.innerHTML = "";
-          td2.appendChild(DocumentHelper.createElement("img", "", {
+          const imageElement = DocumentHelper.createElement("img", "", {
             src: td2.textContent
-          }));
+          });
+          td2.innerHTML = "";
+          td2.appendChild(imageElement);
         }
         var td3 = DocumentHelper.createElement("td");
         td3.appendChild(this.createShowAsColumnButton(column.name));

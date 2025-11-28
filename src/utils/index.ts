@@ -686,7 +686,9 @@ export class DocumentHelper {
     attrs?: any
   ): HTMLElement {
     var el = document.createElement(tagName);
-    el.className = className;
+    if(className) {
+      el.className = className;
+    }
     if(!!attrs) {
       Object.keys(attrs).forEach(function (key) {
         (<any>el)[key] = attrs[key];
