@@ -1,5 +1,5 @@
 import { DocumentHelper } from "./utils";
-import Default from "./themes/default-light";
+import DefaultLight from "./themes/default-light";
 
 export interface IDashboardTheme {
   cssVariables?: { [index: string]: string | any };
@@ -101,7 +101,7 @@ export class DashboardTheme implements IDashboardTheme {
     rootElement.removeChild(tempElement);
   }
 
-  constructor(private theme: IDashboardTheme = Default) {
+  constructor(private theme: IDashboardTheme = DefaultLight) {
     this.setTheme(theme);
   }
 
