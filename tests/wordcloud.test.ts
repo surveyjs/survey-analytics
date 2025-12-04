@@ -7,13 +7,12 @@ test("remove stopwords and clean punktuation", async () => {
     { q1: "The Thimes!" },
     { q1: "mega, (mega) Super answer." },
   ]);
-  var data = await wc.getCalculatedValues();
-  expect(Object.keys(data).length).toEqual(4);
-  expect(data.filter((d) => d[0] === "The").length).toEqual(0);
-  expect(data.filter((d) => d[0] === "mega").length).toEqual(1);
-  expect(data.filter((d) => d[0] === "mega")[0][0]).toEqual("mega");
-  expect(data.filter((d) => d[0] === "mega")[0][1]).toEqual(2);
-  expect(data[0][0]).toEqual("thimes");
+  var data = (await wc.getCalculatedValues());
+
+  expect(data).toEqual({
+    data: [[1, 2, 1, 1]],
+    values: ["thimes", "mega", "super", "answer"],
+  });
 });
 
 test("WordCloudWidget constructor", () => {
@@ -56,10 +55,10 @@ test("getCalculatedValues keeps umlauts", async () => {
     { q1: "Gro\u00DFmutter" },
     { q1: "Gro\u00DFmutter" },
   ]);
-  var data = await wc.getCalculatedValues();
-  expect(Object.keys(data).length).toEqual(1);
-  expect(data[0][0]).toBe("gro\u00DFmutter");
-  expect(data[0][1]).toBe(2);
+  var data = (await wc.getCalculatedValues());
+  expect(data.values.length).toEqual(1);
+  expect(data.values[0]).toBe("gro\u00DFmutter");
+  expect(data.data[0][0]).toBe(2);
 });
 
 test("convertFromExternalData", () => {
@@ -74,12 +73,10 @@ test("convertFromExternalData", () => {
     "two2": 1,
   };
   const calculatedData = (wc as any).getCalculatedValuesCore();
-  expect(calculatedData).toEqual([
+  expect(calculatedData).toEqual({
+    data: [[2, 2, 1, 1]],
     // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
-    ["großmutter", 2],
-    ["string", 2],
-    ["one1", 1],
-    ["two2", 1],
-  ]);
+    values: ["großmutter", "string", "one1", "two2"],
+  });
   expect(wc.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
 });

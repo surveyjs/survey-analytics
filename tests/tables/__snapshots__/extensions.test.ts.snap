@@ -1,35 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`render image in details 1`] = `
-<div
-  class=""
->
+<div>
   <table
     class="sa-table__detail-table"
   >
     <tr
       class="sa-table__detail"
     >
-      <td
-        class=""
-      >
+      <td>
+        <button
+          class="sa-table__svg-button"
+          title="Show as Column"
+        >
+          <svg>
+            <use
+              href="#sa-svg-movetovertical-24x24"
+            />
+          </svg>
+        </button>
+      </td>
+      <td>
         q1
       </td>
-      <td
-        class=""
-      >
+      <td>
         <img
           src="signature"
         />
-      </td>
-      <td
-        class=""
-      >
-        <button
-          class="sa-table__btn sa-table__btn--gray"
-        >
-          Show as Column
-        </button>
       </td>
     </tr>
   </table>
