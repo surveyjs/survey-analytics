@@ -8,4 +8,5 @@ export interface IVisualizerDescription {
   dataName?: string;
   displayValueName?: string;
   title?: string;
+  options?: { [index: string]: any };
 }

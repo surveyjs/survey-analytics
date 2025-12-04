@@ -40,11 +40,19 @@ export class VisualizerFactory {
     if("visualizerType" in description) {
       type = description.visualizerType;
 
+      optionsForCreator = Object.assign({},
+        optionsForCreator,
+        description.options || {}
+      );
+
       if(!!description.chartType) {
-        optionsForCreator[description["name"]] = {
-          chartType: description.chartType,
-          allowChangeVisualizerType: false
-        };
+        optionsForCreator[description["name"]] = Object.assign({},
+          optionsForCreator[description["name"]] || {},
+          {
+            chartType: description.chartType,
+            allowChangeVisualizerType: false
+          }
+        );
       }
 
       question = description.question || {

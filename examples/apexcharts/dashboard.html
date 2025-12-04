@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Dashboard Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" type="text/css" href="../../build/survey.analytics.apexcharts.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+  <script src="../../node_modules/survey-core/survey.core.js"></script>
+  <!-- <script src="../../build/survey.analytics.core.js"></script> -->
+  <script src="../../build/survey.analytics.apexcharts.js"></script>
+  <script src="../../build/themes/index.js"></script>
+</head>
+
+<body>
+  <style>
+    #summaryContainer>.sa-question:nth-child(2) {
+      width: 100%;
+    }
+  </style>
+
+  <input type="checkbox" id="toggle-checkbox">
+  <label for="toggle-checkbox">Dark theme</label>
+  <br><br>
+  <div id="summaryContainer"></div>
+  <script src="../data.js"></script>
+  <script src="./dashboard.js"></script>
+</body>
+
+</html>
