@@ -7,14 +7,16 @@ import { Dashboard } from "../src/dashboard";
 import { IState } from "../src/config";
 import { VisualizationManager } from "../src/visualizationManager";
 import { PostponeHelper } from "../src/visualizerBase";
-import { PivotModel } from "../src/pivot";
+import { IPivotChartVisualizerOptions, PivotModel } from "../src/pivot";
 import { LayoutEngine } from "../src/layout-engine";
 import { NumberModel } from "../src/number";
 import { HistogramModel } from "../src/histogram";
 import { QuestionTextModel, SurveyModel } from "survey-core";
+export * from "../src/card";
 export * from "../src/text";
 export * from "../src/number";
 export * from "../src/nps";
+export * from "../src/pivot";
 
 test("Dashboard should accept visualizer definitions", () => {
   const visualizerDefinition = {
@@ -120,7 +122,7 @@ test("Create nps visualizer from definition with question", async () => {
 
 test("Create number visualizer from definition", async () => {
   const visualizerDefinition = {
-    type: "number",
+    type: "card",
     dataField: "test",
     aggregationType: "count"
   };
@@ -138,7 +140,7 @@ test("Create number visualizer from definition", async () => {
 
 test("Options passed to root panel and visualizer", async () => {
   const visualizerDefinition = {
-    type: "number",
+    type: "gauge",
     dataField: "test",
     aggregationType: "count",
     someVisualizerOption: "vis"
@@ -153,4 +155,60 @@ test("Options passed to root panel and visualizer", async () => {
   expect(visualizer.options.somePanelOption).toEqual("panel");
   expect(visualizer.type).toBe("number");
   expect(visualizer.dataNames[0]).toEqual(visualizerDefinition.dataField);
+});
+
+test("Create pivot visualizer with empty config", async () => {
+  const visualizerDefinition: any = {
+    type: "pivot",
+  };
+  let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
+  expect(dashboard.panel.visualizers.length).toBe(1);
+  const visualizer = dashboard.panel.visualizers[0] as PivotModel;
+  expect(visualizer.type).toBe("pivot");
+});
+
+test("Create pivot visualizer with questions", async () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+      { type: "text", name: "question3" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const visualizerDefinition: any = {
+    type: "pivot",
+    questions: survey.getAllQuestions()
+  };
+  let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
+  expect(dashboard.panel.visualizers.length).toBe(1);
+  const visualizer = dashboard.panel.visualizers[0] as PivotModel;
+  expect(visualizer.type).toBe("pivot");
+  expect(visualizer.questions.length).toBe(3);
+  expect(visualizer.axisXQuestionName).toBe("question1");
+  expect(visualizer.axisYQuestionNames).toStrictEqual([]);
+});
+
+test("Create pivot visualizer with axis options", async () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+      { type: "text", name: "question3" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const visualizerDefinition: any = {
+    type: "pivot",
+    questions: survey.getAllQuestions(),
+    categoryField: "question2",
+    seriesFields: ["question1", "question3"]
+  };
+  let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
+  expect(dashboard.panel.visualizers.length).toBe(1);
+  const visualizer = dashboard.panel.visualizers[0] as PivotModel;
+  expect(visualizer.type).toBe("pivot");
+  expect(visualizer.questions.length).toBe(3);
+  expect(visualizer.axisXQuestionName).toBe("question2");
+  expect(visualizer.axisYQuestionNames).toStrictEqual(["question1", "question3"]);
 });

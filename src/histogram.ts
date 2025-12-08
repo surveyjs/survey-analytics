@@ -245,7 +245,7 @@ export class HistogramModel extends SelectBase {
   }
 
   public getQuestionValueType(question: Question, defaultValue = "enum"): "enum" | "date" | "number" {
-    if(question) {
+    if(question && typeof question.getType == "function") {
       const questionType = question.getType();
       if(questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
         return "date";
@@ -645,3 +645,4 @@ export class HistogramModel extends SelectBase {
 VisualizationManager.registerVisualizer("date", HistogramModel);
 VisualizationManager.registerVisualizer("number", HistogramModel, 100);
 VisualizationManager.registerVisualizer("rating", HistogramModel, 300);
+VisualizationManager.registerVisualizer("histogram", HistogramModel);

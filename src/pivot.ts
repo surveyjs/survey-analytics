@@ -1,10 +1,27 @@
 import { ItemValue, Question } from "survey-core";
 import { SelectBase } from "./selectBase";
 import { createCommercialLicenseLink, DocumentHelper } from "./utils";
-import { ICalculationResult, VisualizerBase } from "./visualizerBase";
+import { ICalculationResult, IVisualizerOptions, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { VisualizationManager } from "./visualizationManager";
 import { HistogramModel } from "./histogram";
+
+export interface IPivotChartVisualizerOptions extends IVisualizerOptions {
+  questions?: Question[] | string[];
+  categoryField?: Question | string;
+  seriesFields?: Question[] | string[];
+  [key: string]: any;
+}
+
+function getQuestionName(question: Question | string): string {
+  if(typeof question === "string") {
+    return question;
+  } else if(question instanceof Question) {
+    return question.name;
+  } else {
+    return undefined;
+  }
+}
 
 export class PivotModel extends HistogramModel {
   private _pivotContinuousData: Array<{ continuous: number, row: any }> = undefined;
@@ -16,16 +33,39 @@ export class PivotModel extends HistogramModel {
   private questionsY: Array<VisualizerBase> = [];
 
   constructor(
-    private questions: Array<Question>,
+    public questions: Array<Question>,
     data: Array<{ [index: string]: any }>,
-    options?: Object,
-    type?: string,
-    private isRoot = true
+    options?: IPivotChartVisualizerOptions,
+    private isRoot = true,
+    type?: string
   ) {
     super(null, data, options, type || "pivot");
+    if(!Array.isArray(this.questions)) {
+      this.questions = [];
+    }
+    this.questions = this.questions || [];
+    if(!!this.options.questions) {
+      if(typeof this.options.questions[0] == "object") {
+        this.questions = this.options.questions as Question[];
+      } else if(typeof this.options.questions[0] == "string") {
+        const questionNames = this.options.questions as string[];
+        this.questions = this.questions.filter((question) => questionNames.indexOf(question.name) !== -1);
+      }
+    }
     this.questions = this.questions.filter((question) => ["matrixdropdown", "matrixdynamic", "matrix", "file", "signature", "multipletext", "comment", "html", "image"].indexOf(question.getType()) === -1);
 
     this.axisXQuestionName = this.questions.length > 0 ? this.questions[0].name : undefined;
+    if(this.options.categoryField) {
+      const categoryField = this.options.categoryField;
+      this.axisXQuestionName = getQuestionName(categoryField) || this.axisXQuestionName;
+    }
+    if(Array.isArray(this.options.seriesFields)) {
+      this.axisYQuestionNames = [];
+      this.options.seriesFields.forEach((seriesField) => {
+        this.axisYQuestionNames.push(getQuestionName(seriesField));
+      });
+    }
+
     this.registerToolbarItem("axisXSelector", () =>
       this.axisXSelector = DocumentHelper.createDropdown(
         this.questions.map((question) => {
@@ -314,7 +354,7 @@ export class PivotModel extends HistogramModel {
     };
   }
 
-  protected renderToolbar(container: HTMLElement) {
+  protected renderToolbar(container: HTMLElement): void {
     container.className += " sa-pivot__header";
     super.renderToolbar(container);
   }
@@ -329,3 +369,4 @@ export class PivotModel extends HistogramModel {
 }
 
 VisualizationManager.registerPivotVisualizer(PivotModel);
+VisualizationManager.registerVisualizer("pivot", PivotModel as any);

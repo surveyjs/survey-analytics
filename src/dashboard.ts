@@ -1,20 +1,10 @@
-import { VisualizerBase } from "./visualizerBase";
+import { IVisualizerOptions, VisualizerBase } from "./visualizerBase";
 import { IVisualizationPanelOptions, VisualizationPanel } from "./visualizationPanel";
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { IVisualizerDescription } from "./visualizerDescription";
 import { Question, SurveyModel } from "survey-core";
 import { LayoutEngine } from "./layout-engine";
 import { IDashboardTheme } from "./theme";
-
-export type VisualizerType = string;
-
-export interface IVisualizerOptions {
-  dataField: string;
-  type: VisualizerType;
-  title?: string;
-  chartType?: string | string[];
-  [key: string]: any;
-}
 
 export interface IDashboardOptions {
   data?: any[];

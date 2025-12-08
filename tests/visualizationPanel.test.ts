@@ -901,7 +901,7 @@ test("invoke updateContent for child visualizers on updateData", () => {
   expect(renderContentSpy).toHaveBeenCalledTimes(1);
 });
 
-test("create visualizer for grouped questions", async () => {
+test("create visualizer for grouped questions (pivot)", async () => {
   const json = {
     "pages": [
       {

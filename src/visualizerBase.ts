@@ -23,6 +23,7 @@ export interface ICalculatedDataInfo {
   getLabel?(value: string): string;
   getSeriesLabel?(series: string): string;
 }
+
 export declare type ICalculationResult<T = number> = {
   data: Array<Array<T>>,
   values: Array<string>,
@@ -60,6 +61,14 @@ type ToolbarItemCreators = {
     groupIndex: number,
   },
 };
+
+export interface IVisualizerOptions {
+  dataField: string;
+  type: string;
+  title?: string;
+  chartType?: string | string[];
+  [key: string]: any;
+}
 
 export class PostponeHelper {
   public static postponeFunction: (fn: () => void, timeout?: number) => any;
