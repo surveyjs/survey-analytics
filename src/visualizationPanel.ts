@@ -354,8 +354,8 @@ export class VisualizationPanel extends VisualizerBase {
         const allQuestions = this._elements.map((element) => {
           return {
             value: element.name,
-            text: element.displayName,
-            title: element.displayName,
+            text: element.displayName || element.name,
+            title: element.displayName || element.name,
             icon: "check-24x24"
           };
         });
@@ -904,7 +904,7 @@ export class VisualizationPanel extends VisualizerBase {
    * @param questionName A question [name](https://surveyjs.io/form-library/documentation/api-reference/question#name).
    */
   public getVisualizer(questionName: string) {
-    return this.visualizers.filter((v) => v.question.name === questionName)[0];
+    return this.visualizers.filter((v) => v.name === questionName)[0];
   }
 
   /**

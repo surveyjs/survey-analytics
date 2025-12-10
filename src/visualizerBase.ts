@@ -246,11 +246,15 @@ export class VisualizerBase implements IDataInfo {
     this.refresh();
   }
 
+  protected getName(): string {
+    return this.question.name || this.question.valueName;
+  }
+
   /**
    * Returns the identifier of a visualized question.
    */
   get name(): string {
-    return this.question.name || this.question.valueName;
+    return this.getName();
   }
 
   get dataNames(): Array<string> {

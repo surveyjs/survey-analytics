@@ -31,6 +31,7 @@ export class PivotModel extends HistogramModel {
   private axisYSelectors: Array<HTMLDivElement> = [];
   public axisYQuestionNames: Array<string> = [];
   private questionsY: Array<VisualizerBase> = [];
+  private _questionDefinition: Question | null = null;
 
   constructor(
     public questions: Array<Question>,
@@ -41,6 +42,7 @@ export class PivotModel extends HistogramModel {
   ) {
     super(null, data, options, type || "pivot");
     if(!Array.isArray(this.questions)) {
+      this._questionDefinition = this.questions;
       this.questions = [];
     }
     this.questions = this.questions || [];
@@ -87,6 +89,14 @@ export class PivotModel extends HistogramModel {
     );
     this.registerToolbarItem("axisYSelector0", this.createYSelecterGenerator(), "dropdown");
     this.setupPivot();
+  }
+
+  protected getName(): string {
+    return this._questionDefinition?.name || super.getName();
+  }
+
+  protected getTitle(question: Question): string {
+    return this._questionDefinition?.title || this._questionDefinition?.name || super.getTitle(question);
   }
 
   private createYSelecterGenerator(): () => HTMLDivElement {

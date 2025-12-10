@@ -87,7 +87,7 @@ export class VisualizerFactory {
     }
 
     var visualizers = creators.map(
-      (creator) => new creator(questionForCreator, data, optionsForCreator)
+      (creator) => new creator(questionForCreator, data, optionsForCreator, false)
     );
     if(visualizers.length > 1) {
       const alternativesVisualizerConstructor = VisualizationManager.getAltVisualizerSelector();
