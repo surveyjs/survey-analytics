@@ -1160,30 +1160,29 @@ export class VisualizationPanel extends VisualizerBase {
     if(!newState) return;
     this._settingState = true;
     try {
-      let loadedElements = [];
-
       if(Array.isArray(newState.elements)) {
         const questionNames = this.questions.map(q => Array.isArray(q) ? q[0].name : q.name);
-        loadedElements = [].concat(newState.elements.filter(e => (questionNames.indexOf(e.name) !== -1)));
+        const loadedElements = [].concat(newState.elements.filter(e => (questionNames.indexOf(e.name) !== -1)));
+
+        const newElements = [];
+        loadedElements.forEach(elementState => {
+          const visualizer = this.getVisualizer(elementState.name);
+          if(visualizer !== undefined) {
+            visualizer.setState(elementState);
+          }
+          newElements.push({
+            name: elementState.name,
+            displayName: elementState.displayName,
+            isVisible: elementState.isVisible,
+            isPublic: elementState.isPublic,
+          });
+        });
+        this._elements = newElements;
       }
 
-      if(typeof newState.locale !== "undefined")this.setLocale(newState.locale);
-
-      const newElements = [];
-      loadedElements.forEach(elementState => {
-        const visualizer = this.getVisualizer(elementState.name);
-        if(visualizer !== undefined) {
-          visualizer.setState(elementState);
-        }
-        newElements.push({
-          name: elementState.name,
-          displayName: elementState.displayName,
-          isVisible: elementState.isVisible,
-          isPublic: elementState.isPublic,
-        });
-      });
-
-      this._elements = newElements;
+      if(typeof newState.locale !== "undefined") {
+        this.setLocale(newState.locale);
+      }
     } finally {
       this._settingState = false;
     }

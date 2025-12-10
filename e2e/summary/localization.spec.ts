@@ -44,7 +44,7 @@ const data = [{ satisfaction: 0 }, { satisfaction: 1 }, { satisfaction: 2 }];
 test.describe("localization", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(url_summary);
-    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.setViewportSize({ width: 1000, height: 800 });
   });
 
   test("check change locale", async ({ page }) => {
