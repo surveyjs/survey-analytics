@@ -226,7 +226,7 @@ export class PivotModel extends HistogramModel {
       }
       const hash = {};
       this.data.forEach(dataItem => {
-        const answerData = dataItem[this.name];
+        const answerData = dataItem[this.dataNames[0]];
         if(answerData !== undefined) {
           // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
           this._pivotContinuousData.push({ continuous: this.getContinuousValue(answerData), row: dataItem });
@@ -329,7 +329,7 @@ export class PivotModel extends HistogramModel {
         statistics.push(values.map(i => 0));
       }
       this.data.forEach(dataRow => {
-        const answerData = dataRow[this.name];
+        const answerData = dataRow[this.dataNames[0]];
         if(answerData !== undefined && valueIndexes[answerData] !== undefined) {
           const valueIndex = valueIndexes[answerData];
           if(this.questionsY.length === 0) {
