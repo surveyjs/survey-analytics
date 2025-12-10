@@ -713,7 +713,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     return result;
   }
 
-  private static _defaultState = {
+  private static _selectBaseDefaultState = {
     "chartType": undefined,
     "answersOrder": "default",
     "hideEmptyAnswers": false,
@@ -728,7 +728,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     if(this._defaultStateValue !== undefined) {
       return this._defaultStateValue;
     }
-    this._defaultStateValue = Object.assign({}, super.getDefaultState(), SelectBase._defaultState);
+    this._defaultStateValue = Object.assign({}, super.getDefaultState(), SelectBase._selectBaseDefaultState);
     this._defaultStateValue.showOnlyPercentages = this.options.showOnlyPercentages === true;
     this._defaultStateValue.answersOrder = this.options.answersOrder || "default";
     this._defaultStateValue.hideEmptyAnswers = this.options.hideEmptyAnswers === true;

@@ -637,7 +637,7 @@ export class HistogramModel extends SelectBase {
     return answersData;
   }
 
-  private static _defaultState = {
+  private static _histogramDefaultState = {
     "showRunningTotals": false,
     "showGrouped": false,
   };
@@ -646,7 +646,7 @@ export class HistogramModel extends SelectBase {
     if(this._defaultStateValue !== undefined) {
       return this._defaultStateValue;
     }
-    this._defaultStateValue = Object.assign({}, super.getDefaultState(), HistogramModel._defaultState);
+    this._defaultStateValue = Object.assign({}, super.getDefaultState(), HistogramModel._histogramDefaultState);
     return this._defaultStateValue;
   }
 
