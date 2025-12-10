@@ -2,7 +2,7 @@ import { Question, QuestionCommentModel, Event, settings, hasLicense, Base } fro
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { VisualizationManager } from "./visualizationManager";
-import { DocumentHelper, createLoadingIndicator } from "./utils";
+import { DocumentHelper, createLoadingIndicator, getDiffsFromDefaults } from "./utils";
 import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
 import { DashboardTheme, IDashboardTheme } from "./theme";
@@ -826,6 +826,17 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  public refreshContent(): void {
+    if(this._settingState) {
+      return;
+    }
+    if(!!this.contentContainer) {
+      this.destroyContent(this.contentContainer);
+      this.renderContent(this.contentContainer);
+    }
+    this.invokeOnUpdate();
+  }
+
   protected processText(text: string): string {
     if(this.options.stripHtmlFromTitles !== false) {
       let originalText = text || "";
@@ -1024,6 +1035,12 @@ export class VisualizerBase implements IDataInfo {
 
   protected _settingState = false;
 
+  protected _defaultStateValue = undefined;
+
+  public getDefaultState(): any {
+    return {};
+  }
+
   /**
    * Returns an object with properties that describe a current visualizer state. The properties are different for each individual visualizer.
    *
@@ -1033,8 +1050,22 @@ export class VisualizerBase implements IDataInfo {
    * @see onStateChanged
    */
   public getState(): any {
-    return {};
+    const state: any = {};
+    const defaultState = this.getDefaultState();
+    Object.keys(defaultState).forEach(propertyName => {
+      state[propertyName] = (<any>this)[propertyName];
+    });
+    return getDiffsFromDefaults(state, defaultState);
   }
+
+  protected setStateCore(state: any): void {
+    Object.keys(this.getDefaultState()).forEach(propertyName => {
+      if(state[propertyName] !== undefined) {
+        (<any>this)[propertyName] = state[propertyName];
+      }
+    });
+  }
+
   /**
    * Sets the visualizer's state.
    *
@@ -1046,7 +1077,16 @@ export class VisualizerBase implements IDataInfo {
    * @see onStateChanged
    */
   public setState(state: any): void {
+    if(this._settingState) return;
+    this._settingState = true;
+    try {
+      this.setStateCore(state);
+    } finally {
+      this._settingState = false;
+    }
+    this.refreshContent();
   }
+
   /**
    * Resets the visualizer's state.
    *
@@ -1056,6 +1096,7 @@ export class VisualizerBase implements IDataInfo {
    * @see onStateChanged
    */
   public resetState(): void {
+    this.setState(this.getDefaultState());
   }
 
   /**

@@ -3,7 +3,6 @@ import { IAnswersData, ICalculationResult, VisualizerBase } from "./visualizerBa
 import { localization } from "./localizationManager";
 import { DataHelper, DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
-import { IDashboardTheme } from "./theme";
 import { ToggleWidget } from "./utils/toggle";
 
 export interface IVisualizerWithSelection {
@@ -76,9 +75,7 @@ export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData 
   return result;
 }
 
-export class SelectBase
-  extends VisualizerBase
-  implements IVisualizerWithSelection {
+export class SelectBase extends VisualizerBase implements IVisualizerWithSelection {
   protected selectedItem: ItemValue = undefined;
   private choicesOrderSelector: HTMLDivElement = undefined;
   private showPercentageBtn: HTMLElement = undefined;
@@ -111,17 +108,13 @@ export class SelectBase
       };
     }
     this._supportSelection = true;
+
     this._showOnlyPercentages = this.options.showOnlyPercentages === true;
-
-    if(this.options.percentagePrecision) {
-      this._percentagePrecision = this.options.percentagePrecision;
-    }
-    if(this.options.transposeData !== undefined) {
-      this._transposeData = this.options.transposeData;
-    }
-
-    this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
+    this._percentagePrecision = this.options.percentagePrecision !== undefined ? this.options.percentagePrecision : 2;
     this._answersOrder = this.options.answersOrder || "default";
+    this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
+    this._legendPosition = this.options.legendPosition || "right";
+    this._transposeData = this.options.transposeData === true;
     this._showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
 
     if(this.options.allowExperimentalFeatures) {
@@ -513,19 +506,13 @@ export class SelectBase
   }
 
   public get legendPosition(): "left" | "right" | "top" | "bottom" {
-    return this._legendPosition || this.options.legendPosition || "right";
+    return this._legendPosition;
   }
 
   public set legendPosition(value: "left" | "right" | "top" | "bottom") {
     this._legendPosition = value;
-  }
-
-  refreshContent() {
-    if(!!this.contentContainer) {
-      this.destroyContent(this.contentContainer);
-      this.renderContent(this.contentContainer);
-    }
-    this.invokeOnUpdate();
+    this.refreshContent();
+    this.stateChanged("legendPosition", value);
   }
 
   onDataItemSelected: (selectedValue: any, selectedText: string) => void;
@@ -726,37 +713,50 @@ export class SelectBase
     return result;
   }
 
-  private static _stateProperties = ["chartType", "answersOrder", "hideEmptyAnswers", "topN"];
+  private static _defaultState = {
+    "chartType": undefined,
+    "answersOrder": "default",
+    "hideEmptyAnswers": false,
+    "legendPosition": "right",
+    "showOnlyPercentages": false,
+    "transposeData": false,
+    "showMissingAnswers": false,
+    "topN": -1
+  }
+
+  public getDefaultState(): any {
+    if(this._defaultStateValue !== undefined) {
+      return this._defaultStateValue;
+    }
+    this._defaultStateValue = Object.assign({}, super.getDefaultState(), SelectBase._defaultState);
+    this._defaultStateValue.showOnlyPercentages = this.options.showOnlyPercentages === true;
+    this._defaultStateValue.answersOrder = this.options.answersOrder || "default";
+    this._defaultStateValue.hideEmptyAnswers = this.options.hideEmptyAnswers === true;
+    this._defaultStateValue.legendPosition = this.options.legendPosition || "right";
+    this._defaultStateValue.transposeData = this.options.transposeData === true;
+    this._defaultStateValue.showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
+
+    this._defaultStateValue.chartType = this.questionOptions?.chartType || this.chartTypes[0];
+    this._defaultStateValue.filter = undefined;
+    return this._defaultStateValue;
+  }
+
   public getState(): any {
-    let state: any = {};
-    SelectBase._stateProperties.forEach(propertyName => {
-      state[propertyName] = (<any>this)[propertyName];
-    });
+    const state = super.getState();
     if(!!this.selectedItem) {
       state.filter = this.selectedItem.value;
     }
     return state;
   }
-  public setState(state: any): void {
-    SelectBase._stateProperties.forEach(propertyName => {
-      if(state[propertyName] !== undefined) {
-        (<any>this)[propertyName] = state[propertyName];
-      }
-    });
+
+  protected setStateCore(state: any): void {
+    super.setStateCore(state);
     const selectedItem = ItemValue.getItemByValue((this.question as QuestionSelectBase).visibleChoices, state.filter);
     this.setSelection(selectedItem ?? undefined);
   }
 
   public resetState(): void {
     super.resetState();
-    // this._showPercentages = this.options.showPercentages === true;
-    // this._showOnlyPercentages = this.options.showOnlyPercentages === true;
-    // this._showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
-    // this._transposeData = this.options.transposeData || false;
-    this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
-    this._answersOrder = this.options.answersOrder || "default";
-    this._topN = -1;
-    this.chartType = this.questionOptions?.chartType || this.chartTypes[0];
     this.setSelection(undefined);
   }
 

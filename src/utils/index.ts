@@ -948,3 +948,20 @@ export function toPrecision(value: number, precision = 2): number {
   const base = Math.pow(10, precision);
   return Math.round(base * value) / base;
 }
+
+export function getDiffsFromDefaults(obj: any, defaultObj: any = {}): any {
+  const result: any = {};
+  Object.keys(obj).forEach(key => {
+    if(typeof obj[key] === "object") {
+      const childDiffs = getDiffsFromDefaults(obj[key], defaultObj[key]);
+      if(Object.keys(childDiffs).length > 0) {
+        result[key] = childDiffs;
+      }
+    } else {
+      if(obj[key] !== undefined && obj[key] != defaultObj[key]) {
+        result[key] = obj[key];
+      }
+    }
+  });
+  return result;
+}

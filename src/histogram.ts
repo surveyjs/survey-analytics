@@ -637,6 +637,19 @@ export class HistogramModel extends SelectBase {
     return answersData;
   }
 
+  private static _defaultState = {
+    "showRunningTotals": false,
+    "showGrouped": false,
+  }
+
+  public getDefaultState(): any {
+    if(this._defaultStateValue !== undefined) {
+      return this._defaultStateValue;
+    }
+    this._defaultStateValue = Object.assign({}, super.getDefaultState(), HistogramModel._defaultState);
+    return this._defaultStateValue;
+  }
+
   public getValueType(): "date" | "number" | "enum" {
     return this.valueType;
   }

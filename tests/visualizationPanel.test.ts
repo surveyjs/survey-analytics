@@ -181,10 +181,6 @@ test("getState, setState, onStateChanged", () => {
         name: "question1",
         isVisible: true,
         isPublic: true,
-        chartType: "bar",
-        answersOrder: "default",
-        hideEmptyAnswers: false,
-        topN: -1
       },
     ],
   };
@@ -229,7 +225,7 @@ test("getState, setState, onStateChanged", () => {
 
   visualizer.chartType = "bar";
   expect(count).toBe(2);
-  expect(visPanel.state.elements![0].chartType).toEqual("bar");
+  expect(visPanel.state.elements![0].chartType).toEqual(undefined);
 
   visualizer.answersOrder = "desc";
   expect(count).toBe(3);
@@ -241,7 +237,7 @@ test("getState, setState, onStateChanged", () => {
 
   visualizer.hideEmptyAnswers = false;
   expect(count).toBe(5);
-  expect(visPanel.state.elements![0].hideEmptyAnswers).toEqual(false);
+  expect(visPanel.state.elements![0].hideEmptyAnswers).toEqual(undefined);
 });
 
 test("getState/setState and results order", () => {

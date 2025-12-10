@@ -1160,21 +1160,30 @@ export class VisualizationPanel extends VisualizerBase {
     if(!newState) return;
     this._settingState = true;
     try {
+      let loadedElements = [];
 
       if(Array.isArray(newState.elements)) {
         const questionNames = this.questions.map(q => Array.isArray(q) ? q[0].name : q.name);
-        this._elements = [].concat(newState.elements.filter(e => (questionNames.indexOf(e.name) !== -1)));
+        loadedElements = [].concat(newState.elements.filter(e => (questionNames.indexOf(e.name) !== -1)));
       }
 
       if(typeof newState.locale !== "undefined")this.setLocale(newState.locale);
 
-      this._elements.forEach(elementState => {
+      const newElements = [];
+      loadedElements.forEach(elementState => {
         const visualizer = this.getVisualizer(elementState.name);
         if(visualizer !== undefined) {
           visualizer.setState(elementState);
         }
+        newElements.push({
+          name: elementState.name,
+          displayName: elementState.displayName,
+          isVisible: elementState.isVisible,
+          isPublic: elementState.isPublic,
+        });
       });
 
+      this._elements = newElements;
     } finally {
       this._settingState = false;
     }

@@ -421,11 +421,8 @@ test("save selection to state / restore selection from state", () => {
 
   let state = selectBase.getState();
   expect(state).toStrictEqual({
-    "answersOrder": "default",
     "chartType": "bar",
     "filter": 1,
-    "hideEmptyAnswers": false,
-    "topN": -1,
   });
   state.filter = "father";
   selectBase.setState(state);
@@ -434,12 +431,7 @@ test("save selection to state / restore selection from state", () => {
 
 test("get/set/reset state", () => {
   selectBase["chartTypes"] = ["bar", "pie"];
-  const initialState = {
-    "answersOrder": "default",
-    "chartType": "bar",
-    "hideEmptyAnswers": false,
-    "topN": -1,
-  };
+  const initialState = { };
 
   let state = selectBase.getState();
   expect(state).toStrictEqual(initialState);
