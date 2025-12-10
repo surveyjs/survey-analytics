@@ -640,7 +640,7 @@ export class HistogramModel extends SelectBase {
   private static _defaultState = {
     "showRunningTotals": false,
     "showGrouped": false,
-  }
+  };
 
   public getDefaultState(): any {
     if(this._defaultStateValue !== undefined) {

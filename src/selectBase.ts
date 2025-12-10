@@ -722,7 +722,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     "transposeData": false,
     "showMissingAnswers": false,
     "topN": -1
-  }
+  };
 
   public getDefaultState(): any {
     if(this._defaultStateValue !== undefined) {
