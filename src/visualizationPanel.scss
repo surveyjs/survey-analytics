@@ -87,6 +87,9 @@
   }
 }
 
+.sa-question-layouted:focus-within {
+  z-index: 1;
+}
 
 .sa-question__title {
   margin: 0;
