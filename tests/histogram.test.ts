@@ -1128,7 +1128,7 @@ test("histogram date different intervals", async () => {
 
 test("getBestIntervalMode for date histogram", () => {
   expect(getBestIntervalMode(new Date("2020-01-01") as any, new Date("2020-01-10") as any)).toBe("days");
-  expect(getBestIntervalMode(new Date("2020-01-01") as any, new Date("2020-04-10") as any)).toBe("days");
+  expect(getBestIntervalMode(new Date("2020-01-01") as any, new Date("2020-04-10") as any)).toBe("months");
   expect(getBestIntervalMode(new Date("2020-01-01") as any, new Date("2020-10-10") as any)).toBe("months");
   expect(getBestIntervalMode(new Date("2020-01-01") as any, new Date("2021-05-10") as any)).toBe("quarters");
   expect(getBestIntervalMode(new Date("2020-01-01") as any, new Date("2025-10-10") as any)).toBe("years");

@@ -26,7 +26,7 @@ export function getBestIntervalMode(min: number, max: number): HistogramInterval
   if(totalMonths > 10 * 12) return "decades";
   if(totalMonths > 2 * 12) return "years";
   if(totalMonths > 1 * 12) return "quarters";
-  if(totalMonths > 4) return "months";
+  if(totalMonths > 2) return "months";
   return "days";
 }
 
