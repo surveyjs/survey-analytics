@@ -177,3 +177,4 @@ VisualizationManager.registerVisualizer("radiogroup", StatisticsTable);
 VisualizationManager.registerVisualizer("dropdown", StatisticsTable);
 VisualizationManager.registerVisualizer("checkbox", StatisticsTable);
 VisualizationManager.registerVisualizer("boolean", StatisticsTableBoolean);
+VisualizationManager.registerVisualizer("table", StatisticsTable);

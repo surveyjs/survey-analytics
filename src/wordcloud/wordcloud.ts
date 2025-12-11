@@ -168,3 +168,4 @@ export class WordCloud extends VisualizerBase {
 VisualizationManager.registerVisualizer("text", WordCloud);
 VisualizationManager.registerVisualizer("comment", WordCloud);
 VisualizationManager.registerVisualizer("multipletext", WordCloud);
+VisualizationManager.registerVisualizer("wordcloud", WordCloud);
