@@ -22,7 +22,7 @@ function getQuarter(date: Date): string {
 export function getBestIntervalMode(min: number, max: number): HistogramIntervalMode {
   const start = new Date(min);
   const end = new Date(max);
-  const totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+  const totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth() + 1);
   if(totalMonths > 10 * 12) return "decades";
   if(totalMonths > 2 * 12) return "years";
   if(totalMonths > 1 * 12) return "quarters";
