@@ -402,7 +402,9 @@ export class ApexChartsSetup {
     let lineHeight = 30;
     let margin = 35;
     let height = (labels.length) * lineHeight + 2 * margin;
-    if(hasSeries) {
+    if(hasSeries && (model.legendPosition === "top" || model.legendPosition === "bottom")) {
+      height += (labels.length * seriesLabels.length) * lineHeight;
+    } else if(hasSeries) {
       height = (labels.length * seriesLabels.length) * lineHeight + 2 * margin;
     }
 
@@ -728,6 +730,9 @@ export class ApexChartsSetup {
     let lineHeight = 30;
     let margin = 35;
     let height = labels.length * lineHeight + 2 * margin;
+    if(hasSeries && (model.legendPosition === "top" || model.legendPosition === "bottom")) {
+      height += labels.length * lineHeight;
+    }
 
     // Chart settings
     const chart: any = {
