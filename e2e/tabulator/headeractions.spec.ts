@@ -1,6 +1,6 @@
 /* eslint-disable surveyjs/eslint-plugin-i18n/only-english-or-code */
 import { test, expect } from "@playwright/test";
-import { url_tabulator, initTabulator } from "../helper";
+import { url_tabulator, initTabulator, getListItemByText } from "../helper";
 
 test.describe("headeractions", () => {
   test.beforeEach(async ({ page }) => {
@@ -33,15 +33,15 @@ test.describe("headeractions", () => {
     await expect(page.locator("#tabulatorContainer .tabulator-table")).toHaveCount(1);
     await expect(page.locator("#tabulatorContainer .tabulator-table").locator(".tabulator-row")).toHaveCount(5);
 
-    await page.click(".sa-table__entries select");
-    await page.selectOption(".sa-table__entries select", { label: "1" });
+    await page.locator(".sa-table__entries .sa-action-dropdown-header").click();
+    await getListItemByText(page, "1").click();
     await expect(page.locator("#tabulatorContainer .tabulator-table").locator(".tabulator-row")).toHaveCount(1);
 
     const pageSize1 = await page.evaluate(() => (window as any).surveyAnalyticsTabulator.state.pageSize);
     expect(pageSize1).toBe(1);
 
-    await page.click(".sa-table__entries select");
-    await page.selectOption(".sa-table__entries select", { label: "10" });
+    await page.locator(".sa-table__entries .sa-action-dropdown-header").click();
+    await getListItemByText(page, "10").click();
     await expect(page.locator("#tabulatorContainer .tabulator-table").locator(".tabulator-row")).toHaveCount(9);
 
     const pageSize10 = await page.evaluate(() => (window as any).surveyAnalyticsTabulator.state.pageSize);
@@ -76,7 +76,7 @@ test.describe("headeractions", () => {
     await expect(page.locator("#tabulatorContainer .tabulator-row").nth(2)).toHaveText("Полностью устраивает");
 
     await page.click('#tabulatorContainer .sa-table__header-extension:has-text("Сменить язык")');
-    await page.getByRole("combobox").first().selectOption("en");
+    await getListItemByText(page, "English").click();
 
     await expect(page.locator("#tabulatorContainer span", { hasText: "How satisfied are you with the Product?" })).toHaveText("How satisfied are you with the Product?");
     await expect(page.locator("#tabulatorContainer .tabulator-row").nth(0)).toHaveText("Not Satisfied");
@@ -110,7 +110,7 @@ test.describe("headeractions", () => {
 
     await initTabulator(page, json, data, { actionsColumnWidth: 100 }, { pageSize: 10 });
     await expect(page.locator("#tabulatorContainer .tabulator-table").locator(".tabulator-row")).toHaveCount(9);
-    await expect(page.locator(".sa-table__entries select")).toHaveValue("10");
+    await expect(page.locator(".sa-table__entries .sa-action-dropdown-header")).toHaveText("10");
   });
 
   test("Check locale from state", async ({ page }) => {

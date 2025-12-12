@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Date Range Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://unpkg.com/jquery"></script>
+  <script src="https://unpkg.com/survey-jquery@1.9.58/survey.jquery.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="../build/survey.analytics.css" />
+
+  <script src="./plotly.min.js"></script>
+
+  <script src="../node_modules/survey-core/survey.core.js"></script>
+  <script src="../node_modules/survey-core/survey.i18n.js"></script>
+  <script src="../build/survey.analytics.js"></script>
+</head>
+
+<body>
+  <style>
+    #summaryContainer>.sa-question:nth-child(2) {
+      width: 100%;
+    }
+    
+    .tabs {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+
+    .tabs button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+    }
+
+    .tabs button:hover {
+      background-color: #ddd;
+    }
+
+    .tabs button.active {
+      background-color: #ccc;
+    }
+
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+
+    div.range-slider {
+        position: relative;
+        width: 200px;
+        height: 35px;
+        text-align: center;
+    }
+
+    div.range-slider input {
+        pointer-events: none;
+        position: absolute;
+        overflow: hidden;
+        left: 0;
+        top: 30px;
+        width: 200px;
+        outline: none;
+        height: 18px;
+        margin: 0;
+        padding: 0;
+    }
+
+    div.range-slider input::-webkit-slider-thumb {
+        pointer-events: all;
+        position: relative;
+        z-index: 1;
+        outline: 0;
+    }
+
+    div.range-slider input::-moz-range-thumb {
+        pointer-events: all;
+        position: relative;
+        z-index: 10;
+        -moz-appearance: none;
+        width: 9px;
+    }
+  </style>
+
+  <input type="checkbox" id="toggle-checkbox">
+  <label for="toggle-checkbox">Dark theme</label>
+  <br><br>
+  
+  <div class="tabs">
+    <button class="tablinks" onclick="openTabNo(event, 1)">Customer Segmentation</button>
+    <button class="tablinks" onclick="openTabNo(event, 2)">Net Promoter Score</button>
+    <button class="tablinks" onclick="openTabNo(event, 3)">Frameworks and Devices</button>
+  </div>
+  <div id="tab1" class="tabcontent">
+    <div id="loadingIndicator1">
+      <div class="sv-loading-indicator">Loading...</div>
+    </div>
+    <div id="vizPanel1"></div>
+  </div>
+  <div id="tab2" class="tabcontent">
+    <div id="loadingIndicator2">
+      <div id="sv-loading-indicator">Loading...</div>
+    </div>
+    <div id="vizPanel2"></div>
+  </div>
+  <div id="tab3" class="tabcontent">
+    <div id="loadingIndicator3">
+      <div id="sv-loading-indicator">Loading...</div>
+    </div>
+    <div id="vizPanel3"></div>
+  </div>
+  <div id="surveyElement" style="display:inline-block;width:100%;"></div>
+  <div id="surveyResult"></div>
+  <script type="text/javascript" src="./customDateRange.js"></script>
+</body>
+
+</html>
