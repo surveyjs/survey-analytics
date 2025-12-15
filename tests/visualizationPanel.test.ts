@@ -63,12 +63,10 @@ test("allowHideQuestions option", () => {
         type: "paneldynamic",
         isRequired: true,
         templateElements: [
-          {
-            type: "text",
-            name: "question2",
-          },
+          { type: "text", name: "question2", },
         ],
       },
+      { type: "text", name: "question3", },
     ],
   };
   const data = [
@@ -1149,4 +1147,42 @@ test("allowChangeVisualizerType", () => {
   expect(visPanel["visualizers"][1]["toolbarItemCreators"]["changeVisualizer"]).toBeDefined();
 
   VisualizationManager.unregisterVisualizer("number", HistogramModel);
+});
+
+test("Render the hide button and drag element if the panel have some elements", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+    ]
+  };
+  const data = [
+    { question1: "1-1", question2: "1-2" },
+    { question1: "2-1", question2: "2-2" },
+  ];
+  const survey = new SurveyModel(json);
+  const vis = new VisualizationPanel(survey.getAllQuestions(), data);
+
+  let container = document.createElement("div");
+  vis.render(container);
+  const hideAction = container.querySelector(".sa-question__hide-action") as HTMLElement;
+  expect(hideAction).not.toBeNull();
+
+  const dragAreaElement = container.querySelector(".sa-question__drag-area") as HTMLElement;
+  expect(dragAreaElement).not.toBeNull();
+});
+
+test("Not render the hide button and drag element if the panel has one element", () => {
+  const json = { elements: [{ type: "text", name: "question1" }] };
+  const data = [{ question1: "1-1" }, { question1: "2-1" }];
+  const survey = new SurveyModel(json);
+  const vis = new VisualizationPanel(survey.getAllQuestions(), data);
+
+  let container = document.createElement("div");
+  vis.render(container);
+  const hideAction = container.querySelector(".sa-question__hide-action") as HTMLElement;
+  expect(hideAction).toBeNull();
+
+  const dragAreaElement = container.querySelector(".sa-question__drag-area") as HTMLElement;
+  expect(dragAreaElement).toBeNull();
 });
