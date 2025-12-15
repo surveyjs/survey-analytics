@@ -659,7 +659,7 @@ export class ApexChartsSetup {
 
     // Data label settings
     const dataLabels: any = {
-      ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
+      enabled: false
     };
 
     // Chart options settings
@@ -859,7 +859,7 @@ export class ApexChartsSetup {
 
     // Axis settings
     const xaxis: any = {
-      type: "numeric",
+      categories: labels,
       axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme) },
       labels: {
         style: {
@@ -870,15 +870,6 @@ export class ApexChartsSetup {
 
     const yaxis: any = {
       ...ApexChartsSetup.defaultAxisLabelConfig(model.theme)
-    };
-
-    const grid = {
-      ...ApexChartsSetup.defaultGridConfig(model.theme),
-      xaxis: {
-        lines: {
-          show: true
-        }
-      },
     };
 
     // Legend settings
@@ -900,16 +891,7 @@ export class ApexChartsSetup {
     };
 
     // Tooltip settings
-    const tooltip: any = {
-      ...ApexChartsSetup.defaultTooltipConfig(model.theme),
-      custom: function({ series, seriesIndex, dataPointIndex, w }: any) {
-        const value = series[seriesIndex][dataPointIndex];
-        const label = hasSeries ? seriesLabels[dataPointIndex] : labels[dataPointIndex];
-        return `<div class="apexcharts-tooltip-box">
-          <span>${label}: ${value.y}</span>
-        </div>`;
-      }
-    };
+    const tooltip: any = ApexChartsSetup.defaultTooltipConfig(model.theme);
 
     // RTL language handling
     if(["ar", "fa"].indexOf(localization.currentLocale) !== -1) {
@@ -927,7 +909,6 @@ export class ApexChartsSetup {
       responsive: [{ ...ApexChartsSetup.defaultResponsive }],
       tooltip,
       hasSeries,
-      grid,
       xaxis,
       yaxis
     };
