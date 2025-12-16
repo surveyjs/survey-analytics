@@ -596,3 +596,91 @@ test("getCalculatedValuesCore with number type and Y questions", async () => {
   expect(calculatedValues.length).toBe(2); // female, male
   expect(calculatedValues[0].length).toBe(PivotModel.IntervalsCount);
 });
+
+test("getCalculatedValues for array in answer data", async () => {
+  const json = {
+    "pages": [
+      {
+        "name": "additional_info",
+        "title": "Additional Information",
+        "elements": [
+          {
+            "type": "checkbox",
+            "name": "income_sources",
+            "choices": [
+              "Salary / Wages",
+              "Business income",
+              "Pension / Retirement",
+              "Government assistance",
+              "Investments / Dividends"
+            ],
+            "showOtherItem": true,
+            "otherText": "Other (specify)"
+          }
+        ]
+      }
+    ],
+  };
+  const data = [
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["other"] },
+    { "income_sources": ["other", "Pension / Retirement"] },
+    { "income_sources": ["Pension / Retirement", "Salary / Wages", "Government assistance"] },
+    { "income_sources": ["other"] },
+    { "income_sources": ["other", "Investments / Dividends", "Business income"] },
+    { "income_sources": ["Pension / Retirement"] },
+    { "income_sources": ["Business income", "other"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["other"] },
+    { "income_sources": ["Pension / Retirement"] },
+    { "income_sources": ["Government assistance", "Business income"] },
+    { "income_sources": ["Salary / Wages", "other", "Business income"] },
+    { "income_sources": ["Business income", "Government assistance", "Investments / Dividends"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["Investments / Dividends"] },
+    { "income_sources": ["Government assistance", "Business income"] },
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["Investments / Dividends", "Government assistance"] },
+    { "income_sources": ["Investments / Dividends"] },
+    { "income_sources": ["Government assistance", "Business income"] },
+    { "income_sources": ["other"] },
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["Salary / Wages", "other", "Business income"] },
+    { "income_sources": ["Business income", "Pension / Retirement", "Salary / Wages"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["Pension / Retirement", "Government assistance", "other"] },
+    { "income_sources": ["other", "Business income", "Salary / Wages"] },
+    { "income_sources": ["other", "Investments / Dividends", "Government assistance"] },
+    { "income_sources": ["Pension / Retirement", "Business income"] },
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["other", "Pension / Retirement"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["Investments / Dividends", "Salary / Wages", "other"] },
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["Pension / Retirement"] },
+    { "income_sources": ["Investments / Dividends"] },
+    { "income_sources": ["other", "Investments / Dividends"] },
+    { "income_sources": ["Salary / Wages", "Business income"] },
+    { "income_sources": ["Investments / Dividends", "Pension / Retirement", "Business income"] },
+    { "income_sources": ["other", "Salary / Wages", "Pension / Retirement"] },
+    { "income_sources": ["Salary / Wages", "Government assistance", "Business income"] },
+    { "income_sources": ["Business income", "other", "Pension / Retirement"] },
+    { "income_sources": ["Salary / Wages", "Business income"] },
+    { "income_sources": ["Investments / Dividends", "Government assistance"] },
+    { "income_sources": ["Salary / Wages", "other", "Government assistance"] },
+    { "income_sources": ["Salary / Wages", "other", "Business income"] },
+    { "income_sources": ["Pension / Retirement"] },
+    { "income_sources": ["Government assistance"] }
+  ];
+
+  const survey = new SurveyModel(json);
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("income_sources");
+  let values = pivot.getValues();
+  let seriesValues = pivot.getSeriesValues();
+  expect(values).toStrictEqual(["Salary / Wages", "Business income", "Pension / Retirement", "Government assistance", "Investments / Dividends", "other"]);
+  expect(seriesValues).toStrictEqual([]);
+  const result = (await pivot.getCalculatedValues()).data;
+  expect(result).toStrictEqual([[17, 17, 13, 17, 11, 19,]]);
+});

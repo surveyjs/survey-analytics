@@ -329,15 +329,20 @@ export class PivotModel extends HistogramModel {
         statistics.push(values.map(i => 0));
       }
       this.data.forEach(dataRow => {
-        const answerData = dataRow[this.dataNames[0]];
-        if(answerData !== undefined && valueIndexes[answerData] !== undefined) {
-          const valueIndex = valueIndexes[answerData];
-          if(this.questionsY.length === 0) {
-            statistics[0][valueIndex]++;
-          } else {
-            this.updateStatisticsSeriesValue(statistics, dataRow, valueIndex, seriesValueIndexes);
-          }
+        let answerData = dataRow[this.dataNames[0]];
+        if(!Array.isArray(answerData)) {
+          answerData = [answerData];
         }
+        answerData.forEach(answerDataItem => {
+          if(answerDataItem !== undefined && valueIndexes[answerDataItem] !== undefined) {
+            const valueIndex = valueIndexes[answerDataItem];
+            if(this.questionsY.length === 0) {
+              statistics[0][valueIndex]++;
+            } else {
+              this.updateStatisticsSeriesValue(statistics, dataRow, valueIndex, seriesValueIndexes);
+            }
+          }
+        });
       });
     } else {
       const continuousValues = this.getContinuousValues();
