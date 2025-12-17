@@ -146,7 +146,7 @@ export var finnishStrings = {
   // [Auto-translated] "Chart"
   visualizer_boolean: "Kaavio",
   // [Auto-translated] "Table"
-  visualizer_options: "Pöytä",
+  visualizer_options: "Taulukko",
   // "NPS"
   npsScore: "NPS",
   // "Promoters"
