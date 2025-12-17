@@ -24,6 +24,28 @@ export class NumberModel extends VisualizerBase {
 
   public displayValueName = "average";
 
+  private initChartTypes(): void {
+    if(VisualizerBase.chartAdapterType) {
+      this._chartAdapter = new VisualizerBase.chartAdapterType(this);
+      this.chartTypes = this._chartAdapter.getChartTypes();
+    }
+    if(this.options.availableChartTypes) {
+      this.chartTypes = this.options.availableChartTypes;
+    }
+
+    if(this.chartTypes?.length > 0) {
+      [this.questionOptions?.chartType, this.options.defaultChartType, this.chartTypes[0]].some(type => {
+        if(!!type && this.chartTypes.indexOf(type) !== -1) {
+          this.chartType = type;
+          return true;
+        }
+        return false;
+      });
+    } else {
+      this.chartType = this.questionOptions?.chartType, this.options.defaultChartType, this.chartTypes[0];
+    }
+  }
+
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
@@ -36,11 +58,7 @@ export class NumberModel extends VisualizerBase {
       this.displayValueName = this.question.displayValueName;
     }
 
-    if(VisualizerBase.chartAdapterType) {
-      this._chartAdapter = new VisualizerBase.chartAdapterType(this);
-      this.chartTypes = this._chartAdapter.getChartTypes();
-      this.chartType = this.questionOptions?.chartType || this.chartTypes[0];
-    }
+    this.initChartTypes();
 
     if(this.options.allowChangeVisualizerType !== false && !(this.questionOptions?.allowChangeVisualizerType === false)) {
       this.registerToolbarItem("changeChartType", () => {

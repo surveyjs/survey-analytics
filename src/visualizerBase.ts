@@ -66,7 +66,8 @@ export interface IVisualizerOptions {
   dataField: string;
   type: string;
   title?: string;
-  chartType?: string | string[];
+  chartType?: string;
+  availableChartTypes?: string[];
   [key: string]: any;
 }
 

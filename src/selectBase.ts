@@ -95,6 +95,34 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
   private _showMissingAnswers: boolean = false;
   private missingAnswersBtn: HTMLElement = undefined;
 
+  private initChartTypes(): void {
+    if(this.options.allowExperimentalFeatures) {
+    // this.chartTypes.splice(1, 0, "vbar");
+    }
+    if(VisualizerBase.chartAdapterType) {
+      this._chartAdapter = new VisualizerBase.chartAdapterType(this);
+      this.chartTypes = this._chartAdapter.getChartTypes();
+    }
+    if(this.options.availableChartTypes) {
+      this.chartTypes = this.options.availableChartTypes;
+    }
+    if(this.getSeriesValues().length > 0 && this.chartTypes.indexOf("stackedbar") === -1) {
+      this.chartTypes.push("stackedbar");
+    }
+
+    if(this.chartTypes?.length > 0) {
+      [this.questionOptions?.chartType, this.options.defaultChartType, this.chartTypes[0], "bar"].some(type => {
+        if(!!type && this.chartTypes.indexOf(type) !== -1) {
+          this._chartType = type;
+          return true;
+        }
+        return false;
+      });
+    } else {
+      this._chartType = this.questionOptions?.chartType || this.options.defaultChartType || this.chartTypes[0] || "bar";
+    }
+  }
+
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
@@ -116,25 +144,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     this._legendPosition = this.options.legendPosition || "right";
     this._transposeData = this.options.transposeData === true;
     this._showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
-
-    if(this.options.allowExperimentalFeatures) {
-    // this.chartTypes.splice(1, 0, "vbar");
-    }
-    if(VisualizerBase.chartAdapterType) {
-      this._chartAdapter = new VisualizerBase.chartAdapterType(this);
-      this.chartTypes = this._chartAdapter.getChartTypes();
-      if(this.getSeriesValues().length > 0 && this.chartTypes.indexOf("stackedbar") === -1) {
-        this.chartTypes.push("stackedbar");
-      }
-
-      this._chartType = this.chartTypes[0];
-      if(this.chartTypes.indexOf(this.options.defaultChartType) !== -1) {
-        this._chartType = this.options.defaultChartType;
-      }
-      if(this.chartTypes.indexOf(this.questionOptions?.chartType) !== -1) {
-        this._chartType = this.questionOptions.chartType;
-      }
-    }
+    this.initChartTypes();
 
     if(this.options.allowChangeVisualizerType !== false && !(this.questionOptions?.allowChangeVisualizerType === false)) {
       this.registerToolbarItem("changeChartType", () => {
