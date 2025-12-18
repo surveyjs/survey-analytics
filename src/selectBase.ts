@@ -111,14 +111,15 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     }
 
     if(this.chartTypes?.length > 0) {
-      [this.questionOptions?.chartType, this.options.defaultChartType, this.chartTypes[0], "bar"].some(type => {
+      [this.questionOptions?.chartType, this.options.defaultChartType].some(type => {
         if(!!type && this.chartTypes.indexOf(type) !== -1) {
           this._chartType = type;
           return true;
         }
         return false;
       });
-    } else {
+    }
+    if(!this._chartType) {
       this._chartType = this.questionOptions?.chartType || this.options.defaultChartType || this.chartTypes[0] || "bar";
     }
   }
@@ -248,7 +249,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
   }
 
   protected chartTypes: string[] = [];
-  protected _chartType: string = "bar";
+  protected _chartType: string;
   /**
    * Chart type - current chart type.
    */

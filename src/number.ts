@@ -17,7 +17,7 @@ export class NumberModel extends VisualizerBase {
     texts: string[]
   ) => string[];
 
-  protected chartTypes: Array<string>;
+  protected chartTypes: Array<string> = [];
   chartType: String;
 
   public static showAsPercentage = false;
@@ -34,15 +34,16 @@ export class NumberModel extends VisualizerBase {
     }
 
     if(this.chartTypes?.length > 0) {
-      [this.questionOptions?.chartType, this.options.defaultChartType, this.chartTypes[0]].some(type => {
+      [this.questionOptions?.chartType, this.options.defaultChartType].some(type => {
         if(!!type && this.chartTypes.indexOf(type) !== -1) {
           this.chartType = type;
           return true;
         }
         return false;
       });
-    } else {
-      this.chartType = this.questionOptions?.chartType, this.options.defaultChartType, this.chartTypes[0];
+    }
+    if(!this.chartType) {
+      this.chartType = this.questionOptions?.chartType || this.options.defaultChartType || this.chartTypes[0];
     }
   }
 
