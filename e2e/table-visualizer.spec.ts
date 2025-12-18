@@ -30,7 +30,7 @@ test.describe("Summary common", () => {
     const questionTitleSelector = page.locator("h3").filter({ hasText: "Please answer the question" });
     await expect(questionTitleSelector).toBeVisible();
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
-    questionVisualizerSelector.scrollIntoViewIfNeeded();
+    await page.getByLabel("Please indicate if you agree").getByRole("button", { name: "Hide" }).click();
 
     // const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     // await expect(chartTypeSelector).toBeVisible();
@@ -40,14 +40,14 @@ test.describe("Summary common", () => {
     await expect(visualizerSelector).toBeVisible();
     await expect(visualizerSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart");
 
-    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
-    await expect(chartTypeSelector).toBeVisible();
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown .sa-dropdown-header-text").nth(1);
+    expect(await chartTypeSelector.textContent()).toBe("Pie");
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").first();
     await expect(chartContentSelector).toBeVisible();
 
     await visualizerSelector.click();
     await getListItemByText(page, "Table").click();
-    await expect(chartTypeSelector).toBeHidden();
+    expect(await chartTypeSelector.textContent()).toBe("Default Order");
     await compareScreenshot(page, chartContentSelector, "boolean-simple-table.png");
   });
 
