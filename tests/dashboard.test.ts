@@ -253,3 +253,24 @@ test("Set chart types from definitions", async () => {
   expect(chart3.chartType).toStrictEqual("line");
   expect(chart3["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
 });
+
+test.skip("Set visualizer types from definitions", async () => {
+  const visualizerDefinition1 = {
+    type: "nps",
+    availableTypes: ["chart", "nps"],
+    dataField: "test"
+  };
+  const visualizerDefinition2 = {
+    availableTypes: ["chart", "nps"],
+    dataField: "test"
+  };
+  const visualizerDefinition3 = {
+    type: "nps",
+    dataField: "test"
+  };
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
+  let dashboard = new Dashboard({ visualizers: [visualizerDefinition1, /*visualizerDefinition2,*/ visualizerDefinition3], data });
+  const chart1 = dashboard.panel.visualizers[0] as AlternativeVisualizersWrapper;
+  expect(chart1.getVisualizer().type).toStrictEqual("nps");
+  expect(chart1.getVisualizers().map(v => v.type)).toStrictEqual(["chart", "nps"]);
+});
