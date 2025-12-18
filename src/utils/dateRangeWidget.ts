@@ -19,6 +19,35 @@ export interface IDateRangeOptions {
 export class DateRangeWidget {
   static invalidRangeClassName = "sa-date-range--invalid";
   static invalidRangeEditorClassName = "sa-date-range_editor--invalid";
+  static defaultChipsConfig: {[key: string]: (instance: DateRangeWidget) => () => void} = {
+    resetRange: (instance: DateRangeWidget) => () => {
+      instance.setFilter(undefined, undefined);
+    },
+    lastYear: (instance: DateRangeWidget) => () => {
+      const end = new Date();
+      const start = new Date();
+      start.setFullYear(end.getFullYear() - 1);
+      instance.setFilter(start, end);
+    },
+    lastQuarter: (instance: DateRangeWidget) => () => {
+      const end = new Date();
+      const start = new Date();
+      start.setMonth(end.getMonth() - 3);
+      instance.setFilter(start, end);
+    },
+    lastMonth: (instance: DateRangeWidget) => () => {
+      const end = new Date();
+      const start = new Date();
+      start.setMonth(end.getMonth() - 1);
+      instance.setFilter(start, end);
+    },
+    lastWeek: (instance: DateRangeWidget) => () => {
+      const end = new Date();
+      const start = new Date();
+      start.setDate(end.getDate() - 6);
+      instance.setFilter(start, end);
+    },
+  };
 
   private currentDateRange: IDateRange;
 
@@ -138,7 +167,7 @@ export class DateRangeWidget {
       this.elementRemoveClassName(chip, "sa-date-range_chip--active");
     });
   }
-  private setFilter(start, end): void {
+  public setFilter(start, end): void {
     this.currentDateRange.start = !!start ? (new Date(start)).getTime() : undefined;
     this.currentDateRange.end = !!end ? (new Date(end)).getTime() : undefined;
     this.setDateRange();
@@ -148,35 +177,11 @@ export class DateRangeWidget {
     this.elementRemoveClassName(this.endDateEditor, DateRangeWidget.invalidRangeEditorClassName);
   }
   private getDefaultChipsConfig(): {[key: string]: any} {
-    return {
-      resetRange: () => {
-        this.setFilter(undefined, undefined);
-      },
-      lastYear: () => {
-        const end = new Date();
-        const start = new Date();
-        start.setFullYear(end.getFullYear() - 1);
-        this.setFilter(start, end);
-      },
-      lastQuarter: () => {
-        const end = new Date();
-        const start = new Date();
-        start.setMonth(end.getMonth() - 3);
-        this.setFilter(start, end);
-      },
-      lastMonth: () => {
-        const end = new Date();
-        const start = new Date();
-        start.setMonth(end.getMonth() - 1);
-        this.setFilter(start, end);
-      },
-      lastWeek: () => {
-        const end = new Date();
-        const start = new Date();
-        start.setDate(end.getDate() - 7);
-        this.setFilter(start, end);
-      },
-    };
+    const config: {[key: string]: any} = {};
+    Object.keys(DateRangeWidget.defaultChipsConfig).forEach(key => {
+      config[key] = DateRangeWidget.defaultChipsConfig[key](this);
+    });
+    return config;
   }
 
   constructor(private config: IDateRangeWidgetOptions) {
