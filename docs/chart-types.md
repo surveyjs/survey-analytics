@@ -12,6 +12,7 @@ SurveyJS Dashboard visualizes survey data using different types of charts. This 
 A bar chart visualizes categorical data with rectangular bars. The length of each bar is proportional to the value it represents. SurveyJS Dashboard supports vertical and horizontal bar charts.
 
 <img src="images/chart-types-bar.png" width="374" height="423" alt="SurveyJS Dashboard: Horizontal bar chart">
+
 <img src="images/chart-types-vertical-bar.png" width="374" height="423" alt="SurveyJS Dashboard: Vertical bar chart">
 
 Bar charts are supported by the question types listed below:
@@ -67,6 +68,7 @@ Doughnut charts are supported by the following question types:
 A histogram is a chart type that visualizes the distribution of a dataset. It divides a continuous data range into intervals and shows how many data points fall within each interval. Histograms support both vertical and horizontal views.  
 
 <img src="images/chart-types-vertical-histogram.png" width="374" height="440" alt="SurveyJS Dashboard: Vertical histogram">
+
 <img src="images/chart-types-horizontal-histogram.png" width="374" height="440" alt="SurveyJS Dashboard: Horizontal histogram">
 
 Histograms are supported by the following question types:

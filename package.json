@@ -1,5 +1,5 @@
 {
-  "version": "2.4.0",
+  "version": "2.5.1",
   "name": "survey-analytics",
   "scripts": {
     "start": "webpack-dev-server --env buildType=dev",
@@ -31,8 +31,7 @@
     "lint": "eslint . --ext .js,.cjs,.mjs,.ts,.cts,.mts --max-warnings=0",
     "lint:fix": "eslint . --ext .js,.cjs,.mjs,.ts,.cts,.mts --max-warnings=0 --fix",
     "pre-push-check": "npm run lint",
-    "pwinst": "playwright install chromium",
-    "postinstall": "husky install"
+    "pwinst": "playwright install chromium"
   },
   "main": "survey.analytics.js",
   "files": [
