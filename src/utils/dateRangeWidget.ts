@@ -44,7 +44,8 @@ export class DateRangeWidget {
     lastWeek: (instance: DateRangeWidget) => () => {
       const end = new Date();
       const start = new Date();
-      start.setDate(end.getDate() - 6);
+      start.setDate(end.getDate() - 7);
+      end.setDate(end.getDate() - 1);
       instance.setFilter(start, end);
     },
   };
