@@ -224,53 +224,66 @@ test("Create pivot visualizer with questions", async () => {
 
 test("Set chart types from definitions", async () => {
   const visualizerDefinition1 = {
-    type: "chart",
-    availableChartTypes: ["line", "scatter", "bar"],
-    chartType: "scatter",
+    type: "scatter",
+    availableTypes: ["line", "scatter", "bar"],
     dataField: "test"
   };
   const visualizerDefinition2 = {
-    type: "chart",
-    chartType: "line",
+    type: "line",
     dataField: "test"
   };
   const visualizerDefinition3 = {
-    type: "chart",
-    availableChartTypes: ["line", "scatter", "bar"],
+    availableTypes: ["line", "scatter", "bar"],
     dataField: "test"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
   const dashboard = new Dashboard({ visualizers: [visualizerDefinition1, visualizerDefinition2, visualizerDefinition3], data });
   const chart1 = dashboard.panel.visualizers[0] as SelectBase;
-  expect(chart1.chartType).toStrictEqual("scatter");
+  expect(chart1.chartType).toBe("scatter");
   expect(chart1["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
 
   const chart2 = dashboard.panel.visualizers[1] as SelectBase;
-  expect(chart2.chartType).toStrictEqual("line");
+  expect(chart2.chartType).toBe("line");
   expect(chart2["chartTypes"]).toStrictEqual([]);
 
   const chart3 = dashboard.panel.visualizers[2] as SelectBase;
-  expect(chart3.chartType).toStrictEqual("line");
+  expect(chart3.chartType).toBe("line");
   expect(chart3["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
 });
 
-test.skip("Set visualizer types from definitions", async () => {
+test("Set visualizer types from definitions", async () => {
   const visualizerDefinition1 = {
     type: "nps",
-    availableTypes: ["chart", "nps"],
+    availableTypes: ["line", "scatter", "bar", "nps"],
     dataField: "test"
   };
   const visualizerDefinition2 = {
-    availableTypes: ["chart", "nps"],
-    dataField: "test"
-  };
-  const visualizerDefinition3 = {
-    type: "nps",
+    availableTypes: ["line", "scatter", "bar", "nps"],
     dataField: "test"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
-  let dashboard = new Dashboard({ visualizers: [visualizerDefinition1, /*visualizerDefinition2,*/ visualizerDefinition3], data });
+  let dashboard = new Dashboard({ visualizers: [visualizerDefinition1, visualizerDefinition2], data });
+  expect(dashboard.panel.visualizers.length).toBe(2);
+
   const chart1 = dashboard.panel.visualizers[0] as AlternativeVisualizersWrapper;
-  expect(chart1.getVisualizer().type).toStrictEqual("nps");
-  expect(chart1.getVisualizers().map(v => v.type)).toStrictEqual(["chart", "nps"]);
+  expect(chart1.type).toStrictEqual("alternative");
+
+  const chart1Visualizers = chart1.getVisualizers();
+  expect(chart1Visualizers.length).toBe(2);
+  expect(chart1.getVisualizer().type).toBe("nps");
+  expect(chart1Visualizers[0].type).toBe("selectBase");
+  expect(chart1Visualizers[0].chartType).toBe("line");
+  expect(chart1Visualizers[0]["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
+  expect(chart1Visualizers[1].type).toBe("nps");
+
+  const chart2 = dashboard.panel.visualizers[1] as AlternativeVisualizersWrapper;
+  expect(chart2.type).toStrictEqual("alternative");
+
+  const chart2Visualizers = chart2.getVisualizers();
+  expect(chart2Visualizers.length).toBe(2);
+  expect(chart2.getVisualizer().type).toBe("selectBase");
+  expect(chart2Visualizers[0].type).toBe("selectBase");
+  expect(chart2Visualizers[0].chartType).toBe("line");
+  expect(chart2Visualizers[0]["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
+  expect(chart2Visualizers[1].type).toBe("nps");
 });

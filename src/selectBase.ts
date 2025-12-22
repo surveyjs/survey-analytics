@@ -103,8 +103,8 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
       this._chartAdapter = new VisualizerBase.chartAdapterType(this);
       this.chartTypes = this._chartAdapter.getChartTypes();
     }
-    if(this.options.availableChartTypes) {
-      this.chartTypes = this.options.availableChartTypes;
+    if(this.options.availableTypes) {
+      this.chartTypes = this.options.availableTypes;
     }
     if(this.getSeriesValues().length > 0 && this.chartTypes.indexOf("stackedbar") === -1) {
       this.chartTypes.push("stackedbar");

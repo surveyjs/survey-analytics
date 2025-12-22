@@ -64,10 +64,9 @@ type ToolbarItemCreators = {
 
 export interface IVisualizerOptions {
   dataField: string;
-  type: string;
+  type?: string;
+  availableTypes?: string[];
   title?: string;
-  chartType?: string;
-  availableChartTypes?: string[];
   [key: string]: any;
 }
 

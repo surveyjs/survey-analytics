@@ -5,6 +5,7 @@ import { IVisualizerDescription } from "./visualizerDescription";
 import { Question, SurveyModel } from "survey-core";
 import { LayoutEngine } from "./layout-engine";
 import { IDashboardTheme } from "./theme";
+import { chartConfig, getChartTypes, getVisualizerTypes } from "./chartConfig";
 
 export interface IDashboardOptions {
   data?: any[];
@@ -38,7 +39,17 @@ export function getVisualizerDescriptions(visualizers: Array<string | IVisualize
         // or throw an error?
       }
     } else if(!!v && typeof v === "object") {
-      const vd = { visualizerType: v.type, dataName: v.dataField, title: v.title, chartType: v.chartType, options: {} } as IVisualizerDescription;
+      const type = v.type || v.availableTypes[0];
+      const config = chartConfig[type];
+      const vd = {
+        visualizerType: config?.visualizerType || type,
+        visualizerTypes: getVisualizerTypes(v.availableTypes),
+        availableTypes: getChartTypes(v.availableTypes),
+        dataName: v.dataField,
+        title: v.title,
+        chartType: config?.chartType,
+        options: {}
+      } as IVisualizerDescription;
       const rootOptions = Object.keys(vd);
       Object.keys(v).forEach((key) => {
         if(!(key in rootOptions)) {

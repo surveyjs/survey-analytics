@@ -33,12 +33,13 @@ export class VisualizerFactory {
     options?: { [index: string]: any }
   ): VisualizerBase {
     let type: string;
+    let types: Array<string>;
     let question: Question;
-    let creators = [];
     let optionsForCreator = Object.assign({}, options);
 
     if("visualizerType" in description) {
       type = description.visualizerType;
+      types = description.visualizerTypes || [description.visualizerType];
 
       optionsForCreator = Object.assign({},
         optionsForCreator,
@@ -69,26 +70,34 @@ export class VisualizerFactory {
       if(description.displayValueName !== undefined) {
         question.displayValueName = description.displayValueName;
       }
-      type = question.getType();
+      types = [question.getType()];
     }
 
     let questionForCreator: Question | Question[] = question;
-    if(type === "text" && (<any>question).inputType) {
-      creators = VisualizationManager.getVisualizersByType((<any>question).inputType, type);
-    } else {
-      let fallbackType = undefined;
-      if(question instanceof QuestionCustomModel) {
-        fallbackType = question.getDynamicType();
-        // questionForCreator = question.contentQuestion;
-      } else if(question instanceof QuestionCompositeModel) {
-        fallbackType = "composite";
+    const visualizers = [];
+    types.forEach(type => {
+      let creators = [];
+      if(type === "text" && (<any>question).inputType) {
+        creators = VisualizationManager.getVisualizersByType((<any>question).inputType, type);
+      } else {
+        let fallbackType = undefined;
+        if(question instanceof QuestionCustomModel) {
+          fallbackType = question.getDynamicType();
+        } else if(question instanceof QuestionCompositeModel) {
+          fallbackType = "composite";
+        }
+        creators = VisualizationManager.getVisualizersByType(type, fallbackType);
       }
-      creators = VisualizationManager.getVisualizersByType(type, fallbackType);
-    }
+      creators.forEach(creator => {
+        const optionsForCreatorType = Object.assign({}, optionsForCreator);
+        if(description.availableTypes && description.availableTypes[type]) {
+          optionsForCreatorType["availableTypes"] = description.availableTypes[type];
+        }
+        const visualizer = new creator(questionForCreator, data, optionsForCreatorType, false);
+        visualizers.push(visualizer);
+      });
+    });
 
-    var visualizers = creators.map(
-      (creator) => new creator(questionForCreator, data, optionsForCreator, false)
-    );
     if(visualizers.length > 1) {
       const alternativesVisualizerConstructor = VisualizationManager.getAltVisualizerSelector();
       let visualizer = new alternativesVisualizerConstructor(
@@ -97,6 +106,9 @@ export class VisualizerFactory {
         data,
         optionsForCreator
       );
+      if(type) {
+        visualizer.setVisualizer(type);
+      }
       return visualizer;
     }
     return visualizers[0];

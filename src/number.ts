@@ -29,8 +29,8 @@ export class NumberModel extends VisualizerBase {
       this._chartAdapter = new VisualizerBase.chartAdapterType(this);
       this.chartTypes = this._chartAdapter.getChartTypes();
     }
-    if(this.options.availableChartTypes) {
-      this.chartTypes = this.options.availableChartTypes;
+    if(this.options.availableTypes) {
+      this.chartTypes = this.options.availableTypes;
     }
 
     if(this.chartTypes?.length > 0) {
