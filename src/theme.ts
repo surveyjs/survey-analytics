@@ -210,7 +210,7 @@ export class DashboardTheme implements IDashboardTheme {
       color: this.getCssVariableValue("--sjs2-color-fg-neutral-primary"),
       family: this.defaultFontFamily,
       size: this.getCssVariableValue("--sjs2-typography-font-size-small", true),
-      weight: 600
+      weight: 400
     };
   }
 

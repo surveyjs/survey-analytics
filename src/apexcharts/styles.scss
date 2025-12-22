@@ -1,7 +1,7 @@
 .sa-visualizer {
   .apexcharts-tooltip.apexcharts-tooltip {
-    padding: var(--sjs2-spacing-x150, 12px) var(--sjs2-spacing-x200, 16px);
-    border-radius: var(--sjs2-radius-container-tooltip, 8px);
+    padding: var(--sjs2-spacing-x075, 6px) var(--sjs2-spacing-x150, 12px);
+    border-radius: var(--sjs2-radius-container-tooltip, 4px);
     border-color: var(--sjs2-color-bg-neutral-primary, #1C1B20);
     background: var(--sjs2-color-bg-neutral-primary, #1C1B20);
     color: var(--sjs2-color-fg-neutral-primary, #FFF);
@@ -15,9 +15,14 @@
     }
   }
 
+  .apexcharts-tooltip-series-group.apexcharts-active {
+    padding: 0;
+  }
+
   .apexcharts-tooltip-y-group.apexcharts-tooltip-y-group {
     display: flex;
     flex-direction: column;
+    padding: 0;
   }
 
   .apexcharts-menu-icon.apexcharts-menu-icon svg {
