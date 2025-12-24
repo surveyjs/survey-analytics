@@ -16,7 +16,10 @@ export class Matrix extends SelectBase {
   }
 
   protected get matrixQuestion(): QuestionMatrixModel {
-    return <QuestionMatrixModel>this.question;
+    if(this.question instanceof QuestionMatrixModel) {
+      return <QuestionMatrixModel>this.question;
+    }
+    return this.options.question;
   }
 
   protected isSupportMissingAnswers(): boolean {

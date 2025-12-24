@@ -10,12 +10,14 @@ import { PostponeHelper } from "../src/visualizerBase";
 import { IPivotChartVisualizerOptions, PivotModel } from "../src/pivot";
 import { NumberModel } from "../src/number";
 import { HistogramModel } from "../src/histogram";
+import { Matrix } from "../src/matrix";
 import { QuestionTextModel, SurveyModel } from "survey-core";
 export * from "../src/card";
 export * from "../src/text";
 export * from "../src/number";
 export * from "../src/nps";
 export * from "../src/pivot";
+export * from "../src/matrix";
 
 test("Dashboard should accept visualizer definitions", () => {
   const visualizerDefinition = {
@@ -286,4 +288,89 @@ test("Set visualizer types from definitions", async () => {
   expect(chart2Visualizers[0].chartType).toBe("line");
   expect(chart2Visualizers[0]["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
   expect(chart2Visualizers[1].type).toBe("nps");
+});
+
+test("Create matrix visualizer", async () => {
+  const survey = new SurveyModel({
+    "pages": [
+      {
+        "elements": [
+          {
+            "type": "matrix",
+            "name": "teacher-evaluation",
+            "title": "Please rate the following aspects of the teacher's performance",
+            "columns": [
+              { "value": "1", "text": "Need Improvement" },
+              { "value": "2", "text": "Satisfactory" },
+              { "value": "3", "text": "Good" },
+              { "value": "4", "text": "Excellent" },
+              { "value": "5", "text": "Outstanding" }
+            ],
+            "rows": [
+              { "value": "well-prepared", "text": "The teacher is well-prepared for class and has good command over the subject." },
+              { "value": "syllabus", "text": "The teacher covers the entire syllabus in time." },
+              { "value": "delivery", "text": "The teacher delivers the contents efficiently and makes the subject interesting." },
+              { "value": "guidance", "text": "The teacher provides guidance in or outside the class." },
+              { "value": "encouragement", "text": "The teacher encourages students to participate in class discussions, ask questions, and share their opinions." },
+              { "value": "modern-tools", "text": "The teacher uses modern teaching tools, content notes, handouts, and suggests useful references (offline/online)." },
+              { "value": "weak", "text": "The teacher focuses on students who are academically weak or poor in performance." },
+              { "value": "counsel", "text": "The teacher counsels students in their physical, emotional, or academic difficulties." },
+              { "value": "non-traditional-methods", "text": "The teacher assesses students' knowledge using non-traditional methods such as quizzes, seminars, assignments, and presentations." },
+              { "value": "class-time", "text": "The teacher schedules class time and tasks to encourage students to solve problems and think critically." },
+              { "value": "study-material", "text": "The teacher provides study materials and references (textbooks, e-resources, journals, etc.) on time." },
+              { "value": "experiment", "text": "The teacher helps students conduct experiments through clear instructions or demonstrations." },
+              { "value": "disciplined", "text": "The classroom environment is well disciplined by the teacher." },
+              { "value": "evaluation", "text": "The evaluation process conducted by the teacher is uniform and unbiased." }
+            ],
+            "eachRowRequired": true,
+            "alternateRows": true
+          }
+        ]
+      }
+    ]
+  });
+  const dataFromServer = [
+    { "teacher-evaluation": { "well-prepared": "2", "syllabus": "5", "delivery": "5", "guidance": "5", "encouragement": "2", "modern-tools": "4", "weak": "5", "counsel": "1", "non-traditional-methods": "5", "class-time": "3", "study-material": "2", "experiment": "3", "disciplined": "4", "evaluation": "5" } },
+    { "teacher-evaluation": { "well-prepared": "3", "syllabus": "5", "delivery": "5", "guidance": "3", "encouragement": "4", "modern-tools": "5", "weak": "3", "counsel": "5", "non-traditional-methods": "5", "class-time": "4", "study-material": "1", "experiment": "4", "disciplined": "4", "evaluation": "4" } },
+    { "teacher-evaluation": { "well-prepared": "3", "syllabus": "5", "delivery": "4", "guidance": "4", "encouragement": "4", "modern-tools": "2", "weak": "1", "counsel": "3", "non-traditional-methods": "5", "class-time": "4", "study-material": "5", "experiment": "5", "disciplined": "5", "evaluation": "5" } },
+    { "teacher-evaluation": { "well-prepared": "5", "syllabus": "4", "delivery": "5", "guidance": "5", "encouragement": "3", "modern-tools": "4", "weak": "4", "counsel": "2", "non-traditional-methods": "4", "class-time": "2", "study-material": "4", "experiment": "3", "disciplined": "5", "evaluation": "2" } },
+    { "teacher-evaluation": { "well-prepared": "5", "syllabus": "5", "delivery": "4", "guidance": "5", "encouragement": "5", "modern-tools": "5", "weak": "5", "counsel": "3", "non-traditional-methods": "2", "class-time": "5", "study-material": "4", "experiment": "3", "disciplined": "4", "evaluation": "4" } },
+    { "teacher-evaluation": { "well-prepared": "2", "syllabus": "3", "delivery": "3", "guidance": "4", "encouragement": "1", "modern-tools": "3", "weak": "2", "counsel": "4", "non-traditional-methods": "3", "class-time": "5", "study-material": "5", "experiment": "4", "disciplined": "3", "evaluation": "4" } },
+    { "teacher-evaluation": { "well-prepared": "4", "syllabus": "3", "delivery": "4", "guidance": "5", "encouragement": "4", "modern-tools": "4", "weak": "5", "counsel": "3", "non-traditional-methods": "3", "class-time": "5", "study-material": "4", "experiment": "4", "disciplined": "5", "evaluation": "4" } },
+    { "teacher-evaluation": { "well-prepared": "4", "syllabus": "1", "delivery": "4", "guidance": "2", "encouragement": "5", "modern-tools": "4", "weak": "1", "counsel": "3", "non-traditional-methods": "4", "class-time": "5", "study-material": "5", "experiment": "4", "disciplined": "3", "evaluation": "4" } },
+    { "teacher-evaluation": { "well-prepared": "5", "syllabus": "3", "delivery": "4", "guidance": "3", "encouragement": "4", "modern-tools": "4", "weak": "5", "counsel": "3", "non-traditional-methods": "5", "class-time": "4", "study-material": "3", "experiment": "4", "disciplined": "4", "evaluation": "5" } },
+    { "teacher-evaluation": { "well-prepared": "3", "syllabus": "3", "delivery": "5", "guidance": "3", "encouragement": "2", "modern-tools": "4", "weak": "4", "counsel": "5", "non-traditional-methods": "3", "class-time": "3", "study-material": "3", "experiment": "4", "disciplined": "3", "evaluation": "3" } },
+    { "teacher-evaluation": { "well-prepared": "5", "syllabus": "3", "delivery": "3", "guidance": "5", "encouragement": "4", "modern-tools": "3", "weak": "3", "counsel": "5", "non-traditional-methods": "2", "class-time": "3", "study-material": "3", "experiment": "2", "disciplined": "5", "evaluation": "5" } },
+    { "teacher-evaluation": { "well-prepared": "4", "syllabus": "5", "delivery": "5", "guidance": "3", "encouragement": "5", "modern-tools": "3", "weak": "4", "counsel": "2", "non-traditional-methods": "4", "class-time": "4", "study-material": "2", "experiment": "1", "disciplined": "5", "evaluation": "5" } },
+    { "teacher-evaluation": { "well-prepared": "5", "syllabus": "1", "delivery": "1", "guidance": "5", "encouragement": "3", "modern-tools": "5", "weak": "2", "counsel": "5", "non-traditional-methods": "4", "class-time": "3", "study-material": "4", "experiment": "3", "disciplined": "5", "evaluation": "4" } },
+    { "teacher-evaluation": { "well-prepared": "4", "syllabus": "4", "delivery": "5", "guidance": "5", "encouragement": "3", "modern-tools": "2", "weak": "3", "counsel": "2", "non-traditional-methods": "5", "class-time": "2", "study-material": "1", "experiment": "5", "disciplined": "2", "evaluation": "5" } },
+    { "teacher-evaluation": { "well-prepared": "5", "syllabus": "3", "delivery": "3", "guidance": "5", "encouragement": "4", "modern-tools": "5", "weak": "4", "counsel": "5", "non-traditional-methods": "3", "class-time": "3", "study-material": "3", "experiment": "3", "disciplined": "5", "evaluation": "3" } },
+    { "teacher-evaluation": { "well-prepared": "4", "syllabus": "5", "delivery": "5", "guidance": "4", "encouragement": "5", "modern-tools": "2", "weak": "3", "counsel": "4", "non-traditional-methods": "1", "class-time": "3", "study-material": "5", "experiment": "3", "disciplined": "2", "evaluation": "5" } },
+    { "teacher-evaluation": { "well-prepared": "2", "syllabus": "1", "delivery": "5", "guidance": "5", "encouragement": "5", "modern-tools": "5", "weak": "5", "counsel": "5", "non-traditional-methods": "5", "class-time": "4", "study-material": "5", "experiment": "2", "disciplined": "4", "evaluation": "2" } },
+    { "teacher-evaluation": { "well-prepared": "3", "syllabus": "5", "delivery": "5", "guidance": "5", "encouragement": "5", "modern-tools": "2", "weak": "3", "counsel": "3", "non-traditional-methods": "5", "class-time": "4", "study-material": "4", "experiment": "4", "disciplined": "4", "evaluation": "4" } }
+  ];
+  const visualizerDefinition: any = {
+    type: "stackedbar",
+    dataField: "teacher-evaluation",
+    question: survey.getQuestionByName("teacher-evaluation")
+  };
+  const dashboard = new Dashboard({
+    questions: survey.getAllQuestions(),
+    data: dataFromServer,
+    visualizers: [visualizerDefinition]
+  });
+  expect(dashboard.panel.visualizers.length).toBe(1);
+
+  const visualizer = dashboard.panel.visualizers[0] as Matrix;
+  expect(visualizer.type).toBe("matrix");
+  expect(visualizer.chartType).toBe("stackedbar");
+
+  const result: any = (await visualizer.getAnswersData())["datasets"];
+  expect(result).toStrictEqual([
+    [6, 7, 9, 10, 6, 5, 5, 6, 7, 4, 5, 2, 7, 7],
+    [5, 2, 5, 3, 6, 6, 4, 2, 4, 6, 5, 7, 6, 7],
+    [4, 6, 3, 4, 3, 3, 5, 6, 4, 6, 4, 6, 3, 2],
+    [3, 0, 0, 1, 2, 4, 2, 3, 2, 2, 2, 2, 2, 2],
+    [0, 3, 1, 0, 1, 0, 2, 1, 1, 0, 2, 1, 0, 0]
+  ]);
 });
