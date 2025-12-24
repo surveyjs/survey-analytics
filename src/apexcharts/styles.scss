@@ -15,6 +15,10 @@
     }
   }
 
+  .apexcharts-xaxistooltip.apexcharts-xaxistooltip {
+    display: none;
+  }
+
   .apexcharts-tooltip-series-group.apexcharts-active {
     padding: 0;
   }
@@ -25,11 +29,11 @@
     padding: 0;
   }
 
-  .apexcharts-menu-icon.apexcharts-menu-icon svg {
+  .apexcharts-toolbar div svg {
     fill: var(--sjs2-color-fg-brand-primary, #19B394);
     opacity: var(--sjs2-opacity-x035, 0.35);
   }
-  .apexcharts-menu-icon.apexcharts-menu-icon:hover svg {
+  .apexcharts-toolbar div:hover svg {
     fill: var(--sjs2-color-fg-brand-primary, #19B394);
     opacity: 1;
   }

@@ -101,6 +101,7 @@ export class ApexChartsSetup {
       markers: {
         size: 10,
         strokeWidth: 1,
+        shape: "square",
       // customHTML: function() {
       //   return '<span class="sa-legend-item-marker"><i class="sa-legend-item-text"></i></span>';
       // }
