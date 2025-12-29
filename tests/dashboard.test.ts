@@ -351,8 +351,7 @@ test("Create matrix visualizer", async () => {
   ];
   const visualizerDefinition: any = {
     type: "stackedbar",
-    dataField: "teacher-evaluation",
-    question: survey.getQuestionByName("teacher-evaluation")
+    dataField: "teacher-evaluation"
   };
   const dashboard = new Dashboard({
     questions: survey.getAllQuestions(),
@@ -364,6 +363,7 @@ test("Create matrix visualizer", async () => {
   const visualizer = dashboard.panel.visualizers[0] as Matrix;
   expect(visualizer.type).toBe("matrix");
   expect(visualizer.chartType).toBe("stackedbar");
+  expect(visualizer["chartTypes"]).toStrictEqual(["stackedbar"]);
 
   const result: any = (await visualizer.getAnswersData())["datasets"];
   expect(result).toStrictEqual([
@@ -373,4 +373,80 @@ test("Create matrix visualizer", async () => {
     [3, 0, 0, 1, 2, 4, 2, 3, 2, 2, 2, 2, 2, 2],
     [0, 3, 1, 0, 1, 0, 2, 1, 1, 0, 2, 1, 0, 0]
   ]);
+});
+
+test("Create visualizer with predefined char type and available types", async () => {
+  const survey = new SurveyModel({
+    "pages": [
+      {
+        "elements": [
+          {
+            "type": "dropdown",
+            "name": "college",
+            "title": "Select your college",
+            "placeholder": "Select college...",
+            "choices": [
+              "Science College",
+              "Engineering College",
+              "Management College",
+              "Medical College",
+              "Fine Arts College"
+            ]
+          }
+        ]
+      }
+    ]
+  });
+  const dataFromServer = [
+    { "college": "Engineering College" },
+    { "college": "Management College" },
+    { "college": "Medical College" },
+    { "college": "Engineering College" },
+    { "college": "Fine Arts College" },
+    { "college": "Engineering College" },
+    { "college": "Science College" },
+    { "college": "Medical College" },
+    { "college": "Management College" },
+    { "college": "Medical College" },
+    { "college": "Science College" },
+    { "college": "Science College" },
+    { "college": "Management College" },
+    { "college": "Medical College" },
+    { "college": "Medical College" },
+    { "college": "Management College" },
+    { "college": "Engineering College" },
+    { "college": "Medical College" },
+    { "college": "Engineering College" },
+    { "college": "Medical College" },
+    { "college": "Medical College" },
+    { "college": "Engineering College" },
+    { "college": "Management College" },
+    { "college": "Medical College" },
+    { "college": "Engineering College" },
+    { "college": "Science College" },
+    { "college": "Science College" },
+    { "college": "Management College" },
+    { "college": "Engineering College" },
+    { "college": "Medical College" },
+    { "college": "Fine Arts College" },
+    { "college": "Engineering College" },
+    { "college": "Fine Arts College" },
+    { "college": "Science College" }
+  ];
+  const visualizerDefinition: any = {
+    type: "vbar",
+    availableTypes: ["bar", "vbar"],
+    dataField: "college",
+  };
+  const dashboard = new Dashboard({
+    questions: survey.getAllQuestions(),
+    data: dataFromServer,
+    visualizers: [visualizerDefinition]
+  });
+  expect(dashboard.panel.visualizers.length).toBe(1);
+
+  const visualizer = dashboard.panel.visualizers[0] as SelectBase;
+  expect(visualizer.type).toBe("selectBase");
+  expect(visualizer.chartType).toBe("vbar");
+  expect(visualizer["chartTypes"]).toStrictEqual(["bar", "vbar"]);
 });

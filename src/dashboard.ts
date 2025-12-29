@@ -40,6 +40,7 @@ export function getVisualizerDescriptions(visualizers: Array<string | IVisualize
       }
     } else if(!!v && typeof v === "object") {
       const type = v.type || v.availableTypes[0];
+      const question = questions.filter(q => q.name === v.dataField)[0];
       const config = chartConfig[type];
       const vd = {
         visualizerType: config?.visualizerType || type,
@@ -48,8 +49,10 @@ export function getVisualizerDescriptions(visualizers: Array<string | IVisualize
         dataName: v.dataField,
         title: v.title,
         chartType: config?.chartType,
+        question: question,
         options: {}
       } as IVisualizerDescription;
+
       const rootOptions = Object.keys(vd);
       Object.keys(v).forEach((key) => {
         if(!(key in rootOptions)) {

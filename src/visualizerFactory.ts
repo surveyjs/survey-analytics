@@ -46,19 +46,21 @@ export class VisualizerFactory {
         description.options || {}
       );
 
+      const dataName = description["name"] || description.question?.name || description.dataName || description.questionName;
+
       if(!!description.chartType) {
-        optionsForCreator[description["name"]] = Object.assign({},
-          optionsForCreator[description["name"]] || {},
+        optionsForCreator[dataName] = Object.assign({},
+          optionsForCreator[dataName] || {},
           {
             chartType: description.chartType,
-            allowChangeVisualizerType: false
+            availableTypes: description.availableTypes
           }
         );
       }
 
       question = description.question || {
-        name: description["name"],
-        valueName: description.dataName || description.questionName,
+        name: dataName,
+        valueName: description.question?.valueName || description.dataName || description.questionName,
         title: description.title,
         displayValueName: description.displayValueName,
         waitForQuestionIsReady: () => {
