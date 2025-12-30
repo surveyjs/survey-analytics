@@ -203,14 +203,24 @@ steps:
       $servicePath = "$(Build.SourcesDirectory)/$(ServiceRepoName)"
       $generatedPath = "$(Build.SourcesDirectory)/$(AnalyticsRepoName)/docs"
       $targetPath = "$servicePath/surveyjs.io/App_Data/DocsAnalytics"
+      
       cd $servicePath
       git config user.email "surveyjs.org@gmail.com"
       git config user.name "surveyjsdeveloper"
       git fetch origin $branch
       git checkout -B $branch origin/$branch
       git reset --hard origin/$branch
+
       if (!(Test-Path $targetPath)) { New-Item -ItemType Directory -Path $targetPath }
-      Copy-Item -Path "$generatedPath/classes.json", "$generatedPath/pmes.json", "$generatedPath/surveyjs_definition.json" -Destination $targetPath -Force
+
+      $files = @("classes.json", "pmes.json", "surveyjs_definition.json")
+      foreach ($f in $files) {
+          $src = "$generatedPath/$f"
+          if (Test-Path $src) {
+              Copy-Item -Path $src -Destination $targetPath -Force
+          }
+      }
+
       git add surveyjs.io/App_Data/DocsAnalytics
       if (git status --porcelain) {
           git commit -m "updated analytics docs for $branch [azurepipelines skip]"
@@ -240,6 +250,7 @@ steps:
       git config user.name "surveyjsdeveloper"
       git fetch origin $branch
       git checkout -B $branch origin/$branch
+      
       git add src/analytics-localization
       if (git status --porcelain) {
           git commit -m "updated analytics translations for $branch [azurepipelines skip]"
@@ -255,6 +266,7 @@ steps:
       OverWrite: true
       CleanTargetFolder: false
     displayName: "put surveyjs_definition.json into build"
+    continueOnError: true
 
   - task: CopyFiles@2
     inputs:
