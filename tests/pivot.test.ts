@@ -684,3 +684,27 @@ test("getCalculatedValues for array in answer data", async () => {
   const result = (await pivot.getCalculatedValues()).data;
   expect(result).toStrictEqual([[17, 17, 13, 17, 11, 19,]]);
 });
+
+test("getCalculatedValues with value aggregation", async () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("question1", "question2");
+  let values = pivot.getValues();
+  let seriesValues = pivot.getSeriesValues();
+  expect(values).toStrictEqual(["female", "male"]);
+  expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
+
+  pivot.setValueAggregation("question2", "question3");
+  values = pivot.getValues();
+  seriesValues = pivot.getSeriesValues();
+  expect(values).toStrictEqual(["female", "male"]);
+  expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[250, 300], [1200, 300], [1050, 400]]);
+
+  pivot.resetAggregations();
+  values = pivot.getValues();
+  seriesValues = pivot.getSeriesValues();
+  expect(values).toStrictEqual(["female", "male"]);
+  expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
+});

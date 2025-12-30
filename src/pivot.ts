@@ -32,6 +32,7 @@ export class PivotModel extends HistogramModel {
   public axisYQuestionNames: Array<string> = [];
   private questionsY: Array<VisualizerBase> = [];
   private _questionDefinition: Question | null = null;
+  private _aggregations: {[index: string]: string | ((acc: number, value: number) => number)} = {};
 
   constructor(
     public questions: Array<Question>,
@@ -301,14 +302,44 @@ export class PivotModel extends HistogramModel {
     for(let j = 0; j < this.questionsY.length; ++j) {
       if(dataRow[this.questionsY[j].name] !== undefined) {
         const questionValueType = this.getQuestionValueType(this.questionsY[j].question);
+        let seriseValueIndexName = this.questionsY[j].name;
         if(questionValueType === "enum" || questionValueType === "date") {
-          const seriesValueIndex = seriesValueIndexes[this.questionsY[j].name + "_" + dataRow[this.questionsY[j].name]];
-          statistics[seriesValueIndex][valueIndex]++;
-        } else {
-          const seriesValueIndex = seriesValueIndexes[this.questionsY[j].name];
-          statistics[seriesValueIndex][valueIndex] += parseFloat(dataRow[this.questionsY[j].name]);
+          seriseValueIndexName += "_" + dataRow[this.questionsY[j].name];
         }
+        const seriesValueIndex = seriesValueIndexes[seriseValueIndexName];
+        statistics[seriesValueIndex][valueIndex] = this.calculateAggregation(dataRow, this.questionsY[j].question.name, statistics[seriesValueIndex][valueIndex]);
       }
+    }
+  }
+
+  public resetAggregations() {
+    this._aggregations = {};
+    this.onDataChanged();
+  }
+
+  public setValueAggregation(axisYQuestion: string, aggregation: string | ((acc: number, value: number) => number)) {
+    this._aggregations[axisYQuestion] = aggregation;
+    this.onDataChanged();
+  }
+
+  protected calculateAggregation(dataRow: any, axisYQuestion: string, currentValue: number): number {
+    if(!dataRow || !axisYQuestion) {
+      return currentValue;
+    }
+    const aggregation = this._aggregations[axisYQuestion] || axisYQuestion;
+    if(typeof aggregation === "function") {
+      return aggregation(currentValue, dataRow[axisYQuestion]);
+    }
+    const aggregationQuestion = this.questions.filter((q) => q.name === aggregation)[0];
+    const value = dataRow[aggregationQuestion?.name];
+    if(value === undefined) {
+      return currentValue;
+    }
+    const questionValueType = this.getQuestionValueType(aggregationQuestion);
+    if(questionValueType === "enum" || questionValueType === "date") {
+      return currentValue + 1;
+    } else {
+      return currentValue + parseFloat(value);
     }
   }
 
