@@ -1,27 +1,35 @@
 @use "globals" as *;
 
+.sa-visualizer-wrapper {
+  min-width: 450px;
+  padding-top: var(--sjs2-spacing-x300, 24px);
+  background: var(--sjs2-color-utility-surface-muted, rgba(28, 27, 32, 0.05));
+}
+
 .sa-visualizer__toolbar {
 }
 
 .sa-visualizer__header {
-  font-family: $font-family-secondary;
+  font-family: $font-family;
   font-size: $root-font-size;
 }
 
 .sa-visualizer__content {
   font-family: $font-family;
   display: inline-block;
-  overflow: hidden;
   width: 100%;
 }
 
 .sa-visualizer__footer {
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .sa-visualizer__footer-title {
   display: inline-block;
-  font-family: $font-family-secondary;
+  font-family: $font-family;
   font-size: $root-font-size;
   color: #404040;
   line-height: 34px;

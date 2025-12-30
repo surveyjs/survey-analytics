@@ -29,16 +29,11 @@ SurveyAnalyticsTabulator.TableExtensions.registerExtension({
   name: "showinsurvey",
   visibleIndex: 0,
   render: (table, opt) => {
-    const btn = SurveyAnalyticsTabulator.DocumentHelper.createElement(
-      "button",
-      "rounded-button",
-      {
-        innerText: "Show in Survey",
-        onclick: (e) => {
+    const btn = SurveyAnalyticsTabulator.DocumentHelper.createButton((e) => {
           e.stopPropagation();
-        },
-      }
+        }, "Show in Survey", "sa-button"
     );
+    btn.className += " sa-button-brand-tertiary";
     return btn;
   },
 });
@@ -48,17 +43,13 @@ SurveyAnalyticsTabulator.TableExtensions.registerExtension({
   name: "delete",
   visibleIndex: 1,
   render: (table, opt) => {
-    const btn = SurveyAnalyticsTabulator.DocumentHelper.createElement(
-      "button",
-      "rounded-button rounded-button--danger",
-      {
-        innerText: "Delete Result",
-        onclick: (e) => {
+    const btn = SurveyAnalyticsTabulator.DocumentHelper.createButton(
+      (e) => {
           e.stopPropagation();
           opt.row.remove();
-        },
-      }
+        }, "Delete Result", "sa-button"
     );
+    btn.className += " sa-button-brand-tertiary";
     return btn;
   },
 });
@@ -67,6 +58,17 @@ var surveyAnalyticsDataTables = new SurveyAnalyticsTabulator.Tabulator(
   survey,
   normalizedData
 );
+
+const checkbox = document.getElementById('toggle-checkbox');
+checkbox.addEventListener('change', () => {
+  if (checkbox.checked) {
+    surveyAnalyticsTabulator.applyTheme(SurveyAnalyticsTheme.DefaultDark);
+  } else {
+    surveyAnalyticsTabulator.applyTheme(SurveyAnalyticsTheme.DefaultLight);
+  }
+});
+// surveyAnalyticsTabulator.applyTheme(SurveyAnalyticsTheme.DefaultDark);
+// surveyAnalyticsTabulator.applyTheme(SurveyAnalyticsTheme.DefaultLight);
 
 SurveyAnalyticsTabulator.TableExtensions.findExtension(
   "row",
