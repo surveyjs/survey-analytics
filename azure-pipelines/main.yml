@@ -36,7 +36,6 @@ resources:
 #          include:
 #            - master
 #            - V3
-#
 
 pool:
   vmImage: "Ubuntu-22.04"
