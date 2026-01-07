@@ -29,7 +29,7 @@ resources:
       endpoint: github.com_surveyjsdeveloper
       name: surveyjs/survey-utils
   pipelines:
-    - pipeline: LibraryTrigger
+    - pipeline: 'LibraryTrigger'
       source: 'Library'
       trigger:
         branches:
