@@ -30,7 +30,7 @@ resources:
       name: surveyjs/survey-utils
   pipelines:
     - pipeline: LibraryTrigger
-      source: 'Library123'
+      source: 'Main/Library'
       trigger:
         branches:
           include:
