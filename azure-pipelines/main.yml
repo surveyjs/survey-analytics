@@ -30,14 +30,12 @@ resources:
       name: surveyjs/survey-utils
   pipelines:
     - pipeline: LibraryTrigger
-      project: 'Libraries'
-      source: 'Library'
+      source: 'Library123'
       trigger:
         branches:
           include:
             - master
             - V3
-
 
 pool:
   vmImage: "Ubuntu-22.04"
