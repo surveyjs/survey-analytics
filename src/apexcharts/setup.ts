@@ -147,6 +147,8 @@ export class ApexChartsSetup {
   static defaultAxisLabelConfig(theme: DashboardTheme) {
     return {
       labels: {
+        trim: true,
+        hideOverlappingLabels: false,
         style: {
           ...ApexChartsSetup.defaultAxisLabelFont(theme)
         },
