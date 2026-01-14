@@ -208,6 +208,13 @@
   user-select: none;
 }
 
+@media screen and (max-width: 600px) {
+  .sa-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 .sa-question__content .sa-toolbar--has-content {
   padding-bottom: var(--sjs2-spacing-x200, 16px);
 }

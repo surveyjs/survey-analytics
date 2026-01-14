@@ -195,9 +195,17 @@ export class DocumentHelper {
 
     // Add open/close handler
     dropdownHeader.addEventListener("click", (e) => {
+      dropdownList.style.width = "auto";
+
       const isOpened = dropdownHeader.classList.toggle(dropdownOpenedClass);
       dropdownList.classList.toggle(dropdownOpenedClass);
       dropdownHeader.setAttribute("aria-expanded", isOpened ? "true" : "false");
+
+      const documentWidth = document.body.clientWidth;
+      const menuRect = dropdownList.getBoundingClientRect();
+      if(menuRect.left + menuRect.width > documentWidth - 20) {
+        dropdownList.style.width = `${documentWidth - menuRect.left - 40}px`;
+      }
 
       if(!isOpened) {
         currentFocusIndex = -1;

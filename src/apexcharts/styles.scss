@@ -74,6 +74,7 @@
     }
   }
 
+  .apx-legend-position-top.apx-legend-position-top,
   .apx-legend-position-bottom.apx-legend-position-bottom {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
@@ -99,9 +100,39 @@
     }
   }
 
+  .sa-question-layouted .apx-legend-position-top.apx-legend-position-top,
   .sa-question-layouted .apx-legend-position-bottom.apx-legend-position-bottom {
     @media screen and (min-width: 900px) {
       grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .apexcharts-legend.apexcharts-legend {
+    border-radius: var(--sjs2-radius-x250, 20px);
+    border: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
+    background: var(--sjs2-color-bg-basic-primary, #fff);
+    padding: var(--sjs2-spacing-x250, 20px);
+    gap: var(--sjs2-spacing-x150, 12px);
+  }
+
+  .apexcharts-legend:not(.apx-legend-position-left):not(.apx-legend-position-top):not(.apx-legend-position-right):not(
+      .apx-legend-position-bottom
+    ) {
+    padding: 0;
+    border: unset;
+  }
+
+  .apexcharts-legend.apx-legend-position-right,
+  .apexcharts-legend.apx-legend-position-left {
+    bottom: auto;
+  }
+
+  .apexcharts-legend-series.apexcharts-legend-series {
+    gap: var(--sjs2-spacing-x100, 8px);
+
+    .apexcharts-legend-text {
+      padding: 0;
+      margin: 0;
     }
   }
 
