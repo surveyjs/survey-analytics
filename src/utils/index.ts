@@ -196,6 +196,8 @@ export class DocumentHelper {
     // Add open/close handler
     dropdownHeader.addEventListener("click", (e) => {
       dropdownList.style.width = "auto";
+      const parentContainerWidth = dropdownContainer.getBoundingClientRect().width;
+      dropdownList.style.minWidth = `${parentContainerWidth}px`;
 
       const isOpened = dropdownHeader.classList.toggle(dropdownOpenedClass);
       dropdownList.classList.toggle(dropdownOpenedClass);
@@ -559,6 +561,9 @@ export class DocumentHelper {
     };
 
     dropdownHeader.addEventListener("click", (e) => {
+      const parentContainerWidth = dropdownContainer.getBoundingClientRect().width;
+      dropdownList.style.minWidth = `${parentContainerWidth}px`;
+
       updateOptions();
       const isOpened = dropdownHeader.classList.toggle(dropdownOpenedClass);
       dropdownList.classList.toggle(dropdownOpenedClass);

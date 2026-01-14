@@ -174,9 +174,9 @@
   margin: 0;
   list-style: none;
   transition: all 0.3s;
-
   margin-top: 8px;
   padding: var(--sjs2-layout-container-drop-vertical, 8px) var(--sjs2-layout-container-drop-horizontal, 8px);
+  box-sizing: border-box;
 
   /* sjs2/shadow/large */
   box-shadow: var(--sjs2-shadow-size-large-offset-x, 0) var(--sjs2-shadow-size-large-offset-y, 6px) var(--sjs2-shadow-size-large-blur, 12px) var(--sjs2-shadow-size-large-spread, 4px) var(--sjs2-shadow-color-large, rgba(0, 76, 68, 0.10));
