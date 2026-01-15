@@ -14,6 +14,7 @@ import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
 import { DateRangeWidget, IDateRange, IDateRangeOptions, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
 import "./visualizationPanel.scss";
+import { getDataName } from "./visualizerDescription";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -725,7 +726,8 @@ export class VisualizationPanel extends VisualizerBase {
           selectedText: string
         ) => {
           filterInfo.update({ value: selectedValue, text: selectedText });
-          this.setFilter(question.name, selectedValue);
+          const dataName = getDataName(question);
+          this.setFilter(dataName, selectedValue);
         };
       }
 

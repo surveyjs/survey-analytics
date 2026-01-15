@@ -12,3 +12,7 @@ export interface IVisualizerDescription {
   title?: string;
   options?: { [index: string]: any };
 }
+
+export function getDataName(description: Question | IVisualizerDescription) {
+  return description["name"] || description.question?.name || description.dataName || description.questionName;
+}

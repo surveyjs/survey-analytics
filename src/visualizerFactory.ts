@@ -1,7 +1,7 @@
 import { Question, QuestionCompositeModel, QuestionCustomModel } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
-import { IVisualizerDescription } from "./visualizerDescription";
+import { getDataName, IVisualizerDescription } from "./visualizerDescription";
 
 /**
  * An object that allows you to create individual visualizers without creating a [visualization panel](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel).
@@ -46,7 +46,7 @@ export class VisualizerFactory {
         description.options || {}
       );
 
-      const dataName = description["name"] || description.question?.name || description.dataName || description.questionName;
+      const dataName = getDataName(description);
 
       if(!!description.chartType) {
         optionsForCreator[dataName] = Object.assign({},
