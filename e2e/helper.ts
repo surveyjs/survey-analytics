@@ -96,6 +96,7 @@ export async function compareScreenshot(page: Page, elementSelector: string | Lo
     content: "textarea::-webkit-resizer { visibility: hidden !important; }"
   });
   await resetFocusToBody(page);
+  await page.mouse.move(0, 0);
 
   const options = {
     timeout: 10000
