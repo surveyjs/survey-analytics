@@ -22,7 +22,6 @@ test.describe("Toolbar visualizers", () => {
     await page.locator(".sa-dropdown").first().click();
 
     await page.setViewportSize({ width: 500, height: 1000 });
-    await resetFocusToBody(page);
     await compareScreenshot(page, visLocator, "visualizer-toolbar-mobile-view.png", mask);
 
     await page.locator(".sa-dropdown").first().click();

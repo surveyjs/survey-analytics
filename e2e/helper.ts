@@ -95,6 +95,7 @@ export async function compareScreenshot(page: Page, elementSelector: string | Lo
   await page.addStyleTag({
     content: "textarea::-webkit-resizer { visibility: hidden !important; }"
   });
+  await resetFocusToBody(page);
 
   const options = {
     timeout: 10000
