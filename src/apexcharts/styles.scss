@@ -108,6 +108,7 @@
   }
 
   .apexcharts-legend.apexcharts-legend {
+    max-height: 100%;
     border-radius: var(--sjs2-radius-x250, 20px);
     border: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
     background: var(--sjs2-color-bg-basic-primary, #fff);
