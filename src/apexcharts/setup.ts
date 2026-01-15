@@ -1063,7 +1063,7 @@ export class ApexChartsSetup {
     };
 
     // Tooltip settings
-    const tooltip: any = ApexChartsSetup.defaultTooltipConfig(model.theme);
+    const tooltip: any = { enabled: false };
 
     const series = [{
       data: [{
