@@ -25,7 +25,6 @@
 }
 
 .sa-panel__header > .sa-toolbar {
-  min-height: 48px;
   gap: var(--sjs2-spacing-x300, 24px);
 }
 
@@ -199,7 +198,6 @@
 
 .sa-toolbar {
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
   column-gap: var(--sjs2-spacing-static-x100, 8px);
   row-gap: var(--sjs2-spacing-static-x150, 12px);
@@ -210,7 +208,6 @@
 
 @media screen and (max-width: 600px) {
   .sa-toolbar {
-    flex-direction: column;
     align-items: flex-start;
   }
 }
