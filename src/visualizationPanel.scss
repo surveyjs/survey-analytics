@@ -5,20 +5,19 @@
 .sa-pivot__header {
   display: flex;
   flex-direction: column;
-  
+
   &.sa-toolbar--has-content {
     padding: var(--sjs2-spacing-x200, 16px);
     border-radius: var(--sjs2-radius-container-panel, 16px);
     background: var(--sjs2-color-bg-basic-primary, #FFF);
     box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
     gap: var(--sjs2-spacing-x200, 16px);
-    
   }
 }
 
 .sa-panel__header.sa-toolbar--has-content {
   margin-inline: var(--sjs2-spacing-x300, 24px);
-  
+
   @media screen and (max-width: 600px) {
     margin-inline: var(--sjs2-spacing-x150, 12px);
   }
@@ -32,7 +31,7 @@
   padding: var(--sjs2-spacing-x300, 24px);
   width: calc(100% - 2 * var(--sjs2-spacing-x300, 24px));
 
-  @media screen and (max-width: 600px) { 
+  @media screen and (max-width: 600px) {
     padding: var(--sjs2-spacing-x150, 12px);
     width: calc(100% - 2 * var(--sjs2-spacing-x150, 12px));
   }
@@ -79,7 +78,7 @@
   @media screen and (min-width: 1400px) {
     width: calc(50% - var(--sjs2-spacing-x300, 24px) * 1.5);
   }
-  @media screen and (max-width: 600px) { 
+  @media screen and (max-width: 600px) {
     margin-inline-start: var(--sjs2-spacing-x150, 12px);
     margin-top: var(--sjs2-spacing-x150, 12px);
     width: calc(100% - var(--sjs2-spacing-x150, 12px) * 2);
@@ -93,7 +92,7 @@
 .sa-question__title {
   margin: 0;
   padding-bottom: var(--sjs2-spacing-x200, 16px);
-  color: var(--sjs2-color-fg-basic-primary, #1C1B20);
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
 
   /* sjs2/typography/default-strong */
   font-family: $font-family;
@@ -187,7 +186,7 @@
   .sa-question__hide-action {
     top: unset;
     right: 0px;
-    bottom: -44px;
+    bottom: 0px;
 
     @media screen and (max-width: 600px) {
       top: 0;
@@ -223,12 +222,12 @@
   align-items: center;
   gap: var(--sjs2-layout-control-action-small-box-gap, 0);
   border-radius: var(--sjs2-radius-control-action, 8px);
-  background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
+  background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0));
   cursor: pointer;
 }
 
 .sa-toolbar__button:hover {
-  background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
+  background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.1));
 }
 
 .sa-toolbar__button:disabled {
@@ -243,17 +242,17 @@
 
 .sa-toolbar__button--disabled,
 .sa-toolbar__button--disabled:hover {
-  opacity: var(--sjs2-opacity-disabled, 0.25);  
+  opacity: var(--sjs2-opacity-disabled, 0.25);
   background: transparent;
   cursor: default;
-  
+
   .sa-toolbar__button-text {
-    color: var(--sjs2-color-fg-state-common-disabled, rgba(28, 27, 32, 0.40));
+    color: var(--sjs2-color-fg-state-common-disabled, rgba(28, 27, 32, 0.4));
   }
 }
 
 .sa-toolbar__button-text {
-  color: var(--sjs2-color-fg-brand-primary, #19B394);
+  color: var(--sjs2-color-fg-brand-primary, #19b394);
   text-align: center;
   padding: var(--sjs2-layout-control-action-small-label-vertical, 0) var(--sjs2-layout-control-action-small-label-horizontal, 8px);
 
@@ -394,7 +393,7 @@
 }
 
 .sa-question__filter-text {
-  color: var(--sjs2-color-fg-basic-primary, #1C1B20);
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
   text-align: center;
 
   /* sjs2/typography/default */
