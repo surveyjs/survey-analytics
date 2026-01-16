@@ -1,11 +1,12 @@
 import { Question, ItemValue } from "survey-core";
 import { ICalculationResult, IChartAdapter, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
-import { DocumentHelper } from "./utils/index";
+import { DocumentHelper, IDropdownItemOption } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 import { IVisualizerWithSelection } from "./selectBase";
 import { Event } from "survey-core";
 import { IDashboardTheme } from "./theme";
+import { chartConfig, getVisualizerNameByType } from "./chartConfig";
 
 export class AlternativeVisualizersWrapper
   extends VisualizerBase
@@ -15,8 +16,24 @@ export class AlternativeVisualizersWrapper
 
   private updateVisualizerSelector() {
     if(!!this.visualizerSelector) {
-      (this.visualizerSelector as any).setValue(this.visualizer.type);
+      (this.visualizerSelector as any).setValue(this.visualizer["chartType"] || this.visualizer.type);
     }
+  }
+
+  private getVisualizerSwitchItems(): Array<IDropdownItemOption> {
+    const result:Array<IDropdownItemOption> = [];
+
+    this.visualizers.forEach((visualizer) => {
+      const names = getVisualizerNameByType(visualizer.type, visualizer["chartTypes"]);
+      names.forEach(name => {
+        result.push({
+          value: name,
+          text: localization.getString("chartType_" + name) || localization.getString("visualizer_" + name),
+        });
+      });
+    });
+
+    return result;
   }
 
   constructor(
@@ -47,13 +64,8 @@ export class AlternativeVisualizersWrapper
     if(this.options.allowChangeVisualizerType !== false) {
       this.registerToolbarItem("changeVisualizer", () =>
         this.visualizerSelector = DocumentHelper.createDropdown(
-          this.visualizers.map((visualizer) => {
-            return {
-              value: visualizer.type,
-              text: localization.getString("visualizer_" + visualizer.type),
-            };
-          }),
-          (option: any) => this.visualizer.type === option.value,
+          this.getVisualizerSwitchItems(),
+          (option: any) => this.visualizer["chartType"] === option.value || this.visualizer.type === option.value,
           (e: any) => this.setVisualizer(e)
         ), "dropdown", 0
       );
@@ -110,7 +122,15 @@ export class AlternativeVisualizersWrapper
   *
   **/
   public setVisualizer(type: string, quiet = false): void {
-    const visualizerCandidate = this.visualizers.filter((v) => v.type === type)[0];
+    let visualizerCandidate = this.visualizers.filter((v) => v.type === type)[0];
+    let chartType: string;
+    if(!visualizerCandidate && !!chartConfig[type]) {
+      chartType = chartConfig[type].chartType;
+      if(chartConfig[type].visualizerType === "gauge") type = "number";
+      else if(chartConfig[type].visualizerType === "chart") type = "selectBase";
+      else type = chartConfig[type].visualizerType;
+      visualizerCandidate = this.visualizers.filter((v) => v.type === type)[0];
+    }
     if(!!visualizerCandidate && visualizerCandidate !== this.visualizer) {
       let isFooterCollapsed;
       if(!!this.visualizer) {
@@ -128,6 +148,10 @@ export class AlternativeVisualizersWrapper
         this.onVisualizerChanged.fire(this, { visualizer: this.visualizer });
         this.stateChanged("visualizer", type);
       }
+      this.updateVisualizerSelector();
+    }
+    if(chartType && !!this.visualizer && !!this.visualizer["setChartType"]) {
+      this.visualizer["setChartType"](chartType);
       this.updateVisualizerSelector();
     }
   }

@@ -1,6 +1,12 @@
 import { glc } from "survey-core";
 import { localization } from "../localizationManager";
 
+export interface IDropdownItemOption {
+  value: string;
+  text: string;
+  title?: string;
+  icon?: string;
+}
 export class DocumentHelper {
   public static createSelector(
     options: Array<{ value: string, text: string }> | Function,
@@ -55,7 +61,7 @@ export class DocumentHelper {
    * @returns {HTMLElement} - Created dropdown element
    */
   public static createDropdown(
-    options: Array<{value: string, text: string, title?: string, icon?: string}> | (() => Array<{value: string, text: string, title?: string, icon?: string}>),
+    options: Array<IDropdownItemOption> | (() => Array<IDropdownItemOption>),
     isSelected: (option: {value: string, text: string, icon?: string}) => boolean,
     handler: (value: string) => void,
     placeholder = "Select...",
@@ -356,7 +362,7 @@ export class DocumentHelper {
   }
 
   public static createActionDropdown(
-    options: Array<{value: string, text: string, title?: string, icon?: string}> | (() => Array<{value: string, text: string, title?: string, icon?: string}>),
+    options: Array<IDropdownItemOption> | (() => Array<IDropdownItemOption>),
     isSelected: (option: {value: string, text: string, icon?: string}) => boolean,
     handler: (value: string) => boolean,
     title: string | Function,
