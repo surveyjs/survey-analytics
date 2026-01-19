@@ -32,17 +32,17 @@ test("Combining visualizer types and chart types", () => {
 
   const visualizations = altVisualizer.getVisualizers();
   expect(visualizations.length).toBe(3);
-  expect(visualizations[0].type).toBe("selectBase");
+  expect(visualizations[0].type).toBe("chartmodel");
   expect((visualizations[0] as SelectBase)["chartTypes"]).toStrictEqual(["bar", "vbar", "pie", "doughnut"]);
-  expect(visualizations[1].type).toBe("number");
+  expect(visualizations[1].type).toBe("numbermodel");
   expect((visualizations[1] as NumberModel)["chartTypes"]).toStrictEqual(["gauge", "bullet"]);
-  expect(visualizations[2].type).toBe("histogram");
+  expect(visualizations[2].type).toBe("histogrammodel");
   expect((visualizations[2] as HistogramModel)["chartTypes"]).toStrictEqual(["vbar", "bar"]);
 
   const visualizerSwitchItems = altVisualizer["getVisualizerSwitchItems"]();
-  expect(visualizerSwitchItems.length).toBe(7);
-  expect(visualizerSwitchItems.map(i => i.value)).toStrictEqual(["bar", "vbar", "pie", "doughnut", "gauge", "bullet", "histogram"]);
-  expect(visualizerSwitchItems.map(i => i.text)).toStrictEqual(["Bar", "Vertical Bar", "Pie", "Doughnut", "Gauge", "Bullet", "chartType_histogram"]);
+  expect(visualizerSwitchItems.length).toBe(8);
+  expect(visualizerSwitchItems.map(i => i.value)).toStrictEqual(["bar", "vbar", "pie", "doughnut", "gauge", "bullet", "histogram", "vistogram"]);
+  expect(visualizerSwitchItems.map(i => i.text)).toStrictEqual(["Bar", "Vertical Bar", "Pie", "Doughnut", "Gauge", "Bullet", "Histogram", "chartType_vistogram"]);
 });
 
 test("setVisualizer by chartType", () => {
@@ -52,18 +52,18 @@ test("setVisualizer by chartType", () => {
   let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
   let altVisualizer = visPanel.getVisualizer("score") as AlternativeVisualizersWrapper;
 
-  expect(altVisualizer.getVisualizer().type).toBe("selectBase");
+  expect(altVisualizer.getVisualizer().type).toBe("chartmodel");
   expect((altVisualizer.getVisualizer() as SelectBase).chartType).toBe("bar");
 
   altVisualizer.setVisualizer("bullet");
-  expect(altVisualizer.getVisualizer().type).toBe("number");
+  expect(altVisualizer.getVisualizer().type).toBe("numbermodel");
   expect((altVisualizer.getVisualizer() as NumberModel).chartType).toBe("bullet");
 
   altVisualizer.setVisualizer("pie");
-  expect(altVisualizer.getVisualizer().type).toBe("selectBase");
+  expect(altVisualizer.getVisualizer().type).toBe("chartmodel");
   expect((altVisualizer.getVisualizer() as SelectBase).chartType).toBe("pie");
 
   altVisualizer.setVisualizer("vbar");
-  expect(altVisualizer.getVisualizer().type).toBe("selectBase");
+  expect(altVisualizer.getVisualizer().type).toBe("chartmodel");
   expect((altVisualizer.getVisualizer() as SelectBase).chartType).toBe("vbar");
 });

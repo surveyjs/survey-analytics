@@ -154,7 +154,8 @@ test("Options passed to root panel and visualizer", async () => {
   const visualizer = dashboard.panel.visualizers[0] as NumberModel;
   expect(visualizer.options.someVisualizerOption).toEqual("vis");
   expect(visualizer.options.somePanelOption).toEqual("panel");
-  expect(visualizer.type).toBe("number");
+  expect(visualizer.type).toBe("numbermodel");
+  expect(visualizer.chartType).toBe("gauge");
   expect(visualizer.dataNames[0]).toEqual(visualizerDefinition.dataField);
 });
 
@@ -273,9 +274,9 @@ test("Set visualizer types from definitions", async () => {
   const chart1Visualizers = chart1.getVisualizers();
   expect(chart1Visualizers.length).toBe(2);
   expect(chart1.getVisualizer().type).toBe("nps");
-  expect(chart1Visualizers[0].type).toBe("selectBase");
-  expect(chart1Visualizers[0].chartType).toBe("line");
-  expect(chart1Visualizers[0]["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
+  expect(chart1Visualizers[0].type).toBe("chartmodel");
+  expect((chart1Visualizers[0] as SelectBase).chartType).toBe("line");
+  expect((chart1Visualizers[0] as SelectBase)["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
   expect(chart1Visualizers[1].type).toBe("nps");
 
   const chart2 = dashboard.panel.visualizers[1] as AlternativeVisualizersWrapper;
@@ -283,10 +284,10 @@ test("Set visualizer types from definitions", async () => {
 
   const chart2Visualizers = chart2.getVisualizers();
   expect(chart2Visualizers.length).toBe(2);
-  expect(chart2.getVisualizer().type).toBe("selectBase");
-  expect(chart2Visualizers[0].type).toBe("selectBase");
-  expect(chart2Visualizers[0].chartType).toBe("line");
-  expect(chart2Visualizers[0]["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
+  expect(chart2.getVisualizer().type).toBe("chartmodel");
+  expect(chart2Visualizers[0].type).toBe("chartmodel");
+  expect((chart2Visualizers[0] as SelectBase).chartType).toBe("line");
+  expect((chart2Visualizers[0] as SelectBase)["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
   expect(chart2Visualizers[1].type).toBe("nps");
 });
 
@@ -361,7 +362,7 @@ test("Create matrix visualizer", async () => {
   expect(dashboard.panel.visualizers.length).toBe(1);
 
   const visualizer = dashboard.panel.visualizers[0] as Matrix;
-  expect(visualizer.type).toBe("matrix");
+  expect(visualizer.type).toBe("matrixmodel");
   expect(visualizer.chartType).toBe("stackedbar");
   expect(visualizer["chartTypes"]).toStrictEqual(["stackedbar"]);
 
@@ -446,7 +447,7 @@ test("Create visualizer with predefined char type and available types", async ()
   expect(dashboard.panel.visualizers.length).toBe(1);
 
   const visualizer = dashboard.panel.visualizers[0] as SelectBase;
-  expect(visualizer.type).toBe("selectBase");
+  expect(visualizer.type).toBe("chartmodel");
   expect(visualizer.chartType).toBe("vbar");
   expect(visualizer["chartTypes"]).toStrictEqual(["bar", "vbar"]);
 });

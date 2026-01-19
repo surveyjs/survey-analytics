@@ -19,7 +19,7 @@ test("register and get", () => {
   ))();
 
   expect(textVizualizer.type).toBe("text");
-  expect(wordCloudVizualizer.type).toBe("wordcloud");
+  expect(wordCloudVizualizer.type).toBe("wordcloudmodel");
   expect(VisualizationManager.vizualizers.text.length).toBe(2);
 });
 

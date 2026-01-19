@@ -16,6 +16,12 @@ export const chartTypes = {
   "matrixDropdownGrouped": ["stackedbar", "bar", "pie", "doughnut"],
   "pivot": ["vbar", "bar", "line", "stackedbar", "pie", "doughnut"], // ["vbar", "bar"]
   "ranking": ["bar", "vbar", "pie", "doughnut", "radar"],
+
+  "numbermodel": ["gauge", "bullet"],
+  "chartmodel": ["bar", "vbar", "pie", "doughnut"],
+  "histogrammodel": ["vbar", "bar"],
+  "matrixmodel": ["bar", "stackedbar", "pie", "doughnut"],
+  "rankingmodel": ["bar", "vbar", "pie", "doughnut", "radar"],
 };
 
 export class PlotlyChartAdapter implements IChartAdapter {
@@ -54,7 +60,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
         });
       }
     }
-    if(this.model.type === "number") {
+    if(this.model.type === "numbermodel") {
       config.displayModeBar = true;
     }
   }

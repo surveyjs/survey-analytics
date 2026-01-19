@@ -53,7 +53,7 @@ export class NumberModel extends VisualizerBase {
     options: { [index: string]: any } = {},
     type?: string
   ) {
-    super(question, data, options, type || "number");
+    super(question, data, options, type || "numbermodel");
 
     if(!!this.question.displayValueName) {
       this.displayValueName = this.question.displayValueName;
@@ -180,6 +180,7 @@ export class NumberModel extends VisualizerBase {
 }
 
 VisualizationManager.registerVisualizer("number", NumberModel, 200);
+VisualizationManager.registerVisualizer("numbermodel", NumberModel);
 VisualizationManager.registerVisualizer("rating", NumberModel, 200);
 VisualizationManager.registerVisualizer("expression", NumberModel);
 VisualizationManager.registerVisualizer("gauge", NumberModel);

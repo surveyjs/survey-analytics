@@ -10,7 +10,7 @@ export class Matrix extends SelectBase {
     options?: Object,
     type?: string
   ) {
-    super(question, data, options, type || "matrix");
+    super(question, data, options, type || "matrixmodel");
     this._transposeData = true;
     // this.getAnswersData();
   }
@@ -111,3 +111,4 @@ export class Matrix extends SelectBase {
 }
 
 VisualizationManager.registerVisualizer("matrix", Matrix);
+VisualizationManager.registerVisualizer("matrixmodel", Matrix);

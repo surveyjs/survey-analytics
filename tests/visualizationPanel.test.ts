@@ -578,7 +578,7 @@ test("set state for non-existing questions", () => {
         "isVisible": true,
         "name": "question1",
         "type": undefined,
-        "visualizer": "wordcloud"
+        "visualizer": "wordcloudmodel"
       },
       {
         "displayName": "question2",
@@ -586,7 +586,7 @@ test("set state for non-existing questions", () => {
         "isVisible": true,
         "name": "question2",
         "type": undefined,
-        "visualizer": "wordcloud"
+        "visualizer": "wordcloudmodel"
       },
     ],
     "locale": "ru",
@@ -616,7 +616,7 @@ test("set state for non-existing questions", () => {
         "isVisible": true,
         "name": "question1",
         "type": undefined,
-        "visualizer": "wordcloud"
+        "visualizer": "wordcloudmodel"
       },
     ],
     "locale": "ru",
@@ -1100,7 +1100,7 @@ test("Generate visualizer names", () => {
   let visPanel = new VisualizationPanel([visualizerDefinition1, visualizerDefinition2], data, {});
 
   expect(visPanel.visualizers.length).toEqual(2);
-  expect(visPanel.visualizers[0].type).toEqual("number");
+  expect(visPanel.visualizers[0].type).toEqual("numbermodel");
   expect(visPanel.visualizers[0].name.indexOf("visualizer")).toEqual(0);
   expect(visPanel.visualizers[1].type).toEqual("nps");
   expect(visPanel.visualizers[1].name.indexOf("visualizer")).toEqual(0);
@@ -1134,14 +1134,14 @@ test("allowChangeVisualizerType", () => {
     allowChangeVisualizerType: false,
   });
 
-  expect(visPanel["visualizers"][0].type).toBe("selectBase");
+  expect(visPanel["visualizers"][0].type).toBe("chartmodel");
   expect(visPanel["visualizers"][0]["toolbarItemCreators"]["changeChartType"]).toBeUndefined();
   expect(visPanel["visualizers"][1].type).toBe("alternative");
   expect(visPanel["visualizers"][1]["toolbarItemCreators"]["changeVisualizer"]).toBeUndefined();
 
   visPanel = new VisualizationPanel(survey.getAllQuestions(), [], {});
 
-  expect(visPanel["visualizers"][0].type).toBe("selectBase");
+  expect(visPanel["visualizers"][0].type).toBe("chartmodel");
   expect(visPanel["visualizers"][0]["toolbarItemCreators"]["changeChartType"]).toBeDefined();
   expect(visPanel["visualizers"][1].type).toBe("alternative");
   expect(visPanel["visualizers"][1]["toolbarItemCreators"]["changeVisualizer"]).toBeDefined();

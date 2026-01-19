@@ -130,7 +130,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     options?: any,
     type?: string
   ) {
-    super(question, data, options, type || "selectBase");
+    super(question, data, options, type || "chartmodel");
     if(!!question) { // TODO: move somewhere else
       (<any>question).visibleChoicesChangedCallback = () => {
         this.dataProvider.raiseDataChanged();
@@ -784,3 +784,4 @@ VisualizationManager.registerVisualizer("imagepicker", SelectBase);
 VisualizationManager.registerVisualizer("tagbox", SelectBase);
 VisualizationManager.registerVisualizer("rating", SelectBase, 100);
 VisualizationManager.registerVisualizer("chart", SelectBase);
+VisualizationManager.registerVisualizer("chartmodel", SelectBase);

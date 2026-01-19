@@ -11,7 +11,7 @@ export class RankingModel extends SelectBase {
     options?: any,
     type?: string
   ) {
-    super(question, data, options, type || "ranking");
+    super(question, data, options, type || "rankingmodel");
   }
 
   getQuestionResults() {
@@ -56,3 +56,4 @@ export class RankingModel extends SelectBase {
 }
 
 VisualizationManager.registerVisualizer("ranking", RankingModel);
+VisualizationManager.registerVisualizer("rankingmodel", RankingModel);

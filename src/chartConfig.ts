@@ -47,17 +47,19 @@ export function getVisualizerNameByType(visualizerType: string, chartTypes: Arra
   return result;
 }
 
-export var chartConfig: { [key: string]: IChartConfigOption } = {
-  "bar": { visualizerType: "chart", chartType: "bar" },
-  "vbar": { visualizerType: "chart", chartType: "vbar" },
-  "stackedbar": { visualizerType: "matrix", chartType: "stackedbar" },
-  "pie": { visualizerType: "chart", chartType: "pie" },
-  "doughnut": { visualizerType: "chart", chartType: "doughnut" },
-  "radar": { visualizerType: "chart", chartType: "radar" },
-  "line": { visualizerType: "chart", chartType: "line" },
-  "scatter": { visualizerType: "chart", chartType: "scatter" },
-  "gauge": { visualizerType: "gauge", chartType: "gauge" },
-  "bullet": { visualizerType: "gauge", chartType: "bullet" },
-  "wordcloud": { visualizerType: "wordcloud" },
-  "histogram": { visualizerType: "histogram" },
+export const chartConfig: { [key: string]: IChartConfigOption } = {
+  "bar": { visualizerType: "chartmodel", chartType: "bar" },
+  "vbar": { visualizerType: "chartmodel", chartType: "vbar" },
+  "stackedbar": { visualizerType: "matrixmodel", chartType: "stackedbar" },
+  "pie": { visualizerType: "chartmodel", chartType: "pie" },
+  "doughnut": { visualizerType: "chartmodel", chartType: "doughnut" },
+  "radar": { visualizerType: "chartmodel", chartType: "radar" },
+  "ranking": { visualizerType: "rankingmodel", chartType: "radar" },
+  "line": { visualizerType: "chartmodel", chartType: "line" },
+  "scatter": { visualizerType: "chartmodel", chartType: "scatter" },
+  "gauge": { visualizerType: "numbermodel", chartType: "gauge" },
+  "bullet": { visualizerType: "numbermodel", chartType: "bullet" },
+  "wordcloud": { visualizerType: "wordcloudmodel" },
+  "histogram": { visualizerType: "histogrammodel", chartType: "vbar" },
+  "vistogram": { visualizerType: "histogrammodel", chartType: "bar" },
 };

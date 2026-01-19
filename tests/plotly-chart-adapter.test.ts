@@ -379,12 +379,12 @@ test("Use chart type from visualizerDefinition", async () => {
   let visPanel = new VisualizationPanel([visualizerDefinition], data, {});
 
   expect(visPanel.visualizers.length).toEqual(1);
-  expect(visPanel.visualizers[0].type).toEqual("number");
+  expect(visPanel.visualizers[0].type).toEqual("numbermodel");
   expect((visPanel.visualizers[0] as NumberModel).chartType).toEqual("bullet");
 });
 
 test("Determine the default charts", () => {
-  const originalTypes = chartTypes["selectBase"];
+  const originalTypes = chartTypes["chartmodel"];
   var selectQuestion = new QuestionDropdownModel("q1");
   selectQuestion.choices = [
     { value: "option1", text: "Option 1" },
@@ -400,8 +400,8 @@ test("Determine the default charts", () => {
 
   expect(adapter.getChartTypes()).toStrictEqual(["bar", "vbar", "pie", "doughnut"]);
 
-  chartTypes["selectBase"] = ["pie", "bar", "scatter"];
+  chartTypes["chartmodel"] = ["pie", "bar", "scatter"];
   expect(adapter.getChartTypes()).toStrictEqual(["pie", "bar", "scatter"]);
 
-  chartTypes["selectBase"] = originalTypes;
+  chartTypes["chartmodel"] = originalTypes;
 });
