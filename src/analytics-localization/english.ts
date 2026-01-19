@@ -35,6 +35,7 @@ export var englishStrings = {
   chartType_bullet: "Bullet",
   chartType_line: "Line",
   chartType_radar: "Radar",
+  chartType_histogram: "Histogram",
   hideButton: "Hide",
   makePrivateButton: "Make private",
   makePublicButton: "Make public",

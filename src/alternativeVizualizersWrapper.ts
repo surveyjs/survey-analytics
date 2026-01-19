@@ -28,7 +28,7 @@ export class AlternativeVisualizersWrapper
       names.forEach(name => {
         result.push({
           value: name,
-          text: localization.getString("chartType_" + name) || localization.getString("visualizer_" + name),
+          text: localization.getString("chartType_" + name),
         });
       });
     });
@@ -126,9 +126,7 @@ export class AlternativeVisualizersWrapper
     let chartType: string;
     if(!visualizerCandidate && !!chartConfig[type]) {
       chartType = chartConfig[type].chartType;
-      if(chartConfig[type].visualizerType === "gauge") type = "number";
-      else if(chartConfig[type].visualizerType === "chart") type = "selectBase";
-      else type = chartConfig[type].visualizerType;
+      type = chartConfig[type].visualizerType;
       visualizerCandidate = this.visualizers.filter((v) => v.type === type)[0];
     }
     if(!!visualizerCandidate && visualizerCandidate !== this.visualizer) {

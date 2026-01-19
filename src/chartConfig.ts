@@ -38,9 +38,6 @@ export function getChartTypes(chartKeys: Array<string>): any {
 export function getVisualizerNameByType(visualizerType: string, chartTypes: Array<string>) {
   const result = [];
 
-  if(visualizerType === "selectBase") visualizerType = "chart";
-  if(visualizerType === "number") visualizerType = "gauge";
-
   Object.keys(chartConfig).forEach(key => {
     const config = chartConfig[key];
     if(config.visualizerType === visualizerType && (!config.chartType || chartTypes.length === 0 || chartTypes.indexOf(config.chartType) !== -1)) {
