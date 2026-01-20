@@ -27,6 +27,10 @@
   gap: var(--sjs2-spacing-x300, 24px);
 }
 
+.sa-panel__header .sa-dropdown {
+  flex-grow: 0;
+}
+
 .sa-panel__content {
   padding: var(--sjs2-spacing-x300, 24px);
   width: calc(100% - 2 * var(--sjs2-spacing-x300, 24px));

@@ -77,7 +77,7 @@ export class VisualizerFactory {
 
     let questionForCreator: Question | Question[] = question;
     const visualizers = [];
-    let allCreators = [];
+    let allCreatorInfos: Array<{typeName: string, creator: any}> = [];
     types.forEach(type => {
       let creators = [];
       if(type === "text" && (<any>question).inputType) {
@@ -91,19 +91,19 @@ export class VisualizerFactory {
         }
         creators = VisualizationManager.getVisualizersByType(type, fallbackType);
       }
-      creators.forEach(creator => allCreators.push(creator));
+      creators.forEach(creator => allCreatorInfos.push({ typeName: type, creator }));
     });
 
-    if(allCreators.length > 0) {
-      allCreators.forEach(creator => {
+    if(allCreatorInfos.length > 0) {
+      allCreatorInfos.forEach(creatorInfo => {
         const optionsForCreatorType = Object.assign({}, optionsForCreator);
-        if(description.availableTypes && description.availableTypes[type]) {
-          optionsForCreatorType["availableTypes"] = description.availableTypes[type];
+        if(description.availableTypes && description.availableTypes[creatorInfo.typeName]) {
+          optionsForCreatorType["availableTypes"] = description.availableTypes[creatorInfo.typeName];
         }
-        if(allCreators.length > 1) {
+        if(allCreatorInfos.length > 1) {
           optionsForCreatorType["allowChangeVisualizerType"] = false;
         }
-        const visualizer = new creator(questionForCreator, data, optionsForCreatorType, false);
+        const visualizer = new creatorInfo.creator(questionForCreator, data, optionsForCreatorType, false);
         visualizers.push(visualizer);
       });
     }

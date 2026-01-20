@@ -1045,7 +1045,6 @@ export class ApexChartsSetup {
     const xaxis = {
       min: minValue,
       max: maxValue,
-      stepSize: 5,
       style: ApexChartsSetup.defaultGaugeTickFont(model.theme),
       axisBorder: {
         color: model.theme.gaugeBackground,
