@@ -451,3 +451,109 @@ test("Create visualizer with predefined char type and available types", async ()
   expect(visualizer.chartType).toBe("vbar");
   expect(visualizer["chartTypes"]).toStrictEqual(["bar", "vbar"]);
 });
+
+test("Dashboard registerToolbarItem", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+      { type: "text", name: "question3" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  let dashboard = new Dashboard({ questions: survey.getAllQuestions() });
+
+  dashboard.registerToolbarItem("default_item1", () => document.createElement("div"), "button", 1000);
+  dashboard.registerToolbarItem("default_item2", () => document.createElement("div"), "filter");
+
+  const result = dashboard.panel.getSortedToolbarItemCreators();
+  expect(dashboard.getSortedToolbarItemCreators()).toHaveLength(0);
+  expect(result).toHaveLength(4);
+  expect(result[2].name).toBe("default_item1");
+  expect(result[3].name).toBe("default_item2");
+});
+
+test("getState, setState, onStateChanged", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "question1",
+        choices: [1, 2, 3]
+      },
+    ],
+  };
+  const data = [{ question1: [1, 2] }];
+  const survey = new SurveyModel(json);
+  let dashboard = new Dashboard({ questions: survey.getAllQuestions(), data });
+  let chartVisualizer = dashboard.panel.getVisualizer("question1") as SelectBase;
+
+  expect(chartVisualizer["chartTypes"]).toStrictEqual([]);
+  chartVisualizer["chartTypes"] = ["bar", "scatter"];
+
+  let initialState: IState = {
+    locale: "",
+    elements: [
+      {
+        displayName: "question1",
+        name: "question1",
+        isVisible: true,
+        isPublic: true,
+      },
+    ],
+  };
+  let newState: IState = {
+    locale: "fr",
+    elements: [
+      {
+        displayName: "question1",
+        name: "question1",
+        isVisible: false,
+        isPublic: true,
+        chartType: "scatter",
+        answersOrder: "asc",
+        hideEmptyAnswers: true,
+        topN: 10
+      },
+    ],
+  };
+  let count = 0;
+
+  dashboard.onStateChanged.add(() => {
+    count++;
+  });
+
+  expect(dashboard.state).toEqual(initialState);
+  dashboard.state = null as any;
+  expect(count).toBe(0);
+
+  dashboard.state = newState;
+  expect(dashboard.state).toEqual(newState);
+  expect(count).toBe(0);
+
+  const visualizer = dashboard.panel.visualizers[0] as SelectBase;
+  expect(visualizer.chartType).toBe("scatter");
+  expect(visualizer.answersOrder).toBe("asc");
+  expect(visualizer.hideEmptyAnswers).toBe(true);
+  expect(visualizer.topN).toBe(10);
+
+  dashboard.locale = "ru";
+  expect(count).toBe(1);
+  expect(dashboard.state.locale).toEqual("ru");
+
+  visualizer.chartType = "bar";
+  expect(count).toBe(2);
+  expect(dashboard.state.elements![0].chartType).toEqual(undefined);
+
+  visualizer.answersOrder = "desc";
+  expect(count).toBe(3);
+  expect(dashboard.state.elements![0].answersOrder).toEqual("desc");
+
+  visualizer.topN = 5;
+  expect(count).toBe(4);
+  expect(dashboard.state.elements![0].topN).toEqual(5);
+
+  visualizer.hideEmptyAnswers = false;
+  expect(count).toBe(5);
+  expect(dashboard.state.elements![0].hideEmptyAnswers).toEqual(undefined);
+});

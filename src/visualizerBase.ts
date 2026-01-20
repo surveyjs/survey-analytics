@@ -51,7 +51,7 @@ export interface IDataInfo {
   getSeriesLabels(): Array<string>;
 }
 
-type ToolbarItemType = "button" | "dropdown" | "filter"| "license";
+export type ToolbarItemType = "button" | "dropdown" | "filter"| "license";
 
 type ToolbarItemCreators = {
   [name: string]: {

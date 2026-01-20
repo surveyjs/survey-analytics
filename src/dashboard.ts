@@ -1,4 +1,4 @@
-import { IVisualizerOptions, VisualizerBase } from "./visualizerBase";
+import { IVisualizerOptions, ToolbarItemType, VisualizerBase } from "./visualizerBase";
 import { IVisualizationPanelOptions, VisualizationPanel } from "./visualizationPanel";
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { IVisualizerDescription } from "./visualizerDescription";
@@ -6,6 +6,7 @@ import { Question, SurveyModel } from "survey-core";
 import { LayoutEngine } from "./layout-engine";
 import { IDashboardTheme } from "./theme";
 import { chartConfig, getChartTypes, getVisualizerTypes } from "./chartConfig";
+import { IState } from "./config";
 
 export interface IDashboardOptions {
   data?: any[];
@@ -93,6 +94,33 @@ export class Dashboard extends VisualizerBase {
     );
 
     this._panel = new VisualizationPanel(visualizerDescriptions, this._data, this._options);
+    this._panel.onStateChanged.add((sender, options) => {
+      this.onStateChanged.fire(this, options);
+    });
+  }
+
+  public registerToolbarItem(
+    name: string,
+    creator: (toolbar?: HTMLDivElement) => HTMLElement,
+    type: ToolbarItemType,
+    index: number = 100,
+    groupIndex: number = 0
+  ): void {
+    this._panel.registerToolbarItem(name, creator, type, index, groupIndex);
+  }
+
+  public get state(): IState {
+    return this.panel.getState();
+  }
+  public set state(newState: IState) {
+    this.panel.state = newState;
+  }
+
+  public get locale(): string {
+    return this.panel.locale;
+  }
+  public set locale(newLocale: string) {
+    this.panel.locale = newLocale;
   }
 
   get panel(): VisualizationPanel {
