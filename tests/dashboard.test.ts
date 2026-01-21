@@ -6,7 +6,7 @@ import { VisualizationPanel } from "../src/visualizationPanel";
 import { Dashboard } from "../src/dashboard";
 import { IState } from "../src/config";
 import { VisualizationManager } from "../src/visualizationManager";
-import { PostponeHelper } from "../src/visualizerBase";
+import { IVisualizerOptions, PostponeHelper } from "../src/visualizerBase";
 import { IPivotChartVisualizerOptions, PivotModel } from "../src/pivot";
 import { NumberModel } from "../src/number";
 import { HistogramModel } from "../src/histogram";
@@ -556,4 +556,18 @@ test("getState, setState, onStateChanged", () => {
   visualizer.hideEmptyAnswers = false;
   expect(count).toBe(5);
   expect(dashboard.state.elements![0].hideEmptyAnswers).toEqual(undefined);
+});
+
+test("Create visualizer with answersOrder", async () => {
+  const visualizerDefinition: IVisualizerOptions = {
+    type: "bar",
+    dataField: "test",
+    answersOrder: "desc"
+  };
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
+  let dashboard = new Dashboard({ visualizers: [visualizerDefinition], data });
+  const visualizer = dashboard.panel.visualizers[0] as SelectBase;
+
+  expect(visualizer.chartType).toBe("bar");
+  expect(visualizer.answersOrder).toBe("desc");
 });

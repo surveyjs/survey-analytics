@@ -20,6 +20,7 @@ export interface IDashboardOptions {
   allowDragDrop?: boolean;
   layoutEngine?: LayoutEngine;
   stripHtmlFromTitles?: boolean;
+  showToolbar?: boolean;
 
   [key: string]: any;
 }
@@ -97,6 +98,7 @@ export class Dashboard extends VisualizerBase {
     this._panel.onStateChanged.add((sender, options) => {
       this.onStateChanged.fire(this, options);
     });
+    this._panel.showToolbar = options.showToolbar;
   }
 
   public registerToolbarItem(

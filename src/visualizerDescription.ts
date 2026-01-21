@@ -10,6 +10,7 @@ export interface IVisualizerDescription {
   dataName?: string;
   displayValueName?: string;
   title?: string;
+  answersOrder?: "default" | "asc" | "desc";
   options?: { [index: string]: any };
 }
 

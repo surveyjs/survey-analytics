@@ -67,6 +67,7 @@ export interface IVisualizerOptions {
   type?: string;
   availableTypes?: string[];
   title?: string;
+  answersOrder?: "default" | "asc" | "desc";
   [key: string]: any;
 }
 
