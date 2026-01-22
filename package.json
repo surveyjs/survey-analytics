@@ -1,5 +1,5 @@
 {
-  "version": "2.5.6",
+  "version": "2.5.7",
   "name": "survey-analytics",
   "scripts": {
     "start": "webpack-dev-server --env buildType=dev",
