@@ -1,11 +1,10 @@
 import { IVisualizerOptions, ToolbarItemType, VisualizerBase } from "./visualizerBase";
 import { IVisualizationPanelOptions, VisualizationPanel } from "./visualizationPanel";
 import { DataProvider, GetDataFn } from "./dataProvider";
-import { IVisualizerDescription } from "./visualizerDescription";
+import { createVisualizerDescription, IVisualizerDescription } from "./visualizerDescription";
 import { Question, SurveyModel } from "survey-core";
 import { LayoutEngine } from "./layout-engine";
 import { IDashboardTheme } from "./theme";
-import { chartConfig, getChartTypes, getVisualizerTypes } from "./chartConfig";
 import { IState } from "./config";
 
 export interface IDashboardOptions {
@@ -41,26 +40,8 @@ export function getVisualizerDescriptions(visualizers: Array<string | IVisualize
         // or throw an error?
       }
     } else if(!!v && typeof v === "object") {
-      const type = v.type || v.availableTypes[0];
       const question = questions.filter(q => q.name === v.dataField)[0];
-      const config = chartConfig[type];
-      const vd = {
-        visualizerType: config?.visualizerType || type,
-        visualizerTypes: getVisualizerTypes(v.availableTypes),
-        availableTypes: getChartTypes(v.availableTypes),
-        dataName: v.dataField,
-        title: v.title,
-        chartType: config?.chartType,
-        question: question,
-        options: {}
-      } as IVisualizerDescription;
-
-      const rootOptions = Object.keys(vd);
-      Object.keys(v).forEach((key) => {
-        if(!(key in rootOptions)) {
-          vd.options[key] = v[key];
-        }
-      });
+      const vd = createVisualizerDescription(v, question);
       items.push(vd);
     }
   }

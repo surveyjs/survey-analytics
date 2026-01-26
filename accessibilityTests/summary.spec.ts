@@ -43,7 +43,7 @@ test.describe("Summary common", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await getListItemByText(page, "Bar").click();
+    await getListItemByText(page, "Pie").click();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
@@ -57,9 +57,7 @@ test.describe("Summary common", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const visualizerSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
-    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
-    const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").nth(1);
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
@@ -74,8 +72,8 @@ test.describe("Summary common", () => {
     await getListItemByText(page, "Doughnut").click();
     await checkA11y(page, axeContext, { axeOptions });
 
-    await visualizerSelector.click();
-    await getListItemByText(page, "Table").click();
+    await chartTypeSelector.click();
+    await getListItemByText(page, "chartType_choices").click(); // "Table"
     await checkA11y(page, axeContext, { axeOptions });
   });
 
@@ -85,8 +83,7 @@ test.describe("Summary common", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const visualizerSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
-    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").nth(1);
     await checkA11y(page, axeContext, { axeOptions });
 
@@ -94,10 +91,7 @@ test.describe("Summary common", () => {
     await getListItemByText(page, "Bar").click();
     await checkA11y(page, axeContext, { axeOptions });
 
-    await visualizerSelector.click();
-    await getListItemByText(page, "Average").click();
-
-    const gaugeTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
+    const gaugeTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await checkA11y(page, axeContext, { axeOptions });
 
     await gaugeTypeSelector.click();
@@ -116,7 +110,7 @@ test.describe("Summary common", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await visualizerTypeSelector.click();
-    await getListItemByText(page, "Texts in table").click();
+    await getListItemByText(page, "chartType_text").click(); //"Texts in table"
     await checkA11y(page, axeContext, { axeOptions });
   });
 });

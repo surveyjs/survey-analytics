@@ -415,4 +415,4 @@ export class PivotModel extends HistogramModel {
 }
 
 VisualizationManager.registerPivotVisualizer(PivotModel);
-VisualizationManager.registerVisualizer("pivot", PivotModel as any);
+VisualizationManager.registerVisualizer("pivot", PivotModel as any, undefined, "pivot");

@@ -15,17 +15,15 @@ export const chartTypes = {
   "matrixDropdownGrouped": ["stackedbar", "bar", "pie", "doughnut"],
   "pivot": ["vbar", "bar", "line", "stackedbar", "pie", "doughnut"], // ["vbar", "bar"];
   "ranking": ["bar", "vbar", "pie", "doughnut", "radar"],
-
-  "numbermodel": ["gauge", "bullet"],
-  "chartmodel": ["bar", "vbar", "pie", "doughnut"],
-  "histogrammodel": ["vbar", "bar"],
-  "matrixmodel": ["bar", "stackedbar", "pie", "doughnut"],
-  "rankingmodel": ["bar", "vbar", "pie", "doughnut", "radar"],
 };
 
 export class ApexChartsAdapter implements IChartAdapter {
   private _chart: ApexCharts = undefined;
   private _pieCharts: ApexCharts[] = undefined;
+
+  static getChartTypesByVisualizerType(vType: string): Array<string> {
+    return (chartTypes[vType] || []).slice();
+  }
 
   private updatePieCharts(options: any, chartOptions: ApexChartsOptions, chartNode: HTMLElement): void {
     if(this._pieCharts) {
@@ -66,7 +64,7 @@ export class ApexChartsAdapter implements IChartAdapter {
   getChartTypes(): string[] {
     const visualizerType = this.model.type;
     const chartCtypes = chartTypes[visualizerType];
-    return chartCtypes || [];
+    return (chartCtypes || []).slice();
   }
 
   public async create(chartNode: HTMLElement): Promise<any> {

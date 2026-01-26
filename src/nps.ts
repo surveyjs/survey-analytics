@@ -152,4 +152,4 @@ export class NpsVisualizer extends VisualizerBase {
 }
 
 // VisualizationManager.registerVisualizer("rating", NpsVisualizer);
-VisualizationManager.registerVisualizer("nps", NpsVisualizer);
+VisualizationManager.registerVisualizer("nps", NpsVisualizer, undefined, "nps");

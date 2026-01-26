@@ -18,11 +18,11 @@ test.describe("Rating common", () => {
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
     await expect(chartContentSelector).toBeVisible();
 
-    await expect(visualizerTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart");
+    await expect(visualizerTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Bar");
     await compareScreenshot(page, chartContentSelector, "rating-number-chart.png");
 
     await visualizerTypeSelector.click();
-    await getListItemByText(page, "Average").click();
+    await getListItemByText(page, "Gauge").click();
     await compareScreenshot(page, chartContentSelector, "rating-number-average.png");
 
     await visualizerTypeSelector.click();
@@ -41,11 +41,11 @@ test.describe("Rating common", () => {
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
     await expect(chartContentSelector).toBeVisible();
 
-    await expect(visualizerTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart");
+    await expect(visualizerTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Bar");
     await compareScreenshot(page, chartContentSelector, "rating-string-chart.png");
 
     await visualizerTypeSelector.click();
-    await getListItemByText(page, "Average").click();
+    await getListItemByText(page, "Gauge").click();
     await compareScreenshot(page, chartContentSelector, "rating-string-average.png");
 
     await visualizerTypeSelector.click();

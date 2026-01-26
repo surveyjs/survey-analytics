@@ -166,7 +166,7 @@ export class HistogramModel extends SelectBase {
     options?: Object,
     type?: string
   ) {
-    super(question, data, options, type || "histogrammodel");
+    super(question, data, options, type || "histogram");
     this._transposeData = false;
     if(this.options.intervalPrecision !== undefined) {
       this._intervalPrecision = this.options.intervalPrecision;
@@ -655,8 +655,7 @@ export class HistogramModel extends SelectBase {
   }
 }
 
-VisualizationManager.registerVisualizer("date", HistogramModel);
-VisualizationManager.registerVisualizer("number", HistogramModel, 100);
-VisualizationManager.registerVisualizer("rating", HistogramModel, 300);
-VisualizationManager.registerVisualizer("histogram", HistogramModel);
-VisualizationManager.registerVisualizer("histogrammodel", HistogramModel);
+VisualizationManager.registerVisualizer("date", HistogramModel, undefined, "histogram");
+VisualizationManager.registerVisualizer("number", HistogramModel, 100, "histogram");
+VisualizationManager.registerVisualizer("rating", HistogramModel, 300, "histogram");
+VisualizationManager.registerVisualizer("histogram", HistogramModel, undefined, "histogram");

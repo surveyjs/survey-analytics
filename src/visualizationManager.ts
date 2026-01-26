@@ -15,7 +15,7 @@ export class VisualizationManager {
   static defaultVisualizer: any = undefined;
   static alternativesVisualizer: any = undefined;
   static pivotVisualizer: any = undefined;
-  static vizualizers: { [index: string]: Array<{ ctor: VisualizerConstructor, index: number }> } = {};
+  static vizualizers: { [index: string]: Array<{ ctor: VisualizerConstructor, index: number, visualizerType: string }> } = {};
   /**
    * Registers a visualizer for a specified question type.
    *
@@ -27,14 +27,15 @@ export class VisualizationManager {
   public static registerVisualizer(
     questionType: string,
     constructor: VisualizerConstructor,
-    index = Number.MAX_VALUE
+    index = Number.MAX_VALUE,
+    visualizerType?:string
   ) {
     let visualizers = VisualizationManager.vizualizers[questionType];
     if(!visualizers) {
       visualizers = [];
       VisualizationManager.vizualizers[questionType] = visualizers;
     }
-    visualizers.push({ ctor: constructor, index });
+    visualizers.push({ ctor: constructor, index, visualizerType });
   }
   /**
    * Unregisters a visualizer for a specified question type.
@@ -93,6 +94,24 @@ export class VisualizationManager {
     vDescrs = [].concat(vDescrs);
     vDescrs.sort((v1, v2) => v1.index - v2.index);
     return vDescrs.map(v => v.ctor);
+  }
+  public static getVisualizerNamesByType(
+    visualizerType: string,
+    fallbackVisualizerType?: string
+  ): Array<string> {
+    let vDescrs = VisualizationManager.vizualizers[visualizerType];
+    if(!!fallbackVisualizerType && (!vDescrs || vDescrs.length == 0)) {
+      vDescrs = VisualizationManager.vizualizers[fallbackVisualizerType];
+    }
+    if(!vDescrs) {
+      if(VisualizationManager.defaultVisualizer.suppressVisualizerStubRendering) {
+        return [];
+      }
+      return [VisualizationManager.defaultVisualizer];
+    }
+    vDescrs = [].concat(vDescrs);
+    vDescrs.sort((v1, v2) => v1.index - v2.index);
+    return vDescrs.map(v => v.visualizerType);
   }
   /**
    * Returns a constructor for an alternative visualizer selector.

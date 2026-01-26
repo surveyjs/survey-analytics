@@ -1,11 +1,9 @@
-import { Question, ItemValue } from "survey-core";
+import { Question, ItemValue, Event } from "survey-core";
 import { ICalculationResult, IChartAdapter, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DocumentHelper, IDropdownItemOption } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 import { IVisualizerWithSelection } from "./selectBase";
-import { Event } from "survey-core";
-import { IDashboardTheme } from "./theme";
 import { chartConfig, getVisualizerNameByType } from "./chartConfig";
 
 export class AlternativeVisualizersWrapper
@@ -21,19 +19,72 @@ export class AlternativeVisualizersWrapper
   }
 
   private getVisualizerSwitchItems(): Array<IDropdownItemOption> {
-    const result:Array<IDropdownItemOption> = [];
+    const result: Array<IDropdownItemOption> = [];
 
     this.visualizers.forEach((visualizer) => {
-      const names = getVisualizerNameByType(visualizer.type, visualizer["chartTypes"]);
-      names.forEach(name => {
-        result.push({
-          value: name,
-          text: localization.getString("chartType_" + name),
+      if(!!visualizer["chartTypes"] && visualizer["chartTypes"].length > 0) {
+        visualizer["chartTypes"].forEach(chType => {
+          result.push({
+            value: chType,
+            visualizerType: visualizer.type,
+            text: localization.getString("visualizer_" + visualizer.type) + " - " + localization.getString("chartType_" + chType),
+          });
         });
-      });
+      } else {
+        result.push({
+          value: visualizer.type,
+          visualizerType: visualizer.type,
+          text: localization.getString("visualizer_" + visualizer.type),
+        });
+      }
     });
 
     return result;
+  }
+
+  private _setVisualizer(options: { value: string, visualizerType?: string }, quiet = false): void {
+    let visualizerCandidate = this.visualizers.filter((v) => v.type === options.value)[0];
+    let chartType: string;
+    let visualizerType = options.visualizerType;
+
+    if(!visualizerCandidate) {
+      let vCandidates = this.visualizers.filter(v => v["chartTypes"] && v["chartTypes"].indexOf(options.value) !== -1);
+      if(vCandidates.length === 1) {
+        visualizerCandidate = vCandidates[0];
+        chartType = options.value;
+      } else if(vCandidates.length > 1) {
+        vCandidates = vCandidates.filter(v => v.type === visualizerType);
+        visualizerCandidate = vCandidates[0];
+        chartType = options.value;
+      } else if(!!chartConfig[options.value]) {
+        chartType = chartConfig[options.value].chartType;
+        visualizerType = chartConfig[options.value].visualizerType;
+        visualizerCandidate = this.visualizers.filter((v) => v.type === visualizerType)[0];
+      }
+    }
+    if(!!visualizerCandidate && visualizerCandidate !== this.visualizer) {
+      let isFooterCollapsed;
+      if(!!this.visualizer) {
+        isFooterCollapsed = this.visualizer.isFooterCollapsed;
+        this.visualizer.onStateChanged.remove(this.onVisualizerStateChangedCallback);
+        this.visualizer.onAfterRender.remove(this.onAfterVisualizerRenderCallback);
+        this.visualizer.destroy();
+      }
+      this.visualizer = visualizerCandidate;
+      this.visualizer.isFooterCollapsed = isFooterCollapsed;
+      this.refresh();
+      this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
+      this.visualizer.onStateChanged.add(this.onVisualizerStateChangedCallback);
+      if(!quiet) {
+        this.onVisualizerChanged.fire(this, { visualizer: this.visualizer });
+        this.stateChanged("visualizer", visualizerType);
+      }
+      this.updateVisualizerSelector();
+    }
+    if(chartType && !!this.visualizer && !!this.visualizer["setChartType"]) {
+      this.visualizer["setChartType"](chartType);
+      this.updateVisualizerSelector();
+    }
   }
 
   constructor(
@@ -65,8 +116,14 @@ export class AlternativeVisualizersWrapper
       this.registerToolbarItem("changeVisualizer", () =>
         this.visualizerSelector = DocumentHelper.createDropdown(
           this.getVisualizerSwitchItems(),
-          (option: any) => this.visualizer["chartType"] === option.value || this.visualizer.type === option.value,
-          (e: any) => this.setVisualizer(e)
+          (option: any) => {
+            if(!!this.visualizer["chartTypes"] && this.visualizer["chartTypes"].length > 0) {
+              return this.visualizer.type === option.visualizerType && this.visualizer["chartType"] === option.value;
+            } else {
+              return this.visualizer.type === option.visualizerType;
+            }
+          },
+          (e: any, selectedOption: any) => this._setVisualizer(selectedOption, false)
         ), "dropdown", 0
       );
     }
@@ -122,36 +179,7 @@ export class AlternativeVisualizersWrapper
   *
   **/
   public setVisualizer(type: string, quiet = false): void {
-    let visualizerCandidate = this.visualizers.filter((v) => v.type === type)[0];
-    let chartType: string;
-    if(!visualizerCandidate && !!chartConfig[type]) {
-      chartType = chartConfig[type].chartType;
-      type = chartConfig[type].visualizerType;
-      visualizerCandidate = this.visualizers.filter((v) => v.type === type)[0];
-    }
-    if(!!visualizerCandidate && visualizerCandidate !== this.visualizer) {
-      let isFooterCollapsed;
-      if(!!this.visualizer) {
-        isFooterCollapsed = this.visualizer.isFooterCollapsed;
-        this.visualizer.onStateChanged.remove(this.onVisualizerStateChangedCallback);
-        this.visualizer.onAfterRender.remove(this.onAfterVisualizerRenderCallback);
-        this.visualizer.destroy();
-      }
-      this.visualizer = visualizerCandidate;
-      this.visualizer.isFooterCollapsed = isFooterCollapsed;
-      this.refresh();
-      this.visualizer.onAfterRender.add(this.onAfterVisualizerRenderCallback);
-      this.visualizer.onStateChanged.add(this.onVisualizerStateChangedCallback);
-      if(!quiet) {
-        this.onVisualizerChanged.fire(this, { visualizer: this.visualizer });
-        this.stateChanged("visualizer", type);
-      }
-      this.updateVisualizerSelector();
-    }
-    if(chartType && !!this.visualizer && !!this.visualizer["setChartType"]) {
-      this.visualizer["setChartType"](chartType);
-      this.updateVisualizerSelector();
-    }
+    this._setVisualizer({ value: type }, quiet);
   }
 
   public getVisualizer(): VisualizerBase {

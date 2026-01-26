@@ -121,6 +121,9 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     }
     if(!this._chartType) {
       this._chartType = this.questionOptions?.chartType || this.options.defaultChartType || this.chartTypes[0] || "bar";
+      if(this.chartTypes.indexOf(this._chartType) === -1) {
+        this.chartTypes.unshift(this._chartType);
+      }
     }
   }
 
@@ -130,7 +133,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     options?: any,
     type?: string
   ) {
-    super(question, data, options, type || "chartmodel");
+    super(question, data, options, type || "selectBase");
     if(!!question) { // TODO: move somewhere else
       (<any>question).visibleChoicesChangedCallback = () => {
         this.dataProvider.raiseDataChanged();
@@ -777,11 +780,10 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
   }
 }
 
-VisualizationManager.registerVisualizer("checkbox", SelectBase);
-VisualizationManager.registerVisualizer("radiogroup", SelectBase);
-VisualizationManager.registerVisualizer("dropdown", SelectBase);
-VisualizationManager.registerVisualizer("imagepicker", SelectBase);
-VisualizationManager.registerVisualizer("tagbox", SelectBase);
-VisualizationManager.registerVisualizer("rating", SelectBase, 100);
-VisualizationManager.registerVisualizer("chart", SelectBase);
-VisualizationManager.registerVisualizer("chartmodel", SelectBase);
+VisualizationManager.registerVisualizer("checkbox", SelectBase, undefined, "selectBase");
+VisualizationManager.registerVisualizer("radiogroup", SelectBase, undefined, "selectBase");
+VisualizationManager.registerVisualizer("dropdown", SelectBase, undefined, "selectBase");
+VisualizationManager.registerVisualizer("imagepicker", SelectBase, undefined, "selectBase");
+VisualizationManager.registerVisualizer("tagbox", SelectBase, undefined, "selectBase");
+VisualizationManager.registerVisualizer("rating", SelectBase, 100, "selectBase");
+VisualizationManager.registerVisualizer("selectBase", SelectBase, undefined, "selectBase");

@@ -66,7 +66,7 @@ export class WordCloud extends VisualizerBase {
     options?: Object,
     type?: string
   ) {
-    super(question, data, options, type || "wordcloudmodel");
+    super(question, data, options, type || "wordcloud");
     this._wordcloudAdapter = new WordCloudAdapter(this);
   }
 
@@ -165,8 +165,7 @@ export class WordCloud extends VisualizerBase {
   }
 }
 
-VisualizationManager.registerVisualizer("text", WordCloud);
-VisualizationManager.registerVisualizer("comment", WordCloud);
-VisualizationManager.registerVisualizer("multipletext", WordCloud);
-VisualizationManager.registerVisualizer("wordcloud", WordCloud);
-VisualizationManager.registerVisualizer("wordcloudmodel", WordCloud);
+VisualizationManager.registerVisualizer("text", WordCloud, undefined, "wordcloud");
+VisualizationManager.registerVisualizer("comment", WordCloud, undefined, "wordcloud");
+VisualizationManager.registerVisualizer("multipletext", WordCloud, undefined, "wordcloud");
+VisualizationManager.registerVisualizer("wordcloud", WordCloud, undefined, "wordcloud");

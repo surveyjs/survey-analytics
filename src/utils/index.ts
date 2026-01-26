@@ -6,6 +6,8 @@ export interface IDropdownItemOption {
   text: string;
   title?: string;
   icon?: string;
+
+  [key: string]: any;
 }
 export class DocumentHelper {
   public static createSelector(
@@ -63,7 +65,7 @@ export class DocumentHelper {
   public static createDropdown(
     options: Array<IDropdownItemOption> | (() => Array<IDropdownItemOption>),
     isSelected: (option: {value: string, text: string, icon?: string}) => boolean,
-    handler: (value: string) => void,
+    handler: (value: string, option: any) => void,
     placeholder = "Select...",
     title?: string | (() => string),
     className = "sa-dropdown"
@@ -170,7 +172,7 @@ export class DocumentHelper {
 
         dropdownItem.addEventListener("click", () => {
           selectedOption = option;
-          handler(option.value);
+          handler(option.value, option);
           updateHeader();
 
           dropdownHeader.classList.remove(dropdownOpenedClass);
@@ -274,7 +276,7 @@ export class DocumentHelper {
               const option = optionItems.find(opt => opt.value === value);
               if(option) {
                 selectedOption = option;
-                handler(option.value);
+                handler(option.value, option);
                 updateHeader();
 
                 dropdownHeader.classList.remove(dropdownOpenedClass);

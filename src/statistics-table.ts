@@ -103,7 +103,9 @@ export class StatisticsTableAdapter {
   }
 
   public destroy(node: HTMLElement) {
-    node.innerHTML = "";
+    if(!!node) {
+      node.innerHTML = "";
+    }
   }
 }
 
@@ -119,6 +121,7 @@ export class StatisticsTable extends SelectBase {
     super(question, data, options, type || "choices");
     this._statisticsTableAdapter = new StatisticsTableAdapter(this);
     this.showPercentages = true;
+    this.chartTypes = [];
   }
 
   protected destroyContent(container: HTMLElement) {
@@ -152,6 +155,7 @@ export class StatisticsTableBoolean extends BooleanModel {
     super(question, data, options, type || "options");
     this._statisticsTableAdapter = new StatisticsTableAdapter(this);
     this.showPercentages = true;
+    this.chartTypes = [];
   }
 
   protected destroyContent(container: HTMLElement) {
@@ -173,8 +177,8 @@ export class StatisticsTableBoolean extends BooleanModel {
   }
 }
 
-VisualizationManager.registerVisualizer("radiogroup", StatisticsTable);
-VisualizationManager.registerVisualizer("dropdown", StatisticsTable);
-VisualizationManager.registerVisualizer("checkbox", StatisticsTable);
-VisualizationManager.registerVisualizer("boolean", StatisticsTableBoolean);
-VisualizationManager.registerVisualizer("table", StatisticsTable);
+VisualizationManager.registerVisualizer("radiogroup", StatisticsTable, undefined, "choices");
+VisualizationManager.registerVisualizer("dropdown", StatisticsTable, undefined, "choices");
+VisualizationManager.registerVisualizer("checkbox", StatisticsTable, undefined, "choices");
+VisualizationManager.registerVisualizer("boolean", StatisticsTableBoolean, undefined, "options");
+VisualizationManager.registerVisualizer("table", StatisticsTable, undefined, "choices");

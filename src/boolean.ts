@@ -69,4 +69,4 @@ export class BooleanModel extends SelectBase {
   }
 }
 
-VisualizationManager.registerVisualizer("boolean", BooleanModel);
+VisualizationManager.registerVisualizer("boolean", BooleanModel, undefined, "boolean");

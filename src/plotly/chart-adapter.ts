@@ -16,16 +16,14 @@ export const chartTypes = {
   "matrixDropdownGrouped": ["stackedbar", "bar", "pie", "doughnut"],
   "pivot": ["vbar", "bar", "line", "stackedbar", "pie", "doughnut"], // ["vbar", "bar"]
   "ranking": ["bar", "vbar", "pie", "doughnut", "radar"],
-
-  "numbermodel": ["gauge", "bullet"],
-  "chartmodel": ["bar", "vbar", "pie", "doughnut"],
-  "histogrammodel": ["vbar", "bar"],
-  "matrixmodel": ["bar", "stackedbar", "pie", "doughnut"],
-  "rankingmodel": ["bar", "vbar", "pie", "doughnut", "radar"],
 };
 
 export class PlotlyChartAdapter implements IChartAdapter {
   private _chart: Promise<Plotly.PlotlyHTMLElement> = undefined;
+
+  static getChartTypesByVisualizerType(vType: string): Array<string> {
+    return (chartTypes[vType] || []).slice();
+  }
 
   constructor(protected model: SelectBase | VisualizerBase) { }
 
@@ -60,7 +58,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
         });
       }
     }
-    if(this.model.type === "numbermodel") {
+    if(this.model.type === "number") {
       config.displayModeBar = true;
     }
   }
@@ -72,7 +70,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
   getChartTypes(): string[] {
     const visualizerType = this.model.type;
     const chartCtypes = chartTypes[visualizerType];
-    return chartCtypes || [];
+    return (chartCtypes || []).slice();
   }
 
   public async create(chartNode: HTMLElement): Promise<any> {

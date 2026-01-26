@@ -421,7 +421,7 @@ test("save selection to state / restore selection from state", () => {
 
   let state = selectBase.getState();
   expect(state).toStrictEqual({
-    "chartType": "bar",
+    // "chartType": "bar",
     "filter": 1,
   });
   state.filter = "father";

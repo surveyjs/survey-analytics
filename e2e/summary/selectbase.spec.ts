@@ -131,8 +131,8 @@ test.describe("selectbase", () => {
     await expect(page.locator(".sa-visualizer__footer .sa-visualizer__content .sa-visualizer-wordcloud")).toHaveCount(1);
 
     // check comment's table
-    await page.locator(".sa-dropdown").nth(3).click();
-    await getListItemByText(page, "Texts in table").click();
+    await page.locator(".sa-dropdown").first().click();
+    await getListItemByText(page, "chartType_choices").click(); // "Texts in table"
     await page.waitForTimeout(100);
 
     const cells = await getTableCells();
@@ -180,7 +180,7 @@ test.describe("selectbase", () => {
     ];
 
     await initSummary(page, json, data, options);
-    const orderingSelect = page.locator(".sa-dropdown").nth(2);
+    const orderingSelect = page.locator(".sa-dropdown").nth(1);
     const color1 = "#84cad4";
     const color2 = "#3a99fb";
     const color3 = "#ff6771";

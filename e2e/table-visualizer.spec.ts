@@ -22,7 +22,7 @@ test.describe("Summary common", () => {
     await compareScreenshot(page, chartContentSelector, "text-simple-wordcloud.png");
 
     await visualizerTypeSelector.click();
-    await getListItemByText(page, "Texts in table").click();
+    await getListItemByText(page, "chartType_choices").click(); //"Texts in table"
     await compareScreenshot(page, chartContentSelector, "text-simple-table.png");
   });
 
@@ -32,21 +32,15 @@ test.describe("Summary common", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     await page.getByLabel("Please indicate if you agree").getByRole("button", { name: "Hide" }).click();
 
-    // const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
-    // await expect(chartTypeSelector).toBeVisible();
-    // const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
-    // await expect(chartContentSelector).toBeVisible();
-    const visualizerSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
-    await expect(visualizerSelector).toBeVisible();
-    await expect(visualizerSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart");
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
+    await expect(chartTypeSelector).toBeVisible();
+    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Pie");
 
-    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown .sa-dropdown-header-text").nth(1);
-    expect(await chartTypeSelector.textContent()).toBe("Pie");
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").first();
     await expect(chartContentSelector).toBeVisible();
 
-    await visualizerSelector.click();
-    await getListItemByText(page, "Table").click();
+    await chartTypeSelector.click();
+    await getListItemByText(page, "chartType_options").click();//"Table"
     expect(await chartTypeSelector.textContent()).toBe("Default Order");
     await compareScreenshot(page, chartContentSelector, "boolean-simple-table.png");
   });
@@ -57,17 +51,15 @@ test.describe("Summary common", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    const visualizerSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
-    await expect(visualizerSelector).toBeVisible();
-    await expect(visualizerSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart");
-
-    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartTypeSelector).toBeVisible();
+    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Bar");
+
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").first();
     await expect(chartContentSelector).toBeVisible();
 
-    await visualizerSelector.click();
-    await getListItemByText(page, "Table").click();
+    await chartTypeSelector.click();
+    await getListItemByText(page, "chartType_options").click(); //"Table"
     await compareScreenshot(page, chartContentSelector, "select-simple-table.png");
 
     const otherItemsSelector = questionVisualizerSelector.locator("h4").filter({ hasText: "Other items and comments" });

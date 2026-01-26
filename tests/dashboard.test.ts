@@ -6,12 +6,13 @@ import { VisualizationPanel } from "../src/visualizationPanel";
 import { Dashboard } from "../src/dashboard";
 import { IState } from "../src/config";
 import { VisualizationManager } from "../src/visualizationManager";
-import { IVisualizerOptions, PostponeHelper } from "../src/visualizerBase";
+import { IVisualizerOptions, PostponeHelper, VisualizerBase } from "../src/visualizerBase";
 import { IPivotChartVisualizerOptions, PivotModel } from "../src/pivot";
 import { NumberModel } from "../src/number";
 import { HistogramModel } from "../src/histogram";
 import { Matrix } from "../src/matrix";
 import { QuestionTextModel, SurveyModel } from "survey-core";
+import { ApexChartsAdapter } from "../src/apexcharts/chart-adapter";
 export * from "../src/card";
 export * from "../src/text";
 export * from "../src/number";
@@ -19,8 +20,10 @@ export * from "../src/nps";
 export * from "../src/pivot";
 export * from "../src/matrix";
 
+VisualizerBase.chartAdapterType = ApexChartsAdapter;
+
 test("Dashboard should accept visualizer definitions", () => {
-  const visualizerDefinition = {
+  const visualizerDefinition: IVisualizerOptions = {
     type: "nps",
     dataField: "test"
   };
@@ -71,7 +74,7 @@ test("Dashboard should show questions mentioned in visualazers parameter", () =>
 });
 
 test("Create nps visualizer from definition with dataName", async () => {
-  const visualizerDefinition = {
+  const visualizerDefinition: IVisualizerOptions = {
     type: "nps",
     dataField: "test"
   };
@@ -88,7 +91,7 @@ test("Create nps visualizer from definition with dataName", async () => {
 });
 
 test("Create nps visualizer from definition with questionName", async () => {
-  const visualizerDefinition = {
+  const visualizerDefinition: IVisualizerOptions = {
     type: "nps",
     dataField: "test"
   };
@@ -105,8 +108,9 @@ test("Create nps visualizer from definition with questionName", async () => {
 });
 
 test("Create nps visualizer from definition with question", async () => {
-  const visualizerDefinition = {
+  const visualizerDefinition: IVisualizerOptions = {
     type: "nps",
+    availableTypes: ["nps"],
     dataField: "test"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
@@ -122,7 +126,7 @@ test("Create nps visualizer from definition with question", async () => {
 });
 
 test("Create number visualizer from definition", async () => {
-  const visualizerDefinition = {
+  const visualizerDefinition: IVisualizerOptions = {
     type: "card",
     dataField: "test",
     aggregationType: "count"
@@ -140,7 +144,7 @@ test("Create number visualizer from definition", async () => {
 });
 
 test("Options passed to root panel and visualizer", async () => {
-  const visualizerDefinition = {
+  const visualizerDefinition: IVisualizerOptions = {
     type: "gauge",
     dataField: "test",
     aggregationType: "count",
@@ -154,7 +158,7 @@ test("Options passed to root panel and visualizer", async () => {
   const visualizer = dashboard.panel.visualizers[0] as NumberModel;
   expect(visualizer.options.someVisualizerOption).toEqual("vis");
   expect(visualizer.options.somePanelOption).toEqual("panel");
-  expect(visualizer.type).toBe("numbermodel");
+  expect(visualizer.type).toBe("number");
   expect(visualizer.chartType).toBe("gauge");
   expect(visualizer.dataNames[0]).toEqual(visualizerDefinition.dataField);
 });
@@ -247,7 +251,7 @@ test("Set chart types from definitions", async () => {
 
   const chart2 = dashboard.panel.visualizers[1] as SelectBase;
   expect(chart2.chartType).toBe("line");
-  expect(chart2["chartTypes"]).toStrictEqual([]);
+  expect(chart2["chartTypes"]).toStrictEqual(["line", "bar", "vbar", "pie", "doughnut"]);
 
   const chart3 = dashboard.panel.visualizers[2] as SelectBase;
   expect(chart3.chartType).toBe("line");
@@ -274,7 +278,7 @@ test("Set visualizer types from definitions", async () => {
   const chart1Visualizers = chart1.getVisualizers();
   expect(chart1Visualizers.length).toBe(2);
   expect(chart1.getVisualizer().type).toBe("nps");
-  expect(chart1Visualizers[0].type).toBe("chartmodel");
+  expect(chart1Visualizers[0].type).toBe("selectBase");
   expect((chart1Visualizers[0] as SelectBase).chartType).toBe("line");
   expect((chart1Visualizers[0] as SelectBase)["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
   expect(chart1Visualizers[1].type).toBe("nps");
@@ -284,8 +288,8 @@ test("Set visualizer types from definitions", async () => {
 
   const chart2Visualizers = chart2.getVisualizers();
   expect(chart2Visualizers.length).toBe(2);
-  expect(chart2.getVisualizer().type).toBe("chartmodel");
-  expect(chart2Visualizers[0].type).toBe("chartmodel");
+  expect(chart2.getVisualizer().type).toBe("selectBase");
+  expect(chart2Visualizers[0].type).toBe("selectBase");
   expect((chart2Visualizers[0] as SelectBase).chartType).toBe("line");
   expect((chart2Visualizers[0] as SelectBase)["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
   expect(chart2Visualizers[1].type).toBe("nps");
@@ -362,7 +366,7 @@ test("Create matrix visualizer", async () => {
   expect(dashboard.panel.visualizers.length).toBe(1);
 
   const visualizer = dashboard.panel.visualizers[0] as Matrix;
-  expect(visualizer.type).toBe("matrixmodel");
+  expect(visualizer.type).toBe("matrix");
   expect(visualizer.chartType).toBe("stackedbar");
   expect(visualizer["chartTypes"]).toStrictEqual(["stackedbar"]);
 
@@ -447,7 +451,7 @@ test("Create visualizer with predefined char type and available types", async ()
   expect(dashboard.panel.visualizers.length).toBe(1);
 
   const visualizer = dashboard.panel.visualizers[0] as SelectBase;
-  expect(visualizer.type).toBe("chartmodel");
+  expect(visualizer.type).toBe("selectBase");
   expect(visualizer.chartType).toBe("vbar");
   expect(visualizer["chartTypes"]).toStrictEqual(["bar", "vbar"]);
 });
@@ -474,21 +478,13 @@ test("Dashboard registerToolbarItem", () => {
 });
 
 test("getState, setState, onStateChanged", () => {
-  const json = {
-    elements: [
-      {
-        type: "checkbox",
-        name: "question1",
-        choices: [1, 2, 3]
-      },
-    ],
-  };
+  const json = { elements: [{ type: "checkbox", name: "question1", choices: [1, 2, 3] }] };
   const data = [{ question1: [1, 2] }];
   const survey = new SurveyModel(json);
   let dashboard = new Dashboard({ questions: survey.getAllQuestions(), data });
   let chartVisualizer = dashboard.panel.getVisualizer("question1") as SelectBase;
 
-  expect(chartVisualizer["chartTypes"]).toStrictEqual([]);
+  expect(chartVisualizer["chartTypes"]).toStrictEqual(["bar", "vbar", "pie", "doughnut"]);
   chartVisualizer["chartTypes"] = ["bar", "scatter"];
 
   let initialState: IState = {

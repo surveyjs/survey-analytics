@@ -31,7 +31,7 @@ test("custom component: single", () => {
   expect(visPanel.visualizers[0].type).toEqual("alternative");
   const altVis = visPanel.visualizers[0] as AlternativeVisualizersWrapper;
   expect(altVis.getVisualizers().length).toEqual(2);
-  expect(altVis.getVisualizers()[0].type).toEqual("wordcloudmodel");
+  expect(altVis.getVisualizers()[0].type).toEqual("wordcloud");
   expect(altVis.getVisualizers()[1].type).toEqual("text");
 
   ComponentCollection.Instance.clear();
@@ -59,7 +59,7 @@ test("custom component: composite", () => {
   const compositePanelVis = (visPanel.visualizers[0] as VisualizationComposite).contentVisualizer;
   expect(compositePanelVis.visualizers.length).toEqual(3);
   expect(compositePanelVis.visualizers[0].type).toEqual("alternative");
-  expect(compositePanelVis.visualizers[1].type).toEqual("chartmodel");
+  expect(compositePanelVis.visualizers[1].type).toEqual("selectBase");
   expect(compositePanelVis.visualizers[2].type).toEqual("alternative");
 
   ComponentCollection.Instance.clear();

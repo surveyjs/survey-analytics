@@ -66,7 +66,7 @@ test.describe("Matrixes visualizer", () => {
     const column1VisualizerSelector = column1TitleSelector.locator("..").locator("..");
     column1VisualizerSelector.scrollIntoViewIfNeeded();
 
-    const chartCol1TypeSelector = column1VisualizerSelector.locator(".sa-dropdown").nth(1);
+    const chartCol1TypeSelector = column1VisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartCol1TypeSelector).toBeVisible();
     const chartCol1ContentSelector = column1VisualizerSelector.locator(".sa-visualizer__content");
     await expect(chartCol1ContentSelector).toBeVisible();

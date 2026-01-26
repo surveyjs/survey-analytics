@@ -64,4 +64,4 @@ export class MatrixDropdownGrouped extends SelectBase {
   }
 }
 
-VisualizationManager.registerVisualizer("matrixdropdown-grouped", MatrixDropdownGrouped);
+VisualizationManager.registerVisualizer("matrixdropdown-grouped", MatrixDropdownGrouped, undefined, "matrixDropdownGrouped");

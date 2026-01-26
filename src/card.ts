@@ -87,4 +87,4 @@ export class CardVisualizer extends NumberModel {
   }
 }
 
-VisualizationManager.registerVisualizer("card", CardVisualizer);
+VisualizationManager.registerVisualizer("card", CardVisualizer, undefined, "card");

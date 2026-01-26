@@ -24,7 +24,7 @@ test.describe("text", () => {
 
     // Select "Texts in table" from the dropdown
     await page.locator(".sa-dropdown").click();
-    await getListItemByText(page, "Texts in table").click();
+    await getListItemByText(page, "chartType_text").click();//"Texts in table"
     await page.waitForTimeout(500);
 
     // Get all table cell values

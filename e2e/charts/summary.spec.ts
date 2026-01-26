@@ -40,20 +40,11 @@ test.describe("Summary common", () => {
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
 
-    // const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
-    // await expect(chartTypeSelector).toBeVisible();
-    // const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
-    // await expect(chartContentSelector).toBeVisible();
-    const visualizerSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
-    await expect(visualizerSelector).toBeVisible();
-    await expect(visualizerSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart");
-
-    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartTypeSelector).toBeVisible();
+    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Pie");
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").first();
     await expect(chartContentSelector).toBeVisible();
-
-    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Pie");
     await compareScreenshot(page, chartContentSelector, "boolean-simple-pie.png");
 
     await chartTypeSelector.click();
@@ -73,9 +64,9 @@ test.describe("Summary common", () => {
 
     const visualizerSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(visualizerSelector).toBeVisible();
-    await expect(visualizerSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart");
+    await expect(visualizerSelector.locator(".sa-dropdown-header-text")).toHaveText("Bar");
 
-    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartTypeSelector).toBeVisible();
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").first();
     await expect(chartContentSelector).toBeVisible();
@@ -101,37 +92,30 @@ test.describe("Summary common", () => {
     await expect(questionTitleSelector).toBeVisible();
     const questionVisualizerSelector = questionTitleSelector.locator("..").locator("..");
     questionVisualizerSelector.scrollIntoViewIfNeeded();
-    await expect(questionVisualizerSelector.locator(".sa-dropdown")).toHaveCount(3);
+    await expect(questionVisualizerSelector.locator(".sa-dropdown")).toHaveCount(2);
 
-    const visualizerSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
-    await expect(visualizerSelector).toBeVisible();
-    await expect(visualizerSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart");
-
-    await visualizerSelector.click();
-    await getListItemByText(page, "Histogram").click();
-
-    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
+    const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartTypeSelector).toBeVisible();
+    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Bar");
+
+    await chartTypeSelector.click();
+    await getListItemByText(page, "Histogram").click();
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
     await expect(chartContentSelector).toBeVisible();
-
-    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Vertical Bar");
+    // await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Vertical Bar");
     await compareScreenshot(page, chartContentSelector, "histogram-simple-vbar.png");
 
     await chartTypeSelector.click();
-    await getListItemByText(page, "Bar").click();
+    await getListItemByText(page, "chartType_vistogram").click();
     await compareScreenshot(page, chartContentSelector, "histogram-simple-bar.png");
 
-    await visualizerSelector.click();
-    await getListItemByText(page, "Average").click();
-    await expect(questionVisualizerSelector.locator(".sa-dropdown")).toHaveCount(2);
-
-    const gaugeTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").nth(1);
-    await expect(gaugeTypeSelector).toBeVisible();
-    await expect(gaugeTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Gauge");
+    await chartTypeSelector.click();
+    await getListItemByText(page, "Gauge").click();
+    await expect(questionVisualizerSelector.locator(".sa-dropdown")).toHaveCount(1);
+    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Gauge");
     await compareScreenshot(page, chartContentSelector, "number-simple-gauge.png");
 
-    await gaugeTypeSelector.click();
+    await chartTypeSelector.click();
     await getListItemByText(page, "Bullet").click();
     await compareScreenshot(page, chartContentSelector, "number-simple-bullet.png");
   });

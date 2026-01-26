@@ -136,6 +136,6 @@ export class Text extends VisualizerBase {
   }
 }
 
-VisualizationManager.registerVisualizer("text", Text);
-VisualizationManager.registerVisualizer("comment", Text);
-VisualizationManager.registerVisualizer("multipletext", Text);
+VisualizationManager.registerVisualizer("text", Text, undefined, "text");
+VisualizationManager.registerVisualizer("comment", Text, undefined, "text");
+VisualizationManager.registerVisualizer("multipletext", Text, undefined, "text");
