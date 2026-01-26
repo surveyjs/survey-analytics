@@ -1,7 +1,8 @@
 import { SurveyModel, QuestionTextModel, ComponentCollection, QuestionCustomModel, QuestionCompositeModel } from "survey-core";
 import { Table } from "../../src/tables/table";
 import { ColumnDataType, ITableState, QuestionLocation } from "../../src/tables/config";
-import { CompositeColumnsBuilder } from "../../src/tables/columnbuilder";
+import { CheckboxColumnsBuilder, ColumnsBuilderFactory, CompositeColumnsBuilder } from "../../src/tables/columnbuilder";
+import { CheckboxColumn, SelectBaseColumn } from "../../src/tables/columns";
 const json = {
   questions: [
     {
@@ -1146,4 +1147,37 @@ test("check checkbox column with custom itemDelimiter", () => {
   let table = new TableTest(survey, data, { itemsDelimiter: " + " }, []);
   expect((<any>table).columns.length).toEqual(1);
   expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1 + Item 2");
+});
+
+test("check tagbox column", () => {
+  const json = { "elements":
+         [{
+           "type": "tagbox",
+           "name": "question4",
+           "choices": [
+             "Item 1",
+             "Item 2",
+             "Item 3"
+           ],
+           "showOtherItem": true,
+           "otherText": "Other for multi dropdown"
+         }]
+  };
+  const survey = new SurveyModel(json);
+  const data = [{
+    "question4": [
+      "Item 1",
+      "Item 3",
+      "other"
+    ],
+    "question4-Comment": "Other Q4",
+  }];
+  let table = new TableTest(survey, data);
+  expect((<any>table).columns.length).toEqual(2);
+  expect((<any>table).columns[0] instanceof CheckboxColumn).toBeTruthy();
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1, Item 3, Other for multi dropdown");
+});
+
+test("tagbox column from ColumnsBuilderFactory", () => {
+  expect(ColumnsBuilderFactory.Instance.getColumnsBuilder("tagbox") instanceof CheckboxColumnsBuilder).toBeTruthy();
 });

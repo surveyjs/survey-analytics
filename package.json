@@ -1,5 +1,5 @@
 {
-  "version": "2.5.5",
+  "version": "2.5.7",
   "name": "survey-analytics",
   "scripts": {
     "start": "webpack-dev-server --env buildType=dev",
@@ -44,17 +44,17 @@
     "url": "https://github.com/surveyjs/survey-analytics.git"
   },
   "dependencies": {
-    "survey-core": "../survey-library/packages/survey-core/build",
     "mongodb": "^6.20.0",
     "muuri": "^0.8.0",
     "plotly.js-dist-min": "^2.28.0",
+    "survey-core": "../survey-library/packages/survey-core/build",
     "tabulator-tables": "^6.2.5",
     "apexcharts": "^4.7.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
-    "@playwright/test": "1.53.1",
+    "@playwright/test": "1.58.0",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-replace": "^6.0.2",
@@ -71,7 +71,6 @@
     "axe-testcafe": "^3.0.0",
     "concurrently": "^5.3.0",
     "css-loader": "^7.1.2",
-    "lint-staged": "^15.4.3",
     "eslint": "^8.57.0",
     "eslint-plugin-surveyjs": "git+https://github.com/surveyjs/eslint-surveyjs.git",
     "html-loader": "^5.0.0",
@@ -81,10 +80,11 @@
     "jest-canvas-mock": "^2.3.1",
     "jest-environment-jsdom": "^29.7.0",
     "jest-junit": "^16.0.0",
+    "lint-staged": "^15.4.3",
     "mini-css-extract-plugin": "^2.9.0",
     "mongodb-memory-server": "^10.2.1",
     "node-uuid": "1.4.7",
-    "playwright": "1.53.1",
+    "playwright": "1.58.0",
     "puppeteer": "22.13.1",
     "replace-in-file": "^6.3.2",
     "rollup": "^4.34.8",

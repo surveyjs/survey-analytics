@@ -92,7 +92,7 @@ export interface IVisualizationPanelOptions {
    *
    * Default value: `true`
    *
-   * [View Demo](https://surveyjs.io/dashboard/examples/custom-layout/ (linkStyle))
+   * [How to Disable the Layout Engine](https://github.com/surveyjs/surveyjs-howtos-and-troubleshooting/blob/50a2f6f755193afb4733435e2942f80c98731e84/categories/data-visualization/custom-layout.md (linkStyle))
    * @see layoutEngine
    */
   allowDynamicLayout?: boolean;
