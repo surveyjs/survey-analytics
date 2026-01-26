@@ -49,6 +49,7 @@ export class CheckboxColumnsBuilder extends DefaultColumnsBuilder<QuestionCheckb
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("checkbox", new CheckboxColumnsBuilder());
+ColumnsBuilderFactory.Instance.registerBuilderColumn("tagbox", new CheckboxColumnsBuilder());
 export class SingleChoiceColumnsBuilder extends DefaultColumnsBuilder<QuestionDropdownModel | QuestionRadiogroupModel> {
   protected createColumn(question: QuestionDropdownModel | QuestionRadiogroupModel, table: Table): BaseColumn<QuestionDropdownModel | QuestionRadiogroupModel> {
     return new SingleChoiceColumn(question, table);
