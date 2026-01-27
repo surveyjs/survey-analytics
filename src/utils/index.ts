@@ -217,6 +217,14 @@ export class DocumentHelper {
         dropdownList.style.width = `${documentWidth - menuRect.left - 40}px`;
       }
 
+      const panelContainer = dropdownElement.closest(".sa-visualizer");
+      if(panelContainer) {
+        const panelContainerRect = panelContainer.getBoundingClientRect();
+        if((menuRect.y + menuRect.height) > (panelContainerRect.y + panelContainerRect.height)) {
+          dropdownList.style.height = `${panelContainerRect.height - menuRect.y + panelContainerRect.y}px`;
+        }
+      }
+
       if(!isOpened) {
         currentFocusIndex = -1;
       }

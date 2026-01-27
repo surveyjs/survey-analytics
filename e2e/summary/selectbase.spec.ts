@@ -131,8 +131,8 @@ test.describe("selectbase", () => {
     await expect(page.locator(".sa-visualizer__footer .sa-visualizer__content .sa-visualizer-wordcloud")).toHaveCount(1);
 
     // check comment's table
-    await page.locator(".sa-dropdown").first().click();
-    await getListItemByText(page, "chartType_choices").click(); // "Texts in table"
+    await page.locator(".sa-dropdown").nth(2).click();
+    await getListItemByText(page, "Texts in table").click();
     await page.waitForTimeout(100);
 
     const cells = await getTableCells();

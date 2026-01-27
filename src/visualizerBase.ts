@@ -311,6 +311,7 @@ export class VisualizerBase implements IDataInfo {
 
       let visualizerOptions = Object.assign({}, this.options);
       visualizerOptions.renderContent = undefined;
+      delete visualizerOptions.allowChangeVisualizerType;
       this._footerVisualizer = this.createVisualizer(question, visualizerOptions);
       if(!!this._footerVisualizer) {
         this._footerVisualizer.onUpdate = () => this.invokeOnUpdate();

@@ -73,7 +73,7 @@ test.describe("Summary common", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await chartTypeSelector.click();
-    await getListItemByText(page, "chartType_choices").click(); // "Table"
+    await getListItemByText(page, "Table").click();
     await checkA11y(page, axeContext, { axeOptions });
   });
 
@@ -110,7 +110,7 @@ test.describe("Summary common", () => {
     await checkA11y(page, axeContext, { axeOptions });
 
     await visualizerTypeSelector.click();
-    await getListItemByText(page, "chartType_text").click(); //"Texts in table"
+    await getListItemByText(page, "Texts in table").click();
     await checkA11y(page, axeContext, { axeOptions });
   });
 });

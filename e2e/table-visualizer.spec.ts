@@ -22,7 +22,7 @@ test.describe("Summary common", () => {
     await compareScreenshot(page, chartContentSelector, "text-simple-wordcloud.png");
 
     await visualizerTypeSelector.click();
-    await getListItemByText(page, "chartType_choices").click(); //"Texts in table"
+    await getListItemByText(page, "Texts in table").click();
     await compareScreenshot(page, chartContentSelector, "text-simple-table.png");
   });
 
@@ -34,14 +34,14 @@ test.describe("Summary common", () => {
 
     const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartTypeSelector).toBeVisible();
-    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Pie");
+    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart - Pie");
 
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").first();
     await expect(chartContentSelector).toBeVisible();
 
     await chartTypeSelector.click();
-    await getListItemByText(page, "chartType_options").click();//"Table"
-    expect(await chartTypeSelector.textContent()).toBe("Default Order");
+    await getListItemByText(page, "Table").click();
+    expect(await questionVisualizerSelector.locator(".sa-dropdown").nth(1).locator(".sa-dropdown-header-text")).toHaveText("Default Order");
     await compareScreenshot(page, chartContentSelector, "boolean-simple-table.png");
   });
 
@@ -53,13 +53,13 @@ test.describe("Summary common", () => {
 
     const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartTypeSelector).toBeVisible();
-    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Bar");
+    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart - Bar");
 
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").first();
     await expect(chartContentSelector).toBeVisible();
 
     await chartTypeSelector.click();
-    await getListItemByText(page, "chartType_options").click(); //"Table"
+    await getListItemByText(page, "Table").click();
     await compareScreenshot(page, chartContentSelector, "select-simple-table.png");
 
     const otherItemsSelector = questionVisualizerSelector.locator("h4").filter({ hasText: "Other items and comments" });
