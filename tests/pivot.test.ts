@@ -474,6 +474,38 @@ test("createAxisYSelector returns undefined when no choices available", () => {
   expect(selector).toBeUndefined();
 });
 
+test("pivot without maxSeriesCount", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("question1", "question2", "question3", "question4");
+
+  const registerSpy = jest.spyOn(pivot, "registerToolbarItem");
+  pivot["axisYSelectors"] = [{} as HTMLDivElement];
+
+  pivot.onAxisYSelectorChanged(0, "question2");
+
+  const axisYSelector1Calls = registerSpy.mock.calls.filter((c) => c[0] === "axisYSelector1");
+  expect(axisYSelector1Calls.length).toBe(1);
+  expect(Object.keys(pivot["toolbarItemCreators"]).filter(key => key.indexOf("axisYSelector") === 0).length).toEqual(2);
+
+  registerSpy.mockRestore();
+});
+
+test("pivot with maxSeriesCount: 1", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { maxSeriesCount: 1 } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3", "question4");
+
+  const registerSpy = jest.spyOn(pivot, "registerToolbarItem");
+  pivot["axisYSelectors"] = [{} as HTMLDivElement];
+
+  pivot.onAxisYSelectorChanged(0, "question2");
+
+  const axisYSelector1Calls = registerSpy.mock.calls.filter((c) => c[0] === "axisYSelector1");
+  expect(axisYSelector1Calls.length).toBe(0);
+  expect(Object.keys(pivot["toolbarItemCreators"]).filter(key => key.indexOf("axisYSelector") === 0).length).toEqual(1);
+
+  registerSpy.mockRestore();
+});
+
 test("isXYChart method", () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
   pivot["chartTypes"] = ["bar", "vbar", "line", "scatter", "pie", "doughnut"];

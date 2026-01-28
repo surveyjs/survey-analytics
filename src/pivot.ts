@@ -10,6 +10,7 @@ export interface IPivotChartVisualizerOptions extends IVisualizerOptions {
   questions?: Question[] | string[];
   categoryField?: Question | string;
   seriesFields?: Question[] | string[];
+  maxSeriesCount?: number;
   [key: string]: any;
 }
 
@@ -135,7 +136,7 @@ export class PivotModel extends HistogramModel {
         this.axisYQuestionNames = this.axisYQuestionNames.slice(0, index + 1);
       }
     } else {
-      if(!!value) {
+      if(!!value && (!this.options.maxSeriesCount || this.axisYSelectors.length < this.options.maxSeriesCount)) {
         this.registerToolbarItem("axisYSelector" + this.axisYSelectors.length, this.createYSelecterGenerator(), "dropdown");
       }
     }
