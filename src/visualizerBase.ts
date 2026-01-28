@@ -67,6 +67,7 @@ export interface IVisualizerOptions {
   type?: string;
   availableTypes?: string[];
   title?: string;
+  allowChangeType?: boolean;
   answersOrder?: "default" | "asc" | "desc";
   [key: string]: any;
 }
@@ -249,6 +250,14 @@ export class VisualizerBase implements IDataInfo {
 
   protected getName(): string {
     return this.question.name || this.question.valueName;
+  }
+
+  protected get allowChangeType() {
+    return this.options.allowChangeType
+      ?? this.questionOptions?.allowChangeType
+      ?? this.options.allowChangeVisualizerType
+      ?? this.questionOptions?.allowChangeVisualizerType
+      ?? true;
   }
 
   /**

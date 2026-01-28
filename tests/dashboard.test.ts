@@ -1,17 +1,12 @@
-import { WordCloud } from "../src/wordcloud/wordcloud";
-import { Text } from "../src/text";
+import { QuestionTextModel, SurveyModel } from "survey-core";
 import { SelectBase } from "../src/selectBase";
 import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrapper";
-import { VisualizationPanel } from "../src/visualizationPanel";
 import { Dashboard } from "../src/dashboard";
 import { IState } from "../src/config";
-import { VisualizationManager } from "../src/visualizationManager";
 import { IVisualizerOptions, PostponeHelper, VisualizerBase } from "../src/visualizerBase";
 import { IPivotChartVisualizerOptions, PivotModel } from "../src/pivot";
 import { NumberModel } from "../src/number";
-import { HistogramModel } from "../src/histogram";
 import { Matrix } from "../src/matrix";
-import { QuestionTextModel, SurveyModel } from "survey-core";
 import { ApexChartsAdapter } from "../src/apexcharts/chart-adapter";
 export * from "../src/card";
 export * from "../src/text";
@@ -566,4 +561,42 @@ test("Create visualizer with answersOrder", async () => {
 
   expect(visualizer.chartType).toBe("bar");
   expect(visualizer.answersOrder).toBe("desc");
+});
+
+test("allowChangeType", () => {
+  const json = {
+    elements: [
+      { type: "checkbox", name: "question1", choices: [1, 2, 3] },
+      { type: "text", inputType: "number", name: "question2" },
+      { type: "rating", name: "question3" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const data = [{ question1: [1, 2] }];
+
+  let dashboard = new Dashboard({
+    allowChangeVisualizerType: true,
+    questions: survey.getAllQuestions(),
+    data,
+    visualizers: [
+      {
+        dataField: "question1",
+        allowChangeType: false
+      },
+      {
+        dataField: "question2",
+        allowChangeType: false
+      },
+      "question3"
+    ],
+  });
+  let visualizers = dashboard.panel["visualizers"];
+
+  expect(visualizers).toHaveLength(3);
+  expect(visualizers[0].type).toBe("selectBase");
+  expect(visualizers[0]["toolbarItemCreators"]["changeChartType"]).toBeUndefined();
+  expect(visualizers[1].type).toBe("alternative");
+  expect(visualizers[1]["toolbarItemCreators"]["changeVisualizer"]).toBeUndefined();
+  expect(visualizers[2].type).toBe("alternative");
+  expect(visualizers[2]["toolbarItemCreators"]["changeVisualizer"]).toBeDefined();
 });

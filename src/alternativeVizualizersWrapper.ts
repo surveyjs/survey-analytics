@@ -112,7 +112,7 @@ export class AlternativeVisualizersWrapper
       }
     });
 
-    if(this.options.allowChangeVisualizerType !== false) {
+    if(this.allowChangeType) {
       this.registerToolbarItem("changeVisualizer", () =>
         this.visualizerSelector = DocumentHelper.createDropdown(
           this.getVisualizerSwitchItems(),
@@ -136,6 +136,10 @@ export class AlternativeVisualizersWrapper
   protected visualizerContainer: HTMLElement;
 
   protected onDataChanged(): void {
+  }
+
+  protected get allowChangeType() {
+    return this.options.allowChangeType ?? this.options.allowChangeVisualizerType ?? true;
   }
 
   public get hasFooter(): boolean {

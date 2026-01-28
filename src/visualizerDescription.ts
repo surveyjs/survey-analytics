@@ -22,7 +22,7 @@ export function getDataName(description: Question | IVisualizerDescription) {
 }
 
 export function createVisualizerDescription(vOptions: IVisualizerOptions, question: Question): IVisualizerDescription {
-  const inputType = vOptions.type || vOptions.availableTypes[0];
+  const inputType = vOptions.type || (vOptions.availableTypes || [])[0];
   let visualizerType;
   let chartType;
   let visualizerTypes;
@@ -45,14 +45,19 @@ export function createVisualizerDescription(vOptions: IVisualizerOptions, questi
       }
       if(VisualizerBase.chartAdapterType) {
         const chartTypes = VisualizerBase.chartAdapterType.getChartTypesByVisualizerType(vt);
-        chartTypes.filter(chType => (vOptions.availableTypes || []).indexOf(chType) !== -1 || chType === vOptions.type)
-          .forEach(chType => {
-            vct.push(chType);
-            if(chType === inputType && !visualizerType) {
-              visualizerType = vt;
-              chartType = inputType;
-            }
-          });
+        if(!vOptions.type && !vOptions.availableTypes) {
+          chartTypes.forEach(chType => vct.push(chType));
+          visualizerType = vt;
+        } else {
+          chartTypes.filter(chType => (vOptions.availableTypes || []).indexOf(chType) !== -1 || chType === vOptions.type)
+            .forEach(chType => {
+              vct.push(chType);
+              if(chType === inputType && !visualizerType) {
+                visualizerType = vt;
+                chartType = inputType;
+              }
+            });
+        }
       }
     });
     Object.keys(availableTypes).forEach(key => {
@@ -61,7 +66,7 @@ export function createVisualizerDescription(vOptions: IVisualizerOptions, questi
         visualizerTypes.splice(visualizerTypes.indexOf(key), 1);
       }
     });
-    if(!visualizerType) {
+    if(!visualizerType && !!inputType) {
       visualizerType = inputType;
       if(visualizerTypes.indexOf(visualizerType) === -1) {
         visualizerTypes.push(visualizerType);

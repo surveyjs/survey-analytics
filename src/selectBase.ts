@@ -150,7 +150,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     this._showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
     this.initChartTypes();
 
-    if(this.options.allowChangeVisualizerType !== false && !(this.questionOptions?.allowChangeVisualizerType === false)) {
+    if(this.allowChangeType) {
       this.registerToolbarItem("changeChartType", () => {
         if(this.chartTypes.length > 1) {
           return DocumentHelper.createDropdown(
