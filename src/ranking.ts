@@ -1,6 +1,7 @@
 import { VisualizationManager } from "./visualizationManager";
 import { SelectBase } from "./selectBase";
 import { QuestionRankingModel } from "survey-core";
+import { ICalculationResult } from "./visualizerBase";
 
 export class RankingModel extends SelectBase {
 
@@ -8,9 +9,9 @@ export class RankingModel extends SelectBase {
     question: QuestionRankingModel,
     data: Array<{ [index: string]: any }>,
     options?: any,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "ranking");
+    super(question, data, options, type || "ranking");
   }
 
   getQuestionResults() {
@@ -28,17 +29,19 @@ export class RankingModel extends SelectBase {
     return data;
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
+  protected getCalculatedValuesCore(): ICalculationResult {
     const results = this.getQuestionResults();
-    const choices = this.getValues();
+    const values = this.getValues();
 
-    let plotlyData = this.getEmptyData();
-
+    let calculatedData = this.getEmptyData();
     results.forEach((result) => {
-      this.applyResultToPlotlyData(result, plotlyData, choices);
+      this.applyResultToPlotlyData(result, calculatedData, values);
     });
 
-    return [plotlyData];
+    return {
+      data: [calculatedData],
+      values
+    };
   }
 
   applyResultToPlotlyData(result: any[], plotlyData: any, choices: any) {
@@ -52,4 +55,4 @@ export class RankingModel extends SelectBase {
   }
 }
 
-VisualizationManager.registerVisualizer("ranking", RankingModel);
+VisualizationManager.registerVisualizer("ranking", RankingModel, undefined, "ranking");

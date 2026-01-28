@@ -44,12 +44,11 @@ function PollVisualizer(question, data) {
     var texts = answersData.texts;
     var seriesLabels = answersData.seriesLabels;
     var hasSeries = seriesLabels.length > 1;
-
-    var emptyTextNode = SurveyAnalytics.DocumentHelper.createElement("p", "", {
-      innerText: SurveyAnalytics.localization.getString("noResults"),
-    });
-
+    
     if (datasets.length === 0 || datasets[0].length === 0) {
+      var emptyTextNode = SurveyAnalytics.DocumentHelper.createElement("p", "", {
+        innerText: SurveyAnalytics.localization.getString("noResults"),
+      });
       contentContainer.appendChild(emptyTextNode);
       return;
     }
