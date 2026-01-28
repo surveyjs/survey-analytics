@@ -49,7 +49,7 @@ test.describe("Rating common", () => {
     await compareScreenshot(page, chartContentSelector, "rating-string-average.png");
 
     await visualizerTypeSelector.click();
-    await getListItemByText(page, "Histogram - Bar").click();
+    await getListItemByText(page, "Histogram - Vertical Bar").click();
     await compareScreenshot(page, chartContentSelector, "rating-string-histogram.png");
   });
 });
