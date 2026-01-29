@@ -79,7 +79,7 @@ export class Dashboard extends VisualizerBase {
     this._panel.onStateChanged.add((sender, options) => {
       this.onStateChanged.fire(this, options);
     });
-    this._panel.showToolbar = options.showToolbar;
+    this._panel.showToolbar = options.showToolbar ?? true;
   }
 
   public registerToolbarItem(
