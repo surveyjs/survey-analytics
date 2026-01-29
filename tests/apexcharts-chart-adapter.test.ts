@@ -8,6 +8,7 @@ import { VisualizerBase } from "../src/visualizerBase";
 import { NumberModel } from "../src/number";
 import { BooleanModel } from "../src/boolean";
 import { StatisticsTableBoolean } from "./apexcharts-chart-adapter.test";
+import { Dashboard } from "../src/dashboard";
 export * from "../src/text";
 export * from "../src/number";
 export * from "../src/nps";
@@ -28,7 +29,7 @@ test("Combining visualizer types and chart types for rating", () => {
   expect(visualizations.length).toBe(3);
   expect(visualizations[0].type).toBe("selectBase");
   expect((visualizations[0] as SelectBase)["chartTypes"]).toStrictEqual(["bar", "vbar", "pie", "doughnut"]);
-  expect(visualizations[1].type).toBe("number");
+  expect(visualizations[1].type).toBe("average");
   expect((visualizations[1] as NumberModel)["chartTypes"]).toStrictEqual(["gauge", "bullet"]);
   expect(visualizations[2].type).toBe("histogram");
   expect((visualizations[2] as HistogramModel)["chartTypes"]).toStrictEqual(["vbar", "bar"]);
@@ -36,7 +37,39 @@ test("Combining visualizer types and chart types for rating", () => {
   const visualizerSwitchItems = altVisualizer["getVisualizerSwitchItems"]();
   expect(visualizerSwitchItems.length).toBe(8);
   expect(visualizerSwitchItems.map(i => i.value)).toStrictEqual(["bar", "vbar", "pie", "doughnut", "gauge", "bullet", "vbar", "bar"]);
-  expect(visualizerSwitchItems.map(i => i.visualizerType)).toStrictEqual(["selectBase", "selectBase", "selectBase", "selectBase", "number", "number", "histogram", "histogram"]);
+  expect(visualizerSwitchItems.map(i => i.visualizerType)).toStrictEqual(["selectBase", "selectBase", "selectBase", "selectBase", "average", "average", "histogram", "histogram"]);
+  // expect(visualizerSwitchItems.map(i => i.text)).toStrictEqual(["Bar", "Vertical Bar", "Pie", "Doughnut", "Gauge", "Bullet", "Histogram", "chartType_vistogram"]);
+});
+
+test("Combining visualizer types and chart types for rating into Dashboard", () => {
+  const json = { elements: [{ type: "rating", name: "score", rateMin: 1, rateMax: 10, }] };
+  const data = [{ "score": 1 }, { "score": 2 }, { "score": 3 }, { "score": 4 }, { "score": 5 }, { "score": 6 }, { "score": 1 }, { "score": 2 }, { "score": 7 }, { "score": 9 }, { "score": 9 }, { "score": 1 }, { "score": 2 }, { "score": 10 }, { "score": 3 }];
+  const survey = new SurveyModel(json);
+  const dashboard = new Dashboard({
+    questions: survey.getAllQuestions(),
+    data,
+    visualizers: [
+      {
+        dataField: "score",
+        type: "gauge"
+      }]
+  });
+  let visPanel = dashboard.panel;
+  let altVisualizer = visPanel.getVisualizer("score") as AlternativeVisualizersWrapper;
+
+  const visualizations = altVisualizer.getVisualizers();
+  // expect(visualizations.length).toBe(3);
+  expect(visualizations[0].type).toBe("selectBase");
+  expect((visualizations[0] as SelectBase)["chartTypes"]).toStrictEqual(["bar", "vbar", "pie", "doughnut"]);
+  expect(visualizations[1].type).toBe("average");
+  expect((visualizations[1] as NumberModel)["chartTypes"]).toStrictEqual(["gauge", "bullet"]);
+  expect(visualizations[2].type).toBe("histogram");
+  expect((visualizations[2] as HistogramModel)["chartTypes"]).toStrictEqual(["vbar", "bar"]);
+
+  const visualizerSwitchItems = altVisualizer["getVisualizerSwitchItems"]();
+  expect(visualizerSwitchItems.length).toBe(8);
+  expect(visualizerSwitchItems.map(i => i.value)).toStrictEqual(["bar", "vbar", "pie", "doughnut", "gauge", "bullet", "vbar", "bar"]);
+  expect(visualizerSwitchItems.map(i => i.visualizerType)).toStrictEqual(["selectBase", "selectBase", "selectBase", "selectBase", "average", "average", "histogram", "histogram"]);
   // expect(visualizerSwitchItems.map(i => i.text)).toStrictEqual(["Bar", "Vertical Bar", "Pie", "Doughnut", "Gauge", "Bullet", "Histogram", "chartType_vistogram"]);
 });
 
@@ -72,7 +105,7 @@ test("setVisualizer by chartType for rating", () => {
   expect((altVisualizer.getVisualizer() as SelectBase).chartType).toBe("bar");
 
   altVisualizer["_setVisualizer"]({ value: "bullet", visualizerType: "number" });
-  expect(altVisualizer.getVisualizer().type).toBe("number");
+  expect(altVisualizer.getVisualizer().type).toBe("average");
   expect((altVisualizer.getVisualizer() as NumberModel).chartType).toBe("bullet");
 
   altVisualizer["_setVisualizer"]({ value: "vbar", visualizerType: "selectBase" });

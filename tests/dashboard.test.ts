@@ -153,7 +153,7 @@ test("Options passed to root panel and visualizer", async () => {
   const visualizer = dashboard.panel.visualizers[0] as NumberModel;
   expect(visualizer.options.someVisualizerOption).toEqual("vis");
   expect(visualizer.options.somePanelOption).toEqual("panel");
-  expect(visualizer.type).toBe("number");
+  expect(visualizer.type).toBe("average");
   expect(visualizer.chartType).toBe("gauge");
   expect(visualizer.dataNames[0]).toEqual(visualizerDefinition.dataField);
 });
@@ -246,7 +246,7 @@ test("Set chart types from definitions", async () => {
 
   const chart2 = dashboard.panel.visualizers[1] as SelectBase;
   expect(chart2.chartType).toBe("line");
-  expect(chart2["chartTypes"]).toStrictEqual(["line", "bar", "vbar", "pie", "doughnut"]);
+  expect(chart2["chartTypes"]).toStrictEqual(["bar", "vbar", "pie", "doughnut"]);
 
   const chart3 = dashboard.panel.visualizers[2] as SelectBase;
   expect(chart3.chartType).toBe("line");
@@ -363,7 +363,7 @@ test("Create matrix visualizer", async () => {
   const visualizer = dashboard.panel.visualizers[0] as Matrix;
   expect(visualizer.type).toBe("matrix");
   expect(visualizer.chartType).toBe("stackedbar");
-  expect(visualizer["chartTypes"]).toStrictEqual(["stackedbar"]);
+  expect(visualizer["chartTypes"]).toStrictEqual(["bar", "stackedbar", "pie", "doughnut"]);
 
   const result: any = (await visualizer.getAnswersData())["datasets"];
   expect(result).toStrictEqual([

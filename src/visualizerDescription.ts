@@ -44,7 +44,18 @@ export function createVisualizerDescription(vOptions: IVisualizerOptions, questi
         availableTypes[vt] = vct;
       }
       if(VisualizerBase.chartAdapterType) {
-        const chartTypes = VisualizerBase.chartAdapterType.getChartTypesByVisualizerType(vt);
+        let chartTypes = VisualizerBase.chartAdapterType.getChartTypesByVisualizerType(vt);
+        if(!!vOptions.availableTypes && vOptions.availableTypes.length > 0) {
+          chartTypes = chartTypes.filter(chType => (vOptions.availableTypes || []).indexOf(chType) !== -1 || chType === vOptions.type);
+        }
+        chartTypes.forEach(chType => {
+          vct.push(chType);
+          if(chType === inputType && !visualizerType) {
+            visualizerType = vt;
+            chartType = chType;
+          }
+        });
+        /*
         if(!vOptions.type && !vOptions.availableTypes) {
           chartTypes.forEach(chType => vct.push(chType));
           visualizerType = vt;
@@ -54,10 +65,10 @@ export function createVisualizerDescription(vOptions: IVisualizerOptions, questi
               vct.push(chType);
               if(chType === inputType && !visualizerType) {
                 visualizerType = vt;
-                chartType = inputType;
+                chartType = chType;
               }
             });
-        }
+        }*/
       }
     });
     Object.keys(availableTypes).forEach(key => {

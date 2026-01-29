@@ -368,7 +368,7 @@ test("should handle null/undefined values correctly", () => {
 
 test("Use chart type from visualizerDefinition", async () => {
   const visualizerDefinition = {
-    visualizerType: "gauge",
+    visualizerType: "average",
     chartType: "bullet",
     dataName: "test",
     displayValueName: "count",
@@ -379,7 +379,7 @@ test("Use chart type from visualizerDefinition", async () => {
   let visPanel = new VisualizationPanel([visualizerDefinition], data, {});
 
   expect(visPanel.visualizers.length).toEqual(1);
-  expect(visPanel.visualizers[0].type).toEqual("number");
+  expect(visPanel.visualizers[0].type).toEqual("average");
   expect((visPanel.visualizers[0] as NumberModel).chartType).toEqual("bullet");
 });
 

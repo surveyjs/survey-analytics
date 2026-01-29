@@ -10,6 +10,7 @@ import { SelectBasePlotly } from "./legacy";
 export const chartTypes = {
   "boolean": ["pie", "doughnut", "bar"],
   "number": ["gauge", "bullet"],
+  "average": ["gauge", "bullet"],
   "selectBase": ["bar", "vbar", "pie", "doughnut"],
   "histogram": ["vbar", "bar"],
   "matrix": ["bar", "stackedbar", "pie", "doughnut"],
@@ -58,7 +59,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
         });
       }
     }
-    if(this.model.type === "number") {
+    if(this.model.type === "average") {
       config.displayModeBar = true;
     }
   }

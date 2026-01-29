@@ -168,7 +168,7 @@ test("getState, setState, onStateChanged", () => {
   let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
   let chartVisualizer = visPanel.getVisualizer("question1") as SelectBase;
 
-  expect(chartVisualizer["chartTypes"]).toStrictEqual(["bar"]);
+  expect(chartVisualizer["chartTypes"]).toStrictEqual([]);
   chartVisualizer["chartTypes"] = ["bar", "scatter"];
 
   let initialState: IState = {
@@ -1082,7 +1082,7 @@ test("Create number visualizer from definition", async () => {
 
 test("Generate visualizer names", () => {
   const visualizerDefinition1 = {
-    visualizerType: "number",
+    visualizerType: "average",
     chartType: "gauge",
     dataName: "test",
     displayValueName: "count",
@@ -1100,7 +1100,7 @@ test("Generate visualizer names", () => {
   let visPanel = new VisualizationPanel([visualizerDefinition1, visualizerDefinition2], data, {});
 
   expect(visPanel.visualizers.length).toEqual(2);
-  expect(visPanel.visualizers[0].type).toEqual("number");
+  expect(visPanel.visualizers[0].type).toEqual("average");
   expect(visPanel.visualizers[0].name.indexOf("visualizer")).toEqual(0);
   expect(visPanel.visualizers[1].type).toEqual("nps");
   expect(visPanel.visualizers[1].name.indexOf("visualizer")).toEqual(0);

@@ -4,7 +4,7 @@ describe("getVisualizerTypes", () => {
   test("should return unique visualizer types from chart keys", () => {
     const chartKeys = ["bar", "pie", "line", "gauge"];
     const result = getVisualizerTypes(chartKeys);
-    expect(result).toEqual(["selectBase", "gauge"]);
+    expect(result).toEqual(["selectBase", "average"]);
   });
 
   test("should return unique visualizer types when duplicates exist", () => {
@@ -44,7 +44,7 @@ describe("getVisualizerTypes", () => {
   test("should handle all chart types from chartConfig", () => {
     const chartKeys = Object.keys(chartConfig);
     const result = getVisualizerTypes(chartKeys);
-    expect(result).toEqual(["selectBase", "ranking", "matrix", "gauge", "wordcloud", "histogram"]);
+    expect(result).toEqual(["selectBase", "ranking", "matrix", "average", "wordcloud", "histogram"]);
   });
 });
 
@@ -54,7 +54,7 @@ describe("getChartTypes", () => {
     const result = getChartTypes(chartKeys);
     expect(result).toEqual({
       selectBase: ["bar", "pie"],
-      gauge: ["gauge", "bullet"]
+      average: ["gauge", "bullet"]
     });
   });
 
@@ -114,7 +114,7 @@ describe("getChartTypes", () => {
     expect(result.selectBase).toEqual(["bar", "vbar", "pie", "doughnut", "line", "scatter"]);
     expect(result.ranking).toEqual(["radar"]);
     expect(result.matrix).toEqual(["stackedbar"]);
-    expect(result.gauge).toEqual(["gauge", "bullet"]);
+    expect(result.average).toEqual(["gauge", "bullet"]);
   });
 });
 
@@ -127,7 +127,7 @@ describe("getVisualizerNameByType", () => {
   });
 
   test("should return all charts for visualizer type when chartTypes is empty", () => {
-    const visualizerType = "gauge";
+    const visualizerType = "average";
     const chartTypes: string[] = [];
     const result = getVisualizerNameByType(visualizerType, chartTypes);
     expect(result).toEqual(["gauge", "bullet"]);
@@ -162,7 +162,7 @@ describe("getVisualizerNameByType", () => {
   });
 
   test("should handle gauge visualizer type", () => {
-    const visualizerType = "gauge";
+    const visualizerType = "average";
     const chartTypes = ["gauge", "bullet"];
     const result = getVisualizerNameByType(visualizerType, chartTypes);
     expect(result).toEqual(["gauge", "bullet"]);

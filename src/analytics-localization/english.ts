@@ -22,6 +22,7 @@ export var englishStrings = {
   visualizer_wordcloud: "Wordcloud",
   visualizer_histogram: "Histogram",
   visualizer_number: "Average",
+  visualizer_average: "Average",
   visualizer_choices: "Table",
   visualizer_selectBase: "Chart",
   visualizer_matrix: "Chart",

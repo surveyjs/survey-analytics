@@ -53,7 +53,7 @@ export class NumberModel extends VisualizerBase {
     options: { [index: string]: any } = {},
     type?: string
   ) {
-    super(question, data, options, type || "number");
+    super(question, data, options, type || "average");
 
     if(!!this.question.displayValueName) {
       this.displayValueName = this.question.displayValueName;
@@ -179,7 +179,8 @@ export class NumberModel extends VisualizerBase {
   }
 }
 
-VisualizationManager.registerVisualizer("number", NumberModel, 200, "number");
-VisualizationManager.registerVisualizer("rating", NumberModel, 200, "number");
-VisualizationManager.registerVisualizer("expression", NumberModel, undefined, "number");
-VisualizationManager.registerVisualizer("gauge", NumberModel, undefined, "number");
+VisualizationManager.registerVisualizer("number", NumberModel, 200, "average");
+VisualizationManager.registerVisualizer("rating", NumberModel, 200, "average");
+VisualizationManager.registerVisualizer("expression", NumberModel, undefined, "average");
+VisualizationManager.registerVisualizer("gauge", NumberModel, undefined, "average");
+VisualizationManager.registerVisualizer("average", NumberModel, undefined, "average");

@@ -121,9 +121,6 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     }
     if(!this._chartType) {
       this._chartType = this.questionOptions?.chartType || this.options.defaultChartType || this.chartTypes[0] || "bar";
-      if(this.chartTypes.indexOf(this._chartType) === -1) {
-        this.chartTypes.unshift(this._chartType);
-      }
     }
   }
 

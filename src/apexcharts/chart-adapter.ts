@@ -9,6 +9,7 @@ import { removeUndefinedProperties } from "../utils/utils";
 export const chartTypes = {
   "boolean": ["pie", "doughnut", "bar"],
   "number": ["gauge", "bullet"],
+  "average": ["gauge", "bullet"],
   "selectBase": ["bar", "vbar", "pie", "doughnut"],
   "histogram": ["vbar", "bar"],
   "matrix": ["bar", "stackedbar", "pie", "doughnut"],
