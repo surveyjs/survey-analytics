@@ -2,7 +2,8 @@ import { SurveyModel, QuestionTextModel, ComponentCollection, QuestionCustomMode
 import { Table } from "../../src/tables/table";
 import { ColumnDataType, ITableState, QuestionLocation } from "../../src/tables/config";
 import { CheckboxColumnsBuilder, ColumnsBuilderFactory, CompositeColumnsBuilder } from "../../src/tables/columnbuilder";
-import { CheckboxColumn, SelectBaseColumn } from "../../src/tables/columns";
+import { CheckboxColumn, SelectBaseColumn, SingleChoiceColumn } from "../../src/tables/columns";
+import { QuestionRadiogroupModel } from "survey-core";
 const json = {
   questions: [
     {
@@ -404,13 +405,21 @@ test("check data for question with other and storeOthersAsComment: true", () => 
     ],
   };
   const survey = new SurveyModel(json);
+  const question = survey.getAllQuestions()[0] as QuestionRadiogroupModel;
+  expect(question.hasOther).toBeTruthy();
+  expect(question.getStoreOthersAsComment()).toBeTruthy();
+
   const data = [{ radio: "choiceValue", "radio-Comment": "otherValue" }];
   const table = new TableTest(survey, data, {}, []);
   expect((<any>table).tableData[0]["radio"]).toEqual("choiceText");
   expect((<any>table).tableData[0]["radio-Comment"]).toEqual("otherValue");
+  expect((<any>table).columns.length).toEqual(2);
+  expect((<any>table).columns[0] instanceof SingleChoiceColumn).toBeTruthy();
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("choiceText");
+  expect(table.columns[1].getCellData(table, data).displayValue).toBe("otherValue");
 });
 
-test("check data for question with other and storeOthersAsComment: true", () => {
+test("check data for question with other and storeOthersAsComment: false", () => {
   const json = {
     questions: [
       {
@@ -423,10 +432,17 @@ test("check data for question with other and storeOthersAsComment: true", () => 
     ],
   };
   const survey = new SurveyModel(json);
+  const question = survey.getAllQuestions()[0] as QuestionRadiogroupModel;
+  expect(question.hasOther).toBeTruthy();
+  expect(question.getStoreOthersAsComment()).toBeFalsy();
+
   const data = [{ radio: "otherValue" }];
   const table = new TableTest(survey, data, {}, []);
-  expect((<any>table).tableData[0]["radio"]).toEqual("Other (describe)");
+  expect((<any>table).tableData[0]["radio"]).toEqual("otherValue");
   expect((<any>table).tableData[0]["radio-Comment"]).toBeUndefined();
+  expect((<any>table).columns.length).toEqual(1);
+  expect((<any>table).columns[0] instanceof SingleChoiceColumn).toBeTruthy();
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("otherValue");
 });
 
 test("check useNamesAsTitles option", () => {
@@ -986,7 +1002,7 @@ test("check checkbox column with multi comments", () => {
 
   table = new TableTest(survey, [], { useValuesAsLabels: true }, []);
   expect((<any>table).columns.length).toEqual(1);
-  expect(table.columns[0].getCellData(table, data).displayValue).toBe("item1, item2");
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("[\"item1\",\"item2\"]");
 });
 
 test("check dropdown column with multi comments", () => {
@@ -1149,7 +1165,35 @@ test("check checkbox column with custom itemDelimiter", () => {
   expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1 + Item 2");
 });
 
-test("check tagbox column", () => {
+test("check tagbox column with comment", () => {
+  const json = { "elements":
+         [{
+           "type": "tagbox",
+           "name": "question4",
+           "choices": [
+             "Item 1",
+             "Item 2",
+             "Item 3"
+           ],
+           "showCommentArea": true
+         }]
+  };
+  const survey = new SurveyModel(json);
+  const data = [{
+    "question4": [
+      "Item 1",
+      "Item 3",
+    ],
+    "question4-Comment": "Comment Q4",
+  }];
+  let table = new TableTest(survey, data);
+  expect((<any>table).columns.length).toEqual(2);
+  expect((<any>table).columns[0] instanceof CheckboxColumn).toBeTruthy();
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1, Item 3");
+  expect(table.columns[1].getCellData(table, data).displayValue).toBe("Comment Q4");
+});
+
+test("check tagbox column with other item", () => {
   const json = { "elements":
          [{
            "type": "tagbox",
@@ -1176,8 +1220,40 @@ test("check tagbox column", () => {
   expect((<any>table).columns.length).toEqual(2);
   expect((<any>table).columns[0] instanceof CheckboxColumn).toBeTruthy();
   expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1, Item 3, Other for multi dropdown");
+  expect(table.columns[1].getCellData(table, data).displayValue).toBe("Other Q4");
 });
 
 test("tagbox column from ColumnsBuilderFactory", () => {
   expect(ColumnsBuilderFactory.Instance.getColumnsBuilder("tagbox") instanceof CheckboxColumnsBuilder).toBeTruthy();
+});
+
+test("check tagbox column with other item and comment", () => {
+  const json = { "elements":
+         [{
+           "type": "tagbox",
+           "name": "question4",
+           "choices": [
+             "Item 1",
+             "Item 2",
+             "Item 3"
+           ],
+           "showOtherItem": true,
+           "showCommentArea": true,
+           "otherText": "Other for multi dropdown"
+         }]
+  };
+  const survey = new SurveyModel(json);
+  const data = [{
+    "question4": [
+      "Item 1",
+      "Item 3",
+      "Other Q4"
+    ],
+    "question4-Comment": "Comment Q4",
+  }];
+  let table = new TableTest(survey, data);
+  expect((<any>table).columns.length).toEqual(2);
+  expect((<any>table).columns[0] instanceof CheckboxColumn).toBeTruthy();
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1, Item 3, Other Q4");
+  expect(table.columns[1].getCellData(table, data).displayValue).toBe("Comment Q4");
 });

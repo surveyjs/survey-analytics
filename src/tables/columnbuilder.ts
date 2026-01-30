@@ -22,9 +22,6 @@ export class DefaultColumnsBuilder<T extends Question = Question> implements ICo
     if(question.hasComment) {
       columns.push(new CommentColumn(question, table));
     }
-    if(question.hasOther && (question as unknown as QuestionSelectBase)["getStoreOthersAsComment"]()) {
-      columns.push(new OtherColumn(question as unknown as QuestionSelectBase, table));
-    }
     return columns;
   }
 }
@@ -43,14 +40,24 @@ export class ColumnsBuilderFactory {
     return this.columnsBuilders[type] || this.defaultColumnsBuilder;
   }
 }
-export class CheckboxColumnsBuilder extends DefaultColumnsBuilder<QuestionCheckboxModel> {
+
+export class SelectBaseColumnsBuilder<T extends QuestionSelectBase> extends DefaultColumnsBuilder<T> {
+  public buildColumns(question: T, table: Table): Array<IColumn> {
+    const columns = super.buildColumns(question, table);
+    if(question.hasOther && question.getStoreOthersAsComment()) {
+      columns.push(new OtherColumn(question, table));
+    }
+    return columns;
+  }
+}
+export class CheckboxColumnsBuilder extends SelectBaseColumnsBuilder<QuestionCheckboxModel> {
   protected createColumn(question: QuestionCheckboxModel, table: Table): BaseColumn<QuestionCheckboxModel> {
     return new CheckboxColumn(question, table);
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("checkbox", new CheckboxColumnsBuilder());
 ColumnsBuilderFactory.Instance.registerBuilderColumn("tagbox", new CheckboxColumnsBuilder());
-export class SingleChoiceColumnsBuilder extends DefaultColumnsBuilder<QuestionDropdownModel | QuestionRadiogroupModel> {
+export class SingleChoiceColumnsBuilder extends SelectBaseColumnsBuilder<QuestionDropdownModel | QuestionRadiogroupModel> {
   protected createColumn(question: QuestionDropdownModel | QuestionRadiogroupModel, table: Table): BaseColumn<QuestionDropdownModel | QuestionRadiogroupModel> {
     return new SingleChoiceColumn(question, table);
   }

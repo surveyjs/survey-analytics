@@ -1,4 +1,4 @@
-import { ItemValue, MatrixRowModel, Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionRadiogroupModel, QuestionSelectBase, settings } from "survey-core";
+import { ItemValue, MatrixRowModel, Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionRadiogroupModel, QuestionSelectBase, QuestionTagboxModel, settings } from "survey-core";
 import { createImagesContainer, createLinksContainer } from "../utils";
 import { ICellData, IColumn, ColumnDataType, QuestionLocation, IColumnData } from "./config";
 import { ITableOptions, Table } from "./table";
@@ -112,32 +112,41 @@ export class DefaultColumn extends BaseColumn {
   }
 }
 
-export class CheckboxColumn extends BaseColumn<QuestionCheckboxModel> {
+export class SelectBaseColumn<T extends QuestionSelectBase> extends BaseColumn<T> {
+  protected get isOtherInSeparateColumn() {
+    return this.question.hasOther && this.question.getStoreOthersAsComment();
+  }
+  protected getItemDisplayText(item: ItemValue, options: ITableOptions): string {
+    return options.useValuesAsLabels ? item.value : item.textOrHtml;
+  }
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
-    const selectedItems = this.question.selectedItems;
-    const res:Array<string> = [];
-    selectedItems.forEach(item => {
-      res.push(options.useValuesAsLabels ? item.value : item.textOrHtml);
-    });
-    return res.join(table.itemsDelimiter);
+    const prevSeparator = settings.choicesSeparator;
+    settings.choicesSeparator = table.itemsDelimiter;
+    const value = options.useValuesAsLabels ? this.question.renderedValue : this.question.displayValue;
+    settings.choicesSeparator = prevSeparator;
+    return value;
   }
 }
 
-export class SingleChoiceColumn extends BaseColumn<QuestionDropdownModel | QuestionRadiogroupModel> {
+export class CheckboxColumn extends SelectBaseColumn<QuestionCheckboxModel | QuestionTagboxModel> {
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
-    const selectedItem = this.question.selectedItem;
-    if(!selectedItem) return "";
-    return options.useValuesAsLabels ? selectedItem.value : selectedItem.textOrHtml;
+    if(this.isOtherInSeparateColumn) {
+      const selectedItems = this.question.selectedItems;
+      const res: Array<string> = selectedItems.map(item => this.getItemDisplayText(item, options));
+      return res.join(table.itemsDelimiter);
+    }
+    return super.getDisplayValue(data, table, options);
   }
 }
-export class SelectBaseColumn extends BaseColumn<QuestionDropdownModel | QuestionCheckboxModel | QuestionRadiogroupModel> {
+
+export class SingleChoiceColumn extends SelectBaseColumn<QuestionDropdownModel | QuestionRadiogroupModel> {
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
-    const value = options.useValuesAsLabels ? this.question.renderedValue : this.question.displayValue;
-    if(Array.isArray(value)) {
-      return value.join(table.itemsDelimiter);
-    } else {
-      return value;
+    if(this.isOtherInSeparateColumn) {
+      const selectedItem = this.question.selectedItem;
+      if(!selectedItem) return "";
+      return this.getItemDisplayText(selectedItem, options);
     }
+    return super.getDisplayValue(data, table, options);
   }
 }
 
