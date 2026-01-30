@@ -12,9 +12,10 @@ import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
-import { DateRangeWidget, IDateRange, IDateRangeOptions, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
+import { DatePeriodEnum, DateRangeWidget, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
 import "./visualizationPanel.scss";
 import { getDataName } from "./visualizerDescription";
+import { IDateRange } from "./utils/calculationDateRanges";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -1014,8 +1015,6 @@ export class VisualizationPanel extends VisualizerBase {
     this.layout();
   }
 
-  public onDatePeriodElementShown = new Event<(sender: VisualizationPanel, options: IDateRangeOptions) => any, VisualizationPanel, any>();
-
   public onPermissionsChangedCallback: any;
 
   protected renderPanelElement(
@@ -1074,12 +1073,10 @@ export class VisualizationPanel extends VisualizerBase {
       container.appendChild(divider);
 
       const config = <IDateRangeWidgetOptions>{
-        setDateRange: (dateRange: IDateRange): void => {
+        setDateRange: (dateRange: IDateRange, datePeriod: DatePeriodEnum): void => {
+          // onDateRangeChanged: (_, { datePeriod, dateRange }) => void
           this.dataProvider.setSystemFilter(this.options.datePeriodFieldName, dateRange);
         },
-        onBeforeRender: (options: IDateRangeOptions) => {
-          this.onDatePeriodElementShown.fire(this, options);
-        }
       };
       this._dateRangeWidget = new DateRangeWidget(config);
       const dateRangeWidgetElement = this._dateRangeWidget.render();

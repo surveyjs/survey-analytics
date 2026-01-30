@@ -1,56 +1,42 @@
-import { DocumentHelper } from ".";
+import { DocumentHelper, IDropdownItemOption } from ".";
 import { localization } from "../localizationManager";
+import { IDateRange, getLast7Days, getLast14Days, getLast28Days, getLast30Days, getLastMonth, getLastQuarter, getLastWeekMon, getLastWeekSun, getLastYear, getThisMonthToDate, getThisQuarterToDate, getThisWeekToDateMon, getThisWeekToDateSun, getThisYearToDate } from "./calculationDateRanges";
 import "./dateRangeWidget.scss";
 
-export interface IDateRange {
-  start?: number;
-  end?: number;
-}
+export type DatePeriodEnum = "custom" | "last7days" | "last14days" | "last28days" | "last30days" | "lastWeekMon" | "lastWeekSun" | "lastMonth" | "lastQuarter" | "lastYear" | "ytd" | "mtd" | "wtdSun" | "wtdMon" | "qtd";
+
+export const datePeriodsFunctions: Partial<Record<DatePeriodEnum, (refDate?: Date) => IDateRange>> = {
+  last7days: getLast7Days,
+  last14days: getLast14Days,
+  last28days: getLast28Days,
+  last30days: getLast30Days,
+  lastWeekMon: getLastWeekMon,
+  lastWeekSun: getLastWeekSun,
+  lastMonth: getLastMonth,
+  lastQuarter: getLastQuarter,
+  lastYear: getLastYear,
+  ytd: (refDate) => getThisYearToDate(refDate, false),
+  mtd: (refDate) => getThisMonthToDate(refDate, false),
+  wtdSun: () => getThisWeekToDateSun(false),
+  wtdMon: (refDate) => getThisWeekToDateMon(refDate, false),
+  qtd: (refDate) => getThisQuarterToDate(refDate, false)
+};
 export interface IDateRangeWidgetOptions {
-  setDateRange: (dateRange: IDateRange) => void;
-  onBeforeRender: (options: IDateRangeOptions) => void;
-}
-export interface IDateRangeOptions {
-  showTotalCount?: boolean;
-  initialRange?: IDateRange;
-  chipsConfig: {[key: string]: any};
+  datePeriod?: DatePeriodEnum;
+  availableDatePeriods: Array<DatePeriodEnum>;
+  dateRange?: IDateRange;
+  showAnswerCount?: boolean;
+
+  setDateRange: (dateRange: IDateRange, datePeriod: DatePeriodEnum) => void;
 }
 
 export class DateRangeWidget {
   static invalidRangeClassName = "sa-date-range--invalid";
   static invalidRangeEditorClassName = "sa-date-range_editor--invalid";
-  static defaultChipsConfig: {[key: string]: (instance: DateRangeWidget) => () => void} = {
-    resetRange: (instance: DateRangeWidget) => () => {
-      instance.setFilter(undefined, undefined);
-    },
-    lastYear: (instance: DateRangeWidget) => () => {
-      const end = new Date();
-      const start = new Date();
-      start.setFullYear(end.getFullYear() - 1);
-      instance.setFilter(start, end);
-    },
-    lastQuarter: (instance: DateRangeWidget) => () => {
-      const end = new Date();
-      const start = new Date();
-      start.setMonth(end.getMonth() - 3);
-      instance.setFilter(start, end);
-    },
-    lastMonth: (instance: DateRangeWidget) => () => {
-      const end = new Date();
-      const start = new Date();
-      start.setMonth(end.getMonth() - 1);
-      instance.setFilter(start, end);
-    },
-    lastWeek: (instance: DateRangeWidget) => () => {
-      const end = new Date();
-      const start = new Date();
-      start.setDate(end.getDate() - 7);
-      end.setDate(end.getDate() - 1);
-      instance.setFilter(start, end);
-    },
-  };
 
+  private currentDatePeriod: DatePeriodEnum;
   private currentDateRange: IDateRange;
+  private availableDatePeriodFunctions: Array<DatePeriodEnum>;
 
   private dateRangeContainer: HTMLElement;
   private startDateEditor: HTMLElement;
@@ -59,7 +45,7 @@ export class DateRangeWidget {
   private endDateInput: HTMLInputElement;
   private countLabel: HTMLElement;
   private rangeErrorMessage: HTMLElement;
-  private chipsContainer: HTMLElement;
+  private datePeriodContainer: HTMLElement;
 
   private elementRemoveClassName(element: Element, className: string) {
     if(element.classList.contains(className)) {
@@ -68,11 +54,12 @@ export class DateRangeWidget {
   }
   private setDateRange(): void {
     this.updateMinMaxAttributes();
-    this.config.setDateRange({ ...this.currentDateRange });
+    // onDateRangeChanged: (_, { datePeriod, dateRange }) => void
+    this.options.setDateRange({ ...this.currentDateRange }, this.currentDatePeriod);
   }
   private dateEditorChangeValue(): void {
     this.setDateRange();
-    this.resetChipsState(this.chipsContainer);
+    // this.resetChipsState(this.datePeriodContainer);
   }
   private updateMinMaxAttributes(): void {
     if(this.currentDateRange.end !== undefined) {
@@ -136,37 +123,47 @@ export class DateRangeWidget {
     divider.appendChild(line);
     return divider;
   }
-  private createChip(text: string, isActive: boolean, container: HTMLElement, clickHandler: () => {}): HTMLElement {
-    const activaStateClass = "sa-date-range_chip--active";
-    const chip = DocumentHelper.createElement("div", "sa-date-range_chip");
-    if(isActive) {
-      chip.classList.add(activaStateClass);
+  // private createChip(text: string, isActive: boolean, container: HTMLElement, clickHandler: () => {}): HTMLElement {
+  //   const activaStateClass = "sa-date-range_chip--active";
+  //   const chip = DocumentHelper.createElement("div", "sa-date-range_chip");
+  //   if(isActive) {
+  //     chip.classList.add(activaStateClass);
+  //   }
+
+  //   const self = this;
+  //   chip.addEventListener("click", function() {
+  //     self.resetChipsState(container);
+  //     chip.classList.add(activaStateClass);
+  //     clickHandler();
+  //   });
+
+  //   const box = DocumentHelper.createElement("div", "sa-date-range_chip-box");
+  //   const labelContainer = DocumentHelper.createElement("div", "sa-date-range_chip-label");
+  //   const labelText = DocumentHelper.createElement("div", "sa-date-range_chip-text");
+  //   labelText.textContent = localization.getString("reportingPeriod" + text.charAt(0).toUpperCase() + text.slice(1));
+
+  //   labelContainer.appendChild(labelText);
+  //   box.appendChild(labelContainer);
+  //   chip.appendChild(box);
+  //   container.appendChild(chip);
+
+  //   return chip;
+  // }
+  // private resetChipsState(container: HTMLElement): void {
+  //   const chips = container.querySelectorAll(".sa-date-range_chip");
+  //   chips.forEach(chip => {
+  //     this.elementRemoveClassName(chip, "sa-date-range_chip--active");
+  //   });
+  // }
+  private setDatePeriod(datePeriod: DatePeriodEnum | "resetRange") {
+    if(datePeriod == "resetRange") {
+      this.currentDatePeriod = undefined;
+      this.setFilter(undefined, undefined);
+      return;
     }
-
-    const self = this;
-    chip.addEventListener("click", function() {
-      self.resetChipsState(container);
-      chip.classList.add(activaStateClass);
-      clickHandler();
-    });
-
-    const box = DocumentHelper.createElement("div", "sa-date-range_chip-box");
-    const labelContainer = DocumentHelper.createElement("div", "sa-date-range_chip-label");
-    const labelText = DocumentHelper.createElement("div", "sa-date-range_chip-text");
-    labelText.textContent = localization.getString("reportingPeriod" + text.charAt(0).toUpperCase() + text.slice(1));
-
-    labelContainer.appendChild(labelText);
-    box.appendChild(labelContainer);
-    chip.appendChild(box);
-    container.appendChild(chip);
-
-    return chip;
-  }
-  private resetChipsState(container: HTMLElement): void {
-    const chips = container.querySelectorAll(".sa-date-range_chip");
-    chips.forEach(chip => {
-      this.elementRemoveClassName(chip, "sa-date-range_chip--active");
-    });
+    this.currentDatePeriod = datePeriod;
+    const range = datePeriodsFunctions[datePeriod]?.();
+    range && this.setFilter(range.start, range.end);
   }
   public setFilter(start, end): void {
     this.currentDateRange.start = !!start ? (new Date(start)).getTime() : undefined;
@@ -177,22 +174,13 @@ export class DateRangeWidget {
     this.elementRemoveClassName(this.startDateEditor, DateRangeWidget.invalidRangeEditorClassName);
     this.elementRemoveClassName(this.endDateEditor, DateRangeWidget.invalidRangeEditorClassName);
   }
-  private getDefaultChipsConfig(): {[key: string]: any} {
-    const config: {[key: string]: any} = {};
-    Object.keys(DateRangeWidget.defaultChipsConfig).forEach(key => {
-      config[key] = DateRangeWidget.defaultChipsConfig[key](this);
-    });
-    return config;
-  }
 
-  constructor(private config: IDateRangeWidgetOptions) {
+  constructor(private options: IDateRangeWidgetOptions) {
+    this.availableDatePeriodFunctions = options.availableDatePeriods ?? Object.keys(datePeriodsFunctions) as Array<DatePeriodEnum>;
   }
 
   public render(): HTMLElement {
-    const options = <IDateRangeOptions>{ chipsConfig: this.getDefaultChipsConfig() };
-    this.config.onBeforeRender(options);
-
-    this.currentDateRange = !!options.initialRange ? options.initialRange : {};
+    this.currentDateRange = this.options.dateRange ?? {};
     const rangeElement = DocumentHelper.createElement("div", "sa-date-range");
     const rangeContainer = DocumentHelper.createElement("div", "sa-date-range-container");
     const dateRangeEditors = DocumentHelper.createElement("div", "sa-date-range_editors");
@@ -236,23 +224,33 @@ export class DateRangeWidget {
 
     this.endDateInput = this.endDateEditor.querySelector("input");
 
-    if(!!options.chipsConfig && Object.keys(options.chipsConfig).length > 0) {
-      const isActive = (index) => {
-        return !options.initialRange && index === 0;
-      };
-      this.chipsContainer = DocumentHelper.createElement("div", "sa-date-range_chips");
-      Object.keys(options.chipsConfig).forEach((chipLabel, index) => {
-        this.createChip(chipLabel, isActive(index), this.chipsContainer, options.chipsConfig[chipLabel]);
+    if(this.availableDatePeriodFunctions.length > 0) {
+      // const isActive = (index) => {
+      //   return !options.initialRange && index === 0;
+      // };
+      // this.chipsContainer = DocumentHelper.createElement("div", "sa-date-range_chips");
+      // Object.keys(options.chipsConfig).forEach((chipLabel, index) => {
+      //   this.createChip(chipLabel, isActive(index), this.chipsContainer, options.chipsConfig[chipLabel]);
+      // });
+      const options = [{ value: "resetRange", text: localization.getString("reportingPeriodResetRange") }];
+      this.availableDatePeriodFunctions.forEach(key => {
+        options.push(<IDropdownItemOption>{
+          value: key,
+          text: localization.getString("reportingPeriod" + key.charAt(0).toUpperCase() + key.slice(1))
+        });
       });
+      this.datePeriodContainer = DocumentHelper.createDropdown(
+        options,
+        (option: any) => this.currentDatePeriod === option.value,
+        (value: any) => { this.setDatePeriod(value); }
+      );
 
       rangeElement.appendChild(this.createDivider());
-      rangeElement.appendChild(this.chipsContainer);
+      rangeElement.appendChild(this.datePeriodContainer);
     }
 
-    if(options.showTotalCount !== false) {
-      const divider2 = this.createDivider();
-      divider2.classList.add("sa-vertical-divider2");
-      rangeElement.appendChild(divider2);
+    if(this.options.showAnswerCount !== false) {
+      rangeElement.appendChild(this.createDivider());
       const countContainer = DocumentHelper.createElement("div", "sa-count");
       this.countLabel = DocumentHelper.createElement("div", "sa-count_text");
       countContainer.appendChild(this.countLabel);
