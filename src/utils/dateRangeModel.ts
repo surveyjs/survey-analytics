@@ -1,6 +1,6 @@
 import { IDateRange, getLast7Days, getLast14Days, getLast28Days, getLast30Days, getLastMonth, getLastQuarter, getLastWeekMon, getLastWeekSun, getLastYear, getThisMonthToDate, getThisQuarterToDate, getThisWeekToDateMon, getThisWeekToDateSun, getThisYearToDate, toRange } from "./calculationDateRanges";
 
-export type DatePeriodEnum = "custom" | "last7days" | "last14days" | "last28days" | "last30days" | "lastWeekMon" | "lastWeekSun" | "lastMonth" | "lastQuarter" | "lastYear" | "ytd" | "mtd" | "wtdSun" | "wtdMon" | "qtd";
+export type DatePeriodEnum = "last7days" | "last14days" | "last28days" | "last30days" | "lastWeekMon" | "lastWeekSun" | "lastMonth" | "lastQuarter" | "lastYear" | "ytd" | "mtd" | "wtdSun" | "wtdMon" | "qtd";
 export type DateRangeTuple = [startDate: Date | number, endDate: Date | number];
 
 export const datePeriodsFunctions: Partial<Record<DatePeriodEnum, (refDate?: Date, includeToday?: boolean) => IDateRange>> = {
