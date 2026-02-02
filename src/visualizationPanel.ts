@@ -15,7 +15,8 @@ import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
 import { DatePeriodEnum, DateRangeWidget, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
 import "./visualizationPanel.scss";
 import { getDataName } from "./visualizerDescription";
-import { IDateRange } from "./utils/calculationDateRanges";
+import { IDateRange, toRange } from "./utils/calculationDateRanges";
+import { IDateRangeChangedOptions } from "./utils/dateRangeModel";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -338,6 +339,11 @@ export class VisualizationPanel extends VisualizerBase {
     }
 
     this.buildVisualizers(questions);
+
+    if(this.isRoot && this.options.dateFieldName && this.options.dateRange) {
+      const dateRange = toRange(this.options.dateRange[0], this.options.dateRange[1]);
+      this.dataProvider.setSystemFilter(this.options.dateFieldName, dateRange);
+    }
 
     this._layoutEngine =
         options.layoutEngine ||
@@ -981,6 +987,8 @@ export class VisualizationPanel extends VisualizerBase {
     any
   >();
 
+  public onDateRangeChanged = new Event<(sender: VisualizationPanel, options: IDateRangeChangedOptions) => any, VisualizationPanel, any>();
+
   protected visibleElementsChanged(
     element: IVisualizerPanelElement,
     reason: string
@@ -1066,21 +1074,28 @@ export class VisualizationPanel extends VisualizerBase {
     container.className += " sa-panel__header";
     super.renderToolbar(container);
 
-    if(this.isRoot && this.options.datePeriodFieldName) {
+    if(this.isRoot && this.options.dateFieldName && this.options.showDatePanel !== false) {
       const divider = DocumentHelper.createElement("div", "sa-horizontal-divider");
       const line = DocumentHelper.createElement("div", "sa-line");
       divider.appendChild(line);
       container.appendChild(divider);
 
       const config = <IDateRangeWidgetOptions>{
-        setDateRange: (dateRange: IDateRange, datePeriod: DatePeriodEnum): void => {
-          // onDateRangeChanged: (_, { datePeriod, dateRange }) => void
-          this.dataProvider.setSystemFilter(this.options.datePeriodFieldName, dateRange);
-        },
+        datePeriod: this.options.datePeriod,
+        availableDatePeriods: this.options.availableDatePeriods,
+        dateRange: this.options.dateRange,
+        showAnswerCount: this.options.showAnswerCount,
+
+        onDateRangeChanged: (dateRange: IDateRange, datePeriod: DatePeriodEnum) => {
+          const options = <IDateRangeChangedOptions>{ datePeriod, dateRange };
+          this.onDateRangeChanged.fire(this, options);
+          this.dataProvider.setSystemFilter(this.options.dateFieldName, options.dateRange);
+        }
       };
       this._dateRangeWidget = new DateRangeWidget(config);
       const dateRangeWidgetElement = this._dateRangeWidget.render();
       container.appendChild(dateRangeWidgetElement);
+
     }
   }
 

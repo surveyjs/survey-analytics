@@ -8,6 +8,7 @@ import { IPivotChartVisualizerOptions, PivotModel } from "../src/pivot";
 import { NumberModel } from "../src/number";
 import { Matrix } from "../src/matrix";
 import { ApexChartsAdapter } from "../src/apexcharts/chart-adapter";
+import { DatePeriodEnum } from "../src/utils/dateRangeModel";
 export * from "../src/card";
 export * from "../src/text";
 export * from "../src/number";
@@ -599,4 +600,61 @@ test("allowChangeType", () => {
   expect(visualizers[1]["toolbarItemCreators"]["changeVisualizer"]).toBeUndefined();
   expect(visualizers[2].type).toBe("alternative");
   expect(visualizers[2]["toolbarItemCreators"]["changeVisualizer"]).toBeDefined();
+});
+
+test("Dashboard should accept date-related options (dateFieldName, datePeriod, availableDatePeriods, dateRange, showAnswerCount, showDatePanel)", () => {
+  const dateRange: [Date, Date] = [new Date("2025-12-01"), new Date("2025-12-31")];
+  const availableDatePeriods: DatePeriodEnum[] = ["last7days", "last30days", "custom"];
+  const dashboard = new Dashboard({
+    visualizers: [{ type: "text", dataField: "q1" }],
+    dateFieldName: "submissionDate",
+    datePeriod: "last30days",
+    availableDatePeriods,
+    dateRange,
+    showAnswerCount: false,
+    showDatePanel: true
+  });
+
+  const panelOptions = dashboard.panel.options as any;
+  expect(panelOptions.dateFieldName).toBe("submissionDate");
+  expect(panelOptions.datePeriod).toBe("last30days");
+  expect(panelOptions.availableDatePeriods).toStrictEqual(availableDatePeriods);
+  expect(panelOptions.dateRange).toStrictEqual(dateRange);
+  expect(panelOptions.showAnswerCount).toBe(false);
+  expect(panelOptions.showDatePanel).toBe(true);
+});
+
+test("Dashboard should accept showDatePanel: false to hide date panel", () => {
+  const dashboard = new Dashboard({
+    visualizers: [{ type: "text", dataField: "q1" }],
+    dateFieldName: "submissionDate",
+    dateRange: [new Date("2025-12-01"), new Date("2025-12-31")],
+    showDatePanel: false
+  });
+
+  const panelOptions = dashboard.panel.options as any;
+  expect(panelOptions.dateFieldName).toBe("submissionDate");
+  expect(panelOptions.dateRange).toBeDefined();
+  expect(panelOptions.showDatePanel).toBe(false);
+});
+
+test("Dashboard onDateRangeChanged event fires when date range changes", () => {
+  const dashboard = new Dashboard({
+    visualizers: [{ type: "text", dataField: "q1" }],
+    dateFieldName: "submissionDate",
+    dateRange: [new Date("2025-12-01"), new Date("2025-12-31")],
+    showDatePanel: true
+  });
+
+  const handler = jest.fn();
+  dashboard.onDateRangeChanged.add(handler);
+
+  const options = {
+    datePeriod: "last7days" as DatePeriodEnum,
+    dateRange: { start: new Date("2025-12-08").getTime(), end: new Date("2025-12-14").getTime() }
+  };
+  dashboard.panel.onDateRangeChanged.fire(dashboard.panel, options);
+
+  expect(handler).toHaveBeenCalledTimes(1);
+  expect(handler).toHaveBeenCalledWith(dashboard, options);
 });

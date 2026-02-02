@@ -13,20 +13,10 @@ import {
   getThisMonthToDate,
   getThisQuarterToDate,
   getThisYearToDate,
-  IDateRange
+  IDateRange,
+  startOfDay,
+  endOfDay
 } from "../src/utils/calculationDateRanges";
-
-function startOfDayMs(d: Date): number {
-  const c = new Date(d);
-  c.setHours(0, 0, 0, 0);
-  return c.getTime();
-}
-
-function endOfDayMs(d: Date): number {
-  const c = new Date(d);
-  c.setHours(23, 59, 59, 999);
-  return c.getTime();
-}
 
 function expectValidRange(range: IDateRange): void {
   expect(range.start).toBeDefined();
@@ -37,11 +27,11 @@ function expectValidRange(range: IDateRange): void {
 }
 
 function expectStartOfDay(range: IDateRange, expectedDate: Date): void {
-  expect(range.start).toBe(startOfDayMs(expectedDate));
+  expect(range.start).toBe(startOfDay(expectedDate).getTime());
 }
 
 function expectEndOfDay(range: IDateRange, expectedDate: Date): void {
-  expect(range.end).toBe(endOfDayMs(expectedDate));
+  expect(range.end).toBe(endOfDay(expectedDate).getTime());
 }
 
 describe("calculationDateRanges for 15.12.2025", () => {
@@ -111,23 +101,17 @@ describe("calculationDateRanges for 15.12.2025", () => {
   });
 
   test("getThisWeekToDateSun includeToday=false", () => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date("2025-12-15"));
-    const range = getThisWeekToDateSun(false);
+    const range = getThisWeekToDateSun(refDate, false);
     expectValidRange(range);
     expectStartOfDay(range, new Date("2025-12-14"));
     expectEndOfDay(range, new Date("2025-12-14"));
-    jest.useRealTimers();
   });
 
   test("getThisWeekToDateSun includeToday=true", () => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date("2025-12-15"));
-    const range = getThisWeekToDateSun(true);
+    const range = getThisWeekToDateSun(refDate, true);
     expectValidRange(range);
     expectStartOfDay(range, new Date("2025-12-14"));
     expectEndOfDay(range, new Date("2025-12-15"));
-    jest.useRealTimers();
   });
 
   test("getThisWeekToDateMon includeToday=false", () => {
@@ -254,23 +238,17 @@ describe("calculationDateRanges for 30.01.2026", () => {
   });
 
   test("getThisWeekToDateSun includeToday=false", () => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date("2026-01-30"));
-    const range = getThisWeekToDateSun(false);
+    const range = getThisWeekToDateSun(refDate, false);
     expectValidRange(range);
     expectStartOfDay(range, new Date("2026-01-25"));
     expectEndOfDay(range, new Date("2026-01-29"));
-    jest.useRealTimers();
   });
 
   test("getThisWeekToDateSun includeToday=true", () => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date("2026-01-30"));
-    const range = getThisWeekToDateSun(true);
+    const range = getThisWeekToDateSun(refDate, true);
     expectValidRange(range);
     expectStartOfDay(range, new Date("2026-01-25"));
     expectEndOfDay(range, new Date("2026-01-30"));
-    jest.useRealTimers();
   });
 
   test("getThisWeekToDateMon includeToday=false", () => {

@@ -65,7 +65,7 @@ var options = {
   // allowTopNAnswers: true,
   // showCorrectAnswers: true
   // labelTruncateLength: 27,
-  datePeriodFieldName: "timestamp",
+  dateFieldName: "timestamp",
 };
 
 // SurveyAnalytics.WordCloudAdapter.drawOutOfBound = false;

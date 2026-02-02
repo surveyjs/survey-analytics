@@ -1,7 +1,7 @@
 var survey = new Survey.SurveyModel(json);
 
 var options = {
-  datePeriodFieldName: "timestamp",
+  dateFieldName: "timestamp",
 };
 
 var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(

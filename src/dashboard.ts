@@ -1,11 +1,12 @@
+import { Question, SurveyModel, Event } from "survey-core";
 import { IVisualizerOptions, ToolbarItemType, VisualizerBase } from "./visualizerBase";
 import { IVisualizationPanelOptions, VisualizationPanel } from "./visualizationPanel";
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { createVisualizerDescription, IVisualizerDescription } from "./visualizerDescription";
-import { Question, SurveyModel } from "survey-core";
 import { LayoutEngine } from "./layout-engine";
 import { IDashboardTheme } from "./theme";
 import { IState } from "./config";
+import { DatePeriodEnum, DateRangeTuple, IDateRangeChangedOptions } from "./utils/dateRangeModel";
 
 export interface IDashboardOptions {
   data?: any[];
@@ -20,6 +21,13 @@ export interface IDashboardOptions {
   layoutEngine?: LayoutEngine;
   stripHtmlFromTitles?: boolean;
   showToolbar?: boolean;
+
+  dateFieldName?: string;
+  datePeriod?: DatePeriodEnum;
+  availableDatePeriods?: DatePeriodEnum[];
+  dateRange?: DateRangeTuple;
+  showAnswerCount?: boolean;
+  showDatePanel?: boolean;
 
   [key: string]: any;
 }
@@ -56,6 +64,8 @@ export class Dashboard extends VisualizerBase {
   private _questions: Question[];
   private _visualizers: any;
 
+  public onDateRangeChanged = new Event<(sender: Dashboard, options: IDateRangeChangedOptions) => any, Dashboard, any>();
+
   constructor(options: IDashboardOptions) {
     super(null, options?.data ?? [], {}, "dashboard");
 
@@ -78,6 +88,9 @@ export class Dashboard extends VisualizerBase {
     this._panel = new VisualizationPanel(visualizerDescriptions, this._data, this._options);
     this._panel.onStateChanged.add((sender, options) => {
       this.onStateChanged.fire(this, options);
+    });
+    this._panel.onDateRangeChanged.add((sender, options) => {
+      this.onDateRangeChanged.fire(this, options);
     });
     this._panel.showToolbar = options.showToolbar ?? true;
   }

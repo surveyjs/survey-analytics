@@ -62,7 +62,6 @@ export var englishStrings = {
   saveDiagramAsPNG: "Download plot as a PNG file",
   answersText: "answer(s)",
   noData: "No data",
-  reportingPeriodResetRange: "Reset range",
   reportingPeriodCustom: "Custom",
   reportingPeriodLast7days: "Last 7 days",
   reportingPeriodLast14days: "Last 14 days",

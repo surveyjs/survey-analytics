@@ -2719,7 +2719,7 @@ var survey = new Survey.SurveyModel(json);
 // var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
 //   survey.getAllQuestions(),
 //   // [survey.getQuestionByName("customer_email")],
-//   dataFromServer, { datePeriodFieldName: "timestamp" }
+//   dataFromServer, { dateFieldName: "timestamp" }
 // );
 
 // const checkbox = document.getElementById('toggle-checkbox');
