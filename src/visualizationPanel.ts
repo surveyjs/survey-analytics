@@ -410,13 +410,14 @@ export class VisualizationPanel extends VisualizerBase {
       //   text: localization.getString("changeLocale"),
       // });
       this.registerToolbarItem("changeLocale", () => {
-        return DocumentHelper.createDropdown(localeChoices,
-          (option: any) => !!option.value && (this.locale || surveyLocalization.defaultLocale) === option.value,
-          (e: any) => {
+        return DocumentHelper.createDropdown({
+          options: localeChoices,
+          isSelected: (option: any) => !!option.value && (this.locale || surveyLocalization.defaultLocale) === option.value,
+          handler: (e: any) => {
             var newLocale = e;
             this.locale = newLocale;
           }
-        );
+        });
       }, "dropdown");
     }
 

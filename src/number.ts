@@ -64,18 +64,18 @@ export class NumberModel extends VisualizerBase {
     if(this.allowChangeType) {
       this.registerToolbarItem("changeChartType", () => {
         if(this.chartTypes.length > 1) {
-          return DocumentHelper.createDropdown(
-            this.chartTypes.map((chartType) => {
+          return DocumentHelper.createDropdown({
+            options: this.chartTypes.map((chartType) => {
               return {
                 value: chartType,
                 text: localization.getString("chartType_" + chartType),
               };
             }),
-            (option: any) => this.chartType === option.value,
-            (e: any) => {
+            isSelected: (option: any) => this.chartType === option.value,
+            handler: (e: any) => {
               this.setChartType(e);
             }
-          );
+          });
         }
         return null;
       }, "dropdown");

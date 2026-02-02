@@ -63,8 +63,12 @@ export class DateRangeModel {
     return [...this._availableDatePeriods];
   }
 
-  setDatePeriod(datePeriod: DatePeriodEnum): void {
+  setDatePeriod(datePeriod: DatePeriodEnum | undefined): void {
     this._currentDatePeriod = datePeriod;
+    if(datePeriod == undefined) {
+      this.setFilter(undefined, undefined);
+      return;
+    }
     const range = datePeriodsFunctions[datePeriod]?.(undefined, this._includeToday);
     if(range) {
       this.setFilter(range.start, range.end);

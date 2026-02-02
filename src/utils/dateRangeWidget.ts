@@ -116,8 +116,7 @@ export class DateRangeWidget {
     this.startDateEditor = this.createDateEditor(currentDateRange.start, (input: HTMLInputElement) => {
       if(input.checkValidity()) {
         this.model.setFilter((new Date(input.value)).getTime(), this.model.currentDateRange.end, true);
-        this.elementRemoveClassName(this.startDateEditor, DateRangeWidget.invalidRangeEditorClassName);
-        this.elementRemoveClassName(this.dateRangeContainer, DateRangeWidget.invalidRangeClassName);
+        this.updateElements();
       } else {
         this.startDateEditor.classList.add(DateRangeWidget.invalidRangeEditorClassName);
         this.dateRangeContainer.classList.add(DateRangeWidget.invalidRangeClassName);
@@ -135,8 +134,7 @@ export class DateRangeWidget {
     this.endDateEditor = this.createDateEditor(currentDateRange.end, (input: HTMLInputElement) => {
       if(input.checkValidity()) {
         this.model.setFilter(this.model.currentDateRange.start, (new Date(input.value)).getTime(), true);
-        this.elementRemoveClassName(this.endDateEditor, DateRangeWidget.invalidRangeEditorClassName);
-        this.elementRemoveClassName(this.dateRangeContainer, DateRangeWidget.invalidRangeClassName);
+        this.updateElements();
       } else {
         this.endDateEditor.classList.add(DateRangeWidget.invalidRangeEditorClassName);
         this.dateRangeContainer.classList.add(DateRangeWidget.invalidRangeClassName);
@@ -158,19 +156,16 @@ export class DateRangeWidget {
         });
       });
 
-      this.datePeriodContainer = DocumentHelper.createDropdown(
+      this.datePeriodContainer = DocumentHelper.createDropdown({
         options,
-        (option: any) => this.model.currentDatePeriod === option.value,
-        (value: any) => {
-          this.model.setDatePeriod(value);
-          this.updateMinMaxAttributes();
-          const range = this.model.currentDateRange;
-          this.setDateIntoInput(range.start, this.startDateInput);
-          this.setDateIntoInput(range.end, this.endDateInput);
-          this.elementRemoveClassName(this.startDateEditor, DateRangeWidget.invalidRangeEditorClassName);
-          this.elementRemoveClassName(this.endDateEditor, DateRangeWidget.invalidRangeEditorClassName);
+        isSelected: (option: any) => this.model.currentDatePeriod === option.value,
+        handler: (value: any) => {
+          this.setDatePeriod(value);
+        },
+        resetHandler: () => {
+          this.setDatePeriod(undefined);
         }
-      );
+      });
 
       rangeElement.appendChild(this.createDivider());
       rangeElement.appendChild(this.datePeriodContainer);
@@ -185,6 +180,21 @@ export class DateRangeWidget {
     }
 
     return rangeElement;
+  }
+
+  public setDatePeriod(datePeriod: DatePeriodEnum | undefined): void {
+    this.model.setDatePeriod(datePeriod);
+    this.updateElements();
+  }
+
+  public updateElements(): void {
+    this.datePeriodContainer["__updateSelect"] && this.datePeriodContainer["__updateSelect"]();
+    this.updateMinMaxAttributes();
+    const range = this.model.currentDateRange;
+    this.setDateIntoInput(range.start, this.startDateInput);
+    this.setDateIntoInput(range.end, this.endDateInput);
+    this.elementRemoveClassName(this.startDateEditor, DateRangeWidget.invalidRangeEditorClassName);
+    this.elementRemoveClassName(this.endDateEditor, DateRangeWidget.invalidRangeEditorClassName);
   }
 
   public updateAnswersCount(answersCount: number): void {

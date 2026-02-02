@@ -176,19 +176,19 @@ export class HistogramModel extends SelectBase {
 
     if(this.allowChangeIntervals) {
       this.registerToolbarItem("changeIntervalsMode", () => {
-        this.changeIntervalsModeSelector = DocumentHelper.createDropdown(
-          this.intervalModes.map((intervalModeValue) => {
+        this.changeIntervalsModeSelector = DocumentHelper.createDropdown({
+          options: this.intervalModes.map((intervalModeValue) => {
             return {
               value: intervalModeValue,
               text: localization.getString("intervalMode_" + intervalModeValue),
             };
           }),
-          (option: any) => this.intervalsMode === option.value,
-          (value: any) => {
+          isSelected: (option: any) => this.intervalsMode === option.value,
+          handler: (value: any) => {
             this.intervalsMode = value;
           },
-          localization.getString("intervalModeTitle")
-        );
+          placeholder: localization.getString("intervalModeTitle")
+        });
         return this.changeIntervalsModeSelector;
       }, "dropdown");
     }
@@ -199,14 +199,14 @@ export class HistogramModel extends SelectBase {
         });
         choices.unshift({ value: "", text: localization.getString("noneAggregateText") }),
 
-        this.aggregateDataNameSelector = DocumentHelper.createDropdown(
-          choices,
-          (option: any) => this.aggregateDataName === option.value,
-          (value) => {
+        this.aggregateDataNameSelector = DocumentHelper.createDropdown({
+          options: choices,
+          isSelected: (option: any) => this.aggregateDataName === option.value,
+          handler: (value) => {
             this.aggregateDataName = value;
           },
-          localization.getString("selectAggregateText")
-        );
+          placeholder: localization.getString("selectAggregateText")
+        });
         this.updateAggregateDataNameSelector();
         return this.aggregateDataNameSelector;
       }, "dropdown");

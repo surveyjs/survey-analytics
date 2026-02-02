@@ -114,17 +114,17 @@ export class AlternativeVisualizersWrapper
 
     if(this.allowChangeType) {
       this.registerToolbarItem("changeVisualizer", () =>
-        this.visualizerSelector = DocumentHelper.createDropdown(
-          this.getVisualizerSwitchItems(),
-          (option: any) => {
+        this.visualizerSelector = DocumentHelper.createDropdown({
+          options: this.getVisualizerSwitchItems(),
+          isSelected: (option: any) => {
             if(!!this.visualizer["chartTypes"] && this.visualizer["chartTypes"].length > 0) {
               return this.visualizer.type === option.visualizerType && this.visualizer["chartType"] === option.value;
             } else {
               return this.visualizer.type === option.visualizerType;
             }
           },
-          (e: any, selectedOption: any) => this._setVisualizer(selectedOption, false)
-        ), "dropdown", 0
+          handler: (e: any, selectedOption: any) => this._setVisualizer(selectedOption, false)
+        }), "dropdown", 0
       );
     }
 

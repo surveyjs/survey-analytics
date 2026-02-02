@@ -9,6 +9,22 @@ export interface IDropdownItemOption {
 
   [key: string]: any;
 }
+
+export interface IDropdownOptions {
+  /** Array of options or function that returns options */
+  options: Array<IDropdownItemOption> | (() => Array<IDropdownItemOption>);
+  /** Function to check if option is selected */
+  isSelected: (option: IDropdownItemOption) => boolean;
+  /** Selection handler */
+  handler: (value: string, option: IDropdownItemOption) => void;
+  /** Placeholder text when no option is selected */
+  placeholder?: string;
+  /** Title text above the dropdown */
+  title?: string | (() => string);
+  /** CSS class name for the dropdown */
+  className?: string;
+  resetHandler?: () => void;
+}
 export class DocumentHelper {
   public static createSelector(
     options: Array<{ value: string, text: string }> | Function,
@@ -55,21 +71,18 @@ export class DocumentHelper {
 
   /**
    * Creates a custom dropdown element with icon support
-   * @param {Array<{value: string, text: string, icon?: string}>} options - Array of options
-   * @param {(option: {value: string, text: string, icon?: string}) => boolean} isSelected - Function to check if option is selected
-   * @param {(value: string) => void} handler - Selection handler
-   * @param {string} placeholder - Placeholder text
-   * @param {string} title - Title text
-   * @returns {HTMLElement} - Created dropdown element
+   * @param options - Configuration object for the dropdown
+   * @returns Created dropdown element
    */
-  public static createDropdown(
-    options: Array<IDropdownItemOption> | (() => Array<IDropdownItemOption>),
-    isSelected: (option: {value: string, text: string, icon?: string}) => boolean,
-    handler: (value: string, option: any) => void,
-    placeholder = "Select...",
-    title?: string | (() => string),
-    className = "sa-dropdown"
-  ): HTMLDivElement {
+  public static createDropdown(options: IDropdownOptions): HTMLDivElement {
+    const {
+      options: optionsSource,
+      isSelected,
+      handler,
+      placeholder = "Select...",
+      title,
+      className = "sa-dropdown"
+    } = options;
     const dropdownOpenedClass = className + "--opened";
     const dropdownElement = document.createElement("div");
     dropdownElement.className = className;
@@ -92,15 +105,15 @@ export class DocumentHelper {
       }
     };
 
-    const optionsSource = options || [];
-    let optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
+    const opts = optionsSource || [];
+    let optionItems = Array.isArray(opts) ? opts : opts();
     let selectedOption = optionItems.find(option => isSelected(option));
     const headerContent = document.createElement("div");
     headerContent.className = className + "-header-content";
 
     const updateHeader = () => {
       headerContent.innerHTML = "";
-      optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
+      optionItems = Array.isArray(opts) ? opts : opts();
       selectedOption = optionItems.find(option => isSelected(option));
 
       if(selectedOption) {
@@ -126,9 +139,22 @@ export class DocumentHelper {
     updateHeader();
     dropdownHeader.appendChild(headerContent);
 
+    if(options.resetHandler) {
+      // Add cancel icon
+      const resetElement = document.createElement("div");
+      resetElement.className = className + "-action " + className + "-reset";
+      resetElement.appendChild(DocumentHelper.createSvgElement("cancel_24x24"));
+      dropdownHeader.appendChild(resetElement);
+      resetElement.addEventListener("click", (e) => {
+        options.resetHandler();
+        e.preventDefault();
+        e.stopPropagation();
+      });
+    }
+
     // Add arrow icon
     const arrowElement = document.createElement("div");
-    arrowElement.className = className + "-arrow";
+    arrowElement.className = className + "-action " + className + "-arrow";
     arrowElement.appendChild(DocumentHelper.createSvgElement("chevrondown-24x24"));
     dropdownHeader.appendChild(arrowElement);
     const dropdownList = document.createElement("ul");
@@ -139,8 +165,8 @@ export class DocumentHelper {
 
     const updateOptions = () => {
       dropdownList.innerHTML = "";
-      const optionsSource = options || [];
-      const optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
+      const opts = optionsSource || [];
+      const optionItems = Array.isArray(opts) ? opts : opts();
       optionItems.forEach(option => {
         const dropdownItem = document.createElement("li");
         dropdownItem.className = className + "-item";
@@ -320,8 +346,8 @@ export class DocumentHelper {
 
     // Method to set value programmatically
     (dropdownElement as any).setValue = (value) => {
-      const optionsSource = options || [];
-      const optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
+      const opts = optionsSource || [];
+      const optionItems = Array.isArray(opts) ? opts : opts();
       const optionToSelect = optionItems.find(opt => opt.value === value);
       if(optionToSelect) {
         selectedOption = optionToSelect;

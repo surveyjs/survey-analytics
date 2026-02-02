@@ -150,18 +150,18 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     if(this.allowChangeType) {
       this.registerToolbarItem("changeChartType", () => {
         if(this.chartTypes.length > 1) {
-          return DocumentHelper.createDropdown(
-            this.chartTypes.map((chartType) => {
+          return DocumentHelper.createDropdown({
+            options: this.chartTypes.map((chartType) => {
               return {
                 value: chartType,
                 text: localization.getString("chartType_" + chartType),
               };
             }),
-            (option: any) => this.chartType === option.value,
-            (e: any) => {
+            isSelected: (option: any) => this.chartType === option.value,
+            handler: (e: any) => {
               this.setChartType(e);
             }
-          );
+          });
         }
         return null;
       }, "dropdown");
@@ -169,17 +169,17 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
 
     this.registerToolbarItem("changeAnswersOrder", () => {
       if(this.isSupportAnswersOrder()) {
-        this.choicesOrderSelector = DocumentHelper.createDropdown(
-          [
+        this.choicesOrderSelector = DocumentHelper.createDropdown({
+          options: [
             { text: localization.getString("defaultOrder"), value: "default" },
             { text: localization.getString("ascOrder"), value: "asc" },
             { text: localization.getString("descOrder"), value: "desc" },
           ],
-          (option) => this.answersOrder === option.value,
-          (e) => {
+          isSelected: (option) => this.answersOrder === option.value,
+          handler: (e) => {
             this.answersOrder = e;
           }
-        );
+        });
         this.updateOrderSelector();
       }
       return this.choicesOrderSelector;
@@ -212,18 +212,18 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
         this.options.allowTopNAnswers &&
         this.getSeriesValues().length === 0
       ) {
-        this.topNSelector = DocumentHelper.createDropdown(
-          this.topNValues.map((value) => {
+        this.topNSelector = DocumentHelper.createDropdown({
+          options: this.topNValues.map((value) => {
             return {
               text: localization.getString("topNValueText" + value),
               value: value,
             };
           }),
-          (option) => this.topN === option.value as any,
-          (e) => {
+          isSelected: (option) => this.topN === option.value as any,
+          handler: (e) => {
             this.topN = parseInt(e);
           }
-        );
+        });
         this.updateTopNSelector();
       }
       return this.topNSelector;

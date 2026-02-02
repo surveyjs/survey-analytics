@@ -71,23 +71,22 @@ export class PivotModel extends HistogramModel {
     }
 
     this.registerToolbarItem("axisXSelector", () =>
-      this.axisXSelector = DocumentHelper.createDropdown(
-        this.questions.map((question) => {
+      this.axisXSelector = DocumentHelper.createDropdown({
+        options: this.questions.map((question) => {
           return {
             value: question.name,
             text: question.title || question.name,
           };
         }),
-        (option: any) => this.axisXQuestionName === option.value,
-        (e: any) => {
+        isSelected: (option: any) => this.axisXQuestionName === option.value,
+        handler: (e: any) => {
           this.axisXQuestionName = e;
           this.updateQuestionsSelection();
           this.updateToolbar();
           this.setupPivot();
         },
-        undefined,
-        () => this.isXYChart() ? localization.getString("axisXSelectorTitle") : localization.getString("axisXAlternativeSelectorTitle")
-      ), "dropdown"
+        title: () => this.isXYChart() ? localization.getString("axisXSelectorTitle") : localization.getString("axisXAlternativeSelectorTitle")
+      }), "dropdown"
     );
     this.registerToolbarItem("axisYSelector0", this.createYSelecterGenerator(), "dropdown");
     this.setupPivot();
@@ -179,13 +178,12 @@ export class PivotModel extends HistogramModel {
     if(getChoices().length == 1) {
       return undefined;
     }
-    const selector = DocumentHelper.createDropdown(
-      getChoices,
-      (option: any) => this.axisYQuestionNames[selectorIndex] === option.value,
-      (e: any) => { this.onAxisYSelectorChanged(selectorIndex, e); },
-      undefined,
-      () => selectorIndex ? undefined : (this.isXYChart() ? localization.getString("axisYSelectorTitle") : localization.getString("axisYAlternativeSelectorTitle"))
-    );
+    const selector = DocumentHelper.createDropdown({
+      options: getChoices,
+      isSelected: (option: any) => this.axisYQuestionNames[selectorIndex] === option.value,
+      handler: (e: any) => { this.onAxisYSelectorChanged(selectorIndex, e); },
+      title: () => selectorIndex ? undefined : (this.isXYChart() ? localization.getString("axisYSelectorTitle") : localization.getString("axisYAlternativeSelectorTitle"))
+    });
     return selector;
   }
 
