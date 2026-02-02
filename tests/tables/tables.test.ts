@@ -1278,7 +1278,7 @@ test("Radiogroup other with storeOthersAsComment cases", () => {
     ],
   };
   const survey = new SurveyModel(json);
-  const data = { radio1: "otherValue1", radio2: "otherValue2" };
+  const data = { radio1: "otherValue1", "radio2": "other", "radio2-Comment": "otherValue2" };
   survey.data = data;
 
   const allQuestions = survey.getAllQuestions();
