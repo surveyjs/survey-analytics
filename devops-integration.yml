@@ -10,11 +10,9 @@ resources:
       endpoint: github.com_surveyjsdeveloper
       name: surveyjs/service
       trigger:
-        batch: true
         branches:
           include:
             - master
-            - V3
     - repository: Utils
       type: github
       endpoint: github.com_surveyjsdeveloper
