@@ -2,7 +2,7 @@ import { SurveyModel, QuestionTextModel, ComponentCollection, QuestionCustomMode
 import { Table } from "../../src/tables/table";
 import { ColumnDataType, ITableState, QuestionLocation } from "../../src/tables/config";
 import { CheckboxColumnsBuilder, ColumnsBuilderFactory, CompositeColumnsBuilder } from "../../src/tables/columnbuilder";
-import { CheckboxColumn, SelectBaseColumn, SingleChoiceColumn } from "../../src/tables/columns";
+import { CheckboxColumn, CommentColumn, OtherColumn, SelectBaseColumn, SingleChoiceColumn } from "../../src/tables/columns";
 import { QuestionRadiogroupModel } from "survey-core";
 const json = {
   questions: [
@@ -1256,4 +1256,48 @@ test("check tagbox column with other item and comment", () => {
   expect((<any>table).columns[0] instanceof CheckboxColumn).toBeTruthy();
   expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1, Item 3, Other Q4");
   expect(table.columns[1].getCellData(table, data).displayValue).toBe("Comment Q4");
+});
+
+test("Radiogroup other with storeOthersAsComment cases", () => {
+  const json = {
+    questions: [
+      {
+        type: "radiogroup",
+        name: "radio1",
+        storeOthersAsComment: false,
+        choices: [{ value: "choiceValue", text: "choiceText" }],
+        hasOther: true,
+      },
+      {
+        type: "radiogroup",
+        name: "radio2",
+        storeOthersAsComment: true,
+        choices: [{ value: "choiceValue", text: "choiceText" }],
+        hasOther: true,
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const data = { radio1: "otherValue1", radio2: "otherValue2" };
+  survey.data = data;
+
+  const allQuestions = survey.getAllQuestions();
+  const question1 = allQuestions[0] as QuestionRadiogroupModel;
+  expect(question1.hasOther).toBeTruthy();
+  expect(question1.getStoreOthersAsComment()).toBeFalsy();
+  expect(question1.displayValue).toBe("otherValue1");
+
+  const question2 = allQuestions[1] as QuestionRadiogroupModel;
+  expect(question2.hasOther).toBeTruthy();
+  expect(question2.getStoreOthersAsComment()).toBeTruthy();
+  expect(question2.displayValue).toBe("otherValue2");
+
+  let table = new TableTest(survey, [data]);
+  expect(table.columns.length).toEqual(3);
+  expect(table.columns[0] instanceof SingleChoiceColumn).toBeTruthy();
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("otherValue1");
+  expect(table.columns[1] instanceof SingleChoiceColumn).toBeTruthy();
+  expect(table.columns[1].getCellData(table, data).displayValue).toBe("Other (describe)");
+  expect(table.columns[2] instanceof OtherColumn).toBeTruthy();
+  expect(table.columns[2].getCellData(table, data).displayValue).toBe("otherValue2");
 });
