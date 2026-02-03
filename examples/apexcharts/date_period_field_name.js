@@ -2,9 +2,9 @@ var survey = new Survey.SurveyModel(json);
 
 var options = {
   dateFieldName: "timestamp",
+  dateRange: [Date.parse("2025-10-15"), Date.parse("2025-10-15")],
   // datePeriod: "lastYear",
   // availableDatePeriods: [],
-  // dateRange: [],
   // showAnswerCount: true,
   // showDatePanel: true,
   // includeToday: true,
