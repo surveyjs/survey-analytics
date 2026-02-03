@@ -13,10 +13,10 @@ import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
 import { DatePeriodEnum, DateRangeWidget, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
-import "./visualizationPanel.scss";
 import { getDataName } from "./visualizerDescription";
 import { IDateRange, toRange } from "./utils/calculationDateRanges";
 import { IDateRangeChangedOptions } from "./utils/dateRangeModel";
+import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";

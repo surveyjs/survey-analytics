@@ -8,9 +8,6 @@ var options = {
   // showAnswerCount: true,
   // showDatePanel: true,
   // includeToday: true,
-  onDateRangeChanged: (dateRange, datePeriod) => {
-    console.log(datePeriod);
-  }
 };
 
 var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(

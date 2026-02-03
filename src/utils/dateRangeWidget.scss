@@ -42,6 +42,8 @@
 }
 
 .sa-date-range_dropdown {
+  align-self: self-start;
+  
   .sa-dropdown-header-content {
     padding: var(--sjs2-layout-control-input-small-content-vertical, 4px)
       var(--sjs2-layout-control-input-small-content-horizontal, 8px);
