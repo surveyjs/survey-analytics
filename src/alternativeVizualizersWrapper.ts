@@ -1,10 +1,11 @@
 import { Question, ItemValue, Event } from "survey-core";
 import { ICalculationResult, IChartAdapter, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
-import { DocumentHelper, IDropdownItemOption } from "./utils/index";
+import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 import { IVisualizerWithSelection } from "./selectBase";
 import { chartConfig, getVisualizerNameByType } from "./chartConfig";
+import { IDropdownItemOption } from "./utils/dropdownWidget";
 
 export class AlternativeVisualizersWrapper
   extends VisualizerBase

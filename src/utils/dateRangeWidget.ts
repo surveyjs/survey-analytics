@@ -1,6 +1,7 @@
-import { DocumentHelper, IDropdownItemOption } from ".";
+import { DocumentHelper } from ".";
 import { localization } from "../localizationManager";
 import { DateRangeModel, DatePeriodEnum, datePeriodsFunctions, IDateRangeModelOptions } from "./dateRangeModel";
+import { IDropdownItemOption } from "./dropdownWidget";
 import "./dateRangeWidget.scss";
 
 export type { DatePeriodEnum };
