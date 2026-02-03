@@ -2,12 +2,12 @@ var survey = new Survey.SurveyModel(json);
 
 var options = {
   dateFieldName: "timestamp",
-  datePeriod: "lastYear",
-  availableDatePeriods: [],
-  dateRange: [],
-  showAnswerCount: true,
-  showDatePanel: true,
-  includeToday: true,
+  // datePeriod: "lastYear",
+  // availableDatePeriods: [],
+  // dateRange: [],
+  // showAnswerCount: true,
+  // showDatePanel: true,
+  // includeToday: true,
   onDateRangeChanged: (dateRange, datePeriod) => {
     console.log(datePeriod);
   }
