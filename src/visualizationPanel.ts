@@ -1098,6 +1098,7 @@ export class VisualizationPanel extends VisualizerBase {
 
       this.createDateRangeWidget();
       const dateRangeWidgetElement = this._dateRangeWidget.render();
+      this.dataProvider.getCount().then(count => this._dateRangeWidget.updateAnswersCount(count));
       container.appendChild(dateRangeWidgetElement);
     }
   }

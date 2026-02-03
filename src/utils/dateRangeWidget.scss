@@ -41,6 +41,18 @@
   }
 }
 
+.sa-date-range_dropdown {
+  .sa-dropdown-header-content {
+    padding: var(--sjs2-layout-control-input-small-content-vertical, 4px)
+      var(--sjs2-layout-control-input-small-content-horizontal, 8px);
+  }
+
+  .sa-dropdown-action {
+    padding: var(--sjs2-layout-control-action-x-small-box-vertical, 4px)
+      var(--sjs2-layout-control-action-x-small-box-horizontal, 4px);
+  }
+}
+
 .sa-range-error {
   display: none;
   align-items: flex-start;

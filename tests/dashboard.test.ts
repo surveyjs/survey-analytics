@@ -10,6 +10,7 @@ import { Matrix } from "../src/matrix";
 import { ApexChartsAdapter } from "../src/apexcharts/chart-adapter";
 import { DatePeriodEnum, DateRangeModel } from "../src/utils/dateRangeModel";
 import { endOfDay, startOfDay } from "../src/utils/calculationDateRanges";
+import { DataProvider } from "../src/dataProvider";
 export * from "../src/card";
 export * from "../src/text";
 export * from "../src/number";
@@ -657,4 +658,42 @@ test("Dashboard onDateRangeChanged event fires when date range changes", () => {
   expect(handler).toHaveBeenCalledWith(dashboard, options);
 
   jest.useRealTimers();
+});
+
+test("Dashboard filter by date range", () => {
+  const data = [
+    { date: "2011-10-13", age: 17 },
+    { date: "2011-10-14", age: 17 },
+    { date: "2011-10-15", age: 17 },
+    { date: "2011-10-16", age: 30 },
+    { date: "2011-10-16", age: 35 },
+    { date: "2011-10-17", age: 40 },
+    { date: "2011-10-17", age: 45 },
+    { date: "2011-10-18", age: 25 },
+  ];
+
+  const dashboard = new Dashboard({
+    data,
+    visualizers: [{ type: "text", dataField: "date" }],
+    dateFieldName: "date",
+    dateRange: [Date.parse("2011-10-16"), Date.parse("2011-10-17")],
+    showDatePanel: false
+  });
+
+  const dataProvider = dashboard.panel["dataProvider"] as DataProvider;
+
+  expect(dataProvider.filteredData).toEqual([
+    { date: "2011-10-16", age: 30 },
+    { date: "2011-10-16", age: 35 },
+  ]);
+  expect(dataProvider.getFilters()).toEqual([
+    {
+      "field": "date",
+      "type": "=",
+      "value": {
+        "end": 1318809600000,
+        "start": 1318723200000
+      }
+    }
+  ]);
 });

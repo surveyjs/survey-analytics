@@ -164,8 +164,10 @@ export class DateRangeWidget {
         },
         resetHandler: () => {
           this.setDatePeriod(undefined);
-        }
+        },
+        placeholder: localization.getString("selectDateRange")
       });
+      this.datePeriodContainer.classList.add("sa-date-range_dropdown");
 
       rangeElement.appendChild(this.createDivider());
       rangeElement.appendChild(this.datePeriodContainer);
@@ -188,7 +190,9 @@ export class DateRangeWidget {
   }
 
   public updateElements(): void {
-    this.datePeriodContainer["__updateSelect"] && this.datePeriodContainer["__updateSelect"]();
+    if(this.datePeriodContainer) {
+      this.datePeriodContainer["__updateSelect"] && this.datePeriodContainer["__updateSelect"]();
+    }
     this.updateMinMaxAttributes();
     const range = this.model.currentDateRange;
     this.setDateIntoInput(range.start, this.startDateInput);
