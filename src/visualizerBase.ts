@@ -1018,7 +1018,7 @@ export class VisualizerBase implements IDataInfo {
         this.loadingData = true;
         const dataLoadingPromise = this.dataProvider.dataFn({
           visualizer: this,
-          filter: this.dataProvider.getFilters(),
+          filter: this.dataProvider.getAllFilters(),
           callback: (loadedData: { data: Array<Object>, error?: any }) => {
             this.loadingData = false;
             if(!loadedData.error && Array.isArray(loadedData.data)) {

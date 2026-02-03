@@ -213,7 +213,7 @@ export class Tabulator extends Table {
           const dataLoadingPromise = (this.data as GetDataFn)({
             offset: (params.page - 1) * params.size,
             limit: params.size,
-            filter: this.tabulatorTables?.getFilters(false),
+            filter: this.tabulatorTables?.getAllFilters(false),
             sort: this.tabulatorTables?.getSorters().map(s => ({ field: s.field, direction: s.dir })),
             callback: dataLoadingCallback
           });

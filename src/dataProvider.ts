@@ -12,6 +12,10 @@ export class DataProvider {
   protected filterValues: { [index: string]: any } = {};
   protected systemFilterValues: { [index: string]: any } = {};
 
+  private convertFilterValuesToSummaryFilters(filterValues: { [index: string]: any }): Array<SummaryFilter> {
+    return Object.keys(filterValues).map(key => ({ field: key, type: "=", value: filterValues[key] }));
+  }
+
   constructor(private _data: Array<any> | GetDataFn = []) {
   }
 
@@ -187,9 +191,13 @@ export class DataProvider {
     }
   }
 
-  public getFilters(): SummaryFilter[] {
+  public getAllFilters(): SummaryFilter[] {
     const filterValues = this.getFilterValues();
-    return Object.keys(filterValues).map(key => ({ field: key, type: "=", value: filterValues[key] }));
+    return this.convertFilterValuesToSummaryFilters(filterValues);
+  }
+
+  public getFilters(): SummaryFilter[] {
+    return this.convertFilterValuesToSummaryFilters(this.filterValues);
   }
 
   public fixDropdownData(dataNames: string[]): void {

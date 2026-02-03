@@ -727,7 +727,7 @@ test("system filter by date range", () => {
     { date: "2011-10-16", age: 35 },
   ]);
   expect(
-    dataProvider.getFilters()
+    dataProvider.getAllFilters()
   ).toEqual([{ "field": "date", "type": "=", "value": { "end": 1318809600000, "start": 1318723200000 } }]);
 
   dataProvider.setFilter("age", { start: 33, end: 37 });
@@ -737,7 +737,7 @@ test("system filter by date range", () => {
     { date: "2011-10-16", age: 35 },
   ]);
   expect(
-    dataProvider.getFilters()
+    dataProvider.getAllFilters()
   ).toEqual([{ "field": "date", "type": "=", "value": { "end": 1318809600000, "start": 1318723200000 } }, { "field": "age", "type": "=", "value": { "end": 37, "start": 33 } }]);
 
   dataProvider.resetFilter();
@@ -748,7 +748,7 @@ test("system filter by date range", () => {
     { date: "2011-10-16", age: 35 },
   ]);
   expect(
-    dataProvider.getFilters()
+    dataProvider.getAllFilters()
   ).toEqual([{ "field": "date", "type": "=", "value": { "end": 1318809600000, "start": 1318723200000 } }]);
 
   dataProvider.resetSystemFilter();
@@ -756,7 +756,7 @@ test("system filter by date range", () => {
     dataProvider.filteredData
   ).toEqual(data);
   expect(
-    dataProvider.getFilters()
+    dataProvider.getAllFilters()
   ).toEqual([]);
 });
 

@@ -686,7 +686,7 @@ test("Dashboard filter by date range", () => {
     { date: "2011-10-16", age: 30 },
     { date: "2011-10-16", age: 35 },
   ]);
-  expect(dataProvider.getFilters()).toEqual([
+  expect(dataProvider.getAllFilters()).toEqual([
     {
       "field": "date",
       "type": "=",
