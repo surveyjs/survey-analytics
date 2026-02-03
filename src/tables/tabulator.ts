@@ -270,19 +270,18 @@ export class Tabulator extends Table {
     */
 
     const values = this._options.downloadButtons.map(val => { return { value: val, text: localization.getString(`${val}DownloadCaption`) }; });
-    const exportAsAction = DocumentHelper.createActionDropdown(
-      values,
-      (option: any) => false,
-      (e: any) => {
+    const exportAsAction = DocumentHelper.createActionDropdown({
+      options: values,
+      isSelected: (option: any) => false,
+      handler: (e: any) => {
         if(!!e) {
           this.download(e);
         }
         return true;
       },
-      localization.getString("exportAs"),
-      undefined,
-      false
-    );
+      title: localization.getString("exportAs"),
+      showArrow: false
+    });
     exportAsAction.className += " sa-tabulator__downloads-bar sa-button-brand-secondary";
     return exportAsAction;
   }

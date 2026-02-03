@@ -31,19 +31,19 @@ TableExtensions.registerExtension({
       return el;
       */
       const optionsValues = table.paginationSizeSelector || ["1", "5", "10", "25", "50", "75", "100"];
-      const el = DocumentHelper.createActionDropdown(
-        optionsValues.map(val => { return { value: val, text: val }; }),
-        (option: any) => {
+      const el = DocumentHelper.createActionDropdown({
+        options: optionsValues.map(val => { return { value: val, text: val }; }),
+        isSelected: (option: any) => {
           return option.value === table.getPageSize();
         },
-        (e: any) => {
+        handler: (e: any) => {
           if(e !== undefined && e !== null) {
             table.setPageSize(Number(e));
           }
           return true;
         },
-        () => { return String(table.getPageSize()); },
-      );
+        title: () => { return String(table.getPageSize()); },
+      });
       el.className += " sa-table__entries-value";
       return el;
     }

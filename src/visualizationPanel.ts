@@ -366,10 +366,10 @@ export class VisualizationPanel extends VisualizerBase {
             icon: "check-24x24"
           };
         });
-        const selectWrapper = DocumentHelper.createActionDropdown(
-          allQuestions,
-          (option: any) => this.hiddenElements.length === 0 || this.hiddenElements.filter(el => el.name === option.value).length === 0,
-          (e: any) => {
+        const selectWrapper = DocumentHelper.createActionDropdown({
+          options: allQuestions,
+          isSelected: (option: any) => this.hiddenElements.length === 0 || this.hiddenElements.filter(el => el.name === option.value).length === 0,
+          handler: (e: any) => {
             if(!!e) {
               const element = this.getElement(e);
               if(!!element && element.isVisible) {
@@ -380,8 +380,8 @@ export class VisualizationPanel extends VisualizerBase {
               return false;
             }
           },
-          localization.getString("allQuestions")
-        );
+          title: localization.getString("allQuestions")
+        });
         return selectWrapper;
       }
       return undefined;

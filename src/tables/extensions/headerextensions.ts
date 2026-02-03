@@ -44,13 +44,13 @@ TableExtensions.registerExtension({
         icon: "check-24x24"
       };
     });
-    const dropdown = DocumentHelper.createActionDropdown(
-      allColumns,
-      (option: any) => {
+    const dropdown = DocumentHelper.createActionDropdown({
+      options: allColumns,
+      isSelected: (option: any) => {
         const hiddenColumns = table.columns.filter((column: any) => !column.isVisible);
         return hiddenColumns.length === 0 || hiddenColumns.filter(el => el.name === option.value).length === 0;
       },
-      (e: any) => {
+      handler: (e: any) => {
         if(!!e) {
           if(!e) return;
           const column = table.columns.filter((column: any) => column.name === e)[0];
@@ -58,8 +58,8 @@ TableExtensions.registerExtension({
           return false;
         }
       },
-      localization.getString("columns")
-    );
+      title: localization.getString("columns")
+    });
     dropdown.className += " sa-table__show-column sa-table__header-extension";
     return dropdown;
   },
@@ -121,17 +121,17 @@ TableExtensions.registerExtension({
     */
 
     const optionsValues = locales.map(val => { return { value: val, text: localization.localeNames[val] || localization.getString(val) || val }; });
-    const el = DocumentHelper.createActionDropdown(
-      optionsValues,
-      (option: any) => false,
-      (e: any) => {
+    const el = DocumentHelper.createActionDropdown({
+      options: optionsValues,
+      isSelected: (option: any) => false,
+      handler: (e: any) => {
         if(!!e) {
           table.locale = e;
         }
         return true;
       },
-      () => localization.getString("changeLocale"),
-    );
+      title: () => localization.getString("changeLocale"),
+    });
     el.className += " sa-table__header-extension";
     return el;
   },
