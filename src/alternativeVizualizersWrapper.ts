@@ -5,7 +5,7 @@ import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 import { IVisualizerWithSelection } from "./selectBase";
 import { chartConfig, getVisualizerNameByType } from "./chartConfig";
-import { IDropdownItemOption } from "./utils/dropdownWidget";
+import { IDropdownItemOption } from "./utils/dropdownBase";
 
 export class AlternativeVisualizersWrapper
   extends VisualizerBase
