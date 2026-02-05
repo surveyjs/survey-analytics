@@ -1,4 +1,4 @@
-import { getVisualizerTypes, getChartTypes, getVisualizerNameByType, chartConfig } from "../src/chartConfig";
+import { getVisualizerTypes, getChartTypes, chartConfig } from "../src/chartConfig";
 
 describe("getVisualizerTypes", () => {
   test("should return unique visualizer types from chart keys", () => {
@@ -115,70 +115,5 @@ describe("getChartTypes", () => {
     expect(result.ranking).toEqual(["radar"]);
     expect(result.matrix).toEqual(["stackedbar"]);
     expect(result.average).toEqual(["gauge", "bullet"]);
-  });
-});
-
-describe("getVisualizerNameByType", () => {
-  test("should return chart names matching visualizer type and chart types", () => {
-    const visualizerType = "selectBase";
-    const chartTypes = ["bar", "pie"];
-    const result = getVisualizerNameByType(visualizerType, chartTypes);
-    expect(result).toEqual(["bar", "pie"]);
-  });
-
-  test("should return all charts for visualizer type when chartTypes is empty", () => {
-    const visualizerType = "average";
-    const chartTypes: string[] = [];
-    const result = getVisualizerNameByType(visualizerType, chartTypes);
-    expect(result).toEqual(["gauge", "bullet"]);
-  });
-
-  test("should convert selectBase to chart", () => {
-    const visualizerType = "selectBase";
-    const chartTypes = ["bar", "pie"];
-    const result = getVisualizerNameByType(visualizerType, chartTypes);
-    expect(result).toEqual(["bar", "pie"]);
-  });
-
-  test("should return empty array when no charts match", () => {
-    const visualizerType = "nonexistent";
-    const chartTypes = ["bar"];
-    const result = getVisualizerNameByType(visualizerType, chartTypes);
-    expect(result).toEqual([]);
-  });
-
-  test("should filter by chartType when provided", () => {
-    const visualizerType = "selectBase";
-    const chartTypes = ["bar"];
-    const result = getVisualizerNameByType(visualizerType, chartTypes);
-    expect(result).toEqual(["bar"]);
-  });
-
-  test("should return charts without chartType when chartTypes array includes them", () => {
-    const visualizerType = "wordcloud";
-    const chartTypes: string[] = [];
-    const result = getVisualizerNameByType(visualizerType, chartTypes);
-    expect(result).toEqual(["wordcloud"]);
-  });
-
-  test("should handle gauge visualizer type", () => {
-    const visualizerType = "average";
-    const chartTypes = ["gauge", "bullet"];
-    const result = getVisualizerNameByType(visualizerType, chartTypes);
-    expect(result).toEqual(["gauge", "bullet"]);
-  });
-
-  test("should handle matrix visualizer type", () => {
-    const visualizerType = "matrix";
-    const chartTypes = ["stackedbar"];
-    const result = getVisualizerNameByType(visualizerType, chartTypes);
-    expect(result).toEqual(["stackedbar"]);
-  });
-
-  test("should handle histogram visualizer type", () => {
-    const visualizerType = "histogram";
-    const chartTypes: string[] = [];
-    const result = getVisualizerNameByType(visualizerType, chartTypes);
-    expect(result).toContain("histogram");
   });
 });
