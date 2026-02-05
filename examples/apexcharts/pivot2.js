@@ -728,6 +728,7 @@ const vizPanel = new SurveyAnalyticsApexcharts.Dashboard({
   visualizers: [{
     type: "pivot",
     questions: survey.getAllQuestions(),
+    // maxSeriesCount: 2
   //   categoryField: "question2",
   //   seriesFields: ["question1", "question3"]
   }],
