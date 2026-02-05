@@ -153,3 +153,14 @@ test("DateRangeModel setFilter converts timestamps correctly", () => {
   expect(model.currentDateRange.start).toBe(startDate.getTime());
   expect(model.currentDateRange.end).toBe(endDate.getTime());
 });
+
+test("DateRangeModel datePeriod takes precedence over dateRange", () => {
+  const model = new DateRangeModel({
+    onDateRangeChanged: mockOnDateRangeChanged,
+    dateRange: [new Date("2025-12-01"), new Date("2025-12-14")],
+    datePeriod: "last30days"
+  });
+
+  expect(model.currentDateRange.start).toBe(startOfDay(new Date("2025-11-15")).getTime());
+  expect(model.currentDateRange.end).toBe(endOfDay(new Date("2025-12-14")).getTime());
+});

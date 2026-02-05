@@ -23,8 +23,7 @@ export class DateRangeWidget {
   private countLabel: HTMLElement;
   private rangeErrorMessage: HTMLElement;
   private datePeriodContainer: HTMLElement;
-
-  private model: DateRangeModel;
+  private answersCount: number;
 
   private elementRemoveClassName(element: Element, className: string) {
     if(element.classList.contains(className)) {
@@ -100,8 +99,7 @@ export class DateRangeWidget {
     return divider;
   }
 
-  constructor(private options: IDateRangeWidgetOptions) {
-    this.model = new DateRangeModel(options);
+  constructor(private model: DateRangeModel, private options: IDateRangeWidgetOptions) {
   }
 
   public render(): HTMLElement {
@@ -178,6 +176,7 @@ export class DateRangeWidget {
       rangeElement.appendChild(this.createDivider());
       const countContainer = DocumentHelper.createElement("div", "sa-count");
       this.countLabel = DocumentHelper.createElement("div", "sa-count_text");
+      this.updateAnswersCount();
       countContainer.appendChild(this.countLabel);
       rangeElement.appendChild(countContainer);
     }
@@ -202,9 +201,31 @@ export class DateRangeWidget {
     this.elementRemoveClassName(this.endDateEditor, DateRangeWidget.invalidRangeEditorClassName);
   }
 
-  public updateAnswersCount(answersCount: number): void {
-    if(!!this.countLabel && answersCount !== undefined) {
-      this.countLabel.textContent = answersCount + " " + localization.getString("answersText");
+  public updateAnswersCount(answersCount?: number): void {
+    if(answersCount !== undefined && answersCount !== null) {
+      this.answersCount = answersCount;
     }
+    if(!!this.countLabel && this.answersCount !== undefined) {
+      this.countLabel.textContent = this.answersCount + " " + localization.getString("answersText");
+    }
+  }
+
+  public destroy() {
+    this.dateRangeContainer = undefined;
+    this.dateRangeContainer.innerHTML = "";
+    this.startDateEditor = undefined;
+    this.startDateEditor.innerHTML = "";
+    this.endDateEditor = undefined;
+    this.endDateEditor.innerHTML = "";
+    this.startDateInput = undefined;
+    this.startDateInput.innerHTML = "";
+    this.endDateInput = undefined;
+    this.endDateInput.innerHTML = "";
+    this.countLabel = undefined;
+    this.countLabel.innerHTML = "";
+    this.rangeErrorMessage = undefined;
+    this.rangeErrorMessage.innerHTML = "";
+    this.datePeriodContainer = undefined;
+    this.datePeriodContainer.innerHTML = "";
   }
 }

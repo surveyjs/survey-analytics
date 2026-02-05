@@ -34,17 +34,17 @@ export interface IDateRangeModelOptions {
 
 export class DateRangeModel {
   private _currentDatePeriod: DatePeriodEnum;
-  private _currentDateRange: IDateRange;
+  private _currentDateRange: IDateRange = { start: undefined, end: undefined };
   private _availableDatePeriods: Array<DatePeriodEnum>;
   private _onDateRangeChanged: (dateRange: IDateRange, datePeriod: DatePeriodEnum) => void;
   private _includeToday: boolean;
 
   constructor(options: IDateRangeModelOptions) {
-    if(options.dateRange) {
-      this._currentDateRange = toRange(options.dateRange[0], options.dateRange[1]);
-    }
     if(options.datePeriod) {
-      this.setDatePeriod(options.datePeriod);
+      this._currentDatePeriod = options.datePeriod;
+      this._currentDateRange = datePeriodsFunctions[this._currentDatePeriod]?.(undefined, this._includeToday);
+    } else if(options.dateRange) {
+      this._currentDateRange = toRange(options.dateRange[0], options.dateRange[1]);
     }
     this._availableDatePeriods = options.availableDatePeriods ?? Object.keys(datePeriodsFunctions) as Array<DatePeriodEnum>;
     this._onDateRangeChanged = options.onDateRangeChanged;

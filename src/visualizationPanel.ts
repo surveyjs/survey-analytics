@@ -15,7 +15,7 @@ import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
 import { DatePeriodEnum, DateRangeWidget, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
 import { getDataName } from "./visualizerDescription";
 import { IDateRange, toRange } from "./utils/calculationDateRanges";
-import { IDateRangeChangedOptions } from "./utils/dateRangeModel";
+import { DateRangeModel, IDateRangeChangedOptions } from "./utils/dateRangeModel";
 import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
@@ -303,6 +303,7 @@ export class VisualizationPanel extends VisualizerBase {
   private static counter = 0;
   private resetFilterButton: HTMLElement;
   private _dateRangeWidget: DateRangeWidget;
+  private _dateRangeModel: DateRangeModel;
 
   private static getVisualizerName() {
     VisualizationPanel.counter++;
@@ -340,9 +341,8 @@ export class VisualizationPanel extends VisualizerBase {
 
     this.buildVisualizers(questions);
 
-    if(this.isRoot && this.options.dateFieldName && this.options.dateRange) {
-      const dateRange = toRange(this.options.dateRange[0], this.options.dateRange[1]);
-      this.dataProvider.setSystemFilter(this.options.dateFieldName, dateRange);
+    if(this.isRoot && this.options.dateFieldName) {
+      this.createDateRangeWidget();
     }
 
     this._layoutEngine =
@@ -1002,7 +1002,12 @@ export class VisualizationPanel extends VisualizerBase {
         this.dataProvider.setSystemFilter(this.options.dateFieldName, options.dateRange);
       }
     };
-    this._dateRangeWidget = new DateRangeWidget(config);
+    this._dateRangeModel = new DateRangeModel(config);
+    this.dataProvider.setSystemFilter(this.options.dateFieldName, this._dateRangeModel.currentDateRange);
+    if(this.options.showDatePanel !== false) {
+      this._dateRangeWidget = new DateRangeWidget(this._dateRangeModel, config);
+      this.dataProvider.getCount().then(count => this._dateRangeWidget.updateAnswersCount(count));
+    }
   }
 
   protected visibleElementsChanged(
@@ -1090,15 +1095,13 @@ export class VisualizationPanel extends VisualizerBase {
     container.className += " sa-panel__header";
     super.renderToolbar(container);
 
-    if(this.isRoot && this.options.dateFieldName && this.options.showDatePanel !== false) {
+    if(this.isRoot && this._dateRangeWidget) {
       const divider = DocumentHelper.createElement("div", "sa-horizontal-divider");
       const line = DocumentHelper.createElement("div", "sa-line");
       divider.appendChild(line);
       container.appendChild(divider);
 
-      this.createDateRangeWidget();
       const dateRangeWidgetElement = this._dateRangeWidget.render();
-      this.dataProvider.getCount().then(count => this._dateRangeWidget.updateAnswersCount(count));
       container.appendChild(dateRangeWidgetElement);
     }
   }
@@ -1265,5 +1268,6 @@ export class VisualizationPanel extends VisualizerBase {
   destroy() {
     super.destroy();
     this.destroyVisualizers();
+    this._dateRangeWidget?.destroy();
   }
 }
