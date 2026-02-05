@@ -34,7 +34,7 @@ test.describe("Summary common", () => {
 
     const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartTypeSelector).toBeVisible();
-    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart - Pie");
+    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Pie");
 
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").first();
     await expect(chartContentSelector).toBeVisible();
@@ -53,7 +53,7 @@ test.describe("Summary common", () => {
 
     const chartTypeSelector = questionVisualizerSelector.locator(".sa-dropdown").first();
     await expect(chartTypeSelector).toBeVisible();
-    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart - Bar");
+    await expect(chartTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Bar");
 
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content").first();
     await expect(chartContentSelector).toBeVisible();

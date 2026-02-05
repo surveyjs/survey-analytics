@@ -18,15 +18,15 @@ test.describe("Rating common", () => {
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
     await expect(chartContentSelector).toBeVisible();
 
-    await expect(visualizerTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart - Bar");
+    await expect(visualizerTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Bar");
     await compareScreenshot(page, chartContentSelector, "rating-number-chart.png");
 
     await visualizerTypeSelector.click();
-    await getListItemByText(page, "Average - Gauge").click();
+    await getListItemByText(page, "Gauge").click();
     await compareScreenshot(page, chartContentSelector, "rating-number-average.png");
 
     await visualizerTypeSelector.click();
-    await getListItemByText(page, "Histogram - Vertical Bar").click();
+    await getListItemByText(page, "Vertical Histogram").click();
     await compareScreenshot(page, chartContentSelector, "rating-number-histogram.png");
   });
 
@@ -41,15 +41,15 @@ test.describe("Rating common", () => {
     const chartContentSelector = questionVisualizerSelector.locator(".sa-visualizer__content");
     await expect(chartContentSelector).toBeVisible();
 
-    await expect(visualizerTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Chart - Bar");
+    await expect(visualizerTypeSelector.locator(".sa-dropdown-header-text")).toHaveText("Bar");
     await compareScreenshot(page, chartContentSelector, "rating-string-chart.png");
 
     await visualizerTypeSelector.click();
-    await getListItemByText(page, "Average - Gauge").click();
+    await getListItemByText(page, "Gauge").click();
     await compareScreenshot(page, chartContentSelector, "rating-string-average.png");
 
     await visualizerTypeSelector.click();
-    await getListItemByText(page, "Histogram - Vertical Bar").click();
+    await getListItemByText(page, "Vertical Histogram").click();
     await compareScreenshot(page, chartContentSelector, "rating-string-histogram.png");
   });
 });

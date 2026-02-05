@@ -252,6 +252,9 @@ export class ApexChartsSetup {
     gauge: ApexChartsSetup.setupGauge,
     bullet: ApexChartsSetup.setupBullet,
     radar: ApexChartsSetup.setupRadar,
+    histogram: ApexChartsSetup.setupBar,
+    vhistogram: ApexChartsSetup.setupVBar,
+    stackedhistogram: ApexChartsSetup.setupStackedBar,
   };
 
   static setup(charType: string, model: VisualizerBase, answersData: IAnswersData): ApexChartsOptions {

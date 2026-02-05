@@ -79,7 +79,7 @@ describe("getChartTypes", () => {
     const result = getChartTypes(chartKeys);
     expect(result).toEqual({
       selectBase: ["bar"],
-      histogram: ["vbar"]
+      histogram: ["histogram"]
     });
   });
 

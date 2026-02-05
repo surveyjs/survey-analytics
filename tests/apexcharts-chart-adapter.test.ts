@@ -32,13 +32,13 @@ test("Combining visualizer types and chart types for rating", () => {
   expect(visualizations[1].type).toBe("average");
   expect((visualizations[1] as NumberModel)["chartTypes"]).toStrictEqual(["gauge", "bullet"]);
   expect(visualizations[2].type).toBe("histogram");
-  expect((visualizations[2] as HistogramModel)["chartTypes"]).toStrictEqual(["vbar", "bar"]);
+  expect((visualizations[2] as HistogramModel)["chartTypes"]).toStrictEqual(["vhistogram", "histogram"]);
 
   const visualizerSwitchItems = altVisualizer["getVisualizerSwitchItems"]();
   expect(visualizerSwitchItems.length).toBe(8);
-  expect(visualizerSwitchItems.map(i => i.value)).toStrictEqual(["bar", "vbar", "pie", "doughnut", "gauge", "bullet", "vbar", "bar"]);
+  expect(visualizerSwitchItems.map(i => i.value)).toStrictEqual(["bar", "vbar", "pie", "doughnut", "gauge", "bullet", "vhistogram", "histogram"]);
   expect(visualizerSwitchItems.map(i => i.visualizerType)).toStrictEqual(["selectBase", "selectBase", "selectBase", "selectBase", "average", "average", "histogram", "histogram"]);
-  // expect(visualizerSwitchItems.map(i => i.text)).toStrictEqual(["Bar", "Vertical Bar", "Pie", "Doughnut", "Gauge", "Bullet", "Histogram", "chartType_vistogram"]);
+  expect(visualizerSwitchItems.map(i => i.text)).toStrictEqual(["Bar", "Vertical Bar", "Pie", "Doughnut", "Gauge", "Bullet", "Vertical Histogram", "Histogram"]);
 });
 
 test("Combining visualizer types and chart types for rating into Dashboard", () => {
@@ -58,19 +58,19 @@ test("Combining visualizer types and chart types for rating into Dashboard", () 
   let altVisualizer = visPanel.getVisualizer("score") as AlternativeVisualizersWrapper;
 
   const visualizations = altVisualizer.getVisualizers();
-  // expect(visualizations.length).toBe(3);
+  expect(visualizations.length).toBe(3);
   expect(visualizations[0].type).toBe("selectBase");
   expect((visualizations[0] as SelectBase)["chartTypes"]).toStrictEqual(["bar", "vbar", "pie", "doughnut"]);
   expect(visualizations[1].type).toBe("average");
   expect((visualizations[1] as NumberModel)["chartTypes"]).toStrictEqual(["gauge", "bullet"]);
   expect(visualizations[2].type).toBe("histogram");
-  expect((visualizations[2] as HistogramModel)["chartTypes"]).toStrictEqual(["vbar", "bar"]);
+  expect((visualizations[2] as HistogramModel)["chartTypes"]).toStrictEqual(["vhistogram", "histogram"]);
 
   const visualizerSwitchItems = altVisualizer["getVisualizerSwitchItems"]();
   expect(visualizerSwitchItems.length).toBe(8);
-  expect(visualizerSwitchItems.map(i => i.value)).toStrictEqual(["bar", "vbar", "pie", "doughnut", "gauge", "bullet", "vbar", "bar"]);
+  expect(visualizerSwitchItems.map(i => i.value)).toStrictEqual(["bar", "vbar", "pie", "doughnut", "gauge", "bullet", "vhistogram", "histogram"]);
   expect(visualizerSwitchItems.map(i => i.visualizerType)).toStrictEqual(["selectBase", "selectBase", "selectBase", "selectBase", "average", "average", "histogram", "histogram"]);
-  // expect(visualizerSwitchItems.map(i => i.text)).toStrictEqual(["Bar", "Vertical Bar", "Pie", "Doughnut", "Gauge", "Bullet", "Histogram", "chartType_vistogram"]);
+  expect(visualizerSwitchItems.map(i => i.text)).toStrictEqual(["Bar", "Vertical Bar", "Pie", "Doughnut", "Gauge", "Bullet", "Vertical Histogram", "Histogram"]);
 });
 
 test("Combining visualizer types and chart types for boolean", () => {

@@ -37,6 +37,8 @@ export var englishStrings = {
   chartType_line: "Line",
   chartType_radar: "Radar",
   chartType_histogram: "Histogram",
+  chartType_vhistogram: "Vertical Histogram",
+  chartType_stackedhistogram: "Stacked Histogram",
   hideButton: "Hide",
   makePrivateButton: "Make private",
   makePublicButton: "Make public",

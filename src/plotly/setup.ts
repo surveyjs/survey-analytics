@@ -233,6 +233,9 @@ export class PlotlySetup {
     gauge: PlotlySetup.setupGauge,
     bullet: PlotlySetup.setupGauge,
     radar: PlotlySetup.setupRadar,
+    histogram: PlotlySetup.setupBar,
+    vhistogram: PlotlySetup.setupVBar,
+    stackedhistogram: PlotlySetup.setupBar,
   };
 
   static setup(charType: string, model: VisualizerBase, answersData: IAnswersData): PlotlyOptions {

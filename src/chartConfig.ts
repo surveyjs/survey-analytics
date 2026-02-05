@@ -15,8 +15,8 @@ export const chartConfig: { [key: string]: IChartConfigOption } = {
   "gauge": { visualizerType: "average", chartType: "gauge" },
   "bullet": { visualizerType: "average", chartType: "bullet" },
   "wordcloud": { visualizerType: "wordcloud" },
-  "histogram": { visualizerType: "histogram", chartType: "vbar" },
-  "vistogram": { visualizerType: "histogram", chartType: "bar" },
+  "vhistogram": { visualizerType: "histogram", chartType: "vhistogram" },
+  "histogram": { visualizerType: "histogram", chartType: "histogram" },
 };
 
 export function getVisualizerTypes(chartKeys: Array<string>): Array<string> {

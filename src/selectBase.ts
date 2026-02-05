@@ -107,7 +107,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
       this.chartTypes = this.options.availableTypes;
     }
     if(this.getSeriesValues().length > 0 && this.chartTypes.indexOf("stackedbar") === -1) {
-      this.chartTypes.push("stackedbar");
+      this.chartTypes.push(this.type == "histogram" ? "stackedhistogram" : "stackedbar");
     }
 
     if(this.chartTypes?.length > 0) {

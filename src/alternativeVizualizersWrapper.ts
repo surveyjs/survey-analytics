@@ -28,7 +28,7 @@ export class AlternativeVisualizersWrapper
           result.push({
             value: chType,
             visualizerType: visualizer.type,
-            text: localization.getString("visualizer_" + visualizer.type) + " - " + localization.getString("chartType_" + chType),
+            text: localization.getString("chartType_" + chType),
           });
         });
       } else {
@@ -45,7 +45,7 @@ export class AlternativeVisualizersWrapper
 
   private _setVisualizer(options: { value: string, visualizerType?: string }, quiet = false): void {
     let visualizerCandidate = this.visualizers.filter((v) => v.type === options.value)[0];
-    let chartType: string;
+    let chartType = options.value;
     let visualizerType = options.visualizerType;
 
     if(!visualizerCandidate) {
@@ -82,7 +82,7 @@ export class AlternativeVisualizersWrapper
       }
       this.updateVisualizerSelector();
     }
-    if(chartType && !!this.visualizer && !!this.visualizer["setChartType"]) {
+    if(!!this.visualizer && !!this.visualizer["setChartType"]) {
       this.visualizer["setChartType"](chartType);
       this.updateVisualizerSelector();
     }

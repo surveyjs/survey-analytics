@@ -11,7 +11,7 @@ export const chartTypes = {
   "number": ["gauge", "bullet"],
   "average": ["gauge", "bullet"],
   "selectBase": ["bar", "vbar", "pie", "doughnut"],
-  "histogram": ["vbar", "bar"],
+  "histogram": ["vhistogram", "histogram"],
   "matrix": ["bar", "stackedbar", "pie", "doughnut"],
   "matrixDropdownGrouped": ["stackedbar", "bar", "pie", "doughnut"],
   "pivot": ["vbar", "bar", "line", "stackedbar", "pie", "doughnut"], // ["vbar", "bar"];
