@@ -1,7 +1,8 @@
 import { ItemValue, Question } from "survey-core";
 import { DataProvider } from "./dataProvider";
-import { IAnswersData, SelectBase } from "./selectBase";
+import { SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
+import { IAnswersData, ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { getNestedDataRows, histogramStatisticsCalculator } from "./statisticCalculators";
 import { DocumentHelper } from "./utils";
 import { localization } from "./localizationManager";
@@ -21,11 +22,11 @@ function getQuarter(date: Date): string {
 export function getBestIntervalMode(min: number, max: number): HistogramIntervalMode {
   const start = new Date(min);
   const end = new Date(max);
-  const totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+  const totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth() + 1);
   if(totalMonths > 10 * 12) return "decades";
   if(totalMonths > 2 * 12) return "years";
   if(totalMonths > 1 * 12) return "quarters";
-  if(totalMonths > 4) return "months";
+  if(totalMonths > 2) return "months";
   return "days";
 }
 
@@ -147,11 +148,11 @@ export const intervalCalculators = {
 };
 
 export class HistogramModel extends SelectBase {
-  protected valueType: "date" | "number" = "number";
-  private _cachedValues: Array<{ original: any, continuous: number, row: any }> = undefined;
+  protected valueType: "date" | "number" | "enum" = "number";
+  protected _cachedValues: Array<{ original: any, continuous: number, row: any }> = undefined;
   private _continuousData: { [series: string]: Array<{continuous: number, row: any}> } = undefined;
-  private _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
-  private _intervalPrecision: number = 2;
+  protected _cachedIntervals: Array<{ start: number, end: number, label: string }> = undefined;
+  protected _intervalPrecision: number = 2;
   private showRunningTotalsBtn: HTMLElement = undefined;
   private showGroupedBtn: HTMLElement = undefined;
   private changeIntervalsModeSelector: HTMLDivElement = undefined;
@@ -163,38 +164,33 @@ export class HistogramModel extends SelectBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "histogram");
+    super(question, data, options, type || "histogram");
     this._transposeData = false;
     if(this.options.intervalPrecision !== undefined) {
       this._intervalPrecision = this.options.intervalPrecision;
     }
-    const questionType = question.getType();
-    if(questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
-      this.valueType = "date";
-    } else {
-      this.valueType = "number";
-    }
+    this.valueType = this.getQuestionValueType(this.question, "number") || this.valueType;
     this._intervalsMode = this.valueType === "date" ? "auto" : "default" as any;
 
     if(this.allowChangeIntervals) {
       this.registerToolbarItem("changeIntervalsMode", () => {
-        this.changeIntervalsModeSelector = DocumentHelper.createSelector(
-          this.intervalModes.map((intervalModeValue) => {
+        this.changeIntervalsModeSelector = DocumentHelper.createDropdown({
+          options: this.intervalModes.map((intervalModeValue) => {
             return {
               value: intervalModeValue,
               text: localization.getString("intervalMode_" + intervalModeValue),
             };
           }),
-          (option: any) => this.intervalsMode === option.value,
-          (e: any) => {
-            this.intervalsMode = e.target.value;
+          isSelected: (option: any) => this.intervalsMode === option.value,
+          handler: (value: any) => {
+            this.intervalsMode = value;
           },
-          localization.getString("intervalModeTitle")
-        );
+          placeholder: localization.getString("intervalModeTitle")
+        });
         return this.changeIntervalsModeSelector;
-      });
+      }, "dropdown");
     }
     if(this.possibleAggregateDataNames.length > 0) {
       this.registerToolbarItem("aggregateDataName", () => {
@@ -203,17 +199,17 @@ export class HistogramModel extends SelectBase {
         });
         choices.unshift({ value: "", text: localization.getString("noneAggregateText") }),
 
-        this.aggregateDataNameSelector = DocumentHelper.createSelector(
-          choices,
-          (option: any) => this.aggregateDataName === option.value,
-          (e) => {
-            this.aggregateDataName = e.target.value;
+        this.aggregateDataNameSelector = DocumentHelper.createDropdown({
+          options: choices,
+          isSelected: (option: any) => this.aggregateDataName === option.value,
+          handler: (value) => {
+            this.aggregateDataName = value;
           },
-          localization.getString("selectAggregateText")
-        );
+          placeholder: localization.getString("selectAggregateText")
+        });
         this.updateAggregateDataNameSelector();
         return this.aggregateDataNameSelector;
-      });
+      }, "dropdown");
     }
     if(this.allowChangeIntervals && this.options.allowRunningTotals) {
       this.registerToolbarItem("showRunningTotals", () => {
@@ -222,7 +218,7 @@ export class HistogramModel extends SelectBase {
         });
         this.updateShowRunningTotalsBtn();
         return this.showRunningTotalsBtn;
-      });
+      }, "button");
     }
     if(this.allowChangeIntervals && this.options.allowCompareDatePeriods) {
       this.registerToolbarItem("showGrouped", () => {
@@ -231,27 +227,37 @@ export class HistogramModel extends SelectBase {
         });
         this.updateShowGroupedBtn();
         return this.showGroupedBtn;
-      });
+      }, "button");
     }
   }
 
   private updateIntervalsModeSelector() {
     if(!!this.changeIntervalsModeSelector) {
-      this.changeIntervalsModeSelector.getElementsByTagName(
-        "select"
-      )[0].value = this.intervalsMode;
+      (this.changeIntervalsModeSelector as any).setValue(this.intervalsMode);
+
     }
   }
 
   private updateAggregateDataNameSelector() {
     if(!!this.aggregateDataNameSelector) {
-      this.aggregateDataNameSelector.getElementsByTagName(
-        "select"
-      )[0].value = this.aggregateDataName;
+      (this.aggregateDataNameSelector as any).setValue(this.aggregateDataName);
     }
   }
 
-  private reset() {
+  public getQuestionValueType(question: Question, defaultValue = "enum"): "enum" | "date" | "number" {
+    if(question && typeof question.getType == "function") {
+      const questionType = question.getType();
+      if(questionType === "text" && (question["inputType"] === "date" || question["inputType"] === "datetime")) {
+        return "date";
+      } else if(questionType === "text" || questionType === "rating" || questionType === "expression" || questionType === "range") {
+        return "number";
+      }
+      return defaultValue as any;
+    }
+    return undefined;
+  }
+
+  protected reset() {
     this._continuousData = undefined;
     this._cachedValues = undefined;
     this._cachedIntervals = undefined;
@@ -271,7 +277,7 @@ export class HistogramModel extends SelectBase {
     return "" + value;
   }
 
-  private toPrecision(value: number) {
+  protected toPrecision(value: number) {
     const base = Math.pow(10, this._intervalPrecision);
     return Math.round(base * value) / base;
   }
@@ -321,7 +327,7 @@ export class HistogramModel extends SelectBase {
       series.forEach(seriesValue => this._continuousData[seriesValue] = []);
       const hash = {};
       this.data.forEach(dataRow => {
-        const nestedDataRows = getNestedDataRows(dataRow, this);
+        const nestedDataRows = getNestedDataRows(dataRow, this.dataPath);
         nestedDataRows.forEach(nestedDataRow => {
           const answerData = nestedDataRow[this.dataNames[0]];
           if(answerData !== undefined) {
@@ -347,14 +353,20 @@ export class HistogramModel extends SelectBase {
   }
 
   protected get needUseRateValues() {
-    return this.question.getType() == "rating" && Array.isArray(this.question["rateValues"]) && this.question["rateValues"].length > 0;
+    return this.dataType == "rating" && Array.isArray(this.question["rateValues"]) && this.question["rateValues"].length > 0;
   }
 
   public getValues(): Array<any> {
+    if(this.valueType === "enum") {
+      return super.getValues().reverse();
+    }
     return this.intervals.map(interval => interval.start);
   }
 
   public getLabels(): Array<string> {
+    if(this.valueType === "enum") {
+      return super.getLabels().reverse();
+    }
     return this.intervals.map(interval => interval.label);
   }
 
@@ -362,12 +374,12 @@ export class HistogramModel extends SelectBase {
     return !!this.questionOptions && Array.isArray(this.questionOptions.intervals);
   }
 
-  public get intervals() {
+  public get intervals(): Array<{start: number, end: number, label: string}> {
     if(this.hasCustomIntervals) {
       return this.questionOptions.intervals;
     }
 
-    if(this.question.getType() == "rating") {
+    if(this.dataType == "rating") {
       if(this.needUseRateValues) {
         const rateValues = this.question["rateValues"] as ItemValue[];
         rateValues.sort((iv1, iv2) => iv1.value - iv2.value);
@@ -438,7 +450,7 @@ export class HistogramModel extends SelectBase {
   }
 
   public get allowChangeIntervals(): boolean {
-    return this.valueType === "date" && !this.hasCustomIntervals && this.options.allowChangeIntervals === true;
+    return this.valueType === "date" && !this.hasCustomIntervals && this.options.allowChangeIntervals !== false;
   }
 
   private _showRunningTotals: boolean = false;
@@ -499,31 +511,35 @@ export class HistogramModel extends SelectBase {
     return this.questionOptions?.aggregateDataNames ?? [];
   }
 
-  public convertFromExternalData(externalCalculatedData: any): any[] {
-    return [externalCalculatedData];
+  public convertFromExternalData(externalCalculatedData: Array<number>): ICalculationResult {
+    return {
+      data: [externalCalculatedData],
+      values: this.intervals.map(i => i.label)
+    };
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
+  protected getCalculatedValuesCore(): ICalculationResult {
     const continuousValues = this.getContinuousValues();
     return histogramStatisticsCalculator(this._continuousData, this.intervals, this, [this.aggregateDataName].filter(name => !!name));
   }
 
-  public async getCalculatedValues(): Promise<Array<Object>> {
-    const values = await super.getCalculatedValues();
-    const result: Array<Array<number>> = JSON.parse(JSON.stringify(values));
+  public async getCalculatedValues(): Promise<ICalculationResult> {
+    const result = await super.getCalculatedValues();
     if(this.showRunningTotals) {
-      for(let i = 0; i < result.length; i++) {
-        for(let j = 1; j < result[i].length; j++) {
-          result[i][j] += result[i][j - 1];
+      const resultData: Array<Array<number>> = JSON.parse(JSON.stringify(result.data));
+      for(let i = 0; i < resultData.length; i++) {
+        for(let j = 1; j < resultData[i].length; j++) {
+          resultData[i][j] += resultData[i][j - 1];
         }
       }
+      result.data = resultData;
     }
     return result;
   }
 
   private async getGroupedDateAnswersData(): Promise<IAnswersData> {
-    let datasets = (await this.getCalculatedValues()) as number[][];
-    let colors = this.getColors();
+    let datasets = ((await this.getCalculatedValues()).data) as number[][];
+    let colors = VisualizerBase.getColors();
     let labels = this.getLabels();
     let seriesLabels = this.getSeriesLabels();
 
@@ -588,6 +604,7 @@ export class HistogramModel extends SelectBase {
     let texts = datasets;
     return {
       datasets,
+      values: this.getValues(),
       labels,
       colors,
       texts,
@@ -620,11 +637,25 @@ export class HistogramModel extends SelectBase {
     return answersData;
   }
 
-  public getValueType(): "date" | "number" {
+  private static _histogramDefaultState = {
+    "showRunningTotals": false,
+    "showGrouped": false,
+  };
+
+  public getDefaultState(): any {
+    if(this._defaultStateValue !== undefined) {
+      return this._defaultStateValue;
+    }
+    this._defaultStateValue = Object.assign({}, super.getDefaultState(), HistogramModel._histogramDefaultState);
+    return this._defaultStateValue;
+  }
+
+  public getValueType(): "date" | "number" | "enum" {
     return this.valueType;
   }
 }
 
-VisualizationManager.registerVisualizer("date", HistogramModel);
-VisualizationManager.registerVisualizer("number", HistogramModel, 100);
-VisualizationManager.registerVisualizer("rating", HistogramModel, 300);
+VisualizationManager.registerVisualizer("date", HistogramModel, undefined, "histogram");
+VisualizationManager.registerVisualizer("number", HistogramModel, 100, "histogram");
+VisualizationManager.registerVisualizer("rating", HistogramModel, 300, "histogram");
+VisualizationManager.registerVisualizer("histogram", HistogramModel, undefined, "histogram");

@@ -7,13 +7,16 @@ import { QuestionLocation, IColumn } from "../config";
 TableExtensions.registerExtension({
   location: "column",
   name: "drag",
-  visibleIndex: 0,
+  visibleIndex: 10,
   render: function (table: Table, options: any) {
-    const btn = DocumentHelper.createElement(
-      "button",
-      "sa-table__svg-button sa-table__drag-button"
-    );
-    btn.appendChild(DocumentHelper.createSvgElement("drag"));
+    const btn = DocumentHelper.createSvgButton("drag-24x24");
+    btn.className = "sa-table__svg-button sa-table__drag-button";
+    btn.title = localization.getString("columnReorder");
+    // const btn = DocumentHelper.createElement(
+    //   "button",
+    //   "sa-table__svg-button sa-table__drag-button"
+    // );
+    // btn.appendChild(DocumentHelper.createSvgElement("drag-24x24"));
     btn.addEventListener("mousedown", () => {
       table.enableColumnReorder();
       document.body.addEventListener("mouseup", () => {
@@ -23,15 +26,16 @@ TableExtensions.registerExtension({
     return btn;
   },
 });
+
 TableExtensions.registerExtension({
   location: "column",
   name: "sort",
-  visibleIndex: 1,
+  visibleIndex: 20,
   render: function (table: Table, options: any) {
     const descTitle = localization.getString("descOrder");
     const ascTitle = localization.getString("ascOrder");
-    var btn = DocumentHelper.createSvgButton("sorting");
-    btn.title = "";
+    var btn = DocumentHelper.createSvgButton("reorder-24x24");
+    btn.title = localization.getString("defaultOrder");
     var direction = "asc";
     btn.onclick = () => {
       if(direction == "asc") {
@@ -53,10 +57,9 @@ TableExtensions.registerExtension({
 TableExtensions.registerExtension({
   location: "column",
   name: "hide",
-  visibleIndex: 2,
+  visibleIndex: 30,
   render: function (table: Table, options: any) {
-    var btn = DocumentHelper.createSvgButton("hide");
-    btn.title = localization.getString("hideColumn");
+    var btn = DocumentHelper.createSvgButton("invisible-24x24", localization.getString("hideColumn"));
     btn.onclick = () => {
       table.setColumnVisibility(options.columnName, false);
     };
@@ -67,10 +70,9 @@ TableExtensions.registerExtension({
 TableExtensions.registerExtension({
   location: "column",
   name: "movetodetails",
-  visibleIndex: 3,
+  visibleIndex: 10,
   render: function (table: Table, options: any) {
-    const button = DocumentHelper.createSvgButton("movetodetails");
-    button.title = localization.getString("moveToDetail");
+    const button = DocumentHelper.createSvgButton("movetohorizontal-24x24", localization.getString("moveToDetail"));
     button.onclick = (e) => {
       e.stopPropagation();
       table.setColumnLocation(options.columnName, QuestionLocation.Row);
@@ -80,18 +82,23 @@ TableExtensions.registerExtension({
 });
 
 TableExtensions.registerExtension({
-  location: "column",
+  location: "columnfilter",
   name: "filter",
-  visibleIndex: 4,
+  visibleIndex: 10,
   render: function (table: Table, options: any) {
-    var el = DocumentHelper.createInput(
-      "sa-table__filter",
-      localization.getString("filterPlaceholder")
+    const el = DocumentHelper.createTextEditor({
+      showIcon: false,
+      onchange: (val) => {
+        table.applyColumnFilter(options.columnName, val);
+      }
+    }
+      // "sa-table__filter",
+      // localization.getString("filterPlaceholder")
     );
-    el.onclick = (e) => e.stopPropagation();
-    el.onchange = (e) => {
-      table.applyColumnFilter(options.columnName, el.value);
-    };
+    // el.onclick = (e) => e.stopPropagation();
+    // el.onchange = (e) => {
+    //   table.applyColumnFilter(options.columnName, el.value);
+    // };
     return el;
   },
 });
