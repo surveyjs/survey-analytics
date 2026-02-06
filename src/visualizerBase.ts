@@ -698,6 +698,7 @@ export class VisualizerBase implements IDataInfo {
   protected renderFooter(container: HTMLElement) {
     container.innerHTML = "";
     if(this.hasFooter) {
+      container.classList.add("sa-visualizer__footer--has-content");
       const footerTitleElement = DocumentHelper.createElement(
         "h4",
         "sa-visualizer__footer-title",
@@ -729,6 +730,8 @@ export class VisualizerBase implements IDataInfo {
       container.appendChild(footerContentElement);
 
       this.footerVisualizer.render(footerContentElement, false);
+    } else {
+      container.classList.remove("sa-visualizer__footer--has-content");
     }
   }
 
