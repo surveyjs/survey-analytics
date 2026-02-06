@@ -502,6 +502,24 @@ export class VisualizationPanel extends VisualizerBase {
     this.onAlternativeVisualizerChanged.fire(sender, options);
   };
 
+  private createHideButtonElement(element: IVisualizerPanelRenderedElement) {
+    const hideElement = document.createElement("div");
+    hideElement.className = "sa-question__hide-action";
+    hideElement.title = localization.getString("hideButton");
+    hideElement.setAttribute("role", "button");
+    hideElement.setAttribute("tabindex", "0");
+    hideElement.appendChild(DocumentHelper.createSvgElement("close-16x16"));
+    hideElement.addEventListener("click", (e) => {
+      setTimeout(() => this.hideElement(element.name), 0);
+    });
+    hideElement.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        this.hideElement(element.name);
+      }
+    });
+    return hideElement;
+  }
   private createDragAreaElement(element: IVisualizerPanelRenderedElement) {
     const dragAreaElement = DocumentHelper.createElement("div");
     dragAreaElement.className = "sa-question__drag-area";
@@ -514,25 +532,6 @@ export class VisualizationPanel extends VisualizerBase {
       dragAreaElement.appendChild(svgElement);
     }
 
-    if(this.allowHideQuestions) {
-      const hideElement = document.createElement("div");
-      hideElement.className = "sa-question__hide-action";
-      hideElement.title = localization.getString("hideButton");
-      hideElement.setAttribute("role", "button");
-      hideElement.setAttribute("tabindex", "0");
-      hideElement.appendChild(DocumentHelper.createSvgElement("close-16x16"));
-      dragAreaElement.appendChild(hideElement);
-      hideElement.addEventListener("click", (e) => {
-        setTimeout(() => this.hideElement(element.name), 0);
-      });
-      hideElement.addEventListener("keydown", (e) => {
-        if(e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          this.hideElement(element.name);
-        }
-      });
-    }
-
     return dragAreaElement;
   }
 
@@ -540,19 +539,27 @@ export class VisualizationPanel extends VisualizerBase {
     const headerElement = DocumentHelper.createElement("div");
     headerElement.className = "sa-question__header";
 
-    const titleElement = DocumentHelper.createElement("h3");
-    titleElement.innerText = element.displayName;
-    titleElement.id = "el_" + element.name;
-    titleElement.className = questionElementClassName + "__title";
-    if(this.allowDynamicLayout && this.allowDragDrop) {
-      titleElement.classList.add(questionElementClassName + "__title--draggable");
-    }
-
-    if(this.haveSeveralChildren) {
+    const hideElement = this.allowHideQuestions ? this.createHideButtonElement(element) : undefined;
+    if(this.haveSeveralChildren && this.allowDynamicLayout && this.allowDragDrop) {
       const dragAreaElement = this.createDragAreaElement(element);
       headerElement.appendChild(dragAreaElement);
+      if(hideElement) {
+        dragAreaElement.appendChild(hideElement);
+      }
+    } else if(this.haveSeveralChildren && hideElement) {
+      headerElement.appendChild(hideElement);
     }
-    headerElement.appendChild(titleElement);
+
+    if(element.displayName) {
+      const titleElement = DocumentHelper.createElement("h3");
+      titleElement.innerText = element.displayName;
+      titleElement.id = "el_" + element.name;
+      titleElement.className = questionElementClassName + "__title";
+      if(this.allowDynamicLayout && this.allowDragDrop) {
+        titleElement.classList.add(questionElementClassName + "__title--draggable");
+      }
+      headerElement.appendChild(titleElement);
+    }
     return headerElement;
   }
 
