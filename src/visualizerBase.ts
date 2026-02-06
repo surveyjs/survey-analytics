@@ -752,16 +752,20 @@ export class VisualizerBase implements IDataInfo {
       this._appliedTheme.applyThemeToElement(this.renderResult);
     }
 
-    targetElement.className = "sa-visualizer";
-    if(isRoot) {
-      targetElement.classList.add("sa-visualizer-wrapper");
-    }
     this.renderBanner(targetElement);
+
+    let container = targetElement;
+    if(isRoot) {
+      container = DocumentHelper.createElement("div", "sa-visualizer-wrapper");
+      targetElement.appendChild(container);
+    } else {
+      container.className = "sa-visualizer";
+    }
     this.toolbarContainer = DocumentHelper.createElement(
       "div",
       "sa-visualizer__toolbar"
     );
-    targetElement.appendChild(this.toolbarContainer);
+    container.appendChild(this.toolbarContainer);
     this.renderToolbar(this.toolbarContainer);
 
     if(this.hasHeader) {
@@ -769,7 +773,7 @@ export class VisualizerBase implements IDataInfo {
         "div",
         "sa-visualizer__header"
       );
-      targetElement.appendChild(this.headerContainer);
+      container.appendChild(this.headerContainer);
       this.renderHeader(this.headerContainer);
     }
 
@@ -778,14 +782,14 @@ export class VisualizerBase implements IDataInfo {
       "sa-visualizer__content"
     );
     this.contentContainer.role = "presentation";
-    targetElement.appendChild(this.contentContainer);
+    container.appendChild(this.contentContainer);
     this.renderContent(this.contentContainer);
 
     this.footerContainer = DocumentHelper.createElement(
       "div",
       "sa-visualizer__footer"
     );
-    targetElement.appendChild(this.footerContainer);
+    container.appendChild(this.footerContainer);
     this.renderFooter(this.footerContainer);
   }
 

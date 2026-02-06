@@ -123,8 +123,8 @@ export class Dashboard extends VisualizerBase {
     return this._panel;
   }
 
-  public renderContent(container: HTMLElement): void {
-    this._panel.render(container);
+  public render(targetElement: HTMLElement | string, isRoot = true) {
+    this._panel.render(targetElement, true);
   }
 
   updateData(data: Array<{ [index: string]: any }> | GetDataFn): void {
