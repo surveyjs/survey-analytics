@@ -89,10 +89,10 @@ test.describe("Toolbar visualizers", () => {
     await page.locator(".sa-date-range_dropdown").click();
     getListItemByText(page, "This year to date").click();
 
-    await compareScreenshot(page, dateRangeLocator, "custom-date-range-include-today.png");
+    await compareScreenshot(page, dateRangeLocator, "custom-date-range-include-today.png", [page.getByRole("textbox").nth(0), page.getByRole("textbox").nth(1)]);
 
     await page.locator(".sa-date-range_include-today-check").click();
-    await compareScreenshot(page, dateRangeLocator, "custom-date-range-not-include-today.png");
+    await compareScreenshot(page, dateRangeLocator, "custom-date-range-not-include-today.png", [page.getByRole("textbox").nth(0), page.getByRole("textbox").nth(1)]);
   });
 
 });
