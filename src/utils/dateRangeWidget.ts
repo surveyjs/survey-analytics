@@ -23,6 +23,8 @@ export class DateRangeWidget {
   private countLabel: HTMLElement;
   private rangeErrorMessage: HTMLElement;
   private datePeriodContainer: HTMLElement;
+  private includeTodayContainer: HTMLElement;
+  private includeTodayCheckbox: HTMLElement;
   private answersCount: number;
 
   private elementRemoveClassName(element: Element, className: string) {
@@ -99,6 +101,45 @@ export class DateRangeWidget {
     return divider;
   }
 
+  private createIncludeTodayCheckbox(): HTMLElement {
+    const className = "sa-date-range_include-today";
+    const container = DocumentHelper.createElement("div", className);
+    const checkbox = DocumentHelper.createElement("div", className + "-checkbox");
+    const button = DocumentHelper.createElement("div", className + "-button");
+    const check = DocumentHelper.createSvgElement("check-16x16");
+    check.classList.add("sa-date-range_include-today-check");
+    button.appendChild(check);
+
+    const caption = DocumentHelper.createElement("div", className + "-caption");
+    const captionText = DocumentHelper.createElement("div", className + "-caption-text");
+    captionText.textContent = localization.getString("includeToday");
+    caption.appendChild(captionText);
+    checkbox.appendChild(button);
+    checkbox.appendChild(caption);
+    container.appendChild(checkbox);
+
+    const toggleCheckbox = () => {
+      this.model.toggleIncludeToday();
+      this.updateElements();
+    };
+    button.onclick = toggleCheckbox;
+
+    this.includeTodayCheckbox = button;
+    return container;
+  }
+
+  private updateIncludeTodayCheckbox() {
+    if(this.includeTodayContainer && this.includeTodayCheckbox) {
+      const className = "sa-date-range_include-today-checkbox--checked";
+      this.includeTodayContainer.style.display = this.model.periodIsToDate() ? "" : "none";
+      if(this.model.includeToday) {
+        this.includeTodayCheckbox.classList.add(className);
+      } else {
+        this.includeTodayCheckbox.classList.remove(className);
+      }
+    }
+  }
+
   constructor(private model: DateRangeModel, private options: IDateRangeWidgetOptions) {
   }
 
@@ -170,6 +211,10 @@ export class DateRangeWidget {
 
       rangeElement.appendChild(this.createDivider());
       rangeElement.appendChild(this.datePeriodContainer);
+
+      this.includeTodayContainer = this.createIncludeTodayCheckbox();
+      this.updateIncludeTodayCheckbox();
+      rangeElement.appendChild(this.includeTodayContainer);
     }
 
     if(this.options.showAnswerCount !== false) {
@@ -199,6 +244,7 @@ export class DateRangeWidget {
     this.setDateIntoInput(range.end, this.endDateInput);
     this.elementRemoveClassName(this.startDateEditor, DateRangeWidget.invalidRangeEditorClassName);
     this.elementRemoveClassName(this.endDateEditor, DateRangeWidget.invalidRangeEditorClassName);
+    this.updateIncludeTodayCheckbox();
   }
 
   public updateAnswersCount(answersCount?: number): void {
@@ -227,5 +273,7 @@ export class DateRangeWidget {
     this.rangeErrorMessage.innerHTML = "";
     this.datePeriodContainer = undefined;
     this.datePeriodContainer.innerHTML = "";
+    this.includeTodayContainer = undefined;
+    this.includeTodayCheckbox = undefined;
   }
 }

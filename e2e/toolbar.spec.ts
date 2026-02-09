@@ -1,5 +1,5 @@
 import { test } from "@playwright/test";
-import { compareScreenshot, resetFocusToBody } from "./helper";
+import { compareScreenshot, getListItemByText, resetFocusToBody } from "./helper";
 
 process.env.SNAPSHOT_SUFFIX = undefined;
 process.env.SNAPSHOT_SUFFIX = "";
@@ -78,6 +78,21 @@ test.describe("Toolbar visualizers", () => {
 
     await page.setViewportSize({ width: 500, height: 1000 });
     await compareScreenshot(page, toolbarLocator, "custom-date-range-toolbar-with-error-mobile.png");
+  });
+
+  test("Custom date range toolbar with 'Include today' toggle", async ({ page }) => {
+    await page.goto("http://localhost:8080/examples/apexcharts/date_period_field_name.html");
+    await page.setViewportSize({ width: 1200, height: 1000 });
+
+    const dateRangeLocator = page.locator(".sa-date-range").first();
+
+    await page.locator(".sa-date-range_dropdown").click();
+    getListItemByText(page, "This year to date").click();
+
+    await compareScreenshot(page, dateRangeLocator, "custom-date-range-include-today.png");
+
+    await page.locator(".sa-date-range_include-today-check").click();
+    await compareScreenshot(page, dateRangeLocator, "custom-date-range-not-include-today.png");
   });
 
 });

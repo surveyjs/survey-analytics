@@ -65,6 +65,7 @@ export var englishStrings = {
   answersText: "answer(s)",
   noData: "No data",
   selectDateRange: "Select date range...",
+  includeToday: "Include today",
   reportingPeriodCustom: "Custom",
   reportingPeriodLast7days: "Last 7 days",
   reportingPeriodLast14days: "Last 14 days",

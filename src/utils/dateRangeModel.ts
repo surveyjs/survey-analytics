@@ -40,6 +40,7 @@ export class DateRangeModel {
   private _includeToday: boolean;
 
   constructor(options: IDateRangeModelOptions) {
+    this._includeToday = options.includeToday ?? true;
     if(options.datePeriod) {
       this._currentDatePeriod = options.datePeriod;
       this._currentDateRange = datePeriodsFunctions[this._currentDatePeriod]?.(undefined, this._includeToday);
@@ -48,7 +49,6 @@ export class DateRangeModel {
     }
     this._availableDatePeriods = options.availableDatePeriods ?? Object.keys(datePeriodsFunctions) as Array<DatePeriodEnum>;
     this._onDateRangeChanged = options.onDateRangeChanged;
-    this._includeToday = options.includeToday;
   }
 
   get currentDatePeriod(): DatePeriodEnum {
@@ -61,6 +61,18 @@ export class DateRangeModel {
 
   get availableDatePeriods(): Array<DatePeriodEnum> {
     return [...this._availableDatePeriods];
+  }
+
+  get includeToday(): boolean {
+    return this._includeToday;
+  }
+  set includeToday(newValue: boolean) {
+    this._includeToday = newValue;
+    this.setDatePeriod(this._currentDatePeriod);
+  }
+
+  toggleIncludeToday() {
+    this.includeToday = !this.includeToday;
   }
 
   setDatePeriod(datePeriod: DatePeriodEnum | undefined): void {
@@ -86,5 +98,9 @@ export class DateRangeModel {
     if(!!this._onDateRangeChanged) {
       this._onDateRangeChanged({ ...this._currentDateRange }, this._currentDatePeriod);
     }
+  }
+
+  periodIsToDate(): boolean {
+    return ["ytd", "mtd", "wtdSun", "wtdMon", "qtd"].indexOf(this.currentDatePeriod) !== -1;
   }
 }
