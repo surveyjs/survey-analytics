@@ -1,28 +1,39 @@
 @use "globals" as *;
+@use "typography-mixins.scss" as *;
+
+.sa-visualizer-wrapper {
+  min-width: 450px;
+  padding: var(--sjs2-spacing-x300, 24px);
+  background: var(--sjs2-color-utility-surface-dashboard, rgba(28, 27, 32, 0.05));
+
+  @media screen and (max-width: 600px) {
+    padding: var(--sjs2-spacing-x150, 12px);
+  }
+}
 
 .sa-visualizer__toolbar {
 }
 
 .sa-visualizer__header {
-  font-family: $font-family-secondary;
-  font-size: $root-font-size;
+  @include sjs2--typography--default;
 }
 
 .sa-visualizer__content {
-  font-family: $font-family;
+  font-family: var(--sjs2-typography-font-family-text);
   display: inline-block;
-  overflow: hidden;
   width: 100%;
 }
 
-.sa-visualizer__footer {
+.sa-visualizer__footer--has-content {
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .sa-visualizer__footer-title {
+  @include sjs2--typography--default-strong;
   display: inline-block;
-  font-family: $font-family-secondary;
-  font-size: $root-font-size;
   color: #404040;
   line-height: 34px;
   vertical-align: middle;

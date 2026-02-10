@@ -65,7 +65,7 @@ test("default settings", async () => {
   expect(seriesValues).toStrictEqual([]);
   expect(seriesLabels).toStrictEqual([]);
 
-  expect(await pivot.getCalculatedValues()).toStrictEqual([[8, 4]]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[8, 4]]);
 });
 
 test("getSeriesValues and getSeriesLabels + values and labels", async () => {
@@ -109,35 +109,35 @@ test("getCalculatedValues", async () => {
   let seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
-  expect(await pivot.getCalculatedValues()).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
 
   pivot.setAxisQuestions("question2", "question1");
   values = pivot.getValues();
   seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(seriesValues).toStrictEqual(["female", "male"]);
-  expect(await pivot.getCalculatedValues()).toStrictEqual([[1, 3, 4], [2, 1, 1]]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 3, 4], [2, 1, 1]]);
 
   pivot.setAxisQuestions("question1", "question3");
   values = pivot.getValues();
   seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual(["question3"]);
-  expect(await pivot.getCalculatedValues()).toStrictEqual([[2500, 1000]]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[2500, 1000]]);
 
   pivot.setAxisQuestions("question2", "question3");
   values = pivot.getValues();
   seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(seriesValues).toStrictEqual(["question3"]);
-  expect(await pivot.getCalculatedValues()).toStrictEqual([[550, 1500, 1450]]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[550, 1500, 1450]]);
 
   pivot.setAxisQuestions("question3", "question1");
   values = pivot.getValues();
   seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual([100, 150, 200, 250, 300, 350, 400, 450, 500, 550]);
   expect(seriesValues).toStrictEqual(["female", "male"]);
-  expect(await pivot.getCalculatedValues()).toStrictEqual([[1, 1, 1, 1, 1, 0, 1, 0, 1, 1], [1, 0, 1, 0, 1, 0, 1, 0, 0, 0]]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 1, 1, 1, 1, 0, 1, 0, 1, 1], [1, 0, 1, 0, 1, 0, 1, 0, 0, 0]]);
 });
 
 test("getQuestionValueType", async () => {
@@ -162,7 +162,7 @@ test("getCalculatedValues multi-Y-axes", async () => {
   expect(values).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3", "question3"]);
   expect(pivot.getSeriesValueIndexes()).toStrictEqual({ "question2_Item 1": 0, "question2_Item 2": 1, "question2_Item 3": 2, "question3": 3 });
-  const calculatedValues = await pivot.getCalculatedValues();
+  const calculatedValues = (await pivot.getCalculatedValues()).data;
   expect(calculatedValues).toHaveLength(4);
   expect(calculatedValues).toStrictEqual([[1, 2], [3, 1], [4, 1], [2500, 1000]]);
 });
@@ -363,7 +363,7 @@ test("convertFromExternalData", () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
   const externalData = { some: "data" };
   const result = pivot.convertFromExternalData(externalData);
-  expect(result).toEqual([externalData]);
+  expect(result.data).toEqual([externalData]);
 });
 
 test("updateStatisticsSeriesValue with enum values", () => {
@@ -442,7 +442,7 @@ test("onAxisYSelectorChanged adds new selector when value is set", () => {
 
   pivot.onAxisYSelectorChanged(1, "question3");
 
-  expect(mockRegister).toHaveBeenCalledWith("axisYSelector2", expect.any(Function));
+  expect(mockRegister).toHaveBeenCalledWith("axisYSelector2", expect.any(Function), "dropdown");
 
   // Restore original method
   pivot["registerToolbarItem"] = originalRegister;
@@ -472,6 +472,38 @@ test("createAxisYSelector returns undefined when no choices available", () => {
   // All questions are already selected, so no choices should be available
   const selector = pivot["createAxisYSelector"](2);
   expect(selector).toBeUndefined();
+});
+
+test("pivot without maxSeriesCount", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("question1", "question2", "question3", "question4");
+
+  const registerSpy = jest.spyOn(pivot, "registerToolbarItem");
+  pivot["axisYSelectors"] = [{} as HTMLDivElement];
+
+  pivot.onAxisYSelectorChanged(0, "question2");
+
+  const axisYSelector1Calls = registerSpy.mock.calls.filter((c) => c[0] === "axisYSelector1");
+  expect(axisYSelector1Calls.length).toBe(1);
+  expect(Object.keys(pivot["toolbarItemCreators"]).filter(key => key.indexOf("axisYSelector") === 0).length).toEqual(2);
+
+  registerSpy.mockRestore();
+});
+
+test("pivot with maxSeriesCount: 1", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { maxSeriesCount: 1 } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3", "question4");
+
+  const registerSpy = jest.spyOn(pivot, "registerToolbarItem");
+  pivot["axisYSelectors"] = [{} as HTMLDivElement];
+
+  pivot.onAxisYSelectorChanged(0, "question2");
+
+  const axisYSelector1Calls = registerSpy.mock.calls.filter((c) => c[0] === "axisYSelector1");
+  expect(axisYSelector1Calls.length).toBe(0);
+  expect(Object.keys(pivot["toolbarItemCreators"]).filter(key => key.indexOf("axisYSelector") === 0).length).toEqual(1);
+
+  registerSpy.mockRestore();
 });
 
 test("isXYChart method", () => {
@@ -576,14 +608,14 @@ test("getCalculatedValuesCore with empty data", async () => {
   pivot.setAxisQuestions("question1", "question2");
 
   const calculatedValues = pivot["getCalculatedValuesCore"]();
-  expect(calculatedValues).toEqual([[0, 0], [0, 0], [0, 0]]);
+  expect(calculatedValues.data).toEqual([[0, 0], [0, 0], [0, 0]]);
 });
 
 test("getCalculatedValuesCore with number type and no Y questions", async () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
   pivot.setAxisQuestions("question3");
 
-  const calculatedValues = pivot["getCalculatedValuesCore"]();
+  const calculatedValues = pivot["getCalculatedValuesCore"]().data;
   expect(calculatedValues.length).toBe(1);
   expect(calculatedValues[0].length).toBe(PivotModel.IntervalsCount);
 });
@@ -592,7 +624,119 @@ test("getCalculatedValuesCore with number type and Y questions", async () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
   pivot.setAxisQuestions("question3", "question1");
 
-  const calculatedValues = pivot["getCalculatedValuesCore"]();
+  const calculatedValues = pivot["getCalculatedValuesCore"]().data;
   expect(calculatedValues.length).toBe(2); // female, male
   expect(calculatedValues[0].length).toBe(PivotModel.IntervalsCount);
+});
+
+test("getCalculatedValues for array in answer data", async () => {
+  const json = {
+    "pages": [
+      {
+        "name": "additional_info",
+        "title": "Additional Information",
+        "elements": [
+          {
+            "type": "checkbox",
+            "name": "income_sources",
+            "choices": [
+              "Salary / Wages",
+              "Business income",
+              "Pension / Retirement",
+              "Government assistance",
+              "Investments / Dividends"
+            ],
+            "showOtherItem": true,
+            "otherText": "Other (specify)"
+          }
+        ]
+      }
+    ],
+  };
+  const data = [
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["other"] },
+    { "income_sources": ["other", "Pension / Retirement"] },
+    { "income_sources": ["Pension / Retirement", "Salary / Wages", "Government assistance"] },
+    { "income_sources": ["other"] },
+    { "income_sources": ["other", "Investments / Dividends", "Business income"] },
+    { "income_sources": ["Pension / Retirement"] },
+    { "income_sources": ["Business income", "other"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["other"] },
+    { "income_sources": ["Pension / Retirement"] },
+    { "income_sources": ["Government assistance", "Business income"] },
+    { "income_sources": ["Salary / Wages", "other", "Business income"] },
+    { "income_sources": ["Business income", "Government assistance", "Investments / Dividends"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["Investments / Dividends"] },
+    { "income_sources": ["Government assistance", "Business income"] },
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["Investments / Dividends", "Government assistance"] },
+    { "income_sources": ["Investments / Dividends"] },
+    { "income_sources": ["Government assistance", "Business income"] },
+    { "income_sources": ["other"] },
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["Salary / Wages", "other", "Business income"] },
+    { "income_sources": ["Business income", "Pension / Retirement", "Salary / Wages"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["Pension / Retirement", "Government assistance", "other"] },
+    { "income_sources": ["other", "Business income", "Salary / Wages"] },
+    { "income_sources": ["other", "Investments / Dividends", "Government assistance"] },
+    { "income_sources": ["Pension / Retirement", "Business income"] },
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["other", "Pension / Retirement"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["Investments / Dividends", "Salary / Wages", "other"] },
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["Pension / Retirement"] },
+    { "income_sources": ["Investments / Dividends"] },
+    { "income_sources": ["other", "Investments / Dividends"] },
+    { "income_sources": ["Salary / Wages", "Business income"] },
+    { "income_sources": ["Investments / Dividends", "Pension / Retirement", "Business income"] },
+    { "income_sources": ["other", "Salary / Wages", "Pension / Retirement"] },
+    { "income_sources": ["Salary / Wages", "Government assistance", "Business income"] },
+    { "income_sources": ["Business income", "other", "Pension / Retirement"] },
+    { "income_sources": ["Salary / Wages", "Business income"] },
+    { "income_sources": ["Investments / Dividends", "Government assistance"] },
+    { "income_sources": ["Salary / Wages", "other", "Government assistance"] },
+    { "income_sources": ["Salary / Wages", "other", "Business income"] },
+    { "income_sources": ["Pension / Retirement"] },
+    { "income_sources": ["Government assistance"] }
+  ];
+
+  const survey = new SurveyModel(json);
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("income_sources");
+  let values = pivot.getValues();
+  let seriesValues = pivot.getSeriesValues();
+  expect(values).toStrictEqual(["Salary / Wages", "Business income", "Pension / Retirement", "Government assistance", "Investments / Dividends", "other"]);
+  expect(seriesValues).toStrictEqual([]);
+  const result = (await pivot.getCalculatedValues()).data;
+  expect(result).toStrictEqual([[17, 17, 13, 17, 11, 19,]]);
+});
+
+test("getCalculatedValues with value aggregation", async () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("question1", "question2");
+  let values = pivot.getValues();
+  let seriesValues = pivot.getSeriesValues();
+  expect(values).toStrictEqual(["female", "male"]);
+  expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
+
+  pivot.setValueAggregation("question2", "question3");
+  values = pivot.getValues();
+  seriesValues = pivot.getSeriesValues();
+  expect(values).toStrictEqual(["female", "male"]);
+  expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[250, 300], [1200, 300], [1050, 400]]);
+
+  pivot.resetAggregations();
+  values = pivot.getValues();
+  seriesValues = pivot.getSeriesValues();
+  expect(values).toStrictEqual(["female", "male"]);
+  expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
 });

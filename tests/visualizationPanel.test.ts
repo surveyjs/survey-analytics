@@ -1,5 +1,5 @@
 /* eslint-disable surveyjs/eslint-plugin-i18n/only-english-or-code */
-import { SurveyModel, QuestionCommentModel, ComponentCollection } from "survey-core";
+import { SurveyModel, QuestionTextModel } from "survey-core";
 import { WordCloud } from "../src/wordcloud/wordcloud";
 import { Text } from "../src/text";
 import { SelectBase } from "../src/selectBase";
@@ -7,14 +7,20 @@ import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrap
 import { VisualizationPanel } from "../src/visualizationPanel";
 import { IState } from "../src/config";
 import { VisualizationManager } from "../src/visualizationManager";
-import { LayoutEngine } from "../src/layoutEngine";
 import { PostponeHelper } from "../src/visualizerBase";
 import { PivotModel } from "../src/pivot";
+import { LayoutEngine } from "../src/layout-engine";
+import { NumberModel } from "../src/number";
+import { HistogramModel } from "../src/histogram";
+export * from "../src/number";
+export * from "../src/nps";
 
+VisualizationPanel.LayoutEngine = LayoutEngine;
 VisualizationManager.registerVisualizer("comment", Text);
 VisualizationManager.registerVisualizer("comment", WordCloud);
 VisualizationManager.registerAltVisualizerSelector(AlternativeVisualizersWrapper);
 VisualizationManager.registerPivotVisualizer(PivotModel);
+VisualizationManager.unregisterVisualizer("number", HistogramModel);
 
 test("allowDynamicLayout option", () => {
   const json = {
@@ -57,12 +63,10 @@ test("allowHideQuestions option", () => {
         type: "paneldynamic",
         isRequired: true,
         templateElements: [
-          {
-            type: "text",
-            name: "question2",
-          },
+          { type: "text", name: "question2", },
         ],
       },
+      { type: "text", name: "question3", },
     ],
   };
   const data = [
@@ -75,18 +79,20 @@ test("allowHideQuestions option", () => {
     allowDynamicLayout: false,
   });
   expect(vis.allowHideQuestions).toBeTruthy();
-  vis.render(document.createElement("div"));
-  var innerVis = vis["visualizers"][0];
-  expect(innerVis["toolbarItemCreators"]["removeQuestion"]).toBeDefined();
+  let container = document.createElement("div");
+  vis.render(container);
+  let hideAction = container.querySelector(".sa-question__hide-action") as HTMLElement;
+  expect(hideAction).not.toBeNull();
 
   vis = new VisualizationPanel(survey.getAllQuestions(), data, {
     allowDynamicLayout: false,
     allowHideQuestions: false,
   });
   expect(vis.allowHideQuestions).toBeFalsy();
-  vis.render(document.createElement("div"));
-  innerVis = vis["visualizers"][0];
-  expect(innerVis["toolbarItemCreators"]["removeQuestion"]).toBeUndefined();
+  container = document.createElement("div");
+  vis.render(container);
+  hideAction = container.querySelector(".sa-question__hide-action") as HTMLElement;
+  expect(hideAction).toBeNull();
 });
 
 test("change language", () => {
@@ -173,10 +179,6 @@ test("getState, setState, onStateChanged", () => {
         name: "question1",
         isVisible: true,
         isPublic: true,
-        chartType: "bar",
-        answersOrder: "default",
-        hideEmptyAnswers: false,
-        topN: -1
       },
     ],
   };
@@ -221,7 +223,7 @@ test("getState, setState, onStateChanged", () => {
 
   visualizer.chartType = "bar";
   expect(count).toBe(2);
-  expect(visPanel.state.elements![0].chartType).toEqual("bar");
+  expect(visPanel.state.elements![0].chartType).toEqual(undefined);
 
   visualizer.answersOrder = "desc";
   expect(count).toBe(3);
@@ -233,7 +235,7 @@ test("getState, setState, onStateChanged", () => {
 
   visualizer.hideEmptyAnswers = false;
   expect(count).toBe(5);
-  expect(visPanel.state.elements![0].hideEmptyAnswers).toEqual(false);
+  expect(visPanel.state.elements![0].hideEmptyAnswers).toEqual(undefined);
 });
 
 test("getState/setState and results order", () => {
@@ -663,14 +665,14 @@ test("updateData should be called in order to update data - #269", async () => {
   let visPanel = new VisualizationPanel(survey.getAllQuestions(), data);
 
   const questionVisualizer = visPanel.visualizers[0];
-  expect(await questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 0, 2]]);
+  expect((await questionVisualizer.getCalculatedValues()).data).toEqual([[0, 1, 2, 0, 2]]);
 
   const newAnswer = { "satisfaction-score": 4, "nps-score": 9 };
   data.push(newAnswer);
-  expect(await questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 0, 2]]);
+  expect((await questionVisualizer.getCalculatedValues()).data).toEqual([[0, 1, 2, 0, 2]]);
 
   visPanel.updateData(data);
-  expect(await questionVisualizer.getCalculatedValues()).toEqual([[0, 1, 2, 1, 2]]);
+  expect((await questionVisualizer.getCalculatedValues()).data).toEqual([[0, 1, 2, 1, 2]]);
 });
 
 test("hide/show all elements", () => {
@@ -893,7 +895,7 @@ test("invoke updateContent for child visualizers on updateData", () => {
   expect(renderContentSpy).toHaveBeenCalledTimes(1);
 });
 
-test("create visualizer for grouped questions", async () => {
+test("create visualizer for grouped questions (pivot)", async () => {
   const json = {
     "pages": [
       {
@@ -950,14 +952,14 @@ test("create visualizer for grouped questions", async () => {
   expect(visualizer.getSeriesLabels()).toStrictEqual([]);
   expect(visualizer.getValues()).toStrictEqual(["female", "male"]);
   expect(visualizer.getLabels()).toStrictEqual(["female", "male"]);
-  expect(await visualizer.getCalculatedValues()).toStrictEqual([[8, 4]]);
+  expect((await visualizer.getCalculatedValues()).data).toStrictEqual([[8, 4]]);
 
   visualizer.setAxisQuestions("question1", "question2");
   expect(visualizer.getSeriesValues()).toStrictEqual(["item1", "item2", "item3"]);
   expect(visualizer.getSeriesLabels()).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(visualizer.getValues()).toStrictEqual(["female", "male"]);
   expect(visualizer.getLabels()).toStrictEqual(["female", "male"]);
-  expect(await visualizer.getCalculatedValues()).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
+  expect((await visualizer.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
 });
 
 test("getCalculatedValues should return empty array", async () => {
@@ -975,7 +977,7 @@ test("getCalculatedValues should return empty array", async () => {
   const vis = new VisualizationPanel(survey.getAllQuestions(), data, {
     allowDynamicLayout: false,
   });
-  expect(await vis.getCalculatedValues()).toStrictEqual([]);
+  expect((await vis.getCalculatedValues()).data).toStrictEqual([]);
 });
 
 test("VisualizationPanel reset filter button respects the allowSelection option", () => {
@@ -995,7 +997,123 @@ test("VisualizationPanel reset filter button respects the allowSelection option"
   expect(creators["resetFilter"]).toBeUndefined();
 });
 
+test("VisualizationPanel should accept visualizer definitions", () => {
+  const visualizerDefinition = {
+    visualizerType: "nps"
+  };
+  let panel = new VisualizationPanel([visualizerDefinition], [], {});
+  expect(panel.visualizers.length).toBe(1);
+  expect(panel.visualizers[0].type).toBe("nps");
+
+  panel = new VisualizationPanel([visualizerDefinition, visualizerDefinition], [], {});
+  expect(panel.visualizers.length).toBe(2);
+  expect(panel.visualizers[0].type).toBe("nps");
+  expect(panel.visualizers[1].type).toBe("nps");
+});
+
+test("Create nps visualizer from definition with dataName", async () => {
+  const visualizerDefinition = {
+    visualizerType: "nps",
+    dataName: "test"
+  };
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
+  let panel = new VisualizationPanel([visualizerDefinition], data, {});
+  const nps = panel.visualizers[0];
+
+  let result: any = await nps.getCalculatedValues();
+
+  expect(result).toStrictEqual({
+    "data": [[1, 2, 3, 6]],
+    "values": ["detractors", "passive", "promoters", "total"],
+  });
+});
+
+test("Create nps visualizer from definition with questionName", async () => {
+  const visualizerDefinition = {
+    visualizerType: "nps",
+    questionName: "test"
+  };
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
+  let panel = new VisualizationPanel([visualizerDefinition], data, {});
+  const nps = panel.visualizers[0];
+
+  let result: any = (await nps.getCalculatedValues());
+
+  expect(result).toStrictEqual({
+    "data": [[1, 2, 3, 6]],
+    "values": ["detractors", "passive", "promoters", "total"],
+  });
+});
+
+test("Create nps visualizer from definition with question", async () => {
+  const visualizerDefinition = {
+    visualizerType: "nps",
+    question: new QuestionTextModel("test")
+  };
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
+  let panel = new VisualizationPanel([visualizerDefinition], data, {});
+  const nps = panel.visualizers[0];
+
+  let result: any = (await nps.getCalculatedValues());
+
+  expect(result).toStrictEqual({
+    "data": [[1, 2, 3, 6]],
+    "values": ["detractors", "passive", "promoters", "total"],
+  });
+});
+
+test("Create number visualizer from definition", async () => {
+  const visualizerDefinition = {
+    visualizerType: "number",
+    dataName: "test",
+    displayValueName: "count"
+  };
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
+  let panel = new VisualizationPanel([visualizerDefinition], data, {});
+  const numberVis = panel.visualizers[0] as NumberModel;
+
+  let result: any = (await numberVis.getCalculatedValues()).data[0];
+
+  expect(result).toStrictEqual([7.34, 1, 10, 7]);
+  expect(numberVis.dataNames[0]).toEqual(visualizerDefinition.dataName);
+  expect(numberVis.name.indexOf("visualizer")).toEqual(0);
+  expect(panel.visibleElements[0].name.indexOf("visualizer")).toEqual(0);
+});
+
+test("Generate visualizer names", () => {
+  const visualizerDefinition1 = {
+    visualizerType: "average",
+    chartType: "gauge",
+    dataName: "test",
+    displayValueName: "count",
+    title: "Total answers count"
+  };
+
+  const visualizerDefinition2 = {
+    visualizerType: "nps",
+    dataName: "test",
+    displayValueName: "count",
+    title: "Total answers count"
+  };
+
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
+  let visPanel = new VisualizationPanel([visualizerDefinition1, visualizerDefinition2], data, {});
+
+  expect(visPanel.visualizers.length).toEqual(2);
+  expect(visPanel.visualizers[0].type).toEqual("average");
+  expect(visPanel.visualizers[0].name.indexOf("visualizer")).toEqual(0);
+  expect(visPanel.visualizers[1].type).toEqual("nps");
+  expect(visPanel.visualizers[1].name.indexOf("visualizer")).toEqual(0);
+  expect(visPanel.visualizers[0].name !== visPanel.visualizers[1].name).toBeTruthy();
+
+  expect(visPanel.visibleElements.length).toEqual(2);
+  expect(visPanel.visibleElements[0].name).toEqual(visPanel.visualizers[0].name);
+  expect(visPanel.visibleElements[1].name).toEqual(visPanel.visualizers[1].name);
+});
+
 test("allowChangeVisualizerType", () => {
+  VisualizationManager.registerVisualizer("number", HistogramModel);
+
   const json = {
     elements: [
       {
@@ -1027,4 +1145,44 @@ test("allowChangeVisualizerType", () => {
   expect(visPanel["visualizers"][0]["toolbarItemCreators"]["changeChartType"]).toBeDefined();
   expect(visPanel["visualizers"][1].type).toBe("alternative");
   expect(visPanel["visualizers"][1]["toolbarItemCreators"]["changeVisualizer"]).toBeDefined();
+
+  VisualizationManager.unregisterVisualizer("number", HistogramModel);
+});
+
+test("Render the hide button and drag element if the panel have some elements", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+    ]
+  };
+  const data = [
+    { question1: "1-1", question2: "1-2" },
+    { question1: "2-1", question2: "2-2" },
+  ];
+  const survey = new SurveyModel(json);
+  const vis = new VisualizationPanel(survey.getAllQuestions(), data);
+
+  let container = document.createElement("div");
+  vis.render(container);
+  const hideAction = container.querySelector(".sa-question__hide-action") as HTMLElement;
+  expect(hideAction).not.toBeNull();
+
+  const dragAreaElement = container.querySelector(".sa-question__drag-area") as HTMLElement;
+  expect(dragAreaElement).not.toBeNull();
+});
+
+test("Not render the hide button and drag element if the panel has one element", () => {
+  const json = { elements: [{ type: "text", name: "question1" }] };
+  const data = [{ question1: "1-1" }, { question1: "2-1" }];
+  const survey = new SurveyModel(json);
+  const vis = new VisualizationPanel(survey.getAllQuestions(), data);
+
+  let container = document.createElement("div");
+  vis.render(container);
+  const hideAction = container.querySelector(".sa-question__hide-action") as HTMLElement;
+  expect(hideAction).toBeNull();
+
+  const dragAreaElement = container.querySelector(".sa-question__drag-area") as HTMLElement;
+  expect(dragAreaElement).toBeNull();
 });

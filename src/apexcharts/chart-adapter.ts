@@ -1,0 +1,183 @@
+import ApexCharts from "apexcharts";
+import { ItemValue } from "survey-core";
+import { SelectBase } from "../selectBase";
+import { localization } from "../localizationManager";
+import { ApexChartsOptions, ApexChartsSetup } from "./setup";
+import { IChartAdapter, VisualizerBase } from "../visualizerBase";
+import { removeUndefinedProperties } from "../utils/utils";
+
+export const chartTypes = {
+  "boolean": ["pie", "doughnut", "bar"],
+  "number": ["gauge", "bullet"],
+  "average": ["gauge", "bullet"],
+  "selectBase": ["bar", "vbar", "pie", "doughnut"],
+  "histogram": ["vhistogram", "histogram"],
+  "matrix": ["bar", "stackedbar", "pie", "doughnut"],
+  "matrixDropdownGrouped": ["stackedbar", "bar", "pie", "doughnut"],
+  "pivot": ["vbar", "bar", "line", "stackedbar", "pie", "doughnut"], // ["vbar", "bar"];
+  "ranking": ["bar", "vbar", "pie", "doughnut", "radar"],
+};
+
+export class ApexChartsAdapter implements IChartAdapter {
+  private _chart: ApexCharts = undefined;
+  private _pieCharts: ApexCharts[] = undefined;
+
+  static getChartTypesByVisualizerType(vType: string): Array<string> {
+    return (chartTypes[vType] || []).slice();
+  }
+
+  private updatePieCharts(options: any, chartOptions: ApexChartsOptions, chartNode: HTMLElement): void {
+    if(this._pieCharts) {
+      this._pieCharts.forEach((chart) => chart.updateOptions(options));
+    } else {
+      chartNode.classList.add("sa-pie-charts");
+      this._pieCharts = chartOptions.series.map((s, i) => {
+        const chartDiv = document.createElement("div");
+        chartDiv.id = "sa-chart" + i;
+        chartDiv.classList.add("sa-pie-chart");
+        chartNode.appendChild(chartDiv);
+
+        const _options = Object.assign({}, options, {
+          series: s.series,
+          labels: s.labels
+        });
+        _options.title.text = s.title;
+
+        removeUndefinedProperties(_options);
+        const chart = new ApexCharts(chartDiv, _options);
+        return chart;
+      });
+      this._pieCharts.forEach((chart) => chart.render());
+    }
+  }
+
+  constructor(protected model: SelectBase | VisualizerBase) { }
+
+  protected patchConfigParameters(
+    chartNode: object,
+    options: object
+  ) { }
+
+  public get chart() {
+    return this._chart;
+  }
+
+  getChartTypes(): string[] {
+    const visualizerType = this.model.type;
+    const chartCtypes = chartTypes[visualizerType];
+    return (chartCtypes || []).slice();
+  }
+
+  public async create(chartNode: HTMLElement): Promise<any> {
+    const chartOptions = await this.update(chartNode);
+    const currentCharts = this._pieCharts || [this._chart];
+
+    if(this.model instanceof SelectBase) {
+    // Handle chart clicks
+      const _model = this.model as SelectBase;
+    }
+
+    return currentCharts;
+  }
+
+  public async update(chartNode: HTMLElement): Promise<ApexChartsOptions> {
+    const _chartType = (this.model as any).chartType;
+    const answersData = await this.model.getAnswersData();
+    var chartOptions = ApexChartsSetup.setup(_chartType, this.model, answersData as any);
+
+    if(this.model instanceof SelectBase && this.model.supportSelection) {
+      const _model = this.model as SelectBase;
+      chartOptions.chart.events = {
+        dataPointMouseEnter: function () { chartNode.style.cursor = "pointer"; },
+        dataPointMouseLeave: function () { chartNode.style.cursor = ""; },
+        dataPointSelection: function(event, chartContext, opts) {
+          if(opts.dataPointIndex !== undefined && opts.seriesIndex !== undefined) {
+            let itemText = "";
+            if(!chartOptions.hasSeries) {
+              itemText = config.labels[opts.dataPointIndex];
+              const item: ItemValue = _model.getSelectedItemByText(itemText);
+              _model.setSelection(item);
+            } else {
+              itemText = config.series[opts.seriesIndex].name;
+              const propertyLabel = config.labels[opts.dataPointIndex];
+
+              const seriesValues = _model.getSeriesValues();
+              const seriesLabels = _model.getSeriesLabels();
+              const propertyValue = seriesValues[seriesLabels.indexOf(propertyLabel)];
+              const selectedItem: ItemValue = _model.getSelectedItemByText(itemText);
+              const item = new ItemValue({ [propertyValue]: selectedItem.value }, propertyLabel + ": " + selectedItem.text);
+              _model.setSelection(item);
+            }
+          }
+
+          // The last parameter opts contains additional information like `seriesIndex` and `dataPointIndex` for cartesian charts
+          /*if (data.points.length > 0) {
+              let itemText = "";
+              if (!chartOptions.hasSeries) {
+                itemText = Array.isArray(data.points[0].customdata)
+                  ? data.points[0].customdata[0]
+                  : data.points[0].customdata;
+                const item: ItemValue = _model.getSelectedItemByText(itemText);
+                _model.setSelection(item);
+              } else {
+                itemText = data.points[0].data.name;
+                const propertyLabel = data.points[0].label;
+                // const seriesValues = this.model.getSeriesValues();
+                // const seriesLabels = this.model.getSeriesLabels();
+                // const propertyValue = seriesValues[seriesLabels.indexOf(propertyLabel)];
+                // const selectedItem: ItemValue = _model.getSelectedItemByText(itemText);
+                // const item = new ItemValue({ [propertyValue]: selectedItem.value }, propertyLabel + ": " + selectedItem.text);
+                // _model.setSelection(item);
+              }
+            }*/
+        }
+      };
+    }
+
+    let config: any = {
+      chart: {
+        ...chartOptions.chart,
+        locales: [{
+          name: localization.currentLocale,
+        }],
+        defaultLocale: localization.currentLocale
+      },
+      ...chartOptions
+    };
+
+    this.patchConfigParameters(chartNode, config);
+
+    let options = {
+      ...config
+    };
+    ApexChartsSetup.onChartCreating.fire(this.model, options);
+
+    if((_chartType === "pie" || _chartType === "doughnut") && chartOptions.series.length > 0 && typeof chartOptions.series[0] !== "number") {
+      this.updatePieCharts(options, chartOptions, chartNode);
+    } else {
+      const availableUpdateOptions = this._chart && !!this._chart["el"] && this._chart["el"].getRootNode() === document;
+      if(availableUpdateOptions) {
+        await this._chart.updateOptions({ series: options.series });
+      } else {
+        removeUndefinedProperties(options);
+        this._chart = new ApexCharts(chartNode, options);
+        await this._chart.render();
+      }
+    }
+
+    return chartOptions;
+  }
+
+  public destroy(node: HTMLElement): void {
+    if(this._chart) {
+      this._chart.destroy();
+      this._chart = undefined;
+    }
+    if(this._pieCharts) {
+      this._pieCharts.forEach(ch => ch.destroy());
+      this._pieCharts = undefined;
+    }
+  }
+}
+
+VisualizerBase.chartAdapterType = ApexChartsAdapter;

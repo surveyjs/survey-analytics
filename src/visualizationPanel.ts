@@ -1,18 +1,22 @@
 import { Event, Question, SurveyModel, surveyLocalization } from "survey-core";
 import { IsTouch } from "survey-core";
-import { VisualizerBase } from "./visualizerBase";
+import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 import { DocumentHelper, createCommercialLicenseLink } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, IState, IPermission } from "./config";
 import { FilterInfo } from "./filterInfo";
-import { LayoutEngine, MuuriLayoutEngine } from "./layoutEngine";
+import { LayoutEngine } from "./layout-engine";
 import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
-import "./visualizationPanel.scss";
 import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
+import { DatePeriodEnum, DateRangeWidget, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
+import { getDataName } from "./visualizerDescription";
+import { IDateRange, toRange } from "./utils/calculationDateRanges";
+import { DateRangeModel, IDateRangeChangedOptions } from "./utils/dateRangeModel";
+import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
 const questionLayoutedElementClassName = "sa-question-layouted";
@@ -275,6 +279,7 @@ export interface IVisualizationPanelOptions {
    * Default value: `true`
    */
   allowChangeVisualizerType?: boolean;
+  legendPosition?: "left" | "right" | "top" | "bottom";
 }
 
 /**
@@ -292,8 +297,30 @@ export interface IVisualizationPanelOptions {
  * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
  */
 export class VisualizationPanel extends VisualizerBase {
+  public static LayoutEngine: new (allowed: boolean, itemSelector: string, dragEnabled?: boolean) => LayoutEngine;
   public visualizers: Array<VisualizerBase> = [];
   private renderedQuestionsCount: number = 0;
+  private static counter = 0;
+  private resetFilterButton: HTMLElement;
+  private _dateRangeWidget: DateRangeWidget;
+  private _dateRangeModel: DateRangeModel;
+
+  private static getVisualizerName() {
+    VisualizationPanel.counter++;
+    return "visualizer" + VisualizationPanel.counter;
+  }
+
+  private updateResetFilterButtonDisabled() {
+    if(this.resetFilterButton) {
+      const buttonDisabledClass = "sa-toolbar__button--disabled";
+      if(this.dataProvider.getFilters().length == 0) {
+        this.resetFilterButton.classList.add(buttonDisabledClass);
+      } else {
+        this.resetFilterButton.classList.remove(buttonDisabledClass);
+      }
+    }
+  }
+
   constructor(
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
@@ -303,17 +330,6 @@ export class VisualizationPanel extends VisualizerBase {
   ) {
     super(null, data, options, "panel");
     this.loadingData = false;
-
-    this._layoutEngine =
-      options.layoutEngine ||
-      new MuuriLayoutEngine(
-        this.allowDynamicLayout,
-        "." + questionLayoutedElementClassName,
-        this.allowDragDrop
-      );
-    this._layoutEngine.onMoveCallback = (order: Array<string>) =>
-      this.reorderVisibleElements(order);
-
     this.showToolbar = isRoot;
     if(this.options.survey) {
       localization.currentLocale = this.options.survey.locale;
@@ -325,65 +341,63 @@ export class VisualizationPanel extends VisualizerBase {
 
     this.buildVisualizers(questions);
 
-    if(!this.haveCommercialLicense && this.isRoot) {
-      this.registerToolbarItem("commercialLicense", () => {
-        return createCommercialLicenseLink();
-      });
+    if(this.isRoot && this.options.dateFieldName) {
+      this.createDateRangeWidget();
     }
 
-    this._supportSelection = true;
-    if(this.supportSelection !== false) {
-      this.registerToolbarItem("resetFilter", () => {
-        return DocumentHelper.createButton(() => {
-          this.resetFilter();
-        }, localization.getString("resetFilter"));
-      }, 900);
+    this._layoutEngine =
+        options.layoutEngine ||
+        VisualizationPanel.LayoutEngine && new VisualizationPanel.LayoutEngine(
+          this.allowDynamicLayout && this.haveSeveralChildren,
+          "." + questionLayoutedElementClassName,
+          this.allowDragDrop
+        );
+    if(!!this._layoutEngine) {
+      this._layoutEngine.onMoveCallback = (order: Array<string>) => this.reorderVisibleElements(order);
     }
 
     this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
       if(this.allowHideQuestions) {
-        let addElementSelector: HTMLElement = undefined;
-        const addElementSelectorUpdater = (
-          panel: VisualizationPanel,
-          options: any
-        ) => {
-          const hiddenElements = this.hiddenElements;
-          const selectWrapper = DocumentHelper.createSelector(
-            [
-              <any>{
-                name: undefined,
-                displayName: localization.getString("addElement"),
-              },
-            ]
-              .concat(hiddenElements)
-              .map((element) => {
-                return {
-                  value: element.name,
-                  text: element.displayName,
-                };
-              }),
-            (option: any) => false,
-            (e: any) => {
-              this.showElement(e.target.value);
+        const allQuestions = this._elements.map((element) => {
+          return {
+            value: element.name,
+            text: element.displayName || element.name,
+            title: element.displayName || element.name,
+            icon: "check-24x24"
+          };
+        });
+        const selectWrapper = DocumentHelper.createActionDropdown({
+          options: allQuestions,
+          isSelected: (option: any) => this.hiddenElements.length === 0 || this.hiddenElements.filter(el => el.name === option.value).length === 0,
+          handler: (e: any) => {
+            if(!!e) {
+              const element = this.getElement(e);
+              if(!!element && element.isVisible) {
+                this.hideElement(e);
+              } else {
+                this.showElement(e);
+              }
+              return false;
             }
-          );
-          if(addElementSelector) {
-            toolbar.replaceChild(selectWrapper, addElementSelector);
-          }
-          addElementSelector = selectWrapper;
-
-          if(hiddenElements.length > 0) {
-            addElementSelector.style.display = undefined;
-          } else if(addElementSelector) {
-            addElementSelector.style.display = "none";
-          }
-        };
-        addElementSelectorUpdater(this, {});
-        this.onVisibleElementsChanged.add(addElementSelectorUpdater);
-        return addElementSelector;
+          },
+          title: localization.getString("allQuestions")
+        });
+        return selectWrapper;
       }
       return undefined;
-    });
+    }, "dropdown");
+
+    this._supportSelection = true;
+    if(this.supportSelection !== false) {
+      this.registerToolbarItem("resetFilter", () => {
+        this.resetFilterButton = DocumentHelper.createButton(() => {
+          this.resetFilter();
+        }, localization.getString("resetFilter"));
+        this.updateResetFilterButtonDisabled();
+        return this.resetFilterButton;
+      }, "button", 900);
+    }
+
     if(!this.options.disableLocaleSwitch && this.locales.length > 1) {
       const localeChoices = this.locales.map((element) => {
         return {
@@ -396,15 +410,26 @@ export class VisualizationPanel extends VisualizerBase {
       //   text: localization.getString("changeLocale"),
       // });
       this.registerToolbarItem("changeLocale", () => {
-        return DocumentHelper.createSelector(localeChoices,
-          (option: any) => !!option.value && (this.locale || surveyLocalization.defaultLocale) === option.value,
-          (e: any) => {
-            var newLocale = e.target.value;
+        return DocumentHelper.createDropdown({
+          options: localeChoices,
+          isSelected: (option: any) => !!option.value && (this.locale || surveyLocalization.defaultLocale) === option.value,
+          handler: (e: any) => {
+            var newLocale = e;
             this.locale = newLocale;
           }
-        );
-      });
+        });
+      }, "dropdown");
     }
+
+    // if(this.isRoot && !this.theme?.isAxisLabelFontLoaded()) {
+    //   document.fonts.ready.then((fontFaceSet: FontFaceSet) => {
+    //     setTimeout(() => {
+    //       if (this.theme?.isAxisLabelFontLoaded()) {
+    //         this.refresh();
+    //       }
+    //     }, 100);
+    //   });
+    // }
   }
 
   public resetFilter(): void {
@@ -417,6 +442,7 @@ export class VisualizationPanel extends VisualizerBase {
         visualizer.resetFilter();
       }
     });
+    this.updateResetFilterButtonDisabled();
   }
 
   reorderVisibleElements(order: string[]): void {
@@ -440,7 +466,7 @@ export class VisualizationPanel extends VisualizerBase {
     this.renderedQuestionsCount++;
     if(this.renderedQuestionsCount == this.visibleElements.length) {
       this.renderedQuestionsCount = 0;
-      this.layoutEngine.update();
+      this.layoutEngine?.update();
       this.afterRender(this.contentContainer);
     }
   };
@@ -476,7 +502,71 @@ export class VisualizationPanel extends VisualizerBase {
     this.onAlternativeVisualizerChanged.fire(sender, options);
   };
 
+  private createHideButtonElement(element: IVisualizerPanelRenderedElement) {
+    const hideElement = document.createElement("div");
+    hideElement.className = "sa-question__hide-action";
+    hideElement.title = localization.getString("hideButton");
+    hideElement.setAttribute("role", "button");
+    hideElement.setAttribute("tabindex", "0");
+    hideElement.appendChild(DocumentHelper.createSvgElement("close-16x16"));
+    hideElement.addEventListener("click", (e) => {
+      setTimeout(() => this.hideElement(element.name), 0);
+    });
+    hideElement.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        this.hideElement(element.name);
+      }
+    });
+    return hideElement;
+  }
+  private createDragAreaElement(element: IVisualizerPanelRenderedElement) {
+    const dragAreaElement = DocumentHelper.createElement("div");
+    dragAreaElement.className = "sa-question__drag-area";
+    if(this.allowDynamicLayout && this.allowDragDrop) {
+      dragAreaElement.classList.add("sa-question__header--draggable");
+
+      const svgElement = document.createElement("div");
+      svgElement.className = "sa-question__drag-area-icon";
+      svgElement.appendChild(DocumentHelper.createSvgElement("draghorizontal-24x16"));
+      dragAreaElement.appendChild(svgElement);
+    }
+
+    return dragAreaElement;
+  }
+
+  private createHeaderElement(element: IVisualizerPanelRenderedElement) {
+    const headerElement = DocumentHelper.createElement("div");
+    headerElement.className = "sa-question__header";
+
+    const hideElement = this.allowHideQuestions ? this.createHideButtonElement(element) : undefined;
+    if(this.haveSeveralChildren && this.allowDynamicLayout && this.allowDragDrop) {
+      const dragAreaElement = this.createDragAreaElement(element);
+      headerElement.appendChild(dragAreaElement);
+      if(hideElement) {
+        dragAreaElement.appendChild(hideElement);
+      }
+    } else if(this.haveSeveralChildren && hideElement) {
+      headerElement.appendChild(hideElement);
+    }
+
+    if(element.displayName) {
+      const titleElement = DocumentHelper.createElement("h3");
+      titleElement.innerText = element.displayName;
+      titleElement.id = "el_" + element.name;
+      titleElement.className = questionElementClassName + "__title";
+      if(this.allowDynamicLayout && this.allowDragDrop) {
+        titleElement.classList.add(questionElementClassName + "__title--draggable");
+      }
+      headerElement.appendChild(titleElement);
+    }
+    return headerElement;
+  }
+
   protected onDataChanged(): void {
+    if(this._dateRangeWidget) {
+      this.dataProvider.getCount().then(count => this._dateRangeWidget.updateAnswersCount(count));
+    }
   }
 
   protected showElementCore(element: IVisualizerPanelRenderedElement, elementIndex = -1): void {
@@ -489,7 +579,7 @@ export class VisualizationPanel extends VisualizerBase {
     if(elementIndex >= 0) {
       options = { index: elementIndex };
     }
-    this.layoutEngine.add([questionElement], options);
+    this.layoutEngine?.add([questionElement], options);
   }
 
   public showElement(elementName: string) {
@@ -502,7 +592,7 @@ export class VisualizationPanel extends VisualizerBase {
   protected hideElementCore(element: IVisualizerPanelRenderedElement) {
     element.isVisible = false;
     if(!!element.renderedElement) {
-      this.layoutEngine.remove([element.renderedElement]);
+      this.layoutEngine?.remove([element.renderedElement]);
       this.contentContainer.removeChild(element.renderedElement);
       element.renderedElement = undefined;
     }
@@ -511,6 +601,10 @@ export class VisualizationPanel extends VisualizerBase {
   public hideElement(elementName: string) {
     const element = this.getElement(elementName);
     this.hideElementCore(element);
+    const visualizer = this.getVisualizer(elementName);
+    if(!!visualizer && !!visualizer.getChartAdapter()) {
+      visualizer.getChartAdapter().destroy(element.renderedElement);
+    }
     this.visibleElementsChanged(element, "REMOVED");
   }
 
@@ -594,20 +688,12 @@ export class VisualizationPanel extends VisualizerBase {
       }
       let visualizer: VisualizerBase;
       if(Array.isArray(question)) {
-        visualizer = new (VisualizationManager.getPivotVisualizerConstructor() as any)(question, [], visualizerOptions, undefined, false);
+        visualizer = new (VisualizationManager.getPivotVisualizerConstructor() as any)(question, [], visualizerOptions, false);
       } else {
         visualizer = this.createVisualizer(question, visualizerOptions, []);
       }
       if(!visualizer) {
         return;
-      }
-
-      if(this.allowHideQuestions) {
-        visualizer.registerToolbarItem("removeQuestion", () => {
-          return DocumentHelper.createButton(() => {
-            setTimeout(() => this.hideElement(question.name), 0);
-          }, localization.getString("hideButton"));
-        }, 1000);
       }
 
       if(this.allowMakeQuestionsPrivate) {
@@ -636,7 +722,7 @@ export class VisualizationPanel extends VisualizerBase {
             doPrivate,
             state
           );
-        });
+        }, "button");
       }
 
       if(visualizer.supportSelection) {
@@ -648,14 +734,15 @@ export class VisualizationPanel extends VisualizerBase {
         visualizer.registerToolbarItem("questionFilterInfo", () => {
           filterInfo.update(visualizerWithSelection.selection);
           return filterInfo.htmlElement;
-        }, 900);
+        }, "filter", 900);
 
         visualizerWithSelection.onDataItemSelected = (
           selectedValue: any,
           selectedText: string
         ) => {
           filterInfo.update({ value: selectedValue, text: selectedText });
-          this.setFilter(question.name, selectedValue);
+          const dataName = getDataName(question);
+          this.setFilter(dataName, selectedValue);
         };
       }
 
@@ -698,7 +785,8 @@ export class VisualizationPanel extends VisualizerBase {
     });
     this.visualizers.forEach(v => {
       v.options.seriesLabels = this.options.seriesLabels;
-      v.locale = newLocale;
+      v["setLocale"](newLocale);
+      v.clear();
     });
     this.stateChanged("locale", newLocale);
   }
@@ -740,6 +828,10 @@ export class VisualizationPanel extends VisualizerBase {
     return this.options.allowMakeQuestionsPrivate === true;
   }
 
+  get haveSeveralChildren(): boolean {
+    return this._elements?.length > 1;
+  }
+
   private _layoutEngine: LayoutEngine;
   /**
    * Returns a [`LayoutEngine`](https://surveyjs.io/dashboard/documentation/api-reference/layoutengine) instance used to arrange visualization items on `VisualizationPanel`.
@@ -751,6 +843,10 @@ export class VisualizationPanel extends VisualizerBase {
   protected buildElements(questions: any[]): IVisualizerPanelElement[] {
     return (questions || []).map((question) => {
       question = Array.isArray(question) ? question[0] : question;
+      question = question.question || question;
+      if(!question.name) {
+        question.name = VisualizationPanel.getVisualizerName();
+      }
       return {
         name: question.name,
         displayName: this.getTitle(question),
@@ -831,7 +927,7 @@ export class VisualizationPanel extends VisualizerBase {
    * @param questionName A question [name](https://surveyjs.io/form-library/documentation/api-reference/question#name).
    */
   public getVisualizer(questionName: string) {
-    return this.visualizers.filter((v) => v.question.name === questionName)[0];
+    return this.visualizers.filter((v) => v.name === questionName)[0];
   }
 
   /**
@@ -899,6 +995,28 @@ export class VisualizationPanel extends VisualizerBase {
     any
   >();
 
+  public onDateRangeChanged = new Event<(sender: VisualizationPanel, options: IDateRangeChangedOptions) => any, VisualizationPanel, any>();
+  public createDateRangeWidget(): void {
+    const config = <IDateRangeWidgetOptions>{
+      datePeriod: this.options.datePeriod,
+      availableDatePeriods: this.options.availableDatePeriods,
+      dateRange: this.options.dateRange,
+      showAnswerCount: this.options.showAnswerCount,
+
+      onDateRangeChanged: (dateRange: IDateRange, datePeriod: DatePeriodEnum) => {
+        const options = <IDateRangeChangedOptions>{ datePeriod, dateRange };
+        this.onDateRangeChanged.fire(this, options);
+        this.dataProvider.setSystemFilter(this.options.dateFieldName, options.dateRange);
+      }
+    };
+    this._dateRangeModel = new DateRangeModel(config);
+    this.dataProvider.setSystemFilter(this.options.dateFieldName, this._dateRangeModel.currentDateRange);
+    if(this.options.showDatePanel !== false) {
+      this._dateRangeWidget = new DateRangeWidget(this._dateRangeModel, config);
+      this.dataProvider.getCount().then(count => this._dateRangeWidget.updateAnswersCount(count));
+    }
+  }
+
   protected visibleElementsChanged(
     element: IVisualizerPanelElement,
     reason: string
@@ -946,42 +1064,53 @@ export class VisualizationPanel extends VisualizerBase {
 
     const questionElement = DocumentHelper.createElement("div");
     questionElement.dataset.question = element.name;
+    questionElement.role = "group";
+    questionElement.setAttribute("aria-labelledby", "el_" + element.name);
 
     !!container && container.appendChild(questionElement);
 
     const questionContent = DocumentHelper.createElement("div");
-    const titleElement = DocumentHelper.createElement("h3");
     const vizualizerElement = DocumentHelper.createElement("div");
+    const headerElement = this.createHeaderElement(element);
 
-    titleElement.innerText = element.displayName;
-
-    questionElement.className = this.allowDynamicLayout
-      ? questionElementClassName + " " + questionLayoutedElementClassName
-      : questionElementClassName;
-    titleElement.className = questionElementClassName + "__title";
-    if(this.allowDynamicLayout && this.allowDragDrop) {
-      titleElement.className =
-        titleElement.className +
-        " " +
-        questionElementClassName +
-        "__title--draggable";
+    questionElement.className = questionElementClassName;
+    if(this.allowDynamicLayout && this.haveSeveralChildren) {
+      questionElement.classList.add(questionLayoutedElementClassName);
     }
     questionContent.className = questionElementClassName + "__content";
-    questionContent.style.backgroundColor = this.backgroundColor;
+    // questionContent.style.backgroundColor = this.backgroundColor;
 
-    questionContent.appendChild(titleElement);
+    questionContent.appendChild(headerElement);
     questionContent.appendChild(vizualizerElement);
     questionElement.appendChild(questionContent);
 
-    visualizer.render(vizualizerElement);
+    visualizer.render(vizualizerElement, false);
 
     element.renderedElement = questionElement;
     return questionElement;
   }
 
+  protected renderBanner(container: HTMLElement): void {
+    if(!this.haveCommercialLicense && this.isRoot) {
+      const banner = createCommercialLicenseLink();
+      container.appendChild(banner);
+    }
+    super.renderBanner(container);
+  }
+
   protected renderToolbar(container: HTMLElement) {
     container.className += " sa-panel__header";
     super.renderToolbar(container);
+
+    if(this.isRoot && this._dateRangeWidget) {
+      const divider = DocumentHelper.createElement("div", "sa-horizontal-divider");
+      const line = DocumentHelper.createElement("div", "sa-line");
+      divider.appendChild(line);
+      container.appendChild(divider);
+
+      const dateRangeWidgetElement = this._dateRangeWidget.render();
+      container.appendChild(dateRangeWidgetElement);
+    }
   }
 
   public renderContent(container: HTMLElement): void {
@@ -991,12 +1120,12 @@ export class VisualizationPanel extends VisualizerBase {
       let questionElement = this.renderPanelElement(element, container);
     });
 
-    this.layoutEngine.start(container);
+    this.layoutEngine?.start(container);
     // !!window && window.dispatchEvent(new UIEvent("resize"));
   }
 
   protected destroyContent(container: HTMLElement) {
-    this.layoutEngine.stop();
+    this.layoutEngine?.stop();
     super.destroyContent(container);
   }
 
@@ -1012,7 +1141,7 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   public layout() {
-    this.layoutEngine.update();
+    this.layoutEngine?.update();
   }
 
   /**
@@ -1036,6 +1165,7 @@ export class VisualizationPanel extends VisualizerBase {
         this.dataProvider.setFilter(this.dataPath, undefined);
       }
     }
+    this.updateResetFilterButtonDisabled();
   }
 
   public getState(): IState {
@@ -1065,21 +1195,29 @@ export class VisualizationPanel extends VisualizerBase {
     if(!newState) return;
     this._settingState = true;
     try {
-
       if(Array.isArray(newState.elements)) {
         const questionNames = this.questions.map(q => Array.isArray(q) ? q[0].name : q.name);
-        this._elements = [].concat(newState.elements.filter(e => (questionNames.indexOf(e.name) !== -1)));
+        const loadedElements = [].concat(newState.elements.filter(e => (questionNames.indexOf(e.name) !== -1)));
+
+        const newElements = [];
+        loadedElements.forEach(elementState => {
+          const visualizer = this.getVisualizer(elementState.name);
+          if(visualizer !== undefined) {
+            visualizer.setState(elementState);
+          }
+          newElements.push({
+            name: elementState.name,
+            displayName: elementState.displayName,
+            isVisible: elementState.isVisible,
+            isPublic: elementState.isPublic,
+          });
+        });
+        this._elements = newElements;
       }
 
-      if(typeof newState.locale !== "undefined")this.setLocale(newState.locale);
-
-      this._elements.forEach(elementState => {
-        const visualizer = this.getVisualizer(elementState.name);
-        if(visualizer !== undefined) {
-          visualizer.setState(elementState);
-        }
-      });
-
+      if(typeof newState.locale !== "undefined") {
+        this.setLocale(newState.locale);
+      }
     } finally {
       this._settingState = false;
     }
@@ -1120,12 +1258,23 @@ export class VisualizationPanel extends VisualizerBase {
       this.onPermissionsChangedCallback(this);
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
-    return [];
+  protected getCalculatedValuesCore(): ICalculationResult {
+    return {
+      data: [],
+      values: []
+    };
+  }
+
+  protected onThemeChanged(): void {
+    super.onThemeChanged();
+    this.visualizers.forEach(v => {
+      v.theme = this.theme;
+    });
   }
 
   destroy() {
     super.destroy();
     this.destroyVisualizers();
+    this._dateRangeWidget?.destroy();
   }
 }
