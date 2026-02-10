@@ -4,11 +4,6 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 resources:
-  repositories:
-    - repository: EmptyRepo
-      type: github
-      endpoint: github.com_surveyjsdeveloper
-      name: surveyjs/azure-pipelines-repo-dont-remove-please
   pipelines:
     - pipeline: LibraryMain
       source: Library Main
@@ -31,10 +26,6 @@ pool:
 
 steps:
   - checkout: self
-  - checkout: EmptyRepo
-    persistCredentials: true
-    clean: true
-    fetchDepth: 1
 
   - download: LibraryMain
     artifact: SurveyJSLibraryBuildCore
