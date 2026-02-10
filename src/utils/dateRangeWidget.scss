@@ -1,3 +1,5 @@
+@use "../typography-mixins.scss" as *;
+
 .sa-date-range {
   display: flex;
   align-items: center;
@@ -95,12 +97,7 @@
 .sa-date-range_include-today-caption-text {
   color: var(--sjs2-color-fg-basic-primary, #1c1b20);
 
-  /* sjs2/typography/default */
-  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default;
 }
 
 .sa-date-range_dropdown {
@@ -137,12 +134,7 @@
   flex: 1 0 0;
   color: var(--sjs2-color-control-message-error-text, #1C1B20);
 
-  /* sjs2/typography/default */
-  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default;
 }
 
 .sa-date-range--invalid .sa-range-error {
@@ -177,12 +169,7 @@
   border: none;
   outline: none;
 
-  /* sjs2/typography/default */
-  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default;
 }
 
 .sa-vertical-divider {
@@ -237,10 +224,5 @@
 .sa-count_text {
   color: var(--sjs2-color-fg-basic-primary, #1C1B20);
 
-  /* sjs2/typography/default-strong */
-  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 600;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default-strong;
 }

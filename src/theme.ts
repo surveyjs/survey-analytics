@@ -135,7 +135,7 @@ export class DashboardTheme implements IDashboardTheme {
   }
 
   public get defaultFontFamily() {
-    return this.getCssVariableValue("--sjs2-typography-font-family-default") || DashboardTheme.fontFamily;
+    return this.getCssVariableValue("--sjs2-typography-font-family-text") || DashboardTheme.fontFamily;
   }
 
   public get backgroundColor(): string {
@@ -207,7 +207,7 @@ export class DashboardTheme implements IDashboardTheme {
 
   public get tooltipFont(): FontSettings {
     return <FontSettings>{
-      color: this.getCssVariableValue("--sjs2-color-fg-neutral-primary"),
+      color: this.getCssVariableValue("--sjs2-color-fg-neutral-on-primary"),
       family: this.defaultFontFamily,
       size: this.getCssVariableValue("--sjs2-typography-font-size-small", true),
       weight: 400

@@ -1,3 +1,5 @@
+@use "../typography-mixins.scss" as *;
+
 .sa-toggle-container {
   display: flex;
   gap: var(--sjs2-spacing-x100, 8px);
@@ -90,12 +92,7 @@
   flex: 1 0 0;
   color: var(--sjs2-color-fg-basic-primary, #1C1B20);
 
-  /* sjs2/typography/default */
-  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default;
 
   @media screen and (max-width: 600px) {
     flex: unset;

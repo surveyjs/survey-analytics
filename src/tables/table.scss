@@ -1,6 +1,7 @@
 @use "../globals" as *;
 @forward "../globals";
 @use "../utils/utils.scss" as *;
+@use "../typography-mixins.scss" as *;
 
 $main-color: var(--main-color, #1ab394);
 $background-color: #ffffff;
@@ -17,10 +18,6 @@ $background-gray: #f7f7f7;
 $text-color: var(--text-color, #404040);
 $text-color-inverse: var(--text-color-inverse, #fff);
 $detail-color: $background-gray;
-
-$font-family: var(--font-family, "Segoe UI", SegoeUI, Arial, sans-serif);
-$font-family-secondary: var(--font-family-secondary, Raleway, Arial, sans-serif);
-$root-font-size: var(--root-font-size, 14px);
 
 @mixin arrow() {
   display: inline-block;
@@ -86,8 +83,7 @@ $root-font-size: var(--root-font-size, 14px);
 }
 
 .sa-table {
-  font-size: $root-font-size;
-  font-family: $font-family;
+  @include sjs2--typography--default;
 
   button {
     cursor: pointer;
@@ -128,12 +124,7 @@ $root-font-size: var(--root-font-size, 14px);
     padding: var(--sjs2-spacing-x200, 16px) var(--sjs2-spacing-x300, 24px);
 
     color: var(--sjs2-color-fg-basic-primary, #1C1B20);
-    /* sjs2/typography/default-strong */
-    font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-    font-size: var(--sjs2-typography-font-size-default, 16px);
-    font-style: normal;
-    font-weight: 600;
-    line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+    @include sjs2--typography--default-strong;
   }
 
   td:first-child {
@@ -149,10 +140,9 @@ $root-font-size: var(--root-font-size, 14px);
 }
 
 .sa-table__btn {
+  @include sjs2--typography--default-strong;
   height: 34px;
   width: 154px;
-  font-size: $root-font-size;
-  font-weight: bold;
   background-color: transparent;
   box-sizing: border-box;
   border: solid 2px;
@@ -232,12 +222,7 @@ a.sa-table__btn {
   color: var(--sjs2-color-fg-basic-primary, #1C1B20);
   flex: 1 0 0;
 
-  /* sjs2/typography/default-strong */
-  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 600;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default-strong;
 }
 
 .sa-table-filter {
@@ -283,12 +268,7 @@ a.sa-table__btn {
   color: var(--sjs2-color-control-input-default-value, #1C1B20);
   text-overflow: ellipsis;
 
-  /* sjs2/typography/default */
-  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default;
 
   &::placeholder {
     overflow: hidden;
@@ -365,12 +345,7 @@ a.sa-table__btn {
   color: var(--dsb-table-view-column-search-text-color, rgba(0, 0, 0, 0.50));
   text-overflow: ellipsis;
 
-  /* ctr/Default */
-  font-family: $font-family;
-  font-size: var(--ctr-font-default-size, 16px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: var(--ctr-font-default-line-height, 24px); /* 150% */
+  @include sjs2--typography--default;
 }
 
 .sa-table__filter.sa-table__filter:focus {
@@ -408,15 +383,9 @@ a.sa-table__btn {
 }
 
 .sa-table__entries-label {
-  // font-weight: bold;
   color: var(--sjs2-color-fg-basic-primary, #1C1B20);
 
-  /* sjs2/typography/default */
-  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default;
 }
 
 .sa-table__entries-value .sa-action-dropdown-list {

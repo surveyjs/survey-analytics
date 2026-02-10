@@ -1,4 +1,5 @@
 @use "./table.scss" as *;
+@use "../typography-mixins.scss" as *;
 
 @mixin doubleArrow() {
   display: inline-block;
@@ -95,12 +96,7 @@
     color: var(--sjs2-color-fg-brand-primary, #19B394);
     text-align: center;
 
-    /* sjs2/typography/default-strong */
-    font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-    font-size: var(--sjs2-typography-font-size-default, 16px);
-    font-style: normal;
-    font-weight: 600;
-    line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+    @include sjs2--typography--default-strong;
   }
 }
 
@@ -188,12 +184,7 @@
       color: var(--sjs2-color-fg-basic-tertiary, rgba(28, 27, 32, 0.40));
       text-align: center;
 
-      /* sjs2/typography/default-strong */
-      font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-      font-size: var(--sjs2-typography-font-size-default, 16px);
-      font-style: normal;
-      font-weight: 600;
-      line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+      @include sjs2--typography--default-strong;
 
       &:hover {
         border-radius: var(--_ctr-survey-action-button-corner-radius, 8px);
@@ -237,12 +228,7 @@
     color: var(--sjs2-color-fg-basic-primary, #1C1B20);
     text-align: center;
 
-    /* sjs2/typography/default-strong */
-    font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-    font-size: var(--sjs2-typography-font-size-default, 16px);
-    font-style: normal;
-    font-weight: 600;
-    line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+    @include sjs2--typography--default-strong;
 
     &:hover {
       cursor: default;
@@ -264,12 +250,7 @@
       border-right: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
 
       color: var(--sjs2-color-fg-basic-primary, #1C1B20);
-      /* sjs2/typography/default */
-      font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-      font-size: var(--sjs2-typography-font-size-default, 16px);
-      font-style: normal;
-      font-weight: 400;
-      line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+      @include sjs2--typography--default;
 
       &.sa-tabulator-cell__action-details {
         padding: var(--sjs2-spacing-x100, 8px);

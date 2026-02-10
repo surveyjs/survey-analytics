@@ -1,5 +1,6 @@
 @use "globals" as *;
 @use "./utils/utils.scss" as *;
+@use "./typography-mixins.scss" as *;
 
 .sa-panel__header,
 .sa-pivot__header {
@@ -37,7 +38,6 @@
   gap: var(--sjs2-spacing-x300, 24px);
   margin-top: var(--sjs2-spacing-x300, 24px);
 }
-
 
 .sa-grid {
   position: relative;
@@ -95,13 +95,7 @@
   margin: 0;
   padding-bottom: var(--sjs2-spacing-x200, 16px);
   color: var(--sjs2-color-fg-basic-primary, #1c1b20);
-
-  /* sjs2/typography/default-strong */
-  font-family: $font-family;
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 600;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default-strong;
 
   @media screen and (max-width: 600px) {
     padding-inline-end: 40px;
@@ -258,12 +252,7 @@
   text-align: center;
   padding: var(--sjs2-layout-control-action-small-label-vertical, 0) var(--sjs2-layout-control-action-small-label-horizontal, 8px);
 
-  /* sjs2/typography/default-strong */
-  font-family: $font-family;
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 600;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default-strong;
 }
 
 .sa-toolbar__button-icon {
@@ -398,12 +387,7 @@
   color: var(--sjs2-color-fg-basic-primary, #1c1b20);
   text-align: center;
 
-  /* sjs2/typography/default */
-  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default;
 }
 
 /* latin-ext */

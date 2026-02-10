@@ -1,10 +1,12 @@
+@use "../typography-mixins.scss" as *;
+
 .sa-visualizer {
   .apexcharts-tooltip.apexcharts-tooltip {
     padding: var(--sjs2-spacing-x075, 6px) var(--sjs2-spacing-x150, 12px);
     border-radius: var(--sjs2-radius-container-tooltip, 4px);
     border-color: var(--sjs2-color-bg-neutral-primary, #1C1B20);
     background: var(--sjs2-color-bg-neutral-primary, #1C1B20);
-    color: var(--sjs2-color-fg-neutral-primary, #FFF);
+    color: var(--sjs2-color-fg-neutral-on-primary, #FFF);
 
     .apexcharts-tooltip-title {
       display: none;
@@ -62,12 +64,7 @@
     color: var(--sjs2-color-fg-basic-primary, #1C1B20);
     background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
 
-    /* sjs2/typography/default */
-    font-family: var(--sjs2-typography-font-family-default, "Open Sans", "Segoe UI", SegoeUI, Arial, sans-serif);
-    font-size: var(--sjs2-typography-font-size-default, 16px);
-    font-style: normal;
-    font-weight: 400;
-    line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+    @include sjs2--typography--default;
 
     &:hover {
       background-color: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.1));

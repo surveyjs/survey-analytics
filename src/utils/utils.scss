@@ -1,5 +1,6 @@
 @use "../globals" as *;
 @forward "../globals";
+@use "../typography-mixins.scss" as *;
 
 .sa-commercial {
   box-sizing: border-box;
@@ -55,12 +56,7 @@
   user-select: none;
   color: var(--sjs2-color-fg-basic-primary, #1C1B20);
 
-  /* sjs2/typography/default-strong */
-  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 600;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default-strong;
 }
 
 .sa-dropdown {
@@ -144,12 +140,7 @@
   color: var(--sjs2-color-fg-basic-secondary, rgba(28, 27, 32, 0.60));
   text-overflow: ellipsis;
 
-  /* sjs2/typography/default */
-  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default;
 }
 
 .sa-dropdown-list,
@@ -241,12 +232,7 @@
   color: var(--sjs2-color-fg-basic-primary, #1C1B20);
   background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
 
-  /* sjs2/typography/default */
-  font-family: $font-family;
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default;
 
   &:hover {
     background-color: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
@@ -307,12 +293,7 @@
   background-color: var(--sjs2-color-bg-brand-primary, #19B394);
   color: var(--sjs2-color-fg-static-main-primary, #FFF);
 
-  /* sjs2/typography/default-strong */
-  font-family: $font-family;
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 600;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default-strong;
 }
 
 .sa-dropdown-placeholder {
@@ -320,12 +301,7 @@
   color: var(--sjs2-color-control-input-default-placeholder, rgba(28, 27, 32, 0.60));
   text-overflow: ellipsis;
 
-  /* sjs2/typography/default */
-  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default;
 }
 
 .sa-dropdown-icon {
@@ -353,12 +329,7 @@
   text-overflow: ellipsis;
   color: var(--sjs2-color-control-input-default-value, #1C1B20);
 
-  /* sjs2/typography/default */
-  font-family: $font-family;
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default;
 }
 
 .sa-action-dropdown-header {
@@ -446,12 +417,7 @@
   color: var(--sjs2-color-fg-brand-primary, #19B394);
   text-align: center;
 
-  /* sjs2/typography/default-strong */
-  font-family: var(--sjs2-typography-font-family-default, "Open Sans");
-  font-size: var(--sjs2-typography-font-size-default, 16px);
-  font-style: normal;
-  font-weight: 600;
-  line-height: var(--sjs2-typography-line-height-default, 24px); /* 150% */
+  @include sjs2--typography--default-strong;
 
   &:hover {
     background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
