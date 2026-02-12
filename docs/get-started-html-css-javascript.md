@@ -7,9 +7,14 @@ description: Learn how to add SurveyJS Dashboard to your JavaScript application 
 
 This step-by-step tutorial will help you get started with SurveyJS Dashboard in an application built with HTML, CSS, and JavaScript (without frontend frameworks). As a result, you will create a dashboard displayed below:
 
+<details>
+  <summary>View Live Example</summary>
+
 <iframe src="/proxy/github/code-examples/get-started-analytics/html-css-js/index.html"
     style="width:100%; border:0; border-radius: 4px; overflow:hidden;"
 ></iframe>
+
+</details>
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/html-css-js (linkStyle))
 
