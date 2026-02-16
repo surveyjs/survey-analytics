@@ -9,6 +9,10 @@ resources:
       type: github
       endpoint: github.com_surveyjsdeveloper
       name: surveyjs/service
+    - repository: SiteData
+      type: github
+      endpoint: github.com_surveyjsdeveloper
+      name: surveyjs/surveyjs-site-data
     - repository: Utils
       type: github
       endpoint: github.com_surveyjsdeveloper
@@ -39,6 +43,10 @@ steps:
   - checkout: self
     persistCredentials: true
   - checkout: Service
+    persistCredentials: true
+    clean: true
+    fetchDepth: 1
+  - checkout: SiteData
     persistCredentials: true
     clean: true
     fetchDepth: 1
@@ -205,6 +213,34 @@ steps:
       git merge -X ours origin/master
       git push origin master
     displayName: "Git surveyjs/service push updated docs"
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/docs"
+      Contents: |
+        classes.json
+        pmes.json
+        surveyjs_definition.json
+      TargetFolder: "$(Build.SourcesDirectory)/surveyjs-site-data/DocsAnalytics"
+      OverWrite: true
+      CleanTargetFolder: false
+    displayName: "Copy generated docs to the local surveyjs-site-data repo"
+
+  - powershell: |
+      cd $(Build.SourcesDirectory)/surveyjs-site-data
+      $env:GIT_REDIRECT_STDERR = '2>&1'
+      git config --global user.email "surveyjs.org@gmail.com"
+      git config --global user.name "surveyjsdeveloper"
+      git pull origin master
+      git merge -X ours origin/master
+      git fetch origin master --tags --force
+      git checkout master
+      git add DocsAnalytics
+      git commit -m "updated survey-analytics docs [azurepipelines skip]"
+      git pull origin master
+      git merge -X ours origin/master
+      git push origin master
+    displayName: "Git surveyjs-site-data push updated docs for $(CurrentBranch)"
   # - powershell: |
   #     cd $(Build.SourcesDirectory)/service
   #     git pull origin V2
