@@ -70,7 +70,7 @@
 .sa-question-layouted {
   overflow: visible;
   position: absolute;
-  // width: calc(100% - var(--sjs2-spacing-x300, 24px) * 2);
+  width: 100%;
   margin-inline-start: var(--sjs2-spacing-x300, 24px);
   margin-top: var(--sjs2-spacing-x300, 24px);
   border-radius: var(--sjs2-radius-container-panel, 16px);
@@ -78,12 +78,12 @@
   box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
 
   @media screen and (min-width: 1400px) {
-    // width: calc(50% - var(--sjs2-spacing-x300, 24px) * 1.5);
+    width: calc(50% - var(--sjs2-spacing-x300, 24px) - 1px);
   }
   @media screen and (max-width: 600px) {
     margin-inline-start: var(--sjs2-spacing-x150, 12px);
     margin-top: var(--sjs2-spacing-x150, 12px);
-    // width: calc(100% - var(--sjs2-spacing-x150, 12px) * 2);
+    width: 100%;
   }
 }
 
