@@ -7,7 +7,7 @@ description: Dashboard is an open-source JavaScript libtaty that simplifies surv
 
 SurveyJS Dashboard visualizes survey results and allows users to analyze them.
 
-![SurveyJS Dashboard](images/survey-analytics-overview.png)
+<img src="images/survey-analytics-overview.png" alt="SurveyJS Dashboard" width="1024" height="658">
 
 ## Features
 

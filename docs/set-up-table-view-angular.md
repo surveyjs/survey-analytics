@@ -15,9 +15,14 @@ This step-by-step tutorial will help you set up a Table View for survey results 
 
 As a result, you will create the following view:
 
+<details>
+  <summary>View Live Example</summary>
+
 <iframe src="/proxy/github/code-examples/dashboard-table-view/html-css-js/index.html"
     style="width:100%; border:0; border-radius: 4px; overflow:hidden;"
 ></iframe>
+
+</details>
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/dashboard-table-view/angular (linkStyle))
 

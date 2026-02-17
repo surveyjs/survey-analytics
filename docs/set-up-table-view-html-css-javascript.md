@@ -7,9 +7,14 @@ description: Convert your survey data to manageable table format for easy filter
 
 This step-by-step tutorial will help you set up a Table View for survey results using SurveyJS Dashboard an application built with HTML, CSS, and JavaScript (without frontend frameworks). As a result, you will create the view displayed below:
 
+<details>
+  <summary>View Live Example</summary>
+
 <iframe src="/proxy/github/code-examples/dashboard-table-view/html-css-js/index.html"
     style="width:100%; border:0; border-radius: 4px; overflow:hidden;"
 ></iframe>
+
+</details>
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/dashboard-table-view/html-css-js (linkStyle))
 
@@ -18,7 +23,7 @@ This step-by-step tutorial will help you set up a Table View for survey results 
 SurveyJS Dashboard depends on other JavaScript libraries. Reference them on your page in the following order:
 
 1. Survey Core       
-A platform-independent part of [SurveyJS Form Library](https://surveyjs.io/form-library/documentation/overview) that works with the survey model. SurveyJS Dashboard requires only this part, but if you also display the survey on the page, reference [the rest of the SurveyJS Form Library resources](/Documentation/Library?id=get-started--html-css-javascript#link-surveyjs-resources) as well.
+A platform-independent part of [SurveyJS Form Library](https://surveyjs.io/form-library/documentation/overview) that works with the survey model. SurveyJS Dashboard requires only this part, but if you also display the survey on the page, reference [the rest of the SurveyJS Form Library resources](/Documentation/Library?id=get-started-html-css-javascript#link-surveyjs-resources) as well.
 
 1. *(Optional)* <a href="https://github.com/parallax/jsPDF#readme" target="_blank">jsPDF</a>, <a href="https://github.com/JonatanPe/jsPDF-AutoTable#readme" target="_blank">jsPDF-AutoTable</a>, and <a href="https://sheetjs.com/" target="_blank">SheetJS</a>       
 Third-party libraries that enable users to export survey results to a PDF or XLSX document. Export to CSV is supported out of the box.
