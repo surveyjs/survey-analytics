@@ -35,6 +35,7 @@ trigger:
   tags:
     exclude:
       - v*.*.*
+pr: none
 
 pool:
   vmImage: "Ubuntu-22.04"
@@ -227,20 +228,21 @@ steps:
     displayName: "Copy generated docs to the local surveyjs-site-data repo"
 
   - powershell: |
+      $branch = "V3"
       cd $(Build.SourcesDirectory)/surveyjs-site-data
       $env:GIT_REDIRECT_STDERR = '2>&1'
       git config --global user.email "surveyjs.org@gmail.com"
       git config --global user.name "surveyjsdeveloper"
-      git pull origin master
-      git merge -X ours origin/master
-      git fetch origin master --tags --force
-      git checkout master
+      git pull origin $branch
+      git merge -X ours origin/$branch
+      git fetch origin $branch --tags --force
+      git checkout $branch
       git add DocsAnalytics
       git commit -m "updated survey-analytics docs [azurepipelines skip]"
-      git pull origin master
-      git merge -X ours origin/master
-      git push origin master
-    displayName: "Git surveyjs-site-data push updated docs for $(CurrentBranch)"
+      git pull origin $branch
+      git merge -X ours origin/$branch
+      git push origin $branch
+    displayName: "Git surveyjs-site-data push updated docs for V3"
   # - powershell: |
   #     cd $(Build.SourcesDirectory)/service
   #     git pull origin V2
