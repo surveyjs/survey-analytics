@@ -1,0 +1,303 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+resources:
+  repositories:
+    - repository: Service # The name used to reference this repository in the checkout step
+      type: github
+      endpoint: github.com_surveyjsdeveloper
+      name: surveyjs/service
+    - repository: SiteData
+      type: github
+      endpoint: github.com_surveyjsdeveloper
+      name: surveyjs/surveyjs-site-data
+    - repository: Utils
+      type: github
+      endpoint: github.com_surveyjsdeveloper
+      name: surveyjs/survey-utils
+  pipelines:
+    - pipeline: LibraryMain
+      source: Library Main
+      trigger: true
+
+variables:
+  npm_config_cache: $(Pipeline.Workspace)/.npm
+  CurrentBranch: $(Build.SourceBranchName)
+  ProjectId: "d79f2855-7b94-4261-9daf-4cace0a06c03"
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+  tags:
+    exclude:
+      - v*.*.*
+
+pool:
+  vmImage: "Ubuntu-22.04"
+
+steps:
+  - checkout: self
+    persistCredentials: true
+  - checkout: Service
+    persistCredentials: true
+    clean: true
+    fetchDepth: 1
+  - checkout: SiteData
+    persistCredentials: true
+    clean: true
+    fetchDepth: 1
+  - checkout: Utils
+    persistCredentials: true
+    clean: true
+    fetchDepth: 1
+  - download: LibraryMain
+    artifact: SurveyJSLibraryBuildCore
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "18.x"
+    displayName: "Install Node.js"
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/"
+      Contents: "package.json"
+      TargetFolder: "$(Build.SourcesDirectory)/Temp/"
+      OverWrite: true
+    displayName: "Copy package.json for cache key"
+
+  - task: Cache@2
+    inputs:
+      key: "npm-cache-analytics | $(Build.SourcesDirectory)/Temp/package.json"
+      path: $(Build.SourcesDirectory)/survey-analytics/node_modules
+      cacheHitVar: NPM_CACHE_RESTORED
+    displayName: Cache NPM
+
+  - powershell: |
+      $env:GIT_REDIRECT_STDERR = '2>&1'
+      git config --global user.email "surveyjs.org@gmail.com"
+      git config --global user.name "surveyjsdeveloper"
+    displayName: "Set up Git config"
+
+  - task: Npm@1
+    displayName: "NPM install"
+    inputs:
+      command: custom
+      customCommand: install --legacy-peer-deps
+      verbose: false
+      workingDir: $(Build.SourcesDirectory)/survey-analytics
+    condition: ne(variables.NPM_CACHE_RESTORED, 'true')
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm run lint
+    displayName: "run lint command"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm run pwinst
+    displayName: "Install chrome playwright"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics/node_modules
+      rm -rf survey-core
+    displayName: "remove survey-core symlink from node_modules"
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(Pipeline.Workspace)/LibraryMain/SurveyJSLibraryBuildCore/packages/survey-core"
+      Contents: "**"
+      TargetFolder: "$(Build.SourcesDirectory)/survey-analytics/node_modules/survey-core"
+      OverWrite: true
+
+  # npm run release with version
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(Pipeline.Workspace)/LibraryMain/SurveyJSLibraryBuildCore/"
+      Contents: "version.txt"
+      TargetFolder: "$(Build.SourcesDirectory)/"
+      OverWrite: true
+    displayName: "Copy Build Artifact - SurveyJSVersion File"
+
+  - powershell: |
+      $version = Get-Content $(Build.SourcesDirectory)/version.txt
+      Write-Host "##vso[task.setvariable variable=SurveyJSVersion;]$version"
+    displayName: "setup SurveyJSVersion variable from SurveyJSVersionFile"
+
+  - powershell: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm run release -- --release-as $(SurveyJSVersion)
+    displayName: "npm run release specific version"
+  #####################################################
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm run build:all
+    displayName: "NPM build"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm run build:types:summary:core
+      npm run build:types:summary
+      npm run build:types:tabulator
+    displayName: "NPM build typings"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm test
+    displayName: "Run unit tests"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm run e2e:ci
+    displayName: "Run E2E tests"
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: Cobertura # or JaCoCo
+      summaryFileLocation: "$(System.DefaultWorkingDirectory)/**/*coverage.xml"
+      reportDirectory: "$(System.DefaultWorkingDirectory)/**/coverage"
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: "$(Build.SourcesDirectory)/survey-analytics/test-results"
+      ArtifactName: "e2e"
+      publishLocation: "Container"
+    condition: always()
+    displayName: "Publish E2E artifacts"
+
+  - task: PublishTestResults@2
+    displayName: "Publish e2e test results"
+    inputs:
+      searchFolder: "$(Build.SourcesDirectory)/survey-analytics/test-results"
+      testResultsFormat: "JUnit"
+      testResultsFiles: "e2e-junit-results.xml"
+      mergeTestResults: true
+      failTaskOnFailedTests: true
+      testRunTitle: "Publish E2E test results"
+    condition: succeededOrFailed()
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      npm run doc:gen
+    displayName: "Generate docs"
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/docs"
+      Contents: |
+        classes.json
+        pmes.json
+        surveyjs_definition.json
+      TargetFolder: "$(Build.SourcesDirectory)/service/surveyjs.io/App_Data/DocsAnalytics"
+      OverWrite: true
+      CleanTargetFolder: false
+    displayName: "Copy generated docs to the local surveyjs/service repo"
+
+  # read about the problem with git output ($env:GIT_REDIRECT_STDERR = '2>&1') :
+  # https://github.com/microsoft/azure-pipelines-yaml/issues/248
+  # https://stackoverflow.com/questions/58485585/azure-pipeline-powershell-and-git-on-windows-server-2019-gives-error-in-output
+  - powershell: |
+      cd $(Build.SourcesDirectory)/service
+      git pull origin master
+      git merge -X ours origin/master
+      git fetch origin master --tags --force
+      git checkout master
+      git add surveyjs.io/App_Data/DocsAnalytics
+      git commit -m "updated survey-analytics docs [azurepipelines skip]"
+      git pull origin master
+      git merge -X ours origin/master
+      git push origin master
+    displayName: "Git surveyjs/service push updated docs"
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/docs"
+      Contents: |
+        classes.json
+        pmes.json
+        surveyjs_definition.json
+      TargetFolder: "$(Build.SourcesDirectory)/surveyjs-site-data/DocsAnalytics"
+      OverWrite: true
+      CleanTargetFolder: false
+    displayName: "Copy generated docs to the local surveyjs-site-data repo"
+
+  - powershell: |
+      cd $(Build.SourcesDirectory)/surveyjs-site-data
+      $env:GIT_REDIRECT_STDERR = '2>&1'
+      git config --global user.email "surveyjs.org@gmail.com"
+      git config --global user.name "surveyjsdeveloper"
+      git pull origin main
+      git merge -X ours origin/main
+      git fetch origin main --tags --force
+      git checkout main
+      git add DocsAnalytics
+      git commit -m "updated survey-analytics docs [azurepipelines skip]"
+      git pull origin main
+      git merge -X ours origin/main
+      git push origin main
+    displayName: "Git surveyjs-site-data push updated docs for $(CurrentBranch)"
+  # - powershell: |
+  #     cd $(Build.SourcesDirectory)/service
+  #     git pull origin V2
+  #     git fetch origin V2 --tags --force
+  #     git checkout V2
+  #     git add surveyjs.io/App_Data/DocsAnalytics
+  #     git commit -m "updated survey-analytics V2 docs [azurepipelines skip]"
+  #     git pull origin V2
+  #     git push origin V2
+  #   displayName: "git surveyjs/service push updated V2 docs"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-utils
+      npm install
+    displayName: "NPM install survey-utils"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-utils
+      npm run build
+    displayName: "survey-utils build"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/survey-utils
+      node ./dist/translateAnalytics.js
+    displayName: "survey-utils translate analytics"
+
+  - powershell: |
+      cd $(Build.SourcesDirectory)/survey-analytics
+      $env:GIT_REDIRECT_STDERR = '2>&1'
+      git config --global user.email "surveyjs.org@gmail.com"
+      git config --global user.name "surveyjsdeveloper"
+      git pull origin master
+      git fetch origin master --tags --force
+      git checkout master
+      git add src/analytics-localization
+      git commit -m "updated survey-analytics translation [azurepipelines skip]"
+      git pull origin master
+      git push origin master
+    displayName: "Analytics - push updated translation to github"
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/docs"
+      Contents: |
+        surveyjs_definition.json
+      TargetFolder: "$(Build.SourcesDirectory)/survey-analytics/build"
+      OverWrite: true
+      CleanTargetFolder: false
+    displayName: "put surveyjs_definition.json into build"
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/build"
+      targetFolder: $(Build.ArtifactStagingDirectory)/SurveyJSAnalyticsBuild/packages/survey-analytics
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)/SurveyJSAnalyticsBuild/"
+      ArtifactName: "SurveyJSAnalyticsBuild"
+      publishLocation: "Container"
