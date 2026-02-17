@@ -7,9 +7,9 @@ export class VisualizationComposite extends VisualizationPanelDynamic {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "composite");
+    super(question, data, options, type || "composite");
   }
 
   getQuestions(): Array<Question> {

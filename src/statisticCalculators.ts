@@ -1,7 +1,7 @@
 import { DataProvider } from "./dataProvider";
-import { IDataInfo } from "./visualizerBase";
+import { ICalculatedDataInfo, ICalculationResult, IDataInfo } from "./visualizerBase";
 
-export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo): Array<any> {
+export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo): ICalculationResult {
   const dataNames = dataInfo.dataNames;
   const statistics: Array<Array<Array<number>>> = [];
 
@@ -71,7 +71,7 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
   };
 
   data.forEach((dataRow: any) => {
-    const nestedDataRows = getNestedDataRows(dataRow, dataInfo);
+    const nestedDataRows = getNestedDataRows(dataRow, dataInfo.dataPath);
     nestedDataRows.forEach(nestedDataRow => {
       dataNames.forEach((dataName, index) => {
         processDataRow(nestedDataRow, dataName, index);
@@ -79,10 +79,14 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
     });
   });
 
-  return dataInfo.dataNames.length > 1 ? statistics : statistics[0] as any;
+  return {
+    data: dataInfo.dataNames.length > 1 ? statistics as any : statistics[0],
+    values,
+    series
+  };
 }
 
-export function histogramStatisticsCalculator(data: { [series: string]: Array<{continuous: number, row: any}> }, intervals: Array<{ start: number, end: number, label: string }>, dataInfo: IDataInfo, aggregateDataNames = []): Array<any> {
+export function histogramStatisticsCalculator(data: any, intervals: Array<{start: number | Date, end: number | Date, label: string}>, dataInfo: IDataInfo, aggregateDataNames = []): ICalculationResult {
   const seriesValues = dataInfo.getSeriesValues();
   const statistics: Array<Array<number>> = [];
   if(seriesValues.length === 0) {
@@ -109,17 +113,25 @@ export function histogramStatisticsCalculator(data: { [series: string]: Array<{c
       }
     });
   }
-  return statistics;
+
+  const result: ICalculationResult = {
+    data: statistics,
+    values: intervals.map(i => i.label),
+  };
+  if(seriesValues.length > 1) {
+    result.series = seriesValues;
+  }
+  return result;
 }
 
-export function mathStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo) {
+export function mathStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo): ICalculationResult {
   let resultMin = Number.MAX_VALUE,
     resultMax = -Number.MAX_VALUE,
     resultAverage = 0;
   let actualAnswerCount = 0;
 
   data.forEach((dataRow) => {
-    const nestedDataRows = getNestedDataRows(dataRow, dataInfo);
+    const nestedDataRows = getNestedDataRows(dataRow, dataInfo.dataPath);
     nestedDataRows.forEach(nestedDataRow => {
       const answerData = nestedDataRow[dataInfo.dataNames[0]];
       if(answerData !== undefined) {
@@ -141,20 +153,23 @@ export function mathStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo) 
   }
   resultAverage = Math.ceil(resultAverage * 100) / 100;
 
-  return [resultAverage, resultMin, resultMax];
+  return {
+    data: [[resultAverage, resultMin, resultMax, data.length]],
+    values: ["average", "min", "max", "count"]
+  };
 }
 
-export function getNestedDataRows(dataRow: any, dataInfo: IDataInfo): Array<any> {
+export function getNestedDataRows(dataRow: any, dataPath: string): Array<any> {
   let nestedDataRows = [];
-  if(!dataInfo.dataPath) {
+  if(!dataPath) {
     nestedDataRows = [dataRow];
   } else {
-    if(dataRow[dataInfo.dataPath] === undefined) return [];
-    if(typeof dataRow[dataInfo.dataPath] !== "object") return [];
-    if(Array.isArray(dataRow[dataInfo.dataPath])) {
-      nestedDataRows = dataRow[dataInfo.dataPath];
+    if(dataRow[dataPath] === undefined) return [];
+    if(typeof dataRow[dataPath] !== "object") return [];
+    if(Array.isArray(dataRow[dataPath])) {
+      nestedDataRows = dataRow[dataPath];
     } else {
-      nestedDataRows = [dataRow[dataInfo.dataPath]];
+      nestedDataRows = [dataRow[dataPath]];
     }
   }
   return nestedDataRows;

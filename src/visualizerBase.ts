@@ -1,10 +1,11 @@
-import { Question, QuestionCommentModel, Event, settings, hasLicense } from "survey-core";
+import { Question, QuestionCommentModel, Event, settings, hasLicense, Base } from "survey-core";
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { VisualizationManager } from "./visualizationManager";
-import { DocumentHelper, createLoadingIndicator } from "./utils";
+import { DocumentHelper, createLoadingIndicator, getDiffsFromDefaults } from "./utils";
 import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
+import { DashboardTheme, IDashboardTheme } from "./theme";
 
 import "./visualizerBase.scss";
 
@@ -13,6 +14,31 @@ export interface IChartAdapter {
   create(chartNode: HTMLElement): Promise<any>;
   update(chartNode: HTMLElement): Promise<any> ;
   destroy(node: HTMLElement): void;
+}
+
+export interface ICalculatedDataInfo {
+  dataPath?: string;
+  valueNames: Array<string>;
+  seriesNames?: Array<string>;
+  getLabel?(value: string): string;
+  getSeriesLabel?(series: string): string;
+}
+
+export declare type ICalculationResult<T = number> = {
+  data: Array<Array<T>>,
+  values: Array<string>,
+  series?: Array<string>,
+};
+
+export interface IAnswersData {
+  datasets: Array<Array<any>>;
+  values: Array<string>;
+  labels: Array<string>;
+  colors: Array<string>;
+  texts: Array<Array<any>>;
+  seriesLabels: Array<string>;
+  labelsTitle?: string;
+  valuesTitle?: string;
 }
 
 export interface IDataInfo {
@@ -25,14 +51,26 @@ export interface IDataInfo {
   getSeriesLabels(): Array<string>;
 }
 
+export type ToolbarItemType = "button" | "dropdown" | "filter"| "license";
+
 type ToolbarItemCreators = {
   [name: string]: {
     creator: (toolbar?: HTMLDivElement) => HTMLElement,
-    // type: ToolbarItemType,
-    order: number,
-    // groupIndex: number,
+    type: ToolbarItemType,
+    index: number,
+    groupIndex: number,
   },
 };
+
+export interface IVisualizerOptions {
+  dataField: string;
+  type?: string;
+  availableTypes?: string[];
+  title?: string;
+  allowChangeType?: boolean;
+  answersOrder?: "default" | "asc" | "desc";
+  [key: string]: any;
+}
 
 export class PostponeHelper {
   public static postponeFunction: (fn: () => void, timeout?: number) => any;
@@ -76,10 +114,12 @@ export class VisualizerBase implements IDataInfo {
   public static suppressVisualizerStubRendering: boolean = false;
   public static chartAdapterType: any = undefined;
 
+  private _appliedTheme: DashboardTheme;
+  private _theme = new DashboardTheme();
   private _showToolbar = true;
   private _footerVisualizer: VisualizerBase = undefined;
   private _dataProvider: DataProvider = undefined;
-  private _getDataCore: (dataInfo: IDataInfo) => number[][] = undefined;
+  private _getDataCore: (dataInfo: IDataInfo) => ICalculationResult = undefined;
   public labelTruncateLength: number = 27;
   protected haveCommercialLicense: boolean = false;
   protected renderResult: HTMLElement = undefined;
@@ -208,15 +248,27 @@ export class VisualizerBase implements IDataInfo {
     this.refresh();
   }
 
+  protected getName(): string {
+    return this.question.name || this.question.valueName;
+  }
+
+  protected get allowChangeType() {
+    return this.options.allowChangeType
+      ?? this.questionOptions?.allowChangeType
+      ?? this.options.allowChangeVisualizerType
+      ?? this.questionOptions?.allowChangeVisualizerType
+      ?? true;
+  }
+
   /**
    * Returns the identifier of a visualized question.
    */
   get name(): string {
-    return this.question.valueName || this.question.name;
+    return this.getName();
   }
 
   get dataNames(): Array<string> {
-    return [this.name];
+    return [this.question.valueName || this.question.name];
   }
 
   get dataPath(): string {
@@ -268,6 +320,7 @@ export class VisualizerBase implements IDataInfo {
 
       let visualizerOptions = Object.assign({}, this.options);
       visualizerOptions.renderContent = undefined;
+      delete visualizerOptions.allowChangeVisualizerType;
       this._footerVisualizer = this.createVisualizer(question, visualizerOptions);
       if(!!this._footerVisualizer) {
         this._footerVisualizer.onUpdate = () => this.invokeOnUpdate();
@@ -299,6 +352,10 @@ export class VisualizerBase implements IDataInfo {
 
   public getLabels(): Array<string> {
     return this.getValues();
+  }
+
+  public getChartAdapter(): IChartAdapter {
+    return this._chartAdapter;
   }
 
   /**
@@ -348,9 +405,11 @@ export class VisualizerBase implements IDataInfo {
   public registerToolbarItem(
     name: string,
     creator: (toolbar?: HTMLDivElement) => HTMLElement,
-    order = 100
+    type: ToolbarItemType,
+    index: number = 100,
+    groupIndex: number = 0
   ): void {
-    this.toolbarItemCreators[name] = { creator, order };
+    this.toolbarItemCreators[name] = { creator, type, index, groupIndex };
   }
 
   /**
@@ -388,6 +447,17 @@ export class VisualizerBase implements IDataInfo {
    */
   public get type(): string {
     return this._type || "visualizer";
+  }
+
+  public get dataType(): string {
+    if(this.question) {
+      if(typeof this.question.getType == "function") {
+        return this.question.getType();
+      } else if("dataType" in this.question) {
+        return this.question["dataType"];
+      }
+    }
+    return undefined;
   }
 
   /**
@@ -468,13 +538,52 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
-  protected createToolbarItems(toolbar: HTMLDivElement) {
+  public getSortedToolbarItemCreators(): Array<any> {
     const toolbarItemCreators = this.getToolbarItemCreators();
-    const sortedItems = Object.keys(toolbarItemCreators || {})
-      .map(name => ({ name, ...toolbarItemCreators[name] }))
-      .sort((a, b) => a.order - b.order);
 
-    sortedItems.forEach((item) => {
+    const groupedItems: { [type: string]: Array<{ name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement, type: ToolbarItemType, index: number, groupIndex: number }> } = {};
+
+    Object.keys(toolbarItemCreators).forEach((toolbarItemName) => {
+      const item = toolbarItemCreators[toolbarItemName];
+      const type = item.type;
+
+      if(!groupedItems[type]) {
+        groupedItems[type] = [];
+      }
+
+      groupedItems[type].push({
+        name: toolbarItemName,
+        ...item
+      });
+    });
+
+    Object.keys(groupedItems).forEach((type) => {
+      groupedItems[type].sort((a, b) => {
+        const indexA = a.index || 0;
+        const indexB = b.index || 0;
+        return indexA - indexB;
+      });
+    });
+
+    const sortedItems: Array<{ name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement, type: ToolbarItemType, index: number, groupIndex: number }> = [];
+
+    const sortedGroups = Object.keys(groupedItems).sort((typeA, typeB) => {
+      const groupA = groupedItems[typeA][0]?.groupIndex || 0;
+      const groupB = groupedItems[typeB][0]?.groupIndex || 0;
+      return groupA - groupB;
+    });
+
+    sortedGroups.forEach((type) => {
+      sortedItems.push(...groupedItems[type]);
+    });
+
+    return sortedItems;
+  }
+
+  protected createToolbarItems(toolbar: HTMLDivElement) {
+    const toolbarItemCreators = this.getSortedToolbarItemCreators();
+
+    toolbarItemCreators.forEach((item) => {
       let toolbarItem = item.creator(toolbar);
       if(!!toolbarItem) {
         toolbar.appendChild(toolbarItem);
@@ -486,6 +595,8 @@ export class VisualizerBase implements IDataInfo {
     return !!this.question ? this.question.correctAnswer : "";
   }
 
+  protected renderBanner(container: HTMLElement) { }
+
   protected destroyToolbar(container: HTMLElement) {
     container.innerHTML = "";
   }
@@ -496,7 +607,11 @@ export class VisualizerBase implements IDataInfo {
         DocumentHelper.createElement("div", "sa-toolbar")
       );
       this.createToolbarItems(toolbar);
-      container.appendChild(toolbar);
+
+      if(!!toolbar && !!toolbar.innerHTML) {
+        container.appendChild(toolbar);
+        container.classList.add("sa-toolbar--has-content");
+      }
     }
   }
 
@@ -511,8 +626,8 @@ export class VisualizerBase implements IDataInfo {
   protected destroyContent(container: HTMLElement) {
     if(!!this.options && typeof this.options.destroyContent === "function") {
       this.options.destroyContent(container, this);
-    } else if(this._chartAdapter) {
-      this._chartAdapter.destroy(<HTMLElement>container.children[0]);
+    } else if(this.getChartAdapter()) {
+      this.getChartAdapter().destroy(<HTMLElement>container.children[0]);
     }
     container.innerHTML = "";
   }
@@ -583,6 +698,7 @@ export class VisualizerBase implements IDataInfo {
   protected renderFooter(container: HTMLElement) {
     container.innerHTML = "";
     if(this.hasFooter) {
+      container.classList.add("sa-visualizer__footer--has-content");
       const footerTitleElement = DocumentHelper.createElement(
         "h4",
         "sa-visualizer__footer-title",
@@ -600,11 +716,11 @@ export class VisualizerBase implements IDataInfo {
       const visibilityButton = DocumentHelper.createButton(() => {
         if(footerContentElement.style.display === "none") {
           footerContentElement.style.display = "block";
-          visibilityButton.innerText = localization.getString("hideButton");
+          (visibilityButton as any).setText(localization.getString("hideButton"));
           this._footerIsCollapsed = false;
         } else {
           footerContentElement.style.display = "none";
-          visibilityButton.innerText = localization.getString("showButton");
+          (visibilityButton as any).setText(localization.getString("showButton"));
           this._footerIsCollapsed = true;
         }
         this.footerVisualizer.invokeOnUpdate();
@@ -613,7 +729,9 @@ export class VisualizerBase implements IDataInfo {
 
       container.appendChild(footerContentElement);
 
-      this.footerVisualizer.render(footerContentElement);
+      this.footerVisualizer.render(footerContentElement, false);
+    } else {
+      container.classList.remove("sa-visualizer__footer--has-content");
     }
   }
 
@@ -621,17 +739,33 @@ export class VisualizerBase implements IDataInfo {
    * Renders the visualizer in a specified container.
    * @param targetElement An `HTMLElement` or an `id` of a page element in which you want to render the visualizer.
    */
-  render(targetElement: HTMLElement | string) {
+  render(targetElement: HTMLElement | string, isRoot = true) {
     if(typeof targetElement === "string") {
       targetElement = document.getElementById(targetElement);
     }
     this.renderResult = targetElement;
+    if(isRoot && !this._appliedTheme) {
+      this._appliedTheme = this.theme;
+      this.onThemeChanged();
+    }
+    if(this._appliedTheme) {
+      this._appliedTheme.applyThemeToElement(this.renderResult);
+    }
 
+    this.renderBanner(targetElement);
+
+    let container = targetElement;
+    if(isRoot) {
+      container = DocumentHelper.createElement("div", "sa-visualizer-wrapper");
+      targetElement.appendChild(container);
+    } else {
+      container.className = "sa-visualizer";
+    }
     this.toolbarContainer = DocumentHelper.createElement(
       "div",
       "sa-visualizer__toolbar"
     );
-    targetElement.appendChild(this.toolbarContainer);
+    container.appendChild(this.toolbarContainer);
     this.renderToolbar(this.toolbarContainer);
 
     if(this.hasHeader) {
@@ -639,7 +773,7 @@ export class VisualizerBase implements IDataInfo {
         "div",
         "sa-visualizer__header"
       );
-      targetElement.appendChild(this.headerContainer);
+      container.appendChild(this.headerContainer);
       this.renderHeader(this.headerContainer);
     }
 
@@ -647,14 +781,15 @@ export class VisualizerBase implements IDataInfo {
       "div",
       "sa-visualizer__content"
     );
-    targetElement.appendChild(this.contentContainer);
+    this.contentContainer.role = "presentation";
+    container.appendChild(this.contentContainer);
     this.renderContent(this.contentContainer);
 
     this.footerContainer = DocumentHelper.createElement(
       "div",
       "sa-visualizer__footer"
     );
-    targetElement.appendChild(this.footerContainer);
+    container.appendChild(this.footerContainer);
     this.renderFooter(this.footerContainer);
   }
 
@@ -713,6 +848,17 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  public refreshContent(): void {
+    if(this._settingState) {
+      return;
+    }
+    if(!!this.contentContainer) {
+      this.destroyContent(this.contentContainer);
+      this.renderContent(this.contentContainer);
+    }
+    this.invokeOnUpdate();
+  }
+
   protected processText(text: string): string {
     if(this.options.stripHtmlFromTitles !== false) {
       let originalText = text || "";
@@ -723,38 +869,72 @@ export class VisualizerBase implements IDataInfo {
   }
 
   getRandomColor() {
-    const colors = this.getColors();
+    const colors = VisualizerBase.getColors();
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
-  private _backgroundColor = "#f7f7f7";
+  private _backgroundColor;
 
   get backgroundColor() { return this.getBackgroundColorCore(); }
   set backgroundColor(value) { this.setBackgroundColorCore(value); }
 
   protected getBackgroundColorCore() {
-    return this._backgroundColor;
+    return this._backgroundColor || this._theme.backgroundColor;
   }
   protected setBackgroundColorCore(color: string) {
     this._backgroundColor = color;
     if(this.footerVisualizer)this.footerVisualizer.backgroundColor = color;
   }
 
+  protected onThemeChanged(): void {
+    if(this.footerVisualizer) {
+      this.footerVisualizer.theme = this.theme;
+    }
+  }
+
+  get theme() : DashboardTheme {
+    return this._theme;
+  }
+  set theme(theme: DashboardTheme) {
+    this._theme = theme;
+    this._appliedTheme = undefined;
+    this.onThemeChanged();
+  }
+
+  public applyTheme(theme: IDashboardTheme): void {
+    this.theme.setTheme(theme);
+    this._appliedTheme = this.theme;
+    if(this.renderResult) {
+      this._appliedTheme.applyThemeToElement(this.renderResult);
+    }
+    this.onThemeChanged();
+  }
+
   static customColors: string[] = [];
   private static colors = [
-    "#86e1fb",
-    "#3999fb",
+    "#84CAD4",
+    "#3a99fb",
     "#ff6771",
-    "#1eb496",
+    "#1db496",
     "#ffc152",
     "#aba1ff",
-    "#7d8da5",
-    "#4ec46c",
-    "#cf37a6",
-    "#4e6198",
+    "#7d8ca5",
+    "#4fc46c",
+    "#e87bcb",
+    "#4e6198"
+    // "#86e1fb",
+    // "#3999fb",
+    // "#ff6771",
+    // "#1eb496",
+    // "#ffc152",
+    // "#aba1ff",
+    // "#7d8da5",
+    // "#4ec46c",
+    // "#cf37a6",
+    // "#4e6198",
   ];
 
-  getColors(count = 10) {
+  static getColors(count = 10) {
     const colors =
       Array.isArray(VisualizerBase.customColors) &&
         VisualizerBase.customColors.length > 0
@@ -795,9 +975,9 @@ export class VisualizerBase implements IDataInfo {
     return this.getCalculatedValuesCore();
   }
 
-  private _calculationsCache: Array<any> = undefined;
+  private _calculationsCache: ICalculationResult = undefined;
 
-  protected getCalculatedValuesCore(): Array<any> {
+  protected getCalculatedValuesCore(): ICalculationResult {
     if(!!this._getDataCore) {
       return this._getDataCore(this);
     }
@@ -811,8 +991,24 @@ export class VisualizerBase implements IDataInfo {
     contentContainer.appendChild(createLoadingIndicator());
   }
 
-  public convertFromExternalData(externalCalculatedData: any): any[] {
+  public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
     return externalCalculatedData;
+  }
+
+  /**
+   * Returns object with all infotmation for data visualization: datasets, labels, colors, additional texts (percentage).
+   */
+  public async getAnswersData(): Promise<IAnswersData> {
+    const calculatedValues = await this.getCalculatedValues();
+    return {
+      datasets: calculatedValues.data,
+      // TODO: remove unused or add missing values
+      values: calculatedValues.values || this.getValues(),
+      labels: this.getLabels(),
+      colors: VisualizerBase.getColors(),
+      texts: calculatedValues.data,
+      seriesLabels: calculatedValues.series || this.getSeriesLabels()
+    };
   }
 
   /**
@@ -820,8 +1016,8 @@ export class VisualizerBase implements IDataInfo {
    *
    * To get an array of source survey results, use the [`surveyData`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#surveyData) property.
    */
-  public getCalculatedValues(): Promise<Array<Object>> {
-    return new Promise<Array<Object>>((resolve, reject) => {
+  public getCalculatedValues(): Promise<ICalculationResult> {
+    return new Promise<ICalculationResult>((resolve, reject) => {
       if(this._calculationsCache !== undefined) {
         resolve(this._calculationsCache);
       }
@@ -829,7 +1025,7 @@ export class VisualizerBase implements IDataInfo {
         this.loadingData = true;
         const dataLoadingPromise = this.dataProvider.dataFn({
           visualizer: this,
-          filter: this.dataProvider.getFilters(),
+          filter: this.dataProvider.getAllFilters(),
           callback: (loadedData: { data: Array<Object>, error?: any }) => {
             this.loadingData = false;
             if(!loadedData.error && Array.isArray(loadedData.data)) {
@@ -861,6 +1057,12 @@ export class VisualizerBase implements IDataInfo {
 
   protected _settingState = false;
 
+  protected _defaultStateValue = undefined;
+
+  public getDefaultState(): any {
+    return {};
+  }
+
   /**
    * Returns an object with properties that describe a current visualizer state. The properties are different for each individual visualizer.
    *
@@ -870,8 +1072,22 @@ export class VisualizerBase implements IDataInfo {
    * @see onStateChanged
    */
   public getState(): any {
-    return {};
+    const state: any = {};
+    const defaultState = this.getDefaultState();
+    Object.keys(defaultState).forEach(propertyName => {
+      state[propertyName] = (<any>this)[propertyName];
+    });
+    return getDiffsFromDefaults(state, defaultState);
   }
+
+  protected setStateCore(state: any): void {
+    Object.keys(this.getDefaultState()).forEach(propertyName => {
+      if(state[propertyName] !== undefined) {
+        (<any>this)[propertyName] = state[propertyName];
+      }
+    });
+  }
+
   /**
    * Sets the visualizer's state.
    *
@@ -883,7 +1099,16 @@ export class VisualizerBase implements IDataInfo {
    * @see onStateChanged
    */
   public setState(state: any): void {
+    if(this._settingState) return;
+    this._settingState = true;
+    try {
+      this.setStateCore(state);
+    } finally {
+      this._settingState = false;
+    }
+    this.refreshContent();
   }
+
   /**
    * Resets the visualizer's state.
    *
@@ -893,6 +1118,7 @@ export class VisualizerBase implements IDataInfo {
    * @see onStateChanged
    */
   public resetState(): void {
+    this.setState(this.getDefaultState());
   }
 
   /**

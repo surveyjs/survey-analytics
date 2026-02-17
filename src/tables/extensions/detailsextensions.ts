@@ -34,16 +34,20 @@ export class Details {
         var td2 = DocumentHelper.createElement("td");
         td2.textContent = this.row.getRowData()[column.name];
         if(column.dataType === ColumnDataType.Image) {
-          td2.innerHTML = "<image src='" + td2.textContent + "'/>";
+          const imageElement = DocumentHelper.createElement("img", "", {
+            src: td2.textContent
+          });
+          td2.innerHTML = "";
+          td2.appendChild(imageElement);
         }
         var td3 = DocumentHelper.createElement("td");
         td3.appendChild(this.createShowAsColumnButton(column.name));
+        row.appendChild(td3);
         row.appendChild(td1);
         row.appendChild(td2);
-        row.appendChild(td3);
         rows.push(row);
       });
-    var row = DocumentHelper.createElement("tr", "sa-table__detail");
+    var row = DocumentHelper.createElement("tr", "sa-table__detail sa-table-detail__actions");
     var td = DocumentHelper.createElement("td", "", { colSpan: 3 });
     var extensions = new TableExtensions(this.table);
     extensions.render(td, "details", { row: this.row });
@@ -59,11 +63,9 @@ export class Details {
   }
 
   protected createShowAsColumnButton = (columnName: string): HTMLElement => {
-    const button = DocumentHelper.createElement(
-      "button",
-      "sa-table__btn sa-table__btn--gray"
-    );
-    button.appendChild(document.createTextNode(localization.getString("showAsColumn")));
+    const button = DocumentHelper.createSvgButton("movetovertical-24x24", localization.getString("showAsColumn"));
+    // "button",
+    // "sa-table__btn sa-table__btn--gray"
     button.onclick = (e) => {
       e.stopPropagation();
       this.table.setColumnLocation(columnName, QuestionLocation.Column);

@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.types.json",
+  "compilerOptions": {
+    "outDir": "build/survey-analytics-apexcharts.types/"
+  },
+  "include": [
+    "src/entries/apexcharts.ts"
+  ]
+}

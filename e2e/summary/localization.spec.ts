@@ -1,6 +1,6 @@
 /* eslint-disable surveyjs/eslint-plugin-i18n/only-english-or-code */
 import { test, expect } from "@playwright/test";
-import { url_summary, initSummary, getYAxisValues } from "../helper";
+import { url_summary, initSummary, getYAxisValues, getListItemByText } from "../helper";
 
 const json = {
   locale: "ru",
@@ -44,7 +44,7 @@ const data = [{ satisfaction: 0 }, { satisfaction: 1 }, { satisfaction: 2 }];
 test.describe("localization", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(url_summary);
-    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.setViewportSize({ width: 1000, height: 800 });
   });
 
   test("check change locale", async ({ page }) => {
@@ -58,12 +58,12 @@ test.describe("localization", () => {
     expect(title).toBe(json.questions[0].title.ru);
 
     // Change locale to English
-    const changeLocaleDropdown = page.locator(".sa-question__select", { hasText: "Русский" });
-    await changeLocaleDropdown.selectOption("en");
-    // await changeLocaleDropdown.click();
-    // await page.locator(".sa-question__select option", { hasText: "English" }).click();
+    const changeLocaleDropdown = page.locator(".sa-dropdown", { hasText: "Русский" });
+    await changeLocaleDropdown.click();
+    await getListItemByText(page, "English").click();
 
     // Check Y axis values in English
+    await page.waitForTimeout(500);
     const yAxisValuesEn = await getYAxisValues(page);
     expect(yAxisValuesEn).toEqual(json.questions[0].choices.map((choice) => choice.text.default + "  ").reverse());
 
@@ -72,7 +72,7 @@ test.describe("localization", () => {
     expect(titleEn).toBe(json.questions[0].title.default);
 
     // Check dropdown shows English
-    await expect(page.locator(".sa-question__select", { hasText: "English" })).toHaveCount(1);
+    await expect(page.locator(".sa-dropdown", { hasText: "English" })).toHaveCount(1);
 
     // Check locale in state
     const localeInState = await page.evaluate(() => (window as any).visPanel.state.locale);
@@ -85,6 +85,6 @@ test.describe("localization", () => {
     const yAxisValues = await getYAxisValues(page);
     expect(yAxisValues).toEqual(json.questions[0].choices.map((choice) => choice.text.default + "  ").reverse());
 
-    await expect(page.locator(".sa-question__select", { hasText: "English" })).toHaveCount(1);
+    await expect(page.locator(".sa-dropdown", { hasText: "English" })).toHaveCount(1);
   });
 });

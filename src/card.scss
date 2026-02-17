@@ -1,0 +1,30 @@
+@use "globals" as *;
+@use "typography-mixins.scss" as *;
+
+.sa-visualizer-card {
+  display: flex;
+  padding-top: var(--sjs2-spacing-x300, 24px);
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.sa-visualizer-card-content {
+  display: flex;
+  min-width: var(--dsb-nps-vizualizer-item-min-width, 256px);
+  padding: var(--sjs2-spacing-x200, 16px) var(--sjs2-spacing-x300, 24px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sjs2-spacing-x300, 24px);
+
+  border-radius: var(--dsb-nps-vizualizer-item-corner-radius, 8px);
+  border: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
+  background: var(--sjs2-color-bg-basic-primary, #FFF);
+
+}
+
+.sa-visualizer-card-value {
+  color: var(--sjs2-color-fg-basic-primary, #1C1B20);
+
+  @include sjs2--typography--large-strong;
+}

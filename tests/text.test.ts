@@ -56,8 +56,8 @@ test("multiple text visualizer", async () => {
   expect(columns[1].title).toBe("Diastolic");
   expect(columns[1].type).toBe("text");
 
-  const { columnCount, data }: any = await text.getCalculatedValues();
-  expect(columnCount).toBe(3);
+  const { series, data }: any = await text.getCalculatedValues();
+  expect(series.length).toBe(3);
   expect(data.length).toBe(3);
 });
 
@@ -73,7 +73,7 @@ test("text visualizer - columns", async () => {
   const columns = text.columns;
   expect(columns.length).toBe(0);
 
-  const { columnCount, data }: any = await text.getCalculatedValues();
-  expect(columnCount).toBe(1);
+  const { series, data }: any = await text.getCalculatedValues();
+  expect(series.length).toBe(1);
   expect(data.length).toBe(1);
 });

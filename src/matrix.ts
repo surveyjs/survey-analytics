@@ -1,15 +1,16 @@
 import { ItemValue, QuestionMatrixModel, Question } from "survey-core";
-import { IAnswersData, SelectBase } from "./selectBase";
+import { SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
+import { IAnswersData } from "./visualizerBase";
 
 export class Matrix extends SelectBase {
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "matrix");
+    super(question, data, options, type || "matrix");
     this._transposeData = true;
     // this.getAnswersData();
   }
@@ -68,6 +69,7 @@ export class Matrix extends SelectBase {
   protected hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData {
     const result: IAnswersData = {
       datasets: <Array<Array<any>>>[],
+      values: <Array<string>>[],
       labels: <Array<string>>[],
       colors: <Array<string>>[],
       texts: <Array<Array<any>>>[],
@@ -108,4 +110,4 @@ export class Matrix extends SelectBase {
 
 }
 
-VisualizationManager.registerVisualizer("matrix", Matrix);
+VisualizationManager.registerVisualizer("matrix", Matrix, undefined, "matrix");

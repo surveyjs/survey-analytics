@@ -2,22 +2,11 @@ import { VisualizerBase, IDataInfo } from "../src/visualizerBase";
 import { QuestionDropdownModel, SurveyModel } from "survey-core";
 
 test("custom colors", () => {
-  expect(new VisualizerBase(null, null).getColors(1)).toEqual([
-    "#86e1fb",
-    "#3999fb",
-    "#ff6771",
-    "#1eb496",
-    "#ffc152",
-    "#aba1ff",
-    "#7d8da5",
-    "#4ec46c",
-    "#cf37a6",
-    "#4e6198",
-  ]);
+  expect(VisualizerBase.getColors(1)).toEqual(VisualizerBase["colors"]);
 
   VisualizerBase.customColors = ["red", "green", "blue"];
 
-  expect(new VisualizerBase(null, null).getColors(2)).toEqual([
+  expect(VisualizerBase.getColors(2)).toEqual([
     "red",
     "green",
     "blue",
@@ -79,7 +68,8 @@ test("Use valueName for data https://surveyjs.answerdesk.io/internal/ticket/deta
   expect(visualizer.name).toEqual("q1");
 
   question.valueName = "q1value";
-  expect(visualizer.name).toEqual("q1value");
+  expect(visualizer.name).toEqual("q1");
+  expect(visualizer.dataNames[0]).toEqual("q1value");
 });
 
 test("options.labelTruncateLength", () => {

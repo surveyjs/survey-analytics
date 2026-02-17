@@ -11,12 +11,11 @@ test("result resultMin resultMax", async () => {
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
   const nps = new NpsVisualizer(question, data);
 
-  let result: any = await nps.getCalculatedValues();
-
-  expect(result.total).toBe(6);
-  expect(result.detractors).toBe(1);
-  expect(result.passive).toBe(2);
-  expect(result.promoters).toBe(3);
+  let result = await nps.getCalculatedValues();
+  expect(result).toStrictEqual({
+    "data": [[1, 2, 3, 6]],
+    "values": ["detractors", "passive", "promoters", "total"]
+  });
 });
 
 test("result precision is 2 digits", async () => {

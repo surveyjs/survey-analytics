@@ -54,12 +54,12 @@ test("ctor/setFilter/reset/onDataChanged", () => {
   expect(callCount).toEqual(1);
   expect(dataProvider.data).toEqual(testData);
 
-  expect(defaultStatisticsCalculator(dataProvider.filteredData, q1testDataInfo)).toEqual([[2, 2, 0, 0]]);
+  expect(defaultStatisticsCalculator(dataProvider.filteredData, q1testDataInfo).data).toEqual([[2, 2, 0, 0]]);
   expect(callCount).toEqual(1);
 
   dataProvider.setFilter("q2", "item1");
   expect(callCount).toEqual(2);
-  expect(defaultStatisticsCalculator(dataProvider.filteredData, q1testDataInfo)).toEqual([[1, 1, 0, 0]]);
+  expect(defaultStatisticsCalculator(dataProvider.filteredData, q1testDataInfo).data).toEqual([[1, 1, 0, 0]]);
   expect(callCount).toEqual(2);
 
   dataProvider.raiseDataChanged();
@@ -67,12 +67,12 @@ test("ctor/setFilter/reset/onDataChanged", () => {
 
   dataProvider.setFilter("q2", undefined);
   expect(callCount).toEqual(4);
-  expect(defaultStatisticsCalculator(dataProvider.filteredData, q1testDataInfo)).toEqual([[2, 2, 0, 0]]);
+  expect(defaultStatisticsCalculator(dataProvider.filteredData, q1testDataInfo).data).toEqual([[2, 2, 0, 0]]);
   expect(callCount).toEqual(4);
 
   dataProvider.setFilter("q3", "item2");
   expect(callCount).toEqual(5);
-  expect(defaultStatisticsCalculator(dataProvider.filteredData, q1testDataInfo)).toEqual([[0, 1, 0, 0]]);
+  expect(defaultStatisticsCalculator(dataProvider.filteredData, q1testDataInfo).data).toEqual([[0, 1, 0, 0]]);
   expect(callCount).toEqual(5);
 });
 
@@ -103,7 +103,7 @@ test("getData for boolean question values - mock", () => {
       getLabels: () => ["true", "false"],
       getSeriesValues: () => [],
       getSeriesLabels: () => [],
-    })
+    }).data
   ).toEqual([[3, 1]]);
 });
 
@@ -132,7 +132,7 @@ test("getData for select base question values", () => {
       getLabels: () => choices,
       getSeriesValues: () => [],
       getSeriesLabels: () => [],
-    })
+    }).data
   ).toEqual([[2, 1, 0, 1, 0, 0]]);
 });
 
@@ -171,7 +171,7 @@ test("getData for matrix question values", () => {
       ],
       getSeriesValues: () => ["Lizol", "Harpic"],
       getSeriesLabels: () => ["Lizol", "Harpic"],
-    })
+    }).data
   ).toEqual([
     [1, 2, 0, 0, 0, 0],
     [1, 1, 1, 0, 0, 0],
@@ -196,7 +196,7 @@ test("getData for matrix dropdown question values - pre-processed data", () => {
       getLabels: () => ["High Quality", "Natural", "Trustworthy"],
       getSeriesValues: () => ["Lizol", "Harpic"],
       getSeriesLabels: () => ["Lizol", "Harpic"],
-    })
+    }).data
   ).toEqual([
     [0, 2, 1],
     [1, 1, 1],
@@ -209,7 +209,7 @@ test("getData for matrix dropdown question values - pre-processed data", () => {
       getLabels: () => ["1", "2", "3", "4", "5"],
       getSeriesValues: () => ["Lizol", "Harpic"],
       getSeriesLabels: () => ["Lizol", "Harpic"],
-    })
+    }).data
   ).toEqual([
     [1, 0, 2, 0, 0],
     [0, 0, 0, 2, 1],
@@ -273,26 +273,26 @@ test("getData for matrix dropdown inner visualizers", async () => {
   expect(innerPanelVisualizer.dataPath).toBe("question2");
   const column1Visualizer = innerPanelVisualizer["visualizers"][0];
   expect(column1Visualizer.dataPath).toBe("question2");
-  expect(await column1Visualizer.getCalculatedValues()).toEqual([
+  expect((await column1Visualizer.getCalculatedValues()).data).toEqual([
     [0, 2, 1].reverse(),
     [1, 1, 1].reverse(),
   ]);
   const column2Visualizer = innerPanelVisualizer["visualizers"][1];
   expect(column2Visualizer.dataPath).toBe("question2");
-  expect(await column2Visualizer.getCalculatedValues()).toEqual([
+  expect((await column2Visualizer.getCalculatedValues()).data).toEqual([
     [1, 0, 2, 0, 0].reverse(),
     [0, 0, 0, 2, 1].reverse(),
   ]);
 
   const dataProvider = new DataProvider(<any>innerPanelVisualizer["data"]);
   expect(
-    defaultStatisticsCalculator(dataProvider.filteredData, <any>innerPanelVisualizer["visualizers"][0])
+    defaultStatisticsCalculator(dataProvider.filteredData, <any>innerPanelVisualizer["visualizers"][0]).data
   ).toEqual([
     [0, 2, 1].reverse(),
     [1, 1, 1].reverse(),
   ]);
   expect(
-    defaultStatisticsCalculator(dataProvider.filteredData, <any>innerPanelVisualizer["visualizers"][1])
+    defaultStatisticsCalculator(dataProvider.filteredData, <any>innerPanelVisualizer["visualizers"][1]).data
   ).toEqual([
     [1, 0, 2, 0, 0].reverse(),
     [0, 0, 0, 2, 1].reverse(),
@@ -332,7 +332,7 @@ test("getData for matrix dropdown grouped", () => {
       getLabels: () => choices,
       getSeriesValues: () => rows,
       getSeriesLabels: () => rows,
-    })
+    }).data
   ).toEqual([
     [[1, 1, 1, 0, 0, 0]],
     [[1, 1, 1, 0, 0, 0]],
@@ -379,7 +379,7 @@ test("filter data by matrix value", () => {
     { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
   ]);
   expect(
-    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo)
+    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo).data
   ).toEqual([
     [1, 1, 0],
   ]);
@@ -389,7 +389,7 @@ test("filter data by matrix value", () => {
     { "Quality": { "affordable": "1", "better then others": "1", "does what it claims": "1", "easy to use": "1" }, "developer_count": "3-5", "organization_type": "Custom" },
   ]);
   expect(
-    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo)
+    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo).data
   ).toEqual([
     [1, 0, 0],
   ]);
@@ -400,7 +400,7 @@ test("filter data by matrix value", () => {
     { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
   ]);
   expect(
-    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo)
+    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo).data
   ).toEqual([
     [1, 1, 0],
   ]);
@@ -410,7 +410,7 @@ test("filter data by matrix value", () => {
     { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
   ]);
   expect(
-    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo)
+    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo).data
   ).toEqual([
     [0, 1, 0],
   ]);
@@ -455,7 +455,7 @@ test("filter data by matrix value - number and string", () => {
     { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
   ]);
   expect(
-    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo)
+    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo).data
   ).toEqual([
     [1, 1, 0],
   ]);
@@ -465,7 +465,7 @@ test("filter data by matrix value - number and string", () => {
     { "Quality": { "affordable": "3", "better then others": "2", "does what it claims": "4", "easy to use": "3" }, "developer_count": "> 10", "organization_type": "Consulting" }
   ]);
   expect(
-    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo)
+    defaultStatisticsCalculator(dataProvider.filteredData, dataInfo).data
   ).toEqual([
     [0, 1, 0],
   ]);
@@ -491,7 +491,7 @@ test("filter data for matrix dropdown question column values - pre-processed dat
       getLabels: () => ["High Quality", "Natural", "Trustworthy"],
       getSeriesValues: () => ["Lizol", "Harpic"],
       getSeriesLabels: () => ["Lizol", "Harpic"],
-    })
+    }).data
   ).toEqual([
     [0, 2, 0],
     [0, 0, 0],
@@ -504,7 +504,7 @@ test("filter data for matrix dropdown question column values - pre-processed dat
       getLabels: () => ["1", "2", "3", "4", "5"],
       getSeriesValues: () => ["Lizol", "Harpic"],
       getSeriesLabels: () => ["Lizol", "Harpic"],
-    })
+    }).data
   ).toEqual([
     [1, 0, 1, 0, 0],
     [0, 0, 0, 0, 0],
@@ -577,7 +577,7 @@ test("getData for boolean question values + missing answers", () => {
       getLabels: () => ["true", "false", "missing"],
       getSeriesValues: () => [],
       getSeriesLabels: () => [],
-    })
+    }).data
   ).toEqual([[3, 1, 2]]);
 });
 
@@ -609,7 +609,7 @@ test("getData for select base question values + missing answers", () => {
       getLabels: () => choices.concat(["missing"]),
       getSeriesValues: () => [],
       getSeriesLabels: () => [],
-    })
+    }).data
   ).toEqual([[2, 1, 0, 1, 0, 0, 1]]);
 });
 
@@ -641,7 +641,7 @@ test("getData for select base question values with showCommentArea choices", () 
     getLabels: () => choices.concat(["missing"]),
     getSeriesValues: () => [],
     getSeriesLabels: () => [],
-  });
+  }).data;
   expect(result).toEqual([[1, 1, 1, 0, 0, 0, 0]]);
 });
 
@@ -664,7 +664,7 @@ test("getData for matrix & cellType is checkbox", () => {
     getLabels: () => ["1", "2", "3", "4", "5"],
     getSeriesValues: () => ["row1", "row2", "row3", "row4"],
     getSeriesLabels: () => ["row1", "row2", "row3", "row4"],
-  });
+  }).data;
   expect(result[0]).toEqual([0, 1, 1, 1, 1]);
   expect(result[1]).toEqual([0, 0, 1, 1, 1]);
   expect(result[2]).toEqual([0, 0, 0, 1, 1]);
@@ -704,3 +704,98 @@ test("fixDropdownData - matrixdropdown question - shouldn't change data twice", 
   dataProvider.fixDropdownData(["question2"]);
   expect(dataProvider.data).toStrictEqual(expectedFixedData);
 });
+
+test("system filter by date range", () => {
+  const data = [
+    { date: "2021-10-13", age: 17 },
+    { date: "2021-10-14", age: 17 },
+    { date: "2021-10-15", age: 17 },
+    { date: "2011-10-16", age: 30 },
+    { date: "2011-10-16", age: 35 },
+    { date: "2004-10-17", age: 40 },
+    { date: "2004-10-17", age: 45 },
+    { date: "2016-10-18", age: 25 },
+  ];
+  const dataProvider = new DataProvider(data);
+
+  dataProvider.setSystemFilter("date", { start: Date.parse("2011-10-16"), end: Date.parse("2011-10-17") });
+
+  expect(
+    dataProvider.filteredData
+  ).toEqual([
+    { date: "2011-10-16", age: 30 },
+    { date: "2011-10-16", age: 35 },
+  ]);
+  expect(
+    dataProvider.getAllFilters()
+  ).toEqual([{ "field": "date", "type": "=", "value": { "end": 1318809600000, "start": 1318723200000 } }]);
+
+  dataProvider.setFilter("age", { start: 33, end: 37 });
+  expect(
+    dataProvider.filteredData
+  ).toEqual([
+    { date: "2011-10-16", age: 35 },
+  ]);
+  expect(
+    dataProvider.getAllFilters()
+  ).toEqual([{ "field": "date", "type": "=", "value": { "end": 1318809600000, "start": 1318723200000 } }, { "field": "age", "type": "=", "value": { "end": 37, "start": 33 } }]);
+
+  dataProvider.resetFilter();
+  expect(
+    dataProvider.filteredData
+  ).toEqual([
+    { date: "2011-10-16", age: 30 },
+    { date: "2011-10-16", age: 35 },
+  ]);
+  expect(
+    dataProvider.getAllFilters()
+  ).toEqual([{ "field": "date", "type": "=", "value": { "end": 1318809600000, "start": 1318723200000 } }]);
+
+  dataProvider.resetSystemFilter();
+  expect(
+    dataProvider.filteredData
+  ).toEqual(data);
+  expect(
+    dataProvider.getAllFilters()
+  ).toEqual([]);
+});
+
+test("filter by partially defined date range", () => {
+  const data = [
+    { date: "2011-10-13", age: 17 },
+    { date: "2011-10-14", age: 17 },
+    { date: "2011-10-15", age: 17 },
+    { date: "2011-10-16", age: 30 },
+    { date: "2011-10-16", age: 35 },
+    { date: "2011-10-17", age: 40 },
+    { date: "2011-10-17", age: 45 },
+    { date: "2011-10-18", age: 25 },
+  ];
+  const dataProvider = new DataProvider(data);
+
+  dataProvider.setSystemFilter("date", { start: Date.parse("2011-10-16"), end: undefined });
+  expect(
+    dataProvider.filteredData
+  ).toEqual([
+    { date: "2011-10-16", age: 30 },
+    { date: "2011-10-16", age: 35 },
+    { date: "2011-10-17", age: 40 },
+    { date: "2011-10-17", age: 45 },
+    { date: "2011-10-18", age: 25 },
+  ]);
+
+  dataProvider.setSystemFilter("date", { start: undefined, end: Date.parse("2011-10-16") });
+  expect(
+    dataProvider.filteredData
+  ).toEqual([
+    { date: "2011-10-13", age: 17 },
+    { date: "2011-10-14", age: 17 },
+    { date: "2011-10-15", age: 17 },
+  ]);
+
+  dataProvider.setSystemFilter("date", { start: undefined, end: undefined });
+  expect(
+    dataProvider.filteredData
+  ).toEqual(data);
+});
+

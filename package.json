@@ -3,22 +3,31 @@
   "name": "survey-analytics",
   "scripts": {
     "start": "webpack-dev-server --env buildType=dev",
+    "serve": "http-server --silent",
     "test": "jest",
     "test:dev": "jest --watch",
     "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
     "e2e": "playwright test --project chromium --ui",
-    "e2e:ci": "playwright test --project chromium",
+    "e2e:apexCharts": "playwright test --project chromium+apexCharts --ui",
+    "e2e:ci": "playwright test --project chromium --project chromium+apexCharts",
+    "e2e:ci:apexCharts": "playwright test --project chromium+apexCharts",
+    "e2e:ci:plotly": "playwright test --project chromium",
     "release": "standard-version --message \"Release: %s [azurepipelines skip]\" ",
     "doc:gen": "node doc_generator/lib_docgenerator.js src/index.ts",
     "doc:update": "chmod +x ./docupdate_npm.sh && ./docupdate_npm.sh",
     "watch:dev": "concurrently \"webpack --env buildType=dev --env emitStyles\" \"rollup -c -w\" ",
-    "build:all": "npm run build",
+    "build:all": "npm run build && npm run build:themes",
     "build": "webpack --env buildType=dev --env emitNonSourceFiles --env emitStyles && webpack --env buildType=prod --env emitStyles && rollup -c && npm run build:types",
-    "build:types": "npm run build:types:core && npm run build:types:summary && npm run build:types:tabulator && npm run build:types:mongo",
-    "build:types:core": "tsc --p tsconfig.summary.core.json && echo \"export * from './survey-analytics.types/entries/summary.core';\" >> build/survey.analytics.core.d.ts",
-    "build:types:summary": "tsc --p tsconfig.summary.json && echo \"export * from './survey-analytics.types/entries/summary';\" >> build/survey.analytics.d.ts",
-    "build:types:tabulator": "tsc --p tsconfig.tabulator.json && echo \"export * from './survey-analytics-tabulator.types/entries/tabulator';\" >> build/survey.analytics.tabulator.d.ts",
+    "build:types": "npm run build:types:core && npm run build:types:summary && npm run build:types:tabulator && npm run build:types:apexcharts && npm run build:types:plotly && npm run build:types:mongo",
+    "build:types:core": "tsc --p tsconfig.types.summary.core.json && echo \"export * from './survey-analytics.types/entries/summary.core';\" >> build/survey.analytics.core.d.ts",
+    "build:types:summary": "tsc --p tsconfig.types.summary.json && echo \"export * from './survey-analytics.types/entries/summary';\" >> build/survey.analytics.d.ts",
+    "build:types:tabulator": "tsc --p tsconfig.types.tabulator.json && echo \"export * from './survey-analytics-tabulator.types/entries/tabulator';\" >> build/survey.analytics.tabulator.d.ts",
+    "build:types:apexcharts": "tsc --p tsconfig.types.apexcharts.json && echo \"export * from './survey-analytics-apexcharts.types/entries/apexcharts';\" >> build/survey.analytics.apexcharts.d.ts",
+    "build:types:plotly": "tsc --p tsconfig.types.plotly.json && echo \"export * from './survey-analytics-plotly.types/entries/plotly';\" >> build/survey.analytics.plotly.d.ts",
     "build:types:mongo": "tsc --p tsconfig.types.mongo.json && echo \"export * from './survey-analytics.types/entries/mongo';\" >> build/survey.analytics.mongo.d.ts",
+    "build:themes": "webpack --config ./webpack.themes.config.js --env buildType=dev --env emitDeclarations && webpack --config ./webpack.themes.config.js --env buildType=prod && rollup -c rollup.themes.config.js",
+    "accessibility-tests": "playwright test --project a11y --ui",
+    "accessibility-tests:ci": "playwright test --project a11y --reporter dot --quiet",
     "lint": "eslint . --ext .js,.cjs,.mjs,.ts,.cts,.mts --max-warnings=0",
     "lint:fix": "eslint . --ext .js,.cjs,.mjs,.ts,.cts,.mts --max-warnings=0 --fix",
     "pre-push-check": "npm run lint",
@@ -39,7 +48,8 @@
     "muuri": "^0.8.0",
     "plotly.js-dist-min": "^2.28.0",
     "survey-core": "../survey-library/packages/survey-core/build",
-    "tabulator-tables": "^6.2.5"
+    "tabulator-tables": "^6.2.5",
+    "apexcharts": "^4.7.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
@@ -53,9 +63,12 @@
     "@types/jest": "^26.0.24",
     "@types/jquery": "3.3.29",
     "@types/node": "7.0.4",
+    "@types/minimatch": "5.1.2",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
-    "@vue/eslint-config-typescript": "^11.0.0",
+    "axe-core": "^4.8.2",
+    "axe-playwright": "^2.1.0",
+    "axe-testcafe": "^3.0.0",
     "concurrently": "^5.3.0",
     "css-loader": "^7.1.2",
     "eslint": "^8.57.0",
@@ -94,6 +107,11 @@
     "@types/mongodb": "^4.0.6",
     "@types/plotly.js-dist-min": "^2.3.0",
     "@types/tabulator-tables": "^6.2.3"
+  },
+  "overrides": {
+    "axe-testcafe": {
+      "axe-core": "^4.8.2"
+    }
   },
   "husky": {
     "hooks": {

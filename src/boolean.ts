@@ -10,9 +10,9 @@ export class BooleanModel extends SelectBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "boolean");
+    super(question, data, options, type || "boolean");
   }
 
   protected getCorrectAnswerText(): string {
@@ -69,4 +69,4 @@ export class BooleanModel extends SelectBase {
   }
 }
 
-VisualizationManager.registerVisualizer("boolean", BooleanModel);
+VisualizationManager.registerVisualizer("boolean", BooleanModel, undefined, "boolean");

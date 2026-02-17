@@ -1,4 +1,5 @@
 @use "globals" as *;
+@use "typography-mixins.scss" as *;
 
 .sa-statistics-table__container {
   width: 100%;
@@ -9,37 +10,71 @@
 
 .sa-statistics-table {
   width: 100%;
-  font-family: $font-family;
-  font-size: $root-font-size;
-  color: $text-color;
-  // border-collapse: collapse;
-  background-color: $background-color;
 }
 
 .sa-statistics-table__cell {
-  border-width: 1px;
-  padding: 8px;
-  border-style: solid;
-  border-color: $border-color;
-  background-color: $background-color;
-  min-height: $form-element-height;
+  border-bottom: var(--dsb-table-cell-border-width, 1px) dashed var(--dsb-table-cell-border-color, #DCDCDC);
 }
 
-.sa-statistics-table__cell-value {
-  text-align: right;
-  min-width: 30px;
+.sa-statistics-table__cell-text {
+  color: var(--dsb-table-cell-text-color, rgba(0, 0, 0, 0.90));
+  margin-left: calc(var(--dsb-table-row-gap, 32px) / 2);
+  margin-right: calc(var(--dsb-table-row-gap, 32px) / 2);
+
+  @include sjs2--typography--default;
+}
+
+.sa-statistics-table__cell:first-child .sa-statistics-table__cell-text {
+  margin-inline-start: 0;
+}
+.sa-statistics-table__cell:last-child .sa-statistics-table__cell-text {
+  margin-inline-end: 0;
+}
+
+.sa-statistics-table__cell-value.sa-statistics-table__cell-value {
+  .sa-statistics-table__cell-text,
+  .sa-statistics-table__cell-header-text {
+    text-align: right;
+  }
 }
 
 .sa-statistics-table__cell-header {
-  font-weight: bold;
+  border-top: var(--dsb-table-cell-border-width, 1px) dashed var(--dsb-table-cell-border-color, #DCDCDC);
+  border-bottom: var(--dsb-table-cell-border-width, 1px) dashed var(--dsb-table-cell-border-color, #DCDCDC);
 }
 
+.sa-statistics-table__cell-header-text {
+  color: var(--dsb-table-header-text-color, rgba(0, 0, 0, 0.90));
+  padding: var(--dsb-table-cell-padding-top, 8px) var(--dsb-table-cell-padding-right-no-border, 0px) var(--dsb-table-cell-padding-bottom, 8px) var(--dsb-table-cell-padding-left-no-border, 0px);
+  margin-left: calc(var(--dsb-table-row-gap, 32px) / 2);
+  margin-right: calc(var(--dsb-table-row-gap, 32px) / 2);
+  text-align: left;
+  
+  @include sjs2--typography--default-strong;
+}
+
+.sa-statistics-table__cell-header:first-child .sa-statistics-table__cell-header-text {
+  margin-inline-start: 0;
+}
+
+.sa-statistics-table__cell-header:last-child .sa-statistics-table__cell-header-text {
+  margin-inline-end: 0;
+}
+
+
 .sa-choices-sparkline {
-  min-width: 100px;
-  height: 24px;
-  border: 1px solid $main-color;
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--dsb-table-cell-padding-top-progressbar, 16px) var(--dsb-table-cell-padding-right-no-border, 0px) var(--dsb-table-cell-padding-bottom-progressbar, 16px) var(--dsb-table-cell-padding-left-no-border, 0px);
+  margin-left: calc(var(--dsb-table-row-gap, 32px) / 2);
+  margin-right: calc(var(--dsb-table-row-gap, 32px) / 2);
 }
 .sa-choices-sparkline-value {
-  height: 100%;
-  background-color: $main-color;
+  display: flex;
+  align-items: flex-start;
+  height: var(--dsb-table-cell-progressbar-height, 8px);
+  border-radius: var(--dsb-table-cell-progressbar-corner-radius, 2px);
+  background: var(--dsb-table-cell-progressbar-color, #19B394);
 }

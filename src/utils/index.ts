@@ -1,5 +1,7 @@
 import { glc } from "survey-core";
 import { localization } from "../localizationManager";
+import { DropdownWidget, IDropdownOptions } from "./dropdownWidget";
+import { ActionDropdownWidget, IActionDropdownOptions } from "./dropdownActionWidget";
 
 export class DocumentHelper {
   public static createSelector(
@@ -45,16 +47,93 @@ export class DocumentHelper {
     return selectWrapper;
   }
 
+  /**
+   * Creates a custom dropdown element with icon support
+   * @param options - Configuration object for the dropdown
+   * @returns Created dropdown element
+   */
+  public static createDropdown(options: IDropdownOptions): HTMLDivElement {
+    const widget = new DropdownWidget(options);
+    return widget.render();
+  }
+
+  public static createActionDropdown(options: IActionDropdownOptions): HTMLDivElement {
+    const widget = new ActionDropdownWidget(options);
+    return widget.render();
+  }
+
+  /**
+   * Destroys dropdown and removes all event handlers
+   * @param {HTMLElement} dropdownElement - Root dropdown element
+   */
+  public static destroyDropdown(dropdownElement: any) {
+    if(dropdownElement && dropdownElement._handleClickOutside) {
+      document.removeEventListener("click", dropdownElement._handleClickOutside);
+      dropdownElement._handleClickOutside = null;
+    }
+    if(dropdownElement && dropdownElement.parentNode) {
+      dropdownElement.parentNode.removeChild(dropdownElement);
+    }
+  }
+
+  // public static createButton(
+  //   handler: (e: any) => void,
+  //   text = "",
+  //   className = "sa-toolbar__button"
+  // ) {
+  //   const button = DocumentHelper.createElement("span", className, {
+  //     innerText: text,
+  //     onclick: handler,
+  //   });
+  //   return button;
+  // }
+
   public static createButton(
-    handler: (e: any) => void,
+    handler: (e:any) => void,
     text = "",
-    className = "sa-toolbar__button"
-  ) {
-    const button = DocumentHelper.createElement("span", className, {
-      innerText: text,
-      onclick: handler,
+    className = "sa-toolbar__button",
+    icon?: string
+  ): HTMLDivElement {
+    const buttonElement = document.createElement("div");
+    buttonElement.className = className + (icon ? " " + className + "-with-icon" : "");
+    buttonElement.setAttribute("role", "button");
+    buttonElement.setAttribute("tabindex", "0");
+
+    if(icon) {
+      const svgElement = document.createElement("div");
+      svgElement.className = className + "-icon";
+      svgElement.appendChild(DocumentHelper.createSvgElement(icon));
+      buttonElement.appendChild(svgElement);
+    }
+    const buttonText = document.createElement("span");
+    buttonText.className = className + "-text";
+    buttonText.textContent = text;
+    buttonElement.appendChild(buttonText);
+
+    (buttonElement as any).setText = function(newText) {
+      buttonText.textContent = newText;
+    };
+
+    buttonElement.addEventListener("click", function(e) {
+      handler(e);
     });
-    return button;
+
+    buttonElement.addEventListener("keydown", function(e) {
+      if(e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        handler(e);
+      }
+    });
+
+    return buttonElement;
+  }
+
+  public static setStyles(element: HTMLElement, styles: Record<string, any>): void {
+    if(!element || !styles) return;
+
+    Object.keys(styles).forEach(property => {
+      element.style.setProperty(property, styles[property]);
+    });
   }
 
   public static createElement(
@@ -63,7 +142,9 @@ export class DocumentHelper {
     attrs?: any
   ): HTMLElement {
     var el = document.createElement(tagName);
-    el.className = className;
+    if(className) {
+      el.className = className;
+    }
     if(!!attrs) {
       Object.keys(attrs).forEach(function (key) {
         (<any>el)[key] = attrs[key];
@@ -90,11 +171,14 @@ export class DocumentHelper {
     return svgElem;
   }
 
-  public static createSvgButton(path: string): HTMLButtonElement {
+  public static createSvgButton(path: string, title?: string): HTMLButtonElement {
     const btn = <HTMLButtonElement>(
       DocumentHelper.createElement("button", "sa-table__svg-button")
     );
     btn.appendChild(DocumentHelper.createSvgElement(path));
+    if(title) {
+      btn.title = title;
+    }
     return btn;
   }
 
@@ -155,6 +239,41 @@ export class DocumentHelper {
       }
     );
     return el;
+  }
+
+  public static createTextEditor(options: { showIcon?: boolean, placeholder?: string, className?: string, inputValue?: string, onchange?: (val) => void } = {}): HTMLElement {
+    const {
+      className = "sa-table-filter",
+      placeholder = localization.getString("filterPlaceholder"),
+      inputValue = "",
+      showIcon = true,
+    } = options;
+
+    const editor = document.createElement("div");
+    editor.className = className;
+
+    if(showIcon) {
+      const iconContainer = DocumentHelper.createElement("div", className + "_icon");
+      const searchIcon = DocumentHelper.createSvgElement("search-24x24");
+
+      iconContainer.appendChild(searchIcon);
+      editor.appendChild(iconContainer);
+    }
+
+    const input = <HTMLInputElement>DocumentHelper.createElement("input", className + "_input",
+      {
+        placeholder: placeholder,
+        defaultValue: inputValue,
+      }
+    );
+    input.onchange = (e) => {
+      if(!!options.onchange) {
+        options.onchange(input.value);
+      }
+    };
+
+    editor.appendChild(input);
+    return editor;
   }
 }
 
@@ -284,4 +403,21 @@ export function createImagesContainer(
 export function toPrecision(value: number, precision = 2): number {
   const base = Math.pow(10, precision);
   return Math.round(base * value) / base;
+}
+
+export function getDiffsFromDefaults(obj: any, defaultObj: any = {}): any {
+  const result: any = {};
+  Object.keys(obj).forEach(key => {
+    if(typeof obj[key] === "object") {
+      const childDiffs = getDiffsFromDefaults(obj[key], defaultObj[key]);
+      if(Object.keys(childDiffs).length > 0) {
+        result[key] = childDiffs;
+      }
+    } else {
+      if(obj[key] !== undefined && obj[key] != defaultObj[key]) {
+        result[key] = obj[key];
+      }
+    }
+  });
+  return result;
 }

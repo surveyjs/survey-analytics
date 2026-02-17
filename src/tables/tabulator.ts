@@ -7,6 +7,7 @@ import { ARIAL_FONT } from "./custom_jspdf_font";
 import { svgTemplate } from "../svgbundle";
 import type { DownloadType, SortDirection, TabulatorFull, RowComponent } from "tabulator-tables";
 import { TableExtensions } from "./extensions/tableextensions";
+import { DashboardTheme, IDashboardTheme } from "../theme";
 import "./tabulator.scss";
 
 if(!!document) {
@@ -55,8 +56,8 @@ export const defaultDownloadOptions = {
 
 export const defaultOptions: ITabulatorOptions = {
   tabulatorOptions: {},
-  actionsColumnWidth: 60,
-  columnMinWidth: 248,
+  actionsColumnWidth: 56,
+  columnMinWidth: 384,
   downloadHiddenColumns: false,
   downloadButtons: ["csv"],
   downloadOptions: defaultDownloadOptions,
@@ -87,6 +88,9 @@ const escapeCellFormula = (field: string) => {
 type TabulatorParameters = ConstructorParameters<typeof TabulatorFull>;
 type TabulatorConstuctor = { new (...args: TabulatorParameters): TabulatorFull };
 export class Tabulator extends Table {
+  private _appliedTheme: DashboardTheme;
+  private _theme = new DashboardTheme();
+
   private static tabulatorTablesConstructor: TabulatorConstuctor;
   public static initTabulatorConstructor(tabulatorTablesConstructor: TabulatorConstuctor): void {
     this.tabulatorTablesConstructor = tabulatorTablesConstructor;
@@ -131,19 +135,28 @@ export class Tabulator extends Table {
       targetNode = document.getElementById(targetNode);
     }
     targetNode.className += " sa-table sa-tabulator";
+    if(!this._appliedTheme) {
+      this._appliedTheme = this.theme;
+    }
+    if(this._appliedTheme) {
+      this._appliedTheme.applyThemeToElement(targetNode);
+    }
 
     const columns = this.getColumns();
     const data = this.tableData;
 
+    var wrapper = DocumentHelper.createElement("div", "sa-tabulator__wrapper");
+    var container = DocumentHelper.createElement("div", "sa-tabulator__container");
     var header = DocumentHelper.createElement("div", "sa-tabulator__header");
-    var paginationElement = DocumentHelper.createElement(
-      "div",
-      "sa-tabulator__pagination-container"
-    );
-    this.tableContainer = DocumentHelper.createElement("div");
+    var footer = DocumentHelper.createElement("div", "sa-tabulator__footer");
+    var paginationElement = DocumentHelper.createElement("div", "sa-tabulator__pagination-container");
+    this.tableContainer = DocumentHelper.createElement("div", "sa-tabulator__table-container");
 
-    targetNode.appendChild(header);
-    targetNode.appendChild(this.tableContainer);
+    container.appendChild(header);
+    container.appendChild(this.tableContainer);
+    container.appendChild(footer);
+    wrapper.appendChild(container);
+    targetNode.appendChild(wrapper);
 
     var config: any = {};
     Object.assign(
@@ -155,7 +168,7 @@ export class Tabulator extends Table {
         paginationMode: "local",
         paginationSize: this.currentPageSize,
         movableColumns: true,
-        // maxHeight: "100%",
+        maxHeight: "50vw",
         columns,
         rowFormatter: this.rowFormatter,
         paginationElement: paginationElement,
@@ -215,18 +228,17 @@ export class Tabulator extends Table {
     this.tabulatorTables.on("columnResized", this.columnResizedCallback);
     this.tabulatorTables.on("columnMoved", this.columnMovedCallback);
 
-    const extensionsContainer = DocumentHelper.createElement(
-      "div",
-      "sa-table__header-extensions"
-    );
+    const extensionsContainer = DocumentHelper.createElement("div", "sa-table__header-extensions");
+    this.extensions.render(extensionsContainer, "header");
+    header.appendChild(extensionsContainer);
     header.appendChild(this.createDownloadsBar());
-    this.extensions.render(header, "header");
-    // header.appendChild(extensionsContainer);
-    header.appendChild(paginationElement);
+    this.extensions.render(footer, "footer");
+    footer.appendChild(paginationElement);
     this.renderResult = targetNode;
   }
 
   private createDownloadsBar(): HTMLElement {
+    /*
     var createDownloadButton = (type: DownloadType, caption: string): HTMLElement => {
       const btn = DocumentHelper.createElement(
         "button",
@@ -255,6 +267,23 @@ export class Tabulator extends Table {
       );
     });
     return container;
+    */
+
+    const values = this._options.downloadButtons.map(val => { return { value: val, text: localization.getString(`${val}DownloadCaption`) }; });
+    const exportAsAction = DocumentHelper.createActionDropdown({
+      options: values,
+      isSelected: (option: any) => false,
+      handler: (e: any) => {
+        if(!!e) {
+          this.download(e);
+        }
+        return true;
+      },
+      title: localization.getString("exportAs"),
+      showArrow: false
+    });
+    exportAsAction.className += " sa-tabulator__downloads-bar sa-button-brand-secondary";
+    return exportAsAction;
   }
 
   public destroy = () => {
@@ -264,7 +293,8 @@ export class Tabulator extends Table {
 
   private columnMovedCallback = (column: any, columns: any[]) => {
     var from = this._columns.indexOf(this.getColumnByName(column.getField()));
-    var to = columns.indexOf(column) - 1;
+    const rowExtensions = TableExtensions.getExtensions("row").filter(e => e.visibleIndex >= 0);
+    var to = columns.indexOf(column) - rowExtensions.length;
     this.moveColumn(from, to);
     this.disableColumnReorder();
   };
@@ -316,14 +346,18 @@ export class Tabulator extends Table {
     onRendered: any,
     columnName: any
   ): HTMLElement {
-    var container = DocumentHelper.createElement("div");
-    var title = DocumentHelper.createElement("span", "", {
+    var container = DocumentHelper.createElement("div", "sa-tabulator-column-header");
+    var title = DocumentHelper.createElement("span", "sa-tabulator-column-title-text", {
       innerText: cell.getValue(),
     });
-    var actions = this.getHeaderActions(columnName);
-    container.appendChild(actions);
+    const actionContainer = this.getHeaderActions(columnName);
+    const containerFilter = DocumentHelper.createElement("div", "sa-table__filter-container");
+    this.extensions.render(containerFilter, "columnfilter", { columnName: columnName });
+
+    container.appendChild(actionContainer);
     container.appendChild(title);
-    ["mousemove", "mousedown"].forEach(eventName => actions.addEventListener(eventName, (event) => {
+    container.appendChild(containerFilter);
+    ["mousemove", "mousedown"].forEach(eventName => actionContainer.addEventListener(eventName, (event) => {
       if(!this.isColumnReorderEnabled) {
         event.stopPropagation();
       }
@@ -332,10 +366,7 @@ export class Tabulator extends Table {
   }
 
   private getHeaderActions(columnName: string): HTMLElement {
-    const container = DocumentHelper.createElement(
-      "div",
-      "sa-table__action-container"
-    );
+    const container = DocumentHelper.createElement("div", "sa-table__action-container");
     this.extensions.render(container, "column", { columnName: columnName });
     return container;
   }
@@ -372,20 +403,22 @@ export class Tabulator extends Table {
         },
       };
     });
-    // const rowExtensions = TableExtensions.getExtensions("row").filter(e => e.visibleIndex >= 0);
+    const rowExtensions = TableExtensions.getExtensions("row").filter(e => e.visibleIndex >= 0);
     // const detailsExtension = TableExtensions.getExtensions("details").filter(e => e.visibleIndex >= 0);
     // const hasRowColumns = this.columns.some(c => c.location === QuestionLocation.Row);
     // if(rowExtensions.length > 1 || detailsExtension.length > 0
     //       || rowExtensions.length == 1 && (rowExtensions[0].name == "details" && hasRowColumns || rowExtensions[0].name != "details")) {
-    columns.unshift({
-      download: false,
-      resizable: false,
-      headerSort: false,
-      minWidth: this._options.actionsColumnWidth,
-      width: this._options.actionsColumnWidth,
-      tooltip: (_: MouseEvent, cell: any) => {
-        return localization.getString("actionsColumn");
-      }
+    rowExtensions.forEach(ext => {
+      columns.unshift({
+        download: false,
+        resizable: false,
+        headerSort: false,
+        minWidth: this._options.actionsColumnWidth,
+        width: this._options.actionsColumnWidth,
+        tooltip: (_: MouseEvent, cell: any) => {
+          return undefined;
+        }
+      });
     });
     // }
 
@@ -502,6 +535,22 @@ export class Tabulator extends Table {
     dataItem["surveyOriginalData"] = item;
     return dataItem;
   }
+
+  get theme() : DashboardTheme {
+    return this._theme;
+  }
+  set theme(theme: DashboardTheme) {
+    this._theme = theme;
+    this._appliedTheme = undefined;
+  }
+
+  public applyTheme(theme: IDashboardTheme): void {
+    this.theme.setTheme(theme);
+    this._appliedTheme = this.theme;
+    if(this.renderResult) {
+      this._appliedTheme.applyThemeToElement(this.renderResult);
+    }
+  }
 }
 
 export class TabulatorRow extends TableRow {
@@ -528,6 +577,18 @@ export class TabulatorRow extends TableRow {
       return data.indexOf(this.innerRow.getData().surveyOriginalData);
     }
     return null;
+  }
+
+  public render() {
+    let rowExtensions = TableExtensions.getExtensions("row").filter(e => e.visibleIndex >= 0);
+    rowExtensions = this.extensions.sortExtensions(rowExtensions);
+    rowExtensions.forEach((rowExt, index) => {
+      const cellAction = this.innerRow.getCells()[index].getElement();
+      cellAction.innerHTML = "";
+      this.extensions.renderExtension(rowExt, cellAction, { row: this });
+      cellAction.classList.add("sa-tabulator-cell__action");
+      cellAction.classList.add("sa-tabulator-cell__action-" + rowExt.name.toLowerCase());
+    });
   }
 
   public remove(): void {

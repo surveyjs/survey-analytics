@@ -1,8 +1,9 @@
 import { Question, QuestionSelectBase, ItemValue, Event, QuestionRatingModel } from "survey-core";
-import { VisualizerBase } from "./visualizerBase";
+import { IAnswersData, ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DataHelper, DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
+import { ToggleWidget } from "./utils/toggle";
 
 export interface IVisualizerWithSelection {
   selection: ItemValue;
@@ -10,19 +11,10 @@ export interface IVisualizerWithSelection {
   setSelection(item: ItemValue): void;
 }
 
-export interface IAnswersData {
-  datasets: Array<Array<any>>;
-  labels: Array<string>;
-  colors: Array<string>;
-  texts: Array<Array<any>>;
-  seriesLabels: Array<string>;
-  labelsTitle?: string;
-  valuesTitle?: string;
-}
-
 export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData {
   const result = {
     datasets: <Array<any>>[],
+    values: <Array<string>>[],
     labels: <Array<string>>[],
     colors: <Array<string>>[],
     texts: <Array<any>>[],
@@ -35,6 +27,7 @@ export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData 
       if(answersData.datasets[0][i] != 0) {
         result.datasets[0].push(answersData.datasets[0][i]);
         result.labels.push(answersData.labels[i]);
+        result.values.push(answersData.values[i]);
         result.colors.push(answersData.colors[i]);
         result.texts[0].push(answersData.texts[0][i]);
       }
@@ -56,6 +49,7 @@ export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData 
   for(var valueIndex = 0; valueIndex < valuesDataExistence.length; valueIndex++) {
     if(valuesDataExistence[valueIndex]) {
       result.labels.push(answersData.labels[valueIndex]);
+      result.values.push(answersData.values[valueIndex]);
       result.colors.push(answersData.colors[valueIndex]);
     }
   }
@@ -81,9 +75,7 @@ export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData 
   return result;
 }
 
-export class SelectBase
-  extends VisualizerBase
-  implements IVisualizerWithSelection {
+export class SelectBase extends VisualizerBase implements IVisualizerWithSelection {
   protected selectedItem: ItemValue = undefined;
   private choicesOrderSelector: HTMLDivElement = undefined;
   private showPercentageBtn: HTMLElement = undefined;
@@ -98,101 +90,114 @@ export class SelectBase
   private _topN = -1;
   public static topNValuesDefaults = [-1, 5, 10, 20];
   public topNValues = [].concat(SelectBase.topNValuesDefaults);
+  public _legendPosition: "left" | "right" | "top" | "bottom";
   protected _transposeData: boolean = false;
   private _showMissingAnswers: boolean = false;
   private missingAnswersBtn: HTMLElement = undefined;
 
-  constructor(
-    question: Question,
-    data: Array<{ [index: string]: any }>,
-    options?: any,
-    name?: string
-  ) {
-    super(question, data, options, name || "selectBase");
-    if(!!question) { // TODO: move somewhere else
-      (<any>question).visibleChoicesChangedCallback = () => {
-        this.dataProvider.raiseDataChanged();
-      };
-    }
-    this._supportSelection = true;
-    this._showOnlyPercentages = this.options.showOnlyPercentages === true;
-
-    if(this.options.percentagePrecision) {
-      this._percentagePrecision = this.options.percentagePrecision;
-    }
-    if(this.options.transposeData !== undefined) {
-      this._transposeData = this.options.transposeData;
-    }
-
-    this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
-    this._answersOrder = this.options.answersOrder || "default";
-    this._showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
-
+  private initChartTypes(): void {
     if(this.options.allowExperimentalFeatures) {
     // this.chartTypes.splice(1, 0, "vbar");
     }
     if(VisualizerBase.chartAdapterType) {
       this._chartAdapter = new VisualizerBase.chartAdapterType(this);
       this.chartTypes = this._chartAdapter.getChartTypes();
-      if(this.getSeriesValues().length > 0 && this.chartTypes.indexOf("stackedbar") === -1) {
-        this.chartTypes.push("stackedbar");
-      }
-      this._chartType = this.chartTypes[0];
-      if(this.chartTypes.indexOf(this.options.defaultChartType) !== -1) {
-        this._chartType = this.options.defaultChartType;
-      }
+    }
+    if(this.options.availableTypes) {
+      this.chartTypes = this.options.availableTypes;
+    }
+    if(this.getSeriesValues().length > 0 && this.chartTypes.indexOf("stackedbar") === -1) {
+      this.chartTypes.push(this.type == "histogram" ? "stackedhistogram" : "stackedbar");
     }
 
-    if(this.options.allowChangeVisualizerType !== false) {
+    if(this.chartTypes?.length > 0) {
+      [this.questionOptions?.chartType, this.options.defaultChartType].some(type => {
+        if(!!type && this.chartTypes.indexOf(type) !== -1) {
+          this._chartType = type;
+          return true;
+        }
+        return false;
+      });
+    }
+    if(!this._chartType) {
+      this._chartType = this.questionOptions?.chartType || this.options.defaultChartType || this.chartTypes[0] || "bar";
+    }
+  }
+
+  constructor(
+    question: Question,
+    data: Array<{ [index: string]: any }>,
+    options?: any,
+    type?: string
+  ) {
+    super(question, data, options, type || "selectBase");
+    if(!!question) { // TODO: move somewhere else
+      (<any>question).visibleChoicesChangedCallback = () => {
+        this.dataProvider.raiseDataChanged();
+      };
+    }
+    this._supportSelection = true;
+
+    this._showOnlyPercentages = this.options.showOnlyPercentages === true;
+    this._percentagePrecision = this.options.percentagePrecision !== undefined ? this.options.percentagePrecision : 2;
+    this._answersOrder = this.options.answersOrder || "default";
+    this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
+    this._legendPosition = this.options.legendPosition || "right";
+    this._transposeData = this.options.transposeData === true;
+    this._showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
+    this.initChartTypes();
+
+    if(this.allowChangeType) {
       this.registerToolbarItem("changeChartType", () => {
         if(this.chartTypes.length > 1) {
-          return DocumentHelper.createSelector(
-            this.chartTypes.map((chartType) => {
+          return DocumentHelper.createDropdown({
+            options: this.chartTypes.map((chartType) => {
               return {
                 value: chartType,
                 text: localization.getString("chartType_" + chartType),
               };
             }),
-            (option: any) => this.chartType === option.value,
-            (e: any) => {
-              this.setChartType(e.target.value);
+            isSelected: (option: any) => this.chartType === option.value,
+            handler: (e: any) => {
+              this.setChartType(e);
             }
-          );
+          });
         }
         return null;
-      });
+      }, "dropdown");
     }
 
     this.registerToolbarItem("changeAnswersOrder", () => {
       if(this.isSupportAnswersOrder()) {
-        this.choicesOrderSelector = DocumentHelper.createSelector(
-          [
+        this.choicesOrderSelector = DocumentHelper.createDropdown({
+          options: [
             { text: localization.getString("defaultOrder"), value: "default" },
             { text: localization.getString("ascOrder"), value: "asc" },
             { text: localization.getString("descOrder"), value: "desc" },
           ],
-          (option) => false,
-          (e) => {
-            this.answersOrder = e.target.value;
+          isSelected: (option) => this.answersOrder === option.value,
+          handler: (e) => {
+            this.answersOrder = e;
           }
-        );
+        });
         this.updateOrderSelector();
       }
       return this.choicesOrderSelector;
-    });
+    }, "dropdown");
     this.registerToolbarItem("showPercentages", () => {
       if(
         this.options.allowShowPercentages &&
         (this.chartTypes.indexOf("bar") !== -1 ||
           this.chartTypes.indexOf("stackedbar") !== -1)
       ) {
-        this.showPercentageBtn = DocumentHelper.createButton(() => {
+        const toggleWidget = new ToggleWidget(() => {
           this.showPercentages = !this.showPercentages;
-        });
+        }, localization.getString("showPercentages"), this.showPercentages);
+        this.showPercentageBtn = toggleWidget.container;
         this.updateShowPercentageBtn();
         return this.showPercentageBtn;
       }
-    });
+    }, "button");
     this.registerToolbarItem("hideEmptyAnswers", () => {
       if(this.options.allowHideEmptyAnswers) {
         this.emptyAnswersBtn = DocumentHelper.createButton(() => {
@@ -201,28 +206,28 @@ export class SelectBase
         this.updateEmptyAnswersBtn();
       }
       return this.emptyAnswersBtn;
-    }, 1000);
+    }, "button", 1000);
     this.registerToolbarItem("topNAnswers", () => {
       if(
         this.options.allowTopNAnswers &&
         this.getSeriesValues().length === 0
       ) {
-        this.topNSelector = DocumentHelper.createSelector(
-          this.topNValues.map((value) => {
+        this.topNSelector = DocumentHelper.createDropdown({
+          options: this.topNValues.map((value) => {
             return {
               text: localization.getString("topNValueText" + value),
               value: value,
             };
           }),
-          (option) => false,
-          (e) => {
-            this.topN = parseInt(e.target.value);
+          isSelected: (option) => this.topN === option.value as any,
+          handler: (e) => {
+            this.topN = parseInt(e);
           }
-        );
+        });
         this.updateTopNSelector();
       }
       return this.topNSelector;
-    });
+    }, "dropdown");
     this.registerToolbarItem("transposeData", () => {
       if(this.options.allowTransposeData) {
         this.transposeDataBtn = DocumentHelper.createButton(() => {
@@ -231,7 +236,7 @@ export class SelectBase
         this.updateTransposeDataBtn();
       }
       return this.transposeDataBtn;
-    });
+    }, "button");
     this.registerToolbarItem("showMissingAnswers", () => {
       if(this.isSupportMissingAnswers() && this.options.allowShowMissingAnswers) {
         this.missingAnswersBtn = DocumentHelper.createButton(() => {
@@ -240,11 +245,11 @@ export class SelectBase
         this.updateMissingAnswersBtn();
       }
       return this.missingAnswersBtn;
-    });
+    }, "button");
   }
 
   protected chartTypes: string[] = [];
-  protected _chartType: string = "bar";
+  protected _chartType: string;
   /**
    * Chart type - current chart type.
    */
@@ -257,9 +262,7 @@ export class SelectBase
 
   private updateEmptyAnswersBtn() {
     if(!!this.emptyAnswersBtn) {
-      this.emptyAnswersBtn.innerText = this._hideEmptyAnswers
-        ? localization.getString("showEmptyAnswers")
-        : localization.getString("hideEmptyAnswers");
+      (this.emptyAnswersBtn as any).setText(localization.getString(this._hideEmptyAnswers ? "showEmptyAnswers" : "hideEmptyAnswers"));
       if(this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "line" || this.chartType == "scatter") {
         this.emptyAnswersBtn.style.display = "inline";
       } else {
@@ -270,9 +273,7 @@ export class SelectBase
 
   private updateTransposeDataBtn() {
     if(!!this.transposeDataBtn) {
-      this.transposeDataBtn.innerText = this.transposeData
-        ? localization.getString("showPerColumns")
-        : localization.getString("showPerValues");
+      (this.transposeDataBtn as any).setText(localization.getString(this.transposeData ? "showPerColumns" : "showPerValues"));
       if(this.getSeriesValues().length > 0) {
         this.transposeDataBtn.style.display = "inline";
       } else {
@@ -295,19 +296,15 @@ export class SelectBase
       } else {
         this.choicesOrderSelector.style.display = "none";
       }
-      this.choicesOrderSelector.getElementsByTagName(
-        "select"
-      )[0].value = this.answersOrder;
+      (this.choicesOrderSelector as any).setValue(this.answersOrder);
     }
   }
 
   private updateShowPercentageBtn() {
     if(!!this.showPercentageBtn) {
-      this.showPercentageBtn.innerText = this._showPercentages
-        ? localization.getString("hidePercentages")
-        : localization.getString("showPercentages");
+      // (this.showPercentageBtn as any).setText(localization.getString(this._showPercentages ? "hidePercentages" : "showPercentages"));
       if(this.chartType == "bar" || this.chartType == "vbar" || this.chartType == "stackedbar") {
-        this.showPercentageBtn.style.display = "inline";
+        this.showPercentageBtn.style.display = undefined;
       } else {
         this.showPercentageBtn.style.display = "none";
       }
@@ -316,17 +313,13 @@ export class SelectBase
 
   private updateTopNSelector() {
     if(!!this.topNSelector) {
-      this.topNSelector.getElementsByTagName("select")[0].value = <any>(
-        this._topN
-      );
+      (this.topNSelector as any).setValue(this._topN);
     }
   }
 
   private updateMissingAnswersBtn() {
     if(!!this.missingAnswersBtn) {
-      this.missingAnswersBtn.innerText = this._showMissingAnswers
-        ? localization.getString("hideMissingAnswers")
-        : localization.getString("showMissingAnswers");
+      (this.missingAnswersBtn as any).setText(localization.getString(this._showMissingAnswers ? "hideMissingAnswers" : "showMissingAnswers"));
     }
   }
 
@@ -420,6 +413,10 @@ export class SelectBase
       return ["pie", "doughnut"].indexOf(this.chartType) !== -1;
     }
     return this.options.showPercentages === true;
+  }
+
+  public get percentagePrecision(): number {
+    return this._percentagePrecision;
   }
 
   /**
@@ -519,12 +516,14 @@ export class SelectBase
     this.stateChanged("showMissingAnsewrs", value);
   }
 
-  refreshContent() {
-    if(!!this.contentContainer) {
-      this.destroyContent(this.contentContainer);
-      this.renderContent(this.contentContainer);
-    }
-    this.invokeOnUpdate();
+  public get legendPosition(): "left" | "right" | "top" | "bottom" {
+    return this._legendPosition;
+  }
+
+  public set legendPosition(value: "left" | "right" | "top" | "bottom") {
+    this._legendPosition = value;
+    this.refreshContent();
+    this.stateChanged("legendPosition", value);
   }
 
   onDataItemSelected: (selectedValue: any, selectedText: string) => void;
@@ -585,6 +584,8 @@ export class SelectBase
   }
 
   getPercentages(data: Array<Array<number>>): Array<Array<number>> {
+    if(!data || !Array.isArray(data)) return [];
+
     var percentages: Array<Array<number>> = [];
     var percentagePrecision = this._percentagePrecision;
 
@@ -626,23 +627,24 @@ export class SelectBase
    */
   public async getAnswersData(): Promise<IAnswersData> {
     let seriesLabels = this.getSeriesLabels();
-    let datasets = (await this.getCalculatedValues()) as number[][];
+    let datasets = (await this.getCalculatedValues()).data;
+    let values = this.getValues();
     let labels = this.getLabels();
-    let colors = this.getColors();
-
+    let colors = VisualizerBase.getColors();
     if(this.transposeData) {
       datasets = this.transpose(datasets);
       const temp = seriesLabels;
       seriesLabels = labels;
       labels = temp;
+      values = this.getSeriesValues();
     }
 
     var texts = this.showPercentages ? this.getPercentages(datasets) : datasets;
 
     if(this.answersOrder == "asc" || this.answersOrder == "desc") {
       var zippedArray = this.showPercentages
-        ? DataHelper.zipArrays(labels, colors, texts[0])
-        : DataHelper.zipArrays(labels, colors);
+        ? DataHelper.zipArrays(labels, colors, values, texts[0])
+        : DataHelper.zipArrays(labels, colors, values);
       let dict = DataHelper.sortDictionary(
         zippedArray,
         datasets[0],
@@ -651,12 +653,14 @@ export class SelectBase
       let unzippedArray = DataHelper.unzipArrays(dict.keys);
       labels = unzippedArray[0];
       colors = unzippedArray[1];
-      if(this.showPercentages) texts[0] = unzippedArray[2];
+      values = unzippedArray[2];
+      if(this.showPercentages) texts[0] = unzippedArray[3];
       datasets[0] = dict.values;
     }
 
     let answersData = {
       datasets,
+      values,
       labels,
       colors,
       texts,
@@ -677,7 +681,7 @@ export class SelectBase
     return answersData;
   }
 
-  public convertFromExternalData(externalCalculatedData: any): any[] {
+  public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
     const values = this.getValues();
     const series = this.getSeriesValues();
     const innerCalculatedData = [];
@@ -700,7 +704,11 @@ export class SelectBase
       }
       innerCalculatedData.push(seriesData);
     }
-    return innerCalculatedData;
+    return {
+      data: innerCalculatedData,
+      values,
+      series
+    };
   }
 
   protected transpose(data: Array<Array<number>>): Array<Array<number>> {
@@ -716,43 +724,63 @@ export class SelectBase
     return result;
   }
 
-  private static _stateProperties = ["chartType", "answersOrder", "hideEmptyAnswers", "topN"];
+  private static _selectBaseDefaultState = {
+    "chartType": undefined,
+    "answersOrder": "default",
+    "hideEmptyAnswers": false,
+    "legendPosition": "right",
+    "showOnlyPercentages": false,
+    "transposeData": false,
+    "showMissingAnswers": false,
+    "topN": -1
+  };
+
+  public getDefaultState(): any {
+    if(this._defaultStateValue !== undefined) {
+      return this._defaultStateValue;
+    }
+    this._defaultStateValue = Object.assign({}, super.getDefaultState(), SelectBase._selectBaseDefaultState);
+    this._defaultStateValue.showOnlyPercentages = this.options.showOnlyPercentages === true;
+    this._defaultStateValue.answersOrder = this.options.answersOrder || "default";
+    this._defaultStateValue.hideEmptyAnswers = this.options.hideEmptyAnswers === true;
+    this._defaultStateValue.legendPosition = this.options.legendPosition || "right";
+    this._defaultStateValue.transposeData = this.options.transposeData === true;
+    this._defaultStateValue.showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
+
+    this._defaultStateValue.chartType = this.questionOptions?.chartType || this.chartTypes[0];
+    this._defaultStateValue.filter = undefined;
+    return this._defaultStateValue;
+  }
+
   public getState(): any {
-    let state: any = {};
-    SelectBase._stateProperties.forEach(propertyName => {
-      state[propertyName] = (<any>this)[propertyName];
-    });
+    const state = super.getState();
     if(!!this.selectedItem) {
       state.filter = this.selectedItem.value;
     }
     return state;
   }
-  public setState(state: any): void {
-    SelectBase._stateProperties.forEach(propertyName => {
-      if(state[propertyName] !== undefined) {
-        (<any>this)[propertyName] = state[propertyName];
-      }
-    });
+
+  protected setStateCore(state: any): void {
+    super.setStateCore(state);
     const selectedItem = ItemValue.getItemByValue((this.question as QuestionSelectBase).visibleChoices, state.filter);
     this.setSelection(selectedItem ?? undefined);
   }
+
   public resetState(): void {
     super.resetState();
-    // this._showPercentages = this.options.showPercentages === true;
-    // this._showOnlyPercentages = this.options.showOnlyPercentages === true;
-    // this._showMissingAnswers = this.isSupportMissingAnswers() && this.options.showMissingAnswers === true;
-    // this._transposeData = this.options.transposeData || false;
-    this._hideEmptyAnswers = this.options.hideEmptyAnswers === true;
-    this._answersOrder = this.options.answersOrder || "default";
-    this._topN = -1;
-    this.chartType = this.chartTypes[0];
     this.setSelection(undefined);
+  }
+
+  protected onThemeChanged(): void {
+    super.onThemeChanged();
+    this.refreshContent();
   }
 }
 
-VisualizationManager.registerVisualizer("checkbox", SelectBase);
-VisualizationManager.registerVisualizer("radiogroup", SelectBase);
-VisualizationManager.registerVisualizer("dropdown", SelectBase);
-VisualizationManager.registerVisualizer("imagepicker", SelectBase);
-VisualizationManager.registerVisualizer("tagbox", SelectBase);
-VisualizationManager.registerVisualizer("rating", SelectBase, 100);
+VisualizationManager.registerVisualizer("checkbox", SelectBase, undefined, "selectBase");
+VisualizationManager.registerVisualizer("radiogroup", SelectBase, undefined, "selectBase");
+VisualizationManager.registerVisualizer("dropdown", SelectBase, undefined, "selectBase");
+VisualizationManager.registerVisualizer("imagepicker", SelectBase, undefined, "selectBase");
+VisualizationManager.registerVisualizer("tagbox", SelectBase, undefined, "selectBase");
+VisualizationManager.registerVisualizer("rating", SelectBase, 100, "selectBase");
+VisualizationManager.registerVisualizer("selectBase", SelectBase, undefined, "selectBase");

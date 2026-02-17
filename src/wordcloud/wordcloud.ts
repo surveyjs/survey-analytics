@@ -1,5 +1,5 @@
 import { Question, Event } from "survey-core";
-import { VisualizerBase } from "../visualizerBase";
+import { ICalculationResult, VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
 import { textHelper } from "./stopwords/index";
 import { DocumentHelper } from "../utils";
@@ -27,11 +27,10 @@ export class WordCloudAdapter {
   }
 
   public async create(element: HTMLElement): Promise<any> {
-    const data = await this.model.getCalculatedValues();
-    const colors = this.model.getColors();
+    const answersData = await this.model.getAnswersData();
 
-    if(data.length === 0) {
-      const emptyTextNode = <HTMLElement>DocumentHelper.createElement("p", "", {
+    if(answersData.datasets.length === 0 || answersData.datasets[0].length === 0) {
+      var emptyTextNode = DocumentHelper.createElement("p", "", {
         innerText: localization.getString("noResults"),
       });
       element.appendChild(emptyTextNode);
@@ -44,8 +43,8 @@ export class WordCloudAdapter {
     };
     WordCloudAdapter.onWordcloudCreating.fire(this.model, options);
     this._wordcloud = new WordCloudWidget(config);
-    this._wordcloud.colors = this.model.getColors();
-    this._wordcloud.words = data;
+    this._wordcloud.colors = VisualizerBase.getColors();
+    this._wordcloud.words = answersData.values.map((w, i) => [w, answersData.datasets[0][i]]);
     this._wordcloud.render(element);
     return this._wordcloud;
   }
@@ -59,26 +58,32 @@ export class WordCloudAdapter {
 }
 export class WordCloud extends VisualizerBase {
   private _wordcloudAdapter: WordCloudAdapter;
+  private _values = [];
 
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "wordcloud");
+    super(question, data, options, type || "wordcloud");
     this._wordcloudAdapter = new WordCloudAdapter(this);
   }
 
-  public convertFromExternalData(externalCalculatedData: any): any[] {
-    const innerCalculatedData = [];
-    Object.keys(externalCalculatedData || []).forEach(word => {
-      innerCalculatedData.push([word, externalCalculatedData[word]]);
-    });
-    return innerCalculatedData;
+  public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
+    this._values = Object.keys(externalCalculatedData || {});
+
+    return {
+      data: [this._values.map(w => externalCalculatedData[w])],
+      values: this._values
+    };
   }
 
-  protected getCalculatedValuesCore(): Array<any> {
+  public getValues(): Array<any> {
+    return this._values;
+  }
+
+  protected getCalculatedValuesCore(): ICalculationResult {
     let result: { [key: string]: number } = {};
 
     let stopWords: string[] = [];
@@ -133,9 +138,11 @@ export class WordCloud extends VisualizerBase {
       }
     });
 
-    return Object.keys(result).map((key) => {
-      return [key, result[key]];
-    });
+    this._values = Object.keys(result);
+    return {
+      data: [this._values.map(w => result[w])],
+      values: this._values
+    };
   }
 
   protected destroyContent(container: HTMLElement) {
@@ -158,6 +165,7 @@ export class WordCloud extends VisualizerBase {
   }
 }
 
-VisualizationManager.registerVisualizer("text", WordCloud);
-VisualizationManager.registerVisualizer("comment", WordCloud);
-VisualizationManager.registerVisualizer("multipletext", WordCloud);
+VisualizationManager.registerVisualizer("text", WordCloud, undefined, "wordcloud");
+VisualizationManager.registerVisualizer("comment", WordCloud, undefined, "wordcloud");
+VisualizationManager.registerVisualizer("multipletext", WordCloud, undefined, "wordcloud");
+VisualizationManager.registerVisualizer("wordcloud", WordCloud, undefined, "wordcloud");
