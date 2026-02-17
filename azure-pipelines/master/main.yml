@@ -231,15 +231,15 @@ steps:
       $env:GIT_REDIRECT_STDERR = '2>&1'
       git config --global user.email "surveyjs.org@gmail.com"
       git config --global user.name "surveyjsdeveloper"
-      git pull origin master
-      git merge -X ours origin/master
-      git fetch origin master --tags --force
-      git checkout master
+      git pull origin main
+      git merge -X ours origin/main
+      git fetch origin main --tags --force
+      git checkout main
       git add DocsAnalytics
       git commit -m "updated survey-analytics docs [azurepipelines skip]"
-      git pull origin master
-      git merge -X ours origin/master
-      git push origin master
+      git pull origin main
+      git merge -X ours origin/main
+      git push origin main
     displayName: "Git surveyjs-site-data push updated docs for $(CurrentBranch)"
   # - powershell: |
   #     cd $(Build.SourcesDirectory)/service
