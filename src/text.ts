@@ -3,6 +3,7 @@ import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils";
+import { getNestedDataRows } from "./statisticCalculators";
 
 import "./text.scss";
 
@@ -86,26 +87,29 @@ export class Text extends VisualizerBase {
     let result: Array<Array<string>> = [];
     let columnCount = 0;
 
-    this.surveyData.forEach((row) => {
-      const rowValue: any = row[this.question.name];
-      let dataStrings: Array<string> = [];
-      if(!!rowValue) {
-        if(Array.isArray(rowValue)) {
-          dataStrings = dataStrings.concat(rowValue);
-        } else {
-          if(typeof rowValue === "object") {
-            Object.keys(rowValue).forEach((key) =>
-              dataStrings.push(rowValue[key])
-            );
+    this.surveyData.forEach((dataRow) => {
+      const nestedDataRows = getNestedDataRows(dataRow, this);
+      nestedDataRows.forEach(row => {
+        const rowValue: any = row[this.question.name];
+        let dataStrings: Array<string> = [];
+        if(!!rowValue) {
+          if(Array.isArray(rowValue)) {
+            dataStrings = dataStrings.concat(rowValue);
           } else {
-            dataStrings.push(rowValue);
+            if(typeof rowValue === "object") {
+              Object.keys(rowValue).forEach((key) =>
+                dataStrings.push(rowValue[key])
+              );
+            } else {
+              dataStrings.push(rowValue);
+            }
+          }
+          result.push(dataStrings);
+          if(dataStrings.length > columnCount) {
+            columnCount = dataStrings.length;
           }
         }
-        result.push(dataStrings);
-        if(dataStrings.length > columnCount) {
-          columnCount = dataStrings.length;
-        }
-      }
+      });
     });
 
     return { columnCount: columnCount, data: result };

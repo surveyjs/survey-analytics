@@ -5,6 +5,7 @@ import { textHelper } from "./stopwords/index";
 import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
 import { WordCloudWidget, defaultOptions } from "./widget";
+import { getNestedDataRows } from "../statisticCalculators";
 
 export class WordCloudAdapter {
   private _wordcloud: any;
@@ -116,21 +117,24 @@ export class WordCloud extends VisualizerBase {
       }
     };
 
-    this.surveyData.forEach((row) => {
-      const rowValue: any = row[this.question.name];
-      if(!!rowValue) {
-        if(Array.isArray(rowValue)) {
-          rowValue.forEach(processString);
-        } else {
-          if(typeof rowValue === "object") {
-            Object.keys(rowValue).forEach((key) =>
-              processString(rowValue[key])
-            );
+    this.surveyData.forEach((dataRow) => {
+      const nestedDataRows = getNestedDataRows(dataRow, this);
+      nestedDataRows.forEach(row => {
+        const rowValue: any = row[this.question.name];
+        if(!!rowValue) {
+          if(Array.isArray(rowValue)) {
+            rowValue.forEach(processString);
           } else {
-            processString(rowValue);
+            if(typeof rowValue === "object") {
+              Object.keys(rowValue).forEach((key) =>
+                processString(rowValue[key])
+              );
+            } else {
+              processString(rowValue);
+            }
           }
         }
-      }
+      });
     });
 
     return Object.keys(result).map((key) => {
