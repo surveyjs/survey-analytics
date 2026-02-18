@@ -1,30 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`render image in details 1`] = `
-<div
-  class=""
->
+<div>
   <table
     class="sa-table__detail-table"
   >
     <tr
       class="sa-table__detail"
     >
-      <td
-        class=""
-      >
+      <td>
         q1
       </td>
-      <td
-        class=""
-      >
+      <td>
         <img
           src="signature"
         />
       </td>
-      <td
-        class=""
-      >
+      <td>
         <button
           class="sa-table__btn sa-table__btn--gray"
         >
