@@ -985,15 +985,6 @@ export class ApexChartsSetup {
       }
     };
 
-    const grid = {
-      padding: {
-        top: 0,
-        right: 0,
-        bottom: isNaN(value) ? 0 : -80,
-        left: 0
-      }
-    };
-
     const series = [percent];
     const labels = [model.name];
     const colors = [model.theme.gaugeBarColor];
@@ -1005,7 +996,6 @@ export class ApexChartsSetup {
       colors,
       plotOptions,
       yaxis,
-      grid,
       responsive: [{ ...ApexChartsSetup.defaultResponsive }],
       // dataLabels,
     };
