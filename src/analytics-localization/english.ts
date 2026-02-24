@@ -62,7 +62,7 @@ export var englishStrings = {
   xlsxDownloadCaption: "Excel",
   csvDownloadCaption: "CSV",
   saveDiagramAsPNG: "Download plot as a PNG file",
-  answersText: "answer(s)",
+  responsesText: "response(s)",
   noData: "No data",
   selectDateRange: "Select date range...",
   includeToday: "Include today",
