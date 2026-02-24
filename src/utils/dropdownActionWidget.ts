@@ -62,11 +62,11 @@ export class ActionDropdownWidget extends DropdownBase {
       this.hidePopup();
     }
 
-    this.updateItemSelection(dropdownItem, this.options.isSelected(option));
+    this.updateItemSelection();
     this.updateHeaderLabel();
   }
 
-  protected onBeforeHeaderToggle(): void {
+  protected onBeforePopupShow(): void {
     this.updateOptions();
   }
 
@@ -90,15 +90,6 @@ export class ActionDropdownWidget extends DropdownBase {
   }
 
   public setValues(values: string[]): void {
-    this.dropdownList.querySelectorAll("." + this.className + "-item").forEach((item) => {
-      const itemValue = (item as HTMLElement)?.dataset?.value;
-      if(itemValue && values.indexOf(itemValue) !== -1) {
-        this.updateItemSelection(item as HTMLLIElement, true);
-      } else {
-        this.updateItemSelection(item as HTMLLIElement, false);
-      }
-    });
-
     this.updateHeaderLabel();
   }
 

@@ -236,7 +236,7 @@ export class DateRangeWidget {
 
   public updateElements(): void {
     if(this.datePeriodContainer) {
-      this.datePeriodContainer["__updateSelect"] && this.datePeriodContainer["__updateSelect"]();
+      this.datePeriodContainer["__updateHeader"] && this.datePeriodContainer["__updateHeader"]();
     }
     this.updateMinMaxAttributes();
     const range = this.model.currentDateRange;
@@ -252,7 +252,7 @@ export class DateRangeWidget {
       this.answersCount = answersCount;
     }
     if(!!this.countLabel && this.answersCount !== undefined) {
-      this.countLabel.textContent = this.answersCount + " " + localization.getString("answersText");
+      this.countLabel.textContent = this.answersCount + " " + localization.getString("responsesText");
     }
   }
 

@@ -29,6 +29,10 @@ export abstract class DropdownBase {
     this.itemClassSelected = this.className + "-item--selected";
   }
 
+  public get isOpen(): boolean {
+    return this.dropdownHeader.classList.contains(this.dropdownOpenedClass);
+  }
+
   public render(): HTMLDivElement {
     this.dropdownElement = this.createDropdownElement();
     this.dropdownHeader = this.createHeader();
@@ -71,6 +75,14 @@ export abstract class DropdownBase {
     arrowElement.className = arrowClassName ?? this.className + "-arrow";
     arrowElement.appendChild(DocumentHelper.createSvgElement("chevrondown-24x24"));
     return arrowElement;
+  }
+
+  protected showPopup() {
+    this.updateItemSelection();
+    this.dropdownHeader.classList.add(this.dropdownOpenedClass);
+    this.dropdownList.classList.add(this.dropdownOpenedClass);
+    this.dropdownHeader.setAttribute("aria-expanded", "true");
+    this.onDropdownOpened();
   }
 
   protected hidePopup(): void {
@@ -154,13 +166,11 @@ export abstract class DropdownBase {
   }
 
   protected handleKeyDown(e: KeyboardEvent): void {
-    if(!this.dropdownHeader.classList.contains(this.dropdownOpenedClass)) {
+    if(!this.isOpen) {
       if(e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
         e.preventDefault();
-        this.dropdownHeader.classList.add(this.dropdownOpenedClass);
-        this.dropdownList.classList.add(this.dropdownOpenedClass);
-        this.dropdownHeader.setAttribute("aria-expanded", "true");
-        this.onDropdownOpened();
+        this.showPopup();
+        this.onOpenedByKeyboard();
       }
       return;
     }
@@ -214,43 +224,44 @@ export abstract class DropdownBase {
   }
 
   protected handleHeaderClick(e: MouseEvent): void {
-    this.onBeforeHeaderToggle();
-
-    const parentContainerWidth = this.dropdownContainer.getBoundingClientRect().width;
-    this.dropdownList.style.minWidth = `${parentContainerWidth}px`;
-
-    const isOpened = this.dropdownHeader.classList.toggle(this.dropdownOpenedClass);
-    this.dropdownList.classList.toggle(this.dropdownOpenedClass);
-    this.dropdownHeader.setAttribute("aria-expanded", isOpened ? "true" : "false");
-
-    this.onAfterHeaderToggle(isOpened);
-
-    if(!isOpened) {
-      this.currentFocusIndex = -1;
+    if(this.isOpen) {
+      this.hidePopup();
+    } else {
+      this.onBeforePopupShow();
+      const parentContainerWidth = this.dropdownContainer.getBoundingClientRect().width;
+      this.dropdownList.style.minWidth = `${parentContainerWidth}px`;
+      this.showPopup();
     }
 
     e.preventDefault();
     e.stopPropagation();
   }
 
-  protected onBeforeHeaderToggle(): void { }
+  protected onBeforePopupShow(): void { }
 
-  protected onAfterHeaderToggle(_isOpened: boolean): void { }
+  protected onOpenedByKeyboard(): void { }
 
   protected onDropdownOpened(): void { }
 
-  protected shouldUpdateAriaSelectedOnFocus(): boolean {
-    return false;
+  protected updateItemSelection(): void {
+    this.dropdownList.querySelectorAll("." + this.className + "-item").forEach((item) => {
+      const value = (item as HTMLElement).dataset.value;
+      const option = this.optionItems.find((o) => o.value === value);
+      if(option) {
+        const selected = this.isOptionSelected(option);
+        if(selected) {
+          item.classList.add(this.itemClassSelected);
+          item.setAttribute("aria-selected", "true");
+        } else {
+          item.classList.remove(this.itemClassSelected);
+          item.setAttribute("aria-selected", "false");
+        }
+      }
+    });
   }
 
-  protected updateItemSelection(dropdownItem: HTMLLIElement, selected: boolean): void {
-    if(selected) {
-      dropdownItem.classList.add(this.itemClassSelected);
-      dropdownItem.setAttribute("aria-selected", "true");
-    } else {
-      dropdownItem.classList.remove(this.itemClassSelected);
-      dropdownItem.setAttribute("aria-selected", "false");
-    }
+  protected shouldUpdateAriaSelectedOnFocus(): boolean {
+    return false;
   }
 
   protected abstract createHeader(): HTMLDivElement;
