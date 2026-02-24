@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.5.12 (2026-02-24)
+
+
+### Bug Fixes
+
+* fi translation fix ([#671](https://github.com/surveyjs/survey-analytics/issues/671)) ([6a8d120](https://github.com/surveyjs/survey-analytics/commit/6a8d1209347d585900a0436b4f2de7b4266522ad))
+
 ### 2.5.11 (2026-02-18)
 
 ### [2.5.10](https://github.com/surveyjs/survey-analytics/compare/v2.5.9...v2.5.10) (2026-02-12)
