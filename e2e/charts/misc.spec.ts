@@ -33,6 +33,7 @@ test.describe("Miscellaneous cases", () => {
 
     await chartTypeSelector.click();
     await getListItemByText(page, "Bar").click();
+    await page.waitForTimeout(500);
     await compareScreenshot(page, chartContentSelector, "matrix-single-row-bar-per-values.png");
   });
 
