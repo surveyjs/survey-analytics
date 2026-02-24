@@ -7,6 +7,7 @@ export interface IActionDropdownOptions {
   title: string | (() => string) | Function;
   className?: string;
   showArrow?: boolean;
+  direction?: "up" | "down";
 }
 
 export class ActionDropdownWidget extends DropdownBase {
@@ -16,6 +17,10 @@ export class ActionDropdownWidget extends DropdownBase {
   constructor(options: IActionDropdownOptions) {
     super(options.className ?? "sa-action-dropdown");
     this.options = options;
+  }
+
+  get direction(): "up" | "down" {
+    return this.options.direction ?? "down";
   }
 
   protected createHeader(): HTMLDivElement {
@@ -67,6 +72,9 @@ export class ActionDropdownWidget extends DropdownBase {
   }
 
   protected onBeforePopupShow(): void {
+    if(this.direction === "up") {
+      this.dropdownList.classList.add(this.className + "--up");
+    }
     this.updateOptions();
   }
 
