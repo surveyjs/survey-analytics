@@ -9,10 +9,27 @@
 
   &.sa-toolbar--has-content {
     padding: var(--sjs2-spacing-x200, 16px);
+    gap: var(--sjs2-spacing-x200, 16px);
+  }
+}
+
+.sa-panel__header.sa-toolbar--has-content {
+  border-radius: var(--sjs2-radius-container-panel, 16px);
+  background: var(--sjs2-color-bg-basic-primary, #FFF);
+  box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
+}
+
+.sa-pivot--standalone {
+  background: var(--sjs2-color-utility-surface-dashboard, rgba(28, 27, 32, 0.05));
+  padding-bottom: var(--sjs2-spacing-x300, 24px);
+
+  .sa-visualizer-wrapper {
     border-radius: var(--sjs2-radius-container-panel, 16px);
     background: var(--sjs2-color-bg-basic-primary, #FFF);
     box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
-    gap: var(--sjs2-spacing-x200, 16px);
+  
+    padding: var(--sjs2-spacing-x400, 32px) var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px);
+    margin: var(--sjs2-spacing-x300, 24px);
   }
 }
 
@@ -57,10 +74,14 @@
   vertical-align: top;
   box-sizing: border-box;
   overflow: hidden;
+
+  border-radius: var(--sjs2-radius-container-panel, 16px);
+  background: var(--sjs2-color-bg-basic-primary, #FFF);
+  box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
 }
 
-.sa-question-layouted .sa-question__content {
-  padding: 0 var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px);
+.sa-question .sa-question__content {
+  padding: var(--sjs2-spacing-x400, 32px) var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px);
 
   @media screen and (max-width: 600px) { 
     padding: var(--sjs2-spacing-x300, 24px) var(--sjs2-spacing-x150, 12px) var(--sjs2-spacing-x150, 12px) var(--sjs2-spacing-x150, 12px);
@@ -73,9 +94,6 @@
   width: 100%;
   margin-inline-start: var(--sjs2-spacing-x300, 24px);
   margin-top: var(--sjs2-spacing-x300, 24px);
-  border-radius: var(--sjs2-radius-container-panel, 16px);
-  background: var(--sjs2-color-bg-basic-primary, #FFF);
-  box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
 
   @media screen and (min-width: 1400px) {
     width: calc(50% - var(--sjs2-spacing-x300, 24px) - 1px);
@@ -84,6 +102,14 @@
     margin-inline-start: var(--sjs2-spacing-x150, 12px);
     margin-top: var(--sjs2-spacing-x150, 12px);
     width: 100%;
+  }
+}
+
+.sa-question-layouted .sa-question__content {
+  padding-top: 0;
+
+  @media screen and (max-width: 600px) {
+    padding-top: 0;
   }
 }
 
@@ -172,6 +198,10 @@
     outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.60));
     background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0.00));
   }
+}
+
+.sa-question__header:not(.sa-question__header--allow-drag) {
+  padding-top: var(--sjs2-spacing-x400, 32px);
 }
 
 .sa-question:not(.sa-question-layouted) {
