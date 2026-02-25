@@ -200,6 +200,10 @@
 
 .sa-question__header:not(.sa-question__header--allow-drag) {
   padding-top: var(--sjs2-spacing-x400, 32px);
+
+  @media screen and (max-width: 600px) {
+    padding-top: var(--sjs2-spacing-x300, 24px);
+  }
 }
 
 
