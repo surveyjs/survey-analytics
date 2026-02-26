@@ -16,7 +16,21 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
 
   constructor(protected question: T, protected table: Table) {
     this.dataType = this.getDataType();
+    this.updateWhenQuestionIsReady(question, table);
   }
+
+  protected updateWhenQuestionIsReady(question: Question, table: Table) {
+    if(!question) return;
+    question.waitForQuestionIsReady().then(() => {
+      try {
+        table.lockStateChanged();
+        table.refresh(!table.isInitTableDataProcessing);
+      } finally {
+        table.unlockStateChanged();
+      }
+    });
+  }
+
   get name(): string {
     if(!this.nameValue) {
       this.name = this.getName();
@@ -51,25 +65,6 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
     return data[this.name];
   }
 
-  protected setupReadyChangedCallback(table: Table, question: Question) {
-    if(!!question) {
-      const onReadyChangedCallback = (sender, options) => {
-        if(options.isReady) {
-          try {
-            sender.onReadyChanged.remove(onReadyChangedCallback);
-            table.lockStateChanged();
-            table.refresh(!table.isInitTableDataProcessing);
-          } finally {
-            table.unlockStateChanged();
-          }
-        }
-      };
-      if(!question.isReady) {
-        question.onReadyChanged.add(onReadyChangedCallback);
-      }
-    }
-  }
-
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
     let displayValue = this.getDisplayValueCore(data);
     const question = this.question;
@@ -91,7 +86,6 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
 
   public getCellData(table: Table, data: any): ICellData {
     const displayValue = this.getDisplayValue(data, table, table.options);
-    this.setupReadyChangedCallback(table, this.question);
     return { question: this.question, displayValue: this.formatDisplayValue(displayValue) };
   }
   public toJSON(): IColumnData {
@@ -278,19 +272,19 @@ export class MatrixDropdownColumn extends BaseColumn<QuestionMatrixDropdownModel
 }
 
 export class CustomQuestionColumn extends BaseColumn<QuestionCustomModel> {
-  public getCellData(table: Table, data: any): ICellData {
-    this.setupReadyChangedCallback(table, this.question.contentQuestion);
-    return super.getCellData(table, data);
+  constructor(question: QuestionCustomModel, table: Table) {
+    super(question, table);
+    this.updateWhenQuestionIsReady(question.contentQuestion, table);
   }
 }
 
 export class CompositeQuestionColumn extends BaseColumn<QuestionCompositeModel> {
-  public getCellData(table: Table, data: any): ICellData {
+  constructor(question: QuestionCompositeModel, table: Table) {
+    super(question, table);
     const questionList: Question[] = [];
     this.question.contentPanel.addQuestionsToList(questionList);
-    questionList.forEach((question: Question) => {
-      this.setupReadyChangedCallback(table, question);
+    questionList.forEach((q: Question) => {
+      this.updateWhenQuestionIsReady(q, table);
     });
-    return super.getCellData(table, data);
   }
 }
