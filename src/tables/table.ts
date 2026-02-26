@@ -188,7 +188,7 @@ export abstract class Table {
    */
   public setPageSize(value: number): void {
     this.currentPageSize = value;
-    this.onStateChanged.fire(this, this.state);
+    this.stateChanged();
   }
 
   public getCreatedRows(): TableRow[] {
@@ -236,7 +236,7 @@ export abstract class Table {
   public set columns(columns: Array<IColumn>) {
     this._columns = columns;
     this.refresh(true);
-    this.onStateChanged.fire(this, this.state);
+    this.stateChanged();
   }
 
   private isInitTableDataProcessingValue: boolean;
@@ -266,7 +266,7 @@ export abstract class Table {
   public moveColumn(from: number, to: number) {
     var deletedColumns = this._columns.splice(from, 1);
     this._columns.splice(to, 0, deletedColumns[0]);
-    this.onStateChanged.fire(this, this.state);
+    this.stateChanged();
   }
 
   public setColumnLocation(columnName: string, location: QuestionLocation) {
@@ -275,7 +275,7 @@ export abstract class Table {
       columnName: columnName,
       location: location,
     });
-    this.onStateChanged.fire(this, this.state);
+    this.stateChanged();
   }
 
   public getColumnByName(columnName: string): IColumn {
@@ -289,13 +289,13 @@ export abstract class Table {
       columnName: columnName,
       columnVisibility: isVisible,
     });
-    this.onStateChanged.fire(this, this.state);
+    this.stateChanged();
   }
 
   public setColumnWidth(columnName: string, width: string | number) {
     var column = this.getColumnByName(columnName);
     column.width = width;
-    this.onStateChanged.fire(this, this.state);
+    this.stateChanged();
   }
 
   public removeRow(row: TableRow): void {
@@ -320,6 +320,19 @@ export abstract class Table {
     localization.currentLocale = newLocale;
     this.columns.forEach(c => c.displayName = undefined);
     this.refresh(true);
+    this.stateChanged();
+  }
+
+  private _lockStateChanged: boolean = false;
+  public lockStateChanged() {
+    this._lockStateChanged = true;
+  }
+  public unlockStateChanged() {
+    this._lockStateChanged = false;
+  }
+
+  protected stateChanged() {
+    if(this._lockStateChanged) return;
     this.onStateChanged.fire(this, this.state);
   }
 
@@ -405,7 +418,7 @@ export abstract class Table {
     this._survey.locale = surveyLocalization.defaultLocale;
     this.initialize();
     this.refresh(true);
-    this.onStateChanged.fire(this, this.state);
+    this.stateChanged();
   }
 
   private updateColumnsFromData(columnsData: Array<IColumnData>) {

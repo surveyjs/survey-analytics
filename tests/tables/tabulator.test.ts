@@ -1,4 +1,4 @@
-import { SurveyModel } from "survey-core";
+import { Question, SurveyModel } from "survey-core";
 // eslint-disable-next-line surveyjs/no-imports-from-entries
 import { Tabulator } from "../../src/entries/tabulator-umd";
 import { TableExtensions } from "../../src/tables/extensions/tableextensions";
@@ -435,4 +435,63 @@ test("setFilter", () => {
     false,
     false,
   ]);
+});
+
+test("onStateChanged for question ready from choicesByUrl", async () => {
+  const surveyJson = {
+    "pages": [
+      {
+        "name": "page1",
+        "elements": [
+          {
+            "type": "text",
+            "name": "question1",
+            "inputType": "number"
+          },
+          {
+            "type": "dropdown",
+            "name": "question3",
+            "choices": [
+              {
+                "value": "Item 1",
+              },
+              {
+                "value": "Item 2",
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "name": "question5",
+            "choicesByUrl": {
+              "url": "https://someurl.com?mode=counties",
+              "valueName": "value",
+              "titleName": "text"
+            }
+          },
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(surveyJson);
+  const tabulator = new Tabulator(survey, [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
+  expect(tabulator["getColumns"]().length).toBe(4);
+  let stateChangedCounter = 0;
+  tabulator.onStateChanged.add((sender, options) => {
+    stateChangedCounter++;
+  });
+  tabulator.render(document.createElement("div"));
+  const allQuestions = survey.getAllQuestions();
+  for(let index in allQuestions) {
+    setTimeout(() => {
+      allQuestions[index]["isReadyValue"] = true;
+      allQuestions[index].onReadyChanged.fire(allQuestions[index], {
+        question: allQuestions[index],
+        isReady: true,
+        oldIsReady: false,
+      });
+    }, 1);
+    await allQuestions[index].waitForQuestionIsReady();
+  }
+  expect(stateChangedCounter).toBe(0);
 });

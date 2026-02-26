@@ -461,7 +461,7 @@ test("check useNamesAsTitles option", () => {
   expect((<any>table).columns[0].displayName).toEqual("radio");
 });
 
-test("check question which is not ready", () => {
+test("check question which is not ready", async () => {
   const json = {
     questions: [
       {
@@ -479,10 +479,11 @@ test("check question which is not ready", () => {
   question["isReadyValue"] = true;
   data[0].text = "test_text";
   question.onReadyChanged.fire(question, { isReady: true });
+  await question.waitForQuestionIsReady();
   expect(table["tableData"][0]["text"]).toEqual("test_text");
 });
 
-test("check custom question with question which is not ready", () => {
+test("check custom question with question which is not ready", async () => {
   ComponentCollection
     .Instance
     .add({
@@ -509,10 +510,11 @@ test("check custom question with question which is not ready", () => {
   question.contentQuestion["isReadyValue"] = true;
   data[0]["customQuestion"] = "test_text";
   question.contentQuestion.onReadyChanged.fire(question.contentQuestion, { isReady: true });
+  await question.contentQuestion.waitForQuestionIsReady();
   expect(table["tableData"][0]["customQuestion"]).toEqual("test_text");
 });
 
-test("check composite question with questions which is not ready", () => {
+test("check composite question with questions which is not ready", async () => {
   CompositeColumnsBuilder.ShowAsSeparateColumns = false;
   ComponentCollection
     .Instance
@@ -547,10 +549,12 @@ test("check composite question with questions which is not ready", () => {
   question.contentPanel.elements[0]["isReadyValue"] = true;
   data[0]["compositeQuestion"]["innerQuestion"] = "test_text1";
   (question.contentPanel.elements[0] as any).onReadyChanged.fire(question.contentPanel.elements[0], { isReady: true });
+  await (question.contentPanel.elements[0] as any).waitForQuestionIsReady();
   expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_text1\",\"innerQuestion2\":\"test_value2\"}");
   question.contentPanel.elements[1]["isReadyValue"] = true;
   data[0]["compositeQuestion"]["innerQuestion2"] = "test_text2";
   (question.contentPanel.elements[1] as any).onReadyChanged.fire(question.contentPanel.elements[1], { isReady: true });
+  await (question.contentPanel.elements[1] as any).waitForQuestionIsReady();
   expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_text1\",\"innerQuestion2\":\"test_text2\"}");
   CompositeColumnsBuilder.ShowAsSeparateColumns = false;
 });
