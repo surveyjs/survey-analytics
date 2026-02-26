@@ -203,17 +203,22 @@ steps:
   # https://github.com/microsoft/azure-pipelines-yaml/issues/248
   # https://stackoverflow.com/questions/58485585/azure-pipeline-powershell-and-git-on-windows-server-2019-gives-error-in-output
   - powershell: |
+      $branch = "$(CurrentBranch)"
       cd $(Build.SourcesDirectory)/service
-      git pull origin master
-      git merge -X ours origin/master
-      git fetch origin master --tags --force
-      git checkout master
+      $env:GIT_REDIRECT_STDERR = '2>&1'
+      git config --global user.email "surveyjs.org@gmail.com"
+      git config --global user.name "surveyjsdeveloper"
+      
+      git fetch origin $branch
+      git checkout -B $branch origin/$branch
+      git reset --hard origin/$branch
+
       git add surveyjs.io/App_Data/DocsAnalytics
-      git commit -m "updated survey-analytics docs [azurepipelines skip]"
-      git pull origin master
-      git merge -X ours origin/master
-      git push origin master
-    displayName: "Git surveyjs/service push updated docs"
+      if (git status --porcelain) {
+          git commit -m "updated survey-analytics docs for $branch [azurepipelines skip]"
+          git push origin $branch
+      }
+    displayName: "Git surveyjs/service push updated docs for $(CurrentBranch)"
 
   - task: CopyFiles@2
     inputs:
@@ -233,15 +238,16 @@ steps:
       $env:GIT_REDIRECT_STDERR = '2>&1'
       git config --global user.email "surveyjs.org@gmail.com"
       git config --global user.name "surveyjsdeveloper"
-      git pull origin $branch
-      git merge -X ours origin/$branch
-      git fetch origin $branch --tags --force
-      git checkout $branch
+      
+      git fetch origin $branch
+      git checkout -B $branch origin/$branch
+      git reset --hard origin/$branch
+
       git add DocsAnalytics
-      git commit -m "updated survey-analytics docs [azurepipelines skip]"
-      git pull origin $branch
-      git merge -X ours origin/$branch
-      git push origin $branch
+      if (git status --porcelain) {
+          git commit -m "updated survey-analytics docs for $branch [azurepipelines skip]"
+          git push origin $branch
+      }
     displayName: "Git surveyjs-site-data push updated docs for main"
   # - powershell: |
   #     cd $(Build.SourcesDirectory)/service
