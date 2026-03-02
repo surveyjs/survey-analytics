@@ -116,8 +116,14 @@ test("check that tabulator takes into account column's width", () => {
   expect(tabulatorColumns[2].widthShrink).toBe(1);
 });
 
-test("check that tabulator take into account column's width after layout (check widthShrink)", () => {
+test("check that tabulator take into account column's width after layout (check widthShrink)", async () => {
+  mockTimeout();
   const tabulator = new Tabulator(new SurveyModel(null), [], null);
+  const rendered = new Promise((resolve) => {
+    tabulator.onAfterRender.add((sender, options) => {
+      resolve(options);
+    });
+  });
   tabulator.columns = [
     {
       name: "q1",
@@ -128,8 +134,9 @@ test("check that tabulator take into account column's width after layout (check 
       location: 0,
     },
   ] as any;
-  mockTimeout();
   tabulator.render(document.createElement("table"));
+  await rendered;
+  expect(tabulator.isRendered).toBe(true);
   const columnDefinitions = tabulator.tabulatorTables.getColumnDefinitions();
   expect(columnDefinitions[1].width).toBe(undefined);
   expect(columnDefinitions[1].widthShrink).toBe(1);
@@ -212,7 +219,7 @@ test("useNamesAsTitles option", () => {
   );
 });
 
-test("check pdf options before download", () => {
+test("check pdf options before download", async () => {
   const surveyJson = {
     questions: [
       {
@@ -242,9 +249,16 @@ test("check pdf options before download", () => {
     ],
   };
   const survey = new SurveyModel(surveyJson);
-  const tabulator = new Tabulator(survey, [], null);
   mockTimeout();
+  const tabulator = new Tabulator(survey, [], null);
+  const rendered = new Promise((resolve) => {
+    tabulator.onAfterRender.add((sender, options) => {
+      resolve(options);
+    });
+  });
   tabulator.render(document.createElement("div"));
+  await rendered;
+  expect(tabulator.isRendered).toBe(true);
   let options = tabulator["getDownloadOptions"]("pdf");
   expect(options.jsPDF.format).toEqual([595.28, 1120.32]);
   tabulator.setColumnVisibility("question 1", false);
