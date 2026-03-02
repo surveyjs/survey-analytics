@@ -1,5 +1,5 @@
 import { GetDataFn, ITableOptions, Table, TableRow, TabulatorSortOrder } from "./table";
-import { SurveyModel } from "survey-core";
+import { SurveyModel, Event } from "survey-core";
 import { ColumnDataType, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
@@ -93,6 +93,12 @@ export class Tabulator extends Table {
   }
   public static set haveCommercialLicense(val: boolean) {
     Table.haveCommercialLicense = val;
+  }
+
+  public onAfterRender: Event<(sender: Table, options: any) => any, Table, any> = new Event<(sender: Table, options: any) => any, Table, any>();
+
+  protected afterRender(contentContainer: HTMLElement) {
+    this.onAfterRender.fire(this, { htmlElement: contentContainer });
   }
 
   constructor(
@@ -214,6 +220,10 @@ export class Tabulator extends Table {
     this.tabulatorTables = new Tabulator.tabulatorTablesConstructor(this.tableContainer, config);
     this.tabulatorTables.on("columnResized", this.columnResizedCallback);
     this.tabulatorTables.on("columnMoved", this.columnMovedCallback);
+    this.tabulatorTables.on("tableBuilt", () => {
+      this.renderResult = targetNode;
+      this.afterRender(targetNode);
+    });
 
     const extensionsContainer = DocumentHelper.createElement(
       "div",
@@ -223,7 +233,6 @@ export class Tabulator extends Table {
     this.extensions.render(header, "header");
     // header.appendChild(extensionsContainer);
     header.appendChild(paginationElement);
-    this.renderResult = targetNode;
   }
 
   private createDownloadsBar(): HTMLElement {
