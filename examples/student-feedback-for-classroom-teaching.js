@@ -2706,7 +2706,7 @@ const dataFromServer = [
 
 var survey = new Survey.SurveyModel(json);
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   survey.getAllQuestions(),
   // [survey.getQuestionByName("customer_email")],
   dataFromServer, { dateFieldName: "timestamp" }

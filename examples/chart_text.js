@@ -1,7 +1,7 @@
 function CustomVisualizer(question, data) {
   var values = [];
 
-  var visualizer = new SurveyAnalytics.SelectBasePlotly(
+  var visualizer = new SurveyAnalyticsPlotly.SelectBasePlotly(
     question,
     data,
     { },
@@ -31,21 +31,21 @@ function CustomVisualizer(question, data) {
 }
 
 // Unregister other visualizers for the "text" question type
-SurveyAnalytics.VisualizationManager.unregisterVisualizer(
+SurveyAnalyticsPlotly.VisualizationManager.unregisterVisualizer(
   "text",
-  SurveyAnalytics.WordCloud
+  SurveyAnalyticsPlotly.WordCloud
 );
-SurveyAnalytics.VisualizationManager.unregisterVisualizer(
+SurveyAnalyticsPlotly.VisualizationManager.unregisterVisualizer(
   "text",
-  SurveyAnalytics.Text
+  SurveyAnalyticsPlotly.Text
 );
 // Register custom visualizer for the given question type
-SurveyAnalytics.VisualizationManager.registerVisualizer(
+SurveyAnalyticsPlotly.VisualizationManager.registerVisualizer(
   "text",
   CustomVisualizer
 );
 // Set localized title of this visualizer
-SurveyAnalytics.localization.locales["en"]["visualizer_textChartVisualizer"] =
+SurveyAnalyticsPlotly.localization.locales["en"]["visualizer_textChartVisualizer"] =
   "Text as Chart";
 
 var json = {
@@ -64,7 +64,7 @@ var data = [
   { zipcode: "000001" }, { zipcode: "100001" }, { zipcode: "500001" }, { zipcode: "000001" }, { zipcode: "500001" }, { zipcode: "000001" }
 ]
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   survey.getAllQuestions(),
   data
 );

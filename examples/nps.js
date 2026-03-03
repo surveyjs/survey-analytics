@@ -33,7 +33,7 @@ function generateData() {
 }
 var dataFromServer = generateData();
 
-var vizPanel = new SurveyAnalytics.VisualizationPanel(
+var vizPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
     [{
       visualizerType: "nps",
       question: survey.getAllQuestions()[0]

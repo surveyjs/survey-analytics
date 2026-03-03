@@ -10,7 +10,7 @@ function generateValues (maxValue, stepsCount) {
 }
 
 function getData (visualizer, minValue, maxValue, level, arrowColor) {
-  const stepsCount = SurveyAnalytics.GaugePlotly.stepsCount;
+  const stepsCount = SurveyAnalyticsPlotly.GaugePlotly.stepsCount;
   const values = generateValues(maxValue, stepsCount);
   const text = [ "Most likely", "Likely", "Neutral", "Unlikely", "Most unlikely" ];
   const colors = visualizer.generateColors(maxValue, minValue, stepsCount);
@@ -83,7 +83,7 @@ function getLayout (maxValue, level, arrowColor) {
   return layout;
 }
 
-SurveyAnalytics.PlotlySetup.onPlotCreating.add((visualizer, options) => {
+SurveyAnalyticsPlotly.PlotlySetup.onPlotCreating.add((visualizer, options) => {
   const arrowColor = "#4e6198";
   const level = options.data.datasets[0][options.data.labels.indexOf("average")];
   const maxValue = options.data.datasets[0][options.data.labels.indexOf("max")];
@@ -133,7 +133,7 @@ const visualizerDefinition3 = {
 };
 
 const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
-let visPanel = new SurveyAnalytics.VisualizationPanel([visualizerDefinition1, visualizerDefinition2, visualizerDefinition3], data, options);
+let visPanel = new SurveyAnalyticsPlotly.VisualizationPanel([visualizerDefinition1, visualizerDefinition2, visualizerDefinition3], data, options);
 
 
 visPanel.showToolbar = true;

@@ -63,14 +63,14 @@ var options = {
 
 var survey = new Survey.SurveyModel(json);
 
-var pivotChart = new SurveyAnalytics.PivotPlotly(
+var pivotChart = new SurveyAnalyticsPlotly.PivotPlotly(
   survey.getAllQuestions(),
   data,
   options
 );
 pivotChart.render(document.getElementById("pivotContainer"));
 
-// var visPanel = new SurveyAnalytics.VisualizationPanel(
+// var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
 //   [ [ survey.getQuestionByName("question2"), survey.getQuestionByName("question1") ], [ survey.getQuestionByName("question1"), survey.getQuestionByName("question2") ] ],
 //   data,
 //   options
@@ -80,7 +80,7 @@ pivotChart.render(document.getElementById("pivotContainer"));
 
 // var pivot_survey = new Survey.SurveyModel(pivot_json);
 
-// var crossQuestion = new SurveyAnalytics.PivotPlotly(
+// var crossQuestion = new SurveyAnalyticsPlotly.PivotPlotly(
 //   pivot_survey.getAllQuestions(),
 //   pivot_data,
 //   options

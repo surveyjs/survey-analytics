@@ -1401,7 +1401,7 @@ const data = [
   }
 ];
 
-var dashboard = new SurveyAnalyticsApexcharts.Dashboard({
+var dashboard = new SurveyAnalytics.Dashboard({
       questions: survey.getAllQuestions(),
       data: data,
       showToolbar: false,

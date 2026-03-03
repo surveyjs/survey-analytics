@@ -147,7 +147,7 @@ function generateData() {
 }
 const dataFromServer = generateData();
 
-var dashboard = new SurveyAnalyticsApexcharts.Dashboard({
+var dashboard = new SurveyAnalytics.Dashboard({
     questions: survey.getAllQuestions(),
     data: dataFromServer,
   }
@@ -158,14 +158,14 @@ dashboard.onStateChanged.add((_, state) => {
 });
 
 dashboard.registerToolbarItem("reload", () => {
-    return SurveyAnalyticsApexcharts.DocumentHelper.createButton(
+    return SurveyAnalytics.DocumentHelper.createButton(
         () => { location.reload(); },
         "Reload the page"
     );
 });
 
 dashboard.registerToolbarItem("resetState", () => {
-    return SurveyAnalyticsApexcharts.DocumentHelper.createButton(
+    return SurveyAnalytics.DocumentHelper.createButton(
         () => {
             window.localStorage.setItem("surveyJsDashboardState", "");
             location.reload();
