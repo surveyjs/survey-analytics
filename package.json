@@ -1,5 +1,5 @@
 {
-  "version": "2.5.10",
+  "version": "2.5.14",
   "name": "survey-analytics",
   "scripts": {
     "start": "webpack-dev-server --env buildType=dev",
@@ -87,7 +87,7 @@
     "playwright": "1.58.0",
     "puppeteer": "22.13.1",
     "replace-in-file": "^6.3.2",
-    "rollup": "^4.34.8",
+    "rollup": "^4.59.0",
     "rollup-plugin-license": "^3.6.0",
     "sass": "^1.62.1",
     "sass-loader": "^16.0.4",

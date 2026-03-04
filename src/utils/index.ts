@@ -142,7 +142,7 @@ export class DocumentHelper {
     attrs?: any
   ): HTMLElement {
     var el = document.createElement(tagName);
-    if(className) {
+    if(!!className) {
       el.className = className;
     }
     if(!!attrs) {
@@ -373,7 +373,7 @@ export function createLinksContainer(
   links: Array<{ name: string, content: any }>
 ): HTMLElement {
   const linksContainer = DocumentHelper.createElement("div");
-  links.forEach((link) => {
+  links.forEach((link, index) => {
     linksContainer.appendChild(
       DocumentHelper.createElement("a", "", {
         innerText: link.name,
@@ -381,6 +381,9 @@ export function createLinksContainer(
         href: link.content,
       })
     );
+    if(index < links.length - 1) {
+      linksContainer.appendChild(DocumentHelper.createElement("br"));
+    }
   });
   return linksContainer;
 }

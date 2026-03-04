@@ -530,3 +530,36 @@ test("filter VisualizationMatrixDropdown data: pass filter to outside", () => {
   expect(visualizer["data"]).toEqual(matrixDropdownFilterTestData);
   expect(innerQuestion1Visualizer["data"]).toEqual(matrixDropdownFilterTestData);
 });
+
+test("TypeError: Cannot read properties of undefined (reading 'length') is thrown when a survey contains a Multi-Select Matrix - https://github.com/surveyjs/survey-analytics/issues/685 ", () => {
+  const survey = new SurveyModel({
+    pages: [
+      {
+        name: "page1",
+        elements: [
+          {
+            type: "matrixdropdown",
+            name: "question1",
+            columns: [
+              {
+                name: "Column 1",
+                cellType: "text",
+              },
+              {
+                name: "Column 2",
+              },
+              {
+                name: "Column 3",
+              },
+            ],
+            choices: [1, 2, 3, 4, 5],
+            rows: ["Row 1"],
+          },
+        ],
+      },
+    ],
+  });
+  const panel = new VisualizationPanel(survey.getAllQuestions(), []);
+  const question1Visualizer = panel.visualizers[0] as VisualizationMatrixDropdown;
+  expect(question1Visualizer).toBeDefined();
+});

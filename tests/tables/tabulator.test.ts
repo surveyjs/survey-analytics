@@ -1,4 +1,4 @@
-import { SurveyModel } from "survey-core";
+import { Question, SurveyModel } from "survey-core";
 // eslint-disable-next-line surveyjs/no-imports-from-entries
 import { Tabulator } from "../../src/entries/tabulator-umd";
 import { TableExtensions } from "../../src/tables/extensions/tableextensions";
@@ -116,8 +116,14 @@ test("check that tabulator takes into account column's width", () => {
   expect(tabulatorColumns[2].widthShrink).toBe(1);
 });
 
-test("check that tabulator take into account column's width after layout (check widthShrink)", () => {
+test("check that tabulator take into account column's width after layout (check widthShrink)", async () => {
+  mockTimeout();
   const tabulator = new Tabulator(new SurveyModel(null), [], null);
+  const rendered = new Promise((resolve) => {
+    tabulator.onAfterRender.add((sender, options) => {
+      resolve(options);
+    });
+  });
   tabulator.columns = [
     {
       name: "q1",
@@ -128,8 +134,9 @@ test("check that tabulator take into account column's width after layout (check 
       location: 0,
     },
   ] as any;
-  mockTimeout();
   tabulator.render(document.createElement("table"));
+  await rendered;
+  expect(tabulator.isRendered).toBe(true);
   const columnDefinitions = tabulator.tabulatorTables.getColumnDefinitions();
   expect(columnDefinitions[1].width).toBe(undefined);
   expect(columnDefinitions[1].widthShrink).toBe(1);
@@ -212,7 +219,7 @@ test("useNamesAsTitles option", () => {
   );
 });
 
-test("check pdf options before download", () => {
+test("check pdf options before download", async () => {
   const surveyJson = {
     questions: [
       {
@@ -242,9 +249,16 @@ test("check pdf options before download", () => {
     ],
   };
   const survey = new SurveyModel(surveyJson);
-  const tabulator = new Tabulator(survey, [], null);
   mockTimeout();
+  const tabulator = new Tabulator(survey, [], null);
+  const rendered = new Promise((resolve) => {
+    tabulator.onAfterRender.add((sender, options) => {
+      resolve(options);
+    });
+  });
   tabulator.render(document.createElement("div"));
+  await rendered;
+  expect(tabulator.isRendered).toBe(true);
   let options = tabulator["getDownloadOptions"]("pdf");
   expect(options.jsPDF.format).toEqual([595.28, 1120.32]);
   tabulator.setColumnVisibility("question 1", false);
@@ -435,4 +449,63 @@ test("setFilter", () => {
     false,
     false,
   ]);
+});
+
+test("onStateChanged for question ready from choicesByUrl", async () => {
+  const surveyJson = {
+    "pages": [
+      {
+        "name": "page1",
+        "elements": [
+          {
+            "type": "text",
+            "name": "question1",
+            "inputType": "number"
+          },
+          {
+            "type": "dropdown",
+            "name": "question3",
+            "choices": [
+              {
+                "value": "Item 1",
+              },
+              {
+                "value": "Item 2",
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "name": "question5",
+            "choicesByUrl": {
+              "url": "https://someurl.com?mode=counties",
+              "valueName": "value",
+              "titleName": "text"
+            }
+          },
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(surveyJson);
+  const tabulator = new Tabulator(survey, [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
+  expect(tabulator["getColumns"]().length).toBe(4);
+  let stateChangedCounter = 0;
+  tabulator.onStateChanged.add((sender, options) => {
+    stateChangedCounter++;
+  });
+  tabulator.render(document.createElement("div"));
+  const allQuestions = survey.getAllQuestions();
+  for(let index in allQuestions) {
+    setTimeout(() => {
+      allQuestions[index]["isReadyValue"] = true;
+      allQuestions[index].onReadyChanged.fire(allQuestions[index], {
+        question: allQuestions[index],
+        isReady: true,
+        oldIsReady: false,
+      });
+    }, 1);
+    await allQuestions[index].waitForQuestionIsReady();
+  }
+  expect(stateChangedCounter).toBe(0);
 });

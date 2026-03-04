@@ -461,7 +461,7 @@ test("check useNamesAsTitles option", () => {
   expect((<any>table).columns[0].displayName).toEqual("radio");
 });
 
-test("check question which is not ready", () => {
+test("check question which is not ready", async () => {
   const json = {
     questions: [
       {
@@ -479,10 +479,11 @@ test("check question which is not ready", () => {
   question["isReadyValue"] = true;
   data[0].text = "test_text";
   question.onReadyChanged.fire(question, { isReady: true });
+  await question.waitForQuestionIsReady();
   expect(table["tableData"][0]["text"]).toEqual("test_text");
 });
 
-test("check custom question with question which is not ready", () => {
+test("check custom question with question which is not ready", async () => {
   ComponentCollection
     .Instance
     .add({
@@ -509,10 +510,11 @@ test("check custom question with question which is not ready", () => {
   question.contentQuestion["isReadyValue"] = true;
   data[0]["customQuestion"] = "test_text";
   question.contentQuestion.onReadyChanged.fire(question.contentQuestion, { isReady: true });
+  await question.contentQuestion.waitForQuestionIsReady();
   expect(table["tableData"][0]["customQuestion"]).toEqual("test_text");
 });
 
-test("check composite question with questions which is not ready", () => {
+test("check composite question with questions which is not ready", async () => {
   CompositeColumnsBuilder.ShowAsSeparateColumns = false;
   ComponentCollection
     .Instance
@@ -547,10 +549,12 @@ test("check composite question with questions which is not ready", () => {
   question.contentPanel.elements[0]["isReadyValue"] = true;
   data[0]["compositeQuestion"]["innerQuestion"] = "test_text1";
   (question.contentPanel.elements[0] as any).onReadyChanged.fire(question.contentPanel.elements[0], { isReady: true });
+  await (question.contentPanel.elements[0] as any).waitForQuestionIsReady();
   expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_text1\",\"innerQuestion2\":\"test_value2\"}");
   question.contentPanel.elements[1]["isReadyValue"] = true;
   data[0]["compositeQuestion"]["innerQuestion2"] = "test_text2";
   (question.contentPanel.elements[1] as any).onReadyChanged.fire(question.contentPanel.elements[1], { isReady: true });
+  await (question.contentPanel.elements[1] as any).waitForQuestionIsReady();
   expect(table["tableData"][0]["compositeQuestion"]).toEqual("{\"innerQuestion\":\"test_text1\",\"innerQuestion2\":\"test_text2\"}");
   CompositeColumnsBuilder.ShowAsSeparateColumns = false;
 });
@@ -1300,4 +1304,89 @@ test("Radiogroup other with storeOthersAsComment cases", () => {
   expect(table.columns[1].getCellData(table, data).displayValue).toBe("Other (describe)");
   expect(table.columns[2] instanceof OtherColumn).toBeTruthy();
   expect(table.columns[2].getCellData(table, data).displayValue).toBe("otherValue2");
+});
+
+test("Multiple file names appear as a single unreadable string - https://github.com/surveyjs/survey-analytics/issues/686", () => {
+  const surveyJson = {
+    title: "multiple files upload",
+    pages: [
+      {
+        name: "page1",
+        elements: [
+          {
+            type: "file",
+            name: "question1",
+            allowMultiple: true,
+            allowImagesPreview: false,
+            storeDataAsText: false,
+            maxSize: 5242880,
+            maxFiles: 15,
+          },
+          {
+            type: "file",
+            name: "question3",
+            allowMultiple: true,
+            allowImagesPreview: false,
+            storeDataAsText: false,
+            maxSize: 5242880,
+            maxFiles: 15,
+          },
+          {
+            type: "file",
+            name: "question2",
+            allowImagesPreview: false,
+            storeDataAsText: false,
+            maxSize: 5242880,
+          },
+        ],
+      },
+    ],
+    clearInvisibleValues: "none",
+    formEmailTo: "{profileEmail}",
+  };
+  const survey = new SurveyModel(surveyJson);
+  const data = {
+    question1: [
+      {
+        name: "report.xlsx",
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        content: "http://localhost:8080/files/report.xlsx",
+      },
+      {
+        name: "summary.pdf",
+        type: "application/pdf",
+        content: "http://localhost:8080/files/summary.pdf",
+      },
+    ],
+    question3: [
+      {
+        name: "presentation.pptx",
+        type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        content: "http://localhost:8080/files/presentation.pptx",
+      },
+      {
+        name: "slides.pptx",
+        type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        content: "http://localhost:8080/files/slides.pptx",
+      },
+      {
+        name: "data.json",
+        type: "application/json",
+        content: "http://localhost:8080/files/data.json",
+      },
+    ],
+    question2: [
+      {
+        name: "image.png",
+        type: "image/png",
+        content: "http://localhost:8080/files/image.png",
+      },
+    ],
+  };
+
+  const table = new TableTest(survey, [data]);
+  expect(table.columns.length).toEqual(3);
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("<div><a download=\"report.xlsx\" href=\"http://localhost:8080/files/report.xlsx\"></a><br><a download=\"summary.pdf\" href=\"http://localhost:8080/files/summary.pdf\"></a></div>");
+  expect(table.columns[1].getCellData(table, data).displayValue).toBe("<div><a download=\"presentation.pptx\" href=\"http://localhost:8080/files/presentation.pptx\"></a><br><a download=\"slides.pptx\" href=\"http://localhost:8080/files/slides.pptx\"></a><br><a download=\"data.json\" href=\"http://localhost:8080/files/data.json\"></a></div>");
+  expect(table.columns[2].getCellData(table, data).displayValue).toBe("<div><a download=\"image.png\" href=\"http://localhost:8080/files/image.png\"></a></div>");
 });
