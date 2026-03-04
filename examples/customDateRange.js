@@ -104,7 +104,7 @@ let vizPanels = [];
 function createVizPanels(data, ...args) {
   const panels = [];
   args.forEach((questions) => {
-    panels.push(new SurveyAnalytics.VisualizationPanel(questions, data));
+    panels.push(new SurveyAnalyticsPlotly.VisualizationPanel(questions, data));
   });
   return panels;
 }

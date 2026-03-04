@@ -63,14 +63,14 @@ var options = {
 
 var survey = new Survey.SurveyModel(json);
 
-var pivotChart = new SurveyAnalyticsApexcharts.PivotModel(
+var pivotChart = new SurveyAnalytics.PivotModel(
   survey.getAllQuestions(),
   data,
   options
 );
 pivotChart.render(document.getElementById("pivotContainer"));
 
-var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
+var visPanel = new SurveyAnalytics.VisualizationPanel(
   [ [ survey.getQuestionByName("question2"), survey.getQuestionByName("question1") ], [ survey.getQuestionByName("question1"), survey.getQuestionByName("question2") ] ],
   data,
   options
@@ -80,7 +80,7 @@ visPanel.render(document.getElementById("summaryContainer"));
 
 var pivot_survey = new Survey.SurveyModel(pivot_json);
 
-// var crossQuestion = new SurveyAnalyticsApexcharts.PivotModel(
+// var crossQuestion = new SurveyAnalytics.PivotModel(
 //   pivot_survey.getAllQuestions(),
 //   pivot_data,
 //   options

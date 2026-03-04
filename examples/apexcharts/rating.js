@@ -65,7 +65,7 @@ var options = {
 
 var survey = new Survey.SurveyModel(json);
 
-var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
+var visPanel = new SurveyAnalytics.VisualizationPanel(
   survey.getAllQuestions(),
   data,
   options

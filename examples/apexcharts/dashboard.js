@@ -72,7 +72,7 @@ var options = {
 // SurveyAnalytics.WordCloudAdapter.shrinkToFit = true;
 // SurveyAnalytics.WordCloudAdapter.weightFactor = 30;
 
-var dashboard = new SurveyAnalyticsApexcharts.Dashboard({
+var dashboard = new SurveyAnalytics.Dashboard({
   // questions: [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   questions: survey.getAllQuestions(),
   data,

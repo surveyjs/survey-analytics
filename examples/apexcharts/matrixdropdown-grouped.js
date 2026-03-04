@@ -77,7 +77,7 @@ var options = {
   allowTransposeData: true
 };
 
-var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
+var visPanel = new SurveyAnalytics.VisualizationPanel(
   survey.getAllQuestions(),
   data,
   options

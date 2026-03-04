@@ -13,7 +13,7 @@ export const initSummary = async (page: Page, json: any, data, options, elements
     }
     var options = options || {};
     options.survey = model;
-    var visPanel = ((window as any).visPanel = new (window as any).SurveyAnalytics.VisualizationPanel(
+    var visPanel = ((window as any).visPanel = new (window as any).SurveyAnalyticsPlotly.VisualizationPanel(
       model.getAllQuestions(),
       data,
       options,
