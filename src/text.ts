@@ -92,7 +92,7 @@ export class Text extends VisualizerBase {
     let columnCount = 0;
 
     this.surveyData.forEach((dataRow) => {
-      const nestedDataRows = getNestedDataRows(dataRow, this);
+      const nestedDataRows = getNestedDataRows(dataRow, this.dataPath);
       nestedDataRows.forEach(row => {
         const rowValue: any = row[this.question.name];
         let dataStrings: Array<string> = [];

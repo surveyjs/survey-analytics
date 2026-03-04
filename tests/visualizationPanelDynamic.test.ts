@@ -183,7 +183,13 @@ test("A Wordcloud/Text in Table visualizer doesn't display responses for Text qu
   expect(textWisualizers[1] instanceof Text).toBeTruthy();
 
   const textWisualizer = textWisualizers[1] as Text;
-  expect(await textWisualizer.getCalculatedValues()).toStrictEqual({ "columnCount": 1, "data": [["First response text"], ["Another answer"], ["Second panel entry"], ["Sample text here"], ["Panel item one"], ["Panel item two"], ["Panel item three"]] });
+  const textCalculatedValues = await textWisualizer.getCalculatedValues();
+  expect(textCalculatedValues.series).toBeDefined();
+  expect(textCalculatedValues.series?.length).toBe(1);
+  expect(textCalculatedValues.series![0]).toBe(undefined);
+  delete textCalculatedValues.series;
+  expect(textCalculatedValues).toStrictEqual({ "data": [["First response text"], ["Another answer"], ["Second panel entry"], ["Sample text here"], ["Panel item one"], ["Panel item two"], ["Panel item three"]], "values": [] });
   const wordcloudWisualizer = textWisualizers[0] as WordCloud;
-  expect(await wordcloudWisualizer.getCalculatedValues()).toStrictEqual([["response", 1], ["text", 2], ["answer", 1], ["panel", 4], ["entry", 1], ["sample", 1], ["item", 3]]);
+  const wordcloudCalculatedValues = await wordcloudWisualizer.getCalculatedValues();
+  expect(wordcloudCalculatedValues).toStrictEqual({ "data": [[1, 2, 1, 4, 1, 1, 3]], "values": ["response", "text", "answer", "panel", "entry", "sample", "item"] });
 });

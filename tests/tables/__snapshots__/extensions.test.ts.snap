@@ -28,13 +28,6 @@ exports[`render image in details 1`] = `
           src="signature"
         />
       </td>
-      <td>
-        <button
-          class="sa-table__btn sa-table__btn--gray"
-        >
-          Show as Column
-        </button>
-      </td>
     </tr>
   </table>
 </div>
