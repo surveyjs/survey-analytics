@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-beta.0](https://github.com/surveyjs/survey-analytics/compare/v2.5.14...v3.0.0-beta.0) (2026-03-05)
+
+### [2.5.10](https://github.com/surveyjs/survey-analytics/compare/v2.5.9...v2.5.10) (2026-02-12)
+
+### [2.5.9](https://github.com/surveyjs/survey-analytics/compare/v2.5.7...v2.5.9) (2026-02-04)
+
+### [2.5.7](https://github.com/surveyjs/survey-analytics/compare/v2.5.5...v2.5.7) (2026-01-22)
+
+### [2.5.5](https://github.com/surveyjs/survey-analytics/compare/v2.5.1...v2.5.5) (2026-01-07)
+
+### [2.5.1](https://github.com/surveyjs/survey-analytics/compare/v2.4.0...v2.5.1) (2025-12-16)
+
+## [2.4.0](https://github.com/surveyjs/survey-analytics/compare/v2.3.16...v2.4.0) (2025-11-26)
+
+### [2.3.16](https://github.com/surveyjs/survey-analytics/compare/v2.3.15...v2.3.16) (2025-11-19)
+
+### [2.3.15](https://github.com/surveyjs/survey-analytics/compare/v2.3.14...v2.3.15) (2025-11-12)
+
+### [2.3.14](https://github.com/surveyjs/survey-analytics/compare/v2.3.12...v2.3.14) (2025-11-05)
+
+### [2.3.12](https://github.com/surveyjs/survey-analytics/compare/v2.3.11...v2.3.12) (2025-10-22)
+
+### [2.3.11](https://github.com/surveyjs/survey-analytics/compare/v2.3.10...v2.3.11) (2025-10-15)
+
+### [2.3.10](https://github.com/surveyjs/survey-analytics/compare/v2.3.9...v2.3.10) (2025-10-07)
+
+### [2.3.9](https://github.com/surveyjs/survey-analytics/compare/v2.3.7...v2.3.9) (2025-09-30)
+
+### [2.3.7](https://github.com/surveyjs/survey-analytics/compare/v2.3.5...v2.3.7) (2025-09-17)
+
+### [2.3.5](https://github.com/surveyjs/survey-analytics/compare/v2.3.4...v2.3.5) (2025-09-03)
+
+### [2.3.4](https://github.com/surveyjs/survey-analytics/compare/v2.3.3...v2.3.4) (2025-08-26)
+
+### [2.3.3](https://github.com/surveyjs/survey-analytics/compare/v2.3.1...v2.3.3) (2025-08-20)
+
+### [2.3.1](https://github.com/surveyjs/survey-analytics/compare/v2.2.6...v2.3.1) (2025-08-06)
+
+### [2.2.6](https://github.com/surveyjs/survey-analytics/compare/v2.2.4...v2.2.6) (2025-07-22)
+
+### [2.2.4](https://github.com/surveyjs/survey-analytics/compare/v2.2.3...v2.2.4) (2025-07-09)
+
+### [2.2.3](https://github.com/surveyjs/survey-analytics/compare/v2.2.2...v2.2.3) (2025-07-02)
+
+### [2.2.2](https://github.com/surveyjs/survey-analytics/compare/v2.2.1...v2.2.2) (2025-06-25)
+
+### [2.2.1](https://github.com/surveyjs/survey-analytics/compare/v2.2.0...v2.2.1) (2025-06-19)
+
+## [2.2.0](https://github.com/surveyjs/survey-analytics/compare/v2.0.8...v2.2.0) (2025-06-12)
+
+### 2.0.8 (2025-05-06)
+
 ### 2.5.14 (2026-03-04)
 
 ### 2.5.13 (2026-02-27)
