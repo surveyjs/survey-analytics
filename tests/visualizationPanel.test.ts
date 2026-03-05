@@ -476,10 +476,10 @@ test("check onAfterRender", () => {
     count++;
   });
   (<any>visPanel).visualizers[0].afterRender(null);
-  expect((<any>visPanel).renderedQuestionsCount).toEqual(1);
+  expect((<any>visPanel)._renderedQuestionsCount).toEqual(1);
   expect(count).toEqual(0);
   (<any>visPanel).visualizers[1].afterRender(null);
-  expect((<any>visPanel).renderedQuestionsCount).toEqual(0);
+  expect((<any>visPanel)._renderedQuestionsCount).toEqual(0);
   expect(count).toEqual(1);
 });
 
@@ -506,10 +506,10 @@ test("check onAfterRender when some questions are hidden", () => {
   expect(visPanel.visibleElements.length).toEqual(2);
 
   (<any>visPanel).visualizers[1].afterRender(null);
-  expect((<any>visPanel).renderedQuestionsCount).toEqual(1);
+  expect((<any>visPanel)._renderedQuestionsCount).toEqual(1);
   expect(count).toEqual(0);
   (<any>visPanel).visualizers[2].afterRender(null);
-  expect((<any>visPanel).renderedQuestionsCount).toEqual(0);
+  expect((<any>visPanel)._renderedQuestionsCount).toEqual(0);
   expect(count).toEqual(1);
 });
 

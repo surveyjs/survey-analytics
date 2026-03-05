@@ -2,7 +2,7 @@ import { Question, SurveyModel, Event } from "survey-core";
 import { IVisualizerOptions, ToolbarItemType, VisualizerBase } from "./visualizerBase";
 import { IVisualizationPanelOptions, VisualizationPanel } from "./visualizationPanel";
 import { DataProvider, GetDataFn } from "./dataProvider";
-import { createVisualizerDescription, IVisualizerDescription } from "./visualizerDescription";
+import { createVisualizerDescription, IVisualizerDescription } from "./dashboard-item";
 import { LayoutEngine } from "./layout-engine";
 import { DatePeriodEnum, DateRangeTuple } from "./utils/dateRangeModel";
 

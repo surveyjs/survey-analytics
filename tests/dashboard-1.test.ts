@@ -35,7 +35,8 @@ test("Create pivot visualizer with axis options", async () => {
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
   expect(dashboard.visualizers.length).toBe(1);
   expect(dashboard.getElements().length).toBe(1);
-  expect(dashboard.getElement("visualizer1")).toStrictEqual({
+  expect(dashboard.getElement("visualizer1").getState()).toStrictEqual({
+    "chartType": "bar",
     "displayName": "",
     "isPublic": true,
     "isVisible": true,

@@ -109,3 +109,17 @@ export function createVisualizerDescription(vOptions: IVisualizerOptions, questi
   });
   return vd;
 }
+
+export class DashboardItem implements IVisualizerDescription {
+  visualizerType: string;
+  visualizerTypes?: string[];
+  chartType?: string;
+  availableTypes?: any;
+  question?: Question;
+  questionName?: string;
+  dataName?: string;
+  displayValueName?: string;
+  title?: string;
+  answersOrder?: "asc" | "desc" | "default";
+  options?: { [index: string]: any };
+}
