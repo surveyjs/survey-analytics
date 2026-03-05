@@ -26,13 +26,13 @@ test("Dashboard should accept visualizer definitions", () => {
     dataField: "test"
   };
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
-  expect(dashboard.panel.visualizers.length).toBe(1);
-  expect(dashboard.panel.visualizers[0].type).toBe("nps");
+  expect(dashboard.visualizers.length).toBe(1);
+  expect(dashboard.visualizers[0].type).toBe("nps");
 
   dashboard = new Dashboard({ visualizers: [visualizerDefinition, visualizerDefinition] });
-  expect(dashboard.panel.visualizers.length).toBe(2);
-  expect(dashboard.panel.visualizers[0].type).toBe("nps");
-  expect(dashboard.panel.visualizers[1].type).toBe("nps");
+  expect(dashboard.visualizers.length).toBe(2);
+  expect(dashboard.visualizers[0].type).toBe("nps");
+  expect(dashboard.visualizers[1].type).toBe("nps");
 });
 
 test("Dashboard should accept questions", () => {
@@ -45,13 +45,13 @@ test("Dashboard should accept questions", () => {
   };
   const survey = new SurveyModel(json);
   let dashboard = new Dashboard({ questions: survey.getAllQuestions() });
-  expect(dashboard.panel.visualizers.length).toBe(3);
-  expect(dashboard.panel.visualizers[0].type).toBe("text");
-  expect(dashboard.panel.visualizers[0].dataNames).toStrictEqual(["question1"]);
-  expect(dashboard.panel.visualizers[1].type).toBe("text");
-  expect(dashboard.panel.visualizers[1].dataNames).toStrictEqual(["question2"]);
-  expect(dashboard.panel.visualizers[2].type).toBe("text");
-  expect(dashboard.panel.visualizers[2].dataNames).toStrictEqual(["question3"]);
+  expect(dashboard.visualizers.length).toBe(3);
+  expect(dashboard.visualizers[0].type).toBe("text");
+  expect(dashboard.visualizers[0].dataNames).toStrictEqual(["question1"]);
+  expect(dashboard.visualizers[1].type).toBe("text");
+  expect(dashboard.visualizers[1].dataNames).toStrictEqual(["question2"]);
+  expect(dashboard.visualizers[2].type).toBe("text");
+  expect(dashboard.visualizers[2].dataNames).toStrictEqual(["question3"]);
 });
 
 test("Dashboard should show questions mentioned in visualazers parameter", () => {
@@ -64,11 +64,11 @@ test("Dashboard should show questions mentioned in visualazers parameter", () =>
   };
   const survey = new SurveyModel(json);
   let dashboard = new Dashboard({ questions: survey.getAllQuestions(), visualizers: ["question2", "question3"] });
-  expect(dashboard.panel.visualizers.length).toBe(2);
-  expect(dashboard.panel.visualizers[0].type).toBe("text");
-  expect(dashboard.panel.visualizers[0].dataNames).toStrictEqual(["question2"]);
-  expect(dashboard.panel.visualizers[1].type).toBe("text");
-  expect(dashboard.panel.visualizers[1].dataNames).toStrictEqual(["question3"]);
+  expect(dashboard.visualizers.length).toBe(2);
+  expect(dashboard.visualizers[0].type).toBe("text");
+  expect(dashboard.visualizers[0].dataNames).toStrictEqual(["question2"]);
+  expect(dashboard.visualizers[1].type).toBe("text");
+  expect(dashboard.visualizers[1].dataNames).toStrictEqual(["question3"]);
 });
 
 test("Create nps visualizer from definition with dataName", async () => {
@@ -78,7 +78,7 @@ test("Create nps visualizer from definition with dataName", async () => {
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition], data });
-  const nps = dashboard.panel.visualizers[0];
+  const nps = dashboard.visualizers[0];
 
   let result: any = await nps.getCalculatedValues();
 
@@ -95,7 +95,7 @@ test("Create nps visualizer from definition with questionName", async () => {
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition], data });
-  const nps = dashboard.panel.visualizers[0];
+  const nps = dashboard.visualizers[0];
 
   let result: any = (await nps.getCalculatedValues());
 
@@ -113,7 +113,7 @@ test("Create nps visualizer from definition with question", async () => {
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition], questions: [new QuestionTextModel("test")], data });
-  const nps = dashboard.panel.visualizers[0];
+  const nps = dashboard.visualizers[0];
 
   let result: any = (await nps.getCalculatedValues());
 
@@ -131,14 +131,14 @@ test("Create number visualizer from definition", async () => {
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition], data });
-  const numberVis = dashboard.panel.visualizers[0] as NumberModel;
+  const numberVis = dashboard.visualizers[0] as NumberModel;
 
   let result: any = (await numberVis.getCalculatedValues()).data[0];
 
   expect(result).toStrictEqual([7.34, 1, 10, 7]);
   expect(numberVis.dataNames[0]).toEqual(visualizerDefinition.dataField);
   expect(numberVis.name.indexOf("visualizer")).toEqual(0);
-  expect(dashboard.panel.visibleElements[0].name.indexOf("visualizer")).toEqual(0);
+  expect(dashboard.visibleElements[0].name.indexOf("visualizer")).toEqual(0);
 });
 
 test("Options passed to root panel and visualizer", async () => {
@@ -149,11 +149,11 @@ test("Options passed to root panel and visualizer", async () => {
     someVisualizerOption: "vis"
   };
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition], somePanelOption: "panel" });
-  expect(Object.keys(dashboard.panel.options)).toStrictEqual(["somePanelOption"]);
-  expect((dashboard.panel.options as any).somePanelOption).toEqual("panel");
-  expect(dashboard.panel.visualizers.length).toBe(1);
+  expect(Object.keys(dashboard.options)).toStrictEqual(["visualizers", "somePanelOption"]);
+  expect((dashboard.options as any).somePanelOption).toEqual("panel");
+  expect(dashboard.visualizers.length).toBe(1);
 
-  const visualizer = dashboard.panel.visualizers[0] as NumberModel;
+  const visualizer = dashboard.visualizers[0] as NumberModel;
   expect(visualizer.options.someVisualizerOption).toEqual("vis");
   expect(visualizer.options.somePanelOption).toEqual("panel");
   expect(visualizer.type).toBe("average");
@@ -166,8 +166,8 @@ test("Create pivot visualizer with empty config", async () => {
     type: "pivot",
   };
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
-  expect(dashboard.panel.visualizers.length).toBe(1);
-  const visualizer = dashboard.panel.visualizers[0] as PivotModel;
+  expect(dashboard.visualizers.length).toBe(1);
+  const visualizer = dashboard.visualizers[0] as PivotModel;
   expect(visualizer.type).toBe("pivot");
 });
 
@@ -185,8 +185,8 @@ test("Create pivot visualizer with questions", async () => {
     questions: survey.getAllQuestions()
   };
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
-  expect(dashboard.panel.visualizers.length).toBe(1);
-  const visualizer = dashboard.panel.visualizers[0] as PivotModel;
+  expect(dashboard.visualizers.length).toBe(1);
+  const visualizer = dashboard.visualizers[0] as PivotModel;
   expect(visualizer.type).toBe("pivot");
   expect(visualizer.questions.length).toBe(3);
   expect(visualizer.axisXQuestionName).toBe("question1");
@@ -209,17 +209,17 @@ test("Create pivot visualizer with questions", async () => {
 //     seriesFields: ["question1", "question3"]
 //   };
 //   let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
-//   expect(dashboard.panel.visualizers.length).toBe(1);
-//   expect(dashboard.panel.getElements().length).toBe(1);
-//   expect(dashboard.panel.getElement("visualizer1")).toStrictEqual({
+//   expect(dashboard.visualizers.length).toBe(1);
+//   expect(dashboard.getElements().length).toBe(1);
+//   expect(dashboard.getElement("visualizer1")).toStrictEqual({
 //     "displayName": "",
 //     "isPublic": true,
 //     "isVisible": true,
 //     "name": "visualizer1",
 //   });
-//   expect(dashboard.panel.getVisualizer("visualizer1")).toBeDefined();
+//   expect(dashboard.getVisualizer("visualizer1")).toBeDefined();
 
-//   const visualizer = dashboard.panel.visualizers[0] as PivotModel;
+//   const visualizer = dashboard.visualizers[0] as PivotModel;
 //   expect(visualizer.type).toBe("pivot");
 //   expect(visualizer.name).toBe("visualizer1");
 //   expect(visualizer.questions.length).toBe(3);
@@ -243,15 +243,15 @@ test("Set chart types from definitions", async () => {
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
   const dashboard = new Dashboard({ visualizers: [visualizerDefinition1, visualizerDefinition2, visualizerDefinition3], data });
-  const chart1 = dashboard.panel.visualizers[0] as SelectBase;
+  const chart1 = dashboard.visualizers[0] as SelectBase;
   expect(chart1.chartType).toBe("scatter");
   expect(chart1["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
 
-  const chart2 = dashboard.panel.visualizers[1] as SelectBase;
+  const chart2 = dashboard.visualizers[1] as SelectBase;
   expect(chart2.chartType).toBe("line");
   expect(chart2["chartTypes"]).toStrictEqual(["bar", "vbar", "pie", "doughnut"]);
 
-  const chart3 = dashboard.panel.visualizers[2] as SelectBase;
+  const chart3 = dashboard.visualizers[2] as SelectBase;
   expect(chart3.chartType).toBe("line");
   expect(chart3["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
 });
@@ -268,9 +268,9 @@ test("Set visualizer types from definitions", async () => {
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition1, visualizerDefinition2], data });
-  expect(dashboard.panel.visualizers.length).toBe(2);
+  expect(dashboard.visualizers.length).toBe(2);
 
-  const chart1 = dashboard.panel.visualizers[0] as AlternativeVisualizersWrapper;
+  const chart1 = dashboard.visualizers[0] as AlternativeVisualizersWrapper;
   expect(chart1.type).toStrictEqual("alternative");
 
   const chart1Visualizers = chart1.getVisualizers();
@@ -281,7 +281,7 @@ test("Set visualizer types from definitions", async () => {
   expect((chart1Visualizers[0] as SelectBase)["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
   expect(chart1Visualizers[1].type).toBe("nps");
 
-  const chart2 = dashboard.panel.visualizers[1] as AlternativeVisualizersWrapper;
+  const chart2 = dashboard.visualizers[1] as AlternativeVisualizersWrapper;
   expect(chart2.type).toStrictEqual("alternative");
 
   const chart2Visualizers = chart2.getVisualizers();
@@ -361,9 +361,9 @@ test("Create matrix visualizer", async () => {
     data: dataFromServer,
     visualizers: [visualizerDefinition]
   });
-  expect(dashboard.panel.visualizers.length).toBe(1);
+  expect(dashboard.visualizers.length).toBe(1);
 
-  const visualizer = dashboard.panel.visualizers[0] as Matrix;
+  const visualizer = dashboard.visualizers[0] as Matrix;
   expect(visualizer.type).toBe("matrix");
   expect(visualizer.chartType).toBe("stackedbar");
   expect(visualizer["chartTypes"]).toStrictEqual(["bar", "stackedbar", "pie", "doughnut"]);
@@ -446,9 +446,9 @@ test("Create visualizer with predefined char type and available types", async ()
     data: dataFromServer,
     visualizers: [visualizerDefinition]
   });
-  expect(dashboard.panel.visualizers.length).toBe(1);
+  expect(dashboard.visualizers.length).toBe(1);
 
-  const visualizer = dashboard.panel.visualizers[0] as SelectBase;
+  const visualizer = dashboard.visualizers[0] as SelectBase;
   expect(visualizer.type).toBe("selectBase");
   expect(visualizer.chartType).toBe("vbar");
   expect(visualizer["chartTypes"]).toStrictEqual(["bar", "vbar"]);
@@ -468,8 +468,7 @@ test("Dashboard registerToolbarItem", () => {
   dashboard.registerToolbarItem("default_item1", () => document.createElement("div"), "button", 1000);
   dashboard.registerToolbarItem("default_item2", () => document.createElement("div"), "filter");
 
-  const result = dashboard.panel.getSortedToolbarItemCreators();
-  expect(dashboard.getSortedToolbarItemCreators()).toHaveLength(0);
+  const result = dashboard.getSortedToolbarItemCreators();
   expect(result).toHaveLength(4);
   expect(result[2].name).toBe("default_item1");
   expect(result[3].name).toBe("default_item2");
@@ -480,7 +479,7 @@ test("getState, setState, onStateChanged", () => {
   const data = [{ question1: [1, 2] }];
   const survey = new SurveyModel(json);
   let dashboard = new Dashboard({ questions: survey.getAllQuestions(), data });
-  let chartVisualizer = dashboard.panel.getVisualizer("question1") as SelectBase;
+  let chartVisualizer = dashboard.getVisualizer("question1") as SelectBase;
 
   expect(chartVisualizer["chartTypes"]).toStrictEqual(["bar", "vbar", "pie", "doughnut"]);
   chartVisualizer["chartTypes"] = ["bar", "scatter"];
@@ -525,7 +524,7 @@ test("getState, setState, onStateChanged", () => {
   expect(dashboard.state).toEqual(newState);
   expect(count).toBe(0);
 
-  const visualizer = dashboard.panel.visualizers[0] as SelectBase;
+  const visualizer = dashboard.visualizers[0] as SelectBase;
   expect(visualizer.chartType).toBe("scatter");
   expect(visualizer.answersOrder).toBe("asc");
   expect(visualizer.hideEmptyAnswers).toBe(true);
@@ -560,7 +559,7 @@ test("Create visualizer with answersOrder", async () => {
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition], data });
-  const visualizer = dashboard.panel.visualizers[0] as SelectBase;
+  const visualizer = dashboard.visualizers[0] as SelectBase;
 
   expect(visualizer.chartType).toBe("bar");
   expect(visualizer.answersOrder).toBe("desc");
@@ -593,7 +592,7 @@ test("allowChangeType", () => {
       "question3"
     ],
   });
-  let visualizers = dashboard.panel["visualizers"];
+  let visualizers = dashboard["visualizers"];
 
   expect(visualizers).toHaveLength(3);
   expect(visualizers[0].type).toBe("selectBase");
@@ -618,15 +617,15 @@ test("Dashboard support date range options", () => {
     showDatePanel: true
   });
 
-  const panelOptions = dashboard.panel.options as any;
+  const panelOptions = dashboard.options as any;
   expect(panelOptions.dateFieldName).toBe("submissionDate");
   expect(panelOptions.datePeriod).toBe("last30days");
   expect(panelOptions.availableDatePeriods).toStrictEqual(availableDatePeriods);
   expect(panelOptions.showAnswerCount).toBe(false);
   expect(panelOptions.showDatePanel).toBe(true);
 
-  dashboard.panel.createDateRangeWidget();
-  const dateRangeModel = dashboard.panel["_dateRangeWidget"]["model"] as DateRangeModel;
+  dashboard.createDateRangeWidget();
+  const dateRangeModel = dashboard["_dateRangeWidget"]["model"] as DateRangeModel;
   expect(dateRangeModel.currentDatePeriod).toEqual("last30days");
   expect(dateRangeModel.currentDateRange.start).toEqual(startOfDay(new Date("2025-11-15")).getTime());
   expect(dateRangeModel.currentDateRange.end).toEqual(endOfDay(new Date("2025-12-14")).getTime());
@@ -651,8 +650,8 @@ test("Dashboard onDateRangeChanged event fires when date range changes", () => {
     datePeriod: "last7days" as DatePeriodEnum,
     dateRange: { start: startOfDay(new Date("2025-12-08")).getTime(), end: endOfDay(new Date("2025-12-14")).getTime() }
   };
-  dashboard.panel.createDateRangeWidget();
-  dashboard.panel["_dateRangeWidget"]["model"].setDatePeriod("last7days");
+  dashboard.createDateRangeWidget();
+  dashboard["_dateRangeWidget"]["model"].setDatePeriod("last7days");
 
   expect(handler).toHaveBeenCalledTimes(1);
   expect(handler).toHaveBeenCalledWith(dashboard, options);
@@ -680,7 +679,7 @@ test("Dashboard filter by date range", () => {
     showDatePanel: false
   });
 
-  const dataProvider = dashboard.panel["dataProvider"] as DataProvider;
+  const dataProvider = dashboard["dataProvider"] as DataProvider;
 
   expect(dataProvider.filteredData).toEqual([
     { date: "2011-10-16", age: 30 },

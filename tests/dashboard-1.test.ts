@@ -33,17 +33,17 @@ test("Create pivot visualizer with axis options", async () => {
     seriesFields: ["question1", "question3"]
   };
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
-  expect(dashboard.panel.visualizers.length).toBe(1);
-  expect(dashboard.panel.getElements().length).toBe(1);
-  expect(dashboard.panel.getElement("visualizer1")).toStrictEqual({
+  expect(dashboard.visualizers.length).toBe(1);
+  expect(dashboard.getElements().length).toBe(1);
+  expect(dashboard.getElement("visualizer1")).toStrictEqual({
     "displayName": "",
     "isPublic": true,
     "isVisible": true,
     "name": "visualizer1",
   });
-  expect(dashboard.panel.getVisualizer("visualizer1")).toBeDefined();
+  expect(dashboard.getVisualizer("visualizer1")).toBeDefined();
 
-  const visualizer = dashboard.panel.visualizers[0] as PivotModel;
+  const visualizer = dashboard.visualizers[0] as PivotModel;
   expect(visualizer.type).toBe("pivot");
   expect(visualizer.name).toBe("visualizer1");
   expect(visualizer.questions.length).toBe(3);

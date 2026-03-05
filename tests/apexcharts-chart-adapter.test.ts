@@ -54,8 +54,7 @@ test("Combining visualizer types and chart types for rating into Dashboard", () 
         type: "gauge"
       }]
   });
-  let visPanel = dashboard.panel;
-  let altVisualizer = visPanel.getVisualizer("score") as AlternativeVisualizersWrapper;
+  let altVisualizer = dashboard.getVisualizer("score") as AlternativeVisualizersWrapper;
 
   const visualizations = altVisualizer.getVisualizers();
   expect(visualizations.length).toBe(3);

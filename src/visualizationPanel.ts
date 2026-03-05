@@ -326,9 +326,10 @@ export class VisualizationPanel extends VisualizerBase {
     data: Array<{ [index: string]: any }>,
     options: IVisualizationPanelOptions = {},
     private _elements: Array<IVisualizerPanelRenderedElement> = undefined,
-    private isRoot = true
+    private isRoot = true,
+    visType: string = "panel"
   ) {
-    super(null, data, options, "panel");
+    super(null, data, options, visType);
     this.loadingData = false;
     this.showToolbar = isRoot;
     if(this.options.survey) {
