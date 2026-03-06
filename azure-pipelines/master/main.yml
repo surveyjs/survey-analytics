@@ -187,6 +187,20 @@ steps:
       npm run doc:gen
     displayName: "Generate docs"
 
+  # read about the problem with git output ($env:GIT_REDIRECT_STDERR = '2>&1') :
+  # https://github.com/microsoft/azure-pipelines-yaml/issues/248
+  # https://stackoverflow.com/questions/58485585/azure-pipeline-powershell-and-git-on-windows-server-2019-gives-error-in-output
+  - powershell: |
+      $branch = "$(CurrentBranch)"
+      cd $(Build.SourcesDirectory)/service
+      $env:GIT_REDIRECT_STDERR = '2>&1'
+      git config --global user.email "surveyjs.org@gmail.com"
+      git config --global user.name "surveyjsdeveloper"
+      git fetch origin $branch
+      git checkout -B $branch origin/$branch
+      git reset --hard origin/$branch
+    displayName: "Git surveyjs/service push updated docs (prepare)"
+
   - task: CopyFiles@2
     inputs:
       SourceFolder: "$(Build.SourcesDirectory)/survey-analytics/docs"
@@ -199,26 +213,29 @@ steps:
       CleanTargetFolder: false
     displayName: "Copy generated docs to the local surveyjs/service repo"
 
-  # read about the problem with git output ($env:GIT_REDIRECT_STDERR = '2>&1') :
-  # https://github.com/microsoft/azure-pipelines-yaml/issues/248
-  # https://stackoverflow.com/questions/58485585/azure-pipeline-powershell-and-git-on-windows-server-2019-gives-error-in-output
   - powershell: |
       $branch = "$(CurrentBranch)"
       cd $(Build.SourcesDirectory)/service
       $env:GIT_REDIRECT_STDERR = '2>&1'
       git config --global user.email "surveyjs.org@gmail.com"
       git config --global user.name "surveyjsdeveloper"
-      
-      git fetch origin $branch
-      git checkout -B $branch origin/$branch
-      git reset --hard origin/$branch
-
       git add surveyjs.io/App_Data/DocsAnalytics
       if (git status --porcelain) {
           git commit -m "updated survey-analytics docs for $branch [azurepipelines skip]"
           git push origin $branch
       }
     displayName: "Git surveyjs/service push updated docs for $(CurrentBranch)"
+
+  - powershell: |
+      $branch = "V2"
+      cd $(Build.SourcesDirectory)/surveyjs-site-data
+      $env:GIT_REDIRECT_STDERR = '2>&1'
+      git config --global user.email "surveyjs.org@gmail.com"
+      git config --global user.name "surveyjsdeveloper"
+      git fetch origin $branch
+      git checkout -B $branch origin/$branch
+      git reset --hard origin/$branch
+    displayName: "Git surveyjs-site-data push updated docs (prepare)"
 
   - task: CopyFiles@2
     inputs:
@@ -238,11 +255,6 @@ steps:
       $env:GIT_REDIRECT_STDERR = '2>&1'
       git config --global user.email "surveyjs.org@gmail.com"
       git config --global user.name "surveyjsdeveloper"
-      
-      git fetch origin $branch
-      git checkout -B $branch origin/$branch
-      git reset --hard origin/$branch
-
       git add DocsAnalytics
       if (git status --porcelain) {
           git commit -m "updated survey-analytics docs for $branch [azurepipelines skip]"
