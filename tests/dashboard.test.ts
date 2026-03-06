@@ -26,10 +26,23 @@ test("Dashboard should accept visualizer definitions", () => {
     dataField: "test"
   };
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
+  let items = dashboard.items;
+  expect(items.length).toBe(1);
+  expect(items[0].visualizerType).toBe("nps");
+  expect(items[0].name).toBe("visualizer1");
+  expect(items[0].dataName).toBe("test");
   expect(dashboard.visualizers.length).toBe(1);
   expect(dashboard.visualizers[0].type).toBe("nps");
 
   dashboard = new Dashboard({ visualizers: [visualizerDefinition, visualizerDefinition] });
+  items = dashboard.items;
+  expect(items.length).toBe(2);
+  expect(items[0].visualizerType).toBe("nps");
+  expect(items[0].name).toBe("visualizer1");
+  expect(items[0].dataName).toBe("test");
+  expect(items[1].visualizerType).toBe("nps");
+  expect(items[1].name).toBe("visualizer2");
+  expect(items[1].dataName).toBe("test");
   expect(dashboard.visualizers.length).toBe(2);
   expect(dashboard.visualizers[0].type).toBe("nps");
   expect(dashboard.visualizers[1].type).toBe("nps");
@@ -39,19 +52,37 @@ test("Dashboard should accept questions", () => {
   const json = {
     elements: [
       { type: "text", name: "question1" },
-      { type: "text", name: "question2" },
-      { type: "text", name: "question3" },
+      { type: "checkbox", name: "question2" },
+      { type: "rating", name: "question3" },
     ],
   };
   const survey = new SurveyModel(json);
   let dashboard = new Dashboard({ questions: survey.getAllQuestions() });
+  const items = dashboard.items;
+  expect(items.length).toBe(3);
+  expect(items[0].visualizerType).toBe("text");
+  expect(items[0].visualizerTypes).toStrictEqual(["text"]);
+  expect(items[0].name).toBe("question1");
+  expect(items[0].question).toBe(survey.getAllQuestions()[0]);
+  expect(items[1].visualizerType).toBe("selectBase");
+  expect(items[1].visualizerTypes).toStrictEqual(["selectBase"]);
+  expect(items[1].name).toBe("question2");
+  expect(items[1].question).toBe(survey.getAllQuestions()[1]);
+  expect(items[2].visualizerType).toBe("selectBase");
+  expect(items[2].visualizerTypes).toStrictEqual(["selectBase", "average", "histogram"]);
+  expect(items[2].name).toBe("question3");
+  expect(items[2].question).toBe(survey.getAllQuestions()[2]);
   expect(dashboard.visualizers.length).toBe(3);
   expect(dashboard.visualizers[0].type).toBe("text");
   expect(dashboard.visualizers[0].dataNames).toStrictEqual(["question1"]);
-  expect(dashboard.visualizers[1].type).toBe("text");
+  expect(dashboard.visualizers[1].type).toBe("selectBase");
   expect(dashboard.visualizers[1].dataNames).toStrictEqual(["question2"]);
-  expect(dashboard.visualizers[2].type).toBe("text");
+  expect(dashboard.visualizers[2].type).toBe("alternative");
   expect(dashboard.visualizers[2].dataNames).toStrictEqual(["question3"]);
+
+  const rankingVisualizer = dashboard.getVisualizer("question3") as AlternativeVisualizersWrapper;
+  const alternativeVisualizers = rankingVisualizer.getVisualizers();
+  expect(alternativeVisualizers.map(v => v.type)).toStrictEqual(["selectBase", "average", "histogram"]);
 });
 
 test("Dashboard should show questions mentioned in visualazers parameter", () => {
@@ -78,6 +109,11 @@ test("Create nps visualizer from definition with dataName", async () => {
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition], data });
+  const items = dashboard.items;
+  expect(items.length).toBe(1);
+  expect(items[0].visualizerType).toBe("nps");
+  expect(items[0].name).toBe("visualizer1");
+  expect(items[0].dataName).toBe("test");
   const nps = dashboard.visualizers[0];
 
   let result: any = await nps.getCalculatedValues();
@@ -131,8 +167,13 @@ test("Create number visualizer from definition", async () => {
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition], data });
-  const numberVis = dashboard.visualizers[0] as NumberModel;
+  const items = dashboard.items;
+  expect(items.length).toBe(1);
+  expect(items[0].visualizerType).toBe("card");
+  expect(items[0].name).toBe("visualizer1");
+  expect(items[0].dataName).toBe("test");
 
+  const numberVis = dashboard.visualizers[0] as NumberModel;
   let result: any = (await numberVis.getCalculatedValues()).data[0];
 
   expect(result).toStrictEqual([7.34, 1, 10, 7]);
@@ -268,28 +309,34 @@ test("Set visualizer types from definitions", async () => {
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
   let dashboard = new Dashboard({ visualizers: [visualizerDefinition1, visualizerDefinition2], data });
+  const items = dashboard.items;
+  expect(items.length).toBe(2);
+  expect(items[0].visualizerType).toBe("nps");
+  expect(items[0].visualizerTypes).toStrictEqual(["selectBase", "nps"]);
+  expect(items[1].visualizerType).toBe("selectBase");
+  expect(items[1].visualizerTypes).toStrictEqual(["selectBase", "nps"]);
   expect(dashboard.visualizers.length).toBe(2);
 
   const chart1 = dashboard.visualizers[0] as AlternativeVisualizersWrapper;
-  expect(chart1.type).toStrictEqual("alternative");
+  expect(chart1.type).toBe("alternative");
 
   const chart1Visualizers = chart1.getVisualizers();
   expect(chart1Visualizers.length).toBe(2);
   expect(chart1.getVisualizer().type).toBe("nps");
   expect(chart1Visualizers[0].type).toBe("selectBase");
   expect((chart1Visualizers[0] as SelectBase).chartType).toBe("line");
-  expect((chart1Visualizers[0] as SelectBase)["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
+  expect((chart1Visualizers[0] as SelectBase)["chartTypes"]).toStrictEqual(["line", "scatter", "bar", "nps"]);
   expect(chart1Visualizers[1].type).toBe("nps");
 
   const chart2 = dashboard.visualizers[1] as AlternativeVisualizersWrapper;
-  expect(chart2.type).toStrictEqual("alternative");
+  expect(chart2.type).toBe("alternative");
 
   const chart2Visualizers = chart2.getVisualizers();
   expect(chart2Visualizers.length).toBe(2);
   expect(chart2.getVisualizer().type).toBe("selectBase");
   expect(chart2Visualizers[0].type).toBe("selectBase");
   expect((chart2Visualizers[0] as SelectBase).chartType).toBe("line");
-  expect((chart2Visualizers[0] as SelectBase)["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
+  expect((chart2Visualizers[0] as SelectBase)["chartTypes"]).toStrictEqual(["line", "scatter", "bar", "nps"]);
   expect(chart2Visualizers[1].type).toBe("nps");
 });
 
@@ -488,7 +535,7 @@ test("getState, setState, onStateChanged", () => {
     locale: "",
     elements: [
       {
-        displayName: "question1",
+        displayName: undefined as any,
         name: "question1",
         isVisible: true,
         isPublic: true,

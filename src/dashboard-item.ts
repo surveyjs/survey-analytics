@@ -1,34 +1,32 @@
 import { Question } from "survey-core";
 import { IVisualizerOptions, VisualizerBase } from "./visualizerBase";
 import { chartConfig, getChartTypes, getVisualizerTypes } from "./chartConfig";
-import { VisualizationManager } from "./visualizationManager";
+import { IVisualizerTypeDescriptor, VisualizationManager } from "./visualizationManager";
+import { PanelElement } from "./visualizationPanel";
+import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 
-export interface IVisualizerDescription {
-  visualizerType: string;
-  visualizerTypes?: Array<string>;
+export interface IDashboardItem extends IVisualizerTypeDescriptor {
   chartType?: string;
   availableTypes?: any;
-  question?: Question;
   questionName?: string;
   dataName?: string;
   displayValueName?: string;
   title?: string;
-  answersOrder?: "default" | "asc" | "desc";
   options?: { [index: string]: any };
 }
 
-export function getDataName(description: Question | IVisualizerDescription) {
-  return description["name"] || description.question?.name || description.dataName || description.questionName;
+export function getDataName(item: Question | IDashboardItem) {
+  return item.dataName || item.question?.valueName || item.question?.name || item.questionName || (item as Question).valueName || (item as Question).name;
 }
 
-export function createVisualizerDescription(vOptions: IVisualizerOptions, question: Question): IVisualizerDescription {
+export function createDashboardItem(vOptions: IVisualizerOptions, question: Question): DashboardItem {
   const inputType = vOptions.type || (vOptions.availableTypes || [])[0];
   let visualizerType;
   let chartType;
   let visualizerTypes;
   let availableTypes;
 
-  if(question) {
+  if(!!question) {
     const qType = question.getType();
     const vType = qType === "text" ? (<any>question).inputType : qType;
     visualizerTypes = VisualizationManager.getVisualizerNamesByType(vType);
@@ -55,20 +53,6 @@ export function createVisualizerDescription(vOptions: IVisualizerOptions, questi
             chartType = chType;
           }
         });
-        /*
-        if(!vOptions.type && !vOptions.availableTypes) {
-          chartTypes.forEach(chType => vct.push(chType));
-          visualizerType = vt;
-        } else {
-          chartTypes.filter(chType => (vOptions.availableTypes || []).indexOf(chType) !== -1 || chType === vOptions.type)
-            .forEach(chType => {
-              vct.push(chType);
-              if(chType === inputType && !visualizerType) {
-                visualizerType = vt;
-                chartType = chType;
-              }
-            });
-        }*/
       }
     });
     Object.keys(availableTypes).forEach(key => {
@@ -83,6 +67,10 @@ export function createVisualizerDescription(vOptions: IVisualizerOptions, questi
         visualizerTypes.push(visualizerType);
       }
     }
+    if(!visualizerType) {
+      visualizerTypes = VisualizationManager.getVisualizerNamesByType(vType);
+      visualizerType = visualizerTypes[0];
+    }
   } else {
     const config = chartConfig[inputType];
     visualizerType = config?.visualizerType || inputType;
@@ -90,36 +78,130 @@ export function createVisualizerDescription(vOptions: IVisualizerOptions, questi
     visualizerTypes = getVisualizerTypes(vOptions.availableTypes);
     availableTypes = getChartTypes(vOptions.availableTypes);
   }
-  const vd = {
-    visualizerType,
-    chartType,
-    visualizerTypes,
-    availableTypes,
-    question,
-    dataName: vOptions.dataField,
-    title: vOptions.title,
-    options: {}
-  } as IVisualizerDescription;
+  const dashboardItem = new DashboardItem(visualizerType, vOptions.question || question, vOptions, availableTypes);
+  dashboardItem.type = inputType || dashboardItem.availableTypes[0];
+  dashboardItem.chartType = chartType;
+  dashboardItem.visualizerTypes = visualizerTypes;
+  dashboardItem.dataName = vOptions.dataField;
+  dashboardItem.title = vOptions.title;
+  if(!dashboardItem.question) {
+    dashboardItem.question = {
+      name: dashboardItem.name,
+      valueName: getDataName(dashboardItem as any),
+      title: vOptions.title,
+      displayValueName: vOptions.displayValueName,
+      waitForQuestionIsReady: () => {
+        return new Promise<void>((resolve) => resolve());
+      }
+    } as any;
+  }
 
-  const rootOptions = Object.keys(vd);
+  const rootOptions = Object.keys(dashboardItem);
   Object.keys(vOptions).forEach((key) => {
     if(!(key in rootOptions)) {
-      vd.options[key] = vOptions[key];
+      dashboardItem.options[key] = vOptions[key];
     }
   });
-  return vd;
+  return dashboardItem;
 }
 
-export class DashboardItem implements IVisualizerDescription {
-  visualizerType: string;
+export class DashboardItem extends PanelElement implements IDashboardItem {
+  private _type: string;
+
+  constructor(private _visualizerType: string, public question?: Question, public options?: IVisualizerOptions, private _availableTypes?: { [index: string]: string[] }) {
+    super(options?.name || question?.name || options?.dataField, question?.title || options?.title);
+  }
+
+  private changeType(newType: string) {
+    let newVisualizerType: string;
+    let newChartType: string;
+    for(const vt in this._availableTypes || {}) {
+      if(this._availableTypes[vt].indexOf(newType) !== -1) {
+        newVisualizerType = vt;
+        newChartType = newType;
+        break;
+      }
+    }
+    if(newVisualizerType && newChartType) {
+      this.visualizerType = newVisualizerType;
+      // this.chartType = newChartType;
+      let currentVisualizer = this.visualizer;
+      if(currentVisualizer instanceof AlternativeVisualizersWrapper) {
+        currentVisualizer = currentVisualizer.getVisualizer();
+      }
+      if(currentVisualizer && typeof currentVisualizer["setChartType"] === "function") {
+        currentVisualizer["setChartType"](newChartType);
+      }
+    }
+    this._type = newType;
+  }
+
+  get visualizerType(): string {
+    return this._visualizerType;
+  }
+  set visualizerType(value: string) {
+    if(this._visualizerType !== value) {
+      this._visualizerType = value;
+      if(this.visualizer instanceof AlternativeVisualizersWrapper) {
+        this.visualizer.setVisualizer(value);
+        // this._type = this.chartType;
+        let currentVisualizer = this.visualizer.getVisualizer();
+        if(!!currentVisualizer) {
+          this._type = (currentVisualizer as any).chartType;
+        }
+      }
+    }
+  }
   visualizerTypes?: string[];
   chartType?: string;
-  availableTypes?: any;
-  question?: Question;
+  // get chartType(): string | undefined {
+  //   let currentVisualizer = this.visualizer;
+  //   if(currentVisualizer instanceof AlternativeVisualizersWrapper) {
+  //     currentVisualizer = currentVisualizer.getVisualizer();
+  //   }
+  //   if(!!currentVisualizer) {
+  //     return (currentVisualizer as any).chartType;
+  //   }
+  //   if(this._availableTypes && this._availableTypes[this.visualizerType] && this._availableTypes[this.visualizerType].length > 0) {
+  //     return this._availableTypes[this.visualizerType][0];
+  //   }
+  //   return undefined;
+  // }
+  // set chartType(value: string) {
+  //   if(!!value && value !== this._type) {
+  //     let currentVisualizer = this.visualizer;
+  //     if(currentVisualizer instanceof AlternativeVisualizersWrapper) {
+  //       currentVisualizer = currentVisualizer.getVisualizer();
+  //     }
+  //     if(currentVisualizer && typeof currentVisualizer["setChartType"] === "function") {
+  //       currentVisualizer["setChartType"](value);
+  //     }
+  //     this._type = value;
+  //   }
+  // }
+  get type(): string {
+    return this._type;
+  }
+  set type(value: string) {
+    if(this._type !== value) {
+      this.changeType(value);
+    }
+  }
+  get availableTypes(): string[] {
+    const at = [];
+    for(const key in this._availableTypes || {}) {
+      at.push(...(this._availableTypes[key] || []));
+    }
+    return at;
+  }
   questionName?: string;
   dataName?: string;
   displayValueName?: string;
-  title?: string;
-  answersOrder?: "asc" | "desc" | "default";
-  options?: { [index: string]: any };
+
+  get title(): string {
+    return this.displayName;
+  }
+  set title(value: string) {
+    this.displayName = value;
+  }
 }

@@ -13,7 +13,6 @@ import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
 import { DatePeriodEnum, DateRangeWidget, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
-import { getDataName } from "./dashboard-item";
 import { IDateRange, toRange } from "./utils/calculationDateRanges";
 import { DateRangeModel, IDateRangeChangedOptions } from "./utils/dateRangeModel";
 import "./visualizationPanel.scss";
@@ -333,18 +332,18 @@ export interface IVisualizationPanelOptions {
  *
  * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
  */
-export class VisualizationPanel extends VisualizerBase {
+export class VisualizationPanel<P extends PanelElement = PanelElement> extends VisualizerBase {
   public static LayoutEngine: new (allowed: boolean, itemSelector: string, dragEnabled?: boolean) => LayoutEngine;
-  private static counter = 0;
+  private _itemsCounter = 0;
   private _renderedQuestionsCount: number = 0;
   private _resetFilterButton: HTMLElement;
   private _dateRangeWidget: DateRangeWidget;
   private _dateRangeModel: DateRangeModel;
-  private _elements: Array<PanelElement> = undefined;
+  protected _elements: Array<P> = undefined;
 
-  private static getVisualizerName() {
-    VisualizationPanel.counter++;
-    return "visualizer" + VisualizationPanel.counter;
+  protected getVisualizerName() {
+    this._itemsCounter++;
+    return "visualizer" + this._itemsCounter;
   }
 
   private updateResetFilterButtonDisabled() {
@@ -457,16 +456,6 @@ export class VisualizationPanel extends VisualizerBase {
         });
       }, "dropdown");
     }
-
-    // if(this.isRoot && !this.theme?.isAxisLabelFontLoaded()) {
-    //   document.fonts.ready.then((fontFaceSet: FontFaceSet) => {
-    //     setTimeout(() => {
-    //       if (this.theme?.isAxisLabelFontLoaded()) {
-    //         this.refresh();
-    //       }
-    //     }, 100);
-    //   });
-    // }
   }
 
   public get visualizers(): Array<VisualizerBase> {
@@ -768,7 +757,8 @@ export class VisualizationPanel extends VisualizerBase {
         selectedText: string
       ) => {
         filterInfo.update({ value: selectedValue, text: selectedText });
-        const dataName = getDataName(question);
+        // TODO: possible issues with visuazlier descriptions
+        const dataName = question.name || question.question?.name || question.dataName || question.questionName;
         this.setFilter(dataName, selectedValue);
       };
     }
@@ -782,7 +772,7 @@ export class VisualizationPanel extends VisualizerBase {
     }
   }
 
-  private buildVisualizer(element: PanelElement, questions: Array<Question>) {
+  protected buildVisualizer(element: P, questions: Array<Question>) {
     const visualizerOptions = Object.assign({}, this.options);
     if(visualizerOptions.dataProvider === undefined) {
       visualizerOptions.dataProvider = this.dataProvider;
@@ -889,10 +879,18 @@ export class VisualizationPanel extends VisualizerBase {
     return this._layoutEngine;
   }
 
-  protected buildElements(questions: any[], elements: IVisualizerPanelRenderedElement[] = []): PanelElement[] {
+  protected createElement(source: IVisualizerPanelElement | Question): P {
+    if(source instanceof Question) {
+      return new PanelElement(source.name, this.getTitle(source)) as P;
+    } else {
+      return new PanelElement(source.name, source.displayName) as P;
+    }
+  }
+
+  protected buildElements(questions: any[], elements: IVisualizerPanelRenderedElement[] = []): P[] {
     if(elements.length > 0) {
       return elements.map((element) => {
-        let el = new PanelElement(element.name, element.displayName);
+        let el = this.createElement(element);
         el.isVisible = element.isVisible;
         el.isPublic = element.isPublic;
         return el;
@@ -902,9 +900,9 @@ export class VisualizationPanel extends VisualizerBase {
       let questionAsElementDeclaration = Array.isArray(question) ? question[0] : question;
       questionAsElementDeclaration = questionAsElementDeclaration.question || questionAsElementDeclaration;
       if(!questionAsElementDeclaration.name) {
-        questionAsElementDeclaration.name = VisualizationPanel.getVisualizerName();
+        questionAsElementDeclaration.name = this.getVisualizerName();
       }
-      const pe = new PanelElement(questionAsElementDeclaration.name, this.getTitle(questionAsElementDeclaration));
+      const pe = this.createElement(questionAsElementDeclaration);
       if(Array.isArray(question)) {
         pe.questions = question;
       } else {
@@ -1254,7 +1252,7 @@ export class VisualizationPanel extends VisualizerBase {
             oldElement.setState(elementState);
             newElements.push(oldElement);
           } else {
-            let newElement = new PanelElement(elementState.name, elementState.displayName);
+            let newElement = this.createElement(elementState);
             newElement.setState(elementState);
             newElements.push(newElement);
           }

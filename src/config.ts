@@ -23,6 +23,7 @@ export interface IVisualizerPanelElement {
    */
   isVisible: boolean;
   isPublic: boolean;
+  [key: string]: any;
 }
 
 export interface IState {

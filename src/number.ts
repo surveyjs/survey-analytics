@@ -43,7 +43,12 @@ export class NumberModel extends VisualizerBase {
       });
     }
     if(!this.chartType) {
-      this.chartType = this.questionOptions?.chartType || this.options.defaultChartType || this.chartTypes[0];
+      const chartTypeCandidate = this.questionOptions?.chartType || this.options.defaultChartType || this.chartTypes[0];
+      if(this.chartTypes.indexOf(chartTypeCandidate) !== -1) {
+        this.chartType = chartTypeCandidate;
+      } else if(this.chartTypes.length > 0) {
+        this.chartType = this.chartTypes[0];
+      }
     }
   }
 

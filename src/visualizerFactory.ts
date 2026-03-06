@@ -1,7 +1,6 @@
 import { Question, QuestionCompositeModel, QuestionCustomModel } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
-import { VisualizationManager } from "./visualizationManager";
-import { getDataName, IVisualizerDescription } from "./dashboard-item";
+import { VisualizationManager, IVisualizerTypeDescriptor } from "./visualizationManager";
 
 /**
  * An object that allows you to create individual visualizers without creating a [visualization panel](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel).
@@ -23,12 +22,12 @@ export class VisualizerFactory {
    * ```
    *
    * If a question has more than one [registered](https://surveyjs.io/dashboard/documentation/api-reference/visualizationmanager#registerVisualizer) visualizer, users can switch between them using a drop-down menu.
-   * @param description A question for which to create a visualizer.
+   * @param descriptor A question or type descriptor to create a visualizer.
    * @param data A data array with survey results to be visualized.
    * @param options An object with any custom properties you need within the visualizer.
    */
   public static createVisualizer(
-    description: Question | IVisualizerDescription,
+    descriptor: Question | any,
     data: Array<{ [index: string]: any }>,
     options?: { [index: string]: any }
   ): VisualizerBase {
@@ -37,39 +36,39 @@ export class VisualizerFactory {
     let optionsForCreator = Object.assign({}, options);
     let creatorInfos: Array<{typeName: string, creator: any}> = [];
 
-    if("visualizerType" in description) {
-      type = description.visualizerType;
-      const dataName = getDataName(description);
+    if("visualizerType" in descriptor || "visualizerTypes" in descriptor) {
+      type = descriptor.visualizerType || (descriptor.visualizerTypes || [])[0];
+      const dataName = descriptor["name"] || descriptor.question?.name || descriptor.dataName || descriptor.questionName;
 
       optionsForCreator = Object.assign({},
         optionsForCreator,
-        description.options || {}
+        descriptor.options || {}
       );
 
-      if(!!description.chartType) {
+      if(!!descriptor.chartType) {
         optionsForCreator[dataName] = Object.assign({},
           optionsForCreator[dataName] || {},
           {
-            chartType: description.chartType,
-            availableTypes: description.availableTypes
+            chartType: descriptor.chartType,
+            availableTypes: descriptor.availableTypes
           }
         );
       }
 
-      question = description.question || {
+      question = descriptor.question || {
         name: dataName,
-        valueName: description.question?.valueName || description.dataName || description.questionName,
-        title: description.title,
-        displayValueName: description.displayValueName,
+        valueName: descriptor.question?.valueName || descriptor.dataName || descriptor.questionName,
+        title: descriptor.title,
+        displayValueName: descriptor.displayValueName,
         waitForQuestionIsReady: () => {
           return new Promise<void>((resolve) => resolve());
         }
-      };
-      creatorInfos = this.getVisualizerCreatorsByDescription(description as IVisualizerDescription);
+      } as any;
+      creatorInfos = this.getVisualizerCreatorsByDescriptor(descriptor);
     } else {
-      question = description;
-      if(description.displayValueName !== undefined) {
-        question.displayValueName = description.displayValueName;
+      question = descriptor;
+      if(descriptor.displayValueName !== undefined) {
+        question.displayValueName = descriptor.displayValueName;
       }
       creatorInfos = this.getVisualizerCreatorsByQuestion(question);
     }
@@ -80,8 +79,10 @@ export class VisualizerFactory {
     if(creatorInfos.length > 0) {
       creatorInfos.forEach(creatorInfo => {
         const optionsForCreatorType = Object.assign({}, optionsForCreator);
-        if(description.availableTypes && description.availableTypes[creatorInfo.typeName]) {
-          optionsForCreatorType["availableTypes"] = description.availableTypes[creatorInfo.typeName];
+        // TODO: improve available types processing
+        const availableTypes = (descriptor as any).availableTypes && (descriptor as any).availableTypes[creatorInfo.typeName];
+        if(availableTypes && availableTypes[creatorInfo.typeName]) {
+          optionsForCreatorType["availableTypes"] = availableTypes[creatorInfo.typeName];
         }
         if(creatorInfos.length > 1) {
           optionsForCreatorType["allowChangeVisualizerType"] = false;
@@ -128,9 +129,9 @@ export class VisualizerFactory {
     return allCreatorInfos;
   }
 
-  static getVisualizerCreatorsByDescription(description: IVisualizerDescription): Array<{typeName: string, creator: any}> {
+  static getVisualizerCreatorsByDescriptor(descriptor: IVisualizerTypeDescriptor): Array<{typeName: string, creator: any}> {
     let allCreatorInfos: Array<{typeName: string, creator: any}> = [];
-    const vTypes = description.visualizerTypes || [description.visualizerType];
+    const vTypes = descriptor.visualizerTypes || [descriptor.visualizerType];
     vTypes.forEach(type => {
       const creators = VisualizationManager.getVisualizersByType(type);
       creators.forEach(creator => allCreatorInfos.push({ typeName: type, creator }));
@@ -138,4 +139,3 @@ export class VisualizerFactory {
     return allCreatorInfos;
   }
 }
-
