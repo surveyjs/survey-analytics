@@ -111,8 +111,8 @@ export interface IDashboardOptions {
    * - `"last14days"`
    * - `"last28days"`
    * - `"last30days"`
-   * - `"lastWeekMon"`
    * - `"lastWeekSun"`
+   * - `"lastWeekMon"`
    * - `"lastMonth"`
    * - `"lastQuarter"`
    * - `"lastYear"`
