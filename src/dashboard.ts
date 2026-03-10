@@ -2,7 +2,7 @@ import { Question, SurveyModel, Event } from "survey-core";
 import { IVisualizerOptions, VisualizerBase } from "./visualizerBase";
 import { VisualizationPanel } from "./visualizationPanel";
 import { DataProvider, GetDataFn } from "./dataProvider";
-import { createDashboardItem, DashboardItem, getDataName, IDashboardItem } from "./dashboard-item";
+import { createDashboardItem, DashboardItem, IDashboardItem } from "./dashboard-item";
 import { LayoutEngine } from "./layout-engine";
 import { DatePeriodEnum, DateRangeTuple } from "./utils/dateRangeModel";
 import { VisualizerFactory } from "./visualizerFactory";
@@ -34,16 +34,11 @@ export interface IDashboardOptions {
 export class Dashboard extends VisualizationPanel<DashboardItem> {
   constructor(private readonly _options: IDashboardOptions) {
     super(_options.questions ?? [], _options?.data ?? [], _options, _options.visualizers ?? [] as any, true, "dashboard");
-
-    // this._elements = this.buildElements(_options.questions ?? [], _options.visualizers ?? []);
-    // this._elements.forEach((element) => {
-    //   this.buildVisualizer(element, _options.questions ?? []);
-    // });
   }
 
   protected buildVisualizer(element: DashboardItem, questions: Array<Question>) {
     const visualizerOptions = Object.assign({}, this.options);
-    const dataName = getDataName(element as any);
+    const dataName = element.dataName;
     if(!!element.chartType) {
       visualizerOptions[dataName] = Object.assign({},
         visualizerOptions[dataName] || {},

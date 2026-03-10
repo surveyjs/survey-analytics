@@ -15,10 +15,6 @@ export interface IDashboardItem extends IVisualizerTypeDescriptor {
   options?: { [index: string]: any };
 }
 
-export function getDataName(item: Question | IDashboardItem) {
-  return item.dataName || item.question?.valueName || item.question?.name || item.questionName || (item as Question).valueName || (item as Question).name;
-}
-
 export function createDashboardItem(vOptions: IVisualizerOptions, question: Question): DashboardItem {
   const inputType = vOptions.type || (vOptions.availableTypes || [])[0];
   let visualizerType;
@@ -87,7 +83,7 @@ export function createDashboardItem(vOptions: IVisualizerOptions, question: Ques
   if(!dashboardItem.question) {
     dashboardItem.question = {
       name: dashboardItem.name,
-      valueName: getDataName(dashboardItem as any),
+      valueName: dashboardItem.dataName,
       title: vOptions.title,
       displayValueName: vOptions.displayValueName,
       waitForQuestionIsReady: () => {
@@ -107,11 +103,23 @@ export function createDashboardItem(vOptions: IVisualizerOptions, question: Ques
 
 export class DashboardItem extends PanelElement implements IDashboardItem {
   private _type: string;
+  private _dataName: string;
 
   constructor(private _visualizerType: string, public question?: Question, public options?: IVisualizerOptions, private _availableTypes?: { [index: string]: string[] }) {
     super(options?.name || question?.name || options?.dataField, question?.title || options?.title);
   }
 
+  private getDataName() {
+    return this.question?.valueName || this.question?.name || this.questionName || this.name;
+  }
+
+  /**
+   * The `changeType` method is called to update the visualizer and chart type accordingly.
+   *
+   * The `changeType` method checks the available types for the current visualizer and updates the
+   * visualizer and chart type if the new type is valid. This ensures that the dashboard item always
+   * has a valid type that is compatible with the available visualizers.
+   */
   private changeType(newType: string) {
     let newVisualizerType: string;
     let newChartType: string;
@@ -179,6 +187,23 @@ export class DashboardItem extends PanelElement implements IDashboardItem {
   //     this._type = value;
   //   }
   // }
+  questionName?: string;
+  displayValueName?: string;
+
+  /** Gets the available types for the dashboard item. */
+  get availableTypes(): string[] {
+    const at = [];
+    for(const key in this._availableTypes || {}) {
+      at.push(...(this._availableTypes[key] || []));
+    }
+    return at;
+  }
+  /**
+   * Gets or sets the type of the dashboard item.
+   *
+   * The `type` property represents the current type of the dashboard item. When setting a new type,
+   * the private `changeType` method is called to update the visualizer and chart type accordingly.
+   */
   get type(): string {
     return this._type;
   }
@@ -187,17 +212,14 @@ export class DashboardItem extends PanelElement implements IDashboardItem {
       this.changeType(value);
     }
   }
-  get availableTypes(): string[] {
-    const at = [];
-    for(const key in this._availableTypes || {}) {
-      at.push(...(this._availableTypes[key] || []));
-    }
-    return at;
+  /** Gets or sets the data name for the dashboard item. */
+  get dataName(): string | undefined {
+    return this._dataName || this.getDataName();
   }
-  questionName?: string;
-  dataName?: string;
-  displayValueName?: string;
-
+  set dataName(value: string | undefined) {
+    this._dataName = value;
+  }
+  /** Gets or sets the title of the dashboard item. */
   get title(): string {
     return this.displayName;
   }
