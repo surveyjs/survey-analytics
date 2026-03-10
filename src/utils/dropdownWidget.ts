@@ -96,20 +96,13 @@ export class DropdownWidget extends DropdownBase {
     this.updateHeaderContent();
 
     this.hidePopup();
-
-    this.dropdownList.querySelectorAll("." + this.className + "-item").forEach(item => {
-      this.updateItemSelection(item as HTMLLIElement, false);
-    });
-    this.updateItemSelection(dropdownItem, true);
   }
 
-  protected onBeforeHeaderToggle(): void {
+  protected onBeforePopupShow(): void {
     this.dropdownList.style.width = "auto";
   }
 
-  protected onAfterHeaderToggle(isOpened: boolean): void {
-    if(!isOpened) return;
-
+  protected onDropdownOpened(): void {
     const documentWidth = document.body.clientWidth;
     const menuRect = this.dropdownList.getBoundingClientRect();
     if(menuRect.left + menuRect.width > documentWidth - 20) {
@@ -125,7 +118,7 @@ export class DropdownWidget extends DropdownBase {
     }
   }
 
-  protected onDropdownOpened(): void {
+  protected onOpenedByKeyboard(): void {
     setTimeout(() => this.focusItem(0, true), 0);
   }
 
@@ -168,28 +161,14 @@ export class DropdownWidget extends DropdownBase {
     (this.dropdownElement as any).setValue = (value: string | null | undefined) => this.setValue(value);
     (this.dropdownElement as any).getValue = () => this.getValue();
     (this.dropdownElement as any).__updateSelect = () => this.updateSelect();
+    (this.dropdownElement as any).__updateHeader = () => this.updateHeaderContent();
   }
 
   setValue(value: string | null | undefined): void {
     const items = this.getOptions();
     const optionToSelect = items.find(opt => opt.value === value);
-
-    if(optionToSelect) {
-      this.selectedOption = optionToSelect;
-      this.updateHeaderContent();
-
-      this.dropdownList.querySelectorAll("." + this.className + "-item").forEach(item => {
-        const itemValue = (item as HTMLElement)?.dataset?.value;
-        this.updateItemSelection(item as HTMLLIElement, itemValue === value);
-      });
-    } else if(value === null || value === undefined) {
-      this.selectedOption = null;
-      this.updateHeaderContent();
-
-      this.dropdownList.querySelectorAll("." + this.className + "-item").forEach(item => {
-        this.updateItemSelection(item as HTMLLIElement, false);
-      });
-    }
+    this.selectedOption = optionToSelect || null;
+    this.updateHeaderContent();
   }
 
   getValue(): string | null {

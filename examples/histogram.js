@@ -159,11 +159,11 @@ var data = [
 data.forEach(function(item) { delete item.date; });
 data = data.concat(salesData);
 
-// SurveyAnalytics.DashboardTheme.backgroundColor = "gray";
-// SurveyAnalytics.DashboardTheme["--dsb-item-background-color"] = "gray";
-// SurveyAnalytics.DashboardTheme["--sa-dropdown-bg"] = "gray";
+// SurveyAnalyticsPlotly.DashboardTheme.backgroundColor = "gray";
+// SurveyAnalyticsPlotly.DashboardTheme["--dsb-item-background-color"] = "gray";
+// SurveyAnalyticsPlotly.DashboardTheme["--sa-dropdown-bg"] = "gray";
 
-// SurveyAnalytics.VisualizerBase.customColors = [
+// SurveyAnalyticsPlotly.VisualizerBase.customColors = [
 //   "#f3cec9",
 //   "#e7a4b6",
 //   "#cd7eaf",
@@ -177,7 +177,7 @@ data = data.concat(salesData);
 // ];
 
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   // [survey.getQuestionByName("date")],
   survey.getAllQuestions(),
   data,

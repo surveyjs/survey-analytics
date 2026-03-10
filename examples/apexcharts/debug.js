@@ -109,7 +109,7 @@ const dataFromServer = generateData();
 
 const survey = new Survey.Model(json);
 
-    const vizPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
+    const vizPanel = new SurveyAnalytics.VisualizationPanel(
         survey.getAllQuestions(),
         dataFromServer,
         { 

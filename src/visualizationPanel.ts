@@ -398,6 +398,7 @@ export class VisualizationPanel extends VisualizerBase {
     if(this.haveSeveralChildren && this.allowDynamicLayout && this.allowDragDrop) {
       const dragAreaElement = this.createDragAreaElement(element);
       headerElement.appendChild(dragAreaElement);
+      headerElement.classList.add("sa-question__header--allow-drag");
       if(hideElement) {
         dragAreaElement.appendChild(hideElement);
       }
@@ -957,7 +958,7 @@ export class VisualizationPanel extends VisualizerBase {
     container.className += " sa-panel__header";
     super.renderToolbar(container);
 
-    if(this.isRoot && this._dateRangeWidget) {
+    if(this.isRoot && this.showToolbar && this._dateRangeWidget) {
       const divider = DocumentHelper.createElement("div", "sa-horizontal-divider");
       const line = DocumentHelper.createElement("div", "sa-line");
       divider.appendChild(line);

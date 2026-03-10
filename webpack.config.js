@@ -81,8 +81,9 @@ SuppressJsForFontlessChunksPlugin.prototype.apply = function (compiler) {
     for (const chunk of stats.compilation.chunks) {
       if (chunk.name && chunk.name.includes('fontless')) {
         const jsFilePatterns = ['.js', '.js.'];
-        const files = fs.readdirSync(outputPath).filter(file => 
-          file.includes(chunk.name) && jsFilePatterns.some(pattern => file.includes(pattern))
+        const chunkNameLower = chunk.name.toLowerCase();
+        const files = fs.readdirSync(outputPath).filter(file =>
+          file.toLowerCase().startsWith(chunkNameLower) && jsFilePatterns.some(pattern => file.includes(pattern))
         );
         
         for (const file of files) {
@@ -199,16 +200,13 @@ module.exports = function (options) {
   const config = {
     mode: isProductionBuild ? "production" : "development",
     entry: {
-      "survey.analytics.tabulator": path.resolve(
-        __dirname,
-        "./src/entries/tabulator-umd"
-      ),
-      "survey.analytics": path.resolve(__dirname, "./src/entries/summary"),
       "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core"),
-      "survey.analytics.apexcharts": path.resolve(__dirname, "./src/entries/apexcharts"),
-      "survey.analytics.apexcharts.fontless": path.resolve(__dirname, "./src/entries/apexcharts.fontless"),
+      "survey.analytics": path.resolve(__dirname, "./src/entries/apexcharts"),
+      "survey.analytics.fontless": path.resolve(__dirname, "./src/entries/apexcharts.fontless"),
       "survey.analytics.plotly": path.resolve(__dirname, "./src/entries/plotly"),
       "survey.analytics.plotly.fontless": path.resolve(__dirname, "./src/entries/plotly.fontless"),
+      "survey.analytics.tabulator": path.resolve(__dirname, "./src/entries/tabulator-umd"),
+      "survey.analytics.tabulator.fontless": path.resolve(__dirname, "./src/entries/tabulator.fontless"),
       "survey.analytics.mongo": path.resolve(__dirname, "./src/entries/mongo"),
     },
     resolve: {
@@ -266,7 +264,11 @@ module.exports = function (options) {
     },
     output: {
       path: buildPath,
-      filename: "[name]" + (options.buildType === "prod" ? ".min" : "") + ".js",
+      filename: (pathData) => {
+        const name = (pathData.chunk && (pathData.chunk.name || pathData.chunk.id)) || "main";
+        const suffix = options.buildType === "prod" ? ".min" : "";
+        return String(name).toLowerCase() + suffix + ".js";
+      },
       library: {
         root: options.libraryName || "[pc-name]",
       },
@@ -315,7 +317,10 @@ module.exports = function (options) {
         "process.env.VERSION": JSON.stringify(packageJson.version),
       }),
       new MiniCssExtractPlugin({
-        filename: isProductionBuild ? "[name].min.css" : "[name].css",
+        filename: (pathData) => {
+          const name = (pathData.chunk && pathData.chunk.name) ? pathData.chunk.name.toLowerCase() : "main";
+          return name + (isProductionBuild ? ".min.css" : ".css");
+        },
       }),
       new webpack.BannerPlugin({
         banner: banner,

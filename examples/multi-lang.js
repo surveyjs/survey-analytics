@@ -22,7 +22,7 @@ var options = {
   survey: survey,
 };
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   survey.getAllQuestions(),
   data,

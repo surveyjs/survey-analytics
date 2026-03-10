@@ -6,7 +6,7 @@ function PollVisualizer(question, data, options) {
       const choices = vizData.labels;
       const percentages = vizData.texts;
       if (polls.length === 0 || polls[0].length === 0) {
-        const emptyResultsHtml = `<p>` + SurveyAnalytics.localization.getString("noResults") + `</p>`;
+        const emptyResultsHtml = `<p>` + SurveyAnalyticsPlotly.localization.getString("noResults") + `</p>`;
         contentContainer.insertAdjacentHTML("beforeend", emptyResultsHtml);
         return;
       }
@@ -37,7 +37,7 @@ function PollVisualizer(question, data, options) {
     });
   };
   // Step 2: Instantiate the visualizer
-  const visualizer = new SurveyAnalytics.SelectBase(
+  const visualizer = new SurveyAnalyticsPlotly.SelectBase(
     question,
     data,
     { renderContent: renderContent, dataProvider: options.dataProvider },
@@ -48,7 +48,7 @@ function PollVisualizer(question, data, options) {
   return visualizer;
 }
 
-SurveyAnalytics.VisualizationManager.registerVisualizer("radiogroup", PollVisualizer, 0);
+SurveyAnalyticsPlotly.VisualizationManager.registerVisualizer("radiogroup", PollVisualizer, 0);
 
 var json = {
   "elements": [{
@@ -95,7 +95,7 @@ var dataFromServer = [
     { organization_type: "Custom" }
 ];;
 
-var vizPanel = new SurveyAnalytics.VisualizationPanel(
+var vizPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
     survey.getAllQuestions(),
     dataFromServer,
     { allowDynamicLayout: false, allowHideQuestions: false }

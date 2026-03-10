@@ -404,6 +404,15 @@ export class PivotModel extends HistogramModel {
     super.renderToolbar(container);
   }
 
+  public render(targetElement: HTMLElement | string, isRoot = true): void {
+    super.render(targetElement, isRoot);
+
+    this.renderResult.classList.add("sa-pivot");
+    if(isRoot) {
+      this.renderResult.classList.add("sa-pivot--standalone");
+    }
+  }
+
   protected renderBanner(container: HTMLElement): void {
     if(!this.haveCommercialLicense && this.isRoot) {
       const banner = createCommercialLicenseLink();

@@ -13,6 +13,7 @@ function isChoicesArraysEqual(
   choices1: Array<ItemValue>,
   choices2: Array<ItemValue>
 ): boolean {
+  if(choices1 === undefined || choices2 === undefined) return false;
   if(choices1.length !== choices2.length) return false;
   for(let i = 0; i < choices1.length; i++) {
     if(

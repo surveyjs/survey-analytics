@@ -2,18 +2,40 @@
 @use "./utils/utils.scss" as *;
 @use "./typography-mixins.scss" as *;
 
-.sa-panel__header,
-.sa-pivot__header {
+.sa-panel__header {
   display: flex;
   flex-direction: column;
+  gap: var(--sjs2-spacing-x200, 16px);
+}
 
-  &.sa-toolbar--has-content {
-    padding: var(--sjs2-spacing-x200, 16px);
+.sa-panel__header.sa-toolbar--has-content {
+  padding: var(--sjs2-spacing-x200, 16px);
+  border-radius: var(--sjs2-radius-container-panel, 16px);
+  background: var(--sjs2-color-bg-basic-primary, #FFF);
+  box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
+}
+
+.sa-pivot--standalone {
+  background: var(--sjs2-color-utility-surface-dashboard, rgba(28, 27, 32, 0.05));
+  display: flex;
+  padding: var(--sjs2-spacing-x300, 24px);
+  flex-direction: column;
+  gap: var(--sjs2-spacing-x300, 24px);
+
+  .sa-visualizer-wrapper {
     border-radius: var(--sjs2-radius-container-panel, 16px);
     background: var(--sjs2-color-bg-basic-primary, #FFF);
     box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
-    gap: var(--sjs2-spacing-x200, 16px);
+  
+    padding: var(--sjs2-spacing-x400, 32px) var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px);
   }
+}
+
+.sa-pivot__header{
+  display: flex;
+  flex-direction: column;
+  gap: var(--sjs2-spacing-x200, 16px);
+  padding-bottom: var(--sjs2-spacing-x200, 16px);
 }
 
 .sa-panel__header > .sa-toolbar {
@@ -57,13 +79,18 @@
   vertical-align: top;
   box-sizing: border-box;
   overflow: hidden;
+
+  border-radius: var(--sjs2-radius-container-panel, 16px);
+  background: var(--sjs2-color-bg-basic-primary, #FFF);
+  box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
 }
 
-.sa-question-layouted .sa-question__content {
+.sa-question .sa-question__content {
+  position: relative;
   padding: 0 var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px);
 
   @media screen and (max-width: 600px) { 
-    padding: var(--sjs2-spacing-x300, 24px) var(--sjs2-spacing-x150, 12px) var(--sjs2-spacing-x150, 12px) var(--sjs2-spacing-x150, 12px);
+    padding: 0 var(--sjs2-spacing-x150, 12px) var(--sjs2-spacing-x150, 12px) var(--sjs2-spacing-x150, 12px);
   }
 }
 
@@ -73,9 +100,6 @@
   width: 100%;
   margin-inline-start: var(--sjs2-spacing-x300, 24px);
   margin-top: var(--sjs2-spacing-x300, 24px);
-  border-radius: var(--sjs2-radius-container-panel, 16px);
-  background: var(--sjs2-color-bg-basic-primary, #FFF);
-  box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
 
   @media screen and (min-width: 1400px) {
     width: calc(50% - var(--sjs2-spacing-x300, 24px) - 1px);
@@ -174,22 +198,14 @@
   }
 }
 
-.sa-question:not(.sa-question-layouted) {
-  .sa-question__header {
-    position: relative;
-  }
+.sa-question__header:not(.sa-question__header--allow-drag) {
+  padding-top: var(--sjs2-spacing-x400, 32px);
 
-  .sa-question__hide-action {
-    top: unset;
-    right: 0px;
-    bottom: 0px;
-
-    @media screen and (max-width: 600px) {
-      top: 0;
-      bottom: unset;
-    }
+  @media screen and (max-width: 600px) {
+    padding-top: var(--sjs2-spacing-x300, 24px);
   }
 }
+
 
 .sa-toolbar {
   display: flex;

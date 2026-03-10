@@ -19,7 +19,7 @@ var options = {
   // labelTruncateLength: 27,
 };
 
-SurveyAnalytics.VisualizerBase.customColors = [
+SurveyAnalyticsPlotly.VisualizerBase.customColors = [
   "#f3cec9",
   "#e7a4b6",
   "#cd7eaf",
@@ -32,7 +32,7 @@ SurveyAnalytics.VisualizerBase.customColors = [
   "#182844",
 ];
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   survey.getAllQuestions(),
   data,
   options

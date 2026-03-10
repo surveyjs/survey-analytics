@@ -46,8 +46,8 @@ function PollVisualizer(question, data) {
     var hasSeries = seriesLabels.length > 1;
     
     if (datasets.length === 0 || datasets[0].length === 0) {
-      var emptyTextNode = SurveyAnalytics.DocumentHelper.createElement("p", "", {
-        innerText: SurveyAnalytics.localization.getString("noResults"),
+      var emptyTextNode = SurveyAnalyticsPlotly.DocumentHelper.createElement("p", "", {
+        innerText: SurveyAnalyticsPlotly.localization.getString("noResults"),
       });
       contentContainer.appendChild(emptyTextNode);
       return;
@@ -55,24 +55,24 @@ function PollVisualizer(question, data) {
 
     datasets.forEach(function (data, idx) {
       var tableNode = (
-        SurveyAnalytics.DocumentHelper.createElement("table", "sa-poll-table")
+        SurveyAnalyticsPlotly.DocumentHelper.createElement("table", "sa-poll-table")
       );
 
       tableNode.style.backgroundColor = visualizer.backgroundColor;
 
       data.forEach(function (rowData, index) {
-        var row = SurveyAnalytics.DocumentHelper.createElement("tr");
-        var labelCell = SurveyAnalytics.DocumentHelper.createElement("td", "sa-poll-table__cell", {
+        var row = SurveyAnalyticsPlotly.DocumentHelper.createElement("tr");
+        var labelCell = SurveyAnalyticsPlotly.DocumentHelper.createElement("td", "sa-poll-table__cell", {
           textContent: labels[index] + " - " + texts[idx][index] + "%" + " (" + rowData + " votes)",
         });
         row.appendChild(labelCell);
         tableNode.appendChild(row);
 
-        row = SurveyAnalytics.DocumentHelper.createElement("tr");
-        var sparklineCell = SurveyAnalytics.DocumentHelper.createElement("td", "sa-poll-table__cell");
+        row = SurveyAnalyticsPlotly.DocumentHelper.createElement("tr");
+        var sparklineCell = SurveyAnalyticsPlotly.DocumentHelper.createElement("td", "sa-poll-table__cell");
         sparklineCell.colspan = "3";
-        var outerBar = SurveyAnalytics.DocumentHelper.createElement("div", "sa-poll-sparkline");
-        var innerBar = SurveyAnalytics.DocumentHelper.createElement("div", "sa-poll-sparkline-value");
+        var outerBar = SurveyAnalyticsPlotly.DocumentHelper.createElement("div", "sa-poll-sparkline");
+        var innerBar = SurveyAnalyticsPlotly.DocumentHelper.createElement("div", "sa-poll-sparkline-value");
         innerBar.style.width = texts[idx][index] + "%";
         outerBar.appendChild(innerBar);
         sparklineCell.appendChild(outerBar);
@@ -83,7 +83,7 @@ function PollVisualizer(question, data) {
       contentContainer.appendChild(tableNode);
     });
   };
-  var visualizer = new SurveyAnalytics.SelectBase(question, data, {
+  var visualizer = new SurveyAnalyticsPlotly.SelectBase(question, data, {
     renderContent: renderContent
   }, "pollVisualizer");
   visualizer.answersOrder = "asc";
@@ -93,7 +93,7 @@ function PollVisualizer(question, data) {
 
 SurveyAnalytics
   .VisualizationManager
-  .unregisterVisualizer("radiogroup", SurveyAnalytics.SelectBasePlotly);
+  .unregisterVisualizer("radiogroup", SurveyAnalyticsPlotly.SelectBasePlotly);
 
 // Register custom visualizer for the given question type
 SurveyAnalytics
@@ -127,6 +127,6 @@ var data = [
   }
 ];
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(allQuestions, data, { allowDynamicLayout: false, allowHideQuestions: false });
+var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(allQuestions, data, { allowDynamicLayout: false, allowHideQuestions: false });
 visPanel.render(panelNode);
 $("#loadingIndicator").hide();

@@ -29,14 +29,12 @@ test.describe("Miscellaneous cases", () => {
     await expect(transposeButtonSelector).toBeVisible();
     await transposeButtonSelector.click();
     await expect(questionVisualizerSelector.locator(".sa-toolbar__button").filter({ hasText: /^Per Values$/ })).toBeVisible();
+    await compareScreenshot(page, chartContentSelector, "matrix-single-row-pie-per-values.png");
 
     await chartTypeSelector.click();
     await getListItemByText(page, "Bar").click();
+    await page.waitForTimeout(500);
     await compareScreenshot(page, chartContentSelector, "matrix-single-row-bar-per-values.png");
-
-    await chartTypeSelector.click();
-    await getListItemByText(page, "Pie").click();
-    await compareScreenshot(page, chartContentSelector, "matrix-single-row-pie-per-values.png");
   });
 
   test("matrix dropdown grouped", async ({ page }) => {

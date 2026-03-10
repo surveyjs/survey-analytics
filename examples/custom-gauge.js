@@ -31,7 +31,7 @@ function getCustomData(model, level, arrowColor) {
 
   const maxValue = question.rateMax;
   const minValue = question.rateMin;
-  const stepsCount = SurveyAnalytics.GaugePlotly.stepsCount;
+  const stepsCount = SurveyAnalyticsPlotly.GaugePlotly.stepsCount;
   const values = generateValues(maxValue, stepsCount);
   const text = generateText(maxValue, minValue, stepsCount);
   const colors = model.generateColors(maxValue, minValue, stepsCount);
@@ -117,7 +117,7 @@ function getCustomLayout(model, level, arrowColor) {
   };
 }
 
-SurveyAnalytics.PlotlySetup.onPlotCreating.add((model, options) => {
+SurveyAnalyticsPlotly.PlotlySetup.onPlotCreating.add((model, options) => {
   if (model.chartType !== "gauge") return;
   const arrowColor = "#4e6198";
   const level = options.data[0].value;
@@ -125,7 +125,7 @@ SurveyAnalytics.PlotlySetup.onPlotCreating.add((model, options) => {
   options.layout = getCustomLayout(model, level, arrowColor);
 });
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   [survey.getQuestionByName("nps_score")],
   data,
   {}

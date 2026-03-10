@@ -7,6 +7,7 @@ export interface IActionDropdownOptions {
   title: string | (() => string) | Function;
   className?: string;
   showArrow?: boolean;
+  direction?: "up" | "down";
 }
 
 export class ActionDropdownWidget extends DropdownBase {
@@ -16,6 +17,10 @@ export class ActionDropdownWidget extends DropdownBase {
   constructor(options: IActionDropdownOptions) {
     super(options.className ?? "sa-action-dropdown");
     this.options = options;
+  }
+
+  get direction(): "up" | "down" {
+    return this.options.direction ?? "down";
   }
 
   protected createHeader(): HTMLDivElement {
@@ -62,11 +67,14 @@ export class ActionDropdownWidget extends DropdownBase {
       this.hidePopup();
     }
 
-    this.updateItemSelection(dropdownItem, this.options.isSelected(option));
+    this.updateItemSelection();
     this.updateHeaderLabel();
   }
 
-  protected onBeforeHeaderToggle(): void {
+  protected onBeforePopupShow(): void {
+    if(this.direction === "up") {
+      this.dropdownList.classList.add(this.className + "--up");
+    }
     this.updateOptions();
   }
 
@@ -90,15 +98,6 @@ export class ActionDropdownWidget extends DropdownBase {
   }
 
   public setValues(values: string[]): void {
-    this.dropdownList.querySelectorAll("." + this.className + "-item").forEach((item) => {
-      const itemValue = (item as HTMLElement)?.dataset?.value;
-      if(itemValue && values.indexOf(itemValue) !== -1) {
-        this.updateItemSelection(item as HTMLLIElement, true);
-      } else {
-        this.updateItemSelection(item as HTMLLIElement, false);
-      }
-    });
-
     this.updateHeaderLabel();
   }
 

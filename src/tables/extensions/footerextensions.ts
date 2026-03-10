@@ -43,6 +43,7 @@ TableExtensions.registerExtension({
           return true;
         },
         title: () => { return String(table.getPageSize()); },
+        direction: "up"
       });
       el.className += " sa-table__entries-value";
       return el;
