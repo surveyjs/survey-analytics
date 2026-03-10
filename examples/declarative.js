@@ -110,6 +110,8 @@ var options = {
   // labelTruncateLength: 27,
 };
 
+const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
+
 const visualizerDefinition1 = {
   visualizerType: "card",
   dataName: "test",
@@ -132,9 +134,29 @@ const visualizerDefinition3 = {
   title: "Total answers count - Gauge gauge"
 };
 
-const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
 let visPanel = new SurveyAnalyticsPlotly.VisualizationPanel([visualizerDefinition1, visualizerDefinition2, visualizerDefinition3], data, options);
-
-
 visPanel.showToolbar = true;
+
+// const visualizerDefinition1 = {
+//   type: "card",
+//   dataField: "test",
+//   displayValueName: "count",
+//   title: "Total answers count - Card"
+// };
+
+// const visualizerDefinition2 = {
+//   type: "bullet",
+//   dataField: "test",
+//   displayValueName: "count",
+//   title: "Total answers count - Gauge bullet"
+// };
+
+// const visualizerDefinition3 = {
+//   type: "gauge",
+//   dataField: "test",
+//   title: "Total answers count - Gauge gauge"
+// };
+
+// let visPanel = new SurveyAnalyticsPlotly.Dashboard({ visualizers: [visualizerDefinition1, visualizerDefinition2, visualizerDefinition3], data, ...options });
+
 visPanel.render(document.getElementById("summaryContainer"));

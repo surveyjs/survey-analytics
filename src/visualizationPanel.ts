@@ -883,7 +883,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     if(source instanceof Question) {
       return new PanelElement(source.name, this.getTitle(source)) as P;
     } else {
-      return new PanelElement(source.name, source.displayName) as P;
+      return new PanelElement(source.name, source.displayName || source.title || source.name) as P;
     }
   }
 
