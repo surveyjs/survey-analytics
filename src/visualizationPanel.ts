@@ -34,19 +34,8 @@ export interface IVisualizerPanelRenderedElement
 }
 
 /**
- * Visualization Panel configuration. Pass it as the third argument to the [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel) constructor:
- *
- * ```js
- * import { VisualizationPanel } from "survey-analytics";
- *
- * const vizPanel = new VisualizationPanel(
- *   surveyQuestions,
- *   surveyResults,
- *   vizPanelOptions
- * );
- * ```
- *
- * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
+ * Obsolete. Use the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object and the [`Dashboard`](/dashboard/documentation/api-reference/dashboard) class instead.
+ * @deprecated
  */
 export interface IVisualizationPanelOptions {
   // An object named after a question that it configures.
@@ -55,11 +44,7 @@ export interface IVisualizationPanelOptions {
   // },
 
   /**
-   * The number of label characters after which truncation starts.
-   *
-   * Set this property to -1 to disable truncation.
-   *
-   * Default value: 27
+   * @deprecated Use the [`labelTruncateLength`](/dashboard/documentation/api-reference/idashboardoptions#labelTruncateLength) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   labelTruncateLength?: number;
 
@@ -70,194 +55,80 @@ export interface IVisualizationPanelOptions {
   useValuesAsLabels?: boolean;
 
   /**
-   * Pass a survey instance to use survey locales in the Visualization Panel.
-   *
-   * [View Demo](https://surveyjs.io/dashboard/examples/localize-survey-data-dashboard-ui/ (linkStyle))
+   * @deprecated Use the [`survey`](/dashboard/documentation/api-reference/idashboardoptions#survey) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   survey?: SurveyModel;
-  /**
-   * A common data provider for all visualizers.
-   */
   dataProvider?: DataProvider;
   /**
-   * Allows users to change the visibility of individual charts.
-   *
-   * This property adds a Hide button to each chart.
-   *
-   * Default value: `true`
+   * @deprecated Use the [`allowHideQuestions`](/dashboard/documentation/api-reference/idashboardoptions#allowHideQuestions) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   allowHideQuestions?: boolean;
   /**
-   * Specifies whether to arrange charts based on the available screen space and allow users to reorder them via drag and drop.
-   *
-   * If this property is disabled, charts are displayed one under another, and users cannot drag and drop them. If you want to disable only drag and drop, set the [`allowDragDrop`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDynamicLayout) property to `false`.
-   *
-   * Default value: `true`
-   *
-   * [How to Disable the Layout Engine](https://github.com/surveyjs/surveyjs-howtos-and-troubleshooting/blob/50a2f6f755193afb4733435e2942f80c98731e84/categories/data-visualization/custom-layout.md (linkStyle))
-   * @see layoutEngine
+   * @deprecated Use the [`allowDynamicLayout`](/dashboard/documentation/api-reference/idashboardoptions#allowDynamicLayout) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   allowDynamicLayout?: boolean;
   /**
-   * Specifies whether users can drag and drop charts. Applies only if [`allowDynamicLayout`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDynamicLayout) is `true`.
-   *
-   * Default value: `true`
-   * @see layoutEngine
+   * @deprecated Use the [`allowDragDrop`](/dashboard/documentation/api-reference/idashboardoptions#allowDragDrop) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   allowDragDrop?: boolean;
   /**
-   * A layout engine used to arrange charts on the Visualization Panel.
-   *
-   * You can use this property to integrate a third-party layout engine with SurveyJS Dashboard.
-   *
-   * @see allowDynamicLayout
+   * @deprecated Use the [`layoutEngine`](/dashboard/documentation/api-reference/idashboardoptions#layoutEngine) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   layoutEngine?: LayoutEngine;
   /**
-   * Allows users to switch between absolute and percentage values in bar charts.
-   *
-   * This property adds a Show Percentages button to each bar chart.
-   *
-   * Default value: `false`
-   *
-   * @see showPercentages
-   * @see showOnlyPercentages
-   * @see percentagePrecision
+   * @deprecated Use the [`allowShowPercentages`](/dashboard/documentation/api-reference/idashboardoptions#allowShowPercentages) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   allowShowPercentages?: boolean;
   /**
-   * Specifies whether bar charts display percentages in addition to absolute values.
-   *
-   * Users can change this property value if you enable the `allowShowPercentages` property.
-   *
-   * Default value: `false`
-   *
-   * @see allowShowPercentages
-   * @see showOnlyPercentages
-   * @see percentagePrecision
+   * @deprecated Use the [`showPercentages`](/dashboard/documentation/api-reference/idashboardoptions#showPercentages) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   showPercentages?: boolean;
   /**
-   * Specifies whether bar charts display only percentages, without absolute values.
-   *
-   * Applies only if the `allowShowPercentages` or `showPercentages` property is enabled.
-   *
-   * Default value: `false`
-   *
-   * @see allowShowPercentages
-   * @see showPercentages
-   * @see percentagePrecision
+   * @deprecated Use the [`showOnlyPercentages`](/dashboard/documentation/api-reference/idashboardoptions#showOnlyPercentages) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   showOnlyPercentages?: boolean;
   /**
-   * Specifies percentage precision.
-   *
-   * Default value: 2
-   *
-   * @see allowShowPercentages
-   * @see showPercentages
-   * @see showOnlyPercentages
+   * @deprecated Use the [`percentagePrecision`](/dashboard/documentation/api-reference/idashboardoptions#percentagePrecision) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   percentagePrecision?: number;
   haveCommercialLicense?: boolean;
   /**
-   * Allows users to sort answers by answer count. Applies only to [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
-   *
-   * This property adds a Sorting dropdown to each supported visualizer.
-   *
-   * Default value: `true`
-   *
-   * @see answersOrder
+   * @deprecated Use the [`allowSortAnswers`](/dashboard/documentation/api-reference/idashboardoptions#allowSortAnswers) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   allowSortAnswers?: boolean;
   /**
-   * @deprecated Use the [`allowSortAnswers`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowSortAnswers) property instead.
+   * @deprecated
    */
   allowChangeAnswersOrder?: boolean;
   /**
-   * Specifies how to sort answers in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
-   *
-   * Accepted values:
-   *
-   * - `"default"` (default) - Do not sort answers.
-   * - `"asc"` - Sort answers by ascending answer count.
-   * - `"desc"` - Sort answers by descending answer count.
-   *
-   * Users can change this property value if you enable the `allowSortAnswers` property.
-   *
-   * @see allowSortAnswers
+   * @deprecated Use the [`answersOrder`](/dashboard/documentation/api-reference/idashboardoptions#answersOrder) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   answersOrder?: "default" | "asc" | "desc";
   /**
-   * Allows users to hide answers with zero count in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
-   *
-   * This property adds a Hide Empty Answers button to each supported visualizer.
-   *
-   * Default value: `false`
+   * @deprecated Use the [`allowHideEmptyAnswers`](/dashboard/documentation/api-reference/idashboardoptions#allowHideEmptyAnswers) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   allowHideEmptyAnswers?: boolean;
   /**
-   * Hides answers with zero count in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
-   *
-   * Users can change this property value if you enable the `allowHideEmptyAnswers` property.
-   *
-   * Default value: `false`
-   *
-   * @see allowHideEmptyAnswers
+   * @deprecated Use the [`hideEmptyAnswers`](/dashboard/documentation/api-reference/idashboardoptions#hideEmptyAnswers) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   hideEmptyAnswers?: boolean;
   /**
-   * Allows users to select whether to show top 5, 10, or 20 answers by answer count.
-   *
-   * This property adds a Top N Answers dropdown to each chart.
-   *
-   * Default value: `false`
+   * @deprecated Use the [`allowTopNAnswers`](/dashboard/documentation/api-reference/idashboardoptions#allowTopNAnswers) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   allowTopNAnswers?: boolean;
   /**
-   * Allows users to show the number of respondents who did not answer a particular question.
-   *
-   * This property adds a Show Missing Answers button to each chart.
-   *
-   * Default value: `false`
+   * @deprecated Use the [`allowShowMissingAnswers`](/dashboard/documentation/api-reference/idashboardoptions#allowShowMissingAnswers) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   allowShowMissingAnswers?: boolean;
 
   allowExperimentalFeatures?: boolean;
-  /**
-   * Default chart type.
-   *
-   * Accepted values depend on the question type as follows:
-   *
-   * - Boolean: `"bar"` | `"vbar"` | `"pie"` | `"doughnut"`
-   * - Date, Number: `"bar"` | `"vbar"`
-   * - Matrix: `"bar"` | `"vbar"` | `"pie"` | `"doughnut"` | `"stackedbar"`
-   * - Rating: `"bar"` | `"vbar"` | `"gauge"` | `"bullet"`
-   * - Radiogroup, Checkbox, Dropdown, Image Picker: `"bar"` | `"vbar"` | `"pie"` | `"doughnut"`
-   * - Ranking: `"bar"` | `"vbar"` | `"pie"` | `"doughnut" | `"radar"`
-   *
-   * To set a type for an individual chart, access this chart in the `visualizers` array or using the [`getVisualizer(questionName)`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#getVisualizer) method and set its `chartType` property to one of the values described above:
-   *
-   * ```js
-   * const vizPanel = new SurveyAnalytics.VisualizationPanel( ... );
-   * vizPanel.visualizers[0].chartType = "stackedbar";
-   * // --- or ---
-   * vizPanel.getVisualizer("my-question").chartType = "stackedbar";
-   * ```
-   */
   defaultChartType?: string;
   /**
-   * Allows users to transpose a visualized matrix question.
-   *
-   * This property adds a Transpose button to charts that visualize matrixes. When users select Per Values, matrix rows go to chart arguments and matrix columns form chart series. When users select Per Columns, matrix rows form chart series and matrix columns go to chart arguments.
-   *
-   * Default value: `false`
+   * @deprecated Use the [`allowTransposeData`](/dashboard/documentation/api-reference/idashboardoptions#allowTransposeData) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   allowTransposeData?: boolean;
   /**
-   * Allows users to cross-filter charts. The filter applies when users select a series point.
-   *
-   * Default value: `true`
+   * @deprecated Use the [`allowSelection`](/dashboard/documentation/api-reference/idashboardoptions#allowSelection) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   allowSelection?: boolean;
 
@@ -265,36 +136,20 @@ export interface IVisualizationPanelOptions {
   destroyContent?: Function;
 
   /**
-   * Removes HTML tags from survey element titles.
-   *
-   * Survey element titles can contain HTML markup and are specified by users. An attacker can inject malicious code into the titles. To guard against it, keep this property set to `true`.
-   *
-   * Default value: `true`
+   * @deprecated Use the [`stripHtmlFromTitles`](/dashboard/documentation/api-reference/idashboardoptions#stripHtmlFromTitles) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   stripHtmlFromTitles?: boolean;
 
   /**
-   * Allows users to switch between different visualizer types.
-   *
-   * Default value: `true`
+   * @deprecated Use the [`allowChangeVisualizerType`](/dashboard/documentation/api-reference/idashboardoptions#allowChangeVisualizerType) property in the [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) configuration object.
    */
   allowChangeVisualizerType?: boolean;
   legendPosition?: "left" | "right" | "top" | "bottom";
 }
 
 /**
- * An object that visualizes survey results and allows users to analyze them.
- *
- * Constructor parameters:
- *
- * - `questions`: Array\<[`Question`](https://surveyjs.io/form-library/documentation/api-reference/question)\>\
- * Survey questions to visualize. Call `SurveyModel`'s [`getAllQuestions()`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#getQuestionByName) method to access all survey questions and pass its result as the `questions` parameter.
- * - `data`: `Array<any>`\
- * Survey results.
- * - `vizPanelOptions`: [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions)\
- * Visualization Panel configuration.
- *
- * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
+ * Obsolete. Use the [`Dashboard`](/dashboard/documentation/api-reference/dashboard) class instead.
+ * @deprecated
  */
 export class VisualizationPanel extends VisualizerBase {
   public static LayoutEngine: new (allowed: boolean, itemSelector: string, dragEnabled?: boolean) => LayoutEngine;
