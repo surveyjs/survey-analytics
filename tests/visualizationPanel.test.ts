@@ -304,7 +304,11 @@ test("partial state", () => {
 
 test("onVisibleElementsChanged and onStateChanged raised on move element", () => {
   const originalElements = [{ name: "el1" }, { name: "el2" }, { name: "el3" }];
-  const resultElements = [{ name: "el2" }, { name: "el3" }, { name: "el1" }];
+  const resultElements = [
+    { "isPublic": true, "isVisible": true, name: "el2" },
+    { "isPublic": true, "isVisible": true, name: "el3" },
+    { "isPublic": true, "isVisible": true, name: "el1" }
+  ];
   let visPanel = new VisualizationPanel([], [], {}, <any>originalElements);
   let onVisibleElementsChangedСllCount = 0;
   visPanel.onVisibleElementsChanged.add((_, options) => {
@@ -387,11 +391,11 @@ test("moveVisibleElement if hidden elements exist", () => {
     { name: "el4", isVisible: true },
   ];
   const resultElements = [
-    { name: "el0", isVisible: true },
-    { name: "el1", isVisible: false },
-    { name: "el4", isVisible: true },
-    { name: "el2", isVisible: true },
-    { name: "el3", isVisible: false },
+    { name: "el0", isPublic: true, isVisible: true },
+    { name: "el1", isPublic: true, isVisible: false },
+    { name: "el4", isPublic: true, isVisible: true },
+    { name: "el2", isPublic: true, isVisible: true },
+    { name: "el3", isPublic: true, isVisible: false },
   ];
   let visPanel = new VisualizationPanel([], [], {}, <any>originalElements);
 

@@ -40,7 +40,6 @@ test("Create pivot visualizer with axis options", async () => {
   expect(dashboard.visualizers.length).toBe(1);
   expect(dashboard.getElements().length).toBe(1);
   expect(dashboard.getElement("visualizer1").getState()).toStrictEqual({
-    "displayName": undefined,
     "isPublic": true,
     "isVisible": true,
     "name": "visualizer1",

@@ -15,7 +15,7 @@ export interface IDashboardItem extends IVisualizerTypeDescriptor {
   options?: { [index: string]: any };
 }
 
-export function createDashboardItem(vOptions: IVisualizerOptions, question: Question): DashboardItem {
+export function createDashboardItem(vOptions: IVisualizerOptions, question?: Question): DashboardItem {
   const inputType = vOptions.type || (vOptions.availableTypes || [])[0];
   let visualizerType;
   let chartType;
@@ -105,7 +105,7 @@ export class DashboardItem extends PanelElement implements IDashboardItem {
   private _type: string;
   private _dataName: string;
 
-  constructor(private _visualizerType: string, public question?: Question, public options?: IVisualizerOptions, private _availableTypes?: { [index: string]: string[] }) {
+  constructor(private _visualizerType: string, public question?: Question, public readonly options?: IVisualizerOptions, private _availableTypes?: { [index: string]: string[] }) {
     super(options?.name || question?.name || options?.dataField, question?.title || options?.title);
   }
 

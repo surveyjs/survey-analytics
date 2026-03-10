@@ -34,11 +34,15 @@ export interface IVisualizerPanelRenderedElement
 }
 
 export class PanelElement implements IVisualizerPanelRenderedElement {
+  protected getStateProperties(): string[] {
+    return ["displayName", "isVisible", "isPublic"];
+  }
   setState(elementState: any) {
-    this.name = elementState.name;
-    this.displayName = elementState.displayName;
-    this.isVisible = elementState.isVisible;
-    this.isPublic = elementState.isPublic;
+    for(let key of this.getStateProperties()) {
+      if(elementState[key] !== undefined) {
+        this[key] = elementState[key];
+      }
+    }
     if(this.visualizer) {
       this.visualizer.setState(elementState);
     }
@@ -46,11 +50,13 @@ export class PanelElement implements IVisualizerPanelRenderedElement {
   getState() {
     const state: any = {
       name: this.name,
-      displayName: this.displayName,
-      isVisible: this.isVisible,
-      isPublic: this.isPublic,
       ...this.visualizer?.getState()
     };
+    for(let key of this.getStateProperties()) {
+      if(this[key] !== undefined) {
+        state[key] = this[key];
+      }
+    }
     return state;
   }
   constructor(name: string, displayName?: string) {
@@ -879,30 +885,48 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     return this._layoutEngine;
   }
 
-  protected createElement(source: IVisualizerPanelElement | Question): P {
-    if(source instanceof Question) {
-      return new PanelElement(source.name, this.getTitle(source)) as P;
-    } else {
-      return new PanelElement(source.name, source.displayName || source.title) as P;
+  protected createElement(element: IVisualizerPanelElement, question?: Question): P {
+    if(!!element) {
+      return new PanelElement(element.name, element.displayName || element.title) as P;
     }
+    return new PanelElement(question.name, this.getTitle(question)) as P;
   }
 
-  protected buildElements(questions: any[], elements: IVisualizerPanelRenderedElement[] = []): P[] {
+  protected buildElements(questions: Question[], elements: Array<IVisualizerPanelElement | string> = []): P[] {
     if(elements.length > 0) {
       return elements.map((element) => {
-        let el = this.createElement(element);
-        el.isVisible = element.isVisible;
-        el.isPublic = element.isPublic;
+        let el = null;
+        if(typeof element === "string") {
+          const q = (questions || []).find((q) => q.name === element || q.valueName === element);
+          if(q) {
+            el = this.createElement(undefined, q);
+          } else {
+            // If no matching question is found, create a simple visualizer description
+            // or throw an error?
+          }
+        } else {
+          const descriptor = Object.assign({}, element) as any;
+          let question = (questions || []).filter(q => q.name === descriptor.dataField)[0];
+          if(typeof descriptor.question === "string") {
+            question = (questions || []).filter((q) => q.name === descriptor.question || q.valueName === descriptor.question)[0];
+          }
+          if(!descriptor.name) {
+            descriptor.name = this.getVisualizerName();
+          }
+          el = this.createElement(descriptor, question);
+          el.setState(element);
+        }
         return el;
       });
     }
+
     return (questions || []).map((question) => {
       let questionAsElementDeclaration = Array.isArray(question) ? question[0] : question;
       questionAsElementDeclaration = questionAsElementDeclaration.question || questionAsElementDeclaration;
       if(!questionAsElementDeclaration.name) {
         questionAsElementDeclaration.name = this.getVisualizerName();
       }
-      const pe = this.createElement(questionAsElementDeclaration);
+      const pe = this.createElement(undefined, questionAsElementDeclaration);
       if(Array.isArray(question)) {
         pe.questions = question;
       } else {
@@ -922,12 +946,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     const result = [];
     (this._elements || []).forEach((element) => {
       if(!questionNames || questionNames.indexOf(element.name) !== -1) {
-        result.push({
-          name: element.name,
-          displayName: element.displayName,
-          isVisible: element.isVisible,
-          isPublic: element.isPublic,
-        });
+        result.push(element.getState());
       }
     });
     return result;
@@ -1252,7 +1271,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
             oldElement.setState(elementState);
             newElements.push(oldElement);
           } else {
-            let newElement = this.createElement(elementState);
+            let newElement = this.createElement(elementState, (this.questions || []).filter(q => q.name === elementState.name)[0]);
             newElement.setState(elementState);
             newElements.push(newElement);
           }
