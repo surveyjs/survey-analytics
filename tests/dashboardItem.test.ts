@@ -3,6 +3,7 @@ import { DashboardItem } from "../src/dashboard-item";
 import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrapper";
 import { ApexChartsAdapter } from "../src/apexcharts/chart-adapter";
 import { VisualizerBase } from "../src/visualizerBase";
+import { VisualizerFactory } from "../src/visualizerFactory";
 
 export * from "../src/card";
 export * from "../src/text";
@@ -200,4 +201,72 @@ test("type setter should still update type for unsupported values", () => {
   expect(fakeVisualizer.setChartType).not.toHaveBeenCalled();
   expect(item.type).toBe("not-supported");
   expect(item.visualizerType).toBe("selectBase");
+});
+
+test("availableTypes setter should reinitialize types and keep initially passed options.availableTypes", () => {
+  const item = new DashboardItem({ dataField: "q1", type: "bar", availableTypes: ["bar", "pie"] } as any);
+
+  item.availableTypes = ["bullet"];
+
+  expect(item.availableTypes).toStrictEqual(["bullet"]);
+  expect(item.type).toBe("bullet");
+  expect(item.visualizerType).toBe("average");
+
+  item.availableTypes = undefined as any;
+
+  expect(item.availableTypes).toStrictEqual(["bar", "pie"]);
+  expect(item.type).toBe("bar");
+  expect(item.visualizerType).toBe("selectBase");
+});
+
+test("availableTypes setter should recreate visualizer and restore its state", () => {
+  const item = new DashboardItem({ dataField: "q1", type: "bar", availableTypes: ["bar", "pie", "bullet"] } as any);
+  const oldVisualizer: any = {
+    destroy: jest.fn(),
+    getState: jest.fn(() => ({ customState: true })),
+    onUpdate: jest.fn(),
+    options: { optionKey: "value" },
+    data: [{ q1: 1 }],
+  };
+  const newVisualizer: any = {
+    setState: jest.fn(),
+    render: jest.fn(),
+  };
+  item.visualizer = oldVisualizer;
+
+  const createSpy = jest.spyOn(VisualizerFactory, "createVisualizer").mockReturnValue(newVisualizer);
+
+  item.availableTypes = ["bullet"];
+
+  expect(oldVisualizer.destroy).toHaveBeenCalled();
+  expect(createSpy).toHaveBeenCalled();
+  expect(item.visualizer).toBe(newVisualizer);
+  expect(newVisualizer.setState).toHaveBeenCalledWith({ customState: true });
+  createSpy.mockRestore();
+});
+
+test("availableTypes setter should rerender recreated visualizer when item is rendered", () => {
+  const item = new DashboardItem({ dataField: "q1", type: "bar", availableTypes: ["bar", "pie", "bullet"] } as any);
+  const renderHost = document.createElement("div");
+  const oldVisualizer: any = {
+    destroy: jest.fn(),
+    getState: jest.fn(() => ({ customState: true })),
+    onUpdate: jest.fn(),
+    options: {},
+    data: [],
+    renderResult: renderHost,
+  };
+  const newVisualizer: any = {
+    setState: jest.fn(),
+    render: jest.fn(),
+  };
+  item.visualizer = oldVisualizer;
+  item.renderedElement = document.createElement("div");
+
+  const createSpy = jest.spyOn(VisualizerFactory, "createVisualizer").mockReturnValue(newVisualizer);
+
+  item.availableTypes = ["bullet"];
+
+  expect(newVisualizer.render).toHaveBeenCalledWith(renderHost, false);
+  createSpy.mockRestore();
 });

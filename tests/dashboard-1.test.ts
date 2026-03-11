@@ -7,6 +7,7 @@ import { VisualizationManager } from "../src/visualizationManager";
 import { PostponeHelper, VisualizerBase } from "../src/visualizerBase";
 import { IPivotChartVisualizerOptions, PivotModel } from "../src/pivot";
 import { HistogramModel } from "../src/histogram";
+import { VisualizerFactory } from "../src/visualizerFactory";
 import { QuestionTextModel, SurveyModel } from "survey-core";
 export * from "../src/card";
 export * from "../src/text";
@@ -107,4 +108,63 @@ test("Dashboard item should control visualizer and chart type", () => {
   items[1].type = "bullet";
   expect(rankingVisualizer.getVisualizer().type).toBe("average");
   // expect(items[1].chartType).toBe("bullet");
+});
+
+test("Dashboard item availableTypes should recreate visualizer in built dashboard", () => {
+  const visualizerDefinition = {
+    type: "bar",
+    availableTypes: ["bar", "pie", "bullet"],
+    dataField: "score"
+  };
+  const dashboard = new Dashboard({ visualizers: [visualizerDefinition], data: [{ score: 10 }] });
+
+  const item = dashboard.items[0];
+  const oldVisualizer = item.visualizer;
+
+  item.availableTypes = ["bullet"];
+
+  expect(item.type).toBe("bullet");
+  expect(item.visualizerType).toBe("average");
+  expect(item.visualizer).toBeDefined();
+  expect(item.visualizer).not.toBe(oldVisualizer);
+  expect(dashboard.visualizers[0]).toBe(item.visualizer);
+
+  item.availableTypes = undefined as any;
+
+  expect(item.availableTypes).toStrictEqual(["bar", "pie", "bullet"]);
+  expect(item.type).toBe("bullet");
+  expect(item.visualizerType).toBe("average");
+});
+
+test("Dashboard item availableTypes should recreate and rerender visualizer after dashboard render", () => {
+  const visualizerDefinition = {
+    type: "bar",
+    availableTypes: ["bar", "pie", "bullet"],
+    dataField: "score"
+  };
+  const dashboard = new Dashboard({ visualizers: [visualizerDefinition], data: [{ score: 10 }] });
+
+  const item = dashboard.items[0];
+  const oldVisualizer = item.visualizer as any;
+  const oldRenderResult = document.createElement("div");
+  oldVisualizer.renderResult = oldRenderResult;
+  item.renderedElement = document.createElement("div");
+
+  const recreatedVisualizer: any = {
+    setState: jest.fn(),
+    render: jest.fn(),
+  };
+  const createSpy = jest.spyOn(VisualizerFactory, "createVisualizer").mockReturnValue(recreatedVisualizer);
+
+  item.availableTypes = ["bullet"];
+
+  expect(item.visualizer).toBeDefined();
+  expect(item.visualizer).toBe(recreatedVisualizer);
+  expect(recreatedVisualizer.render).toHaveBeenCalledWith(oldRenderResult, false);
+  expect(oldVisualizer.renderResult).toBeUndefined();
+  expect(item.renderedElement).toBeDefined();
+  expect(item.type).toBe("bullet");
+  expect(item.visualizerType).toBe("average");
+
+  createSpy.mockRestore();
 });
