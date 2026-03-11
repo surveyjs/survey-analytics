@@ -730,9 +730,10 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     this.destroyElementVisualizer(panelElement);
 
     const elementIndex = this._elements.indexOf(panelElement);
-    this._elements.splice(elementIndex, 1);
-
-    this.visibleElementsChanged(panelElement, "REMOVED");
+    if(elementIndex >= 0) {
+      this._elements.splice(elementIndex, 1);
+      this.visibleElementsChanged(panelElement, "REMOVED");
+    }
   }
 
   protected makeElementPrivate(element: IVisualizerPanelElement) {
