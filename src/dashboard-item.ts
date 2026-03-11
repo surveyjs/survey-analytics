@@ -1,116 +1,107 @@
 import { Question } from "survey-core";
 import { IVisualizerOptions, VisualizerBase } from "./visualizerBase";
 import { chartConfig, getChartTypes, getVisualizerTypes } from "./chartConfig";
-import { IVisualizerTypeDescriptor, VisualizationManager } from "./visualizationManager";
-import { PanelElement } from "./visualizationPanel";
+import { VisualizationManager } from "./visualizationManager";
+import { IVisualizerPanelRenderedElement, PanelElement } from "./visualizationPanel";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 
-export interface IDashboardItem extends IVisualizerTypeDescriptor {
-  chartType?: string;
-  availableTypes?: any;
-  questionName?: string;
-  dataName?: string;
-  displayValueName?: string;
+export interface IDashboardItem extends IVisualizerPanelRenderedElement {
+  dataName: string;
+  type?: string;
+  availableTypes?: string[];
   title?: string;
+  allowChangeType?: boolean;
   options?: { [index: string]: any };
 }
 
-export function createDashboardItem(vOptions: IVisualizerOptions, question?: Question): DashboardItem {
-  const inputType = vOptions.type || (vOptions.availableTypes || [])[0];
-  let visualizerType;
-  let chartType;
-  let visualizerTypes;
-  let availableTypes;
-
-  if(!!question) {
-    const qType = question.getType();
-    const vType = qType === "text" ? (<any>question).inputType : qType;
-    visualizerTypes = VisualizationManager.getVisualizerNamesByType(vType);
-    if(qType === "text" && (<any>question).inputType) {
-      visualizerTypes = VisualizationManager.getVisualizerNamesByType((<any>question).inputType, qType);
-    }
-
-    availableTypes = {};
-    visualizerTypes.forEach(vt => {
-      let vct = availableTypes[vt];
-      if(vct === undefined) {
-        vct = [];
-        availableTypes[vt] = vct;
-      }
-      if(VisualizerBase.chartAdapterType) {
-        let chartTypes = VisualizerBase.chartAdapterType.getChartTypesByVisualizerType(vt);
-        if(!!vOptions.availableTypes && vOptions.availableTypes.length > 0) {
-          chartTypes = chartTypes.filter(chType => (vOptions.availableTypes || []).indexOf(chType) !== -1 || chType === vOptions.type);
-        }
-        chartTypes.forEach(chType => {
-          vct.push(chType);
-          if(chType === inputType && !visualizerType) {
-            visualizerType = vt;
-            chartType = chType;
-          }
-        });
-      }
-    });
-    Object.keys(availableTypes).forEach(key => {
-      if(availableTypes[key].length === 0) {
-        delete availableTypes[key];
-        visualizerTypes.splice(visualizerTypes.indexOf(key), 1);
-      }
-    });
-    if(!visualizerType && !!inputType) {
-      visualizerType = inputType;
-      if(visualizerTypes.indexOf(visualizerType) === -1) {
-        visualizerTypes.push(visualizerType);
-      }
-    }
-    if(!visualizerType) {
-      visualizerTypes = VisualizationManager.getVisualizerNamesByType(vType);
-      visualizerType = visualizerTypes[0];
-    }
-  } else {
-    const config = chartConfig[inputType];
-    visualizerType = config?.visualizerType || inputType;
-    chartType = config?.chartType;
-    visualizerTypes = getVisualizerTypes(vOptions.availableTypes);
-    availableTypes = getChartTypes(vOptions.availableTypes);
-  }
-  const dashboardItem = new DashboardItem(visualizerType, vOptions.question || question, vOptions, availableTypes);
-  dashboardItem.type = inputType || dashboardItem.availableTypes[0];
-  dashboardItem.chartType = chartType;
-  dashboardItem.visualizerTypes = visualizerTypes;
-  dashboardItem.dataName = vOptions.dataField;
-  dashboardItem.title = vOptions.title;
-  if(!dashboardItem.question) {
-    dashboardItem.question = {
-      name: dashboardItem.name,
-      valueName: dashboardItem.dataName,
-      title: vOptions.title,
-      displayValueName: vOptions.displayValueName,
-      waitForQuestionIsReady: () => {
-        return new Promise<void>((resolve) => resolve());
-      }
-    } as any;
-  }
-
-  const rootOptions = Object.keys(dashboardItem);
-  Object.keys(vOptions).forEach((key) => {
-    if(!(key in rootOptions)) {
-      dashboardItem.options[key] = vOptions[key];
-    }
-  });
-  return dashboardItem;
-}
-
 export class DashboardItem extends PanelElement implements IDashboardItem {
+  private _visualizerType: string;
+  private _availableTypes: { [index: string]: string[] };
   private _type: string;
   private _dataName: string;
 
-  constructor(private _visualizerType: string, public question?: Question, public readonly options?: IVisualizerOptions, private _availableTypes?: { [index: string]: string[] }) {
+  constructor(public readonly options: IVisualizerOptions, public question?: Question) {
     super(options?.name || question?.name || options?.dataField, question?.title || options?.title);
+    this.initialize();
+  }
+
+  private initialize() {
+    const requestedDashboardItemType = this.options.type || (this.options.availableTypes || [])[0];
+
+    if(!!this.question) {
+      const qType = this.question.getType();
+      const vType = qType === "text" ? (<any>this.question).inputType : qType;
+      this.visualizerTypes = VisualizationManager.getVisualizerNamesByType(vType);
+      if(qType === "text" && (<any>this.question).inputType) {
+        this.visualizerTypes = VisualizationManager.getVisualizerNamesByType((<any>this.question).inputType, qType);
+      }
+
+      this._availableTypes = {};
+      this.visualizerTypes.forEach(vt => {
+        let vct = this._availableTypes[vt];
+        if(vct === undefined) {
+          vct = [];
+          this._availableTypes[vt] = vct;
+        }
+        if(VisualizerBase.chartAdapterType) {
+          let chartTypes = VisualizerBase.chartAdapterType.getChartTypesByVisualizerType(vt);
+          if(!!this.options.availableTypes && this.options.availableTypes.length > 0) {
+            chartTypes = chartTypes.filter(chType => (this.options.availableTypes || []).indexOf(chType) !== -1 || chType === this.options.type);
+          }
+          chartTypes.forEach(chType => {
+            vct.push(chType);
+            if(chType === requestedDashboardItemType && !this._visualizerType) {
+              this._visualizerType = vt;
+              this.chartType = chType;
+            }
+          });
+        }
+      });
+      Object.keys(this._availableTypes).forEach(key => {
+        if(this._availableTypes[key].length === 0) {
+          delete this._availableTypes[key];
+          this.visualizerTypes.splice(this.visualizerTypes.indexOf(key), 1);
+        }
+      });
+      if(!this._visualizerType && !!requestedDashboardItemType) {
+        this._visualizerType = requestedDashboardItemType;
+        if(this.visualizerTypes.indexOf(this._visualizerType) === -1) {
+          this.visualizerTypes.push(this._visualizerType);
+        }
+      }
+      if(!this._visualizerType) {
+        this.visualizerTypes = VisualizationManager.getVisualizerNamesByType(vType);
+        this._visualizerType = this.visualizerTypes[0];
+      }
+    } else {
+      const config = chartConfig[requestedDashboardItemType];
+      this._visualizerType = config?.visualizerType || requestedDashboardItemType;
+      this.chartType = config?.chartType;
+      this.visualizerTypes = getVisualizerTypes(this.options.availableTypes);
+      this._availableTypes = getChartTypes(this.options.availableTypes);
+    }
+    this._type = requestedDashboardItemType || this.availableTypes[0];
+    this._dataName = this.options.dataField;
+    this.title = this.options.title;
+    if(!this.question) {
+      this.question = {
+        name: this.name,
+        valueName: this.dataName,
+        title: this.options.title,
+        displayValueName: this.options.displayValueName,
+        waitForQuestionIsReady: () => {
+          return new Promise<void>((resolve) => resolve());
+        }
+      } as any;
+    }
   }
 
   private getDataName() {
     return this.question?.valueName || this.question?.name || this.questionName || this.name;
+  }
+
+  protected getStateProperties(): string[] {
+    return ["type"].concat(super.getStateProperties());
   }
 
   /**

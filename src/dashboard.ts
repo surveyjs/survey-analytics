@@ -2,7 +2,7 @@ import { Question, SurveyModel, Event } from "survey-core";
 import { IVisualizerOptions, VisualizerBase } from "./visualizerBase";
 import { VisualizationPanel } from "./visualizationPanel";
 import { DataProvider, GetDataFn } from "./dataProvider";
-import { createDashboardItem, DashboardItem, IDashboardItem } from "./dashboard-item";
+import { DashboardItem, IDashboardItem } from "./dashboard-item";
 import { LayoutEngine } from "./layout-engine";
 import { DatePeriodEnum, DateRangeTuple } from "./utils/dateRangeModel";
 import { VisualizerFactory } from "./visualizerFactory";
@@ -61,7 +61,7 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
   }
 
   protected createElement(element: IVisualizerPanelElement, question?: Question): DashboardItem {
-    return createDashboardItem(element as any || {}, question);
+    return new DashboardItem(element as any || {}, question);
   }
 
   public get items(): DashboardItem[] {
@@ -75,15 +75,21 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
     if(item instanceof DashboardItem) {
       dashboardItem = item;
     } else if("visualizerType" in item) {
-      dashboardItem = new DashboardItem(item.visualizerType, item.question, item.options);
+      dashboardItem = new DashboardItem(item as any, item.question);
     } else if(item instanceof Question) {
-      dashboardItem = new DashboardItem(item.name, item);
+      dashboardItem = new DashboardItem({} as any, item);
+    }
+    if(!!dashboardItem) {
+      // TODO: implement addElement and removeElement in VisualizationPanel and use them here to properly trigger events and update the layout
+      // this.addElement(dashboardItem);
     }
     return dashboardItem;
   }
   public removeItem(item: DashboardItem | string) {
     const dashboardItem = typeof item === "string" ? this.findItem(item) : item;
     if(!!dashboardItem) {
+      // TODO: implement addElement and removeElement in VisualizationPanel and use them here to properly trigger events and update the layout
+      // this.removeElement(dashboardItem);
     }
   }
 }

@@ -15,7 +15,7 @@ export interface IVisualizerPanelElement {
   /**
    * The title of a survey question visualized by this item. The visualization item displays the same title.
    */
-  displayName: string;
+  displayName?: string;
   /**
    * Indicates whether the visualization item is currently visible.
    *

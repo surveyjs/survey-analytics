@@ -43,6 +43,7 @@ test("Create pivot visualizer with axis options", async () => {
     "isPublic": true,
     "isVisible": true,
     "name": "visualizer1",
+    "type": "pivot",
   });
   expect(dashboard.getVisualizer("visualizer1")).toBeDefined();
 

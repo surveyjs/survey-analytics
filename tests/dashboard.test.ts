@@ -535,10 +535,10 @@ test("getState, setState, onStateChanged", () => {
     locale: "",
     elements: [
       {
-        displayName: undefined as any,
         name: "question1",
         isVisible: true,
         isPublic: true,
+        type: "bar",
       },
     ],
   };
@@ -553,7 +553,8 @@ test("getState, setState, onStateChanged", () => {
         chartType: "scatter",
         answersOrder: "asc",
         hideEmptyAnswers: true,
-        topN: 10
+        topN: 10,
+        type: "bar",
       },
     ],
   };
