@@ -1190,3 +1190,215 @@ test("Not render the hide button and drag element if the panel has one element",
   const dragAreaElement = container.querySelector(".sa-question__drag-area") as HTMLElement;
   expect(dragAreaElement).toBeNull();
 });
+
+test("addElement appends element and creates visualizer", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  // All questions available to panel, but only question1 as initial element
+  const visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { allowDynamicLayout: false }, [{ name: "question1" }]);
+
+  expect(visPanel.getElements().length).toBe(1);
+  expect(visPanel.getElement("question2")).toBeUndefined();
+
+  let changesCount = 0;
+  visPanel.onVisibleElementsChanged.add(() => { changesCount++; });
+
+  visPanel.addElement({ name: "question2", isVisible: true, isPublic: true });
+
+  expect(visPanel.getElements().length).toBe(2);
+  expect(visPanel.getElement("question2")).toBeDefined();
+  expect(visPanel.getVisualizer("question2")).toBeDefined();
+  expect(changesCount).toBe(1);
+});
+
+test("addElement inserts element at specified index", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+      { type: "text", name: "question3" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const visPanel = new VisualizationPanel(
+    [survey.getQuestionByName("question1"), survey.getQuestionByName("question3")],
+    [],
+    { allowDynamicLayout: false }
+  );
+
+  expect(visPanel.getElements().map(el => el.name)).toStrictEqual(["question1", "question3"]);
+
+  visPanel.addElement({ name: "question2", isVisible: true, isPublic: true }, 1);
+
+  expect(visPanel.getElements().map(el => el.name)).toStrictEqual(["question1", "question2", "question3"]);
+});
+
+test("addElement renders into DOM when panel is already rendered", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  // All questions available to panel, but only question1 as initial element
+  const visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { allowDynamicLayout: false }, [{ name: "question1" }]);
+
+  const container = document.createElement("div");
+  visPanel.render(container);
+  expect(container.querySelectorAll(".sa-question").length).toBe(1);
+
+  visPanel.addElement({ name: "question2", isVisible: true, isPublic: true });
+
+  expect(container.querySelectorAll(".sa-question").length).toBe(2);
+  expect(visPanel.getElement("question2").renderedElement).not.toBeUndefined();
+});
+
+test("addElement with pre-built PanelElement reuses existing visualizer", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const visPanel = new VisualizationPanel([survey.getQuestionByName("question1")], [], { allowDynamicLayout: false });
+
+  const fullPanel = new VisualizationPanel(survey.getAllQuestions(), [], { allowDynamicLayout: false });
+  const existingElement = fullPanel.getElement("question2");
+  const existingVisualizer = existingElement.visualizer;
+
+  visPanel.addElement(existingElement);
+
+  expect(visPanel.getElement("question2")).toBeDefined();
+  expect(visPanel.getVisualizer("question2")).toBe(existingVisualizer);
+});
+
+test("addElement does not render hidden element into DOM", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const visPanel = new VisualizationPanel([survey.getQuestionByName("question1")], [], { allowDynamicLayout: false });
+
+  const container = document.createElement("div");
+  visPanel.render(container);
+
+  visPanel.addElement({ name: "question2", isVisible: false, isPublic: true });
+
+  expect(container.querySelectorAll(".sa-question").length).toBe(1);
+  expect(visPanel.getElement("question2").isVisible).toBe(false);
+  expect(visPanel.getElement("question2").renderedElement).toBeUndefined();
+});
+
+test("removeElement removes element, destroys visualizer, and fires event", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { allowDynamicLayout: false });
+
+  expect(visPanel.getElements().length).toBe(2);
+  expect(visPanel.getVisualizer("question1")).toBeDefined();
+
+  let changesCount = 0;
+  visPanel.onVisibleElementsChanged.add(() => { changesCount++; });
+
+  visPanel.removeElement("question1");
+
+  expect(visPanel.getElements().length).toBe(1);
+  expect(visPanel.getElement("question1")).toBeUndefined();
+  expect(changesCount).toBe(1);
+});
+
+test("removeElement removes rendered DOM node", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { allowDynamicLayout: false });
+
+  const container = document.createElement("div");
+  visPanel.render(container);
+  expect(container.querySelectorAll(".sa-question").length).toBe(2);
+
+  visPanel.removeElement("question1");
+
+  expect(container.querySelectorAll(".sa-question").length).toBe(1);
+  expect(container.querySelector("[data-question='question1']")).toBeNull();
+});
+
+test("removeElement destroys visualizer callbacks", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { allowDynamicLayout: false });
+
+  const visualizer = visPanel.getVisualizer("question1") as AlternativeVisualizersWrapper;
+  expect(visualizer).toBeDefined();
+  const destroySpy = jest.spyOn(visualizer, "destroy");
+
+  visPanel.removeElement("question1");
+
+  expect(destroySpy).toHaveBeenCalled();
+  expect(visPanel.getElements().length).toBe(0);
+});
+
+test("removeElement is no-op for unknown element name", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { allowDynamicLayout: false });
+
+  let changesCount = 0;
+  visPanel.onVisibleElementsChanged.add(() => { changesCount++; });
+
+  visPanel.removeElement("nonexistent");
+
+  expect(visPanel.getElements().length).toBe(1);
+  expect(changesCount).toBe(0);
+});
+
+test("addElement then removeElement roundtrip", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+      { type: "text", name: "question2" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  // All questions available to panel, but only question1 as initial element
+  const visPanel = new VisualizationPanel(survey.getAllQuestions(), [], { allowDynamicLayout: false }, [{ name: "question1" }]);
+
+  const container = document.createElement("div");
+  visPanel.render(container);
+
+  visPanel.addElement({ name: "question2", isVisible: true, isPublic: true });
+  expect(visPanel.getElements().length).toBe(2);
+  expect(container.querySelectorAll(".sa-question").length).toBe(2);
+
+  visPanel.removeElement("question2");
+  expect(visPanel.getElements().length).toBe(1);
+  expect(container.querySelectorAll(".sa-question").length).toBe(1);
+  expect(visPanel.getElement("question2")).toBeUndefined();
+});

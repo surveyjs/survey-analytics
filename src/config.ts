@@ -21,8 +21,8 @@ export interface IVisualizerPanelElement {
    *
    * If you want to disallow users to hide visualization items, set the [`allowHideQuestions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions) property to `false`.
    */
-  isVisible: boolean;
-  isPublic: boolean;
+  isVisible?: boolean;
+  isPublic?: boolean;
   [key: string]: any;
 }
 

@@ -677,6 +677,64 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     this.visibleElementsChanged(undefined, "ADDEDDALL");
   }
 
+  /**
+   * Adds a new element to the panel. If the element does not have a built visualizer,
+   * one will be created automatically. If the panel is already rendered and the element
+   * is visible, it will also be rendered immediately.
+   * @param element A panel element or element config to add.
+   * @param index The position (zero-based) at which to insert the element. Appends to the end if omitted.
+   */
+  public addElement(element: IVisualizerPanelElement | P, index?: number): void {
+    let panelElement: P;
+    if(element instanceof PanelElement) {
+      panelElement = element as P;
+    } else {
+      const question = (this.questions || []).find((q: any) => q.name === (element as IVisualizerPanelElement).name);
+      panelElement = this.createElement(element as IVisualizerPanelElement, question);
+      panelElement.setState(element);
+    }
+
+    if(!panelElement.visualizer) {
+      this.buildVisualizer(panelElement, this.questions);
+    }
+
+    const insertIndex = (index !== undefined && index >= 0 && index < this._elements.length)
+      ? index
+      : this._elements.length;
+
+    this._elements.splice(insertIndex, 0, panelElement);
+
+    if(panelElement.isVisible && !!this.contentContainer) {
+      this.showElementCore(panelElement, insertIndex);
+    }
+
+    this.visibleElementsChanged(panelElement, "ADDED");
+  }
+
+  /**
+   * Removes an element from the panel. Cleans up any rendered DOM node and destroys
+   * the element's visualizer if one exists.
+   * @param elementName The [name](https://surveyjs.io/form-library/documentation/api-reference/question#name) of the element to remove.
+   */
+  public removeElement(element: P | string): void {
+    const panelElement = typeof element === "string" ? this.getElement(element) : element;
+    if(!panelElement) return;
+
+    if(!!panelElement.renderedElement) {
+      this.layoutEngine?.remove([panelElement.renderedElement]);
+      if(!!this.contentContainer) {
+        this.contentContainer.removeChild(panelElement.renderedElement);
+      }
+    }
+
+    this.destroyElementVisualizer(panelElement);
+
+    const elementIndex = this._elements.indexOf(panelElement);
+    this._elements.splice(elementIndex, 1);
+
+    this.visibleElementsChanged(panelElement, "REMOVED");
+  }
+
   protected makeElementPrivate(element: IVisualizerPanelElement) {
     element.isPublic = false;
     this.stateChanged("isPublic", false);
@@ -798,24 +856,28 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     element.visualizer = visualizer;
   }
 
+  private destroyElementVisualizer(element: P) {
+    const visualizer = element.visualizer;
+    if(!visualizer) {
+      return;
+    }
+    visualizer.onUpdate = undefined;
+    if(visualizer instanceof SelectBase) {
+      visualizer.onDataItemSelected = undefined;
+    }
+    if(visualizer instanceof AlternativeVisualizersWrapper) {
+      visualizer.onVisualizerChanged.remove(this.onAlternativeVisualizerChangedCallback);
+    }
+    visualizer.onStateChanged.remove(this.onStateChangedCallback);
+    visualizer.onAfterRender.remove(this.onAfterRenderQuestionCallback);
+    visualizer.destroy();
+    element.visualizer = undefined;
+    element.renderedElement = undefined;
+  }
+
   private destroyVisualizers() {
     this._elements.forEach((element) => {
-      const visualizer = element.visualizer;
-      if(!visualizer) {
-        return;
-      }
-      visualizer.onUpdate = undefined;
-      if(visualizer instanceof SelectBase) {
-        visualizer.onDataItemSelected = undefined;
-      }
-      if(visualizer instanceof AlternativeVisualizersWrapper) {
-        visualizer.onVisualizerChanged.remove(this.onAlternativeVisualizerChangedCallback);
-      }
-      visualizer.onStateChanged.remove(this.onStateChangedCallback);
-      visualizer.onAfterRender.remove(this.onAfterRenderQuestionCallback);
-      visualizer.destroy();
-      element.visualizer = undefined;
-      element.renderedElement = undefined;
+      this.destroyElementVisualizer(element);
     });
   }
 

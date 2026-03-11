@@ -80,16 +80,13 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
       dashboardItem = new DashboardItem({} as any, item);
     }
     if(!!dashboardItem) {
-      // TODO: implement addElement and removeElement in VisualizationPanel and use them here to properly trigger events and update the layout
-      // this.addElement(dashboardItem);
+      this.addElement(dashboardItem);
     }
     return dashboardItem;
   }
   public removeItem(item: DashboardItem | string) {
-    const dashboardItem = typeof item === "string" ? this.findItem(item) : item;
-    if(!!dashboardItem) {
-      // TODO: implement addElement and removeElement in VisualizationPanel and use them here to properly trigger events and update the layout
-      // this.removeElement(dashboardItem);
+    if(!!item) {
+      this.removeElement(item);
     }
   }
 }
