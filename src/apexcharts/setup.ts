@@ -146,6 +146,7 @@ export class ApexChartsSetup {
 
   static defaultAxisLabelConfig(theme: DashboardTheme) {
     return {
+      min: 0,
       labels: {
         trim: true,
         hideOverlappingLabels: false,
@@ -545,9 +546,7 @@ export class ApexChartsSetup {
       axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme) },
     };
 
-    const yaxis: any = {
-      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme)
-    };
+    const yaxis: any = model.getYAxisInfo().map(info => Object.assign(ApexChartsSetup.defaultAxisLabelConfig(model.theme), info));
 
     const grid = {
       ...ApexChartsSetup.defaultGridConfig(model.theme),
@@ -655,9 +654,7 @@ export class ApexChartsSetup {
       }
     };
 
-    const yaxis: any = {
-      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme)
-    };
+    const yaxis: any = model.getYAxisInfo().map(info => Object.assign(ApexChartsSetup.defaultAxisLabelConfig(model.theme), info));
 
     // Legend settings
     const legend: any = {

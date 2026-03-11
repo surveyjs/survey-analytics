@@ -775,6 +775,11 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     super.onThemeChanged();
     this.refreshContent();
   }
+
+  public getYAxisInfo() {
+    return [{}];
+  }
+
 }
 
 VisualizationManager.registerVisualizer("checkbox", SelectBase, undefined, "selectBase");

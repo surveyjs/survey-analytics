@@ -1,0 +1,17 @@
+@mixin smallDropdown {
+  .sa-dropdown {
+    width: 100%;
+    flex-direction: column;
+    flex-grow: 0;
+  }
+
+  .sa-dropdown-container {
+    width: 100%;
+    flex-grow: 0;
+  }
+
+  .sa-dropdown-list.sa-dropdown--opened {
+    min-width: calc(100% - var(--sjs2-layout-container-drop-horizontal, 8px) * 2);
+    max-width: calc(100% - var(--sjs2-layout-container-drop-horizontal, 8px) * 2);
+  }
+}

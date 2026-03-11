@@ -1,0 +1,212 @@
+@use "./dropdown.scss" as *;
+@use "../typography-mixins.scss" as *;
+
+.sa-sidebar--opened {
+  @include smallDropdown;
+}
+
+// Sidebar (opened from toolbar button)
+.sa-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: transparent;
+  pointer-events: none;
+  transition: background 0.2s ease;
+
+  &.sa-sidebar--opened {
+    pointer-events: auto;
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+.sa-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  width: min(400px, 90vw);
+  max-width: 100%;
+  overflow: auto;
+  background: var(--sjs2-color-bg-basic-primary, #fff);
+  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+
+  &.sa-sidebar--opened {
+    transform: translateX(0);
+  }
+
+  .sa-sidebar-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sjs2-spacing-x200, 16px);
+    padding: var(--sjs2-spacing-x200, 16px);
+    border-bottom: 1px solid var(--sjs2-color-utility-border-default, rgba(28, 27, 32, 0.12));
+    flex-shrink: 0;
+  }
+
+  .sa-sidebar-title {
+    flex: 1;
+    min-width: 0;
+    @include sjs2--typography--default-strong;
+    color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+    word-break: break-word;
+  }
+
+  .sa-sidebar-close {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--sjs2-size-x300, 24px);
+    height: var(--sjs2-size-x300, 24px);
+    padding: 0;
+    border: none;
+    border-radius: var(--sjs2-radius-control-action, 8px);
+    background: transparent;
+    cursor: pointer;
+    color: var(--sjs2-color-fg-basic-secondary, rgba(28, 27, 32, 0.6));
+
+    &:hover {
+      background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.1));
+      color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+    }
+
+    use {
+      fill: currentColor;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .sa-sidebar-content {
+    overflow: auto;
+    padding: var(--sjs2-spacing-x200, 16px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sjs2-spacing-x200, 16px);
+    height: 100%;
+  }
+}
+
+/* Editable series list (sidebar cards with dataName / valueName / aggregation) */
+.sa-series-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sjs2-spacing-x200, 16px);
+}
+
+.sa-series-list__title {
+  font-weight: 600;
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+  margin: 0;
+  padding-bottom: var(--sjs2-spacing-x100, 8px);
+}
+
+.sa-series-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sjs2-spacing-x200, 16px);
+}
+
+.sa-series-list__card {
+  padding: var(--sjs2-spacing-x200, 16px);
+  border-radius: var(--sjs2-radius-control-action, 8px);
+  background: var(--sjs2-color-bg-basic-secondary, rgba(28, 27, 32, 0.06));
+  border: 1px solid var(--sjs2-color-utility-border-default, rgba(28, 27, 32, 0.12));
+  display: flex;
+  flex-direction: column;
+  gap: var(--sjs2-spacing-x150, 12px);
+}
+
+.sa-series-list__card-label,
+.sa-series-list__values-label {
+  font-size: 12px;
+  color: var(--sjs2-color-fg-basic-secondary, rgba(28, 27, 32, 0.6));
+  margin: 0;
+}
+
+.sa-series-list__values-row {
+  display: flex;
+  gap: var(--sjs2-spacing-x150, 12px);
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+.sa-sidebar--opened {
+  .sa-series-list__dropdown {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sa-series-list__dropdown--value {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sa-series-list__dropdown--aggregation {
+    flex: 0 0 auto;
+    min-width: 90px;
+    width: fit-content;
+  }
+}
+
+.sa-series-list__action-button {
+  margin-top: var(--sjs2-spacing-x100, 8px);
+  margin-right: var(--sjs2-spacing-x100, 8px);
+  padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-spacing-x150, 12px);
+  border-radius: var(--sjs2-radius-control-action, 8px);
+  background: var(--sjs2-color-bg-basic-tertiary, rgba(28, 27, 32, 0.08));
+  color: var(--sjs2-color-fg-basic-secondary, rgba(28, 27, 32, 0.6));
+  border: 1px solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
+  cursor: pointer;
+  font-size: 14px;
+  align-self: center;
+
+  &:hover {
+    background: var(--sjs2-color-bg-basic-secondary-dim, rgba(28, 27, 32, 0.05));
+    color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+  }
+}
+
+.sa-series-list__remove-button {
+  margin-top: var(--sjs2-spacing-x100, 8px);
+  padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-spacing-x150, 12px);
+  border-radius: var(--sjs2-radius-control-action, 8px);
+  background: var(--sjs2-color-bg-error-primary, rgba(196, 43, 28, 0.12));
+  color: var(--sjs2-color-fg-error-primary, #c42b1c);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  align-self: center;
+
+  &:hover {
+    background: var(--sjs2-color-bg-error-secondary, rgba(196, 43, 28, 0.2));
+  }
+}
+
+.sa-series-list__add-button {
+  margin-top: var(--sjs2-spacing-x100, 8px);
+  padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-spacing-x150, 12px);
+  border-radius: var(--sjs2-radius-control-action, 8px);
+  background: var(--sjs2-color-bg-basic-tertiary, rgba(28, 27, 32, 0.08));
+  border: 1px dashed var(--sjs2-color-utility-border-default, rgba(28, 27, 32, 0.12));
+  color: var(--sjs2-color-fg-basic-secondary, rgba(28, 27, 32, 0.6));
+  cursor: pointer;
+  font-size: 14px;
+  align-self: stretch;
+  justify-content: center;
+
+  &:hover {
+    background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.1));
+    color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+  }
+}

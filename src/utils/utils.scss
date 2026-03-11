@@ -1,6 +1,7 @@
 @use "../globals" as *;
 @forward "../globals";
 @use "../typography-mixins.scss" as *;
+@use "./dropdown.scss" as *;
 
 .sa-commercial {
   box-sizing: border-box;
@@ -435,17 +436,5 @@
 }
 
 @media screen and (max-width: 600px) {
-  .sa-dropdown {
-    width: 100%;
-    flex-direction: column;
-  }
-
-  .sa-dropdown-container {
-    width: 100%;
-  }
-
-  .sa-dropdown-list.sa-dropdown--opened {
-    min-width: calc(100% - var(--sjs2-layout-container-drop-horizontal, 8px) * 2);
-    max-width: calc(100% - var(--sjs2-layout-container-drop-horizontal, 8px) * 2);
-  }
+  @include smallDropdown;
 }

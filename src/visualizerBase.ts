@@ -6,6 +6,7 @@ import { DocumentHelper, createLoadingIndicator, getDiffsFromDefaults } from "./
 import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
 import { DashboardTheme, IDashboardTheme } from "./theme";
+import { SidebarWidget } from "./utils/sidebarWidget";
 
 import "./visualizerBase.scss";
 
@@ -59,6 +60,13 @@ type ToolbarItemCreators = {
     type: ToolbarItemType,
     index: number,
     groupIndex: number,
+  },
+};
+
+type SideBarItemCreators = {
+  [name: string]: {
+    creator: (container: HTMLDivElement) => HTMLElement,
+    index: number,
   },
 };
 
@@ -213,8 +221,80 @@ export class VisualizerBase implements IDataInfo {
 
   public onGetToolbarItemCreators: () => ToolbarItemCreators;
 
+  protected sideBarItemCreators: SideBarItemCreators = {};
+
+  public onGetSideBarItemCreators: () => SideBarItemCreators;
+
+  protected _sidebarWidget: SidebarWidget | undefined;
+
   protected getToolbarItemCreators(): ToolbarItemCreators {
-    return Object.assign({}, this.toolbarItemCreators, this.onGetToolbarItemCreators && this.onGetToolbarItemCreators() || {});
+    const base = Object.assign({}, this.toolbarItemCreators, this.onGetToolbarItemCreators && this.onGetToolbarItemCreators() || {});
+
+    const hasSideBarItems = Object.keys(this.sideBarItemCreators).length > 0 ||
+      (this.onGetSideBarItemCreators && Object.keys(this.onGetSideBarItemCreators() || {}).length > 0);
+    if(hasSideBarItems) {
+      base["sidebarPanel"] = {
+        creator: (toolbar?: HTMLDivElement) => this.createSidebarPanelButton(toolbar),
+        type: "button",
+        index: 950,
+        groupIndex: 0,
+      };
+    }
+
+    return base;
+  }
+
+  protected createSidebarPanelButton(_toolbar?: HTMLDivElement): HTMLElement {
+    if(!this._sidebarWidget) {
+      const toolbarItemCreators = this.getSideBarToolbarItemCreators();
+      this._sidebarWidget = new SidebarWidget({
+        title: this.title,
+        toolbarItemCreators,
+        buttonIcon: "more-24x24",
+        buttonTitle: "Open panel",
+      });
+    }
+    return this._sidebarWidget.render(_toolbar);
+  }
+
+  protected getSideBarToolbarItemCreators(): Array<(container: HTMLDivElement) => HTMLElement> {
+    const fromCreators = Object.assign(
+      {},
+      this.sideBarItemCreators,
+      this.onGetSideBarItemCreators && this.onGetSideBarItemCreators() || {}
+    );
+    const creatorEntries = Object.keys(fromCreators).map((name) => ({ name, ...fromCreators[name] }));
+    creatorEntries.sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
+    const fromCreatorsArray = creatorEntries.map((entry) => entry.creator);
+    return [...fromCreatorsArray];
+  }
+
+  /**
+   * Registers a sidebar item creator by name. The item will be rendered in the sidebar panel when the sidebar button is used.
+   * @param name Unique name for the sidebar item.
+   * @param creator Function that receives the panel container and returns an HTMLElement to be appended.
+   * @param index Optional order index (default 100). Lower values appear first.
+   */
+  public registerSideBarItem(
+    name: string,
+    creator: (container: HTMLDivElement) => HTMLElement,
+    index: number = 100
+  ): void {
+    this.sideBarItemCreators[name] = { creator, index };
+  }
+
+  /**
+   * Unregisters a sidebar item creator.
+   * @param name Name of the sidebar item to remove.
+   * @returns The previously registered creator function, or undefined.
+   */
+  public unregisterSideBarItem(name: string): ((container: HTMLDivElement) => HTMLElement) | undefined {
+    if(this.sideBarItemCreators[name] !== undefined) {
+      const item = this.sideBarItemCreators[name];
+      delete this.sideBarItemCreators[name];
+      return item.creator;
+    }
+    return undefined;
   }
 
   constructor(
@@ -598,6 +678,10 @@ export class VisualizerBase implements IDataInfo {
   protected renderBanner(container: HTMLElement) { }
 
   protected destroyToolbar(container: HTMLElement) {
+    if(this._sidebarWidget) {
+      this._sidebarWidget.destroy();
+      this._sidebarWidget = undefined;
+    }
     container.innerHTML = "";
   }
 

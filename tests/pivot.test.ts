@@ -59,7 +59,7 @@ test("default settings", async () => {
   const seriesLabels = pivot.getSeriesLabels();
 
   expect(pivot.axisXQuestionName).toBe("question1");
-  expect(pivot.axisYQuestionNames).toStrictEqual([]);
+  expect(pivot.primaryYAxes).toStrictEqual([]);
   expect(values).toStrictEqual(["female", "male"]);
   expect(labels).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual([]);
@@ -77,7 +77,7 @@ test("getSeriesValues and getSeriesLabels + values and labels", async () => {
   let seriesLabels = pivot.getSeriesLabels();
 
   expect(pivot.axisXQuestionName).toBe("question1");
-  expect(pivot.axisYQuestionNames).toStrictEqual([]);
+  expect(pivot.primaryYAxes).toStrictEqual([]);
   expect(values).toStrictEqual(["female", "male"]);
   expect(labels).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual([]);
@@ -91,7 +91,7 @@ test("getSeriesValues and getSeriesLabels + values and labels", async () => {
   seriesLabels = pivot.getSeriesLabels();
 
   expect(pivot.axisXQuestionName).toBe("question2");
-  expect(pivot.axisYQuestionNames).toStrictEqual(["question1"]);
+  expect(pivot.primaryYAxes).toStrictEqual([{ dataName: "question1", valueName: "question1", aggregation: "count" }]);
   expect(values).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(labels).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(seriesValues).toStrictEqual(["female", "male"]);
@@ -403,107 +403,6 @@ test("setAxisQuestions with empty array", () => {
 
   pivot.setAxisQuestions();
   expect(pivot.axisXQuestionName).toBe(originalAxisX);
-});
-
-test("onAxisYSelectorChanged removes subsequent selectors when value is empty", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-  pivot.setAxisQuestions("question1", "question2", "question3");
-
-  expect(pivot.axisYQuestionNames.length).toBe(2);
-
-  // Mock the unregisterToolbarItem method
-  const originalUnregister = pivot["unregisterToolbarItem"];
-  const mockUnregister = jest.fn();
-  pivot["unregisterToolbarItem"] = mockUnregister;
-
-  // Mock the axisYSelectors array to have the expected length
-  pivot["axisYSelectors"] = [{} as HTMLDivElement, {} as HTMLDivElement];
-
-  pivot.onAxisYSelectorChanged(0, "");
-
-  expect(mockUnregister).toHaveBeenCalledWith("axisYSelector1");
-  expect(pivot.axisYQuestionNames.length).toBe(1);
-
-  // Restore original method
-  pivot["unregisterToolbarItem"] = originalUnregister;
-});
-
-test("onAxisYSelectorChanged adds new selector when value is set", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-  pivot.setAxisQuestions("question1", "question2");
-
-  // Mock the registerToolbarItem method
-  const originalRegister = pivot["registerToolbarItem"];
-  const mockRegister = jest.fn();
-  pivot["registerToolbarItem"] = mockRegister;
-
-  // Mock the axisYSelectors array to have the expected length
-  pivot["axisYSelectors"] = [{} as HTMLDivElement, {} as HTMLDivElement];
-
-  pivot.onAxisYSelectorChanged(1, "question3");
-
-  expect(mockRegister).toHaveBeenCalledWith("axisYSelector2", expect.any(Function), "dropdown");
-
-  // Restore original method
-  pivot["registerToolbarItem"] = originalRegister;
-});
-
-test("updateQuestionsSelection prevents duplicate question selection", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-
-  // Mock the onAxisYSelectorChanged method
-  const originalOnAxisYSelectorChanged = pivot.onAxisYSelectorChanged;
-  const mockOnAxisYSelectorChanged = jest.fn();
-  pivot.onAxisYSelectorChanged = mockOnAxisYSelectorChanged;
-
-  pivot.setAxisQuestions("question1", "question1");
-  pivot["updateQuestionsSelection"]();
-
-  expect(mockOnAxisYSelectorChanged).toHaveBeenCalledWith(0, undefined);
-
-  // Restore original method
-  pivot.onAxisYSelectorChanged = originalOnAxisYSelectorChanged;
-});
-
-test("createAxisYSelector returns undefined when no choices available", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-  pivot.setAxisQuestions("question1", "question2", "question3");
-
-  // All questions are already selected, so no choices should be available
-  const selector = pivot["createAxisYSelector"](2);
-  expect(selector).toBeUndefined();
-});
-
-test("pivot without maxSeriesCount", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-  pivot.setAxisQuestions("question1", "question2", "question3", "question4");
-
-  const registerSpy = jest.spyOn(pivot, "registerToolbarItem");
-  pivot["axisYSelectors"] = [{} as HTMLDivElement];
-
-  pivot.onAxisYSelectorChanged(0, "question2");
-
-  const axisYSelector1Calls = registerSpy.mock.calls.filter((c) => c[0] === "axisYSelector1");
-  expect(axisYSelector1Calls.length).toBe(1);
-  expect(Object.keys(pivot["toolbarItemCreators"]).filter(key => key.indexOf("axisYSelector") === 0).length).toEqual(2);
-
-  registerSpy.mockRestore();
-});
-
-test("pivot with maxSeriesCount: 1", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data, { maxSeriesCount: 1 } as any);
-  pivot.setAxisQuestions("question1", "question2", "question3", "question4");
-
-  const registerSpy = jest.spyOn(pivot, "registerToolbarItem");
-  pivot["axisYSelectors"] = [{} as HTMLDivElement];
-
-  pivot.onAxisYSelectorChanged(0, "question2");
-
-  const axisYSelector1Calls = registerSpy.mock.calls.filter((c) => c[0] === "axisYSelector1");
-  expect(axisYSelector1Calls.length).toBe(0);
-  expect(Object.keys(pivot["toolbarItemCreators"]).filter(key => key.indexOf("axisYSelector") === 0).length).toEqual(1);
-
-  registerSpy.mockRestore();
 });
 
 test("isXYChart method", () => {
