@@ -1,3 +1,4 @@
+import { getRGBaColor } from "survey-core";
 import { DocumentHelper } from "./utils";
 import DefaultLight from "./themes/default-light";
 
@@ -10,45 +11,6 @@ export interface FontSettings {
   color: string;
   size: string;
   weight: number;
-}
-
-function getRGBaColor(colorValue: string): string {
-  if(!colorValue) return null;
-  if(colorValue.indexOf("rgba") === 0) {
-    return colorValue;
-  }
-
-  const canvasElement = document.createElement("canvas") as HTMLCanvasElement;
-  if(!canvasElement) return null;
-  var ctx = canvasElement.getContext("2d");
-  ctx.fillStyle = colorValue;
-
-  if(ctx.fillStyle == "#000000") {
-    ctx.fillStyle = colorValue;
-  }
-  const newStr = ctx.fillStyle;
-
-  const regex = /color\s*\(\s*srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*(?:\/\s*([\d.]+))?\s*\)/i;
-  const match = newStr.match(regex);
-
-  if(!match) {
-    if(newStr.indexOf("rgba") === 0) {
-      return newStr;
-    }
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(newStr);
-    return result ? `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, 1)` : null;
-  }
-
-  const r = parseFloat(match[1]);
-  const g = parseFloat(match[2]);
-  const b = parseFloat(match[3]);
-  const alpha = match[4] ? parseFloat(match[4]) : 1;
-
-  const r255 = Math.round(r * 255);
-  const g255 = Math.round(g * 255);
-  const b255 = Math.round(b * 255);
-
-  return `rgba(${r255}, ${g255}, ${b255}, ${alpha})`;
 }
 
 export class DashboardTheme implements IDashboardTheme {
