@@ -1,9 +1,5 @@
 "use strict";
 
-/**
- * Отдельная сборка для plotly, tabulator и mongo entry.
- * Запуск: npm run build:extras (или webpack --config webpack.extras.config.js ...)
- */
 const path = require("path");
 const webpackCommonConfig = require("./webpack.config");
 
