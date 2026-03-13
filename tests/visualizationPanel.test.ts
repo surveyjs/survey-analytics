@@ -1002,26 +1002,26 @@ test("VisualizationPanel reset filter button respects the allowSelection option"
 });
 
 test("VisualizationPanel should accept visualizer definitions", () => {
-  const visualizerDefinition = {
+  const itemDefinition = {
     visualizerType: "nps"
   };
-  let panel = new VisualizationPanel([visualizerDefinition], [], {});
+  let panel = new VisualizationPanel([itemDefinition], [], {});
   expect(panel.visualizers.length).toBe(1);
   expect(panel.visualizers[0].type).toBe("nps");
 
-  panel = new VisualizationPanel([visualizerDefinition, visualizerDefinition], [], {});
+  panel = new VisualizationPanel([itemDefinition, itemDefinition], [], {});
   expect(panel.visualizers.length).toBe(2);
   expect(panel.visualizers[0].type).toBe("nps");
   expect(panel.visualizers[1].type).toBe("nps");
 });
 
 test("Create nps visualizer from definition with dataName", async () => {
-  const visualizerDefinition = {
+  const itemDefinition = {
     visualizerType: "nps",
     dataName: "test"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
-  let panel = new VisualizationPanel([visualizerDefinition], data, {});
+  let panel = new VisualizationPanel([itemDefinition], data, {});
   const nps = panel.visualizers[0];
 
   let result: any = await nps.getCalculatedValues();
@@ -1033,12 +1033,12 @@ test("Create nps visualizer from definition with dataName", async () => {
 });
 
 test("Create nps visualizer from definition with questionName", async () => {
-  const visualizerDefinition = {
+  const itemDefinition = {
     visualizerType: "nps",
     questionName: "test"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
-  let panel = new VisualizationPanel([visualizerDefinition], data, {});
+  let panel = new VisualizationPanel([itemDefinition], data, {});
   const nps = panel.visualizers[0];
 
   let result: any = (await nps.getCalculatedValues());
@@ -1050,12 +1050,12 @@ test("Create nps visualizer from definition with questionName", async () => {
 });
 
 test("Create nps visualizer from definition with question", async () => {
-  const visualizerDefinition = {
+  const itemDefinition = {
     visualizerType: "nps",
     question: new QuestionTextModel("test")
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
-  let panel = new VisualizationPanel([visualizerDefinition], data, {});
+  let panel = new VisualizationPanel([itemDefinition], data, {});
   const nps = panel.visualizers[0];
 
   let result: any = (await nps.getCalculatedValues());
@@ -1067,25 +1067,25 @@ test("Create nps visualizer from definition with question", async () => {
 });
 
 test("Create number visualizer from definition", async () => {
-  const visualizerDefinition = {
+  const itemDefinition = {
     visualizerType: "number",
     dataName: "test",
     displayValueName: "count"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
-  let panel = new VisualizationPanel([visualizerDefinition], data, {});
+  let panel = new VisualizationPanel([itemDefinition], data, {});
   const numberVis = panel.visualizers[0] as NumberModel;
 
   let result: any = (await numberVis.getCalculatedValues()).data[0];
 
   expect(result).toStrictEqual([7.34, 1, 10, 7]);
-  expect(numberVis.dataNames[0]).toEqual(visualizerDefinition.dataName);
+  expect(numberVis.dataNames[0]).toEqual(itemDefinition.dataName);
   expect(numberVis.name.indexOf("visualizer")).toEqual(0);
   expect(panel.visibleElements[0].name.indexOf("visualizer")).toEqual(0);
 });
 
 test("Generate visualizer names", () => {
-  const visualizerDefinition1 = {
+  const itemDefinition1 = {
     visualizerType: "average",
     chartType: "gauge",
     dataName: "test",
@@ -1093,7 +1093,7 @@ test("Generate visualizer names", () => {
     title: "Total answers count"
   };
 
-  const visualizerDefinition2 = {
+  const itemDefinition2 = {
     visualizerType: "nps",
     dataName: "test",
     displayValueName: "count",
@@ -1101,7 +1101,7 @@ test("Generate visualizer names", () => {
   };
 
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
-  let visPanel = new VisualizationPanel([visualizerDefinition1, visualizerDefinition2], data, {});
+  let visPanel = new VisualizationPanel([itemDefinition1, itemDefinition2], data, {});
 
   expect(visPanel.visualizers.length).toEqual(2);
   expect(visPanel.visualizers[0].type).toEqual("average");

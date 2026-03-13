@@ -26,13 +26,13 @@ test("Create pivot visualizer with axis options", async () => {
     ],
   };
   const survey = new SurveyModel(json);
-  const visualizerDefinition: any = {
+  const itemDefinition: any = {
     type: "pivot",
     questions: survey.getAllQuestions(),
     categoryField: "question2",
     seriesFields: ["question1", "question3"]
   };
-  let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
+  let dashboard = new Dashboard({ items: [itemDefinition] });
   const items = dashboard.items;
   expect(items.length).toBe(1);
   expect(items[0].visualizerType).toBe("pivot");
@@ -111,12 +111,12 @@ test("Dashboard item should control visualizer and chart type", () => {
 });
 
 test("Dashboard item availableTypes should recreate visualizer in built dashboard", () => {
-  const visualizerDefinition = {
+  const itemDefinition = {
     type: "bar",
     availableTypes: ["bar", "pie", "bullet"],
     dataField: "score"
   };
-  const dashboard = new Dashboard({ visualizers: [visualizerDefinition], data: [{ score: 10 }] });
+  const dashboard = new Dashboard({ items: [itemDefinition], data: [{ score: 10 }] });
 
   const item = dashboard.items[0];
   const oldVisualizer = item.visualizer;
@@ -137,12 +137,12 @@ test("Dashboard item availableTypes should recreate visualizer in built dashboar
 });
 
 test("Dashboard item availableTypes should recreate and rerender visualizer after dashboard render", () => {
-  const visualizerDefinition = {
+  const itemDefinition = {
     type: "bar",
     availableTypes: ["bar", "pie", "bullet"],
     dataField: "score"
   };
-  const dashboard = new Dashboard({ visualizers: [visualizerDefinition], data: [{ score: 10 }] });
+  const dashboard = new Dashboard({ items: [itemDefinition], data: [{ score: 10 }] });
 
   const item = dashboard.items[0];
   const oldVisualizer = item.visualizer as any;

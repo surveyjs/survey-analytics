@@ -48,7 +48,7 @@ test("Combining visualizer types and chart types for rating into Dashboard", () 
   const dashboard = new Dashboard({
     questions: survey.getAllQuestions(),
     data,
-    visualizers: [
+    items: [
       {
         dataField: "score",
         type: "gauge"

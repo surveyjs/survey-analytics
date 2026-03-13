@@ -21,11 +21,11 @@ export * from "../src/matrix";
 VisualizerBase.chartAdapterType = ApexChartsAdapter;
 
 test("Dashboard should accept visualizer definitions", () => {
-  const visualizerDefinition: IVisualizerOptions = {
+  const itemDefinition: IVisualizerOptions = {
     type: "nps",
     dataField: "test"
   };
-  let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
+  let dashboard = new Dashboard({ items: [itemDefinition] });
   let items = dashboard.items;
   expect(items.length).toBe(1);
   expect(items[0].visualizerType).toBe("nps");
@@ -34,7 +34,7 @@ test("Dashboard should accept visualizer definitions", () => {
   expect(dashboard.visualizers.length).toBe(1);
   expect(dashboard.visualizers[0].type).toBe("nps");
 
-  dashboard = new Dashboard({ visualizers: [visualizerDefinition, visualizerDefinition] });
+  dashboard = new Dashboard({ items: [itemDefinition, itemDefinition] });
   items = dashboard.items;
   expect(items.length).toBe(2);
   expect(items[0].visualizerType).toBe("nps");
@@ -94,7 +94,7 @@ test("Dashboard should show questions mentioned in visualazers parameter", () =>
     ],
   };
   const survey = new SurveyModel(json);
-  let dashboard = new Dashboard({ questions: survey.getAllQuestions(), visualizers: ["question2", "question3"] });
+  let dashboard = new Dashboard({ questions: survey.getAllQuestions(), items: ["question2", "question3"] });
   expect(dashboard.visualizers.length).toBe(2);
   expect(dashboard.visualizers[0].type).toBe("text");
   expect(dashboard.visualizers[0].dataNames).toStrictEqual(["question2"]);
@@ -103,12 +103,12 @@ test("Dashboard should show questions mentioned in visualazers parameter", () =>
 });
 
 test("Create nps visualizer from definition with dataName", async () => {
-  const visualizerDefinition: IVisualizerOptions = {
+  const itemDefinition: IVisualizerOptions = {
     type: "nps",
     dataField: "test"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
-  let dashboard = new Dashboard({ visualizers: [visualizerDefinition], data });
+  let dashboard = new Dashboard({ items: [itemDefinition], data });
   const items = dashboard.items;
   expect(items.length).toBe(1);
   expect(items[0].visualizerType).toBe("nps");
@@ -125,12 +125,12 @@ test("Create nps visualizer from definition with dataName", async () => {
 });
 
 test("Create nps visualizer from definition with questionName", async () => {
-  const visualizerDefinition: IVisualizerOptions = {
+  const itemDefinition: IVisualizerOptions = {
     type: "nps",
     dataField: "test"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
-  let dashboard = new Dashboard({ visualizers: [visualizerDefinition], data });
+  let dashboard = new Dashboard({ items: [itemDefinition], data });
   const nps = dashboard.visualizers[0];
 
   let result: any = (await nps.getCalculatedValues());
@@ -142,13 +142,13 @@ test("Create nps visualizer from definition with questionName", async () => {
 });
 
 test("Create nps visualizer from definition with question", async () => {
-  const visualizerDefinition: IVisualizerOptions = {
+  const itemDefinition: IVisualizerOptions = {
     type: "nps",
     availableTypes: ["nps"],
     dataField: "test"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
-  let dashboard = new Dashboard({ visualizers: [visualizerDefinition], questions: [new QuestionTextModel("test")], data });
+  let dashboard = new Dashboard({ items: [itemDefinition], questions: [new QuestionTextModel("test")], data });
   const nps = dashboard.visualizers[0];
 
   let result: any = (await nps.getCalculatedValues());
@@ -160,13 +160,13 @@ test("Create nps visualizer from definition with question", async () => {
 });
 
 test("Create number visualizer from definition", async () => {
-  const visualizerDefinition: IVisualizerOptions = {
+  const itemDefinition: IVisualizerOptions = {
     type: "card",
     dataField: "test",
     aggregationType: "count"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
-  let dashboard = new Dashboard({ visualizers: [visualizerDefinition], data });
+  let dashboard = new Dashboard({ items: [itemDefinition], data });
   const items = dashboard.items;
   expect(items.length).toBe(1);
   expect(items[0].visualizerType).toBe("card");
@@ -177,20 +177,20 @@ test("Create number visualizer from definition", async () => {
   let result: any = (await numberVis.getCalculatedValues()).data[0];
 
   expect(result).toStrictEqual([7.34, 1, 10, 7]);
-  expect(numberVis.dataNames[0]).toEqual(visualizerDefinition.dataField);
+  expect(numberVis.dataNames[0]).toEqual(itemDefinition.dataField);
   expect(numberVis.name.indexOf("visualizer")).toEqual(0);
   expect(dashboard.visibleElements[0].name.indexOf("visualizer")).toEqual(0);
 });
 
 test("Options passed to root panel and visualizer", async () => {
-  const visualizerDefinition: IVisualizerOptions = {
+  const itemDefinition: IVisualizerOptions = {
     type: "gauge",
     dataField: "test",
     aggregationType: "count",
     someVisualizerOption: "vis"
   };
-  let dashboard = new Dashboard({ visualizers: [visualizerDefinition], somePanelOption: "panel" });
-  expect(Object.keys(dashboard.options)).toStrictEqual(["visualizers", "somePanelOption"]);
+  let dashboard = new Dashboard({ items: [itemDefinition], somePanelOption: "panel" });
+  expect(Object.keys(dashboard.options)).toStrictEqual(["items", "somePanelOption"]);
   expect((dashboard.options as any).somePanelOption).toEqual("panel");
   expect(dashboard.visualizers.length).toBe(1);
 
@@ -199,14 +199,14 @@ test("Options passed to root panel and visualizer", async () => {
   expect(visualizer.options.somePanelOption).toEqual("panel");
   expect(visualizer.type).toBe("average");
   expect(visualizer.chartType).toBe("gauge");
-  expect(visualizer.dataNames[0]).toEqual(visualizerDefinition.dataField);
+  expect(visualizer.dataNames[0]).toEqual(itemDefinition.dataField);
 });
 
 test("Create pivot visualizer with empty config", async () => {
-  const visualizerDefinition: any = {
+  const itemDefinition: any = {
     type: "pivot",
   };
-  let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
+  let dashboard = new Dashboard({ items: [itemDefinition] });
   expect(dashboard.visualizers.length).toBe(1);
   const visualizer = dashboard.visualizers[0] as PivotModel;
   expect(visualizer.type).toBe("pivot");
@@ -221,11 +221,11 @@ test("Create pivot visualizer with questions", async () => {
     ],
   };
   const survey = new SurveyModel(json);
-  const visualizerDefinition: any = {
+  const itemDefinition: any = {
     type: "pivot",
     questions: survey.getAllQuestions()
   };
-  let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
+  let dashboard = new Dashboard({ items: [itemDefinition] });
   expect(dashboard.visualizers.length).toBe(1);
   const visualizer = dashboard.visualizers[0] as PivotModel;
   expect(visualizer.type).toBe("pivot");
@@ -243,13 +243,13 @@ test("Create pivot visualizer with questions", async () => {
 //     ],
 //   };
 //   const survey = new SurveyModel(json);
-//   const visualizerDefinition: any = {
+//   const itemDefinition: any = {
 //     type: "pivot",
 //     questions: survey.getAllQuestions(),
 //     categoryField: "question2",
 //     seriesFields: ["question1", "question3"]
 //   };
-//   let dashboard = new Dashboard({ visualizers: [visualizerDefinition] });
+//   let dashboard = new Dashboard({ items: [itemDefinition] });
 //   expect(dashboard.visualizers.length).toBe(1);
 //   expect(dashboard.getElements().length).toBe(1);
 //   expect(dashboard.getElement("visualizer1")).toStrictEqual({
@@ -269,21 +269,21 @@ test("Create pivot visualizer with questions", async () => {
 // });
 
 test("Set chart types from definitions", async () => {
-  const visualizerDefinition1 = {
+  const itemDefinition1 = {
     type: "scatter",
     availableTypes: ["line", "scatter", "bar"],
     dataField: "test"
   };
-  const visualizerDefinition2 = {
+  const itemDefinition2 = {
     type: "line",
     dataField: "test"
   };
-  const visualizerDefinition3 = {
+  const itemDefinition3 = {
     availableTypes: ["line", "scatter", "bar"],
     dataField: "test"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
-  const dashboard = new Dashboard({ visualizers: [visualizerDefinition1, visualizerDefinition2, visualizerDefinition3], data });
+  const dashboard = new Dashboard({ items: [itemDefinition1, itemDefinition2, itemDefinition3], data });
   const chart1 = dashboard.visualizers[0] as SelectBase;
   expect(chart1.chartType).toBe("scatter");
   expect(chart1["chartTypes"]).toStrictEqual(["line", "scatter", "bar"]);
@@ -298,17 +298,17 @@ test("Set chart types from definitions", async () => {
 });
 
 test("Set visualizer types from definitions", async () => {
-  const visualizerDefinition1 = {
+  const itemDefinition1 = {
     type: "nps",
     availableTypes: ["line", "scatter", "bar", "nps"],
     dataField: "test"
   };
-  const visualizerDefinition2 = {
+  const itemDefinition2 = {
     availableTypes: ["line", "scatter", "bar", "nps"],
     dataField: "test"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
-  let dashboard = new Dashboard({ visualizers: [visualizerDefinition1, visualizerDefinition2], data });
+  let dashboard = new Dashboard({ items: [itemDefinition1, itemDefinition2], data });
   const items = dashboard.items;
   expect(items.length).toBe(2);
   expect(items[0].visualizerType).toBe("nps");
@@ -399,14 +399,14 @@ test("Create matrix visualizer", async () => {
     { "teacher-evaluation": { "well-prepared": "2", "syllabus": "1", "delivery": "5", "guidance": "5", "encouragement": "5", "modern-tools": "5", "weak": "5", "counsel": "5", "non-traditional-methods": "5", "class-time": "4", "study-material": "5", "experiment": "2", "disciplined": "4", "evaluation": "2" } },
     { "teacher-evaluation": { "well-prepared": "3", "syllabus": "5", "delivery": "5", "guidance": "5", "encouragement": "5", "modern-tools": "2", "weak": "3", "counsel": "3", "non-traditional-methods": "5", "class-time": "4", "study-material": "4", "experiment": "4", "disciplined": "4", "evaluation": "4" } }
   ];
-  const visualizerDefinition: any = {
+  const itemDefinition: any = {
     type: "stackedbar",
     dataField: "teacher-evaluation"
   };
   const dashboard = new Dashboard({
     questions: survey.getAllQuestions(),
     data: dataFromServer,
-    visualizers: [visualizerDefinition]
+    items: [itemDefinition]
   });
   expect(dashboard.visualizers.length).toBe(1);
 
@@ -483,7 +483,7 @@ test("Create visualizer with predefined char type and available types", async ()
     { "college": "Fine Arts College" },
     { "college": "Science College" }
   ];
-  const visualizerDefinition: any = {
+  const itemDefinition: any = {
     type: "vbar",
     availableTypes: ["bar", "vbar"],
     dataField: "college",
@@ -491,7 +491,7 @@ test("Create visualizer with predefined char type and available types", async ()
   const dashboard = new Dashboard({
     questions: survey.getAllQuestions(),
     data: dataFromServer,
-    visualizers: [visualizerDefinition]
+    items: [itemDefinition]
   });
   expect(dashboard.visualizers.length).toBe(1);
 
@@ -600,13 +600,13 @@ test("getState, setState, onStateChanged", () => {
 });
 
 test("Create visualizer with answersOrder", async () => {
-  const visualizerDefinition: IVisualizerOptions = {
+  const itemDefinition: IVisualizerOptions = {
     type: "bar",
     dataField: "test",
     answersOrder: "desc"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
-  let dashboard = new Dashboard({ visualizers: [visualizerDefinition], data });
+  let dashboard = new Dashboard({ items: [itemDefinition], data });
   const visualizer = dashboard.visualizers[0] as SelectBase;
 
   expect(visualizer.chartType).toBe("bar");
@@ -628,7 +628,7 @@ test("allowChangeType", () => {
     allowChangeVisualizerType: true,
     questions: survey.getAllQuestions(),
     data,
-    visualizers: [
+    items: [
       {
         dataField: "question1",
         allowChangeType: false
@@ -657,7 +657,7 @@ test("Dashboard support date range options", () => {
 
   const availableDatePeriods: DatePeriodEnum[] = ["last7days", "last30days"];
   const dashboard = new Dashboard({
-    visualizers: [{ type: "text", dataField: "q1" }],
+    items: [{ type: "text", dataField: "q1" }],
     dateFieldName: "submissionDate",
     datePeriod: "last30days",
     availableDatePeriods,
@@ -687,7 +687,7 @@ test("Dashboard onDateRangeChanged event fires when date range changes", () => {
   jest.setSystemTime(new Date("2025-12-15"));
 
   const dashboard = new Dashboard({
-    visualizers: [{ type: "text", dataField: "q1" }],
+    items: [{ type: "text", dataField: "q1" }],
     dateFieldName: "submissionDate",
   });
 
@@ -721,7 +721,7 @@ test("Dashboard filter by date range", () => {
 
   const dashboard = new Dashboard({
     data,
-    visualizers: [{ type: "text", dataField: "date" }],
+    items: [{ type: "text", dataField: "date" }],
     dateFieldName: "date",
     dateRange: [Date.parse("2011-10-16"), Date.parse("2011-10-17")],
     showDatePanel: false

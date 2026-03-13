@@ -2738,7 +2738,7 @@ var survey = new Survey.SurveyModel(json);
 const dashboard = new SurveyAnalytics.Dashboard({
     questions: survey.getAllQuestions(),
     data: dataFromServer,
-    visualizers: [
+    items: [
     {
         dataField: "college",
         type: "vbar",

@@ -11,7 +11,7 @@ import { IVisualizerPanelElement } from "./config";
 export interface IDashboardOptions {
   data?: any[];
   questions?: Question[];
-  visualizers?: Array<string | IVisualizerOptions>;
+  items?: Array<string | IVisualizerOptions>;
 
   survey?: SurveyModel;
   dataProvider?: DataProvider;
@@ -34,7 +34,7 @@ export interface IDashboardOptions {
 
 export class Dashboard extends VisualizationPanel<DashboardItem> {
   constructor(private readonly _options: IDashboardOptions) {
-    super(_options.questions ?? [], _options?.data ?? [], _options, _options.visualizers ?? [] as any, true, "dashboard");
+    super(_options.questions ?? [], _options?.data ?? [], _options, _options.items ?? [] as any, true, "dashboard");
   }
 
   protected buildVisualizer(element: DashboardItem, questions: Array<Question>) {

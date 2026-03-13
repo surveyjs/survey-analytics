@@ -366,8 +366,8 @@ test("should handle null/undefined values correctly", () => {
   expect(traces[2].marker.colors).toBeDefined();
 });
 
-test("Use chart type from visualizerDefinition", async () => {
-  const visualizerDefinition = {
+test("Use chart type from itemDefinition", async () => {
+  const itemDefinition = {
     visualizerType: "average",
     chartType: "bullet",
     dataName: "test",
@@ -376,7 +376,7 @@ test("Use chart type from visualizerDefinition", async () => {
   };
 
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
-  let visPanel = new VisualizationPanel([visualizerDefinition], data, {});
+  let visPanel = new VisualizationPanel([itemDefinition], data, {});
 
   expect(visPanel.visualizers.length).toEqual(1);
   expect(visPanel.visualizers[0].type).toEqual("average");
