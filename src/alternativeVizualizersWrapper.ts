@@ -187,6 +187,10 @@ export class AlternativeVisualizersWrapper
     this._setVisualizer({ value: type }, quiet);
   }
 
+  /**
+   * Returns the current active visualizer.
+   * @returns The current active visualizer.
+   */
   public getVisualizer(): VisualizerBase {
     return this.visualizer;
   }

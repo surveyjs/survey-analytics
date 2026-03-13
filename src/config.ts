@@ -15,14 +15,15 @@ export interface IVisualizerPanelElement {
   /**
    * The title of a survey question visualized by this item. The visualization item displays the same title.
    */
-  displayName: string;
+  displayName?: string;
   /**
    * Indicates whether the visualization item is currently visible.
    *
    * If you want to disallow users to hide visualization items, set the [`allowHideQuestions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions) property to `false`.
    */
-  isVisible: boolean;
-  isPublic: boolean;
+  isVisible?: boolean;
+  isPublic?: boolean;
+  [key: string]: any;
 }
 
 export interface IState {

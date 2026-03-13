@@ -13,7 +13,6 @@ import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
 import { DatePeriodEnum, DateRangeWidget, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
-import { getDataName } from "./visualizerDescription";
 import { IDateRange, toRange } from "./utils/calculationDateRanges";
 import { DateRangeModel, IDateRangeChangedOptions } from "./utils/dateRangeModel";
 import "./visualizationPanel.scss";
@@ -30,7 +29,50 @@ if(!!document) {
 
 export interface IVisualizerPanelRenderedElement
   extends IVisualizerPanelElement {
+  visualizerInstance?: VisualizerBase;
   renderedElement?: HTMLElement;
+}
+
+export class PanelElement implements IVisualizerPanelRenderedElement {
+  protected getStateProperties(): string[] {
+    return ["displayName", "isVisible", "isPublic"];
+  }
+  setState(elementState: any) {
+    for(let key of this.getStateProperties()) {
+      if(elementState[key] !== undefined) {
+        this[key] = elementState[key];
+      }
+    }
+    if(this.visualizerInstance) {
+      this.visualizerInstance.setState(elementState);
+    }
+  }
+  getState() {
+    const state: any = {
+      name: this.name,
+      ...this.visualizerInstance?.getState()
+    };
+    for(let key of this.getStateProperties()) {
+      if(this[key] !== undefined) {
+        state[key] = this[key];
+      }
+    }
+    return state;
+  }
+  constructor(name: string, displayName?: string) {
+    this.name = name;
+    this.displayName = displayName;
+    this.isVisible = true;
+    this.isPublic = true;
+  }
+  name: string;
+  displayName: string;
+  isVisible: boolean;
+  isPublic: boolean;
+  visualizerInstance?: VisualizerBase;
+  renderedElement?: HTMLElement;
+  question?: Question;
+  questions?: Question[];
 }
 
 /**
@@ -296,27 +338,27 @@ export interface IVisualizationPanelOptions {
  *
  * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
  */
-export class VisualizationPanel extends VisualizerBase {
+export class VisualizationPanel<P extends PanelElement = PanelElement> extends VisualizerBase {
   public static LayoutEngine: new (allowed: boolean, itemSelector: string, dragEnabled?: boolean) => LayoutEngine;
-  public visualizers: Array<VisualizerBase> = [];
-  private renderedQuestionsCount: number = 0;
-  private static counter = 0;
-  private resetFilterButton: HTMLElement;
+  private _itemsCounter = 0;
+  private _renderedQuestionsCount: number = 0;
+  private _resetFilterButton: HTMLElement;
   private _dateRangeWidget: DateRangeWidget;
   private _dateRangeModel: DateRangeModel;
+  protected _elements: Array<P> = undefined;
 
-  private static getVisualizerName() {
-    VisualizationPanel.counter++;
-    return "visualizer" + VisualizationPanel.counter;
+  protected getVisualizerName() {
+    this._itemsCounter++;
+    return "visualizer" + this._itemsCounter;
   }
 
   private updateResetFilterButtonDisabled() {
-    if(this.resetFilterButton) {
+    if(this._resetFilterButton) {
       const buttonDisabledClass = "sa-toolbar__button--disabled";
       if(this.dataProvider.getFilters().length == 0) {
-        this.resetFilterButton.classList.add(buttonDisabledClass);
+        this._resetFilterButton.classList.add(buttonDisabledClass);
       } else {
-        this.resetFilterButton.classList.remove(buttonDisabledClass);
+        this._resetFilterButton.classList.remove(buttonDisabledClass);
       }
     }
   }
@@ -325,23 +367,23 @@ export class VisualizationPanel extends VisualizerBase {
     protected questions: Array<any>,
     data: Array<{ [index: string]: any }>,
     options: IVisualizationPanelOptions = {},
-    private _elements: Array<IVisualizerPanelRenderedElement> = undefined,
-    private isRoot = true
+    elements: Array<IVisualizerPanelElement> = undefined,
+    private _isRoot = true,
+    type?: string
   ) {
-    super(null, data, options, "panel");
+    super(null, data, options, type || "panel");
     this.loadingData = false;
-    this.showToolbar = isRoot;
+    this.showToolbar = _isRoot;
     if(this.options.survey) {
       localization.currentLocale = this.options.survey.locale;
     }
 
-    if(_elements === undefined) {
-      this._elements = this.buildElements(questions);
-    }
+    this._elements = this.buildElements(questions, elements);
+    this._elements.forEach((element) => {
+      this.buildVisualizer(element, questions);
+    });
 
-    this.buildVisualizers(questions);
-
-    if(this.isRoot && this.options.dateFieldName) {
+    if(this._isRoot && this.options.dateFieldName) {
       this.createDateRangeWidget();
     }
 
@@ -390,11 +432,11 @@ export class VisualizationPanel extends VisualizerBase {
     this._supportSelection = true;
     if(this.supportSelection !== false) {
       this.registerToolbarItem("resetFilter", () => {
-        this.resetFilterButton = DocumentHelper.createButton(() => {
+        this._resetFilterButton = DocumentHelper.createButton(() => {
           this.resetFilter();
         }, localization.getString("resetFilter"));
         this.updateResetFilterButtonDisabled();
-        return this.resetFilterButton;
+        return this._resetFilterButton;
       }, "button", 900);
     }
 
@@ -420,16 +462,10 @@ export class VisualizationPanel extends VisualizerBase {
         });
       }, "dropdown");
     }
+  }
 
-    // if(this.isRoot && !this.theme?.isAxisLabelFontLoaded()) {
-    //   document.fonts.ready.then((fontFaceSet: FontFaceSet) => {
-    //     setTimeout(() => {
-    //       if (this.theme?.isAxisLabelFontLoaded()) {
-    //         this.refresh();
-    //       }
-    //     }, 100);
-    //   });
-    // }
+  public get visualizers(): Array<VisualizerBase> {
+    return this._elements.map(el => el.visualizerInstance).filter(v => !!v);
   }
 
   public resetFilter(): void {
@@ -463,9 +499,9 @@ export class VisualizationPanel extends VisualizerBase {
     sender: VisualizerBase,
     options: any
   ) => {
-    this.renderedQuestionsCount++;
-    if(this.renderedQuestionsCount == this.visibleElements.length) {
-      this.renderedQuestionsCount = 0;
+    this._renderedQuestionsCount++;
+    if(this._renderedQuestionsCount == this.visibleElements.length) {
+      this._renderedQuestionsCount = 0;
       this.layoutEngine?.update();
       this.afterRender(this.contentContainer);
     }
@@ -602,7 +638,7 @@ export class VisualizationPanel extends VisualizerBase {
   public hideElement(elementName: string) {
     const element = this.getElement(elementName);
     this.hideElementCore(element);
-    const visualizer = this.getVisualizer(elementName);
+    const visualizer = element.visualizerInstance;
     if(!!visualizer && !!visualizer.getChartAdapter()) {
       visualizer.getChartAdapter().destroy(element.renderedElement);
     }
@@ -639,6 +675,65 @@ export class VisualizationPanel extends VisualizerBase {
       }
     });
     this.visibleElementsChanged(undefined, "ADDEDDALL");
+  }
+
+  /**
+   * Adds a new element to the panel. If the element does not have a built visualizer,
+   * one will be created automatically. If the panel is already rendered and the element
+   * is visible, it will also be rendered immediately.
+   * @param element A panel element or element config to add.
+   * @param index The position (zero-based) at which to insert the element. Appends to the end if omitted.
+   */
+  public addElement(element: IVisualizerPanelElement | P, index?: number): void {
+    let panelElement: P;
+    if(element instanceof PanelElement) {
+      panelElement = element as P;
+    } else {
+      const question = (this.questions || []).find((q: any) => q.name === (element as IVisualizerPanelElement).name);
+      panelElement = this.createElement(element as IVisualizerPanelElement, question);
+      panelElement.setState(element);
+    }
+
+    if(!panelElement.visualizerInstance) {
+      this.buildVisualizer(panelElement, this.questions);
+    }
+
+    const insertIndex = (index !== undefined && index >= 0 && index < this._elements.length)
+      ? index
+      : this._elements.length;
+
+    this._elements.splice(insertIndex, 0, panelElement);
+
+    if(panelElement.isVisible && !!this.contentContainer) {
+      this.showElementCore(panelElement, insertIndex);
+    }
+
+    this.visibleElementsChanged(panelElement, "ADDED");
+  }
+
+  /**
+   * Removes an element from the panel. Cleans up any rendered DOM node and destroys
+   * the element's visualizer if one exists.
+   * @param elementName The [name](https://surveyjs.io/form-library/documentation/api-reference/question#name) of the element to remove.
+   */
+  public removeElement(element: P | string): void {
+    const panelElement = typeof element === "string" ? this.getElement(element) : element;
+    if(!panelElement) return;
+
+    if(!!panelElement.renderedElement) {
+      this.layoutEngine?.remove([panelElement.renderedElement]);
+      if(!!this.contentContainer) {
+        this.contentContainer.removeChild(panelElement.renderedElement);
+      }
+    }
+
+    this.destroyElementVisualizer(panelElement);
+
+    const elementIndex = this._elements.indexOf(panelElement);
+    if(elementIndex >= 0) {
+      this._elements.splice(elementIndex, 1);
+      this.visibleElementsChanged(panelElement, "REMOVED");
+    }
   }
 
   protected makeElementPrivate(element: IVisualizerPanelElement) {
@@ -681,98 +776,110 @@ export class VisualizationPanel extends VisualizerBase {
     this.visualizers.forEach(visualizer => visualizer.backgroundColor = color);
   }
 
-  private buildVisualizers(questions: Array<Question>) {
-    questions.forEach((question) => {
-      let visualizerOptions = Object.assign({}, this.options);
-      if(visualizerOptions.dataProvider === undefined) {
-        visualizerOptions.dataProvider = this.dataProvider;
-      }
-      let visualizer: VisualizerBase;
-      if(Array.isArray(question)) {
-        visualizer = new (VisualizationManager.getPivotVisualizerConstructor() as any)(question, [], visualizerOptions, false);
-      } else {
-        visualizer = this.createVisualizer(question, visualizerOptions, []);
-      }
-      if(!visualizer) {
-        return;
-      }
+  protected setupVisualizer(visualizer: VisualizerBase, question: Question) {
+    if(this.allowMakeQuestionsPrivate) {
+      visualizer.registerToolbarItem("makePrivatePublic", () => {
+        const element = this.getElement(question.name);
 
-      if(this.allowMakeQuestionsPrivate) {
-        visualizer.registerToolbarItem("makePrivatePublic", () => {
-          const element = this.getElement(question.name);
+        const state = element.isPublic ? "first" : "second";
 
-          const state = element.isPublic ? "first" : "second";
+        const pathMakePrivateSvg = "makeprivate";
+        const pathMakePublicSvg = "makepublic";
+        const makePrivateTitle = localization.getString("makePrivateButton");
+        const makePublicTitle = localization.getString("makePublicButton");
+        const doPrivate = (e: any) => {
+          setTimeout(() => this.makeElementPrivate(element), 0);
+        };
+        const doPublic = (e: any) => {
+          setTimeout(() => this.makeElementPublic(element), 0);
+        };
 
-          const pathMakePrivateSvg = "makeprivate";
-          const pathMakePublicSvg = "makepublic";
-          const makePrivateTitle = localization.getString("makePrivateButton");
-          const makePublicTitle = localization.getString("makePublicButton");
-          const doPrivate = (e: any) => {
-            setTimeout(() => this.makeElementPrivate(element), 0);
-          };
-          const doPublic = (e: any) => {
-            setTimeout(() => this.makeElementPublic(element), 0);
-          };
+        return DocumentHelper.createSvgToggleButton(
+          pathMakePublicSvg,
+          pathMakePrivateSvg,
+          makePrivateTitle,
+          makePublicTitle,
+          doPublic,
+          doPrivate,
+          state
+        );
+      }, "button");
+    }
 
-          return DocumentHelper.createSvgToggleButton(
-            pathMakePublicSvg,
-            pathMakePrivateSvg,
-            makePrivateTitle,
-            makePublicTitle,
-            doPublic,
-            doPrivate,
-            state
-          );
-        }, "button");
-      }
-
-      if(visualizer.supportSelection) {
-        const visualizerWithSelection = <IVisualizerWithSelection>(
+    if(visualizer.supportSelection) {
+      const visualizerWithSelection = <IVisualizerWithSelection>(
           (<any>visualizer)
         );
-        let filterInfo = new FilterInfo(visualizerWithSelection);
+      let filterInfo = new FilterInfo(visualizerWithSelection);
 
-        visualizer.registerToolbarItem("questionFilterInfo", () => {
-          filterInfo.update(visualizerWithSelection.selection);
-          return filterInfo.htmlElement;
-        }, "filter", 900);
+      visualizer.registerToolbarItem("questionFilterInfo", () => {
+        filterInfo.update(visualizerWithSelection.selection);
+        return filterInfo.htmlElement;
+      }, "filter", 900);
 
-        visualizerWithSelection.onDataItemSelected = (
-          selectedValue: any,
-          selectedText: string
-        ) => {
-          filterInfo.update({ value: selectedValue, text: selectedText });
-          const dataName = getDataName(question);
-          this.setFilter(dataName, selectedValue);
-        };
-      }
+      visualizerWithSelection.onDataItemSelected = (
+        selectedValue: any,
+        selectedText: string
+      ) => {
+        filterInfo.update({ value: selectedValue, text: selectedText });
+        // TODO: possible issues with visuazlier descriptions
+        const dataName = question.name || question.question?.name || question.dataField || question.questionName;
+        this.setFilter(dataName, selectedValue);
+      };
+    }
 
-      visualizer.onUpdate = () => this.layout();
-      visualizer.onAfterRender.add(this.onAfterRenderQuestionCallback);
-      visualizer.onStateChanged.add(this.onStateChangedCallback);
+    visualizer.onUpdate = () => this.layout();
+    visualizer.onAfterRender.add(this.onAfterRenderQuestionCallback);
+    visualizer.onStateChanged.add(this.onStateChangedCallback);
 
-      if(visualizer instanceof AlternativeVisualizersWrapper) {
-        visualizer.onVisualizerChanged.add(this.onAlternativeVisualizerChangedCallback);
-      }
+    if(visualizer instanceof AlternativeVisualizersWrapper) {
+      visualizer.onVisualizerChanged.add(this.onAlternativeVisualizerChangedCallback);
+    }
+  }
 
-      this.visualizers.push(visualizer);
-    });
+  protected buildVisualizer(element: P, questions: Array<Question>) {
+    const visualizerOptions = Object.assign({}, this.options);
+    if(visualizerOptions.dataProvider === undefined) {
+      visualizerOptions.dataProvider = this.dataProvider;
+    }
+    let question = element.question || questions.filter((q: any) => q.name === element.name || q.question && q.question.name === element.name)[0];
+    let visualizer: VisualizerBase;
+    if(element.questions && element.questions.length > 0) {
+      visualizer = new (VisualizationManager.getPivotVisualizerConstructor() as any)(element.questions, [], visualizerOptions, false);
+      this.setupVisualizer(visualizer, element.questions[0]);
+    } else if(!!question) {
+      visualizer = this.createVisualizer(question, visualizerOptions, []);
+      this.setupVisualizer(visualizer, question);
+    }
+    if(!visualizer) {
+      return;
+    }
+    element.visualizerInstance = visualizer;
+  }
+
+  private destroyElementVisualizer(element: P) {
+    const visualizer = element.visualizerInstance;
+    if(!visualizer) {
+      return;
+    }
+    visualizer.onUpdate = undefined;
+    if(visualizer instanceof SelectBase) {
+      visualizer.onDataItemSelected = undefined;
+    }
+    if(visualizer instanceof AlternativeVisualizersWrapper) {
+      visualizer.onVisualizerChanged.remove(this.onAlternativeVisualizerChangedCallback);
+    }
+    visualizer.onStateChanged.remove(this.onStateChangedCallback);
+    visualizer.onAfterRender.remove(this.onAfterRenderQuestionCallback);
+    visualizer.destroy();
+    element.visualizerInstance = undefined;
+    element.renderedElement = undefined;
   }
 
   private destroyVisualizers() {
-    this.visualizers.forEach((visualizer) => {
-      visualizer.onUpdate = undefined;
-      if(visualizer instanceof SelectBase) {
-        visualizer.onDataItemSelected = undefined;
-      }
-      if(visualizer instanceof AlternativeVisualizersWrapper) {
-        visualizer.onVisualizerChanged.remove(this.onAlternativeVisualizerChangedCallback);
-      }
-      visualizer.onStateChanged.remove(this.onStateChangedCallback);
-      visualizer.onAfterRender.remove(this.onAfterRenderQuestionCallback);
-      visualizer.destroy();
+    this._elements.forEach((element) => {
+      this.destroyElementVisualizer(element);
     });
-    this.visualizers = [];
   }
 
   protected setLocale(newLocale: string) {
@@ -841,19 +948,54 @@ export class VisualizationPanel extends VisualizerBase {
     return this._layoutEngine;
   }
 
-  protected buildElements(questions: any[]): IVisualizerPanelElement[] {
+  protected createElement(element: IVisualizerPanelElement, question?: Question): P {
+    if(!!element) {
+      return new PanelElement(element.name, element.displayName || element.title) as P;
+    }
+    return new PanelElement(question.name, this.getTitle(question)) as P;
+  }
+
+  protected buildElements(questions: Question[], elements: Array<IVisualizerPanelElement | string> = []): P[] {
+    if(elements.length > 0) {
+      return elements.map((element) => {
+        let el = null;
+        if(typeof element === "string") {
+          const q = (questions || []).find((q) => q.name === element || q.valueName === element);
+          if(q) {
+            el = this.createElement(undefined, q);
+          } else {
+            // If no matching question is found, create a simple visualizer description
+            // or throw an error?
+          }
+        } else {
+          const descriptor = Object.assign({}, element) as any;
+          let question = (questions || []).filter(q => q.name === descriptor.dataField)[0];
+          if(typeof descriptor.question === "string") {
+            question = (questions || []).filter((q) => q.name === descriptor.question || q.valueName === descriptor.question)[0];
+          }
+          if(!descriptor.name) {
+            descriptor.name = this.getVisualizerName();
+          }
+          el = this.createElement(descriptor, question);
+          el.setState(element);
+        }
+        return el;
+      });
+    }
+
     return (questions || []).map((question) => {
-      question = Array.isArray(question) ? question[0] : question;
-      question = question.question || question;
-      if(!question.name) {
-        question.name = VisualizationPanel.getVisualizerName();
+      let questionAsElementDeclaration = Array.isArray(question) ? question[0] : question;
+      questionAsElementDeclaration = questionAsElementDeclaration.question || questionAsElementDeclaration;
+      if(!questionAsElementDeclaration.name) {
+        questionAsElementDeclaration.name = this.getVisualizerName();
       }
-      return {
-        name: question.name,
-        displayName: this.getTitle(question),
-        isVisible: true,
-        isPublic: true,
-      };
+      const pe = this.createElement(undefined, questionAsElementDeclaration);
+      if(Array.isArray(question)) {
+        pe.questions = question;
+      } else {
+        pe.question = question;
+      }
+      return pe;
     });
   }
 
@@ -867,12 +1009,7 @@ export class VisualizationPanel extends VisualizerBase {
     const result = [];
     (this._elements || []).forEach((element) => {
       if(!questionNames || questionNames.indexOf(element.name) !== -1) {
-        result.push({
-          name: element.name,
-          displayName: element.displayName,
-          isVisible: element.isVisible,
-          isPublic: element.isPublic,
-        });
+        result.push(element.getState());
       }
     });
     return result;
@@ -928,7 +1065,7 @@ export class VisualizationPanel extends VisualizerBase {
    * @param questionName A question [name](https://surveyjs.io/form-library/documentation/api-reference/question#name).
    */
   public getVisualizer(questionName: string) {
-    return this.visualizers.filter((v) => v.name === questionName)[0];
+    return this.getElement(questionName)?.visualizerInstance;
   }
 
   /**
@@ -1054,11 +1191,8 @@ export class VisualizationPanel extends VisualizerBase {
 
   public onPermissionsChangedCallback: any;
 
-  protected renderPanelElement(
-    element: IVisualizerPanelRenderedElement,
-    container: HTMLElement
-  ) {
-    const visualizer = this.getVisualizer(element.name);
+  protected renderPanelElement(element: IVisualizerPanelRenderedElement, container: HTMLElement) {
+    const visualizer = element.visualizerInstance;
     if(!visualizer) {
       return;
     }
@@ -1092,7 +1226,7 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   protected renderBanner(container: HTMLElement): void {
-    if(!this.haveCommercialLicense && this.isRoot) {
+    if(!this.haveCommercialLicense && this._isRoot) {
       const banner = createCommercialLicenseLink();
       container.appendChild(banner);
     }
@@ -1103,7 +1237,7 @@ export class VisualizationPanel extends VisualizerBase {
     container.className += " sa-panel__header";
     super.renderToolbar(container);
 
-    if(this.isRoot && this.showToolbar && this._dateRangeWidget) {
+    if(this._isRoot && this.showToolbar && this._dateRangeWidget) {
       const divider = DocumentHelper.createElement("div", "sa-horizontal-divider");
       const line = DocumentHelper.createElement("div", "sa-line");
       divider.appendChild(line);
@@ -1172,14 +1306,7 @@ export class VisualizationPanel extends VisualizerBase {
   public getState(): IState {
     return {
       locale: this.locale,
-      elements: [].concat(this._elements.map(element => {
-        const visualizer = this.getVisualizer(element.name);
-        const elementState = { ...element, ...visualizer?.getState() };
-        if(elementState.renderedElement !== undefined) {
-          delete elementState.renderedElement;
-        }
-        return elementState;
-      })),
+      elements: [].concat(this._elements.map(element => element.getState())),
     };
   }
 
@@ -1202,16 +1329,15 @@ export class VisualizationPanel extends VisualizerBase {
 
         const newElements = [];
         loadedElements.forEach(elementState => {
-          const visualizer = this.getVisualizer(elementState.name);
-          if(visualizer !== undefined) {
-            visualizer.setState(elementState);
+          const oldElement = this.getElement(elementState.name);
+          if(oldElement !== undefined) {
+            oldElement.setState(elementState);
+            newElements.push(oldElement);
+          } else {
+            let newElement = this.createElement(elementState, (this.questions || []).filter(q => q.name === elementState.name)[0]);
+            newElement.setState(elementState);
+            newElements.push(newElement);
           }
-          newElements.push({
-            name: elementState.name,
-            displayName: elementState.displayName,
-            isVisible: elementState.isVisible,
-            isPublic: elementState.isPublic,
-          });
         });
         this._elements = newElements;
       }
@@ -1237,26 +1363,20 @@ export class VisualizationPanel extends VisualizerBase {
   }
 
   public get permissions(): IPermission[] {
-    return <any>this._elements.map((element) => {
-      return {
-        name: element.name,
-        isPublic: element.isPublic,
-      };
-    });
+    return this._elements.map((element) => ({
+      name: element.name,
+      isPublic: element.isPublic,
+    }));
   }
   public set permissions(permissions: IPermission[]) {
-    const updatedElements = this._elements.map((element) => {
+    if(permissions) {
       permissions.forEach((permission) => {
-        if(permission.name === element.name)
-          element.isPublic = permission.isPublic;
+        const element = this.getElement(permission.name);
+        !!element && (element.isPublic = permission.isPublic);
       });
-
-      return { ...element };
-    });
-    this._elements = [].concat(updatedElements);
-    this.refresh();
-    this.onPermissionsChangedCallback &&
-      this.onPermissionsChangedCallback(this);
+      this.refresh();
+      !!this.onPermissionsChangedCallback && this.onPermissionsChangedCallback(this);
+    }
   }
 
   protected getCalculatedValuesCore(): ICalculationResult {

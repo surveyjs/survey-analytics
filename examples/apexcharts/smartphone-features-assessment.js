@@ -613,7 +613,7 @@ var dashboard = new SurveyAnalytics.Dashboard({
   questions: survey.getAllQuestions(),
   data: dataFromServer,
   dateFieldName: "timestamp",
-  visualizers: [
+  items: [
     {
         dataField: "overall-satisfaction",
         type: "gauge",

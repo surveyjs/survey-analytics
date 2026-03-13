@@ -2,16 +2,16 @@ import { VisualizationPanel } from "../src/visualizationPanel";
 export * from "../src/card";
 
 test("Create visualizer by visualizerType", async () => {
-  const visualizerDefinition = {
+  const itemDefinition = {
     visualizerType: "card",
-    dataName: "test",
+    dataField: "test",
     displayValueName: "count",
     title: "Total answers count"
   };
 
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
-  let visPanel = new VisualizationPanel([visualizerDefinition], data, {});
+  let visPanel = new VisualizationPanel([itemDefinition], data, {});
 
   expect(visPanel.visualizers.length).toEqual(1);
-  expect(visPanel.visualizers[0].type).toEqual(visualizerDefinition.visualizerType);
+  expect(visPanel.visualizers[0].type).toEqual(itemDefinition.visualizerType);
 });

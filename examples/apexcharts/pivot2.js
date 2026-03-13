@@ -725,7 +725,7 @@ var survey = new Survey.SurveyModel(json);
 
 const vizPanel = new SurveyAnalytics.Dashboard({
   data: dataFromServer,
-  visualizers: [{
+  items: [{
     type: "pivot",
     questions: survey.getAllQuestions(),
     // maxSeriesCount: 2
