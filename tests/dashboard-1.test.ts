@@ -37,7 +37,7 @@ test("Create pivot visualizer with axis options", async () => {
   expect(items.length).toBe(1);
   expect(items[0].visualizerType).toBe("pivot");
   expect(items[0].name).toBe("visualizer1");
-  expect(items[0].visualizer).toBeDefined();
+  expect(items[0].visualizerInstance).toBeDefined();
   expect(dashboard.visualizers.length).toBe(1);
   expect(dashboard.getElements().length).toBe(1);
   expect(dashboard.getElement("visualizer1").getState()).toStrictEqual({
@@ -119,15 +119,15 @@ test("Dashboard item availableTypes should recreate visualizer in built dashboar
   const dashboard = new Dashboard({ items: [itemDefinition], data: [{ score: 10 }] });
 
   const item = dashboard.items[0];
-  const oldVisualizer = item.visualizer;
+  const oldVisualizer = item.visualizerInstance;
 
   item.availableTypes = ["bullet"];
 
   expect(item.type).toBe("bullet");
   expect(item.visualizerType).toBe("average");
-  expect(item.visualizer).toBeDefined();
-  expect(item.visualizer).not.toBe(oldVisualizer);
-  expect(dashboard.visualizers[0]).toBe(item.visualizer);
+  expect(item.visualizerInstance).toBeDefined();
+  expect(item.visualizerInstance).not.toBe(oldVisualizer);
+  expect(dashboard.visualizers[0]).toBe(item.visualizerInstance);
 
   item.availableTypes = undefined as any;
 
@@ -145,7 +145,7 @@ test("Dashboard item availableTypes should recreate and rerender visualizer afte
   const dashboard = new Dashboard({ items: [itemDefinition], data: [{ score: 10 }] });
 
   const item = dashboard.items[0];
-  const oldVisualizer = item.visualizer as any;
+  const oldVisualizer = item.visualizerInstance as any;
   const oldRenderResult = document.createElement("div");
   oldVisualizer.renderResult = oldRenderResult;
   item.renderedElement = document.createElement("div");
@@ -158,8 +158,8 @@ test("Dashboard item availableTypes should recreate and rerender visualizer afte
 
   item.availableTypes = ["bullet"];
 
-  expect(item.visualizer).toBeDefined();
-  expect(item.visualizer).toBe(recreatedVisualizer);
+  expect(item.visualizerInstance).toBeDefined();
+  expect(item.visualizerInstance).toBe(recreatedVisualizer);
   expect(recreatedVisualizer.render).toHaveBeenCalledWith(oldRenderResult, false);
   expect(oldVisualizer.renderResult).toBeUndefined();
   expect(item.renderedElement).toBeDefined();

@@ -42,7 +42,8 @@ export class VisualizerFactory {
 
       optionsForCreator = Object.assign({},
         optionsForCreator,
-        descriptor.options || {}
+        descriptor.options || {},
+        descriptor.options?.visualizer || {}
       );
 
       if(!!descriptor.chartType) {

@@ -131,7 +131,7 @@ test("visualizerType setter should switch wrapper visualizer and sync item type 
     getVisualizer: jest.fn(() => wrappedVisualizer),
   };
   Object.setPrototypeOf(fakeWrapper, AlternativeVisualizersWrapper.prototype);
-  item.visualizer = fakeWrapper;
+  item.visualizerInstance = fakeWrapper;
 
   item.visualizerType = "average";
 
@@ -146,7 +146,7 @@ test("visualizerType setter should do nothing when value is unchanged", () => {
     getVisualizer: jest.fn(() => ({ chartType: "bar" })),
   };
   Object.setPrototypeOf(fakeWrapper, AlternativeVisualizersWrapper.prototype);
-  item.visualizer = fakeWrapper;
+  item.visualizerInstance = fakeWrapper;
 
   expect(item.visualizerType).toBe("selectBase");
   item.visualizerType = "selectBase";
@@ -159,7 +159,7 @@ test("type setter should update chart type via current visualizer", () => {
   const fakeVisualizer: any = {
     setChartType: jest.fn(),
   };
-  item.visualizer = fakeVisualizer;
+  item.visualizerInstance = fakeVisualizer;
 
   item.type = "pie";
 
@@ -179,7 +179,7 @@ test("type setter should route through wrapper and change visualizer type", () =
     getVisualizer: jest.fn(() => wrappedVisualizer),
   };
   Object.setPrototypeOf(fakeWrapper, AlternativeVisualizersWrapper.prototype);
-  item.visualizer = fakeWrapper;
+  item.visualizerInstance = fakeWrapper;
 
   item.type = "bullet";
 
@@ -194,7 +194,7 @@ test("type setter should still update type for unsupported values", () => {
   const fakeVisualizer: any = {
     setChartType: jest.fn(),
   };
-  item.visualizer = fakeVisualizer;
+  item.visualizerInstance = fakeVisualizer;
 
   item.type = "not-supported";
 
@@ -232,7 +232,7 @@ test("availableTypes setter should recreate visualizer and restore its state", (
     setState: jest.fn(),
     render: jest.fn(),
   };
-  item.visualizer = oldVisualizer;
+  item.visualizerInstance = oldVisualizer;
 
   const createSpy = jest.spyOn(VisualizerFactory, "createVisualizer").mockReturnValue(newVisualizer);
 
@@ -240,7 +240,7 @@ test("availableTypes setter should recreate visualizer and restore its state", (
 
   expect(oldVisualizer.destroy).toHaveBeenCalled();
   expect(createSpy).toHaveBeenCalled();
-  expect(item.visualizer).toBe(newVisualizer);
+  expect(item.visualizerInstance).toBe(newVisualizer);
   expect(newVisualizer.setState).toHaveBeenCalledWith({ customState: true });
   createSpy.mockRestore();
 });
@@ -260,7 +260,7 @@ test("availableTypes setter should rerender recreated visualizer when item is re
     setState: jest.fn(),
     render: jest.fn(),
   };
-  item.visualizer = oldVisualizer;
+  item.visualizerInstance = oldVisualizer;
   item.renderedElement = document.createElement("div");
 
   const createSpy = jest.spyOn(VisualizerFactory, "createVisualizer").mockReturnValue(newVisualizer);

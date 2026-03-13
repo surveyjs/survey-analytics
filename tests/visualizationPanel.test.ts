@@ -1271,7 +1271,7 @@ test("addElement with pre-built PanelElement reuses existing visualizer", () => 
 
   const fullPanel = new VisualizationPanel(survey.getAllQuestions(), [], { allowDynamicLayout: false });
   const existingElement = fullPanel.getElement("question2");
-  const existingVisualizer = existingElement.visualizer;
+  const existingVisualizer = existingElement.visualizerInstance;
 
   visPanel.addElement(existingElement);
 

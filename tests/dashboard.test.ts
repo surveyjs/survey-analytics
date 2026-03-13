@@ -11,7 +11,7 @@ import { ApexChartsAdapter } from "../src/apexcharts/chart-adapter";
 import { DatePeriodEnum, DateRangeModel } from "../src/utils/dateRangeModel";
 import { endOfDay, startOfDay } from "../src/utils/calculationDateRanges";
 import { DataProvider } from "../src/dataProvider";
-import { IDashboardItem } from "../src/dashboard-item";
+import { IDashboardItemOptions } from "../src/dashboard-item";
 export * from "../src/card";
 export * from "../src/text";
 export * from "../src/number";
@@ -22,7 +22,7 @@ export * from "../src/matrix";
 VisualizerBase.chartAdapterType = ApexChartsAdapter;
 
 test("Dashboard should accept visualizer definitions", () => {
-  const itemDefinition: IDashboardItem = {
+  const itemDefinition: IDashboardItemOptions = {
     type: "nps",
     dataField: "test"
   };
@@ -104,7 +104,7 @@ test("Dashboard should show questions mentioned in visualazers parameter", () =>
 });
 
 test("Create nps visualizer from definition with dataField", async () => {
-  const itemDefinition: IDashboardItem = {
+  const itemDefinition: IDashboardItemOptions = {
     type: "nps",
     dataField: "test"
   };
@@ -126,7 +126,7 @@ test("Create nps visualizer from definition with dataField", async () => {
 });
 
 test("Create nps visualizer from definition with questionName", async () => {
-  const itemDefinition: IDashboardItem = {
+  const itemDefinition: IDashboardItemOptions = {
     type: "nps",
     dataField: "test"
   };
@@ -143,7 +143,7 @@ test("Create nps visualizer from definition with questionName", async () => {
 });
 
 test("Create nps visualizer from definition with question", async () => {
-  const itemDefinition: IDashboardItem = {
+  const itemDefinition: IDashboardItemOptions = {
     type: "nps",
     availableTypes: ["nps"],
     dataField: "test"
@@ -161,10 +161,12 @@ test("Create nps visualizer from definition with question", async () => {
 });
 
 test("Create number visualizer from definition", async () => {
-  const itemDefinition: IDashboardItem = {
+  const itemDefinition: IDashboardItemOptions = {
     type: "card",
     dataField: "test",
-    aggregationType: "count"
+    visualizer: {
+      aggregationType: "count"
+    }
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
   let dashboard = new Dashboard({ items: [itemDefinition], data });
@@ -184,11 +186,33 @@ test("Create number visualizer from definition", async () => {
 });
 
 test("Options passed to root panel and visualizer", async () => {
-  const itemDefinition: IDashboardItem = {
+  const itemDefinition: IDashboardItemOptions = {
     type: "gauge",
     dataField: "test",
     aggregationType: "count",
     someVisualizerOption: "vis"
+  };
+  let dashboard = new Dashboard({ items: [itemDefinition], somePanelOption: "panel" });
+  expect(Object.keys(dashboard.options)).toStrictEqual(["items", "somePanelOption"]);
+  expect((dashboard.options as any).somePanelOption).toEqual("panel");
+  expect(dashboard.visualizers.length).toBe(1);
+
+  const visualizer = dashboard.visualizers[0] as NumberModel;
+  expect(visualizer.options.someVisualizerOption).toEqual("vis");
+  expect(visualizer.options.somePanelOption).toEqual("panel");
+  expect(visualizer.type).toBe("average");
+  expect(visualizer.chartType).toBe("gauge");
+  expect(visualizer.dataNames[0]).toEqual(itemDefinition.dataField);
+});
+
+test("Options passed to visualizer in visualizer options", async () => {
+  const itemDefinition: IDashboardItemOptions = {
+    type: "gauge",
+    dataField: "test",
+    visualizer: {
+      aggregationType: "count",
+      someVisualizerOption: "vis"
+    }
   };
   let dashboard = new Dashboard({ items: [itemDefinition], somePanelOption: "panel" });
   expect(Object.keys(dashboard.options)).toStrictEqual(["items", "somePanelOption"]);
@@ -601,10 +625,26 @@ test("getState, setState, onStateChanged", () => {
 });
 
 test("Create visualizer with answersOrder", async () => {
-  const itemDefinition: IDashboardItem = {
+  const itemDefinition: IDashboardItemOptions = {
     type: "bar",
     dataField: "test",
     answersOrder: "desc"
+  };
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
+  let dashboard = new Dashboard({ items: [itemDefinition], data });
+  const visualizer = dashboard.visualizers[0] as SelectBase;
+
+  expect(visualizer.chartType).toBe("bar");
+  expect(visualizer.answersOrder).toBe("desc");
+});
+
+test("Create visualizer with answersOrder in visualizer options", async () => {
+  const itemDefinition: IDashboardItemOptions = {
+    type: "bar",
+    dataField: "test",
+    visualizer: {
+      answersOrder: "desc"
+    }
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
   let dashboard = new Dashboard({ items: [itemDefinition], data });

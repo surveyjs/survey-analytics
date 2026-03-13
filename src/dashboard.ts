@@ -2,7 +2,7 @@ import { Question, SurveyModel, Event } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationPanel } from "./visualizationPanel";
 import { DataProvider, GetDataFn } from "./dataProvider";
-import { DashboardItem, IDashboardItem } from "./dashboard-item";
+import { DashboardItem, IDashboardItemOptions } from "./dashboard-item";
 import { LayoutEngine } from "./layout-engine";
 import { DatePeriodEnum, DateRangeTuple } from "./utils/dateRangeModel";
 import { VisualizerFactory } from "./visualizerFactory";
@@ -11,7 +11,7 @@ import { IVisualizerPanelElement } from "./config";
 export interface IDashboardOptions {
   data?: any[];
   questions?: Question[];
-  items?: Array<string | IDashboardItem>;
+  items?: Array<string | IDashboardItemOptions>;
 
   survey?: SurveyModel;
   dataProvider?: DataProvider;
@@ -57,7 +57,7 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
       return;
     }
     this.setupVisualizer(visualizer, element.question);
-    element.visualizer = visualizer;
+    element.visualizerInstance = visualizer;
   }
 
   protected createElement(element: IVisualizerPanelElement, question?: Question): DashboardItem {
@@ -70,7 +70,7 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
   public findItem(name: string): DashboardItem | undefined {
     return this.getElement(name) as DashboardItem;
   }
-  public addItem(item: DashboardItem | IDashboardItem | Question): DashboardItem {
+  public addItem(item: DashboardItem | IDashboardItemOptions | Question): DashboardItem {
     let dashboardItem: DashboardItem;
     if(item instanceof DashboardItem) {
       dashboardItem = item;

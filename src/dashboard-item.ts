@@ -6,7 +6,7 @@ import { IVisualizerPanelRenderedElement, PanelElement } from "./visualizationPa
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 import { VisualizerFactory } from "./visualizerFactory";
 
-export interface IDashboardItem {
+export interface IDashboardItemOptions {
   dataField: string;
   name?: string;
   type?: string;
@@ -15,10 +15,11 @@ export interface IDashboardItem {
   allowChangeType?: boolean;
   displayValueName?: string;
   // visualizer?: VisualizerBase;
-  options?: { [index: string]: any };
+  // options?: { [index: string]: any };
+  visualizer?: { [index: string]: any };
 }
 
-export class DashboardItem extends PanelElement implements IDashboardItem, IVisualizerPanelRenderedElement {
+export class DashboardItem extends PanelElement implements IDashboardItemOptions, IVisualizerPanelRenderedElement {
   private _visualizerType: string;
   private _availableTypes: { [index: string]: string[] };
   private _availableTypesOverride?: string[];
@@ -31,7 +32,7 @@ export class DashboardItem extends PanelElement implements IDashboardItem, IVisu
   }
 
   private captureVisualizerContext() {
-    const currentVisualizer = this.visualizer;
+    const currentVisualizer = this.visualizerInstance;
     return {
       visualizer: currentVisualizer,
       state: currentVisualizer?.getState?.(),
@@ -53,7 +54,7 @@ export class DashboardItem extends PanelElement implements IDashboardItem, IVisu
     }
 
     newVisualizer.onUpdate = context.onUpdate;
-    this.visualizer = newVisualizer;
+    this.visualizerInstance = newVisualizer;
     if(context.state) {
       newVisualizer.setState(context.state);
     }
@@ -65,7 +66,7 @@ export class DashboardItem extends PanelElement implements IDashboardItem, IVisu
   /**
    * Configuration object used to initialize and re-create the dashboard item visualizer.
    */
-  constructor(public readonly options: IDashboardItem, public question?: Question) {
+  constructor(public readonly options: IDashboardItemOptions, public question?: Question) {
     super(options?.name || question?.name || options?.dataField, question?.title || options?.title);
     this._initialAvailableTypes = options?.availableTypes?.slice();
     this.initialize();
@@ -149,8 +150,8 @@ export class DashboardItem extends PanelElement implements IDashboardItem, IVisu
    * If the visualizer is an instance of AlternativeVisualizersWrapper, it returns the wrapped visualizer.
    * @returns The current active visualizer.
    */
-  public getVisualizer(): any {
-    let currentVisualizer = this.visualizer;
+  public get visualizer(): VisualizerBase | undefined {
+    let currentVisualizer = this.visualizerInstance;
     if(currentVisualizer instanceof AlternativeVisualizersWrapper) {
       currentVisualizer = currentVisualizer.getVisualizer();
     }
@@ -158,7 +159,7 @@ export class DashboardItem extends PanelElement implements IDashboardItem, IVisu
   }
 
   private applyChartTypeToActiveVisualizer(chartType: string): void {
-    const currentVisualizer = this.getVisualizer();
+    const currentVisualizer = this.visualizer;
     if(currentVisualizer && typeof currentVisualizer["setChartType"] === "function") {
       currentVisualizer["setChartType"](chartType);
     }
@@ -248,9 +249,9 @@ export class DashboardItem extends PanelElement implements IDashboardItem, IVisu
   set visualizerType(value: string) {
     if(this._visualizerType !== value) {
       this._visualizerType = value;
-      if(this.visualizer instanceof AlternativeVisualizersWrapper) {
-        this.visualizer.setVisualizer(value);
-        const currentVisualizer = this.visualizer.getVisualizer();
+      if(this.visualizerInstance instanceof AlternativeVisualizersWrapper) {
+        this.visualizerInstance.setVisualizer(value);
+        const currentVisualizer = this.visualizerInstance.getVisualizer();
         if(!!currentVisualizer) {
           this._type = (currentVisualizer as any).chartType;
         }
@@ -288,7 +289,7 @@ export class DashboardItem extends PanelElement implements IDashboardItem, IVisu
 
     if(context.visualizer) {
       context.visualizer.destroy();
-      this.visualizer = undefined;
+      this.visualizerInstance = undefined;
     }
 
     // Keep all availability/type synchronization rules in one place.

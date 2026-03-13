@@ -29,7 +29,7 @@ if(!!document) {
 
 export interface IVisualizerPanelRenderedElement
   extends IVisualizerPanelElement {
-  visualizer?: VisualizerBase;
+  visualizerInstance?: VisualizerBase;
   renderedElement?: HTMLElement;
 }
 
@@ -43,14 +43,14 @@ export class PanelElement implements IVisualizerPanelRenderedElement {
         this[key] = elementState[key];
       }
     }
-    if(this.visualizer) {
-      this.visualizer.setState(elementState);
+    if(this.visualizerInstance) {
+      this.visualizerInstance.setState(elementState);
     }
   }
   getState() {
     const state: any = {
       name: this.name,
-      ...this.visualizer?.getState()
+      ...this.visualizerInstance?.getState()
     };
     for(let key of this.getStateProperties()) {
       if(this[key] !== undefined) {
@@ -69,7 +69,7 @@ export class PanelElement implements IVisualizerPanelRenderedElement {
   displayName: string;
   isVisible: boolean;
   isPublic: boolean;
-  visualizer?: VisualizerBase;
+  visualizerInstance?: VisualizerBase;
   renderedElement?: HTMLElement;
   question?: Question;
   questions?: Question[];
@@ -465,7 +465,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   }
 
   public get visualizers(): Array<VisualizerBase> {
-    return this._elements.map(el => el.visualizer).filter(v => !!v);
+    return this._elements.map(el => el.visualizerInstance).filter(v => !!v);
   }
 
   public resetFilter(): void {
@@ -638,7 +638,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   public hideElement(elementName: string) {
     const element = this.getElement(elementName);
     this.hideElementCore(element);
-    const visualizer = element.visualizer;
+    const visualizer = element.visualizerInstance;
     if(!!visualizer && !!visualizer.getChartAdapter()) {
       visualizer.getChartAdapter().destroy(element.renderedElement);
     }
@@ -694,7 +694,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
       panelElement.setState(element);
     }
 
-    if(!panelElement.visualizer) {
+    if(!panelElement.visualizerInstance) {
       this.buildVisualizer(panelElement, this.questions);
     }
 
@@ -854,11 +854,11 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     if(!visualizer) {
       return;
     }
-    element.visualizer = visualizer;
+    element.visualizerInstance = visualizer;
   }
 
   private destroyElementVisualizer(element: P) {
-    const visualizer = element.visualizer;
+    const visualizer = element.visualizerInstance;
     if(!visualizer) {
       return;
     }
@@ -872,7 +872,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     visualizer.onStateChanged.remove(this.onStateChangedCallback);
     visualizer.onAfterRender.remove(this.onAfterRenderQuestionCallback);
     visualizer.destroy();
-    element.visualizer = undefined;
+    element.visualizerInstance = undefined;
     element.renderedElement = undefined;
   }
 
@@ -1065,7 +1065,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
    * @param questionName A question [name](https://surveyjs.io/form-library/documentation/api-reference/question#name).
    */
   public getVisualizer(questionName: string) {
-    return this.getElement(questionName)?.visualizer;
+    return this.getElement(questionName)?.visualizerInstance;
   }
 
   /**
@@ -1192,7 +1192,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   public onPermissionsChangedCallback: any;
 
   protected renderPanelElement(element: IVisualizerPanelRenderedElement, container: HTMLElement) {
-    const visualizer = element.visualizer;
+    const visualizer = element.visualizerInstance;
     if(!visualizer) {
       return;
     }
