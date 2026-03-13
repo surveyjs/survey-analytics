@@ -1,27 +1,30 @@
 import { Question } from "survey-core";
-import { IVisualizerOptions, VisualizerBase } from "./visualizerBase";
+import { VisualizerBase } from "./visualizerBase";
 import { chartConfig, getChartTypes, getVisualizerTypes } from "./chartConfig";
 import { VisualizationManager } from "./visualizationManager";
 import { IVisualizerPanelRenderedElement, PanelElement } from "./visualizationPanel";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 import { VisualizerFactory } from "./visualizerFactory";
 
-export interface IDashboardItem extends IVisualizerPanelRenderedElement {
-  dataName: string;
+export interface IDashboardItem {
+  dataField: string;
+  name?: string;
   type?: string;
   availableTypes?: string[];
   title?: string;
   allowChangeType?: boolean;
+  displayValueName?: string;
+  // visualizer?: VisualizerBase;
   options?: { [index: string]: any };
 }
 
-export class DashboardItem extends PanelElement implements IDashboardItem {
+export class DashboardItem extends PanelElement implements IDashboardItem, IVisualizerPanelRenderedElement {
   private _visualizerType: string;
   private _availableTypes: { [index: string]: string[] };
   private _availableTypesOverride?: string[];
   private _initialAvailableTypes?: string[];
   private _type: string;
-  private _dataName: string;
+  private _dataField: string;
 
   private static areTypesEqual(left?: string[], right?: string[]): boolean {
     return (left || []).join("|") === (right || []).join("|");
@@ -62,11 +65,13 @@ export class DashboardItem extends PanelElement implements IDashboardItem {
   /**
    * Configuration object used to initialize and re-create the dashboard item visualizer.
    */
-  constructor(public readonly options: IVisualizerOptions, public question?: Question) {
+  constructor(public readonly options: IDashboardItem, public question?: Question) {
     super(options?.name || question?.name || options?.dataField, question?.title || options?.title);
     this._initialAvailableTypes = options?.availableTypes?.slice();
     this.initialize();
   }
+
+  allowChangeType?: boolean;
 
   private isQuestionWithType(): boolean {
     return !!this.question && typeof (this.question as any).getType === "function";
@@ -139,7 +144,12 @@ export class DashboardItem extends PanelElement implements IDashboardItem {
     return {};
   }
 
-  private getActiveVisualizer(): any {
+  /**
+   * Returns the current active visualizer.
+   * If the visualizer is an instance of AlternativeVisualizersWrapper, it returns the wrapped visualizer.
+   * @returns The current active visualizer.
+   */
+  public getVisualizer(): any {
     let currentVisualizer = this.visualizer;
     if(currentVisualizer instanceof AlternativeVisualizersWrapper) {
       currentVisualizer = currentVisualizer.getVisualizer();
@@ -148,7 +158,7 @@ export class DashboardItem extends PanelElement implements IDashboardItem {
   }
 
   private applyChartTypeToActiveVisualizer(chartType: string): void {
-    const currentVisualizer = this.getActiveVisualizer();
+    const currentVisualizer = this.getVisualizer();
     if(currentVisualizer && typeof currentVisualizer["setChartType"] === "function") {
       currentVisualizer["setChartType"](chartType);
     }
@@ -176,7 +186,7 @@ export class DashboardItem extends PanelElement implements IDashboardItem {
     if(!this.question) {
       this.question = {
         name: this.name,
-        valueName: this.dataName,
+        valueName: this.dataField,
         title: this.options.title,
         displayValueName: this.options.displayValueName,
         waitForQuestionIsReady: () => {
@@ -203,12 +213,12 @@ export class DashboardItem extends PanelElement implements IDashboardItem {
     }
 
     this.synchronizeTypeWithAvailableTypes(requestedDashboardItemType);
-    this._dataName = this.options.dataField;
+    this._dataField = this.options.dataField;
     this.title = this.options.title;
     this.ensureSyntheticQuestion();
   }
 
-  private getDataName() {
+  private getDataField() {
     return this.question?.valueName || this.question?.name || this.questionName || this.name;
   }
 
@@ -301,11 +311,11 @@ export class DashboardItem extends PanelElement implements IDashboardItem {
   /**
    * Gets or sets the data field name used by this dashboard item.
    */
-  get dataName(): string | undefined {
-    return this._dataName || this.getDataName();
+  get dataField(): string | undefined {
+    return this._dataField || this.getDataField();
   }
-  set dataName(value: string | undefined) {
-    this._dataName = value;
+  set dataField(value: string | undefined) {
+    this._dataField = value;
   }
   /**
    * Gets or sets the dashboard item title displayed in the panel.

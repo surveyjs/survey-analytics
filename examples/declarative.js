@@ -114,7 +114,7 @@ const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, 
 
 const itemDefinition1 = {
   visualizerType: "card",
-  dataName: "test",
+  dataField: "test",
   displayValueName: "count",
   title: "Total answers count - Card"
 };
@@ -122,7 +122,7 @@ const itemDefinition1 = {
 const itemDefinition2 = {
   visualizerType: "gauge",
   chartType: "bullet",
-  dataName: "test",
+  dataField: "test",
   displayValueName: "count",
   title: "Total answers count - Gauge bullet"
 };
@@ -130,7 +130,7 @@ const itemDefinition2 = {
 const itemDefinition3 = {
   visualizerType: "gauge",
   chartType: "gauge",
-  dataName: "test",
+  dataField: "test",
   title: "Total answers count - Gauge gauge"
 };
 

@@ -3,14 +3,15 @@ import { SelectBase } from "../src/selectBase";
 import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrapper";
 import { Dashboard } from "../src/dashboard";
 import { IState } from "../src/config";
-import { IVisualizerOptions, PostponeHelper, VisualizerBase } from "../src/visualizerBase";
-import { IPivotChartVisualizerOptions, PivotModel } from "../src/pivot";
+import { PostponeHelper, VisualizerBase } from "../src/visualizerBase";
+import { PivotModel } from "../src/pivot";
 import { NumberModel } from "../src/number";
 import { Matrix } from "../src/matrix";
 import { ApexChartsAdapter } from "../src/apexcharts/chart-adapter";
 import { DatePeriodEnum, DateRangeModel } from "../src/utils/dateRangeModel";
 import { endOfDay, startOfDay } from "../src/utils/calculationDateRanges";
 import { DataProvider } from "../src/dataProvider";
+import { IDashboardItem } from "../src/dashboard-item";
 export * from "../src/card";
 export * from "../src/text";
 export * from "../src/number";
@@ -21,7 +22,7 @@ export * from "../src/matrix";
 VisualizerBase.chartAdapterType = ApexChartsAdapter;
 
 test("Dashboard should accept visualizer definitions", () => {
-  const itemDefinition: IVisualizerOptions = {
+  const itemDefinition: IDashboardItem = {
     type: "nps",
     dataField: "test"
   };
@@ -30,7 +31,7 @@ test("Dashboard should accept visualizer definitions", () => {
   expect(items.length).toBe(1);
   expect(items[0].visualizerType).toBe("nps");
   expect(items[0].name).toBe("visualizer1");
-  expect(items[0].dataName).toBe("test");
+  expect(items[0].dataField).toBe("test");
   expect(dashboard.visualizers.length).toBe(1);
   expect(dashboard.visualizers[0].type).toBe("nps");
 
@@ -39,10 +40,10 @@ test("Dashboard should accept visualizer definitions", () => {
   expect(items.length).toBe(2);
   expect(items[0].visualizerType).toBe("nps");
   expect(items[0].name).toBe("visualizer1");
-  expect(items[0].dataName).toBe("test");
+  expect(items[0].dataField).toBe("test");
   expect(items[1].visualizerType).toBe("nps");
   expect(items[1].name).toBe("visualizer2");
-  expect(items[1].dataName).toBe("test");
+  expect(items[1].dataField).toBe("test");
   expect(dashboard.visualizers.length).toBe(2);
   expect(dashboard.visualizers[0].type).toBe("nps");
   expect(dashboard.visualizers[1].type).toBe("nps");
@@ -102,8 +103,8 @@ test("Dashboard should show questions mentioned in visualazers parameter", () =>
   expect(dashboard.visualizers[1].dataNames).toStrictEqual(["question3"]);
 });
 
-test("Create nps visualizer from definition with dataName", async () => {
-  const itemDefinition: IVisualizerOptions = {
+test("Create nps visualizer from definition with dataField", async () => {
+  const itemDefinition: IDashboardItem = {
     type: "nps",
     dataField: "test"
   };
@@ -113,7 +114,7 @@ test("Create nps visualizer from definition with dataName", async () => {
   expect(items.length).toBe(1);
   expect(items[0].visualizerType).toBe("nps");
   expect(items[0].name).toBe("visualizer1");
-  expect(items[0].dataName).toBe("test");
+  expect(items[0].dataField).toBe("test");
   const nps = dashboard.visualizers[0];
 
   let result: any = await nps.getCalculatedValues();
@@ -125,7 +126,7 @@ test("Create nps visualizer from definition with dataName", async () => {
 });
 
 test("Create nps visualizer from definition with questionName", async () => {
-  const itemDefinition: IVisualizerOptions = {
+  const itemDefinition: IDashboardItem = {
     type: "nps",
     dataField: "test"
   };
@@ -142,7 +143,7 @@ test("Create nps visualizer from definition with questionName", async () => {
 });
 
 test("Create nps visualizer from definition with question", async () => {
-  const itemDefinition: IVisualizerOptions = {
+  const itemDefinition: IDashboardItem = {
     type: "nps",
     availableTypes: ["nps"],
     dataField: "test"
@@ -160,7 +161,7 @@ test("Create nps visualizer from definition with question", async () => {
 });
 
 test("Create number visualizer from definition", async () => {
-  const itemDefinition: IVisualizerOptions = {
+  const itemDefinition: IDashboardItem = {
     type: "card",
     dataField: "test",
     aggregationType: "count"
@@ -171,7 +172,7 @@ test("Create number visualizer from definition", async () => {
   expect(items.length).toBe(1);
   expect(items[0].visualizerType).toBe("card");
   expect(items[0].name).toBe("visualizer1");
-  expect(items[0].dataName).toBe("test");
+  expect(items[0].dataField).toBe("test");
 
   const numberVis = dashboard.visualizers[0] as NumberModel;
   let result: any = (await numberVis.getCalculatedValues()).data[0];
@@ -183,7 +184,7 @@ test("Create number visualizer from definition", async () => {
 });
 
 test("Options passed to root panel and visualizer", async () => {
-  const itemDefinition: IVisualizerOptions = {
+  const itemDefinition: IDashboardItem = {
     type: "gauge",
     dataField: "test",
     aggregationType: "count",
@@ -600,7 +601,7 @@ test("getState, setState, onStateChanged", () => {
 });
 
 test("Create visualizer with answersOrder", async () => {
-  const itemDefinition: IVisualizerOptions = {
+  const itemDefinition: IDashboardItem = {
     type: "bar",
     dataField: "test",
     answersOrder: "desc"

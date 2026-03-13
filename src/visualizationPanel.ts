@@ -823,7 +823,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
       ) => {
         filterInfo.update({ value: selectedValue, text: selectedText });
         // TODO: possible issues with visuazlier descriptions
-        const dataName = question.name || question.question?.name || question.dataName || question.questionName;
+        const dataName = question.name || question.question?.name || question.dataField || question.questionName;
         this.setFilter(dataName, selectedValue);
       };
     }

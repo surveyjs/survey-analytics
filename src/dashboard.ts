@@ -1,5 +1,5 @@
 import { Question, SurveyModel, Event } from "survey-core";
-import { IVisualizerOptions, VisualizerBase } from "./visualizerBase";
+import { VisualizerBase } from "./visualizerBase";
 import { VisualizationPanel } from "./visualizationPanel";
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { DashboardItem, IDashboardItem } from "./dashboard-item";
@@ -11,7 +11,7 @@ import { IVisualizerPanelElement } from "./config";
 export interface IDashboardOptions {
   data?: any[];
   questions?: Question[];
-  items?: Array<string | IVisualizerOptions>;
+  items?: Array<string | IDashboardItem>;
 
   survey?: SurveyModel;
   dataProvider?: DataProvider;
@@ -39,7 +39,7 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
 
   protected buildVisualizer(element: DashboardItem, questions: Array<Question>) {
     const visualizerOptions = Object.assign({}, this.options);
-    const dataName = element.dataName;
+    const dataName = element.dataField;
     if(!!element.chartType) {
       visualizerOptions[dataName] = Object.assign({},
         visualizerOptions[dataName] || {},

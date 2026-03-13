@@ -62,16 +62,6 @@ type ToolbarItemCreators = {
   },
 };
 
-export interface IVisualizerOptions {
-  dataField: string;
-  type?: string;
-  availableTypes?: string[];
-  title?: string;
-  allowChangeType?: boolean;
-  answersOrder?: "default" | "asc" | "desc";
-  [key: string]: any;
-}
-
 export class PostponeHelper {
   public static postponeFunction: (fn: () => void, timeout?: number) => any;
   public static postpone(fn: () => void, timeout?: number): any {

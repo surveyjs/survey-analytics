@@ -370,7 +370,7 @@ test("Use chart type from itemDefinition", async () => {
   const itemDefinition = {
     visualizerType: "average",
     chartType: "bullet",
-    dataName: "test",
+    dataField: "test",
     displayValueName: "count",
     title: "Total answers count"
   };

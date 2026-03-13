@@ -1015,10 +1015,10 @@ test("VisualizationPanel should accept visualizer definitions", () => {
   expect(panel.visualizers[1].type).toBe("nps");
 });
 
-test("Create nps visualizer from definition with dataName", async () => {
+test("Create nps visualizer from definition with dataField", async () => {
   const itemDefinition = {
     visualizerType: "nps",
-    dataName: "test"
+    dataField: "test"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }];
   let panel = new VisualizationPanel([itemDefinition], data, {});
@@ -1069,7 +1069,7 @@ test("Create nps visualizer from definition with question", async () => {
 test("Create number visualizer from definition", async () => {
   const itemDefinition = {
     visualizerType: "number",
-    dataName: "test",
+    dataField: "test",
     displayValueName: "count"
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
@@ -1079,7 +1079,7 @@ test("Create number visualizer from definition", async () => {
   let result: any = (await numberVis.getCalculatedValues()).data[0];
 
   expect(result).toStrictEqual([7.34, 1, 10, 7]);
-  expect(numberVis.dataNames[0]).toEqual(itemDefinition.dataName);
+  expect(numberVis.dataNames[0]).toEqual(itemDefinition.dataField);
   expect(numberVis.name.indexOf("visualizer")).toEqual(0);
   expect(panel.visibleElements[0].name.indexOf("visualizer")).toEqual(0);
 });
@@ -1088,14 +1088,14 @@ test("Generate visualizer names", () => {
   const itemDefinition1 = {
     visualizerType: "average",
     chartType: "gauge",
-    dataName: "test",
+    dataField: "test",
     displayValueName: "count",
     title: "Total answers count"
   };
 
   const itemDefinition2 = {
     visualizerType: "nps",
-    dataName: "test",
+    dataField: "test",
     displayValueName: "count",
     title: "Total answers count"
   };

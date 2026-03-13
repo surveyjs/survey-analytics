@@ -1,12 +1,12 @@
 import { ItemValue, Question } from "survey-core";
 import { SelectBase } from "./selectBase";
 import { createCommercialLicenseLink, DocumentHelper } from "./utils";
-import { ICalculationResult, IVisualizerOptions, VisualizerBase } from "./visualizerBase";
+import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { VisualizationManager } from "./visualizationManager";
 import { HistogramModel } from "./histogram";
 
-export interface IPivotChartVisualizerOptions extends IVisualizerOptions {
+export interface IPivotChartVisualizerOptions {
   questions?: Question[] | string[];
   categoryField?: Question | string;
   seriesFields?: Question[] | string[];

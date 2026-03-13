@@ -67,7 +67,7 @@ test("constructor without question should initialize from chart config", () => {
   expect(item.visualizerTypes).toStrictEqual(["average"]);
   expect(item.availableTypes).toStrictEqual(["gauge", "bullet"]);
   expect(item.name).toBe("score");
-  expect(item.dataName).toBe("score");
+  expect(item.dataField).toBe("score");
   expect(item.title).toBe("Score");
   expect(item.question.name).toBe("score");
   expect(item.question.valueName).toBe("score");
@@ -89,7 +89,7 @@ test("constructor without question should keep custom type when no chart config 
   expect(item.type).toBe("custom");
 });
 
-test("dataName getter should fallback to question valueName then name", () => {
+test("dataField getter should fallback to question valueName then name", () => {
   const survey = new SurveyModel({
     elements: [{ type: "text", name: "q1" }],
   });
@@ -98,9 +98,9 @@ test("dataName getter should fallback to question valueName then name", () => {
 
   const item = new DashboardItem({ type: "wordcloud" } as any, question);
 
-  expect(item.dataName).toBe("storedValue");
-  item.dataName = "override";
-  expect(item.dataName).toBe("override");
+  expect(item.dataField).toBe("storedValue");
+  item.dataField = "override";
+  expect(item.dataField).toBe("override");
 });
 
 test("title getter/setter should proxy displayName", () => {
