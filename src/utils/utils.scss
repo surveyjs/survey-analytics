@@ -133,7 +133,8 @@
 }
 
 .sa-dropdown__title {
-  padding: var(--sjs2-spacing-x150, 12px) var(--sjs2-size-x000, 0.001px) var(--sjs2-spacing-x150, 12px) var(--sjs2-size-x150, 12px);
+  // padding: var(--sjs2-spacing-x150, 12px) var(--sjs2-size-x000, 0.001px) var(--sjs2-spacing-x150, 12px) var(--sjs2-size-x150, 12px);
+  padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-size-x000, 0.001px);
   display: flex;
   flex-shrink: 0;
   margin-inline-end: var(--sjs2-spacing-static-x100, 8px);
@@ -436,5 +437,5 @@
 }
 
 @media screen and (max-width: 600px) {
-  @include smallDropdown;
+  @include columnDropdown;
 }

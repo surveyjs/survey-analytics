@@ -134,7 +134,7 @@ export var englishStrings = {
   seriesListLegendSeries: "Legend (series) {0}",
   seriesListValuesLabel: "Values",
   seriesListRemove: "Remove",
-  seriesListAdd: "Add",
+  seriesListAdd: "Add Series",
   seriesListMoveToSecondAxis: "Move to second axis",
   seriesListMoveToFirstAxis: "Move to first axis",
   aggregationCount: "Count",

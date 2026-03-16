@@ -176,6 +176,13 @@ export class PivotModel extends HistogramModel {
         return;
       }
       const block = DocumentHelper.createElement("div", "sa-pivot__secondary-y-block");
+      const dividerElement = DocumentHelper.createElement("div", "sa-sidebar-divider");
+      const line1 = DocumentHelper.createElement("div", "sa-line-1");
+      dividerElement.appendChild(line1);
+      const line2 = DocumentHelper.createElement("div", "sa-line-2");
+      line1.appendChild(line2);
+      block.appendChild(dividerElement);
+
       const toggleWidget = new ToggleWidget(
         (opts) => {
           this.useSecondaryYAxis = opts.isActive;
@@ -187,9 +194,8 @@ export class PivotModel extends HistogramModel {
         this.useSecondaryYAxis
       );
       block.appendChild(toggleWidget.container);
-      const secondaryListContainer = DocumentHelper.createElement("div", "sa-pivot__secondary-y-list");
+      const secondaryListContainer = this.secondaryYAxesSeriesListWidget.render();
       secondaryListContainer.style.display = this.useSecondaryYAxis ? "" : "none";
-      secondaryListContainer.appendChild(this.secondaryYAxesSeriesListWidget.render());
       block.appendChild(secondaryListContainer);
       return block;
     }, 20);

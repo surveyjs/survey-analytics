@@ -88,12 +88,12 @@ export class SidebarWidget {
     closeBtn.setAttribute("aria-label", "Close");
     closeBtn.appendChild(DocumentHelper.createSvgElement("close-16x16"));
     closeBtn.addEventListener("click", () => this.close());
-    header.appendChild(closeBtn);
-
-    this.panelElement.appendChild(header);
+    this.panelElement.appendChild(closeBtn);
 
     this.contentContainer = DocumentHelper.createElement("div", panelClassName + "-content") as HTMLDivElement;
     this.panelElement.appendChild(this.contentContainer);
+    this.contentContainer.appendChild(header);
+    this.contentContainer.appendChild(this.ensureDivider());
 
     const creators = this.options.toolbarItemCreators || [];
     creators.forEach((creator) => {
@@ -117,6 +117,15 @@ export class SidebarWidget {
     });
 
     this.buttonElement.closest(".sa-visualizer-wrapper").appendChild(this.backdropElement);
+  }
+
+  private ensureDivider(): HTMLElement {
+    const dividerElement = DocumentHelper.createElement("div", "sa-sidebar-divider");
+    const line1 = DocumentHelper.createElement("div", "sa-line-1");
+    dividerElement.appendChild(line1);
+    const line2 = DocumentHelper.createElement("div", "sa-line-2");
+    line1.appendChild(line2);
+    return dividerElement;
   }
 
   open(): void {
@@ -157,9 +166,6 @@ export class SidebarWidget {
     return !!this.panelElement?.classList.contains(SIDEBAR_OPEN_CLASS);
   }
 
-  /**
-   * Destroys the widget: closes the panel, removes backdrop and panel from DOM.
-   */
   destroy(): void {
     this.close();
     if(this.backdropElement?.parentElement) {
