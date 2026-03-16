@@ -625,7 +625,13 @@ test("getCalculatedValues with value aggregation", async () => {
   expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
 
-  pivot.setValueAggregation("question2", "question3");
+  // pivot.setValueAggregation("question2", "question3");
+  pivot.primaryYAxes = [{
+    dataName: "question2",
+    valueName: "question3",
+    aggregation: "sum",
+  }];
+  pivot["onDataChanged"]();
   values = pivot.getValues();
   seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual(["female", "male"]);
@@ -638,4 +644,106 @@ test("getCalculatedValues with value aggregation", async () => {
   expect(values).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
+});
+
+test("useSecondaryYAxis clears secondaryYAxes when set to false and restores when set back to true", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+
+  pivot.secondaryYAxes.push(
+    { dataName: "question2", valueName: "question2", aggregation: "count" },
+    { dataName: "question3", valueName: "question3", aggregation: "sum" }
+  );
+  const stateBeforeOff = pivot.secondaryYAxes.map((axis) => ({ ...axis }));
+
+  expect(pivot.useSecondaryYAxis).toBe(true);
+  expect(pivot.secondaryYAxes).toHaveLength(2);
+
+  pivot.useSecondaryYAxis = false;
+  expect(pivot.useSecondaryYAxis).toBe(false);
+  expect(pivot.secondaryYAxes).toEqual([]);
+
+  pivot.useSecondaryYAxis = true;
+  expect(pivot.useSecondaryYAxis).toBe(true);
+  expect(pivot.secondaryYAxes).toHaveLength(2);
+  expect(pivot.secondaryYAxes).toStrictEqual(stateBeforeOff);
+});
+
+test("useSecondaryYAxis leaves secondaryYAxes empty when re-enabled if it was empty before disabling", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2");
+
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+
+  pivot.useSecondaryYAxis = false;
+  expect(pivot.secondaryYAxes).toEqual([]);
+
+  pivot.useSecondaryYAxis = true;
+  expect(pivot.secondaryYAxes).toEqual([]);
+});
+
+test("movePrimaryItemToSecondary moves item from primary to secondary Y axis", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+
+  expect(pivot.primaryYAxes).toHaveLength(2);
+  expect(pivot.primaryYAxes[0].dataName).toBe("question2");
+  expect(pivot.primaryYAxes[1].dataName).toBe("question3");
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+
+  pivot["movePrimaryItemToSecondary"](0);
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.primaryYAxes[0].dataName).toBe("question3");
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes[0].dataName).toBe("question2");
+  expect(pivot.secondaryYAxes[0].aggregation).toBe("count");
+});
+
+test("movePrimaryItemToSecondary does nothing when index is out of range", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+
+  pivot["movePrimaryItemToSecondary"](10);
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+});
+
+test("moveSecondaryItemToPrimary moves item from secondary to primary Y axis", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+  pivot["movePrimaryItemToSecondary"](0);
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+
+  pivot["moveSecondaryItemToPrimary"](0);
+
+  expect(pivot.primaryYAxes).toHaveLength(2);
+  expect(pivot.primaryYAxes[0].dataName).toBe("question3");
+  expect(pivot.primaryYAxes[1].dataName).toBe("question2");
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+});
+
+test("moveSecondaryItemToPrimary does nothing when index is out of range", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.secondaryYAxes.push(
+    { dataName: "question2", valueName: "question2", aggregation: "count" }
+  );
+  pivot.secondaryYAxesSeriesListWidget.setItems(pivot.secondaryYAxes);
+
+  expect(pivot.primaryYAxes).toHaveLength(0);
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+
+  pivot["moveSecondaryItemToPrimary"](5);
+
+  expect(pivot.primaryYAxes).toHaveLength(0);
+  expect(pivot.secondaryYAxes).toHaveLength(1);
 });

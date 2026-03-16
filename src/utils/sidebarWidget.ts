@@ -166,11 +166,15 @@ export class SidebarWidget {
       this.backdropElement.parentElement.removeChild(this.backdropElement);
       this.backdropElement = null;
     }
+    this.destroyPanel();
+    this.contentContainer = null;
+    this.buttonElement = null;
+  }
+
+  destroyPanel() {
     if(this.panelElement?.parentElement) {
       this.panelElement.parentElement.removeChild(this.panelElement);
       this.panelElement = null;
     }
-    this.contentContainer = null;
-    this.buttonElement = null;
   }
 }

@@ -39,7 +39,8 @@ export class PivotModel extends HistogramModel {
   primaryYAxesSeriesListWidget: EditableSeriesListWidget;
   secondaryYAxes: Array<IAxisDescription> = [];
   secondaryYAxesSeriesListWidget: EditableSeriesListWidget;
-  useSecondaryYAxis: boolean = false;
+  private _useSecondaryYAxis: boolean = false;
+  private _savedSecondaryYAxes: Array<IAxisDescription> = [];
   private questionsY: Array<VisualizerBase> = [];
   private _questionDefinition: Question | null = null;
   private _aggregations: {[index: string]: string | ((acc: number, value: any) => number)} = {
@@ -53,6 +54,8 @@ export class PivotModel extends HistogramModel {
   };
 
   private getChartAxisSetting(axisDescription: IAxisDescription, seriesValues: Array<string>, opposite: boolean) {
+    if(!axisDescription) return {};
+
     const question = this.questions.find(q => q.name === axisDescription.dataName || q.name === axisDescription.valueName);
     const setting = {
       title: {
@@ -159,11 +162,17 @@ export class PivotModel extends HistogramModel {
         this.secondaryYAxes = items;
         this.setupPivot();
       },
-      maxSeriesCount: this.options.maxSeriesCount
+      maxSeriesCount: this.options.maxSeriesCount,
+      getItemExtraButtons: () => (item, index) => {
+        return [{
+          text: localization.getString("seriesListMoveToFirstAxis"),
+          onClick: () => this.moveSecondaryItemToPrimary(index),
+        }];
+      },
     });
 
     this.registerSideBarItem("secondaryYAxisBlock", (container: HTMLDivElement) => {
-      if(!this.isXYChart()) {
+      if(["vbar", "line"].indexOf(this.chartType) === -1) {
         return;
       }
       const block = DocumentHelper.createElement("div", "sa-pivot__secondary-y-block");
@@ -186,6 +195,21 @@ export class PivotModel extends HistogramModel {
     }, 20);
 
     this.setupPivot();
+  }
+
+  get useSecondaryYAxis(): boolean {
+    return this._useSecondaryYAxis;
+  }
+
+  set useSecondaryYAxis(newValue: boolean) {
+    if(!newValue) {
+      this._savedSecondaryYAxes = this.secondaryYAxes.map((axis) => ({ ...axis }));
+      this.secondaryYAxes = [];
+    } else if(this._savedSecondaryYAxes.length > 0) {
+      this.secondaryYAxes = this._savedSecondaryYAxes.map((axis) => ({ ...axis }));
+      this.secondaryYAxesSeriesListWidget.setItems(this.secondaryYAxes);
+    }
+    this._useSecondaryYAxis = newValue;
   }
 
   get yAxes(): Array<IAxisDescription> {
@@ -245,7 +269,6 @@ export class PivotModel extends HistogramModel {
       aggregation: "count"
     }));
 
-    // secondaryYAxes
     this.setupPivot();
   }
 
@@ -319,6 +342,7 @@ export class PivotModel extends HistogramModel {
     if(prev2Dchart !== this.isXYChart()) {
       this.updateToolbar();
     }
+    this._sidebarWidget?.destroyPanel();
   }
 
   private isXYChart() {
@@ -331,6 +355,15 @@ export class PivotModel extends HistogramModel {
     this.primaryYAxesSeriesListWidget.removeAt(index);
     this.secondaryYAxes = [...this.secondaryYAxes, { ...item }];
     this.secondaryYAxesSeriesListWidget.setItems(this.secondaryYAxes);
+    this.setupPivot();
+  }
+
+  private moveSecondaryItemToPrimary(index: number): void {
+    const item = this.secondaryYAxes[index];
+    if(!item) return;
+    this.secondaryYAxesSeriesListWidget.removeAt(index);
+    this.primaryYAxes = [...this.primaryYAxes, { ...item }];
+    this.primaryYAxesSeriesListWidget.setItems(this.primaryYAxes);
     this.setupPivot();
   }
 

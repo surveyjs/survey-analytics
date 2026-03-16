@@ -66,11 +66,11 @@ export class EditableSeriesListWidget {
   }
 
   private notifyChange(): void {
-    this.options.onChange(this.items.slice());
+    this.options.onChange(this.items.slice().filter(item => !!item.dataName));
   }
 
   public removeAt(index: number): void {
-    if(this.items.length <= 1) return;
+    if(this.items.length === 0) return;
     this.items.splice(index, 1);
     this.notifyChange();
     this.renderItems();
@@ -100,7 +100,8 @@ export class EditableSeriesListWidget {
   private renderItems(): void {
     this.listContainer.innerHTML = "";
 
-    this.items.forEach((item, index) => {
+    const list = (!this.items || this.items.length === 0) ? [getDefaultItem()] : this.items;
+    list.forEach((item, index) => {
       const card = DocumentHelper.createElement("div", "sa-series-list__card");
       card.appendChild(DocumentHelper.createElement("div", "sa-series-list__card-label", { textContent: getLegendLabel(index) }));
 

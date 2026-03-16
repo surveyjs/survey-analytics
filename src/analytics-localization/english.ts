@@ -136,6 +136,7 @@ export var englishStrings = {
   seriesListRemove: "Remove",
   seriesListAdd: "Add",
   seriesListMoveToSecondAxis: "Move to second axis",
+  seriesListMoveToFirstAxis: "Move to first axis",
   aggregationCount: "Count",
   aggregationSum: "Sum",
   aggregationAverage: "Average"
