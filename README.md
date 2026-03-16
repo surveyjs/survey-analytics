@@ -4,7 +4,7 @@
 <video src="https://github.com/surveyjs/survey-analytics/assets/22315929/2ebc84e1-dc43-4873-8c72-a1b4125e8749"></video>
 
 
-[![Build Status](https://dev.azure.com/SurveyJS/SurveyJS%20Integration%20Tests/_apis/build/status/SurveyJS%20Library?branchName=master)](https://dev.azure.com/SurveyJS/SurveyJS%20Integration%20Tests/_build/latest?definitionId=7&branchName=master)
+[![Build Status](https://dev.azure.com/SurveyJS/V2%20Libraries/_apis/build/status%2Fanalytics%2FAnalytics%20Main?repoName=surveyjs%2Fsurvey-analytics&branchName=master)](https://dev.azure.com/SurveyJS/V2%20Libraries/_build/latest?definitionId=161&repoName=surveyjs%2Fsurvey-analytics&branchName=master)
 <a href="https://github.com/microsoft/playwright">
 <img alt="Tested with Playwright" src="https://img.shields.io/badge/tested%20with-Playwright-2fa4cf.svg">
 </a>
