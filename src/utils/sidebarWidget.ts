@@ -11,7 +11,7 @@ export interface ISidebarOptions {
    * Array of functions that create toolbar items. Each function receives a container and returns an HTMLElement to be appended to the panel content.
    */
   toolbarItemCreators: Array<(container: HTMLDivElement) => HTMLElement>;
-  /** SVG icon name for the toolbar button (e.g. "more-24x24"). */
+  /** SVG icon name for the toolbar button (e.g. "settings_24x24"). */
   buttonIcon?: string;
   /** Accessible title for the toolbar button. */
   buttonTitle?: string;
@@ -53,7 +53,7 @@ export class SidebarWidget {
       this.buttonElement.title = this.options.buttonTitle;
     }
 
-    const iconName = this.options.buttonIcon ?? "more-24x24";
+    const iconName = this.options.buttonIcon ?? "settings_24x24";
     const iconWrap = DocumentHelper.createElement("div", "sa-toolbar__button-icon");
     iconWrap.appendChild(DocumentHelper.createSvgElement(iconName));
     this.buttonElement.appendChild(iconWrap);
