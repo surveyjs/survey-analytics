@@ -1,4 +1,5 @@
 import { DocumentHelper } from ".";
+import { SideBarItemCreators } from "../sideBarItemCreators";
 import "./sidebar.scss";
 
 /**
@@ -8,9 +9,10 @@ export interface ISidebarOptions {
   /** Panel title shown in the header */
   title: string;
   /**
-   * Array of functions that create toolbar items. Each function receives a container and returns an HTMLElement to be appended to the panel content.
+   * Array of sidebar item entries (creator + optional groupIndex). Items with different groupIndex are separated by a divider.
+   * For backward compatibility, a plain array of creator functions is also accepted (all items are treated as one group).
    */
-  toolbarItemCreators: Array<(container: HTMLDivElement) => HTMLElement>;
+  itemCreators: SideBarItemCreators;
   /** SVG icon name for the toolbar button (e.g. "settings_24x24"). */
   buttonIcon?: string;
   /** Accessible title for the toolbar button. */
@@ -74,6 +76,21 @@ export class SidebarWidget {
     return this.buttonElement;
   }
 
+  private getSideBarToolbarItemCreators(): Array<any> {
+    const fromCreators = this.options.itemCreators;
+    const creatorEntries = Object.keys(fromCreators).map((name) => ({ name, ...fromCreators[name] }));
+    creatorEntries.sort((a, b) => {
+      const groupA = a.groupIndex ?? 0;
+      const groupB = b.groupIndex ?? 0;
+      if(groupA !== groupB) return groupA - groupB;
+      return (a.index ?? 0) - (b.index ?? 0);
+    });
+    return creatorEntries.map((entry) => ({
+      creator: entry.creator,
+      groupIndex: entry.groupIndex,
+    }));
+  }
+
   private ensurePanel(): void {
     if(this.panelElement) return;
 
@@ -93,11 +110,17 @@ export class SidebarWidget {
     this.contentContainer = DocumentHelper.createElement("div", panelClassName + "-content") as HTMLDivElement;
     this.panelElement.appendChild(this.contentContainer);
     this.contentContainer.appendChild(header);
-    this.contentContainer.appendChild(this.ensureDivider());
+    this.contentContainer.appendChild(this.createDivider());
 
-    const creators = this.options.toolbarItemCreators || [];
-    creators.forEach((creator) => {
-      const el = creator(this.contentContainer!);
+    const entries = this.getSideBarToolbarItemCreators() || [];
+    let prevGroupIndex: number | undefined = undefined;
+    entries.forEach((entry) => {
+      const groupIndex = entry.groupIndex ?? 0;
+      if(prevGroupIndex !== undefined && groupIndex !== prevGroupIndex) {
+        this.contentContainer!.appendChild(this.createDivider());
+      }
+      prevGroupIndex = groupIndex;
+      const el = entry.creator(this.contentContainer!);
       if(el) {
         this.contentContainer!.appendChild(el);
       }
@@ -119,7 +142,7 @@ export class SidebarWidget {
     this.buttonElement.closest(".sa-visualizer-wrapper").appendChild(this.backdropElement);
   }
 
-  private ensureDivider(): HTMLElement {
+  private createDivider(): HTMLElement {
     const dividerElement = DocumentHelper.createElement("div", "sa-sidebar-divider");
     const line1 = DocumentHelper.createElement("div", "sa-line-1");
     dividerElement.appendChild(line1);

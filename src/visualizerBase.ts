@@ -9,6 +9,7 @@ import { DashboardTheme, IDashboardTheme } from "./theme";
 import { SidebarWidget } from "./utils/sidebarWidget";
 
 import "./visualizerBase.scss";
+import { SideBarItemCreators } from "./sideBarItemCreators";
 
 export interface IChartAdapter {
   getChartTypes(): string[];
@@ -60,13 +61,6 @@ type ToolbarItemCreators = {
     type: ToolbarItemType,
     index: number,
     groupIndex: number,
-  },
-};
-
-type SideBarItemCreators = {
-  [name: string]: {
-    creator: (container: HTMLDivElement) => HTMLElement,
-    index: number,
   },
 };
 
@@ -246,10 +240,14 @@ export class VisualizerBase implements IDataInfo {
 
   protected createSidebarPanelButton(_toolbar?: HTMLDivElement): HTMLElement {
     if(!this._sidebarWidget) {
-      const toolbarItemCreators = this.getSideBarToolbarItemCreators();
+      const creators = Object.assign(
+        {},
+        this.sideBarItemCreators,
+        this.onGetSideBarItemCreators && this.onGetSideBarItemCreators() || {}
+      );
       this._sidebarWidget = new SidebarWidget({
         title: this.title,
-        toolbarItemCreators,
+        itemCreators: creators,
         buttonIcon: "settings_24x24",
         buttonTitle: "Open panel",
       });
@@ -257,30 +255,20 @@ export class VisualizerBase implements IDataInfo {
     return this._sidebarWidget.render(_toolbar);
   }
 
-  protected getSideBarToolbarItemCreators(): Array<(container: HTMLDivElement) => HTMLElement> {
-    const fromCreators = Object.assign(
-      {},
-      this.sideBarItemCreators,
-      this.onGetSideBarItemCreators && this.onGetSideBarItemCreators() || {}
-    );
-    const creatorEntries = Object.keys(fromCreators).map((name) => ({ name, ...fromCreators[name] }));
-    creatorEntries.sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
-    const fromCreatorsArray = creatorEntries.map((entry) => entry.creator);
-    return [...fromCreatorsArray];
-  }
-
   /**
    * Registers a sidebar item creator by name. The item will be rendered in the sidebar panel when the sidebar button is used.
    * @param name Unique name for the sidebar item.
    * @param creator Function that receives the panel container and returns an HTMLElement to be appended.
    * @param index Optional order index (default 100). Lower values appear first.
+   * @param groupIndex Optional group index (default 0). Items are ordered by group first, then by index within group.
    */
   public registerSideBarItem(
     name: string,
     creator: (container: HTMLDivElement) => HTMLElement,
-    index: number = 100
+    index: number = 100,
+    groupIndex: number = 0
   ): void {
-    this.sideBarItemCreators[name] = { creator, index };
+    this.sideBarItemCreators[name] = { creator, index, groupIndex };
   }
 
   /**

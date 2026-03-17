@@ -747,3 +747,24 @@ test("moveSecondaryItemToPrimary does nothing when index is out of range", () =>
   expect(pivot.primaryYAxes).toHaveLength(0);
   expect(pivot.secondaryYAxes).toHaveLength(1);
 });
+
+test("moveToolbarItemsToSidebar: all toolbar items except changeChartType are moved to sidebar", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  const toolbarNames = Object.keys(pivot["toolbarItemCreators"]);
+  const sidebarNames = Object.keys(pivot["sideBarItemCreators"]);
+
+  expect(toolbarNames).toEqual(["changeChartType"]);
+
+  const pivotSidebarItems = ["axisXSelector", "primaryYAxes", "secondaryYAxisBlock"];
+  pivotSidebarItems.forEach((name) => expect(sidebarNames).toContain(name));
+
+  const movedFromToolbar = [
+    "changeAnswersOrder",
+    "showPercentages",
+    "hideEmptyAnswers",
+    "topNAnswers",
+    "transposeData",
+    "showMissingAnswers",
+  ];
+  movedFromToolbar.forEach((name) => expect(sidebarNames).toContain(name));
+});

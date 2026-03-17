@@ -67,6 +67,94 @@ export class PivotModel extends HistogramModel {
     return setting;
   }
 
+  private registerSideBarItems() {
+    this.registerSideBarItem("axisXSelector", () => {
+      this.axisXSelector = DocumentHelper.createDropdown({
+        options: this.questions.map((question) => {
+          return {
+            value: question.name,
+            text: question.title || question.name,
+          };
+        }),
+        isSelected: (option: any) => this.axisXQuestionName === option.value,
+        handler: (e: any) => {
+          this.axisXQuestionName = e;
+          // this.updateQuestionsSelection();
+          // this.updateToolbar();
+          this.setupPivot();
+        },
+        title: () => this.isXYChart() ? localization.getString("axisXSelectorTitle") : localization.getString("axisXAlternativeSelectorTitle")
+      });
+      return this.axisXSelector;
+    }, 100, 10);
+
+    this.primaryYAxesSeriesListWidget = new EditableSeriesListWidget({
+      title: this.isXYChart() ? localization.getString("axisYSelectorTitle") : localization.getString("axisYAlternativeSelectorTitle"),
+      items: this.primaryYAxes,
+      getOptions: () => this.questions.map((question) => ({
+        value: question.name,
+        text: question.title || question.name,
+      })),
+      onChange: (items) => {
+        this.primaryYAxes = items;
+        this.setupPivot();
+      },
+      maxSeriesCount: this.options.maxSeriesCount,
+      getItemExtraButtons: () => (item, index) => {
+        if(!this.useSecondaryYAxis) return [];
+        return [{
+          text: localization.getString("seriesListMoveToSecondAxis"),
+          onClick: () => this.movePrimaryItemToSecondary(index),
+        }];
+      },
+    });
+    this.registerSideBarItem("primaryYAxes", () => {
+      return this.primaryYAxesSeriesListWidget.render();
+    }, 110, 10);
+
+    this.secondaryYAxesSeriesListWidget = new EditableSeriesListWidget({
+      title: localization.getString("axisYSelectorTitle"),
+      items: this.secondaryYAxes,
+      getOptions: () => this.questions.map((question) => ({
+        value: question.name,
+        text: question.title || question.name,
+      })),
+      onChange: (items) => {
+        this.secondaryYAxes = items;
+        this.setupPivot();
+      },
+      maxSeriesCount: this.options.maxSeriesCount,
+      getItemExtraButtons: () => (item, index) => {
+        return [{
+          text: localization.getString("seriesListMoveToFirstAxis"),
+          onClick: () => this.moveSecondaryItemToPrimary(index),
+        }];
+      },
+    });
+
+    this.registerSideBarItem("secondaryYAxisBlock", (container: HTMLDivElement) => {
+      if(["vbar", "line"].indexOf(this.chartType) === -1) {
+        return;
+      }
+      const block = DocumentHelper.createElement("div", "sa-pivot__secondary-y-block");
+      const toggleWidget = new ToggleWidget(
+        (opts) => {
+          this.useSecondaryYAxis = opts.isActive;
+          secondaryListContainer.style.display = this.useSecondaryYAxis ? "" : "none";
+          this.primaryYAxesSeriesListWidget.refresh();
+          this.setupPivot();
+        },
+        () => localization.getString("secondYAxisToggleTitle"),
+        this.useSecondaryYAxis
+      );
+      block.appendChild(toggleWidget.container);
+      const secondaryListContainer = this.secondaryYAxesSeriesListWidget.render();
+      secondaryListContainer.style.display = this.useSecondaryYAxis ? "" : "none";
+      block.appendChild(secondaryListContainer);
+      return block;
+    }, 120, 20);
+  }
+
   constructor(
     public questions: Array<Question>,
     data: Array<{ [index: string]: any }>,
@@ -107,100 +195,20 @@ export class PivotModel extends HistogramModel {
       });
     }
 
-    this.registerSideBarItem("axisXSelector", () => {
-      this.axisXSelector = DocumentHelper.createDropdown({
-        options: this.questions.map((question) => {
-          return {
-            value: question.name,
-            text: question.title || question.name,
-          };
-        }),
-        isSelected: (option: any) => this.axisXQuestionName === option.value,
-        handler: (e: any) => {
-          this.axisXQuestionName = e;
-          // this.updateQuestionsSelection();
-          // this.updateToolbar();
-          this.setupPivot();
-        },
-        title: () => this.isXYChart() ? localization.getString("axisXSelectorTitle") : localization.getString("axisXAlternativeSelectorTitle")
-      });
-      return this.axisXSelector;
-    }, 0);
-
-    this.primaryYAxesSeriesListWidget = new EditableSeriesListWidget({
-      title: this.isXYChart() ? localization.getString("axisYSelectorTitle") : localization.getString("axisYAlternativeSelectorTitle"),
-      items: this.primaryYAxes,
-      getOptions: () => this.questions.map((question) => ({
-        value: question.name,
-        text: question.title || question.name,
-      })),
-      onChange: (items) => {
-        this.primaryYAxes = items;
-        this.setupPivot();
-      },
-      maxSeriesCount: this.options.maxSeriesCount,
-      getItemExtraButtons: () => (item, index) => {
-        if(!this.useSecondaryYAxis) return [];
-        return [{
-          text: localization.getString("seriesListMoveToSecondAxis"),
-          onClick: () => this.movePrimaryItemToSecondary(index),
-        }];
-      },
-    });
-    this.registerSideBarItem("primaryYAxes", () => {
-      return this.primaryYAxesSeriesListWidget.render();
-    }, 10);
-
-    this.secondaryYAxesSeriesListWidget = new EditableSeriesListWidget({
-      title: localization.getString("axisYSelectorTitle"),
-      items: this.secondaryYAxes,
-      getOptions: () => this.questions.map((question) => ({
-        value: question.name,
-        text: question.title || question.name,
-      })),
-      onChange: (items) => {
-        this.secondaryYAxes = items;
-        this.setupPivot();
-      },
-      maxSeriesCount: this.options.maxSeriesCount,
-      getItemExtraButtons: () => (item, index) => {
-        return [{
-          text: localization.getString("seriesListMoveToFirstAxis"),
-          onClick: () => this.moveSecondaryItemToPrimary(index),
-        }];
-      },
-    });
-
-    this.registerSideBarItem("secondaryYAxisBlock", (container: HTMLDivElement) => {
-      if(["vbar", "line"].indexOf(this.chartType) === -1) {
-        return;
-      }
-      const block = DocumentHelper.createElement("div", "sa-pivot__secondary-y-block");
-      const dividerElement = DocumentHelper.createElement("div", "sa-sidebar-divider");
-      const line1 = DocumentHelper.createElement("div", "sa-line-1");
-      dividerElement.appendChild(line1);
-      const line2 = DocumentHelper.createElement("div", "sa-line-2");
-      line1.appendChild(line2);
-      block.appendChild(dividerElement);
-
-      const toggleWidget = new ToggleWidget(
-        (opts) => {
-          this.useSecondaryYAxis = opts.isActive;
-          secondaryListContainer.style.display = this.useSecondaryYAxis ? "" : "none";
-          this.primaryYAxesSeriesListWidget.refresh();
-          this.setupPivot();
-        },
-        () => localization.getString("secondYAxisToggleTitle"),
-        this.useSecondaryYAxis
-      );
-      block.appendChild(toggleWidget.container);
-      const secondaryListContainer = this.secondaryYAxesSeriesListWidget.render();
-      secondaryListContainer.style.display = this.useSecondaryYAxis ? "" : "none";
-      block.appendChild(secondaryListContainer);
-      return block;
-    }, 20);
+    this.registerSideBarItems();
+    this.moveToolbarItemsToSidebar();
 
     this.setupPivot();
+  }
+
+  private moveToolbarItemsToSidebar(): void {
+    const toolbarNames = Object.keys(this.toolbarItemCreators).filter((name) => name !== "changeChartType");
+    toolbarNames.forEach((name, i) => {
+      const creator = this.unregisterToolbarItem(name);
+      if(creator) {
+        this.registerSideBarItem(name, (container: HTMLDivElement) => creator(container), i);
+      }
+    });
   }
 
   get useSecondaryYAxis(): boolean {
