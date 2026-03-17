@@ -250,7 +250,7 @@ export class VisualizerBase implements IDataInfo {
       this._sidebarWidget = new SidebarWidget({
         title: this.title,
         toolbarItemCreators,
-        buttonIcon: "more-24x24",
+        buttonIcon: "settings_24x24",
         buttonTitle: "Open panel",
       });
     }
