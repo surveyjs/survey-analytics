@@ -203,11 +203,6 @@ module.exports = function (options) {
       "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core"),
       "survey.analytics": path.resolve(__dirname, "./src/entries/apexcharts"),
       "survey.analytics.fontless": path.resolve(__dirname, "./src/entries/apexcharts.fontless"),
-      "survey.analytics.plotly": path.resolve(__dirname, "./src/entries/plotly"),
-      "survey.analytics.plotly.fontless": path.resolve(__dirname, "./src/entries/plotly.fontless"),
-      "survey.analytics.tabulator": path.resolve(__dirname, "./src/entries/tabulator-umd"),
-      "survey.analytics.tabulator.fontless": path.resolve(__dirname, "./src/entries/tabulator.fontless"),
-      "survey.analytics.mongo": path.resolve(__dirname, "./src/entries/mongo"),
     },
     resolve: {
       extensions: [".ts", ".js"],
@@ -283,29 +278,11 @@ module.exports = function (options) {
         commonjs: "survey-core",
         amd: "survey-core",
       },
-      "plotly.js-dist-min": {
-        root: "Plotly",
-        commonjs2: "plotly.js-dist-min",
-        commonjs: "plotly.js-dist-min",
-        amd: "plotly.js-dist-min",
-      },
-      "tabulator-tables": {
-        root: "Tabulator",
-        commonjs2: "tabulator-tables",
-        commonjs: "tabulator-tables",
-        amd: "tabulator-tables",
-      },
       "apexcharts": {
         root: "ApexCharts",
         commonjs2: "apexcharts",
         commonjs: "apexcharts",
         amd: "apexcharts",
-      },
-      "mongodb": {
-        root: "MongoDB",
-        commonjs2: "mongodb",
-        commonjs: "mongodb",
-        amd: "mongodb",
       },
     },
     plugins: [
