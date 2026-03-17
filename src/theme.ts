@@ -137,6 +137,15 @@ export class DashboardTheme implements IDashboardTheme {
     };
   }
 
+  public get axisTitleFont(): FontSettings {
+    return <FontSettings>{
+      color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
+      family: this.defaultFontFamily,
+      size: this.getCssVariableValue("--sjs2-typography-font-size-small", true),
+      weight: 400
+    };
+  }
+
   public get insideLabelFont(): FontSettings {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-data-chart-fg-on-color-1"),
