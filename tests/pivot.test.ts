@@ -625,25 +625,25 @@ test("getCalculatedValues with value aggregation", async () => {
   expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
 
-  // pivot.setValueAggregation("question2", "question3");
   pivot.primaryYAxes = [{
     dataName: "question2",
     valueName: "question3",
     aggregation: "sum",
   }];
-  pivot["onDataChanged"]();
+  pivot["setupPivot"]();
   values = pivot.getValues();
   seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect((await pivot.getCalculatedValues()).data).toStrictEqual([[250, 300], [1200, 300], [1050, 400]]);
 
-  pivot.resetAggregations();
+  pivot.primaryYAxes = [];
+  pivot["setupPivot"]();
   values = pivot.getValues();
   seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual(["female", "male"]);
-  expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
-  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
+  expect(seriesValues).toStrictEqual([]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[8, 4]]);
 });
 
 test("useSecondaryYAxis clears secondaryYAxes when set to false and restores when set back to true", () => {

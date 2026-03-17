@@ -269,11 +269,15 @@ export class PivotModel extends HistogramModel {
       return;
     }
     this.axisXQuestionName = axisQuestionNames[0];
-    this.primaryYAxes = axisQuestionNames.splice(1).map(name => ({
-      dataName: name,
-      valueName: name,
-      aggregation: "count"
-    }));
+    this.primaryYAxes = axisQuestionNames.splice(1).map(name => {
+      const question = this.questions.filter((q) => q.name === name)[0];
+      const questionValueType = this.getQuestionValueType(question);
+      return {
+        dataName: name,
+        valueName: name,
+        aggregation: questionValueType === "enum" || questionValueType === "date" ? "count" : "sum"
+      };
+    });
 
     this.setupPivot();
   }
@@ -485,10 +489,10 @@ export class PivotModel extends HistogramModel {
     }
   }
 
-  public resetAggregations() {
-    this._aggregations = {};
-    this.onDataChanged();
-  }
+  // public resetAggregations() {
+  //   this._aggregations = {};
+  //   this.onDataChanged();
+  // }
 
   // public setValueAggregation(aggregationName: string, aggregationFunc: string | ((acc: number, value: number) => number)) {
   //   this._aggregations[aggregationName] = aggregationFunc;

@@ -18,7 +18,6 @@ export interface IEditableSeriesListOptions {
   getOptions: () => Array<IDropdownItemOption>;
   onChange: (items: IAxisDescription[]) => void;
   maxSeriesCount?: number;
-  /** When provided, returns extra action buttons for each item (e.g. "Move to second axis"). Called at render time. */
   getItemExtraButtons?: () => (item: IAxisDescription, index: number) => IEditableSeriesListItemAction[];
 }
 
