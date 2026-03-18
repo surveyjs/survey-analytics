@@ -557,7 +557,7 @@ export class PlotlySetup {
       margin: {
         t: topMargin,
         b: bottomMargin,
-        r: hasDualAxis ? 60 : 0,
+        r: 0,
         l: 0,
       },
       colorway: colors,
@@ -574,7 +574,6 @@ export class PlotlySetup {
       },
       xaxis: {
         ...PlotlySetup.defaultAxisXConfig(model.theme),
-        domain: [0.1, 0.9],
         automargin: true,
         type: "category",
         tickmode: "array",
@@ -618,9 +617,11 @@ export class PlotlySetup {
     if(!(model as any).getValueType || (model as any).getValueType() != "date") {
       layout.xaxis = {
         ...PlotlySetup.defaultAxisXConfig(model.theme),
-        domain: [0.1, 0.9],
         type: "category",
       };
+    }
+    if(hasDualAxis) {
+      layout.xaxis.domain = [0.1, 0.9];
     }
 
     return { traces, layout, hasSeries };
