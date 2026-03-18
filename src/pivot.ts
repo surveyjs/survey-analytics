@@ -53,7 +53,15 @@ export class PivotModel extends HistogramModel {
     }
   };
 
-  private getChartAxisSetting(axisDescription: IAxisDescription, seriesValues: Array<string>, opposite: boolean) {
+  private getQuestionSeriesLabels(q: VisualizerBase, seriesLabels: any[]) {
+    if(this.getQuestionValueType(q.question) === "enum") {
+      seriesLabels.push.apply(seriesLabels, q.getLabels().reverse());
+    } else {
+      seriesLabels.push(q.question.title || q.question.name);
+    }
+  }
+
+  private getChartAxisSetting(axisDescription: IAxisDescription, seriesLabels: Array<string>, opposite: boolean) {
     if(!axisDescription) return {};
 
     const question = this.questions.find(q => q.name === axisDescription.dataName || q.name === axisDescription.valueName);
@@ -62,7 +70,7 @@ export class PivotModel extends HistogramModel {
         text: question ? this.getTitle(question) : ""
       },
       opposite: opposite,
-      seriesName: seriesValues
+      seriesName: seriesLabels
     };
     return setting;
   }
@@ -232,19 +240,15 @@ export class PivotModel extends HistogramModel {
 
   public getYAxisInfo() {
     if(this.secondaryYAxes.length > 0) {
-      const primarySeriesValues = [];
-      const secondarySeriesValues = [];
+      const primarySeriesLabels = [];
+      const secondarySeriesLabels = [];
       this.questionsY.forEach((q, i) => {
-        const array = i < this.primaryYAxes.length ? primarySeriesValues : secondarySeriesValues;
-        if(this.getQuestionValueType(q.question) === "enum") {
-          array.push.apply(array, q.getValues().reverse());
-        } else {
-          array.push(q.question.name);
-        }
+        const seriesLabels = i < this.primaryYAxes.length ? primarySeriesLabels : secondarySeriesLabels;
+        this.getQuestionSeriesLabels(q, seriesLabels);
       });
 
-      const primarySetting = this.getChartAxisSetting(this.primaryYAxes[0], primarySeriesValues, false);
-      const secondarySetting = this.getChartAxisSetting(this.secondaryYAxes[0], secondarySeriesValues, true);
+      const primarySetting = this.getChartAxisSetting(this.primaryYAxes[0], primarySeriesLabels, false);
+      const secondarySetting = this.getChartAxisSetting(this.secondaryYAxes[0], secondarySeriesLabels, true);
       return [primarySetting, secondarySetting];
     }
     return [{}];
@@ -450,11 +454,7 @@ export class PivotModel extends HistogramModel {
     }
     const seriesLabels = [];
     this.questionsY.forEach(q => {
-      if(this.getQuestionValueType(q.question) === "enum") {
-        seriesLabels.push.apply(seriesLabels, q.getLabels().reverse());
-      } else {
-        seriesLabels.push(q.question.title || q.question.name);
-      }
+      this.getQuestionSeriesLabels(q, seriesLabels);
     });
     return seriesLabels;
   }

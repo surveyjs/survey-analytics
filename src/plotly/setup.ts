@@ -1,4 +1,4 @@
-import { Event, QuestionRatingModel } from "survey-core";
+import { Event, getRGBaColor } from "survey-core";
 import { SelectBase } from "../selectBase";
 import { IAnswersData, VisualizerBase } from "../visualizerBase";
 import { localization } from "../localizationManager";
@@ -18,37 +18,11 @@ export class PlotlySetup {
 
   static defaultBarGap = DashboardTheme.barGap;
 
-  static getRgbaColor(propertyValue: any): string {
-    let str = propertyValue;
-    if(!str) return null;
-    const canvasElement = document.createElement("canvas") as HTMLCanvasElement;
-    if(!canvasElement) return null;
-    const ctx = canvasElement.getContext("2d");
-    ctx.fillStyle = str;
-
-    if(ctx.fillStyle == "#000000") {
-      ctx.fillStyle = propertyValue;
-    }
-    const newStr = ctx.fillStyle as string;
-    const match = newStr.match(/color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*\/\s*([\d.]+)\)/);
-
-    if(!match) {
-      return newStr;
-    }
-
-    const r = parseFloat(match[1]);
-    const g = parseFloat(match[2]);
-    const b = parseFloat(match[3]);
-    const alpha = parseFloat(match[4]);
-    const result = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    return result;
-  }
-
   static defaultModebarConfig(theme: DashboardTheme) {
     return {
       bgcolor: "transparent",
-      activecolor: PlotlySetup.getRgbaColor(theme.modebarActiveColor),
-      color: PlotlySetup.getRgbaColor(theme.modebarColor),
+      activecolor: getRGBaColor(theme.modebarActiveColor),
+      color: getRGBaColor(theme.modebarColor),
     };
   }
 
@@ -59,7 +33,7 @@ export class PlotlySetup {
     };
 
     return {
-      bgcolor: PlotlySetup.getRgbaColor(theme.tooltipBackground),
+      bgcolor: getRGBaColor(theme.tooltipBackground),
       font: font,
     };
   }
@@ -107,7 +81,7 @@ export class PlotlySetup {
     }
 
     return {
-      zerolinecolor: PlotlySetup.getRgbaColor(theme.axisGridColor),
+      zerolinecolor: getRGBaColor(theme.axisGridColor),
       automargin: true,
       tickfont: axisLabelFont
     };
@@ -132,7 +106,7 @@ export class PlotlySetup {
   static defaultAxisXWithGridLineConfig (theme: DashboardTheme) {
     return {
       ...PlotlySetup.defaultAxisXConfig(theme),
-      gridcolor: PlotlySetup.getRgbaColor(theme.axisGridColor),
+      gridcolor: getRGBaColor(theme.axisGridColor),
       griddash: "dot",
     };
   }
@@ -147,17 +121,32 @@ export class PlotlySetup {
   static defaultAxisYWithGridLineConfig(theme: DashboardTheme) {
     return {
       ...PlotlySetup.defaultAxisYConfig(theme),
-      gridcolor: PlotlySetup.getRgbaColor(theme.axisGridColor),
+      gridcolor: getRGBaColor(theme.axisGridColor),
       griddash: "dot",
     };
   }
 
+  static defaultAxisTitleFont(theme: DashboardTheme) {
+    const font = theme.axisTitleFont;
+    const result: any = {
+      size: parseFloat(font.size),
+      color: font.color,
+    };
+    if(theme.isAxisLabelFontLoaded && theme.isAxisLabelFontLoaded()) {
+      result.family = font.family;
+    }
+    if(font.weight != null) {
+      result.weight = font.weight;
+    }
+    return result;
+  }
+
   static defaultGaugeConfig(theme) {
     return {
-      bgcolor: PlotlySetup.getRgbaColor(theme.gaugeBackground),
-      bordercolor: PlotlySetup.getRgbaColor(theme.gaugeBackground),
+      bgcolor: getRGBaColor(theme.gaugeBackground),
+      bordercolor: getRGBaColor(theme.gaugeBackground),
       bar: {
-        color: PlotlySetup.getRgbaColor(theme.gaugeBarColor),
+        color: getRGBaColor(theme.gaugeBarColor),
         thickness: 0.5,
       },
     };
@@ -534,12 +523,23 @@ export class PlotlySetup {
       traceConfig.marker = { color: colors };
     }
 
+    const yAxisInfo: Array<{ title?: { text: string }, seriesName?: string[] }> = model.getYAxisInfo();
+    const hasDualAxis = yAxisInfo.length >= 2;
+
     datasets.forEach((dataset: Array<number>, index: number) => {
       var trace = Object.assign({}, traceConfig, {
         y: dataset,
         name: hasSeries ? seriesLabels[index] : labels[index],
         text: texts[index],
+        offsetgroup: index,
       });
+      if(hasDualAxis && hasSeries) {
+        const seriesName = seriesLabels[index];
+        const onSecondary = yAxisInfo[1].seriesName && yAxisInfo[1].seriesName.indexOf(seriesName) !== -1;
+        if(onSecondary) {
+          trace.yaxis = "y2";
+        }
+      }
       if(model.showPercentages) {
         let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
         trace.texttemplate = texttemplate;
@@ -550,11 +550,14 @@ export class PlotlySetup {
     const maxTicks = 50;
     const tickStep = Math.ceil(labels.length / maxTicks);
 
+    const primaryYAxisTitle = (yAxisInfo[0]?.title?.text) || valuesTitle;
+    const secondaryYAxisTitle = yAxisInfo[1]?.title?.text || "";
+
     const layout: any = {
       margin: {
         t: topMargin,
         b: bottomMargin,
-        r: 0,
+        r: hasDualAxis ? 60 : 0,
         l: 0,
       },
       colorway: colors,
@@ -567,9 +570,11 @@ export class PlotlySetup {
         ...PlotlySetup.defaultAxisYWithGridLineConfig(model.theme),
         rangemode: "nonnegative",
         automargin: true,
+        title: primaryYAxisTitle ? { text: primaryYAxisTitle, font: PlotlySetup.defaultAxisTitleFont(model.theme) } : undefined,
       },
       xaxis: {
         ...PlotlySetup.defaultAxisXConfig(model.theme),
+        domain: [0.1, 0.9],
         automargin: true,
         type: "category",
         tickmode: "array",
@@ -586,26 +591,34 @@ export class PlotlySetup {
       },
       modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
     };
-
     if(labelsTitle) {
       layout.xaxis.title = { text: labelsTitle };
     }
-    if(valuesTitle) {
-      layout.yaxis.title = { text: valuesTitle };
+
+    if(hasDualAxis) {
+      layout.yaxis2 = {
+        ...PlotlySetup.defaultAxisYWithGridLineConfig(model.theme),
+        overlaying: "y",
+        anchor: "x",
+        side: "right",
+        title: secondaryYAxisTitle ? { text: secondaryYAxisTitle, font: PlotlySetup.defaultAxisTitleFont(model.theme) } : undefined,
+      };
     }
 
     if(model.showPercentages && model.showOnlyPercentages) {
-      layout.yaxis = {
-        ...PlotlySetup.defaultAxisYWithGridLineConfig(model.theme),
-        tickformat: ".0%",
-        range: [0, 1],
-        ticklen: model.showOnlyPercentages ? 25 : 5,
-        tickcolor: "transparent",
-      };
+      // layout.yaxis = {
+      //   ...PlotlySetup.defaultAxisYWithGridLineConfig(model.theme),
+      //   tickformat: ".0%",
+      //   range: [0, 1],
+      //   ticklen: model.showOnlyPercentages ? 25 : 5,
+      //   tickcolor: "transparent",
+      // };
     }
+
     if(!(model as any).getValueType || (model as any).getValueType() != "date") {
       layout.xaxis = {
         ...PlotlySetup.defaultAxisXConfig(model.theme),
+        domain: [0.1, 0.9],
         type: "category",
       };
     }

@@ -29,4 +29,3 @@ test("getSideBarToolbarItemCreators returns entries sorted by groupIndex then by
   expect(entries[2].creator().attributes["data-testid"].value).toEqual("d");
   expect(entries[3].creator().attributes["data-testid"].value).toEqual("c");
 });
-

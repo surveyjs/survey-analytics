@@ -119,9 +119,9 @@ export class SidebarWidget {
       if(prevGroupIndex !== undefined && groupIndex !== prevGroupIndex) {
         this.contentContainer!.appendChild(this.createDivider());
       }
-      prevGroupIndex = groupIndex;
       const el = entry.creator(this.contentContainer!);
       if(el) {
+        prevGroupIndex = groupIndex;
         this.contentContainer!.appendChild(el);
       }
     });
