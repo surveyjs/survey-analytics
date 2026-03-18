@@ -1,6 +1,6 @@
 import { Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionRadiogroupModel, QuestionSelectBase } from "survey-core";
 import { BaseColumn, CheckboxColumn, CommentColumn, CompositeQuestionColumn, CustomQuestionColumn, FileColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn, OtherColumn, SelectBaseColumn, SingleChoiceColumn } from "./columns";
-import { IColumn } from "./config";
+import { IColumn, QuestionLocation } from "./config";
 import { Table } from "./table";
 
 export interface IColumnsBuilder {
@@ -94,10 +94,15 @@ ColumnsBuilderFactory.Instance.registerBuilderColumn("file", new FileColumnsBuil
 export class MatrixDropdownColumnBuilder extends DefaultColumnsBuilder {
   public buildColumns(questionBase: QuestionMatrixDropdownModel, table: Table): Array<IColumn> {
     const question = <QuestionMatrixDropdownModel>questionBase;
+    const isDetailRowLocation = question.rows.length > 5;
     const columns = [];
     question.rows.forEach(row => {
       question.columns.forEach(col => {
-        columns.push(new MatrixDropdownColumn(question, row, col, table));
+        const column = new MatrixDropdownColumn(question, row, col, table);
+        if(isDetailRowLocation) {
+          column.location = QuestionLocation.Row;
+        }
+        columns.push(column);
       });
     });
     return columns;

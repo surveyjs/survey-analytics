@@ -105,7 +105,9 @@ export abstract class Table {
   protected _rows: TableRow[] = [];
   protected isColumnReorderEnabled: boolean;
 
+  public isInitialized = false;
   protected initialize(): void {
+    this.isInitialized = false;
     this.currentPageSize = this.options.pageSize || 5;
     this.currentPageNumber = 1;
     this._columns = this.buildColumns(this._survey);
@@ -115,6 +117,7 @@ export abstract class Table {
     if(this._columnsData.length !== 0) {
       this.updateColumnsFromData(this._columnsData);
     }
+    this.isInitialized = true;
   }
 
   public getTableData(): Array<any> {
