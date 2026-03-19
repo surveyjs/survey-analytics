@@ -150,4 +150,75 @@ describe("VisualizerBase", () => {
       expect(result[0].name).toBe("test_item");
     });
   });
+
+  test("registerSideBarItem adds item to sideBarItemCreators with default index and groupIndex", () => {
+    const creator = (container: HTMLDivElement) => document.createElement("div");
+    visualizer.registerSideBarItem("myItem", creator);
+
+    const creators = visualizer["sideBarItemCreators"];
+    expect(Object.keys(creators)).toContain("myItem");
+    expect(creators["myItem"].creator).toBe(creator);
+    expect(creators["myItem"].index).toBe(100);
+    expect(creators["myItem"].groupIndex).toBe(0);
+  });
+
+  test("registerSideBarItem adds item with custom index and groupIndex", () => {
+    const creator = (container: HTMLDivElement) => document.createElement("span");
+    visualizer.registerSideBarItem("customItem", creator, 50, 2);
+
+    const creators = visualizer["sideBarItemCreators"];
+    expect(creators["customItem"].creator).toBe(creator);
+    expect(creators["customItem"].index).toBe(50);
+    expect(creators["customItem"].groupIndex).toBe(2);
+  });
+
+  test("registerSideBarItem overwrites existing item when same name is used", () => {
+    const creator1 = (container: HTMLDivElement) => document.createElement("div");
+    const creator2 = (container: HTMLDivElement) => document.createElement("span");
+    visualizer.registerSideBarItem("item", creator1, 10, 0);
+    visualizer.registerSideBarItem("item", creator2, 20, 1);
+
+    const creators = visualizer["sideBarItemCreators"];
+    expect(Object.keys(creators)).toHaveLength(1);
+    expect(creators["item"].creator).toBe(creator2);
+    expect(creators["item"].index).toBe(20);
+    expect(creators["item"].groupIndex).toBe(1);
+  });
+
+  test("registerSideBarItem allows multiple items with different names", () => {
+    visualizer.registerSideBarItem("itemA", (c) => document.createElement("div"), 1, 0);
+    visualizer.registerSideBarItem("itemB", (c) => document.createElement("div"), 2, 0);
+    visualizer.registerSideBarItem("itemC", (c) => document.createElement("div"), 3, 1);
+
+    const creators = visualizer["sideBarItemCreators"];
+    expect(Object.keys(creators)).toEqual(expect.arrayContaining(["itemA", "itemB", "itemC"]));
+    expect(creators["itemA"].index).toBe(1);
+    expect(creators["itemB"].index).toBe(2);
+    expect(creators["itemC"].index).toBe(3);
+    expect(creators["itemC"].groupIndex).toBe(1);
+  });
+
+  test("registerSideBarItem creator receives container and returns HTMLElement", () => {
+    const container = document.createElement("div");
+    const created = document.createElement("p");
+    created.textContent = "sidebar content";
+    const creator = (c: HTMLDivElement) => {
+      expect(c).toBe(container);
+      return created;
+    };
+    visualizer.registerSideBarItem("test", creator);
+
+    const result = visualizer["sideBarItemCreators"]["test"].creator(container);
+    expect(result).toBe(created);
+    expect(result.textContent).toBe("sidebar content");
+  });
+
+  test("registerSideBarItem causes getToolbarItemCreators to include sidebarPanel", () => {
+    expect(visualizer["getToolbarItemCreators"]()["sidebarPanel"]).toBeUndefined();
+
+    visualizer.registerSideBarItem("anyItem", (c) => document.createElement("div"));
+
+    expect(visualizer["getToolbarItemCreators"]()["sidebarPanel"]).toBeDefined();
+    expect(typeof visualizer["getToolbarItemCreators"]()["sidebarPanel"].creator).toBe("function");
+  });
 });

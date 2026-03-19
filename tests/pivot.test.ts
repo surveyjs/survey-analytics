@@ -768,3 +768,45 @@ test("moveToolbarItemsToSidebar: all toolbar items except changeChartType are mo
   ];
   movedFromToolbar.forEach((name) => expect(sidebarNames).toContain(name));
 });
+
+test("getYAxisInfo returns single empty object when secondary Y axis is not used", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("question1", "question2");
+
+  const result = pivot.getYAxisInfo();
+
+  expect(result).toHaveLength(1);
+  expect(result[0]).toEqual({});
+});
+
+test("getYAxisInfo returns single empty object when secondaryYAxes is empty", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2");
+
+  const result = pivot.getYAxisInfo();
+
+  expect(result).toHaveLength(1);
+  expect(result[0]).toEqual({});
+});
+
+test("getYAxisInfo returns two axis settings when secondary Y axis has series", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+  pivot["movePrimaryItemToSecondary"](0);
+
+  const result = pivot.getYAxisInfo() as Array<{ title?: { text: string }, opposite?: boolean, seriesName?: string[] }>;
+  expect(result).toHaveLength(2);
+
+  const [primary, secondary] = result;
+  expect(primary).toStrictEqual({
+    title: { text: "Bill amount" },
+    opposite: false,
+    seriesName: ["Bill amount"]
+  });
+  expect(secondary).toStrictEqual({
+    title: { text: "Item kind" },
+    opposite: true,
+    seriesName: ["Item 1", "Item 2", "Item 3"]
+  });
+});
