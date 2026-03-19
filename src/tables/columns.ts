@@ -288,3 +288,16 @@ export class CompositeQuestionColumn extends BaseColumn<QuestionCompositeModel> 
     });
   }
 }
+
+export class MatrixDynamicColumn extends BaseColumn {
+  protected getDataType(): ColumnDataType {
+    return this.table.options.useNestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
+  }
+}
+
+export class PanelDynamicColumn extends BaseColumn {
+  protected getDataType(): ColumnDataType {
+    return this.table.options.useNestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
+  }
+}
+

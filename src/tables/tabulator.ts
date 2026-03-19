@@ -349,6 +349,76 @@ export class Tabulator extends Table {
     return container;
   }
 
+  private createNestedTableFormatter(column: IColumn) {
+    return (cell: any, formatterParams: any, onRendered: any) => {
+      const cellData = cell.getValue();
+
+      // If cellData is not an array or is empty, return a placeholder
+      if(!Array.isArray(cellData) || cellData.length === 0) {
+        return "<span>No data</span>";
+      }
+
+      // Get the question to extract column information
+      const question = this._survey.getQuestionByName(column.name);
+      if(!question) {
+        return "<span>Error: Question not found</span>";
+      }
+
+      // Create a container for the nested table
+      const container = document.createElement("div");
+      container.className = "sa-nested-table-container";
+
+      // Determine the columns for the nested table based on question type
+      let nestedColumns: any[] = [];
+      if(question.getType() === "matrixdynamic") {
+        const matrixQuestion = question as any;
+        nestedColumns = matrixQuestion.columns.map((col: any) => ({
+          title: col.title || col.name,
+          field: col.name,
+        }));
+      } else if(question.getType() === "paneldynamic") {
+        const panelQuestion = question as any;
+        const templateQuestions = panelQuestion.template.questions;
+        nestedColumns = templateQuestions.map((q: any) => ({
+          title: q.title || q.name,
+          field: q.name,
+        }));
+      }
+
+      // Create the nested table HTML
+      const table = document.createElement("table");
+      table.className = "sa-nested-table";
+
+      // Create header
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+      nestedColumns.forEach((col: any) => {
+        const th = document.createElement("th");
+        th.textContent = col.title;
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      // Create body
+      const tbody = document.createElement("tbody");
+      cellData.forEach((row: any) => {
+        const tr = document.createElement("tr");
+        nestedColumns.forEach((col: any) => {
+          const td = document.createElement("td");
+          const value = row[col.field];
+          td.textContent = value !== undefined && value !== null ? String(value) : "";
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+
+      container.appendChild(table);
+      return container;
+    };
+  }
+
   public getColumns(): Array<any> {
     const columns: any = this.columns.map((column, index) => {
       let formatter = "plaintext";
@@ -358,7 +428,8 @@ export class Tabulator extends Table {
       if(column.dataType == ColumnDataType.Image) {
         formatter = "image";
       }
-      return {
+
+      const columnDef: any = {
         field: column.name,
         title: column.displayName || column.name,
         width: column.width,
@@ -380,6 +451,13 @@ export class Tabulator extends Table {
           );
         },
       };
+
+      // Add nested table formatting for matrixdynamic and paneldynamic
+      if(column.dataType == ColumnDataType.NestedTable) {
+        columnDef.formatter = this.createNestedTableFormatter(column);
+      }
+
+      return columnDef;
     });
     // const rowExtensions = TableExtensions.getExtensions("row").filter(e => e.visibleIndex >= 0);
     // const detailsExtension = TableExtensions.getExtensions("details").filter(e => e.visibleIndex >= 0);

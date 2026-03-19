@@ -1,5 +1,5 @@
-import { Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionRadiogroupModel, QuestionSelectBase } from "survey-core";
-import { BaseColumn, CheckboxColumn, CommentColumn, CompositeQuestionColumn, CustomQuestionColumn, FileColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn, OtherColumn, SelectBaseColumn, SingleChoiceColumn } from "./columns";
+import { Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixDynamicModel, QuestionMatrixModel, QuestionPanelDynamicModel, QuestionRadiogroupModel, QuestionSelectBase } from "survey-core";
+import { BaseColumn, CheckboxColumn, CommentColumn, CompositeQuestionColumn, CustomQuestionColumn, FileColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn, MatrixDynamicColumn, OtherColumn, PanelDynamicColumn, SelectBaseColumn, SingleChoiceColumn } from "./columns";
 import { IColumn } from "./config";
 import { Table } from "./table";
 
@@ -142,3 +142,17 @@ export class CompositeColumnsBuilder extends DefaultColumnsBuilder<QuestionCompo
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("composite", new CompositeColumnsBuilder());
+
+export class MatrixDynamicColumnsBuilder extends DefaultColumnsBuilder<QuestionMatrixDynamicModel> {
+  protected createColumn(question: QuestionMatrixDynamicModel, table: Table): MatrixDynamicColumn {
+    return new MatrixDynamicColumn(question, table);
+  }
+}
+ColumnsBuilderFactory.Instance.registerBuilderColumn("matrixdynamic", new MatrixDynamicColumnsBuilder());
+
+export class PanelDynamicColumnsBuilder extends DefaultColumnsBuilder<QuestionPanelDynamicModel> {
+  protected createColumn(question: QuestionPanelDynamicModel, table: Table): PanelDynamicColumn {
+    return new PanelDynamicColumn(question, table);
+  }
+}
+ColumnsBuilderFactory.Instance.registerBuilderColumn("paneldynamic", new PanelDynamicColumnsBuilder());

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nested Tables - Matrix Dynamic and Panel Dynamic</title>
+  <link rel="stylesheet" href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css">
+  <script src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+  <script src="https://unpkg.com/survey-core/survey.core.min.js"></script>
+  <script src="../build/survey.analytics.tabulator.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .example-container {
+      margin-bottom: 40px;
+    }
+    .description {
+      background-color: #f0f0f0;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-left: 4px solid #3498db;
+    }
+  </style>
+</head>
+<body>
+  <h1>Nested Tables Example - Matrix Dynamic and Panel Dynamic</h1>
+
+  <div class="example-container">
+    <h2>Matrix Dynamic with Nested Tables</h2>
+    <div class="description">
+      <p>This example shows how Matrix Dynamic questions can be displayed using nested tables instead of JSON strings.</p>
+      <p>The nested table feature is enabled by setting <code>useNestedTables: true</code> in the table options.</p>
+    </div>
+    <div id="matrixDynamicTable"></div>
+  </div>
+
+  <div class="example-container">
+    <h2>Panel Dynamic with Nested Tables</h2>
+    <div class="description">
+      <p>This example shows how Panel Dynamic questions can be displayed using nested tables.</p>
+    </div>
+    <div id="panelDynamicTable"></div>
+  </div>
+
+  <script src="nested-tables.js"></script>
+</body>
+</html>
