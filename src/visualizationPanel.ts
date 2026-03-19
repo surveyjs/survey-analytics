@@ -11,7 +11,6 @@ import { LayoutEngine } from "./layout-engine";
 import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
-import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
 import { DatePeriodEnum, DateRangeWidget, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
 import { getDataName } from "./visualizerDescription";
 import { IDateRange, toRange } from "./utils/calculationDateRanges";
@@ -442,9 +441,7 @@ export class VisualizationPanel extends VisualizerBase {
       if(visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
         visualizer.setSelection(undefined);
       }
-      if(visualizer instanceof VisualizationPanelDynamic) {
-        visualizer.resetFilter();
-      }
+      visualizer.resetContentFilter();
     });
     this.updateResetFilterButtonDisabled();
   }

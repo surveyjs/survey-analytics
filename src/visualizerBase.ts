@@ -596,6 +596,8 @@ export class VisualizerBase implements IDataInfo {
     return !!this.question ? this.question.correctAnswer : "";
   }
 
+  public resetContentFilter(): void { }
+
   protected renderBanner(container: HTMLElement) { }
 
   protected destroyToolbar(container: HTMLElement) {
