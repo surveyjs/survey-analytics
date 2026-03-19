@@ -1,6 +1,6 @@
 import { GetDataFn, ITableOptions, Table, TableRow, TabulatorSortOrder } from "./table";
 import { SurveyModel, Event } from "survey-core";
-import { ColumnDataType, IColumnData, QuestionLocation } from "./config";
+import { ColumnDataType, IColumn, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
 import { ARIAL_FONT } from "./custom_jspdf_font";
