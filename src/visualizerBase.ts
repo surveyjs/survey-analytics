@@ -63,15 +63,7 @@ type ToolbarItemCreators = {
   },
 };
 
-export interface IVisualizerOptions {
-  dataField: string;
-  type?: string;
-  availableTypes?: string[];
-  title?: string;
-  allowChangeType?: boolean;
-  answersOrder?: "default" | "asc" | "desc";
-  [key: string]: any;
-}
+export { IVisualizerOptions } from "./visualizer-interfaces";
 
 export class PostponeHelper {
   public static postponeFunction: (fn: () => void, timeout?: number) => any;
@@ -113,7 +105,12 @@ export class PostponeHelper {
 export class VisualizerBase implements IDataInfo {
   public static haveCommercialLicense: boolean = false;
   public static suppressVisualizerStubRendering: boolean = false;
-  public static chartAdapterType: any = undefined;
+  public static get chartAdapterType(): any {
+    return VisualizationManager.chartAdapterType;
+  }
+  public static set chartAdapterType(value: any) {
+    VisualizationManager.chartAdapterType = value;
+  }
 
   private _appliedTheme: DashboardTheme;
   private _theme = new DashboardTheme();

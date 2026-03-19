@@ -1,21 +1,7 @@
 import { Question } from "survey-core";
-import { IVisualizerOptions, VisualizerBase } from "./visualizerBase";
 import { chartConfig, getChartTypes, getVisualizerTypes } from "./chartConfig";
 import { VisualizationManager } from "./visualizationManager";
-
-export interface IVisualizerDescription {
-  visualizerType: string;
-  visualizerTypes?: Array<string>;
-  chartType?: string;
-  availableTypes?: any;
-  question?: Question;
-  questionName?: string;
-  dataName?: string;
-  displayValueName?: string;
-  title?: string;
-  answersOrder?: "default" | "asc" | "desc";
-  options?: { [index: string]: any };
-}
+import { IVisualizerDescription, IVisualizerOptions } from "./visualizer-interfaces";
 
 export function getDataName(description: Question | IVisualizerDescription) {
   return description["name"] || description.question?.name || description.dataName || description.questionName;
@@ -43,8 +29,8 @@ export function createVisualizerDescription(vOptions: IVisualizerOptions, questi
         vct = [];
         availableTypes[vt] = vct;
       }
-      if(VisualizerBase.chartAdapterType) {
-        let chartTypes = VisualizerBase.chartAdapterType.getChartTypesByVisualizerType(vt);
+      if(VisualizationManager.chartAdapterType) {
+        let chartTypes = VisualizationManager.chartAdapterType.getChartTypesByVisualizerType(vt);
         if(!!vOptions.availableTypes && vOptions.availableTypes.length > 0) {
           chartTypes = chartTypes.filter(chType => (vOptions.availableTypes || []).indexOf(chType) !== -1 || chType === vOptions.type);
         }

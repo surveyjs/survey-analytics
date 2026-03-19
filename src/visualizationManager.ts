@@ -15,6 +15,7 @@ export class VisualizationManager {
   static defaultVisualizer: any = undefined;
   static alternativesVisualizer: any = undefined;
   static pivotVisualizer: any = undefined;
+  static chartAdapterType: any = undefined;
   static vizualizers: { [index: string]: Array<{ ctor: VisualizerConstructor, index: number, visualizerType: string }> } = {};
   /**
    * Registers a visualizer for a specified question type.
