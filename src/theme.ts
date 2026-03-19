@@ -1,5 +1,5 @@
 import { getRGBaColor } from "survey-core";
-import { DocumentHelper } from "./utils";
+import { DocumentHelper } from "./utils/documentHelper";
 import DefaultLight from "./themes/default-light";
 
 export interface IDashboardTheme {

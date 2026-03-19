@@ -1,5 +1,10 @@
 import { DropdownBase, IDropdownItemOption } from "./dropdownBase";
 
+export function createActionDropdown(options: IActionDropdownOptions): HTMLDivElement {
+  const widget = new ActionDropdownWidget(options);
+  return widget.render();
+}
+
 export interface IActionDropdownOptions {
   options: Array<IDropdownItemOption> | (() => Array<IDropdownItemOption>);
   isSelected: (option: { value: string, text: string, icon?: string }) => boolean;

@@ -1,7 +1,7 @@
 import { GetDataFn, ITableOptions, Table, TableRow, TabulatorSortOrder } from "./table";
 import { SurveyModel, Event } from "survey-core";
 import { ColumnDataType, IColumnData, QuestionLocation } from "./config";
-import { DocumentHelper } from "../utils";
+import { DocumentHelper } from "../utils/documentHelper";
 import { localization } from "../localizationManager";
 import { ARIAL_FONT } from "./custom_jspdf_font";
 import { svgTemplate } from "../svgbundle";
@@ -9,6 +9,7 @@ import type { DownloadType, SortDirection, TabulatorFull, RowComponent } from "t
 import { TableExtensions } from "./extensions/tableextensions";
 import { DashboardTheme, IDashboardTheme } from "../theme";
 import "./tabulator.scss";
+import { createActionDropdown } from "../utils/dropdownActionWidget";
 
 if(!!document) {
   const templateHolder = document.createElement("div");
@@ -280,7 +281,7 @@ export class Tabulator extends Table {
     */
 
     const values = this._options.downloadButtons.map(val => { return { value: val, text: localization.getString(`${val}DownloadCaption`) }; });
-    const exportAsAction = DocumentHelper.createActionDropdown({
+    const exportAsAction = createActionDropdown({
       options: values,
       isSelected: (option: any) => false,
       handler: (e: any) => {

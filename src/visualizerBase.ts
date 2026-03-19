@@ -2,10 +2,11 @@ import { Question, QuestionCommentModel, Event, settings, hasLicense, Base } fro
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { VisualizationManager } from "./visualizationManager";
-import { DocumentHelper, createLoadingIndicator, getDiffsFromDefaults } from "./utils";
+import { createLoadingIndicator, getDiffsFromDefaults } from "./utils";
 import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
 import { DashboardTheme, IDashboardTheme } from "./theme";
+import { DocumentHelper } from "./utils/documentHelper";
 
 import "./visualizerBase.scss";
 

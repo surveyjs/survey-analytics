@@ -2,7 +2,7 @@ import { Question, QuestionMultipleTextModel } from "survey-core";
 import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 import { localization } from "./localizationManager";
-import { DocumentHelper } from "./utils";
+import { DocumentHelper } from "./utils/documentHelper";
 import { getNestedDataRows } from "./statisticCalculators";
 
 import "./text.scss";

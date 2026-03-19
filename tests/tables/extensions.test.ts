@@ -3,7 +3,7 @@ import { Tabulator, TabulatorRow } from "../../src/tables/tabulator";
 import { TableExtensions } from "../../src/tables/extensions/tableextensions";
 import { Details } from "../../src/tables/extensions/detailsextensions";
 import { TableRow } from "../../src/tables/table";
-import { DocumentHelper } from "../../src/utils";
+import { DocumentHelper } from "../../src/utils/documentHelper";
 import { QuestionLocation } from "../../src/tables/config";
 
 export * from "../../src/tables/extensions/headerextensions";

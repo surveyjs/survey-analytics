@@ -1,9 +1,11 @@
 import { Question, QuestionSelectBase, ItemValue, Event, QuestionRatingModel } from "survey-core";
 import { IAnswersData, ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
-import { DataHelper, DocumentHelper } from "./utils/index";
+import { DataHelper } from "./utils/index";
+import { DocumentHelper } from "./utils/documentHelper";
 import { VisualizationManager } from "./visualizationManager";
 import { ToggleWidget } from "./utils/toggle";
+import { createDropdown } from "./utils/dropdownWidget";
 
 export interface IVisualizerWithSelection {
   selection: ItemValue;
@@ -150,7 +152,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     if(this.allowChangeType) {
       this.registerToolbarItem("changeChartType", () => {
         if(this.chartTypes.length > 1) {
-          return DocumentHelper.createDropdown({
+          return createDropdown({
             options: this.chartTypes.map((chartType) => {
               return {
                 value: chartType,
@@ -169,7 +171,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
 
     this.registerToolbarItem("changeAnswersOrder", () => {
       if(this.isSupportAnswersOrder()) {
-        this.choicesOrderSelector = DocumentHelper.createDropdown({
+        this.choicesOrderSelector = createDropdown({
           options: [
             { text: localization.getString("defaultOrder"), value: "default" },
             { text: localization.getString("ascOrder"), value: "asc" },
@@ -212,7 +214,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
         this.options.allowTopNAnswers &&
         this.getSeriesValues().length === 0
       ) {
-        this.topNSelector = DocumentHelper.createDropdown({
+        this.topNSelector = createDropdown({
           options: this.topNValues.map((value) => {
             return {
               text: localization.getString("topNValueText" + value),

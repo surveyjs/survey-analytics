@@ -3,7 +3,7 @@ import { IsTouch } from "survey-core";
 import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
-import { DocumentHelper, createCommercialLicenseLink } from "./utils/index";
+import { createCommercialLicenseLink } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, IState, IPermission } from "./config";
 import { FilterInfo } from "./filterInfo";
@@ -16,6 +16,10 @@ import { DatePeriodEnum, DateRangeWidget, IDateRangeWidgetOptions } from "./util
 import { getDataName } from "./visualizerDescription";
 import { IDateRange, toRange } from "./utils/calculationDateRanges";
 import { DateRangeModel, IDateRangeChangedOptions } from "./utils/dateRangeModel";
+import { createActionDropdown } from "./utils/dropdownActionWidget";
+import { createDropdown } from "./utils/dropdownWidget";
+import { DocumentHelper } from "./utils/documentHelper";
+
 import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
@@ -366,7 +370,7 @@ export class VisualizationPanel extends VisualizerBase {
             icon: "check-24x24"
           };
         });
-        const selectWrapper = DocumentHelper.createActionDropdown({
+        const selectWrapper = createActionDropdown({
           options: allQuestions,
           isSelected: (option: any) => this.hiddenElements.length === 0 || this.hiddenElements.filter(el => el.name === option.value).length === 0,
           handler: (e: any) => {
@@ -410,7 +414,7 @@ export class VisualizationPanel extends VisualizerBase {
       //   text: localization.getString("changeLocale"),
       // });
       this.registerToolbarItem("changeLocale", () => {
-        return DocumentHelper.createDropdown({
+        return createDropdown({
           options: localeChoices,
           isSelected: (option: any) => !!option.value && (this.locale || surveyLocalization.defaultLocale) === option.value,
           handler: (e: any) => {

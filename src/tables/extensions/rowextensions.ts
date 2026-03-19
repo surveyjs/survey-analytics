@@ -1,6 +1,6 @@
 import { Table } from "../table";
 import { localization } from "../../localizationManager";
-import { DocumentHelper } from "../../utils";
+import { DocumentHelper } from "../../utils/documentHelper";
 import { TableExtensions } from "./tableextensions";
 
 TableExtensions.registerExtension({

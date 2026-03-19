@@ -1,4 +1,4 @@
-import { DocumentHelper } from ".";
+import { DocumentHelper } from "./documentHelper";
 
 import "./toggle.scss";
 
