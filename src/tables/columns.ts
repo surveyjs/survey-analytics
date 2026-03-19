@@ -20,8 +20,9 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
   }
 
   protected updateWhenQuestionIsReady(question: Question, table: Table) {
-    if(!question) return;
+    if(!question || question.isReady) return;
     question.waitForQuestionIsReady().then(() => {
+      if(!table.isInitialized) return;
       try {
         table.lockStateChanged();
         table.refresh(!table.isInitTableDataProcessing);
