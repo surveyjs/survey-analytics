@@ -294,11 +294,32 @@ export class MatrixDynamicColumn extends BaseColumn {
   protected getDataType(): ColumnDataType {
     return this.table.options.useNestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
   }
+
+  public getCellData(table: Table, data: any): ICellData {
+    const displayValue = this.getDisplayValue(data, table, table.options);
+    // When nested tables are enabled, preserve the raw array data for the formatter
+    // Otherwise, format it as JSON string for backward compatibility
+    const formattedValue = table.options.useNestedTables && Array.isArray(displayValue)
+      ? displayValue
+      : (typeof displayValue === "string" ? displayValue : JSON.stringify(displayValue) || "");
+    return { question: this.question, displayValue: formattedValue };
+  }
 }
 
 export class PanelDynamicColumn extends BaseColumn {
   protected getDataType(): ColumnDataType {
     return this.table.options.useNestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
   }
+
+  public getCellData(table: Table, data: any): ICellData {
+    const displayValue = this.getDisplayValue(data, table, table.options);
+    // When nested tables are enabled, preserve the raw array data for the formatter
+    // Otherwise, format it as JSON string for backward compatibility
+    const formattedValue = table.options.useNestedTables && Array.isArray(displayValue)
+      ? displayValue
+      : (typeof displayValue === "string" ? displayValue : JSON.stringify(displayValue) || "");
+    return { question: this.question, displayValue: formattedValue };
+  }
 }
+
 
