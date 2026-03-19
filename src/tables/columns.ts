@@ -321,5 +321,3 @@ export class PanelDynamicColumn extends BaseColumn {
     return { question: this.question, displayValue: formattedValue };
   }
 }
-
-
