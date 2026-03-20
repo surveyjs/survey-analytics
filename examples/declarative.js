@@ -113,6 +113,7 @@ var options = {
 const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
 
 const itemDefinition1 = {
+  name: "visualizer1",
   visualizerType: "card",
   dataField: "test",
   title: "Total answers count - Card",
@@ -122,6 +123,7 @@ const itemDefinition1 = {
 };
 
 const itemDefinition2 = {
+  name: "visualizer2",
   visualizerType: "gauge",
   chartType: "bullet",
   dataField: "test",
@@ -132,6 +134,7 @@ const itemDefinition2 = {
 };
 
 const itemDefinition3 = {
+  name: "visualizer3",
   visualizerType: "gauge",
   chartType: "gauge",
   dataField: "test",
@@ -145,6 +148,7 @@ let visPanel = new SurveyAnalyticsPlotly.VisualizationPanel([itemDefinition1, it
 visPanel.showToolbar = true;
 
 // const itemDefinition1 = {
+//   name: "visualizer1",
 //   type: "card",
 //   dataField: "test",
 //   visualizer: {
@@ -154,6 +158,7 @@ visPanel.showToolbar = true;
 // };
 
 // const itemDefinition2 = {
+//   name: "visualizer2",
 //   type: "bullet",
 //   dataField: "test",
 //   visualizer: {
@@ -163,6 +168,7 @@ visPanel.showToolbar = true;
 // };
 
 // const itemDefinition3 = {
+//   name: "visualizer3",
 //   type: "gauge",
 //   dataField: "test",
 //   title: "Total answers count - Gauge gauge"

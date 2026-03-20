@@ -351,17 +351,11 @@ export interface IVisualizationPanelOptions {
  */
 export class VisualizationPanel<P extends PanelElement = PanelElement> extends VisualizerBase {
   public static LayoutEngine: new (allowed: boolean, itemSelector: string, dragEnabled?: boolean) => LayoutEngine;
-  private _itemsCounter = 0;
   private _renderedQuestionsCount: number = 0;
   private _resetFilterButton: HTMLElement;
   private _dateRangeWidget: DateRangeWidget;
   private _dateRangeModel: DateRangeModel;
   protected _elements: Array<P> = undefined;
-
-  protected getVisualizerName() {
-    this._itemsCounter++;
-    return "visualizer" + this._itemsCounter;
-  }
 
   private updateResetFilterButtonDisabled() {
     if(this._resetFilterButton) {
@@ -442,10 +436,6 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
           text: localization.getLocaleName(element)
         };
       });
-      // localeChoices.unshift({
-      //   value: "",
-      //   text: localization.getString("changeLocale"),
-      // });
       this.registerToolbarItem("changeLocale", () => {
         return createDropdown({
           options: localeChoices,
@@ -962,12 +952,9 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
           }
         } else {
           const descriptor = Object.assign({}, element) as any;
-          let question = (questions || []).filter(q => q.name === descriptor.dataField)[0];
+          let question = (questions || []).filter(q => q.name === (descriptor.dataField || descriptor.name))[0];
           if(typeof descriptor.question === "string") {
             question = (questions || []).filter((q) => q.name === descriptor.question || q.valueName === descriptor.question)[0];
-          }
-          if(!descriptor.name) {
-            descriptor.name = this.getVisualizerName();
           }
           el = this.createElement(descriptor, question);
           el.setState(element);
@@ -979,9 +966,6 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     return (questions || []).map((question) => {
       let questionAsElementDeclaration = Array.isArray(question) ? question[0] : question;
       questionAsElementDeclaration = questionAsElementDeclaration.question || questionAsElementDeclaration;
-      if(!questionAsElementDeclaration.name) {
-        questionAsElementDeclaration.name = this.getVisualizerName();
-      }
       const pe = this.createElement(undefined, questionAsElementDeclaration);
       if(Array.isArray(question)) {
         pe.questions = question;

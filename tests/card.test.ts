@@ -5,7 +5,7 @@ export * from "../src/card";
 test("Create visualizer by visualizerType", async () => {
   const itemDefinition = {
     visualizerType: "card",
-    dataField: "test",
+    name: "test",
     visualizer: {
       displayValueName: "count"
     },

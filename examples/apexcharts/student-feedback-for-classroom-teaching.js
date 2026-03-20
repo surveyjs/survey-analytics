@@ -2740,7 +2740,7 @@ const dashboard = new SurveyAnalytics.Dashboard({
     data: dataFromServer,
     items: [
     {
-        dataField: "college",
+        name: "college",
         type: "vbar",
         availableTypes: ["bar", "vbar"]
         // title: "College"
@@ -2751,7 +2751,7 @@ const dashboard = new SurveyAnalytics.Dashboard({
     "semester",
     "completion-date",
     {
-        dataField: "teacher-evaluation",
+        name: "teacher-evaluation",
         question: survey.getQuestionByName("teacher-evaluation"),
         type: "stackedbar",
         legendPosition: "bottom"

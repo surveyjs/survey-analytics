@@ -32,7 +32,7 @@ test("constructor with question should initialize requested chart type", () => {
   });
   const question = survey.getQuestionByName("q1");
 
-  const item = new DashboardItem({ dataField: "q1", type: "pie", availableTypes: ["bar", "pie"] } as any, question);
+  const item = new DashboardItem({ name: "q1", type: "pie", availableTypes: ["bar", "pie"] } as any, question);
 
   expect(item.visualizerType).toBe("selectBase");
   expect(item.type).toBe("pie");
@@ -46,7 +46,7 @@ test("constructor with question should keep unknown requested visualizer type", 
   });
   const question = survey.getQuestionByName("q1");
 
-  const item = new DashboardItem({ dataField: "q1", type: "custom-viz", availableTypes: ["custom-viz"] } as any, question);
+  const item = new DashboardItem({ name: "q1", type: "custom-viz", availableTypes: ["custom-viz"] } as any, question);
 
   expect(item.visualizerType).toBe("custom-viz");
   expect(item.visualizerTypes?.includes("custom-viz")).toBeTruthy();
@@ -55,7 +55,7 @@ test("constructor with question should keep unknown requested visualizer type", 
 
 test("constructor without question should initialize from chart config", () => {
   const item = new DashboardItem({
-    dataField: "score",
+    name: "score",
     type: "gauge",
     availableTypes: ["gauge", "bullet"],
     title: "Score",
@@ -79,7 +79,7 @@ test("constructor without question should initialize from chart config", () => {
 
 test("constructor without question should keep custom type when no chart config exists", () => {
   const item = new DashboardItem({
-    dataField: "score",
+    name: "score",
     type: "custom",
     availableTypes: ["custom"],
   } as any);
@@ -106,7 +106,7 @@ test("dataField getter should fallback to question valueName then name", () => {
 });
 
 test("title getter/setter should proxy displayName", () => {
-  const item = new DashboardItem({ dataField: "q1", type: "wordcloud", title: "Initial" } as any);
+  const item = new DashboardItem({ name: "q1", type: "wordcloud", title: "Initial" } as any);
 
   expect(item.title).toBe("Initial");
   item.title = "Updated";
@@ -115,7 +115,7 @@ test("title getter/setter should proxy displayName", () => {
 });
 
 test("state should include type property", () => {
-  const item = new DashboardItem({ dataField: "q1", type: "wordcloud" } as any);
+  const item = new DashboardItem({ name: "q1", type: "wordcloud" } as any);
 
   const state = item.getState();
 
@@ -126,7 +126,7 @@ test("state should include type property", () => {
 });
 
 test("visualizerType setter should switch wrapper visualizer and sync item type from current chart", () => {
-  const item = new DashboardItem({ dataField: "q1", type: "bar", availableTypes: ["bar", "gauge"] } as any);
+  const item = new DashboardItem({ name: "q1", type: "bar", availableTypes: ["bar", "gauge"] } as any);
   const wrappedVisualizer: any = { chartType: "gauge" };
   const fakeWrapper: any = {
     setVisualizer: jest.fn(),
@@ -142,7 +142,7 @@ test("visualizerType setter should switch wrapper visualizer and sync item type 
 });
 
 test("visualizerType setter should do nothing when value is unchanged", () => {
-  const item = new DashboardItem({ dataField: "q1", type: "bar", availableTypes: ["bar", "gauge"] } as any);
+  const item = new DashboardItem({ name: "q1", type: "bar", availableTypes: ["bar", "gauge"] } as any);
   const fakeWrapper: any = {
     setVisualizer: jest.fn(),
     getVisualizer: jest.fn(() => ({ chartType: "bar" })),
@@ -157,7 +157,7 @@ test("visualizerType setter should do nothing when value is unchanged", () => {
 });
 
 test("type setter should update chart type via current visualizer", () => {
-  const item = new DashboardItem({ dataField: "q1", type: "bar", availableTypes: ["bar", "pie"] } as any);
+  const item = new DashboardItem({ name: "q1", type: "bar", availableTypes: ["bar", "pie"] } as any);
   const fakeVisualizer: any = {
     setChartType: jest.fn(),
   };
@@ -171,7 +171,7 @@ test("type setter should update chart type via current visualizer", () => {
 });
 
 test("type setter should route through wrapper and change visualizer type", () => {
-  const item = new DashboardItem({ dataField: "q1", type: "bar", availableTypes: ["bar", "bullet"] } as any);
+  const item = new DashboardItem({ name: "q1", type: "bar", availableTypes: ["bar", "bullet"] } as any);
   const wrappedVisualizer: any = {
     chartType: "bar",
     setChartType: jest.fn(),
@@ -192,7 +192,7 @@ test("type setter should route through wrapper and change visualizer type", () =
 });
 
 test("type setter should still update type for unsupported values", () => {
-  const item = new DashboardItem({ dataField: "q1", type: "bar", availableTypes: ["bar", "pie"] } as any);
+  const item = new DashboardItem({ name: "q1", type: "bar", availableTypes: ["bar", "pie"] } as any);
   const fakeVisualizer: any = {
     setChartType: jest.fn(),
   };
@@ -206,7 +206,7 @@ test("type setter should still update type for unsupported values", () => {
 });
 
 test("availableTypes setter should reinitialize types and keep initially passed options.availableTypes", () => {
-  const item = new DashboardItem({ dataField: "q1", type: "bar", availableTypes: ["bar", "pie"] } as any);
+  const item = new DashboardItem({ name: "q1", type: "bar", availableTypes: ["bar", "pie"] } as any);
 
   item.availableTypes = ["bullet"];
 
@@ -222,7 +222,7 @@ test("availableTypes setter should reinitialize types and keep initially passed 
 });
 
 test("availableTypes setter should recreate visualizer and restore its state", () => {
-  const item = new DashboardItem({ dataField: "q1", type: "bar", availableTypes: ["bar", "pie", "bullet"] } as any);
+  const item = new DashboardItem({ name: "q1", type: "bar", availableTypes: ["bar", "pie", "bullet"] } as any);
   const oldVisualizer: any = {
     destroy: jest.fn(),
     getState: jest.fn(() => ({ customState: true })),
@@ -248,7 +248,7 @@ test("availableTypes setter should recreate visualizer and restore its state", (
 });
 
 test("availableTypes setter should rerender recreated visualizer when item is rendered", () => {
-  const item = new DashboardItem({ dataField: "q1", type: "bar", availableTypes: ["bar", "pie", "bullet"] } as any);
+  const item = new DashboardItem({ name: "q1", type: "bar", availableTypes: ["bar", "pie", "bullet"] } as any);
   const renderHost = document.createElement("div");
   const oldVisualizer: any = {
     destroy: jest.fn(),

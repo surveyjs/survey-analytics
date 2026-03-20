@@ -615,12 +615,12 @@ var dashboard = new SurveyAnalytics.Dashboard({
   dateFieldName: "timestamp",
   items: [
     {
-        dataField: "overall-satisfaction",
+        name: "overall-satisfaction",
         type: "gauge",
         // availableTypes: ["gauge", "bullet"]
     },
     {
-        dataField: "smartphone-features",
+        name: "smartphone-features",
         type: "radar",
         allowChangeType: false
     },

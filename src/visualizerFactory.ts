@@ -38,7 +38,7 @@ export class VisualizerFactory {
 
     if("visualizerType" in descriptor || "visualizerTypes" in descriptor) {
       type = descriptor.visualizerType || (descriptor.visualizerTypes || [])[0];
-      const dataName = descriptor["name"] || descriptor.question?.name || descriptor.dataField || descriptor.questionName;
+      const dataName = descriptor.question?.name || descriptor.dataField || descriptor.questionName || descriptor.name;
 
       optionsForCreator = Object.assign({},
         optionsForCreator,
@@ -58,7 +58,7 @@ export class VisualizerFactory {
 
       question = descriptor.question || {
         name: dataName,
-        valueName: descriptor.question?.valueName || descriptor.dataField || descriptor.questionName,
+        valueName: descriptor.question?.valueName || descriptor.dataField || descriptor.questionName || descriptor.name,
         title: descriptor.title,
         displayValueName: descriptor?.visualizer?.displayValueName,
         waitForQuestionIsReady: () => {

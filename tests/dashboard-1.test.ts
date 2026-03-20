@@ -27,6 +27,7 @@ test("Create pivot visualizer with axis options", async () => {
   };
   const survey = new SurveyModel(json);
   const itemDefinition: any = {
+    name: "visualizer1",
     type: "pivot",
     questions: survey.getAllQuestions(),
     categoryField: "question2",
@@ -117,7 +118,7 @@ test("Dashboard item availableTypes should recreate visualizer in built dashboar
   const itemDefinition = {
     type: "bar",
     availableTypes: ["bar", "pie", "bullet"],
-    dataField: "score"
+    name: "score"
   };
   const dashboard = new Dashboard({ items: [itemDefinition], data: [{ score: 10 }] });
 
@@ -143,7 +144,7 @@ test("Dashboard item availableTypes should recreate and rerender visualizer afte
   const itemDefinition = {
     type: "bar",
     availableTypes: ["bar", "pie", "bullet"],
-    dataField: "score"
+    name: "score"
   };
   const dashboard = new Dashboard({ items: [itemDefinition], data: [{ score: 10 }] });
 

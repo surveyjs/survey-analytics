@@ -1408,27 +1408,27 @@ var dashboard = new SurveyAnalytics.Dashboard({
       dateFieldName: "timestamp",
       items: [
           {
-              dataField: "overall_satisfaction",
+              name: "overall_satisfaction",
               type: "gauge"
           },
           {
-              dataField: "recognition",
+              name: "recognition",
               type: "gauge"
           },
           {
+              name: "role_clarity",
               type: "bar",
-              dataField: "role_clarity",
               answersOrder: "desc"
           },
           // "role_clarity",
           "work_life_balance",
           {
-              dataField: "environment_ratings",
+              name: "environment_ratings",
               type: "stackedbar",
               legendPosition: "bottom"
           },
           {
-              dataField: "leadership_effectiveness",
+              name: "leadership_effectiveness",
               type: "stackedbar",
               legendPosition: "bottom"
           },

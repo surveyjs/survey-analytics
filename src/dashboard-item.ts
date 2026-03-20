@@ -7,8 +7,8 @@ import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 import { VisualizerFactory } from "./visualizerFactory";
 
 export interface IDashboardItemOptions {
-  dataField: string;
-  name?: string;
+  name: string;
+  dataField?: string;
   type?: string;
   availableTypes?: string[];
   title?: string;
