@@ -1,4 +1,5 @@
-import { GetDataFn, ITableOptions, Table, TableRow, TabulatorSortOrder } from "./table";
+import { GetDataFn, Table, TableRow, TabulatorSortOrder } from "./table";
+import { ITableOptions } from "./table-interfaces";
 import { SurveyModel, Event } from "survey-core";
 import { ColumnDataType, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils/documentHelper";
@@ -8,8 +9,9 @@ import { svgTemplate } from "../svgbundle";
 import type { DownloadType, SortDirection, TabulatorFull, RowComponent } from "tabulator-tables";
 import { TableExtensions } from "./extensions/tableextensions";
 import { DashboardTheme, IDashboardTheme } from "../theme";
-import "./tabulator.scss";
 import { createActionDropdown } from "../utils/dropdownActionWidget";
+
+import "./tabulator.scss";
 
 if(!!document) {
   const templateHolder = document.createElement("div");

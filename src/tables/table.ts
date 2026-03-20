@@ -13,54 +13,7 @@ import { ITableExtension, TableExtensions } from "./extensions/tableextensions";
 import { createCommercialLicenseLink } from "../utils";
 import { ColumnsBuilderFactory } from "./columnbuilder";
 import { DefaultColumn } from "./columns";
-
-export interface ITableOptions {
-  [index: string]: any;
-
-  /**
-   * Specifies whether to use question names instead of question titles as column headings.
-   *
-   * Default value: `false`
-   */
-  useNamesAsTitles?: boolean;
-  /**
-   * Specifies the delimiter used to separate multiple choice items in a list.
-   *
-   * Default value: `", "`
-   */
-  itemsDelimiter?: string;
-  /**
-   * A callback function that allows you to customize a question's display value in the table.
-   *
-   * Parameters:
-   *
-   * - `options.question`: `Question`\
-   * The question for which the callback is executed.
-   * - `options.displayValue`: `any`\
-   * The question's display value. You can modify this parameter to change the output.
-   */
-  onGetQuestionValue?: (options: {
-    question: Question,
-    displayValue: any,
-  }) => void;
-
-  /**
-   * Specifies the number of data items to load and display per page. Applies only if `paginationEnabled` is `true`.
-   *
-   * Default value: 10
-   * @see paginationEnabled
-   */
-  pageSize?: number;
-  /**
-   * Specifies whether the dataset is split into pages.
-   *
-   * Default value: `true`
-   *
-   * > Pagination cannot be disabled if the dataset is loaded from a server (that is, if the second parameter passed to the `Tabulator` constructor is a function).
-   * @see pageSize
-   */
-  paginationEnabled?: boolean;
-}
+import { ITableOptions, ITable } from "./table-interfaces";
 
 export type TabulatorFilter = { field: string, type: string, value: any };
 export type TabulatorSortOrder = { field: string, direction: undefined | "asc" | "desc" };
@@ -71,8 +24,11 @@ export type GetDataFn = GetDataUsingCallbackFn | GetDataUsingPromiseFn;
 
 export class TableEvent extends EventBase<Table> {}
 
-export abstract class Table {
+export abstract class Table implements ITable {
   public static showFilesAsImages = false;
+  public getShowFilesAsImages(): boolean {
+    return Table.showFilesAsImages;
+  }
   public static haveCommercialLicense: boolean = false;
   protected tableData: any;
   protected extensions: TableExtensions;
