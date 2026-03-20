@@ -1,35 +1,14 @@
 import { Question, SurveyModel, Event } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
-import { VisualizationPanel } from "./visualizationPanel";
-import { DataProvider, GetDataFn } from "./dataProvider";
+import { IVisualizationPanelOptions, VisualizationPanel } from "./visualizationPanel";
 import { DashboardItem, IDashboardItemOptions } from "./dashboard-item";
-import { LayoutEngine } from "./layout-engine";
-import { DatePeriodEnum, DateRangeTuple } from "./utils/dateRangeModel";
 import { VisualizerFactory } from "./visualizerFactory";
 import { IVisualizerPanelElement } from "./config";
 
-export interface IDashboardOptions {
-  data?: any[];
-  questions?: Question[];
+export interface IDashboardOptions extends IVisualizationPanelOptions {
   items?: Array<string | IDashboardItemOptions>;
-
-  survey?: SurveyModel;
-  dataProvider?: DataProvider;
-  allowHideQuestions?: boolean;
-  allowDynamicLayout?: boolean;
-  allowDragDrop?: boolean;
-  layoutEngine?: LayoutEngine;
-  stripHtmlFromTitles?: boolean;
-  showToolbar?: boolean;
-
-  dateFieldName?: string;
-  datePeriod?: DatePeriodEnum;
-  availableDatePeriods?: DatePeriodEnum[];
-  dateRange?: DateRangeTuple;
-  showAnswerCount?: boolean;
-  showDatePanel?: boolean;
-
-  [key: string]: any;
+  questions?: Question[];
+  data?: any[];
 }
 
 export class Dashboard extends VisualizationPanel<DashboardItem> {

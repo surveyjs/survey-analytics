@@ -13,7 +13,7 @@ import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
 import { DatePeriodEnum, DateRangeWidget, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
 import { IDateRange, toRange } from "./utils/calculationDateRanges";
-import { DateRangeModel, IDateRangeChangedOptions } from "./utils/dateRangeModel";
+import { DateRangeModel, DateRangeTuple, IDateRangeChangedOptions } from "./utils/dateRangeModel";
 import { ElementVisibilityAction } from "./utils/elementVisibilityAction";
 import { IDropdownItemOption } from "./utils/dropdownBase";
 import { DocumentHelper } from "./utils/documentHelper";
@@ -327,6 +327,12 @@ export interface IVisualizationPanelOptions {
    */
   allowChangeVisualizerType?: boolean;
   legendPosition?: "left" | "right" | "top" | "bottom";
+
+  dateFieldName?: string;
+  datePeriod?: DatePeriodEnum;
+  availableDatePeriods?: DatePeriodEnum[];
+  dateRange?: DateRangeTuple;
+  showDatePanel?: boolean;
 }
 
 /**

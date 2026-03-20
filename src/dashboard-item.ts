@@ -14,8 +14,6 @@ export interface IDashboardItemOptions {
   title?: string;
   allowChangeType?: boolean;
   displayValueName?: string;
-  // visualizer?: VisualizerBase;
-  // options?: { [index: string]: any };
   visualizer?: { [index: string]: any };
 }
 
