@@ -134,6 +134,16 @@ export class ApexChartsSetup {
     };
   }
 
+  static defaultAxisTitleFont(theme: DashboardTheme) {
+    const font = theme.axisTitleFont;
+    return {
+      colors: font.color,
+      fontSize: font.size,
+      fontFamily: font.family,
+      fontWeight: font.weight,
+    };
+  }
+
   static defaultAxisLabelFont(theme: DashboardTheme) {
     const font = theme.axisLabelFont;
     return {
@@ -144,15 +154,21 @@ export class ApexChartsSetup {
     };
   }
 
-  static defaultAxisLabelConfig(theme: DashboardTheme) {
+  static defaultAxisConfig(theme: DashboardTheme) {
     return {
+      title: {
+        style: {
+          ...ApexChartsSetup.defaultAxisTitleFont(theme),
+        },
+      },
+      min: 0,
       labels: {
         trim: true,
         hideOverlappingLabels: false,
         style: {
           ...ApexChartsSetup.defaultAxisLabelFont(theme)
         },
-      }
+      },
     };
   }
 
@@ -426,7 +442,7 @@ export class ApexChartsSetup {
 
     // Axis settings
     const xaxis: any = {
-      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
+      ...ApexChartsSetup.defaultAxisConfig(model.theme),
       categories: labels,
       axisBorder: {
         show: false,
@@ -434,7 +450,7 @@ export class ApexChartsSetup {
     };
 
     const yaxis: any = {
-      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
+      ...ApexChartsSetup.defaultAxisConfig(model.theme),
       axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme) },
     };
 
@@ -540,14 +556,18 @@ export class ApexChartsSetup {
 
     // Axis settings
     const xaxis: any = {
-      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
+      ...ApexChartsSetup.defaultAxisConfig(model.theme),
       categories: labels,
       axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme) },
     };
 
-    const yaxis: any = {
-      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme)
-    };
+    const yaxis: any = model.getYAxisInfo().map(info => {
+      const setting = Object.assign(ApexChartsSetup.defaultAxisConfig(model.theme), info);
+      setting.title.style = {
+        ...ApexChartsSetup.defaultAxisTitleFont(model.theme),
+      };
+      return setting;
+    });
 
     const grid = {
       ...ApexChartsSetup.defaultGridConfig(model.theme),
@@ -655,9 +675,13 @@ export class ApexChartsSetup {
       }
     };
 
-    const yaxis: any = {
-      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme)
-    };
+    const yaxis: any = model.getYAxisInfo().map(info => {
+      const setting = Object.assign(ApexChartsSetup.defaultAxisConfig(model.theme), info);
+      setting.title.style = {
+        ...ApexChartsSetup.defaultAxisTitleFont(model.theme),
+      };
+      return setting;
+    });
 
     // Legend settings
     const legend: any = {
@@ -756,14 +780,14 @@ export class ApexChartsSetup {
       series.reduce((sum, s) => sum + s.data[index], 0)
     ));
     const xaxis: any = {
-      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme),
+      ...ApexChartsSetup.defaultAxisConfig(model.theme),
       categories: labels,
       max: Math.ceil(maxValue),
       axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme) },
     };
 
     const yaxis: any = {
-      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme)
+      ...ApexChartsSetup.defaultAxisConfig(model.theme)
     };
 
     const grid = {
@@ -877,7 +901,7 @@ export class ApexChartsSetup {
     };
 
     const yaxis: any = {
-      ...ApexChartsSetup.defaultAxisLabelConfig(model.theme)
+      ...ApexChartsSetup.defaultAxisConfig(model.theme)
     };
 
     // Legend settings

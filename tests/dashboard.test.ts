@@ -190,7 +190,7 @@ test("Create pivot visualizer with questions", async () => {
   expect(visualizer.type).toBe("pivot");
   expect(visualizer.questions.length).toBe(3);
   expect(visualizer.axisXQuestionName).toBe("question1");
-  expect(visualizer.axisYQuestionNames).toStrictEqual([]);
+  expect(visualizer.primaryYAxes).toStrictEqual([]);
 });
 
 // test("Create pivot visualizer with axis options", async () => {

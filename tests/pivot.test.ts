@@ -59,7 +59,7 @@ test("default settings", async () => {
   const seriesLabels = pivot.getSeriesLabels();
 
   expect(pivot.axisXQuestionName).toBe("question1");
-  expect(pivot.axisYQuestionNames).toStrictEqual([]);
+  expect(pivot.primaryYAxes).toStrictEqual([]);
   expect(values).toStrictEqual(["female", "male"]);
   expect(labels).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual([]);
@@ -77,7 +77,7 @@ test("getSeriesValues and getSeriesLabels + values and labels", async () => {
   let seriesLabels = pivot.getSeriesLabels();
 
   expect(pivot.axisXQuestionName).toBe("question1");
-  expect(pivot.axisYQuestionNames).toStrictEqual([]);
+  expect(pivot.primaryYAxes).toStrictEqual([]);
   expect(values).toStrictEqual(["female", "male"]);
   expect(labels).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual([]);
@@ -91,7 +91,7 @@ test("getSeriesValues and getSeriesLabels + values and labels", async () => {
   seriesLabels = pivot.getSeriesLabels();
 
   expect(pivot.axisXQuestionName).toBe("question2");
-  expect(pivot.axisYQuestionNames).toStrictEqual(["question1"]);
+  expect(pivot.primaryYAxes).toStrictEqual([{ dataName: "question1", valueName: "question1", aggregation: "count" }]);
   expect(values).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(labels).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(seriesValues).toStrictEqual(["female", "male"]);
@@ -405,107 +405,6 @@ test("setAxisQuestions with empty array", () => {
   expect(pivot.axisXQuestionName).toBe(originalAxisX);
 });
 
-test("onAxisYSelectorChanged removes subsequent selectors when value is empty", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-  pivot.setAxisQuestions("question1", "question2", "question3");
-
-  expect(pivot.axisYQuestionNames.length).toBe(2);
-
-  // Mock the unregisterToolbarItem method
-  const originalUnregister = pivot["unregisterToolbarItem"];
-  const mockUnregister = jest.fn();
-  pivot["unregisterToolbarItem"] = mockUnregister;
-
-  // Mock the axisYSelectors array to have the expected length
-  pivot["axisYSelectors"] = [{} as HTMLDivElement, {} as HTMLDivElement];
-
-  pivot.onAxisYSelectorChanged(0, "");
-
-  expect(mockUnregister).toHaveBeenCalledWith("axisYSelector1");
-  expect(pivot.axisYQuestionNames.length).toBe(1);
-
-  // Restore original method
-  pivot["unregisterToolbarItem"] = originalUnregister;
-});
-
-test("onAxisYSelectorChanged adds new selector when value is set", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-  pivot.setAxisQuestions("question1", "question2");
-
-  // Mock the registerToolbarItem method
-  const originalRegister = pivot["registerToolbarItem"];
-  const mockRegister = jest.fn();
-  pivot["registerToolbarItem"] = mockRegister;
-
-  // Mock the axisYSelectors array to have the expected length
-  pivot["axisYSelectors"] = [{} as HTMLDivElement, {} as HTMLDivElement];
-
-  pivot.onAxisYSelectorChanged(1, "question3");
-
-  expect(mockRegister).toHaveBeenCalledWith("axisYSelector2", expect.any(Function), "dropdown");
-
-  // Restore original method
-  pivot["registerToolbarItem"] = originalRegister;
-});
-
-test("updateQuestionsSelection prevents duplicate question selection", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-
-  // Mock the onAxisYSelectorChanged method
-  const originalOnAxisYSelectorChanged = pivot.onAxisYSelectorChanged;
-  const mockOnAxisYSelectorChanged = jest.fn();
-  pivot.onAxisYSelectorChanged = mockOnAxisYSelectorChanged;
-
-  pivot.setAxisQuestions("question1", "question1");
-  pivot["updateQuestionsSelection"]();
-
-  expect(mockOnAxisYSelectorChanged).toHaveBeenCalledWith(0, undefined);
-
-  // Restore original method
-  pivot.onAxisYSelectorChanged = originalOnAxisYSelectorChanged;
-});
-
-test("createAxisYSelector returns undefined when no choices available", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-  pivot.setAxisQuestions("question1", "question2", "question3");
-
-  // All questions are already selected, so no choices should be available
-  const selector = pivot["createAxisYSelector"](2);
-  expect(selector).toBeUndefined();
-});
-
-test("pivot without maxSeriesCount", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-  pivot.setAxisQuestions("question1", "question2", "question3", "question4");
-
-  const registerSpy = jest.spyOn(pivot, "registerToolbarItem");
-  pivot["axisYSelectors"] = [{} as HTMLDivElement];
-
-  pivot.onAxisYSelectorChanged(0, "question2");
-
-  const axisYSelector1Calls = registerSpy.mock.calls.filter((c) => c[0] === "axisYSelector1");
-  expect(axisYSelector1Calls.length).toBe(1);
-  expect(Object.keys(pivot["toolbarItemCreators"]).filter(key => key.indexOf("axisYSelector") === 0).length).toEqual(2);
-
-  registerSpy.mockRestore();
-});
-
-test("pivot with maxSeriesCount: 1", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data, { maxSeriesCount: 1 } as any);
-  pivot.setAxisQuestions("question1", "question2", "question3", "question4");
-
-  const registerSpy = jest.spyOn(pivot, "registerToolbarItem");
-  pivot["axisYSelectors"] = [{} as HTMLDivElement];
-
-  pivot.onAxisYSelectorChanged(0, "question2");
-
-  const axisYSelector1Calls = registerSpy.mock.calls.filter((c) => c[0] === "axisYSelector1");
-  expect(axisYSelector1Calls.length).toBe(0);
-  expect(Object.keys(pivot["toolbarItemCreators"]).filter(key => key.indexOf("axisYSelector") === 0).length).toEqual(1);
-
-  registerSpy.mockRestore();
-});
-
 test("isXYChart method", () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
   pivot["chartTypes"] = ["bar", "vbar", "line", "scatter", "pie", "doughnut"];
@@ -726,17 +625,188 @@ test("getCalculatedValues with value aggregation", async () => {
   expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
 
-  pivot.setValueAggregation("question2", "question3");
+  pivot.primaryYAxes = [{
+    dataName: "question2",
+    valueName: "question3",
+    aggregation: "sum",
+  }];
+  pivot["setupPivot"]();
   values = pivot.getValues();
   seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect((await pivot.getCalculatedValues()).data).toStrictEqual([[250, 300], [1200, 300], [1050, 400]]);
 
-  pivot.resetAggregations();
+  pivot.primaryYAxes = [];
+  pivot["setupPivot"]();
   values = pivot.getValues();
   seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual(["female", "male"]);
-  expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
-  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
+  expect(seriesValues).toStrictEqual([]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[8, 4]]);
+});
+
+test("useSecondaryYAxis clears secondaryYAxes when set to false and restores when set back to true", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+
+  pivot.secondaryYAxes.push(
+    { dataName: "question2", valueName: "question2", aggregation: "count" },
+    { dataName: "question3", valueName: "question3", aggregation: "sum" }
+  );
+  const stateBeforeOff = pivot.secondaryYAxes.map((axis) => ({ ...axis }));
+
+  expect(pivot.useSecondaryYAxis).toBe(true);
+  expect(pivot.secondaryYAxes).toHaveLength(2);
+
+  pivot.useSecondaryYAxis = false;
+  expect(pivot.useSecondaryYAxis).toBe(false);
+  expect(pivot.secondaryYAxes).toEqual([]);
+
+  pivot.useSecondaryYAxis = true;
+  expect(pivot.useSecondaryYAxis).toBe(true);
+  expect(pivot.secondaryYAxes).toHaveLength(2);
+  expect(pivot.secondaryYAxes).toStrictEqual(stateBeforeOff);
+});
+
+test("useSecondaryYAxis leaves secondaryYAxes empty when re-enabled if it was empty before disabling", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2");
+
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+
+  pivot.useSecondaryYAxis = false;
+  expect(pivot.secondaryYAxes).toEqual([]);
+
+  pivot.useSecondaryYAxis = true;
+  expect(pivot.secondaryYAxes).toEqual([]);
+});
+
+test("movePrimaryItemToSecondary moves item from primary to secondary Y axis", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+
+  expect(pivot.primaryYAxes).toHaveLength(2);
+  expect(pivot.primaryYAxes[0].dataName).toBe("question2");
+  expect(pivot.primaryYAxes[1].dataName).toBe("question3");
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+
+  pivot["movePrimaryItemToSecondary"](0);
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.primaryYAxes[0].dataName).toBe("question3");
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes[0].dataName).toBe("question2");
+  expect(pivot.secondaryYAxes[0].aggregation).toBe("count");
+});
+
+test("movePrimaryItemToSecondary does nothing when index is out of range", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+
+  pivot["movePrimaryItemToSecondary"](10);
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+});
+
+test("moveSecondaryItemToPrimary moves item from secondary to primary Y axis", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+  pivot["movePrimaryItemToSecondary"](0);
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+
+  pivot["moveSecondaryItemToPrimary"](0);
+
+  expect(pivot.primaryYAxes).toHaveLength(2);
+  expect(pivot.primaryYAxes[0].dataName).toBe("question3");
+  expect(pivot.primaryYAxes[1].dataName).toBe("question2");
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+});
+
+test("moveSecondaryItemToPrimary does nothing when index is out of range", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.secondaryYAxes.push(
+    { dataName: "question2", valueName: "question2", aggregation: "count" }
+  );
+  pivot.secondaryYAxesSeriesListWidget.setItems(pivot.secondaryYAxes);
+
+  expect(pivot.primaryYAxes).toHaveLength(0);
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+
+  pivot["moveSecondaryItemToPrimary"](5);
+
+  expect(pivot.primaryYAxes).toHaveLength(0);
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+});
+
+test("moveToolbarItemsToSidebar: all toolbar items except changeChartType are moved to sidebar", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  const toolbarNames = Object.keys(pivot["toolbarItemCreators"]);
+  const sidebarNames = Object.keys(pivot["sideBarItemCreators"]);
+
+  expect(toolbarNames).toEqual(["changeChartType"]);
+
+  const pivotSidebarItems = ["axisXSelector", "primaryYAxes", "secondaryYAxisBlock"];
+  pivotSidebarItems.forEach((name) => expect(sidebarNames).toContain(name));
+
+  const movedFromToolbar = [
+    "changeAnswersOrder",
+    "showPercentages",
+    "hideEmptyAnswers",
+    "topNAnswers",
+    "transposeData",
+    "showMissingAnswers",
+  ];
+  movedFromToolbar.forEach((name) => expect(sidebarNames).toContain(name));
+});
+
+test("getYAxisInfo returns single empty object when secondary Y axis is not used", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("question1", "question2");
+
+  const result = pivot.getYAxisInfo();
+
+  expect(result).toHaveLength(1);
+  expect(result[0]).toEqual({});
+});
+
+test("getYAxisInfo returns single empty object when secondaryYAxes is empty", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2");
+
+  const result = pivot.getYAxisInfo();
+
+  expect(result).toHaveLength(1);
+  expect(result[0]).toEqual({});
+});
+
+test("getYAxisInfo returns two axis settings when secondary Y axis has series", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+  pivot["movePrimaryItemToSecondary"](0);
+
+  const result = pivot.getYAxisInfo() as Array<{ title?: { text: string }, opposite?: boolean, seriesName?: string[] }>;
+  expect(result).toHaveLength(2);
+
+  const [primary, secondary] = result;
+  expect(primary).toStrictEqual({
+    title: { text: "Bill amount" },
+    opposite: false,
+    seriesName: ["Bill amount"]
+  });
+  expect(secondary).toStrictEqual({
+    title: { text: "Item kind" },
+    opposite: true,
+    seriesName: ["Item 1", "Item 2", "Item 3"]
+  });
 });

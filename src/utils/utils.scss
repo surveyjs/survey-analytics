@@ -1,6 +1,7 @@
 @use "../globals" as *;
 @forward "../globals";
 @use "../typography-mixins.scss" as *;
+@use "./dropdown.scss" as *;
 
 .sa-commercial {
   box-sizing: border-box;
@@ -132,7 +133,8 @@
 }
 
 .sa-dropdown__title {
-  padding: var(--sjs2-spacing-x150, 12px) var(--sjs2-size-x000, 0.001px) var(--sjs2-spacing-x150, 12px) var(--sjs2-size-x150, 12px);
+  // padding: var(--sjs2-spacing-x150, 12px) var(--sjs2-size-x000, 0.001px) var(--sjs2-spacing-x150, 12px) var(--sjs2-size-x150, 12px);
+  padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-size-x000, 0.001px);
   display: flex;
   flex-shrink: 0;
   margin-inline-end: var(--sjs2-spacing-static-x100, 8px);
@@ -444,17 +446,5 @@
 }
 
 @media screen and (max-width: 600px) {
-  .sa-dropdown {
-    width: 100%;
-    flex-direction: column;
-  }
-
-  .sa-dropdown-container {
-    width: 100%;
-  }
-
-  .sa-dropdown-list.sa-dropdown--opened {
-    min-width: calc(100% - var(--sjs2-layout-container-drop-horizontal, 8px) * 2);
-    max-width: calc(100% - var(--sjs2-layout-container-drop-horizontal, 8px) * 2);
-  }
+  @include columnDropdown;
 }

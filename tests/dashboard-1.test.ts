@@ -48,5 +48,8 @@ test("Create pivot visualizer with axis options", async () => {
   expect(visualizer.name).toBe("visualizer1");
   expect(visualizer.questions.length).toBe(3);
   expect(visualizer.axisXQuestionName).toBe("question2");
-  expect(visualizer.axisYQuestionNames).toStrictEqual(["question1", "question3"]);
+  expect(visualizer.primaryYAxes).toStrictEqual([
+    { dataName: "question1", valueName: "question1", aggregation: "count" },
+    { dataName: "question3", valueName: "question3", aggregation: "count" }
+  ]);
 });
