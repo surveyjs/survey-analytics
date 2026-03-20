@@ -371,7 +371,9 @@ test("Use chart type from itemDefinition", async () => {
     visualizerType: "average",
     chartType: "bullet",
     dataField: "test",
-    displayValueName: "count",
+    visualizer: {
+      displayValueName: "count"
+    },
     title: "Total answers count"
   };
 
@@ -381,6 +383,7 @@ test("Use chart type from itemDefinition", async () => {
   expect(visPanel.visualizers.length).toEqual(1);
   expect(visPanel.visualizers[0].type).toEqual("average");
   expect((visPanel.visualizers[0] as NumberModel).chartType).toEqual("bullet");
+  expect((visPanel.visualizers[0] as NumberModel).displayValueName).toEqual("count");
 });
 
 test("Determine the default charts", () => {

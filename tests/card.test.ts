@@ -1,3 +1,4 @@
+import { CardVisualizer } from "../src/card";
 import { VisualizationPanel } from "../src/visualizationPanel";
 export * from "../src/card";
 
@@ -5,7 +6,9 @@ test("Create visualizer by visualizerType", async () => {
   const itemDefinition = {
     visualizerType: "card",
     dataField: "test",
-    displayValueName: "count",
+    visualizer: {
+      displayValueName: "count"
+    },
     title: "Total answers count"
   };
 
@@ -14,4 +17,5 @@ test("Create visualizer by visualizerType", async () => {
 
   expect(visPanel.visualizers.length).toEqual(1);
   expect(visPanel.visualizers[0].type).toEqual(itemDefinition.visualizerType);
+  expect((visPanel.visualizers[0] as CardVisualizer).displayValueName).toEqual("count");
 });

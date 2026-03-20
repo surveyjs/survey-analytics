@@ -1070,7 +1070,9 @@ test("Create number visualizer from definition", async () => {
   const itemDefinition = {
     visualizerType: "number",
     dataField: "test",
-    displayValueName: "count"
+    visualizer: {
+      displayValueName: "count"
+    },
   };
   const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
   let panel = new VisualizationPanel([itemDefinition], data, {});
@@ -1081,6 +1083,7 @@ test("Create number visualizer from definition", async () => {
   expect(result).toStrictEqual([7.34, 1, 10, 7]);
   expect(numberVis.dataNames[0]).toEqual(itemDefinition.dataField);
   expect(numberVis.name.indexOf("visualizer")).toEqual(0);
+  expect(numberVis.displayValueName).toEqual(itemDefinition.visualizer.displayValueName);
   expect(panel.visibleElements[0].name.indexOf("visualizer")).toEqual(0);
 });
 
@@ -1089,14 +1092,12 @@ test("Generate visualizer names", () => {
     visualizerType: "average",
     chartType: "gauge",
     dataField: "test",
-    displayValueName: "count",
     title: "Total answers count"
   };
 
   const itemDefinition2 = {
     visualizerType: "nps",
     dataField: "test",
-    displayValueName: "count",
     title: "Total answers count"
   };
 

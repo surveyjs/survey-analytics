@@ -13,7 +13,6 @@ export interface IDashboardItemOptions {
   availableTypes?: string[];
   title?: string;
   allowChangeType?: boolean;
-  displayValueName?: string;
   visualizer?: { [index: string]: any };
 }
 
@@ -187,7 +186,7 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
         name: this.name,
         valueName: this.dataField,
         title: this.options.title,
-        displayValueName: this.options.displayValueName,
+        displayValueName: this.options?.visualizer?.displayValueName,
         waitForQuestionIsReady: () => {
           return new Promise<void>((resolve) => resolve());
         }
@@ -259,7 +258,6 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
   visualizerTypes?: string[];
   chartType?: string;
   questionName?: string;
-  displayValueName?: string;
 
   /**
    * Gets the list of chart types available for this dashboard item.

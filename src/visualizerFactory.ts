@@ -60,7 +60,7 @@ export class VisualizerFactory {
         name: dataName,
         valueName: descriptor.question?.valueName || descriptor.dataField || descriptor.questionName,
         title: descriptor.title,
-        displayValueName: descriptor.displayValueName,
+        displayValueName: descriptor?.visualizer?.displayValueName,
         waitForQuestionIsReady: () => {
           return new Promise<void>((resolve) => resolve());
         }
@@ -68,9 +68,6 @@ export class VisualizerFactory {
       creatorInfos = this.getVisualizerCreatorsByDescriptor(descriptor);
     } else {
       question = descriptor;
-      if(descriptor.displayValueName !== undefined) {
-        question.displayValueName = descriptor.displayValueName;
-      }
       creatorInfos = this.getVisualizerCreatorsByQuestion(question);
     }
 

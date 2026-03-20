@@ -59,7 +59,9 @@ test("constructor without question should initialize from chart config", () => {
     type: "gauge",
     availableTypes: ["gauge", "bullet"],
     title: "Score",
-    displayValueName: "Score display",
+    visualizer: {
+      displayValueName: "Score display"
+    },
   } as any);
 
   expect(item.visualizerType).toBe("average");

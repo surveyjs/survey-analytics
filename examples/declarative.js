@@ -115,15 +115,19 @@ const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, 
 const itemDefinition1 = {
   visualizerType: "card",
   dataField: "test",
-  displayValueName: "count",
-  title: "Total answers count - Card"
+  title: "Total answers count - Card",
+  visualizer: {
+    displayValueName: "count"
+  }
 };
 
 const itemDefinition2 = {
   visualizerType: "gauge",
   chartType: "bullet",
   dataField: "test",
-  displayValueName: "count",
+  visualizer: {
+    displayValueName: "count"
+  },
   title: "Total answers count - Gauge bullet"
 };
 
@@ -131,6 +135,9 @@ const itemDefinition3 = {
   visualizerType: "gauge",
   chartType: "gauge",
   dataField: "test",
+  visualizer: {
+    displayValueName: "count"
+  },
   title: "Total answers count - Gauge gauge"
 };
 
@@ -140,14 +147,18 @@ visPanel.showToolbar = true;
 // const itemDefinition1 = {
 //   type: "card",
 //   dataField: "test",
-//   displayValueName: "count",
+//   visualizer: {
+//     displayValueName: "count"
+//   },
 //   title: "Total answers count - Card"
 // };
 
 // const itemDefinition2 = {
 //   type: "bullet",
 //   dataField: "test",
-//   displayValueName: "count",
+//   visualizer: {
+//     displayValueName: "count"
+//   },
 //   title: "Total answers count - Gauge bullet"
 // };
 
