@@ -1,7 +1,8 @@
-import { DocumentHelper } from ".";
+import { DocumentHelper } from "./documentHelper";
 import { IDropdownItemOption } from "./dropdownBase";
 import { localization } from "../localizationManager";
 import { IAxisDescription, SeriesAggregation } from "../axisDescription";
+import { createDropdown } from "./dropdownWidget";
 
 import "./editableSeriesListWidget.scss";
 
@@ -130,7 +131,7 @@ export class EditableSeriesListWidget {
     const legendControls = DocumentHelper.createElement("div", "sa-series-settings__legend-controls");
 
     const dataNameOptions = () => [{ value: "", text: placeholder() }].concat(this.options.getOptions());
-    const dataNameDropdown = DocumentHelper.createDropdown({
+    const dataNameDropdown = createDropdown({
       options: dataNameOptions,
       isSelected: (opt) => item.dataName === opt.value,
       handler: (value) => {
@@ -164,7 +165,7 @@ export class EditableSeriesListWidget {
     const valuesControls = DocumentHelper.createElement("div", "sa-series-settings__values-controls");
 
     const valueNameOptions = () => [{ value: "", text: placeholder() }].concat(this.options.getOptions());
-    const valueNameDropdown = DocumentHelper.createDropdown({
+    const valueNameDropdown = createDropdown({
       options: valueNameOptions,
       isSelected: (opt) => (item.valueName ?? item.dataName) === opt.value,
       handler: (value) => this.setItemAt(index, { valueName: value || "" }),
@@ -174,7 +175,7 @@ export class EditableSeriesListWidget {
     const valueDropdownWrapper = DocumentHelper.createElement("div", "sa-series-settings__dropdown sa-series-settings__dropdown--value");
     valueDropdownWrapper.appendChild(valueNameDropdown);
 
-    const aggregationDropdown = DocumentHelper.createDropdown({
+    const aggregationDropdown = createDropdown({
       options: this.aggregationOptions,
       isSelected: (opt) => item.aggregation === opt.value,
       handler: (value) => this.setItemAt(index, { aggregation: (value || "count") as SeriesAggregation }),
