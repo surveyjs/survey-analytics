@@ -67,7 +67,7 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
   public get items(): DashboardItem[] {
     return this._elements;
   }
-  public findItem(name: string): DashboardItem | undefined {
+  public getItem(name: string): DashboardItem | undefined {
     return this.getElement(name) as DashboardItem;
   }
   public addItem(item: DashboardItem | IDashboardItemOptions | Question): DashboardItem {
