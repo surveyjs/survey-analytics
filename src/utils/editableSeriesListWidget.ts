@@ -6,7 +6,7 @@ import { createDropdown } from "./dropdownWidget";
 
 import "./editableSeriesListWidget.scss";
 
-const placeholder = () => localization.getString("notSelected") || "Select...";
+const placeholder = () => localization.getString("notSelected");
 
 export interface IEditableSeriesListItemAction {
   text: string;
@@ -22,16 +22,16 @@ export interface IEditableSeriesListOptions {
   getItemExtraButtons?: () => (item: IAxisDescription, index: number) => IEditableSeriesListItemAction[];
 }
 
-const getLegendLabel = (i: number) => (localization.getString("seriesListLegendSeries") || "Legend (series) {0}").replace("{0}", String(i + 1));
-const valuesLabel = localization.getString("seriesListValuesLabel") || "Values";
-const removeText = localization.getString("seriesListRemove") || "Remove";
-const addText = localization.getString("seriesListAdd") || "Add Series";
+const getLegendLabel = (i: number) => (localization.getString("seriesListSeries")).replace("{0}", String(i + 1));
+const valuesLabel = localization.getString("seriesListValuesLabel");
+const removeText = localization.getString("seriesListRemove");
+const addText = localization.getString("seriesListAdd");
 
 function getDefaultAggregationOptions(): Array<IDropdownItemOption> {
   return [
-    { value: "count", text: localization.getString("aggregationCount") || "Count" },
-    { value: "sum", text: localization.getString("aggregationSum") || "Sum" },
-    // { value: "average", text: localization.getString("aggregationAverage") || "Average" },
+    { value: "count", text: localization.getString("aggregationCount") },
+    { value: "sum", text: localization.getString("aggregationSum") },
+    // { value: "average", text: localization.getString("aggregationAverage") },
   ];
 }
 

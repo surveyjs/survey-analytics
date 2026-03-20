@@ -1,5 +1,6 @@
 import { DocumentHelper } from "./documentHelper";
 import { SideBarItemCreators } from "../sideBarItemCreators";
+import { localization } from "../localizationManager";
 import "./sidebar.scss";
 
 /**
@@ -102,7 +103,7 @@ export class SidebarWidget {
     header.appendChild(DocumentHelper.createElement("div", panelClassName + "-title", { textContent: this.options.title }));
 
     const closeBtn = DocumentHelper.createElement("button", panelClassName + "-close", { type: "button" });
-    closeBtn.setAttribute("aria-label", "Close");
+    closeBtn.setAttribute("aria-label", localization.getString("close"));
     closeBtn.appendChild(DocumentHelper.createSvgElement("close-16x16"));
     closeBtn.addEventListener("click", () => this.close());
     this.panelElement.appendChild(closeBtn);
