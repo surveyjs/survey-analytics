@@ -1,9 +1,9 @@
 import { Question } from "survey-core";
 import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
-import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 import { mathStatisticsCalculator } from "./statisticCalculators";
+import { createDropdown } from "./utils/dropdownWidget";
 
 export class NumberModel extends VisualizerBase {
   private _statistics: ICalculationResult;
@@ -64,7 +64,7 @@ export class NumberModel extends VisualizerBase {
     if(this.allowChangeType) {
       this.registerToolbarItem("changeChartType", () => {
         if(this.chartTypes.length > 1) {
-          return DocumentHelper.createDropdown({
+          return createDropdown({
             options: this.chartTypes.map((chartType) => {
               return {
                 value: chartType,

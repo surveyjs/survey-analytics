@@ -1,7 +1,7 @@
+import { Question, QuestionPanelDynamicModel, IQuestion } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanel } from "./visualizationPanel";
-import { Question, QuestionPanelDynamicModel, IQuestion } from "survey-core";
 
 export class VisualizationPanelDynamic extends VisualizerBase {
   protected _contentVisualizer: VisualizationPanel = undefined;
@@ -35,7 +35,7 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     this.afterRender(this.contentContainer);
   };
 
-  public resetFilter(): void {
+  public resetContentFilter(): void {
     this.contentVisualizer.resetFilter();
   }
 

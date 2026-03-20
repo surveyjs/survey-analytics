@@ -1,4 +1,4 @@
-import { DocumentHelper } from ".";
+import { DocumentHelper } from "./documentHelper";
 
 export interface IDropdownItemOption {
   value: string;
@@ -127,7 +127,7 @@ export abstract class DropdownBase {
 
   protected createOptionItem(option: IDropdownItemOption): HTMLLIElement {
     const dropdownItem = document.createElement("li");
-    dropdownItem.className = this.className + "-item";
+    dropdownItem.className = this.className + "-item" + (option.className ? " " + option.className : "");
     if(option.title) {
       dropdownItem.title = option.title;
     }
@@ -248,6 +248,7 @@ export abstract class DropdownBase {
       const value = (item as HTMLElement).dataset.value;
       const option = this.optionItems.find((o) => o.value === value);
       if(option) {
+        this.updateOption(option, item as HTMLLIElement);
         const selected = this.isOptionSelected(option);
         if(selected) {
           item.classList.add(this.itemClassSelected);
@@ -259,6 +260,8 @@ export abstract class DropdownBase {
       }
     });
   }
+
+  protected updateOption(option: IDropdownItemOption, item: HTMLLIElement): void { }
 
   protected shouldUpdateAriaSelectedOnFocus(): boolean {
     return false;

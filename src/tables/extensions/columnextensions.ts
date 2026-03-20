@@ -1,5 +1,5 @@
 import { Table } from "../table";
-import { DocumentHelper } from "../../utils";
+import { DocumentHelper } from "../../utils/documentHelper";
 import { localization } from "../../localizationManager";
 import { TableExtensions } from "./tableextensions";
 import { QuestionLocation, IColumn } from "../config";

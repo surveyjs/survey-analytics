@@ -2,7 +2,7 @@ import { Question } from "survey-core";
 import { SelectBase } from "./selectBase";
 import { BooleanModel } from "./boolean";
 import { VisualizationManager } from "./visualizationManager";
-import { DocumentHelper } from "./utils";
+import { DocumentHelper } from "./utils/documentHelper";
 import { localization } from "./localizationManager";
 
 import "./statistics-table.scss";

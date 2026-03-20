@@ -3,7 +3,7 @@ import { IsTouch } from "survey-core";
 import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
-import { DocumentHelper, createCommercialLicenseLink } from "./utils/index";
+import { createCommercialLicenseLink } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, IState, IPermission } from "./config";
 import { FilterInfo } from "./filterInfo";
@@ -11,11 +11,16 @@ import { LayoutEngine } from "./layout-engine";
 import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
-import { VisualizationPanelDynamic } from "./visualizationPanelDynamic";
 import { DatePeriodEnum, DateRangeWidget, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
 import { getDataName } from "./visualizerDescription";
 import { IDateRange, toRange } from "./utils/calculationDateRanges";
 import { DateRangeModel, IDateRangeChangedOptions } from "./utils/dateRangeModel";
+import { ElementVisibilityAction } from "./utils/elementVisibilityAction";
+import { IDropdownItemOption } from "./utils/dropdownBase";
+import { DocumentHelper } from "./utils/documentHelper";
+import { createActionDropdown } from "./utils/dropdownActionWidget";
+import { createDropdown } from "./utils/dropdownWidget";
+
 import "./visualizationPanel.scss";
 
 const questionElementClassName = "sa-question";
@@ -358,28 +363,12 @@ export class VisualizationPanel extends VisualizerBase {
 
     this.registerToolbarItem("addElement", (toolbar: HTMLDivElement) => {
       if(this.allowHideQuestions) {
-        const allQuestions = this._elements.map((element) => {
-          return {
-            value: element.name,
-            text: element.displayName || element.name,
-            title: element.displayName || element.name,
-            icon: "check-24x24"
-          };
-        });
-        const selectWrapper = DocumentHelper.createActionDropdown({
-          options: allQuestions,
-          isSelected: (option: any) => this.hiddenElements.length === 0 || this.hiddenElements.filter(el => el.name === option.value).length === 0,
-          handler: (e: any) => {
-            if(!!e) {
-              const element = this.getElement(e);
-              if(!!element && element.isVisible) {
-                this.hideElement(e);
-              } else {
-                this.showElement(e);
-              }
-              return false;
-            }
-          },
+        const visibilityAction = new ElementVisibilityAction(this);
+        const selectWrapper = createActionDropdown({
+          options: () => visibilityAction.getOptions(),
+          isSelected: (option: IDropdownItemOption) => visibilityAction.isSelected(option),
+          updateOption: (option: IDropdownItemOption) => visibilityAction.updateOption(option),
+          handler: (value: string) => visibilityAction.handleSelect(value),
           title: localization.getString("allQuestions")
         });
         return selectWrapper;
@@ -410,7 +399,7 @@ export class VisualizationPanel extends VisualizerBase {
       //   text: localization.getString("changeLocale"),
       // });
       this.registerToolbarItem("changeLocale", () => {
-        return DocumentHelper.createDropdown({
+        return createDropdown({
           options: localeChoices,
           isSelected: (option: any) => !!option.value && (this.locale || surveyLocalization.defaultLocale) === option.value,
           handler: (e: any) => {
@@ -438,9 +427,7 @@ export class VisualizationPanel extends VisualizerBase {
       if(visualizer instanceof SelectBase || visualizer instanceof AlternativeVisualizersWrapper) {
         visualizer.setSelection(undefined);
       }
-      if(visualizer instanceof VisualizationPanelDynamic) {
-        visualizer.resetFilter();
-      }
+      visualizer.resetContentFilter();
     });
     this.updateResetFilterButtonDisabled();
   }

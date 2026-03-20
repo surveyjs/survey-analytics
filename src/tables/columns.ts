@@ -1,7 +1,7 @@
 import { ItemValue, MatrixRowModel, Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionRadiogroupModel, QuestionSelectBase, QuestionTagboxModel, settings } from "survey-core";
 import { createImagesContainer, createLinksContainer } from "../utils";
 import { ICellData, IColumn, ColumnDataType, QuestionLocation, IColumnData } from "./config";
-import { ITableOptions, Table } from "./table";
+import { ITableOptions, ITable } from "./table-interfaces";
 
 export class BaseColumn<T extends Question = Question> implements IColumn {
   dataType: ColumnDataType;
@@ -14,12 +14,12 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
   private nameValue: string;
   private displayNameValue?: string;
 
-  constructor(protected question: T, protected table: Table) {
+  constructor(protected question: T, protected table: ITable) {
     this.dataType = this.getDataType();
     this.updateWhenQuestionIsReady(question, table);
   }
 
-  protected updateWhenQuestionIsReady(question: Question, table: Table) {
+  protected updateWhenQuestionIsReady(question: Question, table: ITable) {
     if(!question) return;
     question.waitForQuestionIsReady().then(() => {
       try {
@@ -65,7 +65,7 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
     return data[this.name];
   }
 
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
+  protected getDisplayValue(data: any, table: ITable, options: ITableOptions): any {
     let displayValue = this.getDisplayValueCore(data);
     const question = this.question;
 
@@ -84,7 +84,7 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
       : JSON.stringify(displayValue) || "";
   }
 
-  public getCellData(table: Table, data: any): ICellData {
+  public getCellData(table: ITable, data: any): ICellData {
     const displayValue = this.getDisplayValue(data, table, table.options);
     return { question: this.question, displayValue: this.formatDisplayValue(displayValue) };
   }
@@ -106,7 +106,7 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
 }
 
 export class DefaultColumn extends BaseColumn {
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
+  protected getDisplayValue(data: any, table: ITable, options: ITableOptions): any {
     return this.getDisplayValueCore(data);
   }
 }
@@ -118,7 +118,7 @@ export class SelectBaseColumn<T extends QuestionSelectBase> extends BaseColumn<T
   protected getItemDisplayText(item: ItemValue, options: ITableOptions): string {
     return options.useValuesAsLabels ? item.value : item.textOrHtml;
   }
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
+  protected getDisplayValue(data: any, table: ITable, options: ITableOptions): string {
     const prevSeparator = settings.choicesSeparator;
     settings.choicesSeparator = table.itemsDelimiter;
     const value = options.useValuesAsLabels ? this.question.renderedValue : this.question.displayValue;
@@ -128,7 +128,7 @@ export class SelectBaseColumn<T extends QuestionSelectBase> extends BaseColumn<T
 }
 
 export class CheckboxColumn extends SelectBaseColumn<QuestionCheckboxModel | QuestionTagboxModel> {
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
+  protected getDisplayValue(data: any, table: ITable, options: ITableOptions): string {
     if(this.isOtherInSeparateColumn) {
       const selectedItems = this.question.selectedItems;
       const res: Array<string> = selectedItems.map(item => this.getItemDisplayText(item, options));
@@ -139,7 +139,7 @@ export class CheckboxColumn extends SelectBaseColumn<QuestionCheckboxModel | Que
 }
 
 export class SingleChoiceColumn extends SelectBaseColumn<QuestionDropdownModel | QuestionRadiogroupModel> {
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
+  protected getDisplayValue(data: any, table: ITable, options: ITableOptions): string {
     if(this.isOtherInSeparateColumn) {
       const selectedItem = this.question.selectedItem;
       if(!selectedItem) return "";
@@ -156,7 +156,7 @@ export class CommentColumn<T extends Question = Question> extends BaseColumn<T> 
   protected getDisplayName(): string {
     return this.question.commentText;
   }
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
+  protected getDisplayValue(data: any, table: ITable, options: ITableOptions): string {
     return this.question.comment;
   }
 }
@@ -169,7 +169,7 @@ export class OtherColumn extends CommentColumn<QuestionSelectBase> {
 export class MatrixColumn extends BaseColumn<QuestionMatrixModel> {
   private valueName: string;
   private valuePath: string;
-  constructor(question: QuestionMatrixModel, private row: MatrixRowModel, table: Table) {
+  constructor(question: QuestionMatrixModel, private row: MatrixRowModel, table: ITable) {
     super(question, table);
     this.valueName = this.question.name;
     this.valuePath = this.row?.value;
@@ -186,7 +186,7 @@ export class MatrixColumn extends BaseColumn<QuestionMatrixModel> {
       : (question.title || "").trim() || question.name) + " - " + (table.useNamesAsTitles ? row?.value : row?.locText.textOrHtml);
   }
 
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions) {
+  protected getDisplayValue(data: any, table: ITable, options: ITableOptions) {
     let displayValue = data[this.valueName];
     if(this.valuePath && typeof displayValue === "object") {
       displayValue = displayValue[this.valuePath];
@@ -223,10 +223,10 @@ export class FileColumn extends BaseColumn<QuestionFileModel> {
   protected getDataType(): ColumnDataType {
     return ColumnDataType.FileLink;
   }
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions) {
+  protected getDisplayValue(data: any, table: ITable, options: ITableOptions) {
     let displayValue = this.getDisplayValueCore(data);
     if(Array.isArray(displayValue)) {
-      displayValue = Table.showFilesAsImages ? createImagesContainer(
+      displayValue = table.getShowFilesAsImages() ? createImagesContainer(
         displayValue
       ).outerHTML : createLinksContainer(
         displayValue
@@ -238,7 +238,7 @@ export class FileColumn extends BaseColumn<QuestionFileModel> {
 export class MatrixDropdownColumn extends BaseColumn<QuestionMatrixDropdownModel> {
   private rowValue: string;
   private colName: string;
-  constructor(question: QuestionMatrixDropdownModel, protected row, protected col, table: Table) {
+  constructor(question: QuestionMatrixDropdownModel, protected row, protected col, table: ITable) {
     super(question, table);
     this.rowValue = this.row.value;
     this.colName = this.col.name;
@@ -254,7 +254,7 @@ export class MatrixDropdownColumn extends BaseColumn<QuestionMatrixDropdownModel
       : (question.title || "").trim() || question.name) + " - " + (table.useNamesAsTitles ? this.row.value : this.row.locText.textOrHtml) + " - " + (table.useNamesAsTitles ? this.col.name : this.col.locTitle.textOrHtml);
 
   }
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions) {
+  protected getDisplayValue(data: any, table: ITable, options: ITableOptions) {
     let displayValue = data[this.question.name];
     const question = this.question;
     if(this.rowValue && this.colName && typeof displayValue === "object") {
@@ -272,14 +272,14 @@ export class MatrixDropdownColumn extends BaseColumn<QuestionMatrixDropdownModel
 }
 
 export class CustomQuestionColumn extends BaseColumn<QuestionCustomModel> {
-  constructor(question: QuestionCustomModel, table: Table) {
+  constructor(question: QuestionCustomModel, table: ITable) {
     super(question, table);
     this.updateWhenQuestionIsReady(question.contentQuestion, table);
   }
 }
 
 export class CompositeQuestionColumn extends BaseColumn<QuestionCompositeModel> {
-  constructor(question: QuestionCompositeModel, table: Table) {
+  constructor(question: QuestionCompositeModel, table: ITable) {
     super(question, table);
     const questionList: Question[] = [];
     this.question.contentPanel.addQuestionsToList(questionList);

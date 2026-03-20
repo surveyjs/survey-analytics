@@ -2,7 +2,7 @@ import { Question, Event } from "survey-core";
 import { ICalculationResult, VisualizerBase } from "../visualizerBase";
 import { VisualizationManager } from "../visualizationManager";
 import { textHelper } from "./stopwords/index";
-import { DocumentHelper } from "../utils";
+import { DocumentHelper } from "../utils/documentHelper";
 import { localization } from "../localizationManager";
 import { WordCloudWidget, defaultOptions } from "./widget";
 import { getNestedDataRows } from "../statisticCalculators";

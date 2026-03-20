@@ -1,7 +1,8 @@
 import { localization } from "../../localizationManager";
 import { Table } from "../table";
-import { DocumentHelper } from "../../utils";
+import { DocumentHelper } from "../../utils/documentHelper";
 import { TableExtensions } from "./tableextensions";
+import { createActionDropdown } from "../../utils/dropdownActionWidget";
 
 TableExtensions.registerExtension({
   location: "header",
@@ -44,7 +45,7 @@ TableExtensions.registerExtension({
         icon: "check-24x24"
       };
     });
-    const dropdown = DocumentHelper.createActionDropdown({
+    const dropdown = createActionDropdown({
       options: allColumns,
       isSelected: (option: any) => {
         const hiddenColumns = table.columns.filter((column: any) => !column.isVisible);
@@ -121,7 +122,7 @@ TableExtensions.registerExtension({
     */
 
     const optionsValues = locales.map(val => { return { value: val, text: localization.localeNames[val] || localization.getString(val) || val }; });
-    const el = DocumentHelper.createActionDropdown({
+    const el = createActionDropdown({
       options: optionsValues,
       isSelected: (option: any) => false,
       handler: (e: any) => {

@@ -1,5 +1,15 @@
-import { DocumentHelper } from ".";
+import { DocumentHelper } from "./documentHelper";
 import { DropdownBase, IDropdownItemOption } from "./dropdownBase";
+
+/**
+   * Creates a custom dropdown element with icon support
+   * @param options - Configuration object for the dropdown
+   * @returns Created dropdown element
+   */
+export function createDropdown(options: IDropdownOptions): HTMLDivElement {
+  const widget = new DropdownWidget(options);
+  return widget.render();
+}
 
 export interface IDropdownOptions {
   /** Array of options or function that returns options */

@@ -1,7 +1,8 @@
 import { Question, QuestionCompositeModel, QuestionCustomModel } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
-import { getDataName, IVisualizerDescription } from "./visualizerDescription";
+import { getDataName } from "./visualizerDescription";
+import { IVisualizerDescription } from "./visualizer-interfaces";
 
 /**
  * An object that allows you to create individual visualizers without creating a [visualization panel](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel).

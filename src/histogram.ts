@@ -4,8 +4,9 @@ import { SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
 import { IAnswersData, ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { getNestedDataRows, histogramStatisticsCalculator } from "./statisticCalculators";
-import { DocumentHelper } from "./utils";
+import { DocumentHelper } from "./utils/documentHelper";
 import { localization } from "./localizationManager";
+import { createDropdown } from "./utils/dropdownWidget";
 
 export declare type HistogramIntervalMode = "auto" | "custom" | "decades" | "years" | "quarters" | "months" | "days";
 export interface IHistogramInterval { start: number, end: number, label: string }
@@ -176,7 +177,7 @@ export class HistogramModel extends SelectBase {
 
     if(this.allowChangeIntervals) {
       this.registerToolbarItem("changeIntervalsMode", () => {
-        this.changeIntervalsModeSelector = DocumentHelper.createDropdown({
+        this.changeIntervalsModeSelector = createDropdown({
           options: this.intervalModes.map((intervalModeValue) => {
             return {
               value: intervalModeValue,
@@ -199,7 +200,7 @@ export class HistogramModel extends SelectBase {
         });
         choices.unshift({ value: "", text: localization.getString("noneAggregateText") }),
 
-        this.aggregateDataNameSelector = DocumentHelper.createDropdown({
+        this.aggregateDataNameSelector = createDropdown({
           options: choices,
           isSelected: (option: any) => this.aggregateDataName === option.value,
           handler: (value) => {
