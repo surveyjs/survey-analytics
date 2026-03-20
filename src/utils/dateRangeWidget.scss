@@ -29,17 +29,21 @@
 
 .sa-date-range_editor-formbox {
   display: flex;
-  padding: var(--sjs2-layout-control-formbox-small-vertical, 4px) var(--sjs2-layout-control-formbox-small-horizontal, 4px);
+  padding: var(--sjs2-spacing-x050, 4px) var(--sjs2-spacing-x050, 4px);
   align-items: flex-start;
-  gap: var(--sjs2-layout-control-formbox-small-gap, 4px);
+  gap: var(--sjs2-spacing-x050, 4px);
   align-self: stretch;
   border-radius: var(--sjs2-radius-semantic-form, 8px);
-  background: var(--sjs2-color-control-formbox-default-bg, rgba(28, 27, 32, 0.05));
-  outline: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0) var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px) var(--sjs2-color-control-formbox-default-border, #D4D4D4) inset;
+  background: var(--sjs2-color-component-formbox-default-bg, rgba(28, 27, 32, 0.05));
+  outline: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
+    var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
+    var(--sjs2-color-component-formbox-default-border, #d4d4d4) inset;
 
   &:focus-visible {
-    background: var(--sjs2-color-control-formbox-focused-bg, #F5F5F5);
-    box-shadow: var(--sjs2-border-offset-x-form-focused, 0) var(--sjs2-border-offset-y-form-focused, 0) var(--sjs2-border-blur-form-focused, 0) var(--sjs2-border-spread-form-focused, 2px) var(--sjs2-color-control-formbox-focused-border, #19B394) inset;
+    background: var(--sjs2-color-component-formbox-focused-bg, #f5f5f5);
+    box-shadow: var(--sjs2-border-offset-x-form-focused, 0) var(--sjs2-border-offset-y-form-focused, 0)
+      var(--sjs2-border-blur-form-focused, 0) var(--sjs2-border-spread-form-focused, 2px)
+      var(--sjs2-color-component-formbox-focused-border, #19b394) inset;
   }
 }
 
@@ -64,9 +68,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: var(--sjs2-radius-control-checkbox, 4px);
-  background: var(--sjs2-color-control-check-false-default-bg, #F5F5F5);
-  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0) var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px) var(--sjs2-color-control-check-false-default-border, #D4D4D4) inset;
+  border-radius: var(--sjs2-radius-component-checkbox, 4px);
+  background: var(--sjs2-color-component-check-false-default-bg, #f5f5f5);
+  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
+    var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
+    var(--sjs2-color-component-check-false-default-border, #d4d4d4) inset;
 
   .sa-date-range_include-today-check {
     display: none;
@@ -76,14 +82,15 @@
   }
 }
 
-
 .sa-date-range_include-today-checkbox--checked {
-  background: var(--sjs2-color-control-check-true-default-bg, #19B394);
-  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0) var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px) var(--sjs2-color-control-check-true-default-border, #19B394) inset;
-  
+  background: var(--sjs2-color-component-check-true-default-bg, #19b394);
+  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
+    var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
+    var(--sjs2-color-component-check-true-default-border, #19b394) inset;
+
   .sa-date-range_include-today-check {
     display: block;
-    fill: var(--sjs2-color-control-check-true-default-icon, #FFF);
+    fill: var(--sjs2-color-component-check-true-default-icon, #fff);
   }
 }
 
@@ -104,13 +111,11 @@
   align-self: self-start;
 
   .sa-dropdown-header-content {
-    padding: var(--sjs2-layout-control-input-small-content-vertical, 4px)
-      var(--sjs2-layout-control-input-small-content-horizontal, 8px);
+    padding: var(--sjs2-spacing-x050, 4px) var(--sjs2-spacing-x100, 8px);
   }
 
   .sa-dropdown-action {
-    padding: var(--sjs2-layout-control-action-x-small-box-vertical, 4px)
-      var(--sjs2-layout-control-action-x-small-box-horizontal, 4px);
+    padding: var(--sjs2-spacing-x050, 4px) var(--sjs2-spacing-x050, 4px);
   }
 }
 
@@ -122,37 +127,39 @@
 
 .sa-range-error_panel {
   display: flex;
-  padding: var(--sjs2-layout-control-message-small-vertical, 8px) var(--sjs2-layout-control-message-small-horizontal, 12px);
+  padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-spacing-x150, 12px);
   align-items: flex-start;
-  gap: var(--sjs2-layout-control-message-small-gap, 8px);
+  gap: var(--sjs2-spacing-x100, 8px);
   flex: 1 0 0;
   align-self: stretch;
   border-radius: var(--sjs2-radius-semantic-form, 8px);
-  background: var(--sjs2-color-control-message-error-bg, rgba(229, 10, 62, 0.10));
+  background: var(--sjs2-color-component-message-error-bg, rgba(229, 10, 62, 0.1));
 }
 .sa-range-error_text {
   flex: 1 0 0;
-  color: var(--sjs2-color-control-message-error-text, #1C1B20);
+  color: var(--sjs2-color-component-message-error-text, #1c1b20);
 
   @include sjs2--typography--default;
 }
 
 .sa-date-range--invalid .sa-range-error {
   display: flex;
-  padding-top: var(--sjs2-layout-control-message-small-spacer, 8px);
+  padding-top: var(--sjs2-spacing-x100, 8px);
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
 }
 
 .sa-date-range_editor--invalid .sa-date-range_editor-formbox {
-  background: var(--sjs2-color-control-formbox-invalid-bg, #F5F5F5);
-  box-shadow: var(--sjs2-border-offset-x-form-invalid, 0) var(--sjs2-border-offset-y-form-invalid, 0) var(--sjs2-border-blur-form-invalid, 0) var(--sjs2-border-spread-form-invalid, 2px) var(--sjs2-color-control-formbox-invalid-border, #E50A3E) inset;  
+  background: var(--sjs2-color-component-formbox-invalid-bg, #f5f5f5);
+  box-shadow: var(--sjs2-border-offset-x-form-invalid, 0) var(--sjs2-border-offset-y-form-invalid, 0)
+    var(--sjs2-border-blur-form-invalid, 0) var(--sjs2-border-spread-form-invalid, 2px)
+    var(--sjs2-color-component-formbox-invalid-border, #e50a3e) inset;
 }
 
 .sa-date-range_editor-content {
   display: flex;
-  padding: var(--sjs2-layout-control-input-small-content-vertical, 4px) var(--sjs2-layout-control-input-small-content-horizontal, 8px);
+  padding: var(--sjs2-spacing-x050, 4px) var(--sjs2-spacing-x100, 8px);
   align-items: flex-start;
   flex: 1 0 0;
 }
@@ -163,7 +170,7 @@
   -webkit-line-clamp: 1;
   flex: 1 0 0;
   overflow: hidden;
-  color: var(--sjs2-color-control-input-default-value, #1C1B20);
+  color: var(--sjs2-color-component-input-default-value, #1c1b20);
   text-overflow: ellipsis;
   background: transparent;
   border: none;

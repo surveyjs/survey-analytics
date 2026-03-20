@@ -46,7 +46,7 @@ Object.assign(newTheme, SurveyAnalyticsTheme.DefaultLight, {
     "--sjs2-color-utility-surface-muted": "#1f2420",
     "--sjs2-color-bg-basic-primary": "gray",
     "--sjs2-color-utility-sheet": "gray",
-    "--sjs2-color-control-formbox-focused-bg": "darkgray",
+    "--sjs2-color-component-formbox-focused-bg": "darkgray",
   }
 });
 visPanel.applyTheme(newTheme);

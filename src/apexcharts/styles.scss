@@ -12,7 +12,9 @@
       display: none;
     }
 
-    .apexcharts-tooltip-text-goals-value, .apexcharts-tooltip-text-y-value, .apexcharts-tooltip-text-z-value {
+    .apexcharts-tooltip-text-goals-value,
+    .apexcharts-tooltip-text-y-value,
+    .apexcharts-tooltip-text-z-value {
       margin: 0;
     }
   }
@@ -46,8 +48,10 @@
     border-radius: var(--sjs2-radius-container-drop, 16px);
     background: var(--sjs2-color-utility-sheet, #FFF);
     margin-top: 8px;
-    padding: var(--sjs2-layout-container-drop-vertical, 8px) var(--sjs2-layout-container-drop-horizontal, 8px);
-    box-shadow: var(--sjs2-shadow-size-large-offset-x, 0) var(--sjs2-shadow-size-large-offset-y, 6px) var(--sjs2-shadow-size-large-blur, 12px) var(--sjs2-shadow-size-large-spread, 4px) var(--sjs2-shadow-color-large, rgba(0, 76, 68, 0.10));
+    padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-spacing-x100, 8px);
+    box-shadow: var(--sjs2-shadow-size-large-offset-x, 0) var(--sjs2-shadow-size-large-offset-y, 6px)
+      var(--sjs2-shadow-size-large-blur, 12px) var(--sjs2-shadow-size-large-spread, 4px)
+      var(--sjs2-shadow-color-large, rgba(0, 76, 68, 0.1));
   }
 
   .apexcharts-menu-item.apexcharts-menu-item {
@@ -60,9 +64,9 @@
     display: flex;
     align-items: center;
     gap: var(--sjs2-spacing-x150, 12px);
-    border-radius: var(--sjs2-radius-control-drop-item, 8px);
-    color: var(--sjs2-color-fg-basic-primary, #1C1B20);
-    background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
+    border-radius: var(--sjs2-radius-component-drop-item, 8px);
+    color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+    background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0));
 
     @include sjs2--typography--default;
 
