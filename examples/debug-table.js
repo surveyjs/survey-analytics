@@ -21,7 +21,7 @@ function getPaginatedData({ offset, limit, filter, sort }) {
 // );
 var surveyAnalyticsTabulator = new SurveyAnalyticsTabulator.Tabulator(
   survey,
-  tableData,
+  getPaginatedData,
 );
 
 surveyAnalyticsTabulator.render("tabulatorContainer");
