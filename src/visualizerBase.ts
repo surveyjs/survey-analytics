@@ -2,10 +2,11 @@ import { Question, QuestionCommentModel, Event, settings, hasLicense, Base } fro
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { VisualizationManager } from "./visualizationManager";
-import { DocumentHelper, createLoadingIndicator, getDiffsFromDefaults } from "./utils";
+import { createLoadingIndicator, getDiffsFromDefaults } from "./utils";
 import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
 import { DashboardTheme, IDashboardTheme } from "./theme";
+import { DocumentHelper } from "./utils/documentHelper";
 
 import "./visualizerBase.scss";
 
@@ -62,15 +63,7 @@ type ToolbarItemCreators = {
   },
 };
 
-export interface IVisualizerOptions {
-  dataField: string;
-  type?: string;
-  availableTypes?: string[];
-  title?: string;
-  allowChangeType?: boolean;
-  answersOrder?: "default" | "asc" | "desc";
-  [key: string]: any;
-}
+export { IVisualizerOptions } from "./visualizer-interfaces";
 
 export class PostponeHelper {
   public static postponeFunction: (fn: () => void, timeout?: number) => any;
@@ -112,7 +105,12 @@ export class PostponeHelper {
 export class VisualizerBase implements IDataInfo {
   public static haveCommercialLicense: boolean = false;
   public static suppressVisualizerStubRendering: boolean = false;
-  public static chartAdapterType: any = undefined;
+  public static get chartAdapterType(): any {
+    return VisualizationManager.chartAdapterType;
+  }
+  public static set chartAdapterType(value: any) {
+    VisualizationManager.chartAdapterType = value;
+  }
 
   private _appliedTheme: DashboardTheme;
   private _theme = new DashboardTheme();
@@ -594,6 +592,8 @@ export class VisualizerBase implements IDataInfo {
   protected getCorrectAnswerText(): string {
     return !!this.question ? this.question.correctAnswer : "";
   }
+
+  public resetContentFilter(): void { }
 
   protected renderBanner(container: HTMLElement) { }
 

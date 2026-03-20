@@ -1,8 +1,9 @@
 import { Question, Event } from "survey-core";
 import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
-import { DocumentHelper, toPrecision } from "./utils";
+import { toPrecision } from "./utils";
 import { localization } from "./localizationManager";
+import { DocumentHelper } from "./utils/documentHelper";
 
 import "./nps.scss";
 

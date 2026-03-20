@@ -1,6 +1,6 @@
 import { Question } from "survey-core";
 import { ICalculationResult } from "./visualizerBase";
-import { DocumentHelper } from "./utils";
+import { DocumentHelper } from "./utils/documentHelper";
 import { NumberModel } from "./number";
 import { VisualizationManager } from "./visualizationManager";
 

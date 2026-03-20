@@ -1,10 +1,11 @@
 import { ItemValue, Question } from "survey-core";
 import { SelectBase } from "./selectBase";
-import { createCommercialLicenseLink, DocumentHelper } from "./utils";
+import { createCommercialLicenseLink } from "./utils";
 import { ICalculationResult, IVisualizerOptions, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { VisualizationManager } from "./visualizationManager";
 import { HistogramModel } from "./histogram";
+import { createDropdown } from "./utils/dropdownWidget";
 
 export interface IPivotChartVisualizerOptions extends IVisualizerOptions {
   questions?: Question[] | string[];
@@ -71,7 +72,7 @@ export class PivotModel extends HistogramModel {
     }
 
     this.registerToolbarItem("axisXSelector", () =>
-      this.axisXSelector = DocumentHelper.createDropdown({
+      this.axisXSelector = createDropdown({
         options: this.questions.map((question) => {
           return {
             value: question.name,
@@ -178,7 +179,7 @@ export class PivotModel extends HistogramModel {
     if(getChoices().length == 1) {
       return undefined;
     }
-    const selector = DocumentHelper.createDropdown({
+    const selector = createDropdown({
       options: getChoices,
       isSelected: (option: any) => this.axisYQuestionNames[selectorIndex] === option.value,
       handler: (e: any) => { this.onAxisYSelectorChanged(selectorIndex, e); },

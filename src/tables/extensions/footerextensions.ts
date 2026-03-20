@@ -1,7 +1,8 @@
 import { localization } from "../../localizationManager";
 import { Table } from "../table";
-import { DocumentHelper } from "../../utils";
+import { DocumentHelper } from "../../utils/documentHelper";
 import { TableExtensions } from "./tableextensions";
+import { createActionDropdown } from "../../utils/dropdownActionWidget";
 
 TableExtensions.registerExtension({
   location: "footer",
@@ -31,7 +32,7 @@ TableExtensions.registerExtension({
       return el;
       */
       const optionsValues = table.paginationSizeSelector || ["1", "5", "10", "25", "50", "75", "100"];
-      const el = DocumentHelper.createActionDropdown({
+      const el = createActionDropdown({
         options: optionsValues.map(val => { return { value: val, text: val }; }),
         isSelected: (option: any) => {
           return option.value === table.getPageSize();
