@@ -449,13 +449,11 @@ export class Tabulator extends Table {
         },
       };
 
-      // For nested table columns, show a summary or hide the column content
-      // The actual nested data will be shown in the nested Tabulator instance
       if(column.dataType == ColumnDataType.NestedTable) {
         columnDef.formatter = (cell: any) => {
           const data = cell.getValue();
           if(Array.isArray(data)) {
-            return `${data.length} row${data.length !== 1 ? 's' : ''}`;
+            return `${data.length} row${data.length !== 1 ? "s" : ""}`;
           }
           return "";
         };

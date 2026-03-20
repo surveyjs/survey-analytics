@@ -296,8 +296,6 @@ export class MatrixDynamicColumn extends BaseColumn<QuestionMatrixDynamicModel> 
   }
 
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
-    // When nested tables are enabled, use the raw data directly
-    // Otherwise, use the parent's getDisplayValue which formats it
     if(table.options.useNestedTables) {
       return this.getDisplayValueCore(data);
     }
@@ -319,8 +317,6 @@ export class PanelDynamicColumn extends BaseColumn<QuestionPanelDynamicModel> {
   }
 
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
-    // When nested tables are enabled, use the raw data directly
-    // Otherwise, use the parent's getDisplayValue which formats it
     if(table.options.useNestedTables) {
       return this.getDisplayValueCore(data);
     }
