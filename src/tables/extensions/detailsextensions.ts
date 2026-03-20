@@ -1,6 +1,6 @@
 import { TableRow } from "../table";
 import { Table } from "../table";
-import { DocumentHelper } from "../../utils";
+import { DocumentHelper } from "../../utils/documentHelper";
 import { ColumnDataType, QuestionLocation } from "../config";
 import { TableExtensions } from "./tableextensions";
 import { localization } from "../../localizationManager";

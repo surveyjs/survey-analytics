@@ -1,8 +1,14 @@
 import { DropdownBase, IDropdownItemOption } from "./dropdownBase";
 
+export function createActionDropdown(options: IActionDropdownOptions): HTMLDivElement {
+  const widget = new ActionDropdownWidget(options);
+  return widget.render();
+}
+
 export interface IActionDropdownOptions {
   options: Array<IDropdownItemOption> | (() => Array<IDropdownItemOption>);
   isSelected: (option: { value: string, text: string, icon?: string }) => boolean;
+  updateOption?: (option: IDropdownItemOption) => void;
   handler: (value: string) => boolean;
   title: string | (() => string) | Function;
   className?: string;
@@ -60,6 +66,17 @@ export class ActionDropdownWidget extends DropdownBase {
 
   protected isOptionSelected(option: IDropdownItemOption): boolean {
     return this.options.isSelected(option);
+  }
+
+  protected updateOption(option: IDropdownItemOption, item: HTMLLIElement): void {
+    this.options.updateOption?.(option);
+    if(item.title !== option.title) {
+      item.title = option.title;
+    }
+    const span = item.querySelector("span");
+    if(span && span.textContent !== option.text) {
+      span.textContent = option.text;
+    }
   }
 
   protected onOptionSelect(option: IDropdownItemOption, dropdownItem: HTMLLIElement): void {

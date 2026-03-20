@@ -1,11 +1,11 @@
 import { Question, ItemValue, Event } from "survey-core";
 import { ICalculationResult, IChartAdapter, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
-import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 import { IVisualizerWithSelection } from "./selectBase";
 import { chartConfig } from "./chartConfig";
 import { IDropdownItemOption } from "./utils/dropdownBase";
+import { createDropdown } from "./utils/dropdownWidget";
 
 export class AlternativeVisualizersWrapper
   extends VisualizerBase
@@ -115,7 +115,7 @@ export class AlternativeVisualizersWrapper
 
     if(this.allowChangeType) {
       this.registerToolbarItem("changeVisualizer", () =>
-        this.visualizerSelector = DocumentHelper.createDropdown({
+        this.visualizerSelector = createDropdown({
           options: this.getVisualizerSwitchItems(),
           isSelected: (option: any) => {
             if(!!this.visualizer["chartTypes"] && this.visualizer["chartTypes"].length > 0) {

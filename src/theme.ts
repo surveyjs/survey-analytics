@@ -1,5 +1,5 @@
 import { getRGBaColor } from "survey-core";
-import { DocumentHelper } from "./utils";
+import { DocumentHelper } from "./utils/documentHelper";
 import DefaultLight from "./themes/default-light";
 
 export interface IDashboardTheme {
@@ -129,6 +129,15 @@ export class DashboardTheme implements IDashboardTheme {
   }
 
   public get axisLabelFont(): FontSettings {
+    return <FontSettings>{
+      color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
+      family: this.defaultFontFamily,
+      size: this.getCssVariableValue("--sjs2-typography-font-size-small", true),
+      weight: 400
+    };
+  }
+
+  public get axisTitleFont(): FontSettings {
     return <FontSettings>{
       color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
       family: this.defaultFontFamily,

@@ -2,10 +2,13 @@ import { Question, QuestionCommentModel, Event, settings, hasLicense, Base } fro
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { VisualizationManager } from "./visualizationManager";
-import { DocumentHelper, createLoadingIndicator, getDiffsFromDefaults } from "./utils";
+import { createLoadingIndicator, getDiffsFromDefaults } from "./utils";
 import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
 import { DashboardTheme, IDashboardTheme } from "./theme";
+import { SidebarWidget } from "./utils/sidebarWidget";
+import { DocumentHelper } from "./utils/documentHelper";
+import { SideBarItemCreators } from "./sideBarItemCreators";
 
 import "./visualizerBase.scss";
 
@@ -102,7 +105,12 @@ export class PostponeHelper {
 export class VisualizerBase implements IDataInfo {
   public static haveCommercialLicense: boolean = false;
   public static suppressVisualizerStubRendering: boolean = false;
-  public static chartAdapterType: any = undefined;
+  public static get chartAdapterType(): any {
+    return VisualizationManager.chartAdapterType;
+  }
+  public static set chartAdapterType(value: any) {
+    VisualizationManager.chartAdapterType = value;
+  }
 
   private _appliedTheme: DashboardTheme;
   private _theme = new DashboardTheme();
@@ -203,8 +211,74 @@ export class VisualizerBase implements IDataInfo {
 
   public onGetToolbarItemCreators: () => ToolbarItemCreators;
 
+  protected sideBarItemCreators: SideBarItemCreators = {};
+
+  public onGetSideBarItemCreators: () => SideBarItemCreators;
+
+  protected _sidebarWidget: SidebarWidget | undefined;
+
   protected getToolbarItemCreators(): ToolbarItemCreators {
-    return Object.assign({}, this.toolbarItemCreators, this.onGetToolbarItemCreators && this.onGetToolbarItemCreators() || {});
+    const base = Object.assign({}, this.toolbarItemCreators, this.onGetToolbarItemCreators && this.onGetToolbarItemCreators() || {});
+
+    const hasSideBarItems = Object.keys(this.sideBarItemCreators).length > 0 ||
+      (this.onGetSideBarItemCreators && Object.keys(this.onGetSideBarItemCreators() || {}).length > 0);
+    if(hasSideBarItems) {
+      base["sidebarPanel"] = {
+        creator: (toolbar?: HTMLDivElement) => this.createSidebarPanelButton(toolbar),
+        type: "button",
+        index: 950,
+        groupIndex: 0,
+      };
+    }
+
+    return base;
+  }
+
+  protected createSidebarPanelButton(_toolbar?: HTMLDivElement): HTMLElement {
+    if(!this._sidebarWidget) {
+      const creators = Object.assign(
+        {},
+        this.sideBarItemCreators,
+        this.onGetSideBarItemCreators && this.onGetSideBarItemCreators() || {}
+      );
+      this._sidebarWidget = new SidebarWidget({
+        title: this.title,
+        itemCreators: creators,
+        buttonIcon: "settings_24x24",
+        buttonTitle: "Open panel",
+      });
+    }
+    return this._sidebarWidget.render(_toolbar);
+  }
+
+  /**
+   * Registers a sidebar item creator by name. The item will be rendered in the sidebar panel when the sidebar button is used.
+   * @param name Unique name for the sidebar item.
+   * @param creator Function that receives the panel container and returns an HTMLElement to be appended.
+   * @param index Optional order index (default 100). Lower values appear first.
+   * @param groupIndex Optional group index (default 0). Items are ordered by group first, then by index within group.
+   */
+  public registerSideBarItem(
+    name: string,
+    creator: (container: HTMLDivElement) => HTMLElement,
+    index: number = 100,
+    groupIndex: number = 0
+  ): void {
+    this.sideBarItemCreators[name] = { creator, index, groupIndex };
+  }
+
+  /**
+   * Unregisters a sidebar item creator.
+   * @param name Name of the sidebar item to remove.
+   * @returns The previously registered creator function, or undefined.
+   */
+  public unregisterSideBarItem(name: string): ((container: HTMLDivElement) => HTMLElement) | undefined {
+    if(this.sideBarItemCreators[name] !== undefined) {
+      const item = this.sideBarItemCreators[name];
+      delete this.sideBarItemCreators[name];
+      return item.creator;
+    }
+    return undefined;
   }
 
   constructor(
@@ -585,9 +659,15 @@ export class VisualizerBase implements IDataInfo {
     return !!this.question ? this.question.correctAnswer : "";
   }
 
+  public resetContentFilter(): void { }
+
   protected renderBanner(container: HTMLElement) { }
 
   protected destroyToolbar(container: HTMLElement) {
+    if(this._sidebarWidget) {
+      this._sidebarWidget.destroy();
+      this._sidebarWidget = undefined;
+    }
     container.innerHTML = "";
   }
 

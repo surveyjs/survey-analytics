@@ -45,7 +45,9 @@ export * from "../ranking";
 export * from "../pivot";
 export * from "../theme";
 
-export { DocumentHelper } from "../utils/index";
+export { DocumentHelper } from "../utils/documentHelper";
+export { createActionDropdown } from "../utils/dropdownActionWidget";
+export { createDropdown } from "../utils/dropdownWidget";
 
 export * from "../layout-engine";
 export * from "../muuri-layout-engine";

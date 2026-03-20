@@ -1,5 +1,5 @@
 import { IVisualizerWithSelection } from "./selectBase";
-import { DocumentHelper } from "./utils";
+import { DocumentHelper } from "./utils/documentHelper";
 import { localization } from "./localizationManager";
 
 export class FilterInfo {

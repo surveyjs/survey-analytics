@@ -1,8 +1,9 @@
-import { DocumentHelper } from ".";
+import { DocumentHelper } from "./documentHelper";
 import { localization } from "../localizationManager";
 import { DateRangeModel, DatePeriodEnum, datePeriodsFunctions, IDateRangeModelOptions } from "./dateRangeModel";
 import { IDropdownItemOption } from "./dropdownBase";
 import "./dateRangeWidget.scss";
+import { createDropdown } from "./dropdownWidget";
 
 export type { DatePeriodEnum };
 export { datePeriodsFunctions };
@@ -196,7 +197,7 @@ export class DateRangeWidget {
         });
       });
 
-      this.datePeriodContainer = DocumentHelper.createDropdown({
+      this.datePeriodContainer = createDropdown({
         options,
         isSelected: (option: any) => this.model.currentDatePeriod === option.value,
         handler: (value: any) => {
