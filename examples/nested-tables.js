@@ -1,5 +1,4 @@
-// Matrix Dynamic Example
-var matrixDynamicJson = {
+var surveyJson = {
   questions: [
     {
       type: "matrixdynamic",
@@ -37,33 +36,6 @@ var matrixDynamicJson = {
         },
       ],
     },
-  ],
-};
-
-var matrixDynamicData = [
-  {
-    teachersRate: [
-      { subject: "Math", rating: 5, experience: "Excellent", feedback: "Great teacher!" },
-      { subject: "Science", rating: 4, experience: "Good", feedback: "Very knowledgeable" },
-      { subject: "History", rating: 3, experience: "Average", feedback: "Could improve" },
-    ],
-  },
-  {
-    teachersRate: [
-      { subject: "English", rating: 5, experience: "Excellent", feedback: "Inspiring!" },
-      { subject: "Physical Education", rating: 4, experience: "Good", feedback: "Motivating" },
-    ],
-  },
-  {
-    teachersRate: [
-      { subject: "Math", rating: 4, experience: "Good", feedback: "Clear explanations" },
-    ],
-  },
-];
-
-// Panel Dynamic Example
-var panelDynamicJson = {
-  questions: [
     {
       type: "paneldynamic",
       name: "relatives",
@@ -96,8 +68,13 @@ var panelDynamicJson = {
   ],
 };
 
-var panelDynamicData = [
+var surveyData = [
   {
+    teachersRate: [
+      { subject: "Math", rating: 5, experience: "Excellent", feedback: "Great teacher!" },
+      { subject: "Science", rating: 4, experience: "Good", feedback: "Very knowledgeable" },
+      { subject: "History", rating: 3, experience: "Average", feedback: "Could improve" },
+    ],
     relatives: [
       { relativeType: "Sibling", firstName: "John", lastName: "Doe", age: "28" },
       { relativeType: "Sibling", firstName: "Jane", lastName: "Doe", age: "25" },
@@ -105,36 +82,31 @@ var panelDynamicData = [
     ],
   },
   {
+    teachersRate: [
+      { subject: "English", rating: 5, experience: "Excellent", feedback: "Inspiring!" },
+      { subject: "Physical Education", rating: 4, experience: "Good", feedback: "Motivating" },
+    ],
     relatives: [
       { relativeType: "Spouse", firstName: "Mary", lastName: "Smith", age: "30" },
       { relativeType: "Child", firstName: "Tommy", lastName: "Smith", age: "5" },
     ],
   },
   {
+    teachersRate: [
+      { subject: "Math", rating: 4, experience: "Good", feedback: "Clear explanations" },
+    ],
     relatives: [
       { relativeType: "Parent", firstName: "Alice", lastName: "Johnson", age: "65" },
     ],
   },
 ];
 
-// Initialize Matrix Dynamic Table with nested tables
-var matrixSurvey = new Survey.SurveyModel(matrixDynamicJson);
-var matrixTabulator = new SurveyAnalytics.Tabulator(
-  matrixSurvey,
-  matrixDynamicData,
+var survey = new Survey.SurveyModel(surveyJson);
+var matrixTabulator = new SurveyAnalyticsTabulator.Tabulator(
+  survey,
+  surveyData,
   {
-    useNestedTables: true, // Enable nested tables
+    useNestedTables: true,
   }
 );
-matrixTabulator.render("matrixDynamicTable");
-
-// Initialize Panel Dynamic Table with nested tables
-var panelSurvey = new Survey.SurveyModel(panelDynamicJson);
-var panelTabulator = new SurveyAnalytics.Tabulator(
-  panelSurvey,
-  panelDynamicData,
-  {
-    useNestedTables: true, // Enable nested tables
-  }
-);
-panelTabulator.render("panelDynamicTable");
+matrixTabulator.render("tabulatorContainer");
