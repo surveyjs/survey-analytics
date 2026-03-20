@@ -379,19 +379,20 @@ export class Tabulator extends Table {
         }));
       }
 
-      const holderEl = document.createElement("div");
-      holderEl.classList.add("sa-nested-table-holder");
       const tableEl = document.createElement("div");
-      holderEl.appendChild(tableEl);
-
-      new Tabulator.tabulatorTablesConstructor(tableEl, {
-        layout: "fitDataFill",
+      tableEl.classList.add("sa-nested-table");
+      const nestedTable = new Tabulator.tabulatorTablesConstructor(tableEl, {
+        // layout: "fitDataFill",
         data: cellData,
         columns: nestedTableColumns,
         pagination: false,
       });
-      cell.getElement().appendChild(holderEl);
-      return holderEl;
+      nestedTable.on("tableBuilt", () => {
+        // cell.getRow().normalizeHeight();
+        this.layout(false);
+      });
+
+      return tableEl;
     };
   }
 
