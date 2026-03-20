@@ -49,6 +49,8 @@ export var englishStrings = {
   clearButton: "Clear",
   addElement: "Choose question to show...",
   allQuestions: "All questions",
+  selectAll: "Select all",
+  clearSelection: "Clear selection",
   defaultOrder: "Default Order",
   ascOrder: "Ascending",
   descOrder: "Descending",

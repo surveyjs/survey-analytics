@@ -279,6 +279,15 @@
   }
 }
 
+.sa-action-dropdown-item--toggle-all {
+  color: var(--sjs2-color-fg-brand-primary, #19b394);
+  @include sjs2--typography--default-strong;
+
+  &:hover {
+    color: var(--sjs2-color-fg-brand-primary-dim, #15987e);
+  }
+}
+
 .sa-action-dropdown-icon {
   width: var(--sjs2-size-icon-medium, 24px);
   height: var(--sjs2-size-icon-medium, 24px);
