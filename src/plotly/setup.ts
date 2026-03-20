@@ -836,7 +836,8 @@ export class PlotlySetup {
           ...PlotlySetup.defaultAxisConfig(model.theme),
           tickfont: model.theme.radarLabelFont,
           linecolor: model.theme.axisGridColor,
-        }
+        },
+        bgcolor: "transparent",
       },
       showlegend: hasSeries,
       legend: hasSeries ? PlotlySetup.defaultLegendConfig(model) : undefined,
