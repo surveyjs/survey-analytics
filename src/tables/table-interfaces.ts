@@ -57,4 +57,5 @@ export interface ITable {
   unlockStateChanged(): void;
   refresh(hard: boolean): void;
   getShowFilesAsImages(): boolean;
+  isInitialized: boolean;
 }

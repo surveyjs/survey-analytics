@@ -181,21 +181,21 @@ a.sa-table__btn {
 
 .sa-table__svg-button {
   display: flex;
-  padding: var(--sjs2-layout-control-action-small-box-vertical, 8px) var(--sjs2-layout-control-action-small-box-horizontal, 8px);
+  padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-spacing-x100, 8px);
   justify-content: center;
   align-items: center;
-  gap: var(--sjs2-layout-control-action-small-box-gap, 0);
+  gap: var(--sjs2-spacing-x000, 0);
   border: none;
   box-sizing: content-box;
-  
+
   &:hover {
-    border-radius: var(--sjs2-radius-control-action-icon, 8px);
-    background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
+    border-radius: var(--sjs2-radius-component-action-icon, 8px);
+    background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.1));
   }
   &:focus-visible {
-    border-radius: var(--sjs2-radius-control-action-icon, 8px);
-    outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.60));
-    background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
+    border-radius: var(--sjs2-radius-component-action-icon, 8px);
+    outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.6));
+    background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0));
   }
   svg {
     width: 24px;
@@ -227,23 +227,28 @@ a.sa-table__btn {
 
 .sa-table-filter {
   display: flex;
-  padding: var(--sjs2-layout-control-formbox-small-vertical, 4px) var(--sjs2-layout-control-formbox-small-horizontal, 4px);
+  padding: var(--sjs2-spacing-x050, 4px) var(--sjs2-spacing-x050, 4px);
   align-items: flex-start;
-  gap: var(--sjs2-layout-control-formbox-small-gap, 4px);
+  gap: var(--sjs2-spacing-x050, 4px);
   align-self: stretch;
   border-radius: var(--sjs2-radius-semantic-form, 8px);
-  background: var(--sjs2-color-control-formbox-default-bg, #F5F5F5);
-  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0) var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px) var(--sjs2-color-control-formbox-default-border, #D4D4D4) inset;
+  background: var(--sjs2-color-component-formbox-default-bg, #f5f5f5);
+  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
+    var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
+    var(--sjs2-color-component-formbox-default-border, #d4d4d4) inset;
 
   &:focus-within {
-    background: var(--sjs2-color-control-formbox-focused-bg, #F5F5F5);
-    box-shadow: var(--sjs2-border-offset-x-form-focused, 0) var(--sjs2-border-offset-y-form-focused, 0) var(--sjs2-border-blur-form-focused, 0) var(--sjs2-border-spread-form-focused, 2px) var(--sjs2-color-control-formbox-focused-border, #19B394) inset;
+    background: var(--sjs2-color-component-formbox-focused-bg, #f5f5f5);
+    box-shadow: var(--sjs2-border-offset-x-form-focused, 0) var(--sjs2-border-offset-y-form-focused, 0)
+      var(--sjs2-border-blur-form-focused, 0) var(--sjs2-border-spread-form-focused, 2px)
+      var(--sjs2-color-component-formbox-focused-border, #19b394) inset;
   }
 }
 
 .sa-table-filter_icon {
   display: flex;
-  padding: var(--sjs2-layout-control-input-small-icon-vertical, 4px) var(--sjs2-layout-control-input-small-icon-right, 0) var(--sjs2-layout-control-input-small-icon-vertical, 4px) var(--sjs2-layout-control-input-small-icon-left, 4px);
+  padding: var(--sjs2-spacing-x050, 4px) var(--sjs2-spacing-x000, 0) var(--sjs2-spacing-x050, 4px)
+    var(--sjs2-spacing-x050, 4px);
   justify-content: center;
   align-items: center;
 
@@ -254,25 +259,25 @@ a.sa-table__btn {
   }
 
   use {
-    fill: var(--sjs2-color-control-input-default-icon, rgba(28, 27, 32, 0.40));
+    fill: var(--sjs2-color-component-input-default-icon, rgba(28, 27, 32, 0.4));
   }
 }
 
 .sa-table-filter_input.sa-table-filter_input {
   display: flex;
-  padding: var(--sjs2-layout-control-input-small-content-vertical, 4px) var(--sjs2-layout-control-input-small-content-horizontal, 8px);
+  padding: var(--sjs2-spacing-x050, 4px) var(--sjs2-spacing-x100, 8px);
   align-items: flex-start;
   flex: 1 0 0;
   border: none;
   overflow: hidden;
-  color: var(--sjs2-color-control-input-default-value, #1C1B20);
+  color: var(--sjs2-color-component-input-default-value, #1c1b20);
   text-overflow: ellipsis;
 
   @include sjs2--typography--default;
 
   &::placeholder {
     overflow: hidden;
-    color: var(--sjs2-color-control-input-default-placeholder, rgba(28, 27, 32, 0.60));
+    color: var(--sjs2-color-component-input-default-placeholder, rgba(28, 27, 32, 0.6));
     text-overflow: ellipsis;
   }
 }
@@ -290,11 +295,11 @@ a.sa-table__btn {
   // align-items: flex-start;
   // align-self: stretch;
 
-  // padding: var(--sjs2-layout-control-formbox-small-vertical, 4px) var(--sjs2-layout-control-formbox-small-horizontal, 4px);
-  // gap: var(--sjs2-layout-control-formbox-small-gap, 4px);
+  // padding: var(--sjs2-spacing-x050, 4px) var(--sjs2-spacing-x050, 4px);
+  // gap: var(--sjs2-spacing-x050, 4px);
   // border-radius: var(--sjs2-radius-semantic-form, 8px);
-  // background: var(--sjs2-color-control-formbox-default-bg, rgba(28, 27, 32, 0.05));
-  // box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0) var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px) var(--sjs2-color-control-formbox-default-border, #D4D4D4) inset;
+  // background: var(--sjs2-color-component-formbox-default-bg, rgba(28, 27, 32, 0.05));
+  // box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0) var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px) var(--sjs2-color-component-formbox-default-border, #D4D4D4) inset;
 }
 
 .sa-table__action-container {
@@ -336,9 +341,11 @@ a.sa-table__btn {
   min-width: 195px;
   border: none;
   border-radius: var(--dsb-table-view-column-search-corner-radius, 6px);
-  outline: var(--dsb-table-view-column-search-border-width, 0px) solid var(--dsb-table-view-column-search-border-color, #DCDCDC);
-  background: var(--dsb-table-view-column-search-background-color, #F4F4F4);
-  padding: var(--dsb-table-view-column-search-padding-top, 8px) var(--dsb-table-view-column-search-padding-right, 16px) var(--dsb-table-view-column-search-padding-bottom, 8px) var(--dsb-table-view-column-search-padding-left, 16px);
+  outline: var(--dsb-table-view-column-search-border-width, 0px) solid
+    var(--dsb-table-view-column-search-border-color, #dcdcdc);
+  background: var(--dsb-table-view-column-search-background-color, #f4f4f4);
+  padding: var(--dsb-table-view-column-search-padding-top, 8px) var(--dsb-table-view-column-search-padding-right, 16px)
+    var(--dsb-table-view-column-search-padding-bottom, 8px) var(--dsb-table-view-column-search-padding-left, 16px);
   margin-inline-end: var(--dsb-table-view-header-toolbar-gap, 16px);
 
   overflow: hidden;
@@ -431,36 +438,44 @@ a.sa-table__btn {
   outline: none;
   padding: 0;
 
-  border-radius: var(--sjs2-radius-control-checkbox, 4px);
-  background: var(--sjs2-color-control-check-false-default-bg, #F5F5F5);
-  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0) var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px) var(--sjs2-color-control-check-false-default-border, #D4D4D4) inset;
+  border-radius: var(--sjs2-radius-component-checkbox, 4px);
+  background: var(--sjs2-color-component-check-false-default-bg, #f5f5f5);
+  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
+    var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
+    var(--sjs2-color-component-check-false-default-border, #d4d4d4) inset;
 
   &:hover {
-    background: var(--sjs2-color-control-check-false-hovered-bg, rgba(28, 27, 32, 0.10));
-    box-shadow: var(--sjs2-border-offset-x-form-hovered, 0) var(--sjs2-border-offset-y-form-hovered, 0) var(--sjs2-border-blur-form-hovered, 0) var(--sjs2-border-spread-form-hovered, 1px) var(--sjs2-color-control-check-false-hovered-border, #D4D4D4) inset;
+    background: var(--sjs2-color-component-check-false-hovered-bg, rgba(28, 27, 32, 0.1));
+    box-shadow: var(--sjs2-border-offset-x-form-hovered, 0) var(--sjs2-border-offset-y-form-hovered, 0)
+      var(--sjs2-border-blur-form-hovered, 0) var(--sjs2-border-spread-form-hovered, 1px)
+      var(--sjs2-color-component-check-false-hovered-border, #d4d4d4) inset;
   }
 
   svg {
     display: none;
     width: var(--sjs2-size-x200, 16px);
-    height: var(--sjs2-size-x200, 16px);;
+    height: var(--sjs2-size-x200, 16px);
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
   }
 
   use {
-    fill: var(--sjs2-color-control-check-true-default-icon, #FFF);
+    fill: var(--sjs2-color-component-check-true-default-icon, #fff);
   }
 }
 
 .sa-checkbox--checked.sa-checkbox--checked {
-  background: var(--sjs2-color-control-check-true-default-bg, #19B394);
-  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0) var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px) var(--sjs2-color-control-check-true-default-border, #19B394) inset;
+  background: var(--sjs2-color-component-check-true-default-bg, #19b394);
+  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
+    var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
+    var(--sjs2-color-component-check-true-default-border, #19b394) inset;
 
   &:hover {
-    background: var(--sjs2-color-control-check-true-hovered-bg, #15987E);
-    box-shadow: var(--sjs2-border-offset-x-form-hovered, 0) var(--sjs2-border-offset-y-form-hovered, 0) var(--sjs2-border-blur-form-hovered, 0) var(--sjs2-border-spread-form-hovered, 1px) var(--sjs2-color-control-check-true-hovered-border, #15987E) inset;
+    background: var(--sjs2-color-component-check-true-hovered-bg, #15987e);
+    box-shadow: var(--sjs2-border-offset-x-form-hovered, 0) var(--sjs2-border-offset-y-form-hovered, 0)
+      var(--sjs2-border-blur-form-hovered, 0) var(--sjs2-border-spread-form-hovered, 1px)
+      var(--sjs2-color-component-check-true-hovered-border, #15987e) inset;
   }
 
   svg {
