@@ -143,7 +143,7 @@ export class PivotModel extends HistogramModel {
     });
 
     this.registerSideBarItem("secondaryYAxisBlock", (container: HTMLDivElement) => {
-      if(["vbar", "line"].indexOf(this.chartType) === -1) {
+      if(!this.allowSecondaryAxis) {
         return;
       }
       const block = DocumentHelper.createElement("div", "sa-pivot__secondary-y-block");
@@ -240,6 +240,10 @@ export class PivotModel extends HistogramModel {
     return [...this.primaryYAxes, ...this.secondaryYAxes];
   }
 
+  get allowSecondaryAxis(): boolean {
+    return ["vbar", "line"].indexOf(this.chartType) !== -1;
+  }
+
   public getYAxisInfo() {
     if(this.secondaryYAxes.length > 0) {
       const primarySeriesLabels = [];
@@ -261,7 +265,7 @@ export class PivotModel extends HistogramModel {
   }
 
   protected getTitle(question: Question): string {
-    return this._questionDefinition?.title || this._questionDefinition?.name || super.getTitle(question);
+    return this._questionDefinition?.title || super.getTitle(question);
   }
 
   // private createYSelecterGenerator(): () => HTMLDivElement {
@@ -365,6 +369,9 @@ export class PivotModel extends HistogramModel {
     super.setChartType(chartType);
     if(prev2Dchart !== this.isXYChart()) {
       this.updateToolbar();
+    }
+    if(!this.allowSecondaryAxis) {
+      this.useSecondaryYAxis = false;
     }
     this._sidebarWidget?.destroyPanel();
   }

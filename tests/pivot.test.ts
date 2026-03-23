@@ -810,3 +810,41 @@ test("getYAxisInfo returns two axis settings when secondary Y axis has series", 
     seriesName: ["Item 1", "Item 2", "Item 3"]
   });
 });
+
+test("primaryYAxesSeriesListWidget renders movePrimaryItemToSecondary button when useSecondaryYAxis is true", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+
+  const root = pivot.primaryYAxesSeriesListWidget.render();
+  const actionButtons = root.querySelectorAll(".sa-series-settings__action-button");
+  expect(actionButtons.length).toBeGreaterThan(0);
+});
+
+test("primaryYAxesSeriesListWidget does not render movePrimaryItemToSecondary button when useSecondaryYAxis is false", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+
+  const root = pivot.primaryYAxesSeriesListWidget.render();
+  const actionButtons = root.querySelectorAll(".sa-series-settings__action-button");
+  expect(actionButtons.length).toBe(0);
+});
+
+test("primaryYAxesSeriesListWidget hides movePrimaryItemToSecondary button after switching chart type to bar", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot["chartTypes"] = ["vbar", "bar", "line", "pie", "doughnut"];
+  pivot.chartType = "vbar";
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+
+  let primaryYAxesElement = pivot.primaryYAxesSeriesListWidget.render();
+  const buttonsBefore = primaryYAxesElement.querySelectorAll(".sa-series-settings__action-button");
+  expect(buttonsBefore.length).toBeGreaterThan(0);
+
+  pivot.chartType = "bar";
+
+  primaryYAxesElement = pivot.primaryYAxesSeriesListWidget.render();
+  const buttonsAfter = primaryYAxesElement.querySelectorAll(".sa-series-settings__action-button");
+  expect(buttonsAfter.length).toBe(0);
+});

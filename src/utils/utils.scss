@@ -79,6 +79,8 @@
   align-items: flex-start;
   gap: var(--sjs2-layout-control-formbox-medium-gap, 4px);
   align-self: stretch;
+  width: 100%;
+  box-sizing: border-box;
 
   border-radius: var(--sjs2-radius-semantic-form, 8px);
   margin: var(--sjs2-border-width-x100, 1px);
@@ -342,6 +344,7 @@
   padding: var(--sjs2-layout-control-input-medium-content-vertical, 8px) var(--sjs2-layout-control-input-medium-content-horizontal, 12px);
   align-items: flex-start;
   flex: 1 0 0;
+  min-width: 0;
 }
 
 .sa-dropdown-header-text {
