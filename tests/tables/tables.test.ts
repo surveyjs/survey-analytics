@@ -929,6 +929,56 @@ test("check matrix dropdown columns name with dots", () => {
   expect(expect(tableData["question.name.row 2.col 2"]).toEqual(""));
 });
 
+test("check matrix dropdown shown in detail row if have more than 5 rows", () => {
+  const matrixDotsNameDropdownJson = {
+    "elements": [
+      {
+        "type": "matrixdropdown",
+        "name": "shortMatrix",
+        "columns": [
+          {
+            "name": "col 1",
+          },
+          {
+            "name": "col 2",
+          },
+        ],
+        "rows": ["row1", "row2"]
+      },
+      {
+        "type": "matrixdropdown",
+        "name": "longMatrix",
+        "columns": [
+          {
+            "name": "col 1",
+          },
+          {
+            "name": "col 2",
+          },
+        ],
+        "rows": ["row1", "row2", "row3", "row4", "row5", "row6"]
+      }
+    ]
+  };
+
+  const survey = new SurveyModel(matrixDotsNameDropdownJson);
+  let table = new TableTest(survey, [], {}, []);
+  let columns = table.columns;
+  expect(columns.length).toBe(16);
+  expect(columns[0].name).toBe("shortMatrix.row1.col 1");
+  expect(columns[0].location).toBe(QuestionLocation.Column);
+  expect(columns[1].name).toBe("shortMatrix.row1.col 2");
+  expect(columns[1].location).toBe(QuestionLocation.Column);
+  expect(columns[2].name).toBe("shortMatrix.row2.col 1");
+  expect(columns[2].location).toBe(QuestionLocation.Column);
+  expect(columns[3].name).toBe("shortMatrix.row2.col 2");
+  expect(columns[3].location).toBe(QuestionLocation.Column);
+  expect(columns[4].name).toBe("longMatrix.row1.col 1");
+  expect(columns[4].location).toBe(QuestionLocation.Row);
+  expect(columns[5].name).toBe("longMatrix.row1.col 2");
+  expect(columns[5].location).toBe(QuestionLocation.Row);
+});
+
 test("check set state with columns which not inside survey", () => {
   const survey = new SurveyModel({
     elements: [
