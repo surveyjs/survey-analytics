@@ -5,11 +5,11 @@ import { VisualizationManager } from "./visualizationManager";
 import { mathStatisticsCalculator } from "./statisticCalculators";
 import { createDropdown } from "./utils/dropdownWidget";
 
-export interface INumberModelVisualizerOptions {
+export interface INumericVisualizerOptions {
   displayValueName: string;
 }
 
-export class NumberModel extends VisualizerBase implements INumberModelVisualizerOptions {
+export class NumberModel extends VisualizerBase implements INumericVisualizerOptions {
   private _statistics: ICalculationResult;
 
   public static stepsCount = 5;

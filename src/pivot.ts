@@ -11,7 +11,7 @@ import { ToggleWidget } from "./utils/toggle";
 import { createDropdown } from "./utils/dropdownWidget";
 import { DocumentHelper } from "./utils/documentHelper";
 
-export interface IPivotChartVisualizerOptions {
+export interface IPivotVisualizerOptions {
   questions?: Question[] | string[];
   categoryField?: Question | string;
   seriesFields?: Question[] | string[];
@@ -168,7 +168,7 @@ export class PivotModel extends HistogramModel {
   constructor(
     public questions: Array<Question>,
     data: Array<{ [index: string]: any }>,
-    options?: IPivotChartVisualizerOptions,
+    options?: IPivotVisualizerOptions,
     private isRoot = true,
     type?: string
   ) {

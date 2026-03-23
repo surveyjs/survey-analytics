@@ -5,7 +5,7 @@ import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrap
 import { Dashboard } from "../src/dashboard";
 import { VisualizationManager } from "../src/visualizationManager";
 import { PostponeHelper, VisualizerBase } from "../src/visualizerBase";
-import { IPivotChartVisualizerOptions, PivotModel } from "../src/pivot";
+import { IPivotVisualizerOptions, PivotModel } from "../src/pivot";
 import { HistogramModel } from "../src/histogram";
 import { VisualizerFactory } from "../src/visualizerFactory";
 import { QuestionTextModel, SurveyModel } from "survey-core";
