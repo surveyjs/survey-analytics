@@ -65,8 +65,6 @@ type ToolbarItemCreators = {
   },
 };
 
-export { IVisualizerOptions } from "./visualizer-interfaces";
-
 export class PostponeHelper {
   public static postponeFunction: (fn: () => void, timeout?: number) => any;
   public static postpone(fn: () => void, timeout?: number): any {

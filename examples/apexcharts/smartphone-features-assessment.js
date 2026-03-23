@@ -613,14 +613,14 @@ var dashboard = new SurveyAnalytics.Dashboard({
   questions: survey.getAllQuestions(),
   data: dataFromServer,
   dateFieldName: "timestamp",
-  visualizers: [
+  items: [
     {
-        dataField: "overall-satisfaction",
+        name: "overall-satisfaction",
         type: "gauge",
         // availableTypes: ["gauge", "bullet"]
     },
     {
-        dataField: "smartphone-features",
+        name: "smartphone-features",
         type: "radar",
         allowChangeType: false
     },
