@@ -139,6 +139,32 @@ export class CheckboxColumn extends SelectBaseColumn<QuestionCheckboxModel | Que
   }
 }
 
+export class FlattenedCheckboxColumn extends BaseColumn<QuestionCheckboxModel | QuestionTagboxModel> {
+  constructor(question: QuestionCheckboxModel | QuestionTagboxModel, private choiceValue: any, private choiceText: string, table: Table) {
+    super(question, table);
+  }
+
+  protected getName(): string {
+    return `${this.question.name}_${this.choiceValue}`;
+  }
+
+  protected getDisplayName(): string {
+    const questionDisplayName = this.table.useNamesAsTitles
+      ? this.question.name
+      : (this.question.locTitle?.renderedHtml || this.question.title || "").trim() || this.question.name;
+    return `${questionDisplayName}_${this.choiceText}`;
+  }
+
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
+    const questionValue = data[this.question.name];
+    if(!Array.isArray(questionValue)) {
+      return "";
+    }
+    const index = questionValue.indexOf(this.choiceValue);
+    return index >= 0 ? (index + 1).toString() : "";
+  }
+}
+
 export class SingleChoiceColumn extends SelectBaseColumn<QuestionDropdownModel | QuestionRadiogroupModel> {
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
     if(this.isOtherInSeparateColumn) {

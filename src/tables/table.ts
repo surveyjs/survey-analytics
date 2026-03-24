@@ -60,6 +60,15 @@ export interface ITableOptions {
    * @see pageSize
    */
   paginationEnabled?: boolean;
+  /**
+   * Specifies whether to flatten checkbox answers into separate columns.
+   * When enabled, each checkbox choice is represented as a separate column,
+   * with values showing the selection order (1 for first selected, 2 for second, etc.).
+   * Blank cells indicate the choice was not selected.
+   *
+   * Default value: `false`
+   */
+  flattenCheckbox?: boolean;
 }
 
 export type TabulatorFilter = { field: string, type: string, value: any };

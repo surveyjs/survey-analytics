@@ -1440,3 +1440,104 @@ test("Multiple file names appear as a single unreadable string - https://github.
   expect(table.columns[1].getCellData(table, data).displayValue).toBe("<div><a download=\"presentation.pptx\" href=\"http://localhost:8080/files/presentation.pptx\"></a><br><a download=\"slides.pptx\" href=\"http://localhost:8080/files/slides.pptx\"></a><br><a download=\"data.json\" href=\"http://localhost:8080/files/data.json\"></a></div>");
   expect(table.columns[2].getCellData(table, data).displayValue).toBe("<div><a download=\"image.png\" href=\"http://localhost:8080/files/image.png\"></a></div>");
 });
+
+test("check flattened checkbox columns", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "fav_cars",
+        title: "Favorite Cars",
+        choices: [
+          { value: "car1", text: "Car 1" },
+          { value: "car2", text: "Car 2" },
+          { value: "car3", text: "Car 3" }
+        ]
+      }
+    ]
+  };
+
+  const data1 = { fav_cars: ["car1", "car2"] };
+  const data2 = { fav_cars: ["car2"] };
+  const data3 = { fav_cars: [] };
+
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [data1, data2, data3], { flattenCheckbox: true });
+
+  // Should create 3 columns, one for each choice
+  expect(table.columns.length).toEqual(3);
+
+  // Check column names
+  expect(table.columns[0].name).toBe("fav_cars_car1");
+  expect(table.columns[1].name).toBe("fav_cars_car2");
+  expect(table.columns[2].name).toBe("fav_cars_car3");
+
+  // Check column display names
+  expect(table.columns[0].displayName).toBe("Favorite Cars_Car 1");
+  expect(table.columns[1].displayName).toBe("Favorite Cars_Car 2");
+  expect(table.columns[2].displayName).toBe("Favorite Cars_Car 3");
+
+  // Check values for first data row (selected car1 first, car2 second)
+  expect(table.columns[0].getCellData(table, data1).displayValue).toBe("1");
+  expect(table.columns[1].getCellData(table, data1).displayValue).toBe("2");
+  expect(table.columns[2].getCellData(table, data1).displayValue).toBe("");
+
+  // Check values for second data row (only car2 selected)
+  expect(table.columns[0].getCellData(table, data2).displayValue).toBe("");
+  expect(table.columns[1].getCellData(table, data2).displayValue).toBe("1");
+  expect(table.columns[2].getCellData(table, data2).displayValue).toBe("");
+
+  // Check values for third data row (nothing selected)
+  expect(table.columns[0].getCellData(table, data3).displayValue).toBe("");
+  expect(table.columns[1].getCellData(table, data3).displayValue).toBe("");
+  expect(table.columns[2].getCellData(table, data3).displayValue).toBe("");
+});
+
+test("check flattened checkbox columns with useNamesAsTitles", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "fav_cars",
+        title: "Favorite Cars",
+        choices: [
+          { value: "car1", text: "Car 1" },
+          { value: "car2", text: "Car 2" }
+        ]
+      }
+    ]
+  };
+
+  const data = { fav_cars: ["car1"] };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [data], { flattenCheckbox: true, useNamesAsTitles: true });
+
+  expect(table.columns.length).toEqual(2);
+  expect(table.columns[0].displayName).toBe("fav_cars_Car 1");
+  expect(table.columns[1].displayName).toBe("fav_cars_Car 2");
+});
+
+test("check non-flattened checkbox columns still work", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "question1",
+        choices: [
+          { value: "item1", text: "Item 1" },
+          { value: "item2", text: "Item 2" },
+          { value: "item3", text: "Item 3" }
+        ]
+      }
+    ]
+  };
+
+  const data = { question1: ["item1", "item3"] };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [data], { flattenCheckbox: false });
+
+  // Should create only 1 column for the checkbox question
+  expect(table.columns.length).toEqual(1);
+  expect(table.columns[0].name).toBe("question1");
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1, Item 3");
+});
