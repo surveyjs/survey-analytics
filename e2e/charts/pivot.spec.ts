@@ -19,9 +19,9 @@ test.describe("Pivot chart", () => {
     });
 
     await openSidebarButton.click();
-    await expect(page.locator("#pivotContainer").getByText("Category (X Axis):")).toBeVisible();
+    await expect(page.locator("#pivotContainer").getByText("Category (X Axis)")).toBeVisible();
     await expect(xAxisSelector).toBeVisible();
-    await expect(page.locator("#pivotContainer").getByText("Legend (Series):").first()).toBeVisible();
+    await expect(page.locator("#pivotContainer").getByText("Legend (Series)").first()).toBeVisible();
     await expect(yAxisSelector).toBeVisible();
     await closeSidebarButton.click();
     await compareScreenshot(page, "#pivotContainer", "pivot-q1-none.png");

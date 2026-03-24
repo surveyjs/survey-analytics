@@ -265,7 +265,7 @@ export class PivotModel extends HistogramModel {
   }
 
   protected getTitle(question: Question): string {
-    return this._questionDefinition?.title || super.getTitle(question);
+    return this._questionDefinition?.title || super.getTitle(question) || this.getName();
   }
 
   // private createYSelecterGenerator(): () => HTMLDivElement {
