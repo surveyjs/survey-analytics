@@ -1468,14 +1468,14 @@ test("check flattened checkbox columns", () => {
   expect(table.columns.length).toEqual(3);
 
   // Check column names
-  expect(table.columns[0].name).toBe("fav_cars_car1");
-  expect(table.columns[1].name).toBe("fav_cars_car2");
-  expect(table.columns[2].name).toBe("fav_cars_car3");
+  expect(table.columns[0].name).toBe("fav_cars.car1");
+  expect(table.columns[1].name).toBe("fav_cars.car2");
+  expect(table.columns[2].name).toBe("fav_cars.car3");
 
   // Check column display names
-  expect(table.columns[0].displayName).toBe("Favorite Cars_Car 1");
-  expect(table.columns[1].displayName).toBe("Favorite Cars_Car 2");
-  expect(table.columns[2].displayName).toBe("Favorite Cars_Car 3");
+  expect(table.columns[0].displayName).toBe("Favorite Cars - Car 1");
+  expect(table.columns[1].displayName).toBe("Favorite Cars - Car 2");
+  expect(table.columns[2].displayName).toBe("Favorite Cars - Car 3");
 
   // Check values for first data row (selected car1 first, car2 second)
   expect(table.columns[0].getCellData(table, data1).displayValue).toBe("1");
@@ -1513,8 +1513,8 @@ test("check flattened checkbox columns with useNamesAsTitles", () => {
   const table = new TableTest(survey, [data], { flattenCheckbox: true, useNamesAsTitles: true });
 
   expect(table.columns.length).toEqual(2);
-  expect(table.columns[0].displayName).toBe("fav_cars_Car 1");
-  expect(table.columns[1].displayName).toBe("fav_cars_Car 2");
+  expect(table.columns[0].displayName).toBe("fav_cars - car1");
+  expect(table.columns[1].displayName).toBe("fav_cars - car2");
 });
 
 test("check non-flattened checkbox columns still work", () => {

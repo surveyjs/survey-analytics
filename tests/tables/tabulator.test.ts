@@ -538,11 +538,11 @@ test("check flattenCheckbox option in Tabulator", () => {
 
   // First column is the actions column, next 3 are the flattened checkbox columns
   expect(columns.length).toBe(4);
-  expect(columns[1].field).toBe("fav_cars_car1");
-  expect(columns[1].title).toBe("Favorite Cars_Car 1");
-  expect(columns[2].field).toBe("fav_cars_car2");
-  expect(columns[2].title).toBe("Favorite Cars_Car 2");
-  expect(columns[3].field).toBe("fav_cars_car3");
-  expect(columns[3].title).toBe("Favorite Cars_Car 3");
+  expect(columns[1].field).toBe("fav_cars.car1");
+  expect(columns[1].title).toBe("Favorite Cars - Car 1");
+  expect(columns[2].field).toBe("fav_cars.car2");
+  expect(columns[2].title).toBe("Favorite Cars - Car 2");
+  expect(columns[3].field).toBe("fav_cars.car3");
+  expect(columns[3].title).toBe("Favorite Cars - Car 3");
 });
 

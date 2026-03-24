@@ -145,14 +145,15 @@ export class FlattenedCheckboxColumn extends BaseColumn<QuestionCheckboxModel | 
   }
 
   protected getName(): string {
-    return `${this.question.name}_${this.choiceValue}`;
+    return `${this.question.name}.${this.choiceValue}`;
   }
 
   protected getDisplayName(): string {
     const questionDisplayName = this.table.useNamesAsTitles
       ? this.question.name
       : (this.question.locTitle?.renderedHtml || this.question.title || "").trim() || this.question.name;
-    return `${questionDisplayName}_${this.choiceText}`;
+    const choiceDisplayText = this.table.useNamesAsTitles ? this.choiceValue : this.choiceText;
+    return `${questionDisplayName} - ${choiceDisplayText}`;
   }
 
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
