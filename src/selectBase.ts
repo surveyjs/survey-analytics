@@ -556,12 +556,19 @@ export class SelectBase
         if(rowValue !== undefined) {
           const rowValues = Array.isArray(rowValue) ? rowValue : [rowValue];
           rowValues.forEach((val) => {
-            // Handle object values (e.g., { value: "something" })
+            // Handle simple value objects (e.g., { value: "something" })
             if(val !== null && typeof val === "object" && val.value !== undefined) {
-              uniqueValues.add(val.value);
-            } else if(val !== null) {
+              // Only extract .value if this looks like a value wrapper object (has exactly one key or has 'text' key too)
+              const keys = Object.keys(val);
+              if(keys.length === 1 || (keys.length === 2 && keys.includes("text"))) {
+                uniqueValues.add(val.value);
+              }
+              // Otherwise, skip complex objects (like matrix row objects)
+            } else if(val !== null && typeof val !== "object") {
+              // Add primitive values (strings, numbers, booleans)
               uniqueValues.add(val);
             }
+            // Skip null and complex objects (like matrix rows: { Lizol: "Excellent", Harpic: "Good" })
           });
         }
       });
@@ -617,7 +624,6 @@ export class SelectBase
       return this.getValues();
     }
 
-    const values = this.getValues();
     const valuesSource = this.valuesSource();
     const labels: Array<string> = [];
 
@@ -637,17 +643,50 @@ export class SelectBase
       valueLabelMap.set("other", selBase.otherText);
     }
 
-    // Generate labels for all values in the same order as values
-    values.forEach((value) => {
-      if(value === undefined) {
-        labels.push(localization.getString("missingAnswersLabel"));
-      } else {
-        // Use the label from choices if available, otherwise use the value as label
-        const label = valueLabelMap.get(value);
-        labels.push(label !== undefined ? label : String(value));
+    // Start with labels from loaded choices
+    valuesSource.forEach((choice) => {
+      labels.push(valueLabelMap.get(choice.value));
+    });
+
+    // Add labels for values from data that aren't in the loaded choices
+    const valuesSet = new Set(valuesSource.map(c => c.value));
+    const uniqueDataValues = this.collectUniqueValuesFromData();
+
+    uniqueDataValues.forEach((value) => {
+      // Skip special values that are handled separately
+      if(value === "other" || value === undefined) {
+        return;
+      }
+      // Add values that are in the data but not in the choices
+      if(!valuesSet.has(value)) {
+        const question = this.question as QuestionSelectBase;
+        // Check if this might be a none item value
+        if(question.hasNone && value === question.noneItem.value) {
+          return;
+        }
+        // Use the value as its own label if no choice is defined for it
+        labels.push(String(value));
+        valuesSet.add(value);
       }
     });
 
+    // Add none and other labels
+    if(selBase.hasNone) {
+      labels.push(selBase.noneText);
+    }
+    if(selBase.hasOther) {
+      labels.push(selBase.otherText);
+    }
+
+    // Add missing answers label at the beginning
+    if(this.showMissingAnswers) {
+      labels.unshift(localization.getString("missingAnswersLabel"));
+    }
+
+    // Reverse if needed to match the original order
+    if(this.showValuesInOriginalOrder) {
+      return labels.reverse();
+    }
     return labels;
   }
 
