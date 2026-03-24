@@ -1478,13 +1478,14 @@ test("check flattened checkbox columns", () => {
   expect(table.columns[2].displayName).toBe("Favorite Cars - Car 3");
 
   // Check values for first data row (selected car1 first, car2 second)
-  expect(table.columns[0].getCellData(table, data1).displayValue).toBe("1");
-  expect(table.columns[1].getCellData(table, data1).displayValue).toBe("2");
+  // Default is checkmark mode
+  expect(table.columns[0].getCellData(table, data1).displayValue).toBe("✓");
+  expect(table.columns[1].getCellData(table, data1).displayValue).toBe("✓");
   expect(table.columns[2].getCellData(table, data1).displayValue).toBe("");
 
   // Check values for second data row (only car2 selected)
   expect(table.columns[0].getCellData(table, data2).displayValue).toBe("");
-  expect(table.columns[1].getCellData(table, data2).displayValue).toBe("1");
+  expect(table.columns[1].getCellData(table, data2).displayValue).toBe("✓");
   expect(table.columns[2].getCellData(table, data2).displayValue).toBe("");
 
   // Check values for third data row (nothing selected)
@@ -1515,6 +1516,41 @@ test("check flattened checkbox columns with useNamesAsTitles", () => {
   expect(table.columns.length).toEqual(2);
   expect(table.columns[0].displayName).toBe("fav_cars - car1");
   expect(table.columns[1].displayName).toBe("fav_cars - car2");
+});
+
+test("check flattened checkbox columns with order mode", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "fav_cars",
+        title: "Favorite Cars",
+        choices: [
+          { value: "car1", text: "Car 1" },
+          { value: "car2", text: "Car 2" },
+          { value: "car3", text: "Car 3" }
+        ]
+      }
+    ]
+  };
+
+  const data1 = { fav_cars: ["car1", "car2"] };
+  const data2 = { fav_cars: ["car2"] };
+
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [data1, data2], { flattenCheckbox: true, flattenCheckboxValue: "order" });
+
+  expect(table.columns.length).toEqual(3);
+
+  // Check values for first data row (selected car1 first, car2 second) - should show order
+  expect(table.columns[0].getCellData(table, data1).displayValue).toBe("1");
+  expect(table.columns[1].getCellData(table, data1).displayValue).toBe("2");
+  expect(table.columns[2].getCellData(table, data1).displayValue).toBe("");
+
+  // Check values for second data row (only car2 selected)
+  expect(table.columns[0].getCellData(table, data2).displayValue).toBe("");
+  expect(table.columns[1].getCellData(table, data2).displayValue).toBe("1");
+  expect(table.columns[2].getCellData(table, data2).displayValue).toBe("");
 });
 
 test("check non-flattened checkbox columns still work", () => {

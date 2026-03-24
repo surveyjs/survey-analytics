@@ -162,7 +162,12 @@ export class FlattenedCheckboxColumn extends BaseColumn<QuestionCheckboxModel | 
       return "";
     }
     const index = questionValue.indexOf(this.choiceValue);
-    return index >= 0 ? (index + 1).toString() : "";
+    if(index < 0) {
+      return "";
+    }
+    // Default to checkmark if not specified
+    const displayMode = options.flattenCheckboxValue || "check";
+    return displayMode === "check" ? "✓" : (index + 1).toString();
   }
 }
 

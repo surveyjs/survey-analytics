@@ -21,8 +21,11 @@
   <h1>Flattened Checkbox Example</h1>
   <p>This example demonstrates the <code>flattenCheckbox</code> option that transforms checkbox answers into separate columns.</p>
 
-  <h2>With flattenCheckbox: true</h2>
+  <h2>With flattenCheckbox: true (default checkmark mode)</h2>
   <div id="tabulatorFlattenedContainer"></div>
+
+  <h2 style="margin-top: 40px;">With flattenCheckbox: true and flattenCheckboxValue: "order"</h2>
+  <div id="tabulatorOrderContainer"></div>
 
   <h2 style="margin-top: 40px;">With flattenCheckbox: false (default)</h2>
   <div id="tabulatorNormalContainer"></div>
@@ -59,7 +62,7 @@
 
     var survey = new Survey.SurveyModel(json);
 
-    // Create flattened checkbox tabulator
+    // Create flattened checkbox tabulator with checkmarks (default)
     var surveyAnalyticsFlattenedTabulator = new SurveyAnalyticsTabulator.Tabulator(
       survey,
       data,
@@ -68,6 +71,17 @@
       }
     );
     surveyAnalyticsFlattenedTabulator.render("tabulatorFlattenedContainer");
+
+    // Create flattened checkbox tabulator with selection order
+    var surveyAnalyticsOrderTabulator = new SurveyAnalyticsTabulator.Tabulator(
+      survey,
+      data,
+      {
+        flattenCheckbox: true,
+        flattenCheckboxValue: "order"
+      }
+    );
+    surveyAnalyticsOrderTabulator.render("tabulatorOrderContainer");
 
     // Create normal tabulator for comparison
     var surveyAnalyticsNormalTabulator = new SurveyAnalyticsTabulator.Tabulator(

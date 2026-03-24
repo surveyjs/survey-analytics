@@ -69,6 +69,16 @@ export interface ITableOptions {
    * Default value: `false`
    */
   flattenCheckbox?: boolean;
+  /**
+   * Specifies the value to display in flattened checkbox columns when a choice is selected.
+   * - `"check"`: Display a checkmark symbol (✓)
+   * - `"order"`: Display the selection order (1, 2, 3, etc.)
+   *
+   * This option only applies when `flattenCheckbox` is `true`.
+   *
+   * Default value: `"check"`
+   */
+  flattenCheckboxValue?: "check" | "order";
 }
 
 export type TabulatorFilter = { field: string, type: string, value: any };

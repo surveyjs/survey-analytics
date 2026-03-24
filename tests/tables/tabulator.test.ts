@@ -546,3 +546,36 @@ test("check flattenCheckbox option in Tabulator", () => {
   expect(columns[3].title).toBe("Favorite Cars - Car 3");
 });
 
+test("check flattenCheckbox option with order mode in Tabulator", () => {
+  const surveyJson = {
+    questions: [
+      {
+        type: "checkbox",
+        name: "fav_cars",
+        title: "Favorite Cars",
+        choices: [
+          { value: "car1", text: "Car 1" },
+          { value: "car2", text: "Car 2" },
+          { value: "car3", text: "Car 3" }
+        ]
+      }
+    ]
+  };
+
+  const survey = new SurveyModel(surveyJson);
+  const data = [
+    { fav_cars: ["car1", "car2"] },
+    { fav_cars: ["car2"] },
+    { fav_cars: [] }
+  ];
+
+  const tabulator = new Tabulator(survey, data, { flattenCheckbox: true, flattenCheckboxValue: "order" });
+  const columns = tabulator.getColumns();
+
+  // Verify columns are created correctly
+  expect(columns.length).toBe(4);
+  expect(columns[1].field).toBe("fav_cars.car1");
+  expect(columns[2].field).toBe("fav_cars.car2");
+  expect(columns[3].field).toBe("fav_cars.car3");
+});
+
