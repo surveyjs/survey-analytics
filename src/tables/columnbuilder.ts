@@ -55,7 +55,7 @@ export class CheckboxColumnsBuilder extends SelectBaseColumnsBuilder<QuestionChe
     return new CheckboxColumn(question, table);
   }
   protected buildColumnsCore(question: QuestionCheckboxModel, table: Table): Array<IColumn> {
-    if(table.options.flattenCheckbox) {
+    if(table.options.splitMultiSelectIntoColumns) {
       const columns: Array<IColumn> = [];
       question.visibleChoices.forEach(choice => {
         columns.push(new FlattenedCheckboxColumn(question, choice.value, choice.text, table));

@@ -19,15 +19,15 @@
 
 <body>
   <h1>Flattened Checkbox Example</h1>
-  <p>This example demonstrates the <code>flattenCheckbox</code> option that transforms checkbox answers into separate columns.</p>
+  <p>This example demonstrates the <code>splitMultiSelectIntoColumns</code> option that transforms checkbox answers into separate columns.</p>
 
-  <h2>With flattenCheckbox: true (default checkmark mode)</h2>
+  <h2>With splitMultiSelectIntoColumns: true (default checkmark mode)</h2>
   <div id="tabulatorFlattenedContainer"></div>
 
-  <h2 style="margin-top: 40px;">With flattenCheckbox: true and flattenCheckboxValue: "order"</h2>
+  <h2 style="margin-top: 40px;">With splitMultiSelectIntoColumns: true and multiSelectColumnValueFormat: "selectionOrder"</h2>
   <div id="tabulatorOrderContainer"></div>
 
-  <h2 style="margin-top: 40px;">With flattenCheckbox: false (default)</h2>
+  <h2 style="margin-top: 40px;">With splitMultiSelectIntoColumns: false (default)</h2>
   <div id="tabulatorNormalContainer"></div>
 
   <script>
@@ -67,7 +67,7 @@
       survey,
       data,
       {
-        flattenCheckbox: true
+        splitMultiSelectIntoColumns: true
       }
     );
     surveyAnalyticsFlattenedTabulator.render("tabulatorFlattenedContainer");
@@ -77,8 +77,8 @@
       survey,
       data,
       {
-        flattenCheckbox: true,
-        flattenCheckboxValue: "order"
+        splitMultiSelectIntoColumns: true,
+        multiSelectColumnValueFormat: "selectionOrder"
       }
     );
     surveyAnalyticsOrderTabulator.render("tabulatorOrderContainer");
@@ -88,7 +88,7 @@
       survey,
       data,
       {
-        flattenCheckbox: false
+        splitMultiSelectIntoColumns: false
       }
     );
     surveyAnalyticsNormalTabulator.render("tabulatorNormalContainer");

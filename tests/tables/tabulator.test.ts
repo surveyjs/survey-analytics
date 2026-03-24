@@ -510,7 +510,7 @@ test("onStateChanged for question ready from choicesByUrl", async () => {
   expect(stateChangedCounter).toBe(0);
 });
 
-test("check flattenCheckbox option in Tabulator", () => {
+test("check splitMultiSelectIntoColumns option in Tabulator", () => {
   const surveyJson = {
     questions: [
       {
@@ -533,7 +533,7 @@ test("check flattenCheckbox option in Tabulator", () => {
     { fav_cars: [] }
   ];
 
-  const tabulator = new Tabulator(survey, data, { flattenCheckbox: true });
+  const tabulator = new Tabulator(survey, data, { splitMultiSelectIntoColumns: true });
   const columns = tabulator.getColumns();
 
   // First column is the actions column, next 3 are the flattened checkbox columns
@@ -546,7 +546,7 @@ test("check flattenCheckbox option in Tabulator", () => {
   expect(columns[3].title).toBe("Favorite Cars - Car 3");
 });
 
-test("check flattenCheckbox option with order mode in Tabulator", () => {
+test("check splitMultiSelectIntoColumns option with order mode in Tabulator", () => {
   const surveyJson = {
     questions: [
       {
@@ -569,7 +569,7 @@ test("check flattenCheckbox option with order mode in Tabulator", () => {
     { fav_cars: [] }
   ];
 
-  const tabulator = new Tabulator(survey, data, { flattenCheckbox: true, flattenCheckboxValue: "order" });
+  const tabulator = new Tabulator(survey, data, { splitMultiSelectIntoColumns: true, multiSelectColumnValueFormat: "selectionOrder" });
   const columns = tabulator.getColumns();
 
   // Verify columns are created correctly

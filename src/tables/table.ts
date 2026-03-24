@@ -61,24 +61,25 @@ export interface ITableOptions {
    */
   paginationEnabled?: boolean;
   /**
-   * Specifies whether to flatten checkbox answers into separate columns.
-   * When enabled, each checkbox choice is represented as a separate column,
-   * with values showing the selection order (1 for first selected, 2 for second, etc.).
-   * Blank cells indicate the choice was not selected.
+   * Specifies whether to split responses to multi-select questions (Checkboxes and Multi-Select Dropdown) into separate columns.
+   *
+   * When enabled, each choice is represented as an individual column. Cell values indicate whether the choice was selected or the selection order, depending on the `multiSelectColumnValueFormat` setting. Empty cells indicate that the choice was not selected.
    *
    * Default value: `false`
+   *
    */
-  flattenCheckbox?: boolean;
+  splitMultiSelectIntoColumns?: boolean;
   /**
-   * Specifies the value to display in flattened checkbox columns when a choice is selected.
-   * - `"check"`: Display a checkmark symbol
-   * - `"order"`: Display the selection order (1, 2, 3, etc.)
+   * Specifies how selected values are represented in columns generated from multi-select questions. Applies only when `splitMultiSelectIntoColumns` is `true`.
    *
-   * This option only applies when `flattenCheckbox` is `true`.
+   * Accepted values:
    *
-   * Default value: `"check"`
+   * - `"checkmark"` &ndash; Displays a checkmark symbol for selected choices.
+   * - `"selectionOrder"` &ndash; Displays the order in which choices were selected (1, 2, 3, ...).
+   *
+   * Default value: `"checkmark"`
    */
-  flattenCheckboxValue?: "check" | "order";
+  multiSelectColumnValueFormat?: "checkmark" | "selectionOrder";
 }
 
 export type TabulatorFilter = { field: string, type: string, value: any };

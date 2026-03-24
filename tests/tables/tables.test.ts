@@ -1462,7 +1462,7 @@ test("check flattened checkbox columns", () => {
   const data3 = { fav_cars: [] };
 
   const survey = new SurveyModel(json);
-  const table = new TableTest(survey, [data1, data2, data3], { flattenCheckbox: true });
+  const table = new TableTest(survey, [data1, data2, data3], { splitMultiSelectIntoColumns: true });
 
   // Should create 3 columns, one for each choice
   expect(table.columns.length).toEqual(3);
@@ -1514,7 +1514,7 @@ test("check flattened checkbox columns with useNamesAsTitles", () => {
 
   const data = { fav_cars: ["car1"] };
   const survey = new SurveyModel(json);
-  const table = new TableTest(survey, [data], { flattenCheckbox: true, useNamesAsTitles: true });
+  const table = new TableTest(survey, [data], { splitMultiSelectIntoColumns: true, useNamesAsTitles: true });
 
   expect(table.columns.length).toEqual(2);
   expect(table.columns[0].displayName).toBe("fav_cars - car1");
@@ -1541,7 +1541,7 @@ test("check flattened checkbox columns with order mode", () => {
   const data2 = { fav_cars: ["car2"] };
 
   const survey = new SurveyModel(json);
-  const table = new TableTest(survey, [data1, data2], { flattenCheckbox: true, flattenCheckboxValue: "order" });
+  const table = new TableTest(survey, [data1, data2], { splitMultiSelectIntoColumns: true, multiSelectColumnValueFormat: "selectionOrder" });
 
   expect(table.columns.length).toEqual(3);
 
@@ -1573,7 +1573,7 @@ test("check non-flattened checkbox columns still work", () => {
 
   const data = { question1: ["item1", "item3"] };
   const survey = new SurveyModel(json);
-  const table = new TableTest(survey, [data], { flattenCheckbox: false });
+  const table = new TableTest(survey, [data], { splitMultiSelectIntoColumns: false });
 
   // Should create only 1 column for the checkbox question
   expect(table.columns.length).toEqual(1);
