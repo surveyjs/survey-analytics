@@ -509,3 +509,40 @@ test("onStateChanged for question ready from choicesByUrl", async () => {
   }
   expect(stateChangedCounter).toBe(0);
 });
+
+test("check flattenCheckbox option in Tabulator", () => {
+  const surveyJson = {
+    questions: [
+      {
+        type: "checkbox",
+        name: "fav_cars",
+        title: "Favorite Cars",
+        choices: [
+          { value: "car1", text: "Car 1" },
+          { value: "car2", text: "Car 2" },
+          { value: "car3", text: "Car 3" }
+        ]
+      }
+    ]
+  };
+
+  const survey = new SurveyModel(surveyJson);
+  const data = [
+    { fav_cars: ["car1", "car2"] },
+    { fav_cars: ["car2"] },
+    { fav_cars: [] }
+  ];
+
+  const tabulator = new Tabulator(survey, data, { flattenCheckbox: true });
+  const columns = tabulator.getColumns();
+
+  // First column is the actions column, next 3 are the flattened checkbox columns
+  expect(columns.length).toBe(4);
+  expect(columns[1].field).toBe("fav_cars_car1");
+  expect(columns[1].title).toBe("Favorite Cars_Car 1");
+  expect(columns[2].field).toBe("fav_cars_car2");
+  expect(columns[2].title).toBe("Favorite Cars_Car 2");
+  expect(columns[3].field).toBe("fav_cars_car3");
+  expect(columns[3].title).toBe("Favorite Cars_Car 3");
+});
+
