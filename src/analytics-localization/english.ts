@@ -114,7 +114,7 @@ export var englishStrings = {
   axisXAlternativeSelectorTitle: "Segments:",
   axisYAlternativeSelectorTitle: "Groups:",
   secondYAxisToggleTitle: "Second Y axis",
-  notSelected: "Not selected",
+  selectDataField: "Select a data field...",
   intervalMode_default: "Default",
   intervalMode_decades: "Decades",
   intervalMode_years: "Years",

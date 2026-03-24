@@ -6,8 +6,6 @@ import { createDropdown } from "./dropdownWidget";
 
 import "./editableSeriesListWidget.scss";
 
-const placeholder = () => localization.getString("notSelected");
-
 export interface IEditableSeriesListItemAction {
   text: string;
   onClick: () => void;
@@ -130,7 +128,7 @@ export class EditableSeriesListWidget {
 
     const legendControls = DocumentHelper.createElement("div", "sa-series-settings__legend-controls");
 
-    const dataNameOptions = () => [{ value: "", text: placeholder() }].concat(this.options.getOptions());
+    const dataNameOptions = () => this.options.getOptions();
     const dataNameDropdown = createDropdown({
       options: dataNameOptions,
       isSelected: (opt) => item.dataName === opt.value,
@@ -142,7 +140,7 @@ export class EditableSeriesListWidget {
         }
         this.setItemAt(index, patch);
       },
-      placeholder: placeholder(),
+      placeholder: localization.getString("selectDataField"),
       resetHandler: () => this.setItemAt(index, { dataName: "" }),
     });
     const legendDropdownWrapper = DocumentHelper.createElement("div", "sa-series-settings__dropdown sa-series-settings__dropdown--legend");
@@ -164,12 +162,12 @@ export class EditableSeriesListWidget {
 
     const valuesControls = DocumentHelper.createElement("div", "sa-series-settings__values-controls");
 
-    const valueNameOptions = () => [{ value: "", text: placeholder() }].concat(this.options.getOptions());
+    const valueNameOptions = () => this.options.getOptions();
     const valueNameDropdown = createDropdown({
       options: valueNameOptions,
       isSelected: (opt) => (item.valueName ?? item.dataName) === opt.value,
       handler: (value) => this.setItemAt(index, { valueName: value || "" }),
-      placeholder: placeholder(),
+      placeholder: localization.getString("selectDataField"),
       resetHandler: () => this.setItemAt(index, { valueName: "" }),
     });
     const valueDropdownWrapper = DocumentHelper.createElement("div", "sa-series-settings__dropdown sa-series-settings__dropdown--value");
