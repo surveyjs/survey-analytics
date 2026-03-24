@@ -11,20 +11,19 @@
 
 .sa-visualizer-card-content {
   display: flex;
-  min-width: var(--dsb-nps-vizualizer-item-min-width, 256px);
+  min-width: calc(var(--sjs2-base-unit-size, 8px) * 32);
   padding: var(--sjs2-spacing-x200, 16px) var(--sjs2-spacing-x300, 24px);
   flex-direction: column;
   align-items: flex-start;
   gap: var(--sjs2-spacing-x300, 24px);
 
-  border-radius: var(--dsb-nps-vizualizer-item-corner-radius, 8px);
-  border: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
-  background: var(--sjs2-color-bg-basic-primary, #FFF);
-
+  border-radius: var(--sjs2-radius-form, 8px);
+  border: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
+  background: var(--sjs2-color-bg-basic-primary, #fff);
 }
 
 .sa-visualizer-card-value {
-  color: var(--sjs2-color-fg-basic-primary, #1C1B20);
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
 
   @include sjs2--typography--large-strong;
 }

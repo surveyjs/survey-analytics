@@ -13,13 +13,14 @@
 }
 
 .sa-statistics-table__cell {
-  border-bottom: var(--dsb-table-cell-border-width, 1px) dashed var(--dsb-table-cell-border-color, #DCDCDC);
+  border-bottom: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
 }
 
 .sa-statistics-table__cell-text {
-  color: var(--dsb-table-cell-text-color, rgba(0, 0, 0, 0.90));
-  margin-left: calc(var(--dsb-table-row-gap, 32px) / 2);
-  margin-right: calc(var(--dsb-table-row-gap, 32px) / 2);
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+  margin-left: var(--sjs2-spacing-x200, 16px);
+  margin-right: var(--sjs2-spacing-x200, 16px);
+  padding: var(--sjs2-spacing-x100, 8px) 0;
 
   @include sjs2--typography--default;
 }
@@ -39,17 +40,17 @@
 }
 
 .sa-statistics-table__cell-header {
-  border-top: var(--dsb-table-cell-border-width, 1px) dashed var(--dsb-table-cell-border-color, #DCDCDC);
-  border-bottom: var(--dsb-table-cell-border-width, 1px) dashed var(--dsb-table-cell-border-color, #DCDCDC);
+  border-top: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
+  border-bottom: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
 }
 
 .sa-statistics-table__cell-header-text {
-  color: var(--dsb-table-header-text-color, rgba(0, 0, 0, 0.90));
-  padding: var(--dsb-table-cell-padding-top, 8px) var(--dsb-table-cell-padding-right-no-border, 0px) var(--dsb-table-cell-padding-bottom, 8px) var(--dsb-table-cell-padding-left-no-border, 0px);
-  margin-left: calc(var(--dsb-table-row-gap, 32px) / 2);
-  margin-right: calc(var(--dsb-table-row-gap, 32px) / 2);
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+  padding: var(--sjs2-spacing-x100, 8px) 0;
+  margin-left: var(--sjs2-spacing-x200, 16px);
+  margin-right: var(--sjs2-spacing-x200, 16px);
   text-align: left;
-  
+
   @include sjs2--typography--default-strong;
 }
 
@@ -61,20 +62,19 @@
   margin-inline-end: 0;
 }
 
-
 .sa-choices-sparkline {
   display: flex;
   flex: 1 0 0;
   flex-direction: column;
   align-items: flex-start;
-  padding: var(--dsb-table-cell-padding-top-progressbar, 16px) var(--dsb-table-cell-padding-right-no-border, 0px) var(--dsb-table-cell-padding-bottom-progressbar, 16px) var(--dsb-table-cell-padding-left-no-border, 0px);
-  margin-left: calc(var(--dsb-table-row-gap, 32px) / 2);
-  margin-right: calc(var(--dsb-table-row-gap, 32px) / 2);
+  padding: var(--sjs2-spacing-x200, 16px) 0;
+  margin-left: var(--sjs2-spacing-x200, 16px);
+  margin-right: var(--sjs2-spacing-x200, 16px);
 }
 .sa-choices-sparkline-value {
   display: flex;
   align-items: flex-start;
-  height: var(--dsb-table-cell-progressbar-height, 8px);
-  border-radius: var(--dsb-table-cell-progressbar-corner-radius, 2px);
-  background: var(--dsb-table-cell-progressbar-color, #19B394);
+  height: var(--sjs2-size-x100, 8px);
+  border-radius: var(--sjs2-radius-component-track, 9999px);
+  background: var(--sjs2-color-bg-brand-primary, #19b394);
 }

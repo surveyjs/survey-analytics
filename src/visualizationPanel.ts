@@ -1066,7 +1066,6 @@ export class VisualizationPanel extends VisualizerBase {
       questionElement.classList.add(questionLayoutedElementClassName);
     }
     questionContent.className = questionElementClassName + "__content";
-    // questionContent.style.backgroundColor = this.backgroundColor;
 
     questionContent.appendChild(headerElement);
     questionContent.appendChild(vizualizerElement);

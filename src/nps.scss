@@ -5,27 +5,27 @@
   display: flex;
   align-items: flex-start;
   align-content: flex-start;
-  gap: 16px var(--dsb-nps-vizualizer-gap, 16px);
+  gap: 16px var(--sjs2-spacing-x200, 16px);
   align-self: stretch;
   flex-wrap: wrap;
 }
 
 .sa-visualizer-nps__score-part {
   display: flex;
-  min-width: var(--dsb-nps-vizualizer-item-min-width, 256px);
-  padding: var(--dsb-nps-vizualizer-item-padding-top, 16px) var(--dsb-nps-vizualizer-item-padding-right, 24px) var(--dsb-nps-vizualizer-item-padding-bottom, 16px) var(--dsb-nps-vizualizer-item-padding-left, 24px);
+  min-width: calc(var(--sjs2-base-unit-size, 8px) * 32);
+  padding: var(--sjs2-spacing-x200, 16px) var(--sjs2-spacing-x300, 24px);
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--dsb-nps-vizualizer-item-gap, 24px);
+  gap: var(--sjs2-spacing-x300, 24px);
   flex: 1 0 0;
 
-  border-radius: var(--dsb-nps-vizualizer-item-corner-radius, 8px);
-  border: var(--dsb-nps-vizualizer-item-border-width, 1px) dashed var(--dsb-nps-vizualizer-item-border-color, #DCDCDC);
-  background: var(--dsb-nps-vizualizer-item-background-color, #FFF);
+  border-radius: var(--sjs2-radius-form, 8px);
+  border: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
+  background: var(--sjs2-color-bg-basic-primary, #fff);
 }
 
 .sa-visualizer-nps__score-part-title {
-  color: var(--dsb-nps-vizualizer-item-title-color, rgba(0, 0, 0, 0.90));
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
 
   @include sjs2--typography--default-strong;
 }
@@ -33,19 +33,19 @@
 .sa-visualizer-nps__score-part-values {
   display: flex;
   align-items: flex-start;
-  gap: var(--dsb-nps-vizualizer-item-text-gap, 24px);
+  gap: var(--sjs2-spacing-x300, 24px);
   align-self: stretch;
 }
 
 .sa-visualizer-nps__score-part-value {
   flex: 1 0 0;
-  color: var(--dsb-nps-vizualizer-item-text-color-value, rgba(0, 0, 0, 0.90));
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
 
   @include sjs2--typography--large-strong;
 }
 
 .sa-visualizer-nps__score-part-percent {
-  color: var(--dsb-nps-vizualizer-item-text-color-percent, #19B394);
+  color: var(--sjs2-color-fg-brand-primary, #19b394);
   text-align: right;
 
   @include sjs2--typography--large-strong;

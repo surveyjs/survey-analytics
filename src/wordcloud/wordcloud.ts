@@ -31,7 +31,7 @@ export class WordCloudAdapter {
     const answersData = await this.model.getAnswersData();
 
     if(answersData.datasets.length === 0 || answersData.datasets[0].length === 0) {
-      var emptyTextNode = DocumentHelper.createElement("p", "", {
+      var emptyTextNode = DocumentHelper.createElement("p", "sa-no-result", {
         innerText: localization.getString("noResults"),
       });
       element.appendChild(emptyTextNode);

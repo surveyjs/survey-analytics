@@ -1,6 +1,11 @@
 @use "globals" as *;
 @use "typography-mixins.scss" as *;
 
+.sa-no-result {
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+  @include sjs2--typography--default;
+}
+
 .sa-text-table__container {
   width: 100%;
   min-height: 200px;
@@ -17,14 +22,14 @@
 }
 
 .sa-text-table tr:first-child {
-  border-top: var(--dsb-table-cell-border-width, 1px) dashed var(--dsb-table-cell-border-color, #DCDCDC);
+  border-top: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
 }
 
 .sa-text-table__cell {
   @include sjs2--typography--default;
-  color: var(--dsb-table-cell-text-color, rgba(0, 0, 0, 0.90));
-  padding: var(--dsb-table-cell-padding-top, 8px) var(--dsb-table-cell-padding-right-no-border, 0px) var(--dsb-table-cell-padding-bottom, 8px) var(--dsb-table-cell-padding-left-no-border, 0px);
-  border-bottom: var(--dsb-table-cell-border-width, 1px) dashed var(--dsb-table-cell-border-color, #DCDCDC);
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+  padding: var(--sjs2-spacing-x100, 8px) 0;
+  border-bottom: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
 }
 
 .sa-text-table__cell--number {
@@ -32,7 +37,7 @@
 }
 
 th.sa-text-table__cell {
-  color: var(--dsb-table-header-text-color, rgba(0, 0, 0, 0.90));
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
 
   @include sjs2--typography--default-strong;
 }
