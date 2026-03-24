@@ -51,7 +51,6 @@ var data = [
     age: 17
   },
   {
-    nps_score: 10,
     date: "2011-10-13",
     age: 30
   },
@@ -76,7 +75,6 @@ var data = [
     age: 25
   },
   {
-    nps_score: 6,
     date: "2017-10-13",
     age: 25
   },
@@ -99,18 +97,15 @@ var data = [
     age: 25
   },
   {
-    nps_score: 7,
     date: "2022-10-13",
     "question2": 16.21,
     age: 25
   },
   {
-    nps_score: 8,
     date: "2023-10-13",
     age: 25
   },
   {
-    nps_score: 9,
     date: "2024-10-13",
     "question2": 11.1435232232,
     age: 25
@@ -146,7 +141,6 @@ var data = [
     age: 25
   },
   {
-    nps_score: 0,
     date: "2030-10-13",
     "question2": 15.1232432423,
     age: 25
