@@ -1,23 +1,5 @@
-@use "../globals" as *;
-@forward "../globals";
 @use "../utils/utils.scss" as *;
 @use "../typography-mixins.scss" as *;
-
-$main-color: var(--main-color, #1ab394);
-$background-color: #ffffff;
-
-$text-gray: #a0a0a0;
-$background-gray: #9b9b9b;
-$border-color: #d4d4d4;
-$scroll-color: #e2e2e2;
-$svg-color: var(--svg-color, rgba(#9f9f9f, 0.4));
-$svg-hover-color: var(--svg-hover-color, #9f9f9f);
-$dark-gray: #9b9b9b;
-$background-gray: #f7f7f7;
-
-$text-color: var(--text-color, #404040);
-$text-color-inverse: var(--text-color-inverse, #fff);
-$detail-color: $background-gray;
 
 @mixin arrow() {
   display: inline-block;
@@ -50,7 +32,7 @@ $detail-color: $background-gray;
   background-size: 0.57em 100%;
   height: 34px;
   border-radius: 2px;
-  border: solid 1px $border-color;
+  border: solid 1px var(--sjs2-color-component-formbox-design-border, #D4D4D4);
   box-sizing: border-box;
   font-family: inherit;
   font-size: inherit;
@@ -58,7 +40,7 @@ $detail-color: $background-gray;
 
   &:focus {
     background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 10 10' style='enable-background:new 0 0 10 10;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%231AB394;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='2,2 0,4 5,9 10,4 8,2 5,5 '/%3E%3C/svg%3E ");
-    border-color: $border-color;
+    border-color: var(--sjs2-color-component-formbox-design-border, #D4D4D4);
     outline: none;
   }
   &::-ms-expand {
@@ -69,7 +51,7 @@ $detail-color: $background-gray;
 @mixin input() {
   height: 34px;
   border: none;
-  border-bottom: 0.06em solid $border-color;
+  border-bottom: 0.06em solid var(--sjs2-color-component-formbox-design-border, #D4D4D4);
   box-sizing: border-box;
   font-family: inherit;
   font-size: inherit;
@@ -77,7 +59,7 @@ $detail-color: $background-gray;
   background: transparent;
 
   &:focus {
-    border-color: $main-color;
+    border-color: var(--sjs2-color-border-brand-primary, #19b394);
     outline: none;
   }
 }
@@ -108,7 +90,7 @@ $detail-color: $background-gray;
 .sa-table__detail-table.sa-table__detail-table {
   width: 100%;
   border-collapse: collapse;
-  border-right: 1px solid $border-color;
+  border-right: 1px solid var(--sjs2-color-component-formbox-design-border, #D4D4D4);
   border-bottom: none;
 }
 
@@ -162,20 +144,21 @@ a.sa-table__btn {
 }
 
 .sa-table__btn--gray {
-  border-color: $text-gray;
-  color: $text-gray;
+  border-color: transparent;
+  color: var(--sjs2-color-component-action-neutral-tertiary-default-label, #1C1B20);
+
   &:hover {
-    background-color: $dark-gray;
-    color: $text-color-inverse;
+    background: var(--sjs2-color-component-action-neutral-tertiary-hovered-bg, rgba(95, 94, 97, 0.10));
+    color: var(--sjs2-color-component-action-neutral-tertiary-hovered-label, #1C1B20);
   }
 }
 
 .sa-table__btn--green {
-  border-color: $main-color;
-  color: $main-color;
+  border-color: var(--sjs2-color-border-brand-primary, #19b394);
+  color: var(--sjs2-color-fg-brand-primary, #19b394);
   &:hover {
-    background-color: $main-color;
-    color: $text-color-inverse;
+    background-color: var(--sjs2-color-fg-brand-primary, #19b394);
+    color: var(--sjs2-color-fg-brand-on-primary, #fff);
   }
 }
 
@@ -189,11 +172,11 @@ a.sa-table__btn {
   box-sizing: content-box;
 
   &:hover {
-    border-radius: var(--sjs2-radius-component-action-icon, 8px);
+    border-radius: var(--sjs2-radius-component-action, 8px);
     background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.1));
   }
   &:focus-visible {
-    border-radius: var(--sjs2-radius-component-action-icon, 8px);
+    border-radius: var(--sjs2-radius-component-action, 8px);
     outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.6));
     background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0));
   }
@@ -231,11 +214,9 @@ a.sa-table__btn {
   align-items: flex-start;
   gap: var(--sjs2-spacing-x050, 4px);
   align-self: stretch;
-  border-radius: var(--sjs2-radius-semantic-form, 8px);
+  border-radius: var(--sjs2-radius-form, 8px);
   background: var(--sjs2-color-component-formbox-default-bg, #f5f5f5);
-  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
-    var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
-    var(--sjs2-color-component-formbox-default-border, #d4d4d4) inset;
+  box-shadow: var(--sjs2-border-effect-component-formbox-default, inset 0 0 0 1px #d4d4d4);
 
   &:focus-within {
     background: var(--sjs2-color-component-formbox-focused-bg, #f5f5f5);
@@ -332,7 +313,7 @@ a.sa-table__btn {
     0 0;
   background-size: 1em 100%;
   padding-left: 35px;
-  border: solid 1px $border-color;
+  border: solid 1px var(--sjs2-color-component-formbox-design-border, #D4D4D4);
   pointer-events: all;
 }
 
@@ -348,7 +329,7 @@ a.sa-table__btn {
 //     1em 100%,
 //     0.57em 100%;
 //   padding-left: 35px;
-//   border: solid 1px $border-color;
+//   border: solid 1px var(--sjs2-color-component-formbox-design-border, #D4D4D4);
 //   pointer-events: all;
 //   margin-left: 20px;
 //   &:focus {

@@ -42,8 +42,8 @@
   flex-direction: column;
   align-items: flex-start;
   flex: 1 0 0;
-  border-radius: var(--sjs2-radius-container-panel, 16px);
-  background: var(--sjs2-color-bg-basic-primary, #FFF);
+  border-radius: var(--sjs2-radius-component-panel, 16px);
+  background: var(--sjs2-color-bg-basic-primary, #fff);
 
   /* sjs2/border-effect/surface/default */
   box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
@@ -55,7 +55,7 @@
   align-items: flex-start;
   flex: 1 0 0;
   align-self: stretch;
-  border-bottom: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #D4D4D4);
+  border-bottom: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
 
   // &:after {
   //   content: "";
@@ -83,17 +83,17 @@
   align-items: center;
   flex: 1 0 0;
   align-self: stretch;
-  border-top: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #D4D4D4);
+  border-top: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
 }
 
 .sa-tabulator__header {
   .sa-table__btn {
     display: flex;
-    min-width: var(--sjs2-size-semantic-small, 40px);
+    min-width: var(--sjs2-size-x500, 40px);
     justify-content: center;
     align-items: center;
 
-    color: var(--sjs2-color-fg-brand-primary, #19B394);
+    color: var(--sjs2-color-fg-brand-primary, #19b394);
     text-align: center;
 
     @include sjs2--typography--default-strong;
@@ -101,7 +101,7 @@
 }
 
 .tabulator-headers {
-  border-bottom: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
+  border-bottom: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
 }
 
 .sa-tabulator__downloads-bar {
@@ -138,7 +138,6 @@
     // margin-right: 15px;
     // padding: 1px;
     // vertical-align: middle;
-    // color: $text-gray;
     cursor: pointer;
     outline: none;
     border: none;
@@ -150,7 +149,7 @@
     background: transparent;
 
     &:hover {
-      border-radius: var(--sjs2-radius-component-action-icon, 8px);
+      border-radius: var(--sjs2-radius-component-action, 8px);
       background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.1));
     }
 
@@ -173,12 +172,12 @@
 
     .tabulator-page {
       display: flex;
-      min-width: var(--sjs2-size-semantic-small, 40px);
+      min-width: var(--sjs2-size-x500, 40px);
       padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-spacing-x100, 8px);
       justify-content: center;
       align-items: center;
       gap: var(--sjs2-spacing-x000, 0);
-      border-radius: var(--_ctr-survey-action-button-corner-radius, 8px);
+      border-radius: var(--sjs2-radius-component-action, 8px);
       background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0));
 
       color: var(--sjs2-color-fg-basic-tertiary, rgba(28, 27, 32, 0.4));
@@ -187,7 +186,6 @@
       @include sjs2--typography--default-strong;
 
       &:hover {
-        border-radius: var(--_ctr-survey-action-button-corner-radius, 8px);
         background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.1));
       }
     }
@@ -215,13 +213,13 @@
 
   .tabulator-page.active {
     display: flex;
-    min-width: var(--sjs2-size-semantic-small, 40px);
+    min-width: var(--sjs2-size-x500, 40px);
     padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-spacing-x100, 8px);
     justify-content: center;
     align-items: center;
     gap: var(--sjs2-spacing-x000, 0);
 
-    border-radius: var(--_ctr-survey-action-button-corner-radius, 8px);
+    border-radius: var(--sjs2-radius-component-action, 8px);
     border: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
     background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0));
 
@@ -246,10 +244,10 @@
 
     .tabulator-row .tabulator-cell {
       padding: var(--sjs2-spacing-x200, 16px) var(--sjs2-spacing-x300, 24px);
-      border-top: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
-      border-right: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
+      border-top: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
+      border-right: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
 
-      color: var(--sjs2-color-fg-basic-primary, #1C1B20);
+      color: var(--sjs2-color-fg-basic-primary, #1c1b20);
       @include sjs2--typography--default;
 
       &.sa-tabulator-cell__action-details {
@@ -262,7 +260,7 @@
     }
 
     .tabulator-header .tabulator-col {
-      border-right: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
+      border-right: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
     }
 
     .tabulator-header .tabulator-col .tabulator-col-content {
@@ -283,7 +281,7 @@
     }
 
     .tabulator-col.tabulator-moving {
-      border: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
+      border: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
     }
 
     .tabulator-header .tabulator-col:first-child {
@@ -295,7 +293,7 @@
     }
 
     .tabulator-row {
-      background: var(--sjs2-color-bg-basic-primary, #FFF);
+      background: var(--sjs2-color-bg-basic-primary, #fff);
     }
 
     .tabulator-row.tabulator-selectable:hover {
@@ -324,7 +322,7 @@
 
       &::-webkit-scrollbar-thumb {
         background-clip: padding-box;
-        border-radius: var(--ctr-scrollbar-corner-radius, 1024px);
+        border-radius: var(--sjs2-radius-round, 1024px);
         background: var(--sjs2-color-utility-scrollbar, rgba(17, 16, 20, 0.15));
       }
 

@@ -15,11 +15,7 @@
   flex-direction: column;
   align-items: flex-start;
   background: var(--sjs2-color-utility-sheet, #fff);
-
-  /* sjs2/border-effect/elevated/default */
-  box-shadow: var(--sjs2-border-offset-x-elevated-default, 0) var(--sjs2-border-offset-y-elevated-default, 4px)
-    var(--sjs2-border-blur-elevated-default, 12px) var(--sjs2-border-spread-elevated-default, 0)
-    var(--sjs2-color-utility-shadow-elevated-default, rgba(0, 76, 68, 0.1));
+  box-shadow: var(--sjs2-border-effect-floating-default, 0 4px 12px 0 rgba(0, 76, 68, 0.1));
 
   transform: translateX(100%);
   transition: transform 0.25s ease;
@@ -129,14 +125,14 @@
 
 .sa-sidebar__divider-line {
   display: flex;
-  max-width: var(--_ctr-toolbox-separator-max-width-compact, 10000px);
+  max-width: 10000px;
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
 }
 
 .sa-sidebar__divider-separator {
-  height: var(--sjs2-border-width-static-x100, 1px);
+  height: var(--sjs2-border-width-x100, 1px);
   align-self: stretch;
   background: var(--sjs2-color-border-basic-secondary, #d4d4d4);
 }
