@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Lazy Loading Choices Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" type="text/css" href="../build/survey.analytics.css" />
+
+  <script src="https://cdn.rawgit.com/inexorabletash/polyfill/master/typedarray.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js"></script>
+
+  <script src="https://unpkg.com/plotly.js-dist-min/plotly.min.js"></script>
+
+  <script src="../node_modules/survey-core/survey.core.js"></script>
+  <script src="../node_modules/survey-core/survey.i18n.js"></script>
+  <script src="../build/survey.analytics.js"></script>
+</head>
+
+<body>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .description {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-left: 4px solid #19b394;
+      margin-bottom: 20px;
+    }
+    #summaryContainer {
+      margin-top: 20px;
+    }
+  </style>
+
+  <h1>Lazy Loading Choices Example</h1>
+  <div class="description">
+    <p><strong>Scenario:</strong> This example demonstrates how visualizers handle questions with lazy loading enabled.</p>
+    <p>The country dropdown has 1000+ choices but only the first 25 are loaded initially via lazy loading.
+    However, the survey response data contains values (Albania, France, Zimbabwe) that span the full range of choices,
+    including some outside the initially loaded 25.</p>
+    <p><strong>Solution:</strong> The visualizer now collects all unique values from the response data and includes them
+    in the visualization, even if they weren't in the initially loaded choices. Values without loaded choice definitions
+    are displayed using their value as the label.</p>
+  </div>
+
+  <div id="summaryContainer"></div>
+  <script src="./lazy-loading-choices.js"></script>
+</body>
+
+</html>
