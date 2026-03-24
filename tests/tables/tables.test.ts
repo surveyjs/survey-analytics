@@ -1479,12 +1479,15 @@ test("check flattened checkbox columns", () => {
 
   // Check values for first data row (selected car1 first, car2 second)
   // Default is checkmark mode
+  // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
   expect(table.columns[0].getCellData(table, data1).displayValue).toBe("✓");
+  // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
   expect(table.columns[1].getCellData(table, data1).displayValue).toBe("✓");
   expect(table.columns[2].getCellData(table, data1).displayValue).toBe("");
 
   // Check values for second data row (only car2 selected)
   expect(table.columns[0].getCellData(table, data2).displayValue).toBe("");
+  // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
   expect(table.columns[1].getCellData(table, data2).displayValue).toBe("✓");
   expect(table.columns[2].getCellData(table, data2).displayValue).toBe("");
 

@@ -167,6 +167,7 @@ export class FlattenedCheckboxColumn extends BaseColumn<QuestionCheckboxModel | 
     }
     // Default to checkmark if not specified
     const displayMode = options.flattenCheckboxValue || "check";
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
     return displayMode === "check" ? "✓" : (index + 1).toString();
   }
 }
