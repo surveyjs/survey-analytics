@@ -541,10 +541,61 @@ export class SelectBase
     return question["activeChoices"] || question.visibleChoices || question.choices || [];
   }
 
+  /**
+   * Collects all unique values that appear in the survey response data.
+   * This is useful for questions with lazy loading where not all choices are loaded initially.
+   */
+  protected collectUniqueValuesFromData(): Set<any> {
+    const uniqueValues = new Set<any>();
+    const data = this.surveyData;
+    const dataNames = this.dataNames;
+
+    data.forEach((dataRow: any) => {
+      dataNames.forEach((dataName) => {
+        const rowValue = dataRow[dataName];
+        if(rowValue !== undefined) {
+          const rowValues = Array.isArray(rowValue) ? rowValue : [rowValue];
+          rowValues.forEach((val) => {
+            // Handle object values (e.g., { value: "something" })
+            if(val !== null && typeof val === "object" && val.value !== undefined) {
+              uniqueValues.add(val.value);
+            } else if(val !== null) {
+              uniqueValues.add(val);
+            }
+          });
+        }
+      });
+    });
+
+    return uniqueValues;
+  }
+
   getValues(): Array<any> {
     const values: Array<any> = this.valuesSource().map(
       (choice) => choice.value
     );
+
+    // For questions with lazy loading, we need to include all values that appear in the data
+    // even if they're not in the currently loaded choices
+    const valuesSet = new Set(values);
+    const uniqueDataValues = this.collectUniqueValuesFromData();
+
+    uniqueDataValues.forEach((value) => {
+      // Skip special values that are handled separately
+      if(value === "other" || value === undefined) {
+        return;
+      }
+      // Add values that are in the data but not in the choices
+      if(!valuesSet.has(value)) {
+        const question = this.question as QuestionSelectBase;
+        // Check if this might be a none item value
+        if(question.hasNone && value === question.noneItem.value) {
+          return;
+        }
+        values.push(value);
+        valuesSet.add(value);
+      }
+    });
 
     if((<QuestionSelectBase>this.question).hasNone) {
       values.push((<QuestionSelectBase>this.question).noneItem.value);
@@ -565,22 +616,38 @@ export class SelectBase
     if(this.options.useValuesAsLabels) {
       return this.getValues();
     }
-    const labels: Array<string> = this.valuesSource().map((choice) =>
-      ItemValue.getTextOrHtmlByValue(this.valuesSource(), choice.value)
-    );
+
+    const values = this.getValues();
+    const valuesSource = this.valuesSource();
+    const labels: Array<string> = [];
+
+    // Build a map of value -> label from the choices
+    const valueLabelMap = new Map<any, string>();
+    valuesSource.forEach((choice) => {
+      valueLabelMap.set(choice.value, ItemValue.getTextOrHtmlByValue(valuesSource, choice.value));
+    });
+
     const selBase = <QuestionSelectBase>this.question;
+
+    // Add labels for none and other to the map
     if(selBase.hasNone) {
-      labels.push(selBase.noneText);
+      valueLabelMap.set(selBase.noneItem.value, selBase.noneText);
     }
     if(selBase.hasOther) {
-      labels.push(selBase.otherText);
+      valueLabelMap.set("other", selBase.otherText);
     }
-    if(this.showMissingAnswers) {
-      labels.unshift(localization.getString("missingAnswersLabel"));
-    }
-    if(this.showValuesInOriginalOrder) {
-      return labels.reverse();
-    }
+
+    // Generate labels for all values in the same order as values
+    values.forEach((value) => {
+      if(value === undefined) {
+        labels.push(localization.getString("missingAnswersLabel"));
+      } else {
+        // Use the label from choices if available, otherwise use the value as label
+        const label = valueLabelMap.get(value);
+        labels.push(label !== undefined ? label : String(value));
+      }
+    });
+
     return labels;
   }
 

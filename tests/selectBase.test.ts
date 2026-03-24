@@ -595,3 +595,140 @@ test("getSelectedItemByText works for QuestionRatingModel", () => {
   expect(item.value).toEqual(10);
   expect(item.text).toEqual("10");
 });
+
+test("SelectBase handles lazy loading with sparse choices - includes values from data", () => {
+  // Simulate a question with lazy loading where only first 25 choices are loaded
+  const question = new QuestionDropdownModel("q1");
+  // Only load first 3 choices initially
+  question.choices = [
+    { value: 1, text: "Item 1" },
+    { value: 2, text: "Item 2" },
+    { value: 3, text: "Item 3" },
+  ];
+
+  // But the actual data contains responses with values outside the loaded choices
+  const data = [
+    { q1: 1 },
+    { q1: 2 },
+    { q1: 50 }, // This value is not in the loaded choices
+    { q1: 100 }, // This value is not in the loaded choices
+    { q1: 50 }, // Duplicate to test uniqueness
+    { q1: 200 }, // Another value not in the loaded choices
+  ];
+
+  const selectBase = new SelectBase(question, data, {});
+
+  // getValues should include all values from data, not just loaded choices
+  const values = selectBase.getValues();
+  expect(values).toContain(1);
+  expect(values).toContain(2);
+  expect(values).toContain(3);
+  expect(values).toContain(50);
+  expect(values).toContain(100);
+  expect(values).toContain(200);
+
+  // getLabels should provide labels for all values
+  const labels = selectBase.getLabels();
+  expect(labels.length).toBe(values.length);
+
+  // Values with loaded choices should have their text labels
+  expect(labels[values.indexOf(1)]).toBe("Item 1");
+  expect(labels[values.indexOf(2)]).toBe("Item 2");
+  expect(labels[values.indexOf(3)]).toBe("Item 3");
+
+  // Values without loaded choices should use the value as label
+  expect(labels[values.indexOf(50)]).toBe("50");
+  expect(labels[values.indexOf(100)]).toBe("100");
+  expect(labels[values.indexOf(200)]).toBe("200");
+});
+
+test("SelectBase handles lazy loading with array values (multi-select)", () => {
+  // Simulate a checkbox question with lazy loading
+  const question = new QuestionDropdownModel("q1");
+  question.choices = [
+    { value: "a", text: "Option A" },
+    { value: "b", text: "Option B" },
+  ];
+
+  // Data contains array values with some options not in loaded choices
+  const data = [
+    { q1: ["a", "b"] },
+    { q1: ["a", "z"] }, // "z" is not in loaded choices
+    { q1: ["x", "y"] }, // Both "x" and "y" are not in loaded choices
+  ];
+
+  const selectBase = new SelectBase(question, data, {});
+
+  const values = selectBase.getValues();
+  expect(values).toContain("a");
+  expect(values).toContain("b");
+  expect(values).toContain("x");
+  expect(values).toContain("y");
+  expect(values).toContain("z");
+
+  const labels = selectBase.getLabels();
+  expect(labels[values.indexOf("a")]).toBe("Option A");
+  expect(labels[values.indexOf("b")]).toBe("Option B");
+  expect(labels[values.indexOf("x")]).toBe("x");
+  expect(labels[values.indexOf("y")]).toBe("y");
+  expect(labels[values.indexOf("z")]).toBe("z");
+});
+
+test("SelectBase handles lazy loading with object values", () => {
+  // Simulate a question where values are objects
+  const question = new QuestionDropdownModel("q1");
+  question.choices = [
+    { value: "opt1", text: "Option 1" },
+  ];
+
+  // Data contains object values with value property
+  const data = [
+    { q1: { value: "opt1" } },
+    { q1: { value: "opt2" } }, // "opt2" is not in loaded choices
+    { q1: { value: "opt3" } }, // "opt3" is not in loaded choices
+  ];
+
+  const selectBase = new SelectBase(question, data, {});
+
+  const values = selectBase.getValues();
+  expect(values).toContain("opt1");
+  expect(values).toContain("opt2");
+  expect(values).toContain("opt3");
+
+  const labels = selectBase.getLabels();
+  expect(labels[values.indexOf("opt1")]).toBe("Option 1");
+  expect(labels[values.indexOf("opt2")]).toBe("opt2");
+  expect(labels[values.indexOf("opt3")]).toBe("opt3");
+});
+
+test("SelectBase lazy loading preserves hasNone and hasOther", () => {
+  const question = new QuestionDropdownModel("q1");
+  question.choices = [
+    { value: 1, text: "Item 1" },
+  ];
+  question.hasNone = true;
+  question.hasOther = true;
+
+  const data = [
+    { q1: 1 },
+    { q1: 50 }, // Not in loaded choices
+    { q1: "other" },
+    { q1: "none" },
+  ];
+
+  const selectBase = new SelectBase(question, data, {});
+
+  const values = selectBase.getValues();
+  // Should include both loaded choice, data value, and special values
+  expect(values).toContain(1);
+  expect(values).toContain(50);
+  expect(values).toContain("other");
+  expect(values).toContain("none");
+
+  const labels = selectBase.getLabels();
+  expect(labels[values.indexOf(1)]).toBe("Item 1");
+  expect(labels[values.indexOf(50)]).toBe("50");
+  expect(labels[values.indexOf("other")]).toBe(question.otherText);
+  expect(labels[values.indexOf("none")]).toBe(question.noneText);
+});
+
