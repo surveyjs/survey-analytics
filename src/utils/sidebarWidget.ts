@@ -1,5 +1,6 @@
 import { DocumentHelper } from "./documentHelper";
 import { SideBarItemCreators } from "../sideBarItemCreators";
+import { localization } from "../localizationManager";
 import "./sidebar.scss";
 
 /**
@@ -22,7 +23,8 @@ export interface ISidebarOptions {
 }
 
 const SIDEBAR_OPEN_CLASS = "sa-sidebar--opened";
-const SIDEBAR_BACKDROP_CLASS = "sa-sidebar-backdrop";
+const SIDEBAR_BACKDROP_CLASS = "sa-sidebar__backdrop";
+const SIDEBAR_BACKDROP_OPEN_CLASS = "sa-sidebar__backdrop--opened";
 
 /**
  * Widget that renders a toolbar button which opens a sidebar (sliding) panel.
@@ -45,7 +47,7 @@ export class SidebarWidget {
    * @returns The button element to be placed in the toolbar.
    */
   render(_toolbar?: HTMLDivElement): HTMLDivElement {
-    this.buttonElement = DocumentHelper.createElement("div", "sa-toolbar__button sa-toolbar__button-with-icon sa-sidebar-trigger") as HTMLDivElement;
+    this.buttonElement = DocumentHelper.createElement("div", "sa-toolbar__button sa-toolbar__button-with-icon sa-sidebar__trigger") as HTMLDivElement;
     this.buttonElement.setAttribute("role", "button");
     this.buttonElement.setAttribute("tabindex", "0");
     this.buttonElement.setAttribute("aria-label", this.options.buttonTitle || this.options.title);
@@ -98,29 +100,30 @@ export class SidebarWidget {
     this.panelElement = DocumentHelper.createElement("div", panelClassName) as HTMLDivElement;
     this.panelElement.addEventListener("click", (e) => e.stopPropagation());
 
-    const header = DocumentHelper.createElement("div", panelClassName + "-header");
-    header.appendChild(DocumentHelper.createElement("div", panelClassName + "-title", { textContent: this.options.title }));
+    const header = DocumentHelper.createElement("div", panelClassName + "__header");
+    const headerTitle = DocumentHelper.createElement("div", panelClassName + "__title");
+    header.appendChild(headerTitle);
+    headerTitle.appendChild(DocumentHelper.createElement("div", panelClassName + "__title-text", { textContent: this.options.title }));
+    this.panelElement.appendChild(header);
 
-    const closeBtn = DocumentHelper.createElement("button", panelClassName + "-close", { type: "button" });
-    closeBtn.setAttribute("aria-label", "Close");
+    const closeBtn = DocumentHelper.createElement("button", panelClassName + "__close", { type: "button" });
+    closeBtn.setAttribute("aria-label", localization.getString("close"));
     closeBtn.appendChild(DocumentHelper.createSvgElement("close-16x16"));
     closeBtn.addEventListener("click", () => this.close());
-    this.panelElement.appendChild(closeBtn);
+    header.appendChild(closeBtn);
 
-    this.contentContainer = DocumentHelper.createElement("div", panelClassName + "-content") as HTMLDivElement;
+    this.contentContainer = DocumentHelper.createElement("div", panelClassName + "__content") as HTMLDivElement;
     this.panelElement.appendChild(this.contentContainer);
-    this.contentContainer.appendChild(header);
-    this.contentContainer.appendChild(this.createDivider());
 
     const entries = this.getSideBarToolbarItemCreators() || [];
     let prevGroupIndex: number | undefined = undefined;
     entries.forEach((entry) => {
       const groupIndex = entry.groupIndex ?? 0;
-      if(prevGroupIndex !== undefined && groupIndex !== prevGroupIndex) {
-        this.contentContainer!.appendChild(this.createDivider());
-      }
       const el = entry.creator(this.contentContainer!);
       if(el) {
+        if(prevGroupIndex !== undefined && groupIndex !== prevGroupIndex) {
+          this.contentContainer!.appendChild(this.createDivider());
+        }
         prevGroupIndex = groupIndex;
         this.contentContainer!.appendChild(el);
       }
@@ -143,10 +146,10 @@ export class SidebarWidget {
   }
 
   private createDivider(): HTMLElement {
-    const dividerElement = DocumentHelper.createElement("div", "sa-sidebar-divider");
-    const line1 = DocumentHelper.createElement("div", "sa-line-1");
+    const dividerElement = DocumentHelper.createElement("div", "sa-sidebar__divider");
+    const line1 = DocumentHelper.createElement("div", "sa-sidebar__divider-line");
     dividerElement.appendChild(line1);
-    const line2 = DocumentHelper.createElement("div", "sa-line-2");
+    const line2 = DocumentHelper.createElement("div", "sa-sidebar__divider-separator");
     line1.appendChild(line2);
     return dividerElement;
   }
@@ -158,7 +161,7 @@ export class SidebarWidget {
       this.panelElement.classList.add(SIDEBAR_OPEN_CLASS);
     }
     if(this.backdropElement) {
-      this.backdropElement.classList.add(SIDEBAR_OPEN_CLASS);
+      this.backdropElement.classList.add(SIDEBAR_BACKDROP_OPEN_CLASS);
     }
     if(this.buttonElement) {
       this.buttonElement.setAttribute("aria-expanded", "true");
@@ -170,7 +173,7 @@ export class SidebarWidget {
       this.panelElement.classList.remove(SIDEBAR_OPEN_CLASS);
     }
     if(this.backdropElement) {
-      this.backdropElement.classList.remove(SIDEBAR_OPEN_CLASS);
+      this.backdropElement.classList.remove(SIDEBAR_BACKDROP_OPEN_CLASS);
     }
     if(this.buttonElement) {
       this.buttonElement.setAttribute("aria-expanded", "false");

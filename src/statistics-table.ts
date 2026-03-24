@@ -22,7 +22,7 @@ export class StatisticsTableAdapter {
     const hasSeries = seriesLabels.length > 1;
 
     if(datasets.length === 0 || datasets[0].length === 0) {
-      const emptyTextNode = DocumentHelper.createElement("p", "", {
+      const emptyTextNode = DocumentHelper.createElement("p", "sa-no-result", {
         innerText: localization.getString("noResults"),
       });
       container.appendChild(emptyTextNode);
@@ -34,7 +34,6 @@ export class StatisticsTableAdapter {
         DocumentHelper.createElement("table", "sa-statistics-table")
       );
 
-      tableNode.style.backgroundColor = this.model.backgroundColor;
       container.appendChild(tableNode);
 
       var headerRow = DocumentHelper.createElement("tr");

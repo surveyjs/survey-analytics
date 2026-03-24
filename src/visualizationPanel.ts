@@ -1190,7 +1190,6 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
       questionElement.classList.add(questionLayoutedElementClassName);
     }
     questionContent.className = questionElementClassName + "__content";
-    // questionContent.style.backgroundColor = this.backgroundColor;
 
     questionContent.appendChild(headerElement);
     questionContent.appendChild(vizualizerElement);

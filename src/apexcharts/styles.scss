@@ -3,10 +3,10 @@
 .sa-visualizer {
   .apexcharts-tooltip.apexcharts-tooltip {
     padding: var(--sjs2-spacing-x075, 6px) var(--sjs2-spacing-x150, 12px);
-    border-radius: var(--sjs2-radius-container-tooltip, 4px);
-    border-color: var(--sjs2-color-bg-neutral-primary, #1C1B20);
-    background: var(--sjs2-color-bg-neutral-primary, #1C1B20);
-    color: var(--sjs2-color-fg-neutral-on-primary, #FFF);
+    border-radius: var(--sjs2-radius-component-tooltip, 4px);
+    border-color: var(--sjs2-color-bg-neutral-primary, #1c1b20);
+    background: var(--sjs2-color-bg-neutral-primary, #1c1b20);
+    color: var(--sjs2-color-fg-neutral-on-primary, #fff);
 
     .apexcharts-tooltip-title {
       display: none;
@@ -34,24 +34,28 @@
   }
 
   .apexcharts-toolbar div svg {
-    fill: var(--sjs2-color-fg-brand-primary, #19B394);
+    fill: var(--sjs2-color-fg-brand-primary, #19b394);
     opacity: var(--sjs2-opacity-x035, 0.35);
   }
   .apexcharts-toolbar div:hover svg {
-    fill: var(--sjs2-color-fg-brand-primary, #19B394);
+    fill: var(--sjs2-color-fg-brand-primary, #19b394);
     opacity: 1;
   }
 
   .apexcharts-menu.apexcharts-menu-open {
-    border: var(--sjs2-border-width-x100, 1px) solid var(--sjs2-color-border-basic-secondary, #D4D4D4);
+    border: var(--sjs2-border-width-x100, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
     border-top: none;
-    border-radius: var(--sjs2-radius-container-drop, 16px);
-    background: var(--sjs2-color-utility-sheet, #FFF);
+    border-radius: var(--sjs2-radius-component-drop, 16px);
+    background: var(--sjs2-color-utility-sheet, #fff);
     margin-top: 8px;
     padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-spacing-x100, 8px);
-    box-shadow: var(--sjs2-shadow-size-large-offset-x, 0) var(--sjs2-shadow-size-large-offset-y, 6px)
-      var(--sjs2-shadow-size-large-blur, 12px) var(--sjs2-shadow-size-large-spread, 4px)
-      var(--sjs2-shadow-color-large, rgba(0, 76, 68, 0.1));
+
+    /* sjs2/border-effect/floating/default */
+    box-shadow:
+      var(--sjs2-border-offset-x-floating-default, 0) var(--sjs2-border-offset-y-floating-default, 6px)
+        var(--sjs2-border-blur-floating-default, 20px) var(--sjs2-border-spread-floating-default, 0)
+        var(--sjs2-color-utility-shadow-floating-default, rgba(0, 76, 68, 0.15)),
+      0 0 0 0 rgba(0, 0, 0, 0);
   }
 
   .apexcharts-menu-item.apexcharts-menu-item {
@@ -80,8 +84,8 @@
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     border-radius: var(--sjs2-radius-x050, 4px);
-    border: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #D4D4D4);
-    background: var(--sjs2-color-bg-basic-primary, #FFF);
+    border: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
+    background: var(--sjs2-color-bg-basic-primary, #fff);
     padding: var(--sjs2-spacing-x250, 20px);
     align-items: flex-start;
     gap: var(--sjs2-spacing-x150, 12px);

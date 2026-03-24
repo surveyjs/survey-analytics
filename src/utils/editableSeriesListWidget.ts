@@ -6,8 +6,6 @@ import { createDropdown } from "./dropdownWidget";
 
 import "./editableSeriesListWidget.scss";
 
-const placeholder = () => localization.getString("notSelected") || "Select...";
-
 export interface IEditableSeriesListItemAction {
   text: string;
   onClick: () => void;
@@ -22,16 +20,16 @@ export interface IEditableSeriesListOptions {
   getItemExtraButtons?: () => (item: IAxisDescription, index: number) => IEditableSeriesListItemAction[];
 }
 
-const getLegendLabel = (i: number) => (localization.getString("seriesListLegendSeries") || "Legend (series) {0}").replace("{0}", String(i + 1));
-const valuesLabel = localization.getString("seriesListValuesLabel") || "Values";
-const removeText = localization.getString("seriesListRemove") || "Remove";
-const addText = localization.getString("seriesListAdd") || "Add Series";
+const getLegendLabel = (i: number) => (localization.getString("seriesListSeries")).replace("{0}", String(i + 1));
+const valuesLabel = localization.getString("seriesListValuesLabel");
+const removeText = localization.getString("seriesListRemove");
+const addText = localization.getString("seriesListAdd");
 
 function getDefaultAggregationOptions(): Array<IDropdownItemOption> {
   return [
-    { value: "count", text: localization.getString("aggregationCount") || "Count" },
-    { value: "sum", text: localization.getString("aggregationSum") || "Sum" },
-    // { value: "average", text: localization.getString("aggregationAverage") || "Average" },
+    { value: "count", text: localization.getString("aggregationCount") },
+    { value: "sum", text: localization.getString("aggregationSum") },
+    // { value: "average", text: localization.getString("aggregationAverage") },
   ];
 }
 
@@ -130,7 +128,7 @@ export class EditableSeriesListWidget {
 
     const legendControls = DocumentHelper.createElement("div", "sa-series-settings__legend-controls");
 
-    const dataNameOptions = () => [{ value: "", text: placeholder() }].concat(this.options.getOptions());
+    const dataNameOptions = () => this.options.getOptions();
     const dataNameDropdown = createDropdown({
       options: dataNameOptions,
       isSelected: (opt) => item.dataName === opt.value,
@@ -142,7 +140,7 @@ export class EditableSeriesListWidget {
         }
         this.setItemAt(index, patch);
       },
-      placeholder: placeholder(),
+      placeholder: localization.getString("selectDataField"),
       resetHandler: () => this.setItemAt(index, { dataName: "" }),
     });
     const legendDropdownWrapper = DocumentHelper.createElement("div", "sa-series-settings__dropdown sa-series-settings__dropdown--legend");
@@ -164,12 +162,12 @@ export class EditableSeriesListWidget {
 
     const valuesControls = DocumentHelper.createElement("div", "sa-series-settings__values-controls");
 
-    const valueNameOptions = () => [{ value: "", text: placeholder() }].concat(this.options.getOptions());
+    const valueNameOptions = () => this.options.getOptions();
     const valueNameDropdown = createDropdown({
       options: valueNameOptions,
       isSelected: (opt) => (item.valueName ?? item.dataName) === opt.value,
       handler: (value) => this.setItemAt(index, { valueName: value || "" }),
-      placeholder: placeholder(),
+      placeholder: localization.getString("selectDataField"),
       resetHandler: () => this.setItemAt(index, { valueName: "" }),
     });
     const valueDropdownWrapper = DocumentHelper.createElement("div", "sa-series-settings__dropdown sa-series-settings__dropdown--value");

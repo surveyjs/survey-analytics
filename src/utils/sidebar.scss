@@ -1,24 +1,6 @@
 @use "./dropdown.scss" as *;
 @use "../typography-mixins.scss" as *;
 
-.sa-sidebar--opened {
-  @include columnDropdown;
-}
-
-.sa-sidebar-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  background: transparent;
-  pointer-events: none;
-  transition: background 0.2s ease;
-
-  &.sa-sidebar--opened {
-    pointer-events: auto;
-    background: var(--sjs2-color-utility-overlay, rgba(66, 65, 70, 0.6));
-  }
-}
-
 .sa-sidebar {
   position: fixed;
   top: 0;
@@ -33,102 +15,124 @@
   flex-direction: column;
   align-items: flex-start;
   background: var(--sjs2-color-utility-sheet, #fff);
-
-  /* sjs2/border-effect/elevated/default */
-  box-shadow: var(--sjs2-border-offset-x-elevated-default, 0) var(--sjs2-border-offset-y-elevated-default, 4px)
-    var(--sjs2-border-blur-elevated-default, 12px) var(--sjs2-border-spread-elevated-default, 0)
-    var(--sjs2-color-utility-shadow-elevated-default, rgba(0, 76, 68, 0.1));
+  box-shadow: var(--sjs2-border-effect-floating-default, 0 4px 12px 0 rgba(0, 76, 68, 0.1));
 
   transform: translateX(100%);
   transition: transform 0.25s ease;
+}
 
-  &.sa-sidebar--opened {
-    transform: translateX(0);
-  }
+.sa-sidebar--opened {
+  @include columnDropdown;
+  transform: translateX(0);
+}
 
-  .sa-sidebar-header {
-    display: flex;
-    padding-right: 40px;
-    align-items: flex-start;
-    align-self: stretch;
+.sa-sidebar__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: transparent;
+  pointer-events: none;
+  transition: background 0.2s ease;
 
-    flex-direction: column;
-    gap: var(--sjs2-spacing-x300, 24px);
-  }
-
-  .sa-sidebar-title {
-    flex: 1 0 0;
-    color: var(--sjs2-color-fg-basic-primary, #1c1b20);
-
-    @include sjs2--typography--default-strong;
-  }
-
-  .sa-sidebar-close {
-    position: absolute;
-    right: 12px;
-    top: 12px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: var(--sjs2-spacing-x100, 8px);
-
-    background: transparent;
-    border: none;
-    cursor: pointer;
-
-    &:hover {
-      border-radius: var(--sjs2-radius-component-action, 8px);
-      background: var(--sjs2-color-bg-neutral-tertiary-dim, rgba(95, 94, 97, 0.1));
-
-      use {
-        fill: var(--sjs2-color-fg-basic-primary-muted, #424146);
-      }
-    }
-
-    use {
-      fill: var(--sjs2-color-fg-basic-tertiary, rgba(28, 27, 32, 0.4));
-    }
-
-    svg {
-      display: flex;
-      width: 24px;
-      height: 24px;
-      justify-content: center;
-      align-items: center;
-    }
-  }
-
-  .sa-sidebar-content {
-    overflow: auto;
-    height: 100%;
-    display: flex;
-    padding: var(--sjs2-spacing-x300, 24px);
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--sjs2-spacing-x300, 24px);
-    align-self: stretch;
+  .sa-sidebar--opened {
+    pointer-events: auto;
+    background: var(--sjs2-color-utility-overlay, rgba(66, 65, 70, 0.6));
   }
 }
 
-.sa-sidebar-divider {
+.sa-sidebar__header {
+  display: flex;
+  padding: var(--sjs2-spacing-x300, 24px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sjs2-spacing-x300, 24px);
+  align-self: stretch;
+
+  border-bottom: var(--sjs2-border-width-x100, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
+  background: var(--sjs2-color-utility-sheet, #fff);
+}
+
+.sa-sidebar__title {
+  display: flex;
+  padding-right: var(--sjs2-spacing-x500, 40px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sjs2-spacing-x400, 32px);
+  align-self: stretch;
+}
+
+.sa-sidebar__title-text {
+  align-self: stretch;
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+
+  @include sjs2--typography--default-strong;
+}
+
+.sa-sidebar__close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--sjs2-spacing-x100, 8px);
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  .sa-sidebar:hover {
+    border-radius: var(--sjs2-radius-component-action, 8px);
+    background: var(--sjs2-color-bg-neutral-tertiary-dim, rgba(95, 94, 97, 0.1));
+
+    use {
+      fill: var(--sjs2-color-fg-basic-primary-muted, #424146);
+    }
+  }
+
+  use {
+    fill: var(--sjs2-color-fg-basic-tertiary, rgba(28, 27, 32, 0.4));
+  }
+
+  svg {
+    display: flex;
+    width: 24px;
+    height: 24px;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.sa-sidebar__content {
+  overflow: auto;
+  height: 100%;
+  display: flex;
+  padding: var(--sjs2-spacing-x300, 24px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sjs2-spacing-x300, 24px);
+  align-self: stretch;
+}
+
+.sa-sidebar__divider {
   display: flex;
   padding: var(--sjs2-spacing-x000, 0) 0;
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
+}
 
-  .sa-line-1 {
-    display: flex;
-    max-width: var(--_ctr-toolbox-separator-max-width-compact, 10000px);
-    flex-direction: column;
-    align-items: flex-start;
-    align-self: stretch;
-  }
+.sa-sidebar__divider-line {
+  display: flex;
+  max-width: 10000px;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
 
-  .sa-line-2 {
-    height: var(--sjs2-border-width-static-x100, 1px);
-    align-self: stretch;
-    background: var(--sjs2-color-border-basic-secondary, #d4d4d4);
-  }
+.sa-sidebar__divider-separator {
+  height: var(--sjs2-border-width-x100, 1px);
+  align-self: stretch;
+  background: var(--sjs2-color-border-basic-secondary, #d4d4d4);
 }

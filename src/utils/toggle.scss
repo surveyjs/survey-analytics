@@ -20,32 +20,23 @@
 
   border-radius: var(--sjs2-radius-component-toggle, 9999px);
   outline: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-component-toggle-false-default-border, #d4d4d4);
-  background: var(--sjs2-color-component-toggle-false-default-bg, rgba(28, 27, 32, 0.05));
-
-  /* sjs2/shadow/inner */
-  box-shadow: var(--sjs2-shadow-size-inner-offset-x, 0) var(--sjs2-shadow-size-inner-offset-y, 0) var(--sjs2-shadow-size-inner-blur, 0) var(--sjs2-shadow-size-inner-spread, 1px) var(--sjs2-shadow-color-inner, #D4D4D4) inset;
+  background: var(--sjs2-color-component-toggle-false-default-bg, #f5f5f5);
 
   &:hover {
-    outline: var(--sjs2-border-width-default, 1px) solid
-      var(--sjs2-color-component-toggle-false-hovered-border, #d4d4d4);
-    background: var(--sjs2-color-component-toggle-false-hovered-bg, rgba(28, 27, 32, 0.1));
+    background: var(--sjs2-color-component-toggle-false-hovered-bg, #ededed);
+    outline: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-component-toggle-false-hovered-border, #d4d4d4);
 
     .sa-toggle-handle {
-      outline: var(--ctr-toggle-button-thumb-border-width, 0) solid
-        var(--sjs2-color-component-toggle-false-hovered-icon, rgba(28, 27, 32, 0.6));
-      background: var(--sjs2-color-component-toggle-false-hovered-icon, rgba(28, 27, 32, 0.6));
+      background: var(--sjs2-color-component-toggle-false-hovered-thumb, rgba(28, 27, 32, 0.6));
     }
   }
 
   &:focus {
-    outline: var(--sjs2-border-width-focused, 2px) solid
-      var(--sjs2-color-component-toggle-false-focused-border, #19b394);
+    outline: var(--sjs2-border-width-focused, 2px) solid var(--sjs2-color-component-toggle-false-focused-border, #19b394);
     background: var(--sjs2-color-component-toggle-false-focused-bg, #f5f5f5);
 
     .sa-toggle-handle {
-      outline: var(--ctr-toggle-button-thumb-border-width, 0) solid
-        var(--sjs2-color-component-toggle-false-focused-icon, rgba(28, 27, 32, 0.6));
-      background: var(--sjs2-color-component-toggle-false-focused-icon, rgba(28, 27, 32, 0.6));
+      background: var(--sjs2-color-component-toggle-false-focused-thumb, rgba(28, 27, 32, 0.6));
     }
   }
 }
@@ -59,7 +50,7 @@
     background: var(--sjs2-color-component-toggle-true-hovered-bg, #15987e);
 
     .sa-toggle-handle {
-      background: var(--sjs2-color-component-toggle-true-hovered-icon, #fff);
+      background: var(--sjs2-color-component-toggle-true-hovered-thumb, #fff);
     }
   }
 
@@ -68,7 +59,7 @@
     background: var(--sjs2-color-component-toggle-true-focused-bg, #fff);
 
     .sa-toggle-handle {
-      background: var(--sjs2-color-component-toggle-true-focused-icon, #19b394);
+      background: var(--sjs2-color-component-toggle-true-focused-thumb, #19b394);
     }
   }
 }
@@ -83,9 +74,7 @@
     transform 0.3s ease,
     background-color 0.3s ease;
 
-  border-radius: var(--sjs2-radius-component-toggle-item, 9999px);
-  outline: var(--ctr-toggle-button-thumb-border-width, 0) solid
-    var(--sjs2-color-component-toggle-false-default-thumb, rgba(28, 27, 32, 0.6));
+  border-radius: var(--sjs2-radius-component-toggle-thumb, 9999px);
   background: var(--sjs2-color-component-toggle-false-default-thumb, rgba(28, 27, 32, 0.6));
 }
 
@@ -96,7 +85,7 @@
 
 .sa-toggle-text {
   flex: 1 0 0;
-  color: var(--sjs2-color-fg-basic-primary, #1C1B20);
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
 
   @include sjs2--typography--default;
 

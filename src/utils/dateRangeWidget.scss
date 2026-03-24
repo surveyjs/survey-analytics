@@ -33,7 +33,7 @@
   align-items: flex-start;
   gap: var(--sjs2-spacing-x050, 4px);
   align-self: stretch;
-  border-radius: var(--sjs2-radius-semantic-form, 8px);
+  border-radius: var(--sjs2-radius-form, 8px);
   background: var(--sjs2-color-component-formbox-default-bg, rgba(28, 27, 32, 0.05));
   outline: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
     var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
@@ -132,7 +132,7 @@
   gap: var(--sjs2-spacing-x100, 8px);
   flex: 1 0 0;
   align-self: stretch;
-  border-radius: var(--sjs2-radius-semantic-form, 8px);
+  border-radius: var(--sjs2-radius-form, 8px);
   background: var(--sjs2-color-component-message-error-bg, rgba(229, 10, 62, 0.1));
 }
 .sa-range-error_text {
@@ -193,7 +193,7 @@
     align-items: flex-start;
     flex: 1 0 0;
     align-self: stretch;
-    background: var(--sjs2-color-border-basic-secondary, #D4D4D4);
+    background: var(--sjs2-color-border-basic-secondary, #d4d4d4);
   }
 }
 @media screen and (max-width: 600px) {
@@ -214,8 +214,8 @@
     align-items: flex-start;
     align-self: stretch;
 
-    height: var(--sjs2-border-width-static-x100, 1px);
-    background: var(--sjs2-color-border-basic-secondary, #D4D4D4);
+    height: var(--sjs2-border-width-x100, 1px);
+    background: var(--sjs2-color-border-basic-secondary, #d4d4d4);
   }
 }
 
@@ -229,7 +229,7 @@
 }
 
 .sa-count_text {
-  color: var(--sjs2-color-fg-basic-primary, #1C1B20);
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
 
   @include sjs2--typography--default-strong;
 }

@@ -14,7 +14,7 @@ export class TextTableAdapter {
     const answersData = await this.model.getAnswersData();
 
     if(answersData.datasets.length === 0 || answersData.datasets[0].length === 0) {
-      var emptyTextNode = DocumentHelper.createElement("p", "", {
+      var emptyTextNode = DocumentHelper.createElement("p", "sa-no-result", {
         innerText: localization.getString("noResults"),
       });
       container.appendChild(emptyTextNode);
@@ -25,7 +25,6 @@ export class TextTableAdapter {
       DocumentHelper.createElement("table", "sa-text-table")
     );
 
-    tableNode.style.backgroundColor = this.model.backgroundColor;
     container.appendChild(tableNode);
 
     if(this.model.columns && this.model.columns.length > 0) {
