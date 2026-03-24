@@ -50,14 +50,14 @@ var options = {
   // allowShowPercentages: true,
   // showPercentages: true,
   // showOnlyPercentages: true,
-  // useValuesAsLabels: false
+  // useValuesAsLabels: false,
   // haveCommercialLicense: false,
   // allowSortAnswers: true,
-  // answersOrder: "desc"
+  // answersOrder: "desc",
   // allowHideEmptyAnswers: true,
   // hideEmptyAnswers: true,
   // allowTopNAnswers: true,
-  // showCorrectAnswers: true
+  // showCorrectAnswers: true,
   // labelTruncateLength: 27,
 };
 

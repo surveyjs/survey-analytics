@@ -143,22 +143,22 @@
     outline: none;
     border: none;
     display: flex;
-    padding: var(--sjs2-layout-control-action-small-box-vertical, 8px) var(--sjs2-layout-control-action-small-box-horizontal, 8px);
+    padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-spacing-x100, 8px);
     justify-content: center;
     align-items: center;
-    gap: var(--sjs2-layout-control-action-small-box-gap, 0);
+    gap: var(--sjs2-spacing-x000, 0);
     background: transparent;
 
     &:hover {
-      border-radius: var(--sjs2-radius-control-action-icon, 8px);
-      background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
+      border-radius: var(--sjs2-radius-component-action-icon, 8px);
+      background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.1));
     }
 
     &:focus-visible {
-      border-radius: var(--sjs2-radius-control-action, 8px);
+      border-radius: var(--sjs2-radius-component-action, 8px);
       border: unset;
-      outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.60));
-      background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
+      outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.6));
+      background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0));
     }
 
     &:disabled {
@@ -174,21 +174,21 @@
     .tabulator-page {
       display: flex;
       min-width: var(--sjs2-size-semantic-small, 40px);
-      padding: var(--sjs2-layout-control-action-small-box-vertical, 8px) var(--sjs2-layout-control-action-small-box-horizontal, 8px);
+      padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-spacing-x100, 8px);
       justify-content: center;
       align-items: center;
-      gap: var(--sjs2-layout-control-action-small-box-gap, 0);
+      gap: var(--sjs2-spacing-x000, 0);
       border-radius: var(--_ctr-survey-action-button-corner-radius, 8px);
-      background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0.00));
+      background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0));
 
-      color: var(--sjs2-color-fg-basic-tertiary, rgba(28, 27, 32, 0.40));
+      color: var(--sjs2-color-fg-basic-tertiary, rgba(28, 27, 32, 0.4));
       text-align: center;
 
       @include sjs2--typography--default-strong;
 
       &:hover {
         border-radius: var(--_ctr-survey-action-button-corner-radius, 8px);
-        background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.10));
+        background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.1));
       }
     }
   }
@@ -216,16 +216,16 @@
   .tabulator-page.active {
     display: flex;
     min-width: var(--sjs2-size-semantic-small, 40px);
-    padding: var(--sjs2-layout-control-action-small-box-vertical, 8px) var(--sjs2-layout-control-action-small-box-horizontal, 8px);
+    padding: var(--sjs2-spacing-x100, 8px) var(--sjs2-spacing-x100, 8px);
     justify-content: center;
     align-items: center;
-    gap: var(--sjs2-layout-control-action-small-box-gap, 0);
+    gap: var(--sjs2-spacing-x000, 0);
 
     border-radius: var(--_ctr-survey-action-button-corner-radius, 8px);
-    border: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #D4D4D4);
-    background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0.00));
+    border: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
+    background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0));
 
-    color: var(--sjs2-color-fg-basic-primary, #1C1B20);
+    color: var(--sjs2-color-fg-basic-primary, #1c1b20);
     text-align: center;
 
     @include sjs2--typography--default-strong;

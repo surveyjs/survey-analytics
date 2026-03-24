@@ -1,7 +1,7 @@
 import { ItemValue, Question } from "survey-core";
 import { SelectBase } from "./selectBase";
 import { createCommercialLicenseLink } from "./utils";
-import { ICalculationResult, IVisualizerOptions, VisualizerBase } from "./visualizerBase";
+import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { VisualizationManager } from "./visualizationManager";
 import { HistogramModel } from "./histogram";
@@ -11,7 +11,7 @@ import { ToggleWidget } from "./utils/toggle";
 import { createDropdown } from "./utils/dropdownWidget";
 import { DocumentHelper } from "./utils/documentHelper";
 
-export interface IPivotChartVisualizerOptions extends IVisualizerOptions {
+export interface IPivotVisualizerOptions {
   questions?: Question[] | string[];
   categoryField?: Question | string;
   seriesFields?: Question[] | string[];
@@ -168,7 +168,7 @@ export class PivotModel extends HistogramModel {
   constructor(
     public questions: Array<Question>,
     data: Array<{ [index: string]: any }>,
-    options?: IPivotChartVisualizerOptions,
+    options?: IPivotVisualizerOptions,
     private isRoot = true,
     type?: string
   ) {

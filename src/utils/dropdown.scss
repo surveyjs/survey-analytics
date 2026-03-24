@@ -11,7 +11,7 @@
   }
 
   .sa-dropdown-list.sa-dropdown--opened {
-    min-width: calc(100% - var(--sjs2-layout-container-drop-horizontal, 8px) * 2);
-    max-width: calc(100% - var(--sjs2-layout-container-drop-horizontal, 8px) * 2);
+    min-width: calc(100% - var(--sjs2-spacing-x100, 8px) * 2);
+    max-width: calc(100% - var(--sjs2-spacing-x100, 8px) * 2);
   }
 }

@@ -6,6 +6,12 @@ declare type VisualizerConstructor = new (
   options?: Object
 ) => any;
 
+export interface IVisualizerTypeDescriptor {
+  visualizerType?: string;
+  visualizerTypes?: Array<string>;
+  question?: Question;
+}
+
 /**
  * An object with methods used to register and unregister visualizers for individual question types.
  *

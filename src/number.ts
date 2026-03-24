@@ -5,7 +5,11 @@ import { VisualizationManager } from "./visualizationManager";
 import { mathStatisticsCalculator } from "./statisticCalculators";
 import { createDropdown } from "./utils/dropdownWidget";
 
-export class NumberModel extends VisualizerBase {
+export interface INumericVisualizerOptions {
+  displayValueName: string;
+}
+
+export class NumberModel extends VisualizerBase implements INumericVisualizerOptions {
   private _statistics: ICalculationResult;
 
   public static stepsCount = 5;
@@ -43,7 +47,12 @@ export class NumberModel extends VisualizerBase {
       });
     }
     if(!this.chartType) {
-      this.chartType = this.questionOptions?.chartType || this.options.defaultChartType || this.chartTypes[0];
+      const chartTypeCandidate = this.questionOptions?.chartType || this.options.defaultChartType || this.chartTypes[0];
+      if(this.chartTypes.indexOf(chartTypeCandidate) !== -1) {
+        this.chartType = chartTypeCandidate;
+      } else if(this.chartTypes.length > 0) {
+        this.chartType = this.chartTypes[0];
+      }
     }
   }
 
