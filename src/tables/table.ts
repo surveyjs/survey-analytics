@@ -63,12 +63,12 @@ export interface ITableOptions {
   /**
    * Specifies whether to use nested tables for displaying Matrix Dynamic and Panel Dynamic questions.
    *
-   * Default value: `false`
+   * Default value: undefined (nested tables are not used)
    *
    * When enabled, Matrix Dynamic and Panel Dynamic question responses will be displayed as nested tables
    * within the main table row, providing a better visualization of complex data structures.
    */
-  useNestedTables?: boolean;
+  nestedTables?: undefined | "table" | "tabulator";
 }
 
 export type TabulatorFilter = { field: string, type: string, value: any };

@@ -1,5 +1,5 @@
 import { GetDataFn, ITableOptions, Table, TableRow, TabulatorSortOrder } from "./table";
-import { SurveyModel, Event } from "survey-core";
+import { SurveyModel, Event, Question } from "survey-core";
 import { ColumnDataType, IColumn, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
@@ -296,11 +296,40 @@ export class Tabulator extends Table {
     });
     tableRow.render();
     this._rows.push(tableRow);
-
-    // if(this.options.useNestedTables) {
-    //   this.renderNestedTables(row);
-    // }
   };
+
+  private createNestedTable(nestedTableColumns: any[], cellData: any): HTMLElement {
+    const container = document.createElement("div");
+    container.className = "sa-nested-table-container";
+    const table = document.createElement("table");
+    table.className = "sa-nested-table";
+
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    nestedTableColumns.forEach((col: any) => {
+      const th = document.createElement("th");
+      th.textContent = col.title;
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    cellData.forEach((row: any) => {
+      const tr = document.createElement("tr");
+      nestedTableColumns.forEach((col: any) => {
+        const td = document.createElement("td");
+        const value = row[col.field];
+        td.textContent = value !== undefined && value !== null ? String(value) : "";
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+
+    container.appendChild(table);
+    return container;
+  }
 
   private createNestedTableFormatter(column: IColumn) {
     return (cell: any, formatterParams: any, onRendered: any) => {
@@ -314,54 +343,6 @@ export class Tabulator extends Table {
       if(!question) {
         return "<span>Error: Question not found</span>";
       }
-
-      // const container = document.createElement("div");
-      // container.className = "sa-nested-table-container";
-
-      // let nestedColumns: any[] = [];
-      // if(question.getType() === "matrixdynamic") {
-      //   const matrixQuestion = question as any;
-      //   nestedColumns = matrixQuestion.columns.map((col: any) => ({
-      //     title: col.title || col.name,
-      //     field: col.name,
-      //   }));
-      // } else if(question.getType() === "paneldynamic") {
-      //   const panelQuestion = question as any;
-      //   const templateQuestions = panelQuestion.template.questions;
-      //   nestedColumns = templateQuestions.map((q: any) => ({
-      //     title: q.title || q.name,
-      //     field: q.name,
-      //   }));
-      // }
-
-      // const table = document.createElement("table");
-      // table.className = "sa-nested-table";
-
-      // const thead = document.createElement("thead");
-      // const headerRow = document.createElement("tr");
-      // nestedColumns.forEach((col: any) => {
-      //   const th = document.createElement("th");
-      //   th.textContent = col.title;
-      //   headerRow.appendChild(th);
-      // });
-      // thead.appendChild(headerRow);
-      // table.appendChild(thead);
-
-      // const tbody = document.createElement("tbody");
-      // cellData.forEach((row: any) => {
-      //   const tr = document.createElement("tr");
-      //   nestedColumns.forEach((col: any) => {
-      //     const td = document.createElement("td");
-      //     const value = row[col.field];
-      //     td.textContent = value !== undefined && value !== null ? String(value) : "";
-      //     tr.appendChild(td);
-      //   });
-      //   tbody.appendChild(tr);
-      // });
-      // table.appendChild(tbody);
-
-      // container.appendChild(table);
-      // return container;
 
       let nestedTableColumns: any[] = [];
       if(question.getType() === "matrixdynamic") {
@@ -377,6 +358,10 @@ export class Tabulator extends Table {
           title: q.title || q.name,
           field: q.name,
         }));
+      }
+
+      if(this.options.nestedTables === "table") {
+        return this.createNestedTable(nestedTableColumns, cellData);
       }
 
       const tableEl = document.createElement("div");

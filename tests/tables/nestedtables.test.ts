@@ -56,7 +56,7 @@ describe("Nested Tables for Matrix Dynamic", () => {
 
   test("should create column for matrixdynamic question when nested tables disabled", () => {
     const survey = new SurveyModel(matrixDynamicJson);
-    const tabulator = new Tabulator(survey, matrixDynamicData, { useNestedTables: false });
+    const tabulator = new Tabulator(survey, matrixDynamicData, { nestedTables: undefined });
 
     const columns = tabulator["buildColumns"](survey);
 
@@ -67,7 +67,7 @@ describe("Nested Tables for Matrix Dynamic", () => {
 
   test("should create column for matrixdynamic question with nested table capability when enabled", () => {
     const survey = new SurveyModel(matrixDynamicJson);
-    const tabulator = new Tabulator(survey, matrixDynamicData, { useNestedTables: true });
+    const tabulator = new Tabulator(survey, matrixDynamicData, { nestedTables: "tabulator" });
 
     const columns = tabulator["buildColumns"](survey);
 
@@ -79,7 +79,7 @@ describe("Nested Tables for Matrix Dynamic", () => {
 
   test("should generate nested table configuration for matrixdynamic", () => {
     const survey = new SurveyModel(matrixDynamicJson);
-    const tabulator = new Tabulator(survey, matrixDynamicData, { useNestedTables: true });
+    const tabulator = new Tabulator(survey, matrixDynamicData, { nestedTables: "tabulator" });
 
     mockTimeout();
     const container = document.createElement("div");
@@ -97,7 +97,7 @@ describe("Nested Tables for Matrix Dynamic", () => {
   test("should handle empty matrixdynamic data", () => {
     const survey = new SurveyModel(matrixDynamicJson);
     const emptyData = [{ teachersRate: [] }];
-    const tabulator = new Tabulator(survey, emptyData, { useNestedTables: true });
+    const tabulator = new Tabulator(survey, emptyData, { nestedTables: "tabulator" });
 
     const columns = tabulator["buildColumns"](survey);
 
@@ -150,7 +150,7 @@ describe("Nested Tables for Panel Dynamic", () => {
 
   test("should create column for paneldynamic question when nested tables disabled", () => {
     const survey = new SurveyModel(panelDynamicJson);
-    const tabulator = new Tabulator(survey, panelDynamicData, { useNestedTables: false });
+    const tabulator = new Tabulator(survey, panelDynamicData, { nestedTables: undefined });
 
     const columns = tabulator["buildColumns"](survey);
 
@@ -161,7 +161,7 @@ describe("Nested Tables for Panel Dynamic", () => {
 
   test("should create column for paneldynamic question with nested table capability when enabled", () => {
     const survey = new SurveyModel(panelDynamicJson);
-    const tabulator = new Tabulator(survey, panelDynamicData, { useNestedTables: true });
+    const tabulator = new Tabulator(survey, panelDynamicData, { nestedTables: "tabulator" });
 
     const columns = tabulator["buildColumns"](survey);
 
@@ -174,7 +174,7 @@ describe("Nested Tables for Panel Dynamic", () => {
   test("should handle empty paneldynamic data", () => {
     const survey = new SurveyModel(panelDynamicJson);
     const emptyData = [{ relatives: [] }];
-    const tabulator = new Tabulator(survey, emptyData, { useNestedTables: true });
+    const tabulator = new Tabulator(survey, emptyData, { nestedTables: "tabulator" });
 
     const columns = tabulator["buildColumns"](survey);
 
@@ -189,14 +189,14 @@ describe("Nested Tables Configuration", () => {
     const survey = new SurveyModel(json);
     const tabulator = new Tabulator(survey, []);
 
-    expect(tabulator.options.useNestedTables).toBeUndefined();
+    expect(tabulator.options.nestedTables).toBeUndefined();
   });
 
   test("should allow enabling nested tables via options", () => {
     const json = { questions: [{ type: "text", name: "q1" }] };
     const survey = new SurveyModel(json);
-    const tabulator = new Tabulator(survey, [], { useNestedTables: true });
+    const tabulator = new Tabulator(survey, [], { nestedTables: "tabulator" });
 
-    expect(tabulator.options.useNestedTables).toBe(true);
+    expect(tabulator.options.nestedTables).toBe("tabulator");
   });
 });
