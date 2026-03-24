@@ -13,7 +13,7 @@
 }
 .sa-commercial__text {
   text-decoration: none;
-  color: var(--sjs2-color-fg-basic-primary, #fff);
+  color: var(--sjs2-color-fg-brand-on-primary, #fff);
   text-align: center;
 
   @include sjs2--typography--default-strong;
@@ -24,7 +24,7 @@
 
   a {
     @include sjs2--typography--default-strong;
-    color: var(--sjs2-color-fg-basic-primary, #fff);
+    color: var(--sjs2-color-fg-brand-on-primary, #fff);
     text-align: center;
     text-decoration-line: underline;
     text-decoration-style: solid;
@@ -319,7 +319,7 @@
 
 .sa-dropdown-item.sa-dropdown-item--selected {
   background-color: var(--sjs2-color-bg-brand-primary, #19b394);
-  color: var(--sjs2-color-fg-basic-primary, #fff);
+  color: var(--sjs2-color-fg-brand-on-primary, #fff);
 
   @include sjs2--typography--default-strong;
 }
