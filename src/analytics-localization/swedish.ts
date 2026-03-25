@@ -163,8 +163,6 @@ export var swedishStrings = {
   axisXAlternativeSelectorTitle: "Segment:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupper:",
-  // [Auto-translated] "Not selected"
-  notSelected: "Inte valt",
   // [Auto-translated] "Default"
   intervalMode_default: "Standard",
   // [Auto-translated] "Decades"

@@ -163,8 +163,6 @@ export var frenchStrings = {
   axisXAlternativeSelectorTitle: "Segments:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Groupes:",
-  // [Auto-translated] "Not selected"
-  notSelected: "Non sélectionné",
   // [Auto-translated] "Default"
   intervalMode_default: "Par défaut",
   // [Auto-translated] "Decades"

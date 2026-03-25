@@ -163,8 +163,6 @@ export var arabicStrings = {
   axisXAlternativeSelectorTitle: "قطاعات:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "المجموعات:",
-  // [Auto-translated] "Not selected"
-  notSelected: "غير محدد",
   // [Auto-translated] "Default"
   intervalMode_default: "افتراضي",
   // [Auto-translated] "Decades"
