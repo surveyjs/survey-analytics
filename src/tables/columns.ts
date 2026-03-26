@@ -144,6 +144,10 @@ export class FlattenedCheckboxColumn extends BaseColumn<QuestionCheckboxModel | 
     super(question, table);
   }
 
+  protected getDataType(): ColumnDataType {
+    return ColumnDataType.Html;
+  }
+
   protected getName(): string {
     return `${this.question.name}.${this.choiceValue}`;
   }
@@ -167,7 +171,7 @@ export class FlattenedCheckboxColumn extends BaseColumn<QuestionCheckboxModel | 
     }
     // Default to checkmark if not specified
     const displayMode = options.multiSelectColumnValueFormat || "checkmark";
-    return displayMode === "checkmark" ? "&#10004;" : (index + 1).toString();
+    return displayMode === "checkmark" ? "<span>&#10004;</span>" : (index + 1).toString();
   }
 }
 

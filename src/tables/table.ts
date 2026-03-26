@@ -10,7 +10,7 @@ import {
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { ITableExtension, TableExtensions } from "./extensions/tableextensions";
-import { createCommercialLicenseLink, createImagesContainer, createLinksContainer, DocumentHelper } from "../utils";
+import { createCommercialLicenseLink } from "../utils";
 import { ColumnsBuilderFactory } from "./columnbuilder";
 import { DefaultColumn } from "./columns";
 

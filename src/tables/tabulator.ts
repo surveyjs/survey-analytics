@@ -352,7 +352,7 @@ export class Tabulator extends Table {
   public getColumns(): Array<any> {
     const columns: any = this.columns.map((column, index) => {
       let formatter = "plaintext";
-      if(column.dataType == ColumnDataType.FileLink) {
+      if(column.dataType == ColumnDataType.FileLink || column.dataType == ColumnDataType.Html) {
         formatter = "html";
       }
       if(column.dataType == ColumnDataType.Image) {
