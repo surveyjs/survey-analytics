@@ -88,11 +88,17 @@ const decodeHtmlEntities = (text: string): string => {
   if(typeof text !== "string") return text;
   // Decode common HTML entities
   const entityMap: { [key: string]: string } = {
-    "&#10004;": "✓",
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
+    "&#10004;": "+",
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
     "&check;": "✓",
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
     "&checkmark;": "✓",
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
     "&#x2713;": "✓",
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
     "&#9745;": "☑",
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
     "&#x2611;": "☑",
     "&amp;": "&",
     "&lt;": "<",
