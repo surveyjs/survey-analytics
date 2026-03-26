@@ -84,6 +84,31 @@ const escapeCellFormula = (field: string) => {
   }
 };
 
+const decodeHtmlEntities = (text: string): string => {
+  if(typeof text !== "string") return text;
+  // Decode common HTML entities
+  const entityMap: { [key: string]: string } = {
+    "&#10004;": "✓",
+    "&check;": "✓",
+    "&checkmark;": "✓",
+    "&#x2713;": "✓",
+    "&#9745;": "☑",
+    "&#x2611;": "☑",
+    "&amp;": "&",
+    "&lt;": "<",
+    "&gt;": ">",
+    "&quot;": '"',
+    "&#39;": "'",
+    "&apos;": "'"
+  };
+
+  let decoded = text;
+  for(const entity in entityMap) {
+    decoded = decoded.replace(new RegExp(entity, "g"), entityMap[entity]);
+  }
+  return decoded;
+};
+
 type TabulatorParameters = ConstructorParameters<typeof TabulatorFull>;
 type TabulatorConstuctor = { new (...args: TabulatorParameters): TabulatorFull };
 export class Tabulator extends Table {
@@ -310,6 +335,9 @@ export class Tabulator extends Table {
         }
         if(column.dataType === ColumnDataType.FileLink && Array.isArray(dataCell)) {
           return (dataCell || []).map(f => f.name).join(", ");
+        }
+        if(column.dataType === ColumnDataType.Html) {
+          return decodeHtmlEntities(cellData);
         }
       }
     }
