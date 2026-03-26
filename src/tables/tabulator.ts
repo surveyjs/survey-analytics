@@ -86,7 +86,6 @@ const escapeCellFormula = (field: string) => {
 
 const decodeHtmlEntities = (text: string): string => {
   if(typeof text !== "string") return text;
-  // Decode common HTML entities
   const entityMap: { [key: string]: string } = {
     // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
     "&#10004;": "+",
