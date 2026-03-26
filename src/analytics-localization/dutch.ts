@@ -163,8 +163,6 @@ export var dutchStrings = {
   axisXAlternativeSelectorTitle: "Segmenten:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Groepen:",
-  // [Auto-translated] "Not selected"
-  notSelected: "Niet geselecteerd",
   // [Auto-translated] "Default"
   intervalMode_default: "Verstek",
   // [Auto-translated] "Decades"

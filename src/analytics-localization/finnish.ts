@@ -163,8 +163,6 @@ export var finnishStrings = {
   axisXAlternativeSelectorTitle: "Segmentit:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Ryhmät:",
-  // [Auto-translated] "Not selected"
-  notSelected: "Ei valittu",
   // [Auto-translated] "Default"
   intervalMode_default: "Laiminlyönti",
   // [Auto-translated] "Decades"

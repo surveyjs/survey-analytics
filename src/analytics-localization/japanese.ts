@@ -163,8 +163,6 @@ export var japaneseStrings = {
   axisXAlternativeSelectorTitle: "セグメント：",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "グループ：",
-  // [Auto-translated] "Not selected"
-  notSelected: "選択されていない",
   // [Auto-translated] "Default"
   intervalMode_default: "デフォルト",
   // [Auto-translated] "Decades"

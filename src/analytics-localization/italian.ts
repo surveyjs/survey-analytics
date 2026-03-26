@@ -163,8 +163,6 @@ export var italianStrings = {
   axisXAlternativeSelectorTitle: "Segmenti:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Gruppi:",
-  // [Auto-translated] "Not selected"
-  notSelected: "Non selezionato",
   // [Auto-translated] "Default"
   intervalMode_default: "Default",
   // [Auto-translated] "Decades"

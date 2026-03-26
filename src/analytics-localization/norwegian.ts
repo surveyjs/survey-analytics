@@ -163,8 +163,6 @@ export var norwegianStrings = {
   axisXAlternativeSelectorTitle: "Segmenter:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupper:",
-  // [Auto-translated] "Not selected"
-  notSelected: "Ikke valgt",
   // [Auto-translated] "Default"
   intervalMode_default: "Standard",
   // [Auto-translated] "Decades"
