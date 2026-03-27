@@ -1,21 +1,16 @@
 var survey = new Survey.SurveyModel(json);
 
-var options = {
-  dateFieldName: "timestamp",
-  dateRange: [Date.parse("2025-10-15"), Date.parse("2025-10-15")],
-  // datePeriod: "lastYear",
-  // availableDatePeriods: [],
-  // showAnswerCount: true,
-  // showDatePanel: true,
-  // includeToday: true,
-};
-
-var visPanel = new SurveyAnalytics.VisualizationPanel(
-  // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
-  survey.getAllQuestions(),
-  data,
-  options
-);
+var visPanel = new SurveyAnalytics.Dashboard({
+    questions: survey.getAllQuestions(), // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
+    data, 
+    dateFieldName: "timestamp",
+    dateRange: [Date.parse("2025-10-15"), Date.parse("2025-10-15")],
+    // datePeriod: "lastYear",
+    // availableDatePeriods: [],
+    // showAnswerCount: true,
+    // showDatePanel: true,
+    // includeToday: true,
+});
 visPanel.showToolbar = true;
 
 const checkbox = document.getElementById('toggle-checkbox');
