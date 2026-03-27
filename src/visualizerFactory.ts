@@ -128,11 +128,17 @@ export class VisualizerFactory {
   }
 
   static getVisualizerCreatorsByDescriptor(descriptor: IVisualizerTypeDescriptor): Array<{typeName: string, creator: any}> {
+    const usedCreators = [];
     let allCreatorInfos: Array<{typeName: string, creator: any}> = [];
     const vTypes = descriptor.visualizerTypes || [descriptor.visualizerType];
     vTypes.forEach(type => {
       const creators = VisualizationManager.getVisualizersByType(type);
-      creators.forEach(creator => allCreatorInfos.push({ typeName: type, creator }));
+      creators.forEach(creator => {
+        if(usedCreators.indexOf(creator) === -1) {
+          allCreatorInfos.push({ typeName: type, creator });
+          usedCreators.push(creator);
+        }
+      });
     });
     return allCreatorInfos;
   }

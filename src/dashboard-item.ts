@@ -212,7 +212,7 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
 
     this.synchronizeTypeWithAvailableTypes(requestedDashboardItemType);
     this._dataField = this.options.dataField;
-    this.title = this.options.title;
+    this.title = this.options.title || this.title;
     this.ensureSyntheticQuestion();
   }
 

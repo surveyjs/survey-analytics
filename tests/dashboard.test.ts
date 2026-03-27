@@ -560,6 +560,7 @@ test("getState, setState, onStateChanged", () => {
     locale: "",
     elements: [
       {
+        "displayName": "question1",
         name: "question1",
         isVisible: true,
         isPublic: true,

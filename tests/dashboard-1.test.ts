@@ -9,6 +9,7 @@ import { IPivotVisualizerOptions, PivotModel } from "../src/pivot";
 import { HistogramModel } from "../src/histogram";
 import { VisualizerFactory } from "../src/visualizerFactory";
 import { QuestionTextModel, SurveyModel } from "survey-core";
+export * from "../src/wordcloud/wordcloud";
 export * from "../src/card";
 export * from "../src/text";
 export * from "../src/number";
@@ -171,4 +172,58 @@ test("Dashboard item availableTypes should recreate and rerender visualizer afte
   expect(item.visualizerType).toBe("average");
 
   createSpy.mockRestore();
+});
+
+test("Dashboard item should take title from question", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1", title: "Question 1" },
+      { type: "text", name: "question2", title: "Question 2" },
+      { type: "text", name: "question3", title: "Question 3" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const dashboard = new Dashboard({
+    questions: survey.getAllQuestions(),
+    items: [
+      {
+        name: "question1",
+        type: "bullet"
+      },
+      "question2",
+    ]
+  });
+  expect(dashboard.items.length).toBe(2);
+  expect(dashboard.items[0].title).toBe("Question 1");
+  expect(dashboard.items[1].title).toBe("Question 2");
+});
+
+test("Wordcloud visualizer shouldn't be instatiated twice", () => {
+  const creators = VisualizerFactory.getVisualizerCreatorsByDescriptor({ visualizerType: "wordcloud", visualizerTypes: ["wordcloud", "text"] });
+  expect(creators.length).toStrictEqual(2);
+  expect(creators[0].typeName).toBe("wordcloud");
+  expect(creators[1].typeName).toBe("text");
+
+  const json = {
+    elements: [
+      {
+        "type": "comment",
+        "name": "additional_feedback",
+        "title": "Additional comments or suggestions"
+      }
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const dashboard = new Dashboard({
+    questions: survey.getAllQuestions(),
+    items: [
+      "additional_feedback"
+    ]
+  });
+  expect(dashboard.items.length).toBe(1);
+  expect(dashboard.items[0].availableTypes).toStrictEqual([]);
+  const visualizer = dashboard.visualizers[0];
+  expect(visualizer.type).toBe("alternative");
+  expect((visualizer as AlternativeVisualizersWrapper).getVisualizer().type).toBe("wordcloud");
+  expect((visualizer as AlternativeVisualizersWrapper).getVisualizers().map(v => v.type)).toStrictEqual(["wordcloud", "text"]);
 });
