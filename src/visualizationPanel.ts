@@ -70,6 +70,11 @@ export class PanelElement implements IVisualizerPanelRenderedElement {
     this.isVisible = true;
     this.isPublic = true;
   }
+  /**
+   * A unique identifier for the dashboard item.
+   *
+   * If the [`questions`](https://surveyjs.io/dashboard/documentation/api-reference/idashboardoptions#questions) array is specified when initializing the Dashboard, item names are generated automatically based on the associated question names.
+   */
   name: string;
   displayName: string;
   isVisible: boolean;
@@ -81,19 +86,7 @@ export class PanelElement implements IVisualizerPanelRenderedElement {
 }
 
 /**
- * Visualization Panel configuration. Pass it as the third argument to the [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel) constructor:
- *
- * ```js
- * import { VisualizationPanel } from "survey-analytics";
- *
- * const vizPanel = new VisualizationPanel(
- *   surveyQuestions,
- *   surveyResults,
- *   vizPanelOptions
- * );
- * ```
- *
- * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
+ * Obsolete. Use the [`IDashboardOptions`](https://surveyjs.io/dashboard/documentation/api-reference/idashboardoptions) configuration object and the [`Dashboard`](https://surveyjs.io/dashboard/documentation/api-reference/dashboard) class instead.
  */
 export interface IVisualizationPanelOptions {
   // An object named after a question that it configures.
@@ -102,42 +95,32 @@ export interface IVisualizationPanelOptions {
   // },
 
   /**
-   * The number of label characters after which truncation starts.
+   * Maximum label length before truncation starts. Set to `-1` to disable truncation.
    *
-   * Set this property to -1 to disable truncation.
-   *
-   * Default value: 27
+   * Default value: `27`
    */
   labelTruncateLength?: number;
-
   allowMakeQuestionsPrivate?: boolean;
-
   seriesValues?: string[];
   seriesLabels?: string[];
   useValuesAsLabels?: boolean;
-
   /**
-   * Pass a survey instance to use survey locales in the Visualization Panel.
+   * A survey instance used to apply survey localization settings to the Dashboard UI.
    *
    * [View Demo](https://surveyjs.io/dashboard/examples/localize-survey-data-dashboard-ui/ (linkStyle))
    */
   survey?: SurveyModel;
-  /**
-   * A common data provider for all visualizers.
-   */
   dataProvider?: DataProvider;
   /**
-   * Allows users to change the visibility of individual charts.
-   *
-   * This property adds a Hide button to each chart.
+   * Enables users to hide individual dashboard items. Adds a **Hide** button to each item.
    *
    * Default value: `true`
    */
   allowHideQuestions?: boolean;
   /**
-   * Specifies whether to arrange charts based on the available screen space and allow users to reorder them via drag and drop.
+   * Enables automatic layout based on available screen space and allows users to reorder items via drag and drop.
    *
-   * If this property is disabled, charts are displayed one under another, and users cannot drag and drop them. If you want to disable only drag and drop, set the [`allowDragDrop`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDynamicLayout) property to `false`.
+   * If disabled, items are rendered sequentially (one below another), and drag-and-drop reordering is disabled. To disable only drag-and-drop while keeping dynamic layout, set [`allowDragDrop`](#allowDragDrop) to `false`.
    *
    * Default value: `true`
    *
@@ -146,61 +129,49 @@ export interface IVisualizationPanelOptions {
    */
   allowDynamicLayout?: boolean;
   /**
-   * Specifies whether users can drag and drop charts. Applies only if [`allowDynamicLayout`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDynamicLayout) is `true`.
+   * Enables drag-and-drop reordering of dashboard items. Applies only if [`allowDynamicLayout`](#allowDynamicLayout) is `true`.
    *
    * Default value: `true`
    * @see layoutEngine
    */
   allowDragDrop?: boolean;
   /**
-   * A layout engine used to arrange charts on the Visualization Panel.
-   *
-   * You can use this property to integrate a third-party layout engine with SurveyJS Dashboard.
-   *
+   * A layout engine implementation used to arrange dashboard items. Use this property to integrate a third-party layout engine.
    * @see allowDynamicLayout
    */
   layoutEngine?: LayoutEngine;
   /**
-   * Allows users to switch between absolute and percentage values in bar charts.
-   *
-   * This property adds a Show Percentages button to each bar chart.
+   * Allows users to toggle between absolute values and percentages in bar charts. Adds a **Show Percentages** button to each bar chart.
    *
    * Default value: `false`
-   *
    * @see showPercentages
    * @see showOnlyPercentages
    * @see percentagePrecision
    */
   allowShowPercentages?: boolean;
   /**
-   * Specifies whether bar charts display percentages in addition to absolute values.
-   *
-   * Users can change this property value if you enable the `allowShowPercentages` property.
+   * Displays percentages alongside absolute values in bar charts.
    *
    * Default value: `false`
    *
-   * @see allowShowPercentages
+   * Users can modify this setting in the UI if [`allowShowPercentages`](#allowShowPercentages) is enabled.
    * @see showOnlyPercentages
    * @see percentagePrecision
    */
   showPercentages?: boolean;
   /**
-   * Specifies whether bar charts display only percentages, without absolute values.
-   *
-   * Applies only if the `allowShowPercentages` or `showPercentages` property is enabled.
+   * Displays only percentages (without absolute values) in bar charts. Applies only if [`allowShowPercentages`](#allowShowPercentages) or [`showPercentages`](#showPercentages) is enabled.
    *
    * Default value: `false`
-   *
    * @see allowShowPercentages
    * @see showPercentages
    * @see percentagePrecision
    */
   showOnlyPercentages?: boolean;
   /**
-   * Specifies percentage precision.
+   * Number of decimal places used when displaying percentages.
    *
-   * Default value: 2
-   *
+   * Default value: `2`
    * @see allowShowPercentages
    * @see showPercentages
    * @see showOnlyPercentages
@@ -208,12 +179,9 @@ export interface IVisualizationPanelOptions {
   percentagePrecision?: number;
   haveCommercialLicense?: boolean;
   /**
-   * Allows users to sort answers by answer count. Applies only to [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
-   *
-   * This property adds a Sorting dropdown to each supported visualizer.
+   * Enables sorting answers by response count in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table). Adds a **Sorting** dropdown to each supported dashboard item.
    *
    * Default value: `true`
-   *
    * @see answersOrder
    */
   allowSortAnswers?: boolean;
@@ -222,132 +190,140 @@ export interface IVisualizationPanelOptions {
    */
   allowChangeAnswersOrder?: boolean;
   /**
-   * Specifies how to sort answers in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
+   * Specifies the answer sorting order in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
    *
    * Accepted values:
    *
-   * - `"default"` (default) - Do not sort answers.
-   * - `"asc"` - Sort answers by ascending answer count.
-   * - `"desc"` - Sort answers by descending answer count.
+   * - `"default"` (default) &ndash; Preserve original order.
+   * - `"asc"` &ndash; Sort by ascending response count.
+   * - `"desc"` &ndash; Sort by descending response count.
    *
-   * Users can change this property value if you enable the `allowSortAnswers` property.
-   *
-   * @see allowSortAnswers
+   * Users can modify this setting in the UI if [`allowSortAnswers`](#allowSortAnswers) is enabled.
    */
   answersOrder?: "default" | "asc" | "desc";
   /**
-   * Allows users to hide answers with zero count in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
-   *
-   * This property adds a Hide Empty Answers button to each supported visualizer.
+   * Enables hiding answers with zero responses in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table). Adds a **Hide Empty Answers** button to each supported visualizer.
    *
    * Default value: `false`
    */
   allowHideEmptyAnswers?: boolean;
   /**
-   * Hides answers with zero count in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
-   *
-   * Users can change this property value if you enable the `allowHideEmptyAnswers` property.
+   * Hides answers with zero responses in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
    *
    * Default value: `false`
    *
-   * @see allowHideEmptyAnswers
+   * Users can modify this setting in the UI if [`allowHideEmptyAnswers`](#allowHideEmptyAnswers) is enabled.
    */
   hideEmptyAnswers?: boolean;
   /**
-   * Allows users to select whether to show top 5, 10, or 20 answers by answer count.
-   *
-   * This property adds a Top N Answers dropdown to each chart.
+   * Enables selection of top 5, 10, or 20 answers by response count. Adds a **Top N Answers** dropdown to each chart.
    *
    * Default value: `false`
    */
   allowTopNAnswers?: boolean;
   /**
-   * Allows users to show the number of respondents who did not answer a particular question.
-   *
-   * This property adds a Show Missing Answers button to each chart.
+   * Enables displaying the number of respondents who skipped a question. Adds a **Show Missing Answers** button to each chart.
    *
    * Default value: `false`
    */
   allowShowMissingAnswers?: boolean;
-
   allowExperimentalFeatures?: boolean;
-  /**
-   * Default chart type.
-   *
-   * Accepted values depend on the question type as follows:
-   *
-   * - Boolean: `"bar"` | `"vbar"` | `"pie"` | `"doughnut"`
-   * - Date, Number: `"bar"` | `"vbar"`
-   * - Matrix: `"bar"` | `"vbar"` | `"pie"` | `"doughnut"` | `"stackedbar"`
-   * - Rating: `"bar"` | `"vbar"` | `"gauge"` | `"bullet"`
-   * - Radiogroup, Checkbox, Dropdown, Image Picker: `"bar"` | `"vbar"` | `"pie"` | `"doughnut"`
-   * - Ranking: `"bar"` | `"vbar"` | `"pie"` | `"doughnut" | `"radar"`
-   *
-   * To set a type for an individual chart, access this chart in the `visualizers` array or using the [`getVisualizer(questionName)`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#getVisualizer) method and set its `chartType` property to one of the values described above:
-   *
-   * ```js
-   * const vizPanel = new SurveyAnalytics.VisualizationPanel( ... );
-   * vizPanel.visualizers[0].chartType = "stackedbar";
-   * // --- or ---
-   * vizPanel.getVisualizer("my-question").chartType = "stackedbar";
-   * ```
-   */
   defaultChartType?: string;
   /**
-   * Allows users to transpose a visualized matrix question.
+   * Enables transposing data for matrix question visualizations.
    *
-   * This property adds a Transpose button to charts that visualize matrixes. When users select Per Values, matrix rows go to chart arguments and matrix columns form chart series. When users select Per Columns, matrix rows form chart series and matrix columns go to chart arguments.
+   * Adds a **Transpose** button to supported charts.
+   *
+   * - **Per Values** &ndash; Matrix rows become chart arguments, columns become series.
+   * - **Per Columns** &ndash; Matrix rows become series, columns become arguments.
    *
    * Default value: `false`
    */
   allowTransposeData?: boolean;
   /**
-   * Allows users to cross-filter charts. The filter applies when users select a series point.
+   * Enables cross-filtering between dashboard items. When enabled, selecting a data point filters other dashboard items accordingly.
    *
    * Default value: `true`
    */
   allowSelection?: boolean;
-
   renderContent?: Function;
   destroyContent?: Function;
-
   /**
-   * Removes HTML tags from survey element titles.
+   * Removes HTML markup from survey element titles before rendering.
    *
-   * Survey element titles can contain HTML markup and are specified by users. An attacker can inject malicious code into the titles. To guard against it, keep this property set to `true`.
+   * Since survey titles may contain user-defined HTML, keeping this property enabled helps prevent potential injection of malicious code.
    *
    * Default value: `true`
    */
   stripHtmlFromTitles?: boolean;
-
   /**
-   * Allows users to switch between different visualizer types.
+   * Enables switching between different visualizer types.
    *
    * Default value: `true`
    */
   allowChangeVisualizerType?: boolean;
+  /**
+   * Default chart legend position.
+   *
+   * You can override this setting per dashboard item using the [`items`](#items) array.
+   */
   legendPosition?: "left" | "right" | "top" | "bottom";
-
+  /**
+   * The name of a data field that contains date values used by the date panel.
+   */
   dateFieldName?: string;
+  /**
+   * The predefined date period selected in the date panel. Applies only if [`dateFieldName`](#dateFieldName) is specified.
+   *
+   * Supported values:
+   *
+   * - `"last7days"`
+   * - `"last14days"`
+   * - `"last28days"`
+   * - `"last30days"`
+   * - `"lastWeekSun"`
+   * - `"lastWeekMon"`
+   * - `"lastMonth"`
+   * - `"lastQuarter"`
+   * - `"lastYear"`
+   * - `"ytd"`
+   * - `"mtd"`
+   * - `"wtdSun"`
+   * - `"wtdMon"`
+   * - `"qtd"`
+   * @see availableDatePeriods
+   * @see showDatePanel
+   */
   datePeriod?: DatePeriodEnum;
+  /**
+   * An array of date periods available for selection in the date panel.
+   *
+   * Refer to [`datePeriod`](#datePeriod) for supported values.
+   */
   availableDatePeriods?: DatePeriodEnum[];
+  /**
+   * A `[startDate, endDate]` tuple that defines a custom date range. Applies only if [`dateFieldName`](#dateFieldName) is specified.
+   *
+   * If both [`datePeriod`](#datePeriod) and `dateRange` are specified, `dateRange` takes precedence.
+   */
   dateRange?: DateRangeTuple;
+  /**
+   * Specifies whether to display the total number of answers in the date panel. Applies only if [`dateFieldName`](#dateFieldName) is specified.
+   *
+   * Default value: `true`
+   */
   showDatePanel?: boolean;
+  /**
+   * Specifies whether to display the toolbar.
+   *
+   * Default value: `true`
+   */
+  showToolbar?: boolean;
 }
 
 /**
- * An object that visualizes survey results and allows users to analyze them.
- *
- * Constructor parameters:
- *
- * - `questions`: Array\<[`Question`](https://surveyjs.io/form-library/documentation/api-reference/question)\>\
- * Survey questions to visualize. Call `SurveyModel`'s [`getAllQuestions()`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#getQuestionByName) method to access all survey questions and pass its result as the `questions` parameter.
- * - `data`: `Array<any>`\
- * Survey results.
- * - `vizPanelOptions`: [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions)\
- * Visualization Panel configuration.
- *
- * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
+ * Obsolete. Use the [`Dashboard`](/dashboard/documentation/api-reference/dashboard) class instead.
+ * @deprecated
  */
 export class VisualizationPanel<P extends PanelElement = PanelElement> extends VisualizerBase {
   public static LayoutEngine: new (allowed: boolean, itemSelector: string, dragEnabled?: boolean) => LayoutEngine;
@@ -497,17 +473,6 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     this.stateChanged(sender.question?.name, options);
   };
 
-  /**
-   * An event that is raised when a user selects a different visualizer type from the Type drop-down menu.
-   *
-   * Parameters:
-   *
-   * - `sender`: `AlternativeVisualizersWrapper`\
-   * An object that controls altenative visualizers.
-   *
-   * - `options.visualizer`: `VisualizerBase`\
-   * An applied visualizer.
-   **/
   public onAlternativeVisualizerChanged: Event<
     (sender: AlternativeVisualizersWrapper, options: any) => any,
     AlternativeVisualizersWrapper,
@@ -628,11 +593,6 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     this.visibleElementsChanged(element, "REMOVED");
   }
 
-  /**
-   * Hides all panel elements. Users can select the elements they want to show from a drop-down menu.
-   * @see showAllElements
-   * @see allowHideQuestions
-   */
   public hideAllElements(): void {
     const affectedElements = [];
     this._elements.forEach(element => {
@@ -644,11 +604,6 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     this.visibleElementsChanged(undefined, "REMOVEDALL");
   }
 
-  /**
-   * Shows all panel elements if they are hidden to a drop-down menu.
-   * @see hideAllElements
-   * @see allowHideQuestions
-   */
   public showAllElements() {
     const affectedElements = [];
     this._elements.forEach(element => {
@@ -660,13 +615,6 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     this.visibleElementsChanged(undefined, "ADDEDDALL");
   }
 
-  /**
-   * Adds a new element to the panel. If the element does not have a built visualizer,
-   * one will be created automatically. If the panel is already rendered and the element
-   * is visible, it will also be rendered immediately.
-   * @param element A panel element or element config to add.
-   * @param index The position (zero-based) at which to insert the element. Appends to the end if omitted.
-   */
   public addElement(element: IVisualizerPanelElement | P, index?: number): void {
     let panelElement: P;
     if(element instanceof PanelElement) {
@@ -694,11 +642,6 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     this.visibleElementsChanged(panelElement, "ADDED");
   }
 
-  /**
-   * Removes an element from the panel. Cleans up any rendered DOM node and destroys
-   * the element's visualizer if one exists.
-   * @param elementName The [name](https://surveyjs.io/form-library/documentation/api-reference/question#name) of the element to remove.
-   */
   public removeElement(element: P | string): void {
     const panelElement = typeof element === "string" ? this.getElement(element) : element;
     if(!panelElement) return;
@@ -1110,6 +1053,16 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     any
   >();
 
+  /**
+   * Raised when the user changes the date range in the date panel. Handle this event to react to date filtering changes.
+   *
+   * Parameters:
+   *
+   * - `options.dateRange`: `number[]`\
+   * The selected `[startDate, endDate]` range.
+   * - `options.datePeriod`: `"last7days"` | `"last14days"` | `"last28days"` | `"last30days"` | `"lastWeekMon"` | `"lastWeekSun"` | `"lastMonth"` | `"lastQuarter"` | `"lastYear"` | `"ytd"` | `"mtd"` | `"wtdSun"` | `"wtdMon"` | `"qtd"`\
+   * The selected predefined date period. `undefined` if the user selected a custom range.
+   */
   public onDateRangeChanged = new Event<(sender: VisualizationPanel, options: IDateRangeChangedOptions) => any, VisualizationPanel, any>();
   public createDateRangeWidget(): void {
     const config = <IDateRangeWidgetOptions>{
@@ -1287,7 +1240,9 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   }
 
   /**
-   * The state of `VisualizationPanel`. Includes information about the visualized elements and current locale.
+   * Gets or sets the Dashboard state.
+   *
+   * The state includes configuration of dashboard items and the current locale.
    *
    * [View Demo](https://surveyjs.io/dashboard/examples/save-dashboard-state-to-local-storage/ (linkStyle))
    * @see onStateChanged

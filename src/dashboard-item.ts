@@ -6,16 +6,72 @@ import { IVisualizerPanelRenderedElement, PanelElement } from "./visualizationPa
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 import { VisualizerFactory } from "./visualizerFactory";
 
+/**
+ * Defines configuration options for a dashboard item.
+ *
+ * Pass an array of `IDashboardItemOptions` objects to the [`items`](https://surveyjs.io/dashboard/documentation/api-reference/dashboard#items) array when initializing the Dashboard.
+ */
 export interface IDashboardItemOptions {
+  /**
+   * A unique identifier for the item.
+   */
   name: string;
+  /**
+   * The data field the item is bound to. If not specified, the [`name`](#name) value is used.
+   */
   dataField?: string;
+  /**
+   * The item type (visualization type).
+   *
+   * Supported values:
+   *
+   * - [`"bar"`](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart)
+   * - [`"vbar"`](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart)
+   * - [`"pie"`](https://surveyjs.io/dashboard/documentation/chart-types#pie-chart)
+   * - [`"doughnut"`](https://surveyjs.io/dashboard/documentation/chart-types#doughnut-chart)
+   * - [`"histogram"`](https://surveyjs.io/dashboard/documentation/chart-types#histogram)
+   * - [`"vhistogram"`](https://surveyjs.io/dashboard/documentation/chart-types#histogram)
+   * - [`"gauge"`](https://surveyjs.io/dashboard/documentation/chart-types#gauge-chart)
+   * - [`"bullet"`](https://surveyjs.io/dashboard/documentation/chart-types#bullet-chart)
+   * - [`"radar"`](https://surveyjs.io/dashboard/documentation/chart-types#radar-chart-spider-chart)
+   * - [`"stackedbar"`](https://surveyjs.io/dashboard/documentation/chart-types#stacked-bar-chart)
+   * - [`"wordcloud"`](https://surveyjs.io/dashboard/documentation/chart-types#word-cloud)
+   * - [`"text"`](https://surveyjs.io/dashboard/documentation/chart-types#text-table)
+   * - [`"choices"`](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table)
+   * - [`"nps"`](https://surveyjs.io/dashboard/documentation/chart-types#nps-visualizer)
+   * - `"card"`
+   * - `"pivot"`
+   *
+   * To prevent end users from changing the item type at runtime, set [`allowChangeType`](#allowChangeType) to `false`.
+   */
   type?: string;
+  /**
+   * A list of item types available for user selection.
+   *
+   * Refer to [`type`](#type) for supported values.
+   * @see allowChangeType
+   */
   availableTypes?: string[];
+  /**
+   * The item title.
+   */
   title?: string;
+  /**
+   * Specifies whether users can change the item [`type`](#type).
+   *
+   * Default value: `true`
+   * @see availableTypes
+   */
   allowChangeType?: boolean;
+  /**
+   * A configuration object with visualizer settings that control how this item's data is rendered.
+   */
   visualizer?: { [index: string]: any };
 }
 
+/**
+ * Visualizes an individual dashboard item.
+ */
 export class DashboardItem extends PanelElement implements IDashboardItemOptions, IVisualizerPanelRenderedElement {
   private _visualizerType: string;
   private _availableTypes: { [index: string]: string[] };
@@ -60,9 +116,6 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
     }
   }
 
-  /**
-   * Configuration object used to initialize and re-create the dashboard item visualizer.
-   */
   constructor(public readonly options: IDashboardItemOptions, public question?: Question) {
     super(options?.name || question?.name || options?.dataField, question?.title || options?.title);
     this._initialAvailableTypes = options?.availableTypes?.slice();
@@ -143,9 +196,8 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
   }
 
   /**
-   * Returns the current active visualizer.
-   * If the visualizer is an instance of AlternativeVisualizersWrapper, it returns the wrapped visualizer.
-   * @returns The current active visualizer.
+   * Returns the currently active visualizer.
+   * @returns The currently active visualizer.
    */
   public get visualizer(): VisualizerBase | undefined {
     let currentVisualizer = this.visualizerInstance;
@@ -224,13 +276,6 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
     return ["type"].concat(super.getStateProperties());
   }
 
-  /**
-   * The `changeType` method is called to update the visualizer and chart type accordingly.
-   *
-   * The `changeType` method checks the available types for the current visualizer and updates the
-   * visualizer and chart type if the new type is valid. This ensures that the dashboard item always
-   * has a valid type that is compatible with the available visualizers.
-   */
   private changeType(newType: string) {
     const match = this.findVisualizerAndChartType(newType);
     if(match.visualizerType && match.chartType) {
@@ -260,9 +305,9 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
   questionName?: string;
 
   /**
-   * Gets the list of chart types available for this dashboard item.
+   * Gets or sets the list of item types available for user selection.
    *
-   * The list is aggregated across all compatible visualizer types.
+   * Refer to [`IDashboardItemOptions.type`](https://surveyjs.io/dashboard/documentation/api-reference/idashboarditemoptions#type) for supported values.
    */
   get availableTypes(): string[] {
     const at = [];
@@ -295,7 +340,7 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
   /**
    * Gets or sets the current dashboard item type.
    *
-   * Setting this property updates the active visualizer and chart type when the specified value is supported.
+   * Refer to [`IDashboardItemOptions.type`](https://surveyjs.io/dashboard/documentation/api-reference/idashboarditemoptions#type) for supported values.
    */
   get type(): string {
     return this._type;
@@ -306,7 +351,7 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
     }
   }
   /**
-   * Gets or sets the data field name used by this dashboard item.
+   * Gets or sets the data field the item is bound to.
    */
   get dataField(): string | undefined {
     return this._dataField || this.getDataField();
@@ -315,7 +360,7 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
     this._dataField = value;
   }
   /**
-   * Gets or sets the dashboard item title displayed in the panel.
+   * Gets or sets the item title.
    */
   get title(): string {
     return this.displayName;
