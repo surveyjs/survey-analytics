@@ -7,6 +7,112 @@ import { VisualizationManager } from "./visualizationManager";
 import { ToggleWidget } from "./utils/toggle";
 import { createDropdown } from "./utils/dropdownWidget";
 
+export interface ISelectBaseVisualizerOptions {
+  /**
+   * Allows users to toggle between absolute values and percentages in bar charts. Adds a **Show Percentages** button to each bar chart.
+   *
+   * Default value: `false`
+   * @see showPercentages
+   * @see showOnlyPercentages
+   * @see percentagePrecision
+   */
+  allowShowPercentages?: boolean;
+  /**
+   * Displays percentages alongside absolute values in bar charts.
+   *
+   * Default value: `false`
+   *
+   * Users can modify this setting in the UI if [`allowShowPercentages`](#allowShowPercentages) is enabled.
+   * @see showOnlyPercentages
+   * @see percentagePrecision
+   */
+  showPercentages?: boolean;
+  /**
+   * Displays only percentages (without absolute values) in bar charts. Applies only if [`allowShowPercentages`](#allowShowPercentages) or [`showPercentages`](#showPercentages) is enabled.
+   *
+   * Default value: `false`
+   * @see allowShowPercentages
+   * @see showPercentages
+   * @see percentagePrecision
+   */
+  showOnlyPercentages?: boolean;
+  /**
+   * Number of decimal places used when displaying percentages.
+   *
+   * Default value: `2`
+   * @see allowShowPercentages
+   * @see showPercentages
+   * @see showOnlyPercentages
+   */
+  percentagePrecision?: number;
+  /**
+   * Enables sorting answers by response count in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table). Adds a **Sorting** dropdown to each supported dashboard item.
+   *
+   * Default value: `true`
+   * @see answersOrder
+   */
+  allowSortAnswers?: boolean;
+  /**
+   * @deprecated Use the [`allowSortAnswers`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowSortAnswers) property instead.
+   */
+  allowChangeAnswersOrder?: boolean;
+  /**
+   * Specifies the answer sorting order in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
+   *
+   * Accepted values:
+   *
+   * - `"default"` (default) &ndash; Preserve original order.
+   * - `"asc"` &ndash; Sort by ascending response count.
+   * - `"desc"` &ndash; Sort by descending response count.
+   *
+   * Users can modify this setting in the UI if [`allowSortAnswers`](#allowSortAnswers) is enabled.
+   */
+  answersOrder?: "default" | "asc" | "desc";
+  /**
+   * Enables hiding answers with zero responses in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table). Adds a **Hide Empty Answers** button to each supported visualizer.
+   *
+   * Default value: `false`
+   */
+  allowHideEmptyAnswers?: boolean;
+  /**
+   * Hides answers with zero responses in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
+   *
+   * Default value: `false`
+   *
+   * Users can modify this setting in the UI if [`allowHideEmptyAnswers`](#allowHideEmptyAnswers) is enabled.
+   */
+  hideEmptyAnswers?: boolean;
+  /**
+   * Enables selection of top 5, 10, or 20 answers by response count. Adds a **Top N Answers** dropdown to each chart.
+   *
+   * Default value: `false`
+   */
+  allowTopNAnswers?: boolean;
+  /**
+   * Enables displaying the number of respondents who skipped a question. Adds a **Show Missing Answers** button to each chart.
+   *
+   * Default value: `false`
+   */
+  allowShowMissingAnswers?: boolean;
+  /**
+   * Enables transposing data for matrix question visualizations.
+   *
+   * Adds a **Transpose** button to supported charts.
+   *
+   * - **Per Values** &ndash; Matrix rows become chart arguments, columns become series.
+   * - **Per Columns** &ndash; Matrix rows become series, columns become arguments.
+   *
+   * Default value: `false`
+   */
+  allowTransposeData?: boolean;
+  /**
+   * Default chart legend position.
+   *
+   * You can override this setting per dashboard item using the [`items`](#items) array.
+   */
+  legendPosition?: "left" | "right" | "top" | "bottom";
+}
+
 export interface IVisualizerWithSelection {
   selection: ItemValue;
   onDataItemSelected: (selectedValue: any, selectedText: string) => void;
@@ -129,7 +235,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
-    options?: any,
+    options?: ISelectBaseVisualizerOptions,
     type?: string
   ) {
     super(question, data, options, type || "selectBase");

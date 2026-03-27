@@ -1,9 +1,13 @@
-import { Question, SurveyModel, Event } from "survey-core";
+import { Event, Question } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { IVisualizationPanelOptions, VisualizationPanel } from "./visualizationPanel";
 import { DashboardItem, IDashboardItemOptions } from "./dashboard-item";
 import { VisualizerFactory } from "./visualizerFactory";
 import { IVisualizerPanelElement } from "./config";
+import { DatePeriodEnum, DateRangeWidget, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
+import { IDateRange } from "./utils/calculationDateRanges";
+import { DateRangeModel, DateRangeTuple, IDateRangeChangedOptions } from "./utils/dateRangeModel";
+import { DocumentHelper } from "./utils/documentHelper";
 
 /**
  * A configuration object passed to the [`Dashboard`](https://surveyjs.io/dashboard/documentation/api-reference/dashboard) constructor.
@@ -38,6 +42,52 @@ export interface IDashboardOptions extends IVisualizationPanelOptions {
    * Items are generated from `questions` and then customized using `items`.
    */
   data?: any[];
+  /**
+   * The name of a data field that contains date values used by the date panel.
+   */
+  dateFieldName?: string;
+  /**
+   * The predefined date period selected in the date panel. Applies only if [`dateFieldName`](#dateFieldName) is specified.
+   *
+   * Supported values:
+   *
+   * - `"last7days"`
+   * - `"last14days"`
+   * - `"last28days"`
+   * - `"last30days"`
+   * - `"lastWeekSun"`
+   * - `"lastWeekMon"`
+   * - `"lastMonth"`
+   * - `"lastQuarter"`
+   * - `"lastYear"`
+   * - `"ytd"`
+   * - `"mtd"`
+   * - `"wtdSun"`
+   * - `"wtdMon"`
+   * - `"qtd"`
+   * @see availableDatePeriods
+   * @see showDatePanel
+   */
+  datePeriod?: DatePeriodEnum;
+  /**
+   * An array of date periods available for selection in the date panel.
+   *
+   * Refer to [`datePeriod`](#datePeriod) for supported values.
+   */
+  availableDatePeriods?: DatePeriodEnum[];
+  /**
+   * A `[startDate, endDate]` tuple that defines a custom date range. Applies only if [`dateFieldName`](#dateFieldName) is specified.
+   *
+   * If both [`datePeriod`](#datePeriod) and `dateRange` are specified, `dateRange` takes precedence.
+   */
+  dateRange?: DateRangeTuple;
+  /**
+   * Specifies whether to display the total number of answers in the date panel. Applies only if [`dateFieldName`](#dateFieldName) is specified.
+   *
+   * Default value: `true`
+   */
+  showDatePanel?: boolean;
+  showAnswerCount?: boolean;
 }
 
 /**
@@ -48,8 +98,67 @@ export interface IDashboardOptions extends IVisualizationPanelOptions {
  * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
  */
 export class Dashboard extends VisualizationPanel<DashboardItem> {
+  private _dateRangeWidget: DateRangeWidget;
+  private _dateRangeModel: DateRangeModel;
+
   constructor(private readonly _options: IDashboardOptions) {
     super(_options.questions ?? [], _options?.data ?? [], _options, _options.items ?? [] as any, true, "dashboard");
+    if(this._options.dateFieldName) {
+      this.createDateRangeWidget();
+    }
+  }
+
+  /**
+   * Raised when the user changes the date range in the date panel. Handle this event to react to date filtering changes.
+   *
+   * Parameters:
+   *
+   * - `options.dateRange`: `number[]`\
+   * The selected `[startDate, endDate]` range.
+   * - `options.datePeriod`: `"last7days"` | `"last14days"` | `"last28days"` | `"last30days"` | `"lastWeekMon"` | `"lastWeekSun"` | `"lastMonth"` | `"lastQuarter"` | `"lastYear"` | `"ytd"` | `"mtd"` | `"wtdSun"` | `"wtdMon"` | `"qtd"`\
+   * The selected predefined date period. `undefined` if the user selected a custom range.
+   */
+  public onDateRangeChanged = new Event<(sender: Dashboard, options: IDateRangeChangedOptions) => any, Dashboard, any>();
+  public createDateRangeWidget(): void {
+    const config = <IDateRangeWidgetOptions>{
+      datePeriod: this._options.datePeriod,
+      availableDatePeriods: this._options.availableDatePeriods,
+      dateRange: this._options.dateRange,
+      showAnswerCount: this._options.showAnswerCount,
+
+      onDateRangeChanged: (dateRange: IDateRange, datePeriod: DatePeriodEnum) => {
+        const options = <IDateRangeChangedOptions>{ datePeriod, dateRange };
+        this.onDateRangeChanged.fire(this, options);
+        this.dataProvider.setSystemFilter(this._options.dateFieldName, options.dateRange);
+      }
+    };
+    this._dateRangeModel = new DateRangeModel(config);
+    this.dataProvider.setSystemFilter(this._options.dateFieldName, this._dateRangeModel.currentDateRange);
+    if(this._options.showDatePanel !== false) {
+      this._dateRangeWidget = new DateRangeWidget(this._dateRangeModel, config);
+      this.dataProvider.getCount().then(count => this._dateRangeWidget.updateAnswersCount(count));
+    }
+  }
+
+  protected onDataChanged(): void {
+    super.onDataChanged();
+    if(this._dateRangeWidget) {
+      this.dataProvider.getCount().then(count => this._dateRangeWidget.updateAnswersCount(count));
+    }
+  }
+
+  protected renderToolbar(container: HTMLElement) {
+    super.renderToolbar(container);
+
+    if(this.showToolbar && this._dateRangeWidget) {
+      const divider = DocumentHelper.createElement("div", "sa-horizontal-divider");
+      const line = DocumentHelper.createElement("div", "sa-line");
+      divider.appendChild(line);
+      container.appendChild(divider);
+
+      const dateRangeWidgetElement = this._dateRangeWidget.render();
+      container.appendChild(dateRangeWidgetElement);
+    }
   }
 
   protected buildVisualizer(element: DashboardItem, questions: Array<Question>) {
@@ -131,5 +240,10 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
     if(!!item) {
       this.removeElement(item);
     }
+  }
+
+  public destroy() {
+    super.destroy();
+    this._dateRangeWidget?.destroy();
   }
 }

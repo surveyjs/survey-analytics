@@ -1,7 +1,7 @@
 import { SurveyModel } from "survey-core";
 import { DateRangeModel } from "../src/utils/dateRangeModel";
 import { DateRangeWidget, IDateRangeWidgetOptions } from "../src/utils/dateRangeWidget";
-import { VisualizationPanel } from "../src/visualizationPanel";
+import { Dashboard } from "../src/dashboard";
 
 const mockOnDateRangeChanged = jest.fn();
 
@@ -64,7 +64,9 @@ test("verifies answer count when range is set by dateRange", async () => {
     { timestamp: "2025-12-15", question1: "e" },
   ];
   const survey = new SurveyModel(json);
-  const visPanel = new VisualizationPanel(survey.getAllQuestions(), data, {
+  const visPanel = new Dashboard({
+    questions: survey.getAllQuestions(),
+    data,
     dateFieldName: "timestamp",
     dateRange: [new Date("2025-12-01"), new Date("2025-12-14")],
   });
@@ -90,7 +92,9 @@ test("verifies answer count when range is set by datePeriod", async () => {
     { timestamp: "2025-12-15", question1: "e" },
   ];
   const survey = new SurveyModel(json);
-  const visPanel = new VisualizationPanel(survey.getAllQuestions(), data, {
+  const visPanel = new Dashboard({
+    questions: survey.getAllQuestions(),
+    data,
     dateFieldName: "timestamp",
     datePeriod: "last7days",
   });
@@ -116,7 +120,9 @@ test("verifies answer count when range is not set", async () => {
     { timestamp: "2025-12-15", question1: "e" },
   ];
   const survey = new SurveyModel(json);
-  const visPanel = new VisualizationPanel(survey.getAllQuestions(), data, {
+  const visPanel = new Dashboard({
+    questions: survey.getAllQuestions(),
+    data,
     dateFieldName: "timestamp",
   });
 
