@@ -47,6 +47,21 @@ test("Create pivot visualizer with axis options", async () => {
     "isVisible": true,
     "name": "visualizer1",
     "type": "pivot",
+    "categoryField": "question2",
+    "series": [
+      {
+        "aggregation": "count",
+        "seriesField": undefined,
+        "valueField": "question1",
+        "yAxis": "primary",
+      },
+      {
+        "aggregation": "count",
+        "seriesField": undefined,
+        "valueField": "question3",
+        "yAxis": "primary",
+      },
+    ],
   });
   expect(dashboard.getVisualizer("visualizer1")).toBeDefined();
 

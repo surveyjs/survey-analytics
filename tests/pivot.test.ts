@@ -889,3 +889,33 @@ test("IPivotVisualizerOptions and IPivotSeriesOptions interfaces", () => {
   expect(pivot.secondaryYAxes[0].aggregation).toBe("count");
 });
 
+test("Pivot series saved to state and restored correctly", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+  pivot["movePrimaryItemToSecondary"](0);
+  pivot.series[0].aggregation = "sum";
+
+  const state = pivot.getState();
+  expect(state).toStrictEqual({
+    chartType: "bar",
+    categoryField: "question1",
+    series: [
+      {
+        valueField: "question3",
+        seriesField: undefined,
+        aggregation: "sum",
+        yAxis: "primary"
+      },
+      {
+        valueField: undefined,
+        seriesField: "question2",
+        aggregation: "count",
+        yAxis: "secondary"
+      }
+    ]
+  });
+  const newPivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  newPivot.setState(state);
+  expect(newPivot.series).toEqual(pivot.series);
+});

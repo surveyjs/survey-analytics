@@ -62,17 +62,110 @@ export class PivotModel extends HistogramModel {
   };
 
   public get series(): IPivotSeriesOptions[] {
-    const mapAxisToSeries = (axis: IAxisDescription, yAxis: "primary" | "secondary"): IPivotSeriesOptions => ({
-      valueField: axis?.dataName,
-      seriesField: axis?.valueName,
-      aggregation: (axis?.aggregation as "sum" | "count") || "count",
-      yAxis,
-    });
+    const mapAxisToSeries = (axis: IAxisDescription, yAxis: "primary" | "secondary"): IPivotSeriesOptions => {
+      const dataName = axis?.dataName;
+      const valueName = axis?.valueName;
+      const axisQuestionName = dataName || valueName;
+      const axisQuestion = this.questions.find((q) => q.name === axisQuestionName);
+      const axisQuestionType = this.getQuestionValueType(axisQuestion);
+
+      if(dataName === undefined && valueName !== undefined) {
+        return {
+          valueField: undefined,
+          seriesField: valueName,
+          aggregation: (axis?.aggregation as "sum" | "count") || "count",
+          yAxis,
+        };
+      }
+
+      if(dataName !== undefined && valueName === undefined) {
+        return {
+          valueField: dataName,
+          seriesField: undefined,
+          aggregation: (axis?.aggregation as "sum" | "count") || "count",
+          yAxis,
+        };
+      }
+
+      if(dataName !== undefined && valueName !== undefined && dataName !== valueName) {
+        return {
+          valueField: dataName,
+          seriesField: valueName,
+          aggregation: (axis?.aggregation as "sum" | "count") || "count",
+          yAxis,
+        };
+      }
+
+      return {
+        valueField: axisQuestionType === "number" ? axisQuestionName : undefined,
+        seriesField: axisQuestionType === "number" ? undefined : axisQuestionName,
+        aggregation: (axis?.aggregation as "sum" | "count") || "count",
+        yAxis,
+      };
+    };
 
     return [
       ...this.primaryYAxes.map((axis) => mapAxisToSeries(axis, "primary")),
       ...this.secondaryYAxes.map((axis) => mapAxisToSeries(axis, "secondary")),
     ];
+  }
+
+  public set series(seriesOptions: IPivotSeriesOptions[]) {
+    if(!Array.isArray(seriesOptions)) {
+      return;
+    }
+
+    this.applySeriesOptions(seriesOptions);
+
+    if(!!this.primaryYAxesSeriesListWidget) {
+      this.primaryYAxesSeriesListWidget.setItems(this.primaryYAxes);
+    }
+    if(!!this.secondaryYAxesSeriesListWidget) {
+      this.secondaryYAxesSeriesListWidget.setItems(this.secondaryYAxes);
+    }
+
+    if(this.secondaryYAxes.length > 0) {
+      this._savedSecondaryYAxes = this.secondaryYAxes.map((axis) => ({ ...axis }));
+      this._useSecondaryYAxis = true;
+    }
+
+    this.setupPivot();
+  }
+
+  public get categoryField(): string {
+    return this.axisXQuestionName;
+  }
+
+  public set categoryField(fieldName: string) {
+    if(!fieldName) {
+      return;
+    }
+    this.axisXQuestionName = fieldName;
+    this.setupPivot();
+  }
+
+  public getState(): any {
+    const state = super.getState();
+    state.categoryField = this.categoryField;
+    state.series = this.series.map((series) => ({ ...series }));
+    return state;
+  }
+
+  protected setStateCore(state: any): void {
+    super.setStateCore(state);
+
+    if(state?.categoryField !== undefined) {
+      this.categoryField = state.categoryField;
+    }
+
+    if(state?.series !== undefined) {
+      const serializedSeries = Array.isArray(state.series)
+        ? state.series
+        : Object.keys(state.series || {})
+          .sort((a, b) => parseInt(a, 10) - parseInt(b, 10))
+          .map((key) => state.series[key]);
+      this.series = serializedSeries;
+    }
   }
 
   private applySeriesOptions(seriesOptions: IPivotSeriesOptions[]): void {
@@ -92,6 +185,10 @@ export class PivotModel extends HistogramModel {
         valueName: normalizedOption.seriesField,
         aggregation: normalizedOption.aggregation,
       };
+
+      if(normalizedOption.valueField !== undefined && normalizedOption.seriesField === undefined) {
+        axis.valueName = normalizedOption.valueField;
+      }
 
       if(normalizedOption.yAxis === "secondary") {
         this.secondaryYAxes.push(axis);
