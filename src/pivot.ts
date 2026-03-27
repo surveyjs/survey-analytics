@@ -11,13 +11,19 @@ import { ToggleWidget } from "./utils/toggle";
 import { createDropdown } from "./utils/dropdownWidget";
 import { DocumentHelper } from "./utils/documentHelper";
 
+export interface IPivotSeriesOptions {
+  valueField?: string;
+  seriesField?: string;
+  aggregation?: "sum" | "count";
+  yAxis?: "primary" | "secondary";
+}
+
 export interface IPivotVisualizerOptions {
   questions?: Question[] | string[];
   categoryField?: Question | string;
-  seriesFields?: Question[] | string[];
+  series?: IPivotSeriesOptions[];
   maxSeriesCount?: number;
   useSecondaryYAxis?: boolean;
-  [key: string]: any;
 }
 
 function getQuestionName(question: Question | string): string {
@@ -54,6 +60,46 @@ export class PivotModel extends HistogramModel {
       return acc + (!Number.isNaN(parsedFloat) ? parsedFloat : 0);
     }
   };
+
+  public get series(): IPivotSeriesOptions[] {
+    const mapAxisToSeries = (axis: IAxisDescription, yAxis: "primary" | "secondary"): IPivotSeriesOptions => ({
+      valueField: axis?.dataName,
+      seriesField: axis?.valueName,
+      aggregation: (axis?.aggregation as "sum" | "count") || "count",
+      yAxis,
+    });
+
+    return [
+      ...this.primaryYAxes.map((axis) => mapAxisToSeries(axis, "primary")),
+      ...this.secondaryYAxes.map((axis) => mapAxisToSeries(axis, "secondary")),
+    ];
+  }
+
+  private applySeriesOptions(seriesOptions: IPivotSeriesOptions[]): void {
+    this.primaryYAxes = [];
+    this.secondaryYAxes = [];
+
+    seriesOptions.forEach((seriesOption) => {
+      const normalizedOption: IPivotSeriesOptions = {
+        valueField: seriesOption?.valueField,
+        seriesField: seriesOption?.seriesField,
+        aggregation: seriesOption?.aggregation || "count",
+        yAxis: seriesOption?.yAxis || "primary",
+      };
+
+      const axis: IAxisDescription = {
+        dataName: normalizedOption.valueField,
+        valueName: normalizedOption.seriesField,
+        aggregation: normalizedOption.aggregation,
+      };
+
+      if(normalizedOption.yAxis === "secondary") {
+        this.secondaryYAxes.push(axis);
+      } else {
+        this.primaryYAxes.push(axis);
+      }
+    });
+  }
 
   private getQuestionSeriesLabels(q: VisualizerBase, seriesLabels: any[]) {
     if(this.getQuestionValueType(q.question) === "enum") {
@@ -204,6 +250,9 @@ export class PivotModel extends HistogramModel {
         });
       });
     }
+    if(Array.isArray(this.options.series)) {
+      this.applySeriesOptions(this.options.series);
+    }
 
     this.registerSideBarItems();
     this.moveToolbarItemsToSidebar();
@@ -268,20 +317,6 @@ export class PivotModel extends HistogramModel {
     return this._questionDefinition?.title || super.getTitle(question) || this.getName();
   }
 
-  // private createYSelecterGenerator(): () => HTMLDivElement {
-  //   const selectorIndex: number = this.axisYSelectors.length;
-  //   return () => {
-  //     let selector = this.axisYSelectors[selectorIndex];
-  //     if(!selector) {
-  //       selector = this.createAxisYSelector(selectorIndex);
-  //       this.axisYSelectors.push(selector);
-  //     } else {
-  //       selector["__updateSelect"] && selector["__updateSelect"]();
-  //     }
-  //     return selector;
-  //   };
-  // }
-
   public setAxisQuestions(...axisQuestionNames: string[]): void {
     if(axisQuestionNames.length < 1) {
       return;
@@ -299,70 +334,6 @@ export class PivotModel extends HistogramModel {
 
     this.setupPivot();
   }
-
-  // public onAxisYSelectorChanged(index: number, value: any): void {
-  //   this.axisYQuestionNames[index] = value;
-
-  //   if(index < this.axisYSelectors.length - 1) {
-  //     if(!value) {
-  //       for(let i = index + 1; i < this.axisYSelectors.length; ++i) {
-  //         this.unregisterToolbarItem("axisYSelector" + i);
-  //       }
-  //       this.axisYSelectors = this.axisYSelectors.slice(0, index + 1);
-  //       this.axisYQuestionNames = this.axisYQuestionNames.slice(0, index + 1);
-  //     }
-  //   } else {
-  //     if(!!value && (!this.options.maxSeriesCount || this.axisYSelectors.length < this.options.maxSeriesCount)) {
-  //       this.registerToolbarItem("axisYSelector" + this.axisYSelectors.length, this.createYSelecterGenerator(), "dropdown");
-  //     }
-  //   }
-
-  //   this.updateQuestionsSelection();
-  //   // this.updateToolbar();
-  //   this.setupPivot();
-  // }
-
-  // protected updateQuestionsSelection() {
-  //   const selectedQuestions = [this.axisXQuestionName];
-  //   for(let i = 0; i < this.axisYQuestionNames.length; ++i) {
-  //     const questionName = this.axisYQuestionNames[i];
-  //     if(selectedQuestions.indexOf(questionName) !== -1) {
-  //       this.onAxisYSelectorChanged(i, undefined);
-  //       break;
-  //     } else {
-  //       selectedQuestions.push(questionName);
-  //     }
-  //   }
-  // }
-
-  // private createAxisYSelector(selectorIndex: number): HTMLDivElement {
-
-  //   const getChoices = () => {
-  //     const choices = this.questions.filter(q => {
-  //       if(q.name === this.axisXQuestionName) {
-  //         return false;
-  //       }
-  //       const usedIndex = this.axisYQuestionNames.indexOf(q.name);
-  //       return usedIndex == -1 || usedIndex >= selectorIndex;
-  //     }).map((question) => {
-  //       return {
-  //         value: question.name,
-  //         text: question.title || question.name,
-  //       };
-  //     });
-  //     return [{ value: "", text: localization.getString("notSelected") }].concat(choices);
-  //   };
-  //   if(getChoices().length == 1) {
-  //     return undefined;
-  //   }
-  //   const selector = createDropdown({
-  //     options: getChoices,
-  //     isSelected: (option: any) => this.axisYQuestionNames[selectorIndex] === option.value,
-  //     handler: (e: any) => { this.onAxisYSelectorChanged(selectorIndex, e); },
-  //     title: () => selectorIndex ? undefined : (this.isXYChart() ? localization.getString("axisYSelectorTitle") : localization.getString("axisYAlternativeSelectorTitle"))
-  //   });
-  //   return selector;
-  // }
 
   protected setChartType(chartType: string) {
     const prev2Dchart = this.isXYChart();
@@ -407,7 +378,8 @@ export class PivotModel extends HistogramModel {
     this.valueType = this.getQuestionValueType(questionX);
 
     this.questionsY = this.yAxes.map((axisOption) => {
-      const questionY = this.questions.filter((q) => q.name === axisOption.dataName)[0];
+      const axisQuestionName = axisOption.dataName || axisOption.valueName;
+      const questionY = this.questions.filter((q) => q.name === axisQuestionName)[0];
       if(!!questionY) {
         return this.getQuestionValueType(questionY) === "enum" ? new SelectBase(questionY, []) : new VisualizerBase(questionY, []);
       }
@@ -505,16 +477,6 @@ export class PivotModel extends HistogramModel {
       }
     }
   }
-
-  // public resetAggregations() {
-  //   this._aggregations = {};
-  //   this.onDataChanged();
-  // }
-
-  // public setValueAggregation(aggregationName: string, aggregationFunc: string | ((acc: number, value: number) => number)) {
-  //   this._aggregations[aggregationName] = aggregationFunc;
-  //   this.onDataChanged();
-  // }
 
   protected calculateAggregation(dataRow: any, series: IAxisDescription, currentValue: number): number {
     if(!dataRow || !series) {

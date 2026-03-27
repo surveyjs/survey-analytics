@@ -848,3 +848,44 @@ test("primaryYAxesSeriesListWidget hides movePrimaryItemToSecondary button after
   const buttonsAfter = primaryYAxesElement.querySelectorAll(".sa-series-settings__action-button");
   expect(buttonsAfter.length).toBe(0);
 });
+
+test("IPivotVisualizerOptions and IPivotSeriesOptions interfaces", () => {
+  const pivotOptions = {
+    questions: survey.getAllQuestions(),
+    categoryField: "question1",
+    series: [
+      {
+        valueField: "question2",
+        seriesField: "question3",
+        aggregation: "sum"
+      },
+      {
+        seriesField: "question2",
+        aggregation: "count",
+        yAxis: "secondary"
+      }
+    ],
+    useSecondaryYAxis: true
+  } as any;
+  const pivot = new PivotModel(survey.getAllQuestions(), data, pivotOptions);
+  expect(pivot.axisXQuestionName).toBe("question1");
+
+  expect(pivot.series).toHaveLength(2);
+  expect(pivot.series[0].valueField).toBe("question2");
+  expect(pivot.series[0].seriesField).toBe("question3");
+  expect(pivot.series[0].aggregation).toBe("sum");
+  expect(pivot.series[0].yAxis).toBe("primary");
+  expect(pivot.series[1].seriesField).toBe("question2");
+  expect(pivot.series[1].aggregation).toBe("count");
+  expect(pivot.series[1].yAxis).toBe("secondary");
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.primaryYAxes[0].dataName).toBe("question2");
+  expect(pivot.primaryYAxes[0].valueName).toBe("question3");
+  expect(pivot.primaryYAxes[0].aggregation).toBe("sum");
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes[0].dataName).toBeUndefined();
+  expect(pivot.secondaryYAxes[0].valueName).toBe("question2");
+  expect(pivot.secondaryYAxes[0].aggregation).toBe("count");
+});
+

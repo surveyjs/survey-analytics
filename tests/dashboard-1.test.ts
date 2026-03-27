@@ -227,3 +227,66 @@ test("Wordcloud visualizer shouldn't be instatiated twice", () => {
   expect((visualizer as AlternativeVisualizersWrapper).getVisualizer().type).toBe("wordcloud");
   expect((visualizer as AlternativeVisualizersWrapper).getVisualizers().map(v => v.type)).toStrictEqual(["wordcloud", "text"]);
 });
+
+test("IPivotVisualizerOptions passed to pivot", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1", title: "Question 1" },
+      { type: "text", name: "question2", title: "Question 2" },
+      { type: "text", name: "question3", title: "Question 3" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const dashboard = new Dashboard({
+    questions: survey.getAllQuestions(),
+    items: [
+      {
+        type: "pivot",
+        name: "pivot-chart",
+        allowChangeType: false,
+        visualizer: {
+          questions: survey.getAllQuestions(),
+          categoryField: "question1",
+          series: [
+            {
+              valueField: "question2",
+              seriesField: "question3",
+              aggregation: "sum"
+            },
+            {
+              seriesField: "question2",
+              aggregation: "count",
+              yAxis: "secondary"
+            }
+          ],
+          useSecondaryYAxis: true
+        }
+      }
+    ]
+  });
+
+  expect(dashboard.items.length).toBe(1);
+  expect(dashboard.items[0].type).toBe("pivot");
+  expect(dashboard.visualizers.length).toBe(1);
+  expect(dashboard.visualizers[0].type).toBe("pivot");
+  const pivot = dashboard.visualizers[0] as PivotModel;
+  expect(pivot.axisXQuestionName).toBe("question1");
+
+  expect(pivot.series).toHaveLength(2);
+  expect(pivot.series[0].valueField).toBe("question2");
+  expect(pivot.series[0].seriesField).toBe("question3");
+  expect(pivot.series[0].aggregation).toBe("sum");
+  expect(pivot.series[0].yAxis).toBe("primary");
+  expect(pivot.series[1].seriesField).toBe("question2");
+  expect(pivot.series[1].aggregation).toBe("count");
+  expect(pivot.series[1].yAxis).toBe("secondary");
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.primaryYAxes[0].dataName).toBe("question2");
+  expect(pivot.primaryYAxes[0].valueName).toBe("question3");
+  expect(pivot.primaryYAxes[0].aggregation).toBe("sum");
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes[0].dataName).toBeUndefined();
+  expect(pivot.secondaryYAxes[0].valueName).toBe("question2");
+  expect(pivot.secondaryYAxes[0].aggregation).toBe("count");
+});
