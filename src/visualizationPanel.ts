@@ -11,9 +11,6 @@ import { LayoutEngine } from "./layout-engine";
 import { DataProvider } from "./dataProvider";
 import { svgTemplate } from "./svgbundle";
 import { VisualizationManager } from "./visualizationManager";
-import { DatePeriodEnum, DateRangeWidget, IDateRangeWidgetOptions } from "./utils/dateRangeWidget";
-import { IDateRange, toRange } from "./utils/calculationDateRanges";
-import { DateRangeModel, DateRangeTuple, IDateRangeChangedOptions } from "./utils/dateRangeModel";
 import { ElementVisibilityAction } from "./utils/elementVisibilityAction";
 import { IDropdownItemOption } from "./utils/dropdownBase";
 import { DocumentHelper } from "./utils/documentHelper";
@@ -269,51 +266,6 @@ export interface IVisualizationPanelOptions {
    */
   legendPosition?: "left" | "right" | "top" | "bottom";
   /**
-   * The name of a data field that contains date values used by the date panel.
-   */
-  dateFieldName?: string;
-  /**
-   * The predefined date period selected in the date panel. Applies only if [`dateFieldName`](#dateFieldName) is specified.
-   *
-   * Supported values:
-   *
-   * - `"last7days"`
-   * - `"last14days"`
-   * - `"last28days"`
-   * - `"last30days"`
-   * - `"lastWeekSun"`
-   * - `"lastWeekMon"`
-   * - `"lastMonth"`
-   * - `"lastQuarter"`
-   * - `"lastYear"`
-   * - `"ytd"`
-   * - `"mtd"`
-   * - `"wtdSun"`
-   * - `"wtdMon"`
-   * - `"qtd"`
-   * @see availableDatePeriods
-   * @see showDatePanel
-   */
-  datePeriod?: DatePeriodEnum;
-  /**
-   * An array of date periods available for selection in the date panel.
-   *
-   * Refer to [`datePeriod`](#datePeriod) for supported values.
-   */
-  availableDatePeriods?: DatePeriodEnum[];
-  /**
-   * A `[startDate, endDate]` tuple that defines a custom date range. Applies only if [`dateFieldName`](#dateFieldName) is specified.
-   *
-   * If both [`datePeriod`](#datePeriod) and `dateRange` are specified, `dateRange` takes precedence.
-   */
-  dateRange?: DateRangeTuple;
-  /**
-   * Specifies whether to display the total number of answers in the date panel. Applies only if [`dateFieldName`](#dateFieldName) is specified.
-   *
-   * Default value: `true`
-   */
-  showDatePanel?: boolean;
-  /**
    * Specifies whether to display the toolbar.
    *
    * Default value: `true`
@@ -329,8 +281,6 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   public static LayoutEngine: new (allowed: boolean, itemSelector: string, dragEnabled?: boolean) => LayoutEngine;
   private _renderedQuestionsCount: number = 0;
   private _resetFilterButton: HTMLElement;
-  private _dateRangeWidget: DateRangeWidget;
-  private _dateRangeModel: DateRangeModel;
   protected _elements: Array<P> = undefined;
 
   private updateResetFilterButtonDisabled() {
@@ -363,10 +313,6 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     this._elements.forEach((element) => {
       this.buildVisualizer(element, questions);
     });
-
-    if(this._isRoot && this.options.dateFieldName) {
-      this.createDateRangeWidget();
-    }
 
     this._layoutEngine =
         options.layoutEngine ||
@@ -549,9 +495,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   }
 
   protected onDataChanged(): void {
-    if(this._dateRangeWidget) {
-      this.dataProvider.getCount().then(count => this._dateRangeWidget.updateAnswersCount(count));
-    }
+    // Do nothing.
   }
 
   protected showElementCore(element: IVisualizerPanelRenderedElement, elementIndex = -1): void {
@@ -1053,38 +997,6 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
     any
   >();
 
-  /**
-   * Raised when the user changes the date range in the date panel. Handle this event to react to date filtering changes.
-   *
-   * Parameters:
-   *
-   * - `options.dateRange`: `number[]`\
-   * The selected `[startDate, endDate]` range.
-   * - `options.datePeriod`: `"last7days"` | `"last14days"` | `"last28days"` | `"last30days"` | `"lastWeekMon"` | `"lastWeekSun"` | `"lastMonth"` | `"lastQuarter"` | `"lastYear"` | `"ytd"` | `"mtd"` | `"wtdSun"` | `"wtdMon"` | `"qtd"`\
-   * The selected predefined date period. `undefined` if the user selected a custom range.
-   */
-  public onDateRangeChanged = new Event<(sender: VisualizationPanel, options: IDateRangeChangedOptions) => any, VisualizationPanel, any>();
-  public createDateRangeWidget(): void {
-    const config = <IDateRangeWidgetOptions>{
-      datePeriod: this.options.datePeriod,
-      availableDatePeriods: this.options.availableDatePeriods,
-      dateRange: this.options.dateRange,
-      showAnswerCount: this.options.showAnswerCount,
-
-      onDateRangeChanged: (dateRange: IDateRange, datePeriod: DatePeriodEnum) => {
-        const options = <IDateRangeChangedOptions>{ datePeriod, dateRange };
-        this.onDateRangeChanged.fire(this, options);
-        this.dataProvider.setSystemFilter(this.options.dateFieldName, options.dateRange);
-      }
-    };
-    this._dateRangeModel = new DateRangeModel(config);
-    this.dataProvider.setSystemFilter(this.options.dateFieldName, this._dateRangeModel.currentDateRange);
-    if(this.options.showDatePanel !== false) {
-      this._dateRangeWidget = new DateRangeWidget(this._dateRangeModel, config);
-      this.dataProvider.getCount().then(count => this._dateRangeWidget.updateAnswersCount(count));
-    }
-  }
-
   protected visibleElementsChanged(
     element: IVisualizerPanelElement,
     reason: string
@@ -1165,16 +1077,6 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   protected renderToolbar(container: HTMLElement) {
     container.className += " sa-panel__header";
     super.renderToolbar(container);
-
-    if(this._isRoot && this.showToolbar && this._dateRangeWidget) {
-      const divider = DocumentHelper.createElement("div", "sa-horizontal-divider");
-      const line = DocumentHelper.createElement("div", "sa-line");
-      divider.appendChild(line);
-      container.appendChild(divider);
-
-      const dateRangeWidgetElement = this._dateRangeWidget.render();
-      container.appendChild(dateRangeWidgetElement);
-    }
   }
 
   public renderContent(container: HTMLElement): void {
@@ -1327,6 +1229,5 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   destroy() {
     super.destroy();
     this.destroyVisualizers();
-    this._dateRangeWidget?.destroy();
   }
 }
