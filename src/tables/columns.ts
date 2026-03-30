@@ -139,6 +139,42 @@ export class CheckboxColumn extends SelectBaseColumn<QuestionCheckboxModel | Que
   }
 }
 
+export class FlattenedCheckboxColumn extends BaseColumn<QuestionCheckboxModel | QuestionTagboxModel> {
+  constructor(question: QuestionCheckboxModel | QuestionTagboxModel, private choiceValue: any, private choiceText: string, table: Table) {
+    super(question, table);
+  }
+
+  protected getDataType(): ColumnDataType {
+    return ColumnDataType.Html;
+  }
+
+  protected getName(): string {
+    return `${this.question.name}.${this.choiceValue}`;
+  }
+
+  protected getDisplayName(): string {
+    const questionDisplayName = this.table.useNamesAsTitles
+      ? this.question.name
+      : (this.question.locTitle?.renderedHtml || this.question.title || "").trim() || this.question.name;
+    const choiceDisplayText = this.table.useNamesAsTitles ? this.choiceValue : this.choiceText;
+    return `${questionDisplayName} - ${choiceDisplayText}`;
+  }
+
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
+    const questionValue = data[this.question.name];
+    if(!Array.isArray(questionValue)) {
+      return "";
+    }
+    const index = questionValue.indexOf(this.choiceValue);
+    if(index < 0) {
+      return "";
+    }
+    // Default to checkmark if not specified
+    const displayMode = options.multiSelectColumnValueFormat || "checkmark";
+    return displayMode === "checkmark" ? "&#10004;" : (index + 1).toString();
+  }
+}
+
 export class SingleChoiceColumn extends SelectBaseColumn<QuestionDropdownModel | QuestionRadiogroupModel> {
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): string {
     if(this.isOtherInSeparateColumn) {

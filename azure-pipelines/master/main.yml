@@ -288,18 +288,19 @@ steps:
     displayName: "survey-utils translate analytics"
 
   - powershell: |
+      $branch = "$(CurrentBranch)"
       cd $(Build.SourcesDirectory)/survey-analytics
       $env:GIT_REDIRECT_STDERR = '2>&1'
       git config --global user.email "surveyjs.org@gmail.com"
       git config --global user.name "surveyjsdeveloper"
-      git pull origin master
-      git fetch origin master --tags --force
-      git checkout master
+      git fetch origin $branch
+      git checkout -B $branch origin/$branch
       git add src/analytics-localization
-      git commit -m "updated survey-analytics translation [azurepipelines skip]"
-      git pull origin master
-      git push origin master
-    displayName: "Analytics - push updated translation to github"
+      if (git status --porcelain) {
+          git commit -m "updated survey-analytics translation for $branch [azurepipelines skip]"
+          git push origin $branch
+      }
+    displayName: "Analytics - push updated translation to github for $(CurrentBranch)"
 
   - task: CopyFiles@2
     inputs:

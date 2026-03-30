@@ -163,8 +163,6 @@ export var germanStrings = {
   axisXAlternativeSelectorTitle: "Segmente:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Gruppen:",
-  // [Auto-translated] "Not selected"
-  notSelected: "Nicht ausgewählt",
   // [Auto-translated] "Default"
   intervalMode_default: "Vorgabe",
   // [Auto-translated] "Decades"

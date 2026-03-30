@@ -163,8 +163,6 @@ export var spanishStrings = {
   axisXAlternativeSelectorTitle: "Segmentos:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupos:",
-  // [Auto-translated] "Not selected"
-  notSelected: "No seleccionado",
   // [Auto-translated] "Default"
   intervalMode_default: "Predeterminado",
   // [Auto-translated] "Decades"

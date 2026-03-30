@@ -163,8 +163,6 @@ export var farsiStrings = {
   axisXAlternativeSelectorTitle: "بخش:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "گروه:",
-  // [Auto-translated] "Not selected"
-  notSelected: "انتخاب نشده است",
   // [Auto-translated] "Default"
   intervalMode_default: "پیش فرض",
   // [Auto-translated] "Decades"

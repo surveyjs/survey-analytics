@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Flattened Checkbox Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" type="text/css" href="../node_modules/tabulator-tables/dist/css/tabulator.css" />
+  <link rel="stylesheet" type="text/css" href="../build/survey.analytics.tabulator.css" />
+  <script src="https://unpkg.com/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
+  <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+  <script src="../node_modules/tabulator-tables/dist/js/tabulator.js"></script>
+  <script src="../node_modules/survey-core/survey.core.js"></script>
+  <script src="../node_modules/survey-core/survey.i18n.js"></script>
+  <script src="../build/survey.analytics.tabulator.js"></script>
+</head>
+
+<body>
+  <h1>Flattened Checkbox Example</h1>
+  <p>This example demonstrates the <code>splitMultiSelectIntoColumns</code> option that transforms checkbox answers into separate columns.</p>
+
+  <h2>With splitMultiSelectIntoColumns: true (default checkmark mode)</h2>
+  <div id="tabulatorFlattenedContainer"></div>
+
+  <h2 style="margin-top: 40px;">With splitMultiSelectIntoColumns: true and multiSelectColumnValueFormat: "selectionOrder"</h2>
+  <div id="tabulatorOrderContainer"></div>
+
+  <h2 style="margin-top: 40px;">With splitMultiSelectIntoColumns: false (default)</h2>
+  <div id="tabulatorNormalContainer"></div>
+
+  <script>
+    // Define the survey JSON
+    var json = {
+      elements: [
+        {
+          type: "checkbox",
+          name: "fav_cars",
+          title: "Favorite Cars",
+          choices: [
+            { value: "car1", text: "Car 1" },
+            { value: "car2", text: "Car 2" },
+            { value: "car3", text: "Car 3" }
+          ]
+        },
+        {
+          type: "text",
+          name: "name",
+          title: "Name"
+        }
+      ]
+    };
+
+    // Sample data
+    var data = [
+      { fav_cars: ["car1", "car2"], name: "John Doe" },
+      { fav_cars: ["car2"], name: "Jane Smith" },
+      { fav_cars: ["car1", "car3"], name: "Bob Johnson" },
+      { fav_cars: [], name: "Alice Williams" }
+    ];
+
+    var survey = new Survey.SurveyModel(json);
+
+    // Create flattened checkbox tabulator with checkmarks (default)
+    var surveyAnalyticsFlattenedTabulator = new SurveyAnalyticsTabulator.Tabulator(
+      survey,
+      data,
+      {
+        splitMultiSelectIntoColumns: true
+      }
+    );
+    surveyAnalyticsFlattenedTabulator.render("tabulatorFlattenedContainer");
+
+    // Create flattened checkbox tabulator with selection order
+    var surveyAnalyticsOrderTabulator = new SurveyAnalyticsTabulator.Tabulator(
+      survey,
+      data,
+      {
+        splitMultiSelectIntoColumns: true,
+        multiSelectColumnValueFormat: "selectionOrder"
+      }
+    );
+    surveyAnalyticsOrderTabulator.render("tabulatorOrderContainer");
+
+    // Create normal tabulator for comparison
+    var surveyAnalyticsNormalTabulator = new SurveyAnalyticsTabulator.Tabulator(
+      survey,
+      data,
+      {
+        splitMultiSelectIntoColumns: false
+      }
+    );
+    surveyAnalyticsNormalTabulator.render("tabulatorNormalContainer");
+  </script>
+</body>
+
+</html>

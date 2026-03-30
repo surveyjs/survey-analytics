@@ -163,8 +163,6 @@ export var plStrings = {
   axisXAlternativeSelectorTitle: "Segmenty:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupy:",
-  // [Auto-translated] "Not selected"
-  notSelected: "Nie wybrano",
   // [Auto-translated] "Default"
   intervalMode_default: "Domyślny",
   // [Auto-translated] "Decades"

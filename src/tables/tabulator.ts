@@ -84,6 +84,36 @@ const escapeCellFormula = (field: string) => {
   }
 };
 
+const decodeHtmlEntities = (text: string): string => {
+  if(typeof text !== "string") return text;
+  const entityMap: { [key: string]: string } = {
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
+    "&#10004;": "+",
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
+    "&check;": "✓",
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
+    "&checkmark;": "✓",
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
+    "&#x2713;": "✓",
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
+    "&#9745;": "☑",
+    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
+    "&#x2611;": "☑",
+    "&amp;": "&",
+    "&lt;": "<",
+    "&gt;": ">",
+    "&quot;": '"',
+    "&#39;": "'",
+    "&apos;": "'"
+  };
+
+  let decoded = text;
+  for(const entity in entityMap) {
+    decoded = decoded.replace(new RegExp(entity, "g"), entityMap[entity]);
+  }
+  return decoded;
+};
+
 type TabulatorParameters = ConstructorParameters<typeof TabulatorFull>;
 type TabulatorConstuctor = { new (...args: TabulatorParameters): TabulatorFull };
 export class Tabulator extends Table {
@@ -443,6 +473,9 @@ export class Tabulator extends Table {
         if(column.dataType === ColumnDataType.FileLink && Array.isArray(dataCell)) {
           return (dataCell || []).map(f => f.name).join(", ");
         }
+        if(column.dataType === ColumnDataType.Html) {
+          return decodeHtmlEntities(cellData);
+        }
       }
     }
     if(this.currentDownloadType === "csv" || this.currentDownloadType === "xlsx") {
@@ -484,7 +517,7 @@ export class Tabulator extends Table {
   public getColumns(): Array<any> {
     const columns: any = this.columns.map((column, index) => {
       let formatter = "plaintext";
-      if(column.dataType == ColumnDataType.FileLink) {
+      if(column.dataType == ColumnDataType.FileLink || column.dataType == ColumnDataType.Html) {
         formatter = "html";
       }
       if(column.dataType == ColumnDataType.Image) {

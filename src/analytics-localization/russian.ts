@@ -163,8 +163,6 @@ export var russianStrings = {
   axisXAlternativeSelectorTitle: "Сегментов:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Группы:",
-  // [Auto-translated] "Not selected"
-  notSelected: "Не выбрано",
   // [Auto-translated] "Default"
   intervalMode_default: "По умолчанию",
   // [Auto-translated] "Decades"
