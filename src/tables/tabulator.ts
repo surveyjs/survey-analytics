@@ -396,15 +396,49 @@ export class Tabulator extends Table {
 
       const tableEl = document.createElement("div");
       tableEl.classList.add("sa-nested-table");
-      const nestedTable = new Tabulator.tabulatorTablesConstructor(tableEl, {
-        // layout: "fitDataFill",
-        data: cellData,
-        columns: nestedTableColumns,
-        pagination: false,
-      });
-      nestedTable.on("tableBuilt", () => {
-        // cell.getRow().normalizeHeight();
-        this.layout(false);
+
+      // Defer nested Tabulator initialization to onRendered so that it
+      // runs once per cell and can be properly cleaned up.
+      onRendered(() => {
+        const el: any = tableEl as any;
+
+        // Avoid creating multiple nested tables for the same cell element.
+        if (el._nestedTabulator) {
+          return;
+        }
+
+        const nestedTable = new (Tabulator as any).tabulatorTablesConstructor(tableEl, {
+          // layout: "fitDataFill",
+          data: cellData,
+          columns: nestedTableColumns,
+          pagination: false,
+        });
+
+        // Cache instance on the element for reuse / potential future teardown.
+        el._nestedTabulator = nestedTable;
+
+        nestedTable.on("tableBuilt", () => {
+          // cell.getRow().normalizeHeight();
+          this.layout(false);
+        });
+
+        // Ensure nested table is destroyed when the parent row is deleted.
+        try {
+          const row = cell.getRow && cell.getRow();
+          const parentTable = row && row.getTable && row.getTable();
+          if (parentTable && parentTable.on) {
+            parentTable.on("rowDeleted", (deletedRow: any) => {
+              if (deletedRow === row && el._nestedTabulator) {
+                // Destroy nested Tabulator and clear cache.
+                el._nestedTabulator.destroy();
+                el._nestedTabulator = null;
+              }
+            });
+          }
+        } catch {
+          // Fail-safe: if lifecycle hooks are unavailable, we still avoid
+          // multiple instances per cell via the cached _nestedTabulator.
+        }
       });
 
       return tableEl;
