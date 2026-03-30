@@ -589,6 +589,13 @@ export class Tabulator extends Table {
 
       if(column.dataType == ColumnDataType.NestedTable) {
         columnDef.formatter = this.createNestedTableFormatter(column);
+        columnDef.tooltip = (_: MouseEvent, cell: any) => {
+          const cellData = cell.getValue();
+          if(Array.isArray(cellData) && cellData.length > 0) {
+            return this.formatNestedDataForExport(cellData, column);
+          }
+          return "";
+        };
       }
 
       return columnDef;
