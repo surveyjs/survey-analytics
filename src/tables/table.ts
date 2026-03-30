@@ -69,6 +69,7 @@ export interface ITableOptions {
    * within the main table row, providing a better visualization of complex data structures.
    */
   nestedTables?: undefined | "table" | "tabulator";
+  /**
    * Specifies whether to split responses to multi-select questions (Checkboxes and Multi-Select Dropdown) into separate columns.
    *
    * When enabled, each choice is represented as an individual column. Cell values indicate whether the choice was selected or the selection order, depending on the `multiSelectColumnValueFormat` setting. Empty cells indicate that the choice was not selected.
