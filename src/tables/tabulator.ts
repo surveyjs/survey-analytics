@@ -191,7 +191,6 @@ export class Tabulator extends Table {
         paginationMode: "local",
         paginationSize: this.currentPageSize,
         movableColumns: true,
-        // maxHeight: "100%",
         columns,
         rowFormatter: this.rowFormatter,
         paginationElement: paginationElement,
@@ -219,10 +218,10 @@ export class Tabulator extends Table {
       config.pagination = true;
       config.paginationMode = "remote";
       config.paginationSize = this.currentPageSize,
-      config.ajaxFiltering = true; // Tabulator v4.8
-      config.filterMode = "remote"; // Tabulator v6.2
-      config.ajaxSorting = true; // Tabulator v4.8
-      config.sortMode = "remote"; // Tabulator v6.2
+      config.ajaxFiltering = true;
+      config.filterMode = "remote";
+      config.ajaxSorting = true;
+      config.sortMode = "remote";
       config.ajaxURL = "function",
       config.ajaxRequestFunc = (url, config, params) => {
         return new Promise<{ data: Array<Object>, last_page: number }>((resolve, reject) => {
@@ -261,7 +260,6 @@ export class Tabulator extends Table {
     );
     header.appendChild(this.createDownloadsBar());
     this.extensions.render(header, "header");
-    // header.appendChild(extensionsContainer);
     header.appendChild(paginationElement);
   }
 
@@ -397,13 +395,11 @@ export class Tabulator extends Table {
       const tableEl = document.createElement("div");
       tableEl.classList.add("sa-nested-table");
       const nestedTable = new Tabulator.tabulatorTablesConstructor(tableEl, {
-        // layout: "fitDataFill",
         data: cellData,
         columns: nestedTableColumns,
         pagination: false,
       });
       nestedTable.on("tableBuilt", () => {
-        // cell.getRow().normalizeHeight();
         this.layout(false);
       });
 
@@ -411,53 +407,43 @@ export class Tabulator extends Table {
     };
   }
 
-  // private renderNestedTables(row: RowComponent): void {
-  //   const rowData = row.getData();
 
-  //   const nestedColumns = this.columns.filter(col => col.dataType === ColumnDataType.NestedTable);
+  private formatNestedDataForExport(nestedData: any[], column: IColumn): string {
+    if(!Array.isArray(nestedData) || nestedData.length === 0) {
+      return "";
+    }
 
-  //   nestedColumns.forEach(column => {
-  //     const nestedData = rowData[column.name];
+    const question = this._survey.getQuestionByName(column.name);
+    if(!question) {
+      return "";
+    }
 
-  //     if(!Array.isArray(nestedData) || nestedData.length === 0) {
-  //       return;
-  //     }
+    let nestedColumns: any[] = [];
+    if(question.getType() === "matrixdynamic") {
+      const matrixQuestion = question as any;
+      nestedColumns = matrixQuestion.columns.map((col: any) => ({
+        title: col.title || col.name,
+        field: col.name,
+      }));
+    } else if(question.getType() === "paneldynamic") {
+      const panelQuestion = question as any;
+      const templateQuestions = panelQuestion.template.questions;
+      nestedColumns = templateQuestions.map((q: any) => ({
+        title: q.title || q.name,
+        field: q.name,
+      }));
+    }
 
-  //     const question = this._survey.getQuestionByName(column.name);
-  //     if(!question) {
-  //       return;
-  //     }
+    const header = nestedColumns.map(col => col.title).join(" | ");
+    const rows = nestedData.map(rowData => {
+      return nestedColumns.map(col => {
+        const value = rowData[col.field];
+        return value !== undefined && value !== null ? String(value) : "";
+      }).join(" | ");
+    });
 
-  //     let tabulatorColumns: any[] = [];
-  //     if(question.getType() === "matrixdynamic") {
-  //       const matrixQuestion = question as any;
-  //       tabulatorColumns = matrixQuestion.columns.map((col: any) => ({
-  //         title: col.title || col.name,
-  //         field: col.name,
-  //       }));
-  //     } else if(question.getType() === "paneldynamic") {
-  //       const panelQuestion = question as any;
-  //       const templateQuestions = panelQuestion.template.questions;
-  //       tabulatorColumns = templateQuestions.map((q: any) => ({
-  //         title: q.title || q.name,
-  //         field: q.name,
-  //       }));
-  //     }
-
-  //     const holderEl = document.createElement("div");
-  //     holderEl.classList.add("sa-nested-table-holder");
-  //     const tableEl = document.createElement("div");
-  //     holderEl.appendChild(tableEl);
-  //     row.getElement().appendChild(holderEl);
-
-  //     new Tabulator.tabulatorTablesConstructor(tableEl, {
-  //       layout: "fitDataFill",
-  //       data: nestedData,
-  //       columns: tabulatorColumns,
-  //       pagination: false,
-  //     });
-  //   });
-  // }
+    return `[${header}]\n${rows.join("\n")}`;
+  }
 
   private accessorDownload = (cellData: any, rowData: any, reason: string, _: any, columnComponent: any, rowComponent: any) => {
     if(Array.isArray(this.data)) {
@@ -475,6 +461,9 @@ export class Tabulator extends Table {
         }
         if(column.dataType === ColumnDataType.Html) {
           return decodeHtmlEntities(cellData);
+        }
+        if(column.dataType === ColumnDataType.NestedTable && Array.isArray(cellData)) {
+          return this.formatNestedDataForExport(cellData, column);
         }
       }
     }
@@ -553,11 +542,6 @@ export class Tabulator extends Table {
 
       return columnDef;
     });
-    // const rowExtensions = TableExtensions.getExtensions("row").filter(e => e.visibleIndex >= 0);
-    // const detailsExtension = TableExtensions.getExtensions("details").filter(e => e.visibleIndex >= 0);
-    // const hasRowColumns = this.columns.some(c => c.location === QuestionLocation.Row);
-    // if(rowExtensions.length > 1 || detailsExtension.length > 0
-    //       || rowExtensions.length == 1 && (rowExtensions[0].name == "details" && hasRowColumns || rowExtensions[0].name != "details")) {
     columns.unshift({
       download: false,
       resizable: false,
@@ -568,7 +552,6 @@ export class Tabulator extends Table {
         return localization.getString("actionsColumn");
       }
     });
-    // }
 
     return columns;
   }
