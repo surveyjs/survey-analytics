@@ -7,10 +7,14 @@ export var swedishStrings = {
   ungroupButton: "Avgruppera av mig",
   // "Select Me"
   selectButton: "Välj mig",
+  // [Auto-translated] "Column reorder"
+  columnReorder: "Kolumnomordning",
   // "Hide column"
   hideColumn: "Göm kolumn",
   // "Show column"
   showColumn: "Visa kolumn",
+  // [Auto-translated] "Columns"
+  columns: "Kolumner",
   // "Make column private"
   makePrivateColumn: "Gör kolumn privat",
   // "Make column public"
@@ -27,14 +31,18 @@ export var swedishStrings = {
   showLabel: "Visa",
   // "entries"
   entriesLabel: "poster",
+  // [Auto-translated] "Entries on Page:"
+  entriesOnPageLabel: "Inlägg på sidan:",
   // "Texts in table"
   visualizer_text: "Texter i tabell",
   // "Wordcloud"
   visualizer_wordcloud: "Ordmoln",
-  // "Histogram"
+  // [Auto-translated] "Histogram"
   visualizer_histogram: "Histogram",
   // "Average"
   visualizer_number: "Genomsnitt",
+  // [Auto-translated] "Average"
+  visualizer_average: "Genomsnitt",
   // "Table"
   visualizer_choices: "Tabell",
   // "Chart"
@@ -55,12 +63,18 @@ export var swedishStrings = {
   chartType_scatter: "Punkt",
   // "Gauge"
   chartType_gauge: "Mätare",
-  // "Bullet"
+  // [Auto-translated] "Bullet"
   chartType_bullet: "Bullet",
   // "Line"
   chartType_line: "Linje",
-  // "Radar"
+  // [Auto-translated] "Radar"
   chartType_radar: "Radar",
+  // [Auto-translated] "Histogram"
+  chartType_histogram: "Histogram",
+  // [Auto-translated] "Vertical Histogram"
+  chartType_vhistogram: "Vertikalt histogram",
+  // [Auto-translated] "Stacked Histogram"
+  chartType_stackedhistogram: "Staplad histogram",
   // "Hide"
   hideButton: "Göm",
   // "Make private"
@@ -69,7 +83,7 @@ export var swedishStrings = {
   makePublicButton: "Gör offentlig",
   // "Show"
   showButton: "Visa",
-  // "Filter"
+  // [Auto-translated] "Filter"
   filter: "Filter",
   // "Reset Filter"
   resetFilter: "Återställ filter",
@@ -79,6 +93,12 @@ export var swedishStrings = {
   clearButton: "Rensa",
   // "Choose question to show..."
   addElement: "Välj fråga att visa...",
+  // [Auto-translated] "All questions"
+  allQuestions: "Alla frågor",
+  // [Auto-translated] "Select all"
+  selectAll: "Välj alla",
+  // [Auto-translated] "Clear selection"
+  clearSelection: "Tydligt urval",
   // "Default Order"
   defaultOrder: "Standard ordning",
   // "Ascending"
@@ -95,14 +115,54 @@ export var swedishStrings = {
   showPercentages: "Visa procent",
   // "Hide percentages"
   hidePercentages: "Göm procent",
-  // "PDF"
+  // [Auto-translated] "Export As..."
+  exportAs: "Exportera som...",
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Ladda ner diagram som PNG-fil",
+  // [Auto-translated] "response(s)"
+  responsesText: "Svar",
+  // [Auto-translated] "No data"
+  noData: "Inga data",
+  // [Auto-translated] "Select date range..."
+  selectDateRange: "Välj datumintervall...",
+  // [Auto-translated] "Include today"
+  includeToday: "Inkludera idag",
+  // [Auto-translated] "Custom"
+  reportingPeriodCustom: "Sedvänja",
+  // [Auto-translated] "Last 7 days"
+  reportingPeriodLast7days: "Sista 7 dagarna",
+  // [Auto-translated] "Last 14 days"
+  reportingPeriodLast14days: "De senaste 14 dagarna",
+  // [Auto-translated] "Last 28 days"
+  reportingPeriodLast28days: "Senaste 28 dagarna",
+  // [Auto-translated] "Last 30 days"
+  reportingPeriodLast30days: "De senaste 30 dagarna",
+  // [Auto-translated] "Last week (starts Monday)"
+  reportingPeriodLastWeekMon: "Förra veckan (börjar på måndag)",
+  // [Auto-translated] "Last week (starts Sunday)"
+  reportingPeriodLastWeekSun: "Förra veckan (börjar på söndag)",
+  // [Auto-translated] "Last month"
+  reportingPeriodLastMonth: "Förra månaden",
+  // [Auto-translated] "Last quarter"
+  reportingPeriodLastQuarter: "Sista kvartalet",
+  // [Auto-translated] "Last year"
+  reportingPeriodLastYear: "Förra året",
+  // [Auto-translated] "This week to date (starts Sunday)"
+  reportingPeriodWtdSun: "Den här veckan hittills (börjar på söndag)",
+  // [Auto-translated] "This week to date (starts Monday)"
+  reportingPeriodWtdMon: "Den här veckan hittills (börjar måndag)",
+  // [Auto-translated] "This month to date"
+  reportingPeriodMtd: "Den här månaden hittills",
+  // [Auto-translated] "This quarter to date"
+  reportingPeriodQtd: "Detta kvartal hittills",
+  // [Auto-translated] "This year to date"
+  reportingPeriodYtd: "Hittills i år",
   // "Hide empty answers"
   hideEmptyAnswers: "Göm tomma svar",
   // "Show empty answers"
@@ -141,13 +201,13 @@ export var swedishStrings = {
   statistics_chart: "Diagram",
   // "Responses"
   responses: "Svar",
-  // "NPS"
+  // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"
   visualizer_boolean: "Diagram",
   // [Auto-translated] "Table"
   visualizer_options: "Bord",
-  // "NPS"
+  // [Auto-translated] "NPS"
   npsScore: "NPS",
   // "Promoters"
   npsPromoters: "Promotorer",
@@ -163,6 +223,10 @@ export var swedishStrings = {
   axisXAlternativeSelectorTitle: "Segment:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupper:",
+  // [Auto-translated] "Second Y axis"
+  secondYAxisToggleTitle: "Andra Y-axeln",
+  // [Auto-translated] "Select a data field..."
+  selectDataField: "Välj ett datafält...",
   // [Auto-translated] "Default"
   intervalMode_default: "Standard",
   // [Auto-translated] "Decades"
@@ -194,7 +258,27 @@ export var swedishStrings = {
   // [Auto-translated] "Aggregate:"
   selectAggregateText: "Aggregat:",
   // [Auto-translated] "Year ends with"
-  groupedYearsAxisTitle: "Året slutar med"
+  groupedYearsAxisTitle: "Året slutar med",
+  // [Auto-translated] "Series {0}"
+  seriesListSeries: "Serie {0}",
+  // [Auto-translated] "Values"
+  seriesListValuesLabel: "Värderingar",
+  // [Auto-translated] "Remove"
+  seriesListRemove: "Ta bort",
+  // [Auto-translated] "Add Series"
+  seriesListAdd: "Lägg till serier",
+  // [Auto-translated] "Move to second axis"
+  seriesListMoveToSecondAxis: "Flytta till andra axeln",
+  // [Auto-translated] "Move to first axis"
+  seriesListMoveToFirstAxis: "Flytt till första axeln",
+  // [Auto-translated] "Count"
+  aggregationCount: "Greve",
+  // [Auto-translated] "Sum"
+  aggregationSum: "Summa",
+  // [Auto-translated] "Average"
+  aggregationAverage: "Genomsnitt",
+  // [Auto-translated] "Close"
+  close: "Stäng"
 };
 
 setupLocale({ localeCode: "sv", strings: swedishStrings, nativeName: "Svenska" });

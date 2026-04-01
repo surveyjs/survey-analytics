@@ -7,10 +7,14 @@ export var spanishStrings = {
   ungroupButton: "Desagrupar por mí",
   // "Select Me"
   selectButton: "Seleccionarme",
+  // [Auto-translated] "Column reorder"
+  columnReorder: "Reordenamiento de columnas",
   // "Hide column"
   hideColumn: "Ocultar columna",
   // "Show column"
   showColumn: "Mostrar columna",
+  // [Auto-translated] "Columns"
+  columns: "Columnas",
   // "Make column private"
   makePrivateColumn: "Hacer que la columna sea privada",
   // "Make column public"
@@ -27,14 +31,18 @@ export var spanishStrings = {
   showLabel: "Mostrar",
   // "entries"
   entriesLabel: "Entradas",
+  // [Auto-translated] "Entries on Page:"
+  entriesOnPageLabel: "Entradas en la página:",
   // "Texts in table"
   visualizer_text: "Textos en tabla",
-  // "Wordcloud"
-  visualizer_wordcloud: "Wordcloud",
+  // [Auto-translated] "Wordcloud"
+  visualizer_wordcloud: "Nube de palabras",
   // "Histogram"
   visualizer_histogram: "Histograma",
   // "Average"
   visualizer_number: "Promedio",
+  // [Auto-translated] "Average"
+  visualizer_average: "Promedio",
   // "Table"
   visualizer_choices: "Mesa",
   // "Chart"
@@ -49,18 +57,24 @@ export var spanishStrings = {
   chartType_stackedbar: "Barra apilada",
   // "Doughnut"
   chartType_doughnut: "Donut",
-  // "Pie"
-  chartType_pie: "Pie",
+  // [Auto-translated] "Pie"
+  chartType_pie: "Pastel",
   // "Scatter"
   chartType_scatter: "Dispersión",
-  // "Gauge"
-  chartType_gauge: "Gauge",
-  // "Bullet"
-  chartType_bullet: "Bullet",
+  // [Auto-translated] "Gauge"
+  chartType_gauge: "Vía",
+  // [Auto-translated] "Bullet"
+  chartType_bullet: "Bala",
   // [Auto-translated] "Line"
   chartType_line: "Línea",
   // [Auto-translated] "Radar"
   chartType_radar: "Radar",
+  // [Auto-translated] "Histogram"
+  chartType_histogram: "Histograma",
+  // [Auto-translated] "Vertical Histogram"
+  chartType_vhistogram: "Histograma vertical",
+  // [Auto-translated] "Stacked Histogram"
+  chartType_stackedhistogram: "Histograma apilado",
   // "Hide"
   hideButton: "Ocultar",
   // "Make private"
@@ -79,6 +93,12 @@ export var spanishStrings = {
   clearButton: "Borrar",
   // "Choose question to show..."
   addElement: "Elija la pregunta para mostrar ...",
+  // [Auto-translated] "All questions"
+  allQuestions: "Todas las preguntas",
+  // [Auto-translated] "Select all"
+  selectAll: "Seleccionar todo",
+  // [Auto-translated] "Clear selection"
+  clearSelection: "Selección clara",
   // "Default Order"
   defaultOrder: "Orden predeterminado",
   // "Ascending"
@@ -95,14 +115,54 @@ export var spanishStrings = {
   showPercentages: "Mostrar porcentajes",
   // "Hide percentages"
   hidePercentages: "Ocultar porcentajes",
-  // "PDF"
+  // [Auto-translated] "Export As..."
+  exportAs: "Exportar como...",
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Descargar el gráfico como png",
+  // [Auto-translated] "response(s)"
+  responsesText: "Respuesta(s)",
+  // [Auto-translated] "No data"
+  noData: "Sin datos",
+  // [Auto-translated] "Select date range..."
+  selectDateRange: "Seleccione el rango de fechas...",
+  // [Auto-translated] "Include today"
+  includeToday: "Incluye la actualidad",
+  // [Auto-translated] "Custom"
+  reportingPeriodCustom: "Costumbres",
+  // [Auto-translated] "Last 7 days"
+  reportingPeriodLast7days: "Últimos 7 días",
+  // [Auto-translated] "Last 14 days"
+  reportingPeriodLast14days: "Últimos 14 días",
+  // [Auto-translated] "Last 28 days"
+  reportingPeriodLast28days: "Últimos 28 días",
+  // [Auto-translated] "Last 30 days"
+  reportingPeriodLast30days: "Últimos 30 días",
+  // [Auto-translated] "Last week (starts Monday)"
+  reportingPeriodLastWeekMon: "La semana pasada (empieza el lunes)",
+  // [Auto-translated] "Last week (starts Sunday)"
+  reportingPeriodLastWeekSun: "La semana pasada (empieza el domingo)",
+  // [Auto-translated] "Last month"
+  reportingPeriodLastMonth: "El mes pasado",
+  // [Auto-translated] "Last quarter"
+  reportingPeriodLastQuarter: "Último cuarto",
+  // [Auto-translated] "Last year"
+  reportingPeriodLastYear: "El año pasado",
+  // [Auto-translated] "This week to date (starts Sunday)"
+  reportingPeriodWtdSun: "Esta semana hasta la fecha (empieza el domingo)",
+  // [Auto-translated] "This week to date (starts Monday)"
+  reportingPeriodWtdMon: "Esta semana hasta la fecha (empieza el lunes)",
+  // [Auto-translated] "This month to date"
+  reportingPeriodMtd: "Este mes hasta la fecha",
+  // [Auto-translated] "This quarter to date"
+  reportingPeriodQtd: "Este trimestre hasta la fecha",
+  // [Auto-translated] "This year to date"
+  reportingPeriodYtd: "Este año hasta la fecha",
   // "Hide empty answers"
   hideEmptyAnswers: "Ocultar respuestas vacías",
   // "Show empty answers"
@@ -155,14 +215,18 @@ export var spanishStrings = {
   npsPassives: "Pasivos",
   // [Auto-translated] "Detractors"
   npsDetractors: "Detractores",
-  // [Auto-translated] "Category (X Axis):"
-  axisXSelectorTitle: "Categoría (eje X):",
-  // [Auto-translated] "Legend (Series):"
-  axisYSelectorTitle: "Leyenda (Serie):",
+  // [Auto-translated] "Category (X Axis)"
+  axisXSelectorTitle: "Categoría (eje X)",
+  // [Auto-translated] "Legend (Series)"
+  axisYSelectorTitle: "Leyenda (serie)",
   // [Auto-translated] "Segments:"
   axisXAlternativeSelectorTitle: "Segmentos:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupos:",
+  // [Auto-translated] "Second Y axis"
+  secondYAxisToggleTitle: "Segundo eje Y",
+  // [Auto-translated] "Select a data field..."
+  selectDataField: "Seleccionar un campo de datos...",
   // [Auto-translated] "Default"
   intervalMode_default: "Predeterminado",
   // [Auto-translated] "Decades"
@@ -194,7 +258,27 @@ export var spanishStrings = {
   // [Auto-translated] "Aggregate:"
   selectAggregateText: "Agregado:",
   // [Auto-translated] "Year ends with"
-  groupedYearsAxisTitle: "El año termina con"
+  groupedYearsAxisTitle: "El año termina con",
+  // [Auto-translated] "Series {0}"
+  seriesListSeries: "Temporada {0}",
+  // [Auto-translated] "Values"
+  seriesListValuesLabel: "Valores",
+  // [Auto-translated] "Remove"
+  seriesListRemove: "Eliminar",
+  // [Auto-translated] "Add Series"
+  seriesListAdd: "Añadir series",
+  // [Auto-translated] "Move to second axis"
+  seriesListMoveToSecondAxis: "Pasar al segundo eje",
+  // [Auto-translated] "Move to first axis"
+  seriesListMoveToFirstAxis: "Pasar al primer eje",
+  // [Auto-translated] "Count"
+  aggregationCount: "Conde",
+  // [Auto-translated] "Sum"
+  aggregationSum: "Suma",
+  // [Auto-translated] "Average"
+  aggregationAverage: "Promedio",
+  // [Auto-translated] "Close"
+  close: "Cierre"
 };
 
 setupLocale({ localeCode: "es", strings: spanishStrings, nativeName: "Español" });

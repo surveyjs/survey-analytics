@@ -7,10 +7,14 @@ export var germanStrings = {
   ungroupButton: "Gruppierung aufheben",
   // "Select Me"
   selectButton: "Mich auswählen",
+  // [Auto-translated] "Column reorder"
+  columnReorder: "Säulenumordnung",
   // "Hide column"
   hideColumn: "Spalte ausblenden",
   // "Show column"
   showColumn: "Spalte einblenden",
+  // [Auto-translated] "Columns"
+  columns: "Säulen",
   // "Make column private"
   makePrivateColumn: "Spalte privat machen",
   // "Make column public"
@@ -27,14 +31,18 @@ export var germanStrings = {
   showLabel: "Anzeigen",
   // "entries"
   entriesLabel: "Einträge",
+  // [Auto-translated] "Entries on Page:"
+  entriesOnPageLabel: "Einträge auf der Seite:",
   // "Texts in table"
   visualizer_text: "Texte in Tabellenform",
-  // "Wordcloud"
+  // [Auto-translated] "Wordcloud"
   visualizer_wordcloud: "Wordcloud",
   // "Histogram"
   visualizer_histogram: "Histogramm",
   // "Average"
   visualizer_number: "Durchschnitt",
+  // [Auto-translated] "Average"
+  visualizer_average: "Durchschnitt",
   // "Table"
   visualizer_choices: "Tabelle",
   // "Chart"
@@ -61,6 +69,12 @@ export var germanStrings = {
   chartType_line: "Linie",
   // [Auto-translated] "Radar"
   chartType_radar: "Radar",
+  // [Auto-translated] "Histogram"
+  chartType_histogram: "Histogramm",
+  // [Auto-translated] "Vertical Histogram"
+  chartType_vhistogram: "Vertikales Histogramm",
+  // [Auto-translated] "Stacked Histogram"
+  chartType_stackedhistogram: "Gestapeltes Histogramm",
   // "Hide"
   hideButton: "Ausblenden",
   // "Make private"
@@ -69,7 +83,7 @@ export var germanStrings = {
   makePublicButton: "Öffentlich machen",
   // "Show"
   showButton: "Anzeigen",
-  // "Filter"
+  // [Auto-translated] "Filter"
   filter: "Filter",
   // "Reset Filter"
   resetFilter: "Filter zurücksetzen",
@@ -79,6 +93,12 @@ export var germanStrings = {
   clearButton: "Einstellungen löschen",
   // "Choose question to show..."
   addElement: "Wählen Sie eine Frage, um zu zeigen...",
+  // [Auto-translated] "All questions"
+  allQuestions: "Alle Fragen",
+  // [Auto-translated] "Select all"
+  selectAll: "Alle auswählen",
+  // [Auto-translated] "Clear selection"
+  clearSelection: "Klare Auswahl",
   // "Default Order"
   defaultOrder: "Standardreihenfolge",
   // "Ascending"
@@ -95,14 +115,54 @@ export var germanStrings = {
   showPercentages: "Prozentsätze anzeigen",
   // "Hide percentages"
   hidePercentages: "Prozentsätze ausblenden",
-  // "PDF"
+  // [Auto-translated] "Export As..."
+  exportAs: "Exportieren als...",
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Diagramm als PNG herunterladen",
+  // [Auto-translated] "response(s)"
+  responsesText: "Antwort(en)",
+  // [Auto-translated] "No data"
+  noData: "Keine Daten",
+  // [Auto-translated] "Select date range..."
+  selectDateRange: "Datumsbereich auswählen...",
+  // [Auto-translated] "Include today"
+  includeToday: "Heute einbeziehen",
+  // [Auto-translated] "Custom"
+  reportingPeriodCustom: "Gepflogenheit",
+  // [Auto-translated] "Last 7 days"
+  reportingPeriodLast7days: "Letzte 7 Tage",
+  // [Auto-translated] "Last 14 days"
+  reportingPeriodLast14days: "Letzte 14 Tage",
+  // [Auto-translated] "Last 28 days"
+  reportingPeriodLast28days: "Letzte 28 Tage",
+  // [Auto-translated] "Last 30 days"
+  reportingPeriodLast30days: "Letzte 30 Tage",
+  // [Auto-translated] "Last week (starts Monday)"
+  reportingPeriodLastWeekMon: "Letzte Woche (beginnt am Montag)",
+  // [Auto-translated] "Last week (starts Sunday)"
+  reportingPeriodLastWeekSun: "Letzte Woche (beginnt am Sonntag)",
+  // [Auto-translated] "Last month"
+  reportingPeriodLastMonth: "Letzten Monat",
+  // [Auto-translated] "Last quarter"
+  reportingPeriodLastQuarter: "Letztes Quartal",
+  // [Auto-translated] "Last year"
+  reportingPeriodLastYear: "Letztes Jahr",
+  // [Auto-translated] "This week to date (starts Sunday)"
+  reportingPeriodWtdSun: "Diese Woche bis heute (beginnt am Sonntag)",
+  // [Auto-translated] "This week to date (starts Monday)"
+  reportingPeriodWtdMon: "Diese Woche bis heute (beginnt am Montag)",
+  // [Auto-translated] "This month to date"
+  reportingPeriodMtd: "Bis heute in diesem Monat",
+  // [Auto-translated] "This quarter to date"
+  reportingPeriodQtd: "Dieses Quartal bis heute",
+  // [Auto-translated] "This year to date"
+  reportingPeriodYtd: "Bis heute dieses Jahr",
   // "Hide empty answers"
   hideEmptyAnswers: "Leere Antworten ausblenden",
   // "Show empty answers"
@@ -141,13 +201,13 @@ export var germanStrings = {
   statistics_chart: "Diagramm",
   // "Responses"
   responses: "Antworten",
-  // "NPS"
+  // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"
   visualizer_boolean: "Diagramm",
   // "Table"
   visualizer_options: "Tabelle",
-  // "NPS"
+  // [Auto-translated] "NPS"
   npsScore: "NPS",
   // "Promoters"
   npsPromoters: "Promotoren",
@@ -155,14 +215,18 @@ export var germanStrings = {
   npsPassives: "Passive",
   // "Detractors"
   npsDetractors: "Detraktoren",
-  // [Auto-translated] "Category (X Axis):"
-  axisXSelectorTitle: "Kategorie (X-Achse):",
-  // [Auto-translated] "Legend (Series):"
-  axisYSelectorTitle: "Legende (Serie):",
+  // [Auto-translated] "Category (X Axis)"
+  axisXSelectorTitle: "Kategorie (X-Achse)",
+  // [Auto-translated] "Legend (Series)"
+  axisYSelectorTitle: "Legend (Serie)",
   // [Auto-translated] "Segments:"
   axisXAlternativeSelectorTitle: "Segmente:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Gruppen:",
+  // [Auto-translated] "Second Y axis"
+  secondYAxisToggleTitle: "Zweite Y-Achse",
+  // [Auto-translated] "Select a data field..."
+  selectDataField: "Wähle ein Datenfeld aus...",
   // [Auto-translated] "Default"
   intervalMode_default: "Vorgabe",
   // [Auto-translated] "Decades"
@@ -194,7 +258,27 @@ export var germanStrings = {
   // [Auto-translated] "Aggregate:"
   selectAggregateText: "Aggregat:",
   // [Auto-translated] "Year ends with"
-  groupedYearsAxisTitle: "Das Jahr endet mit"
+  groupedYearsAxisTitle: "Das Jahr endet mit",
+  // [Auto-translated] "Series {0}"
+  seriesListSeries: "Serie {0}",
+  // [Auto-translated] "Values"
+  seriesListValuesLabel: "Werte",
+  // [Auto-translated] "Remove"
+  seriesListRemove: "Entfernen",
+  // [Auto-translated] "Add Series"
+  seriesListAdd: "Serien hinzufügen",
+  // [Auto-translated] "Move to second axis"
+  seriesListMoveToSecondAxis: "Wechsel zur zweiten Achse",
+  // [Auto-translated] "Move to first axis"
+  seriesListMoveToFirstAxis: "Wechsel zur ersten Achse",
+  // [Auto-translated] "Count"
+  aggregationCount: "Graf",
+  // [Auto-translated] "Sum"
+  aggregationSum: "Summe",
+  // [Auto-translated] "Average"
+  aggregationAverage: "Durchschnitt",
+  // [Auto-translated] "Close"
+  close: "Schließen"
 };
 
 setupLocale({ localeCode: "de", strings: germanStrings, nativeName: "Deutsch" });
