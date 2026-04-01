@@ -11,18 +11,77 @@ import { ToggleWidget } from "./utils/toggle";
 import { createDropdown } from "./utils/dropdownWidget";
 import { DocumentHelper } from "./utils/documentHelper";
 
+/**
+ * Defines configuration options for a pivot chart series.
+ *
+ * Assign an array of `IPivotSeriesOptions` objects to the [`visualizer.series`](/dashboard/documentation/api-reference/IPivotVisualizerOptions#series) property to define chart series.
+ *
+ * [View Demo](/dashboard/examples/household-income-analysis-pivot-chart/ (linkStyle))
+ */
 export interface IPivotSeriesOptions {
+  /**
+   * The data field whose values are aggregated and plotted on the Y axis. If not specified, the [`seriesField`](#seriesField) is used.
+   */
   valueField?: string;
+  /**
+   * The data field whose values define individual series and appear in the legend.
+   */
   seriesField?: string;
+  /**
+   * The aggregation function applied to [`valueField`](#valueField).
+   *
+   * Supported values:
+   *
+   * - `"count"` (default)
+   * - `"sum"`
+   */
   aggregation?: "sum" | "count";
+  /**
+   * The Y axis to which this series is bound. Applies only when [`useSecondaryYAxis`](/dashboard/documentation/api-reference/IPivotVisualizerOptions#useSecondaryYAxis) is `true`.
+   *
+   * Supported values:
+   *
+   * - `"primary"`
+   * - `"secondary"`
+   */
   yAxis?: "primary" | "secondary";
 }
 
+/**
+ * Defines configuration options for a pivot chart visualizer.
+ *
+ * [View Demo](/dashboard/examples/household-income-analysis-pivot-chart/ (linkStyle))
+ */
 export interface IPivotVisualizerOptions {
+  /**
+   * An array of survey questions available for use in the pivot chart.
+   *
+   * To populate this array, instantiate a [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model), call its [`getAllQuestions()`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#getAllQuestions) method, optionally filter the result, and assign it to this property.
+   *
+   * [View Demo](/dashboard/examples/household-income-analysis-pivot-chart/ (linkStyle))
+   */
   questions?: Question[] | string[];
-  categoryField?: Question | string;
+  /**
+   * The data field whose values define categories on the X axis.
+   */
+  categoryField?: string;
+  /**
+   * [Series definitions](/dashboard/documentation/api-reference/IPivotSeriesOptions) for the pivot chart.
+   */
   series?: IPivotSeriesOptions[];
+  /**
+   * The maximum number of series per axis.
+   *
+   * Default value: `undefined` (no limit)
+   */
   maxSeriesCount?: number;
+  /**
+   * Specifies whether to display a secondary Y axis.
+   *
+   * Default value: `false`
+   *
+   * If you enable this option, use the [`series[].yAxis`](/dashboard/documentation/api-reference/IPivotSeriesOptions#yAxis) property to assign individual series to the secondary axis.
+   */
   useSecondaryYAxis?: boolean;
 }
 

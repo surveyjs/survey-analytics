@@ -26,7 +26,9 @@ export interface IDashboardOptions extends IVisualizationPanelOptions {
   /**
    * An array of survey questions to visualize.
    *
-   * When specified, the Dashboard generates items automatically according to question configuration. Use the [`items`](#items) array to customize the generated items.
+   * To populate this array, instantiate a [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model), call its [`getAllQuestions()`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#getAllQuestions) method, optionally filter the result, and assign it to this property.
+   *
+   * When `questions` are specified, the Dashboard generates items automatically according to question configuration. Use the [`items`](#items) array to customize the generated items.
    */
   questions?: Question[];
   /**
