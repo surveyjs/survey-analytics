@@ -917,3 +917,55 @@ test("Pivot series saved to state and restored correctly", () => {
   newPivot.setState(state);
   expect(newPivot.series).toEqual(pivot.series);
 });
+
+test("getChartAxisSetting returns empty object when axisDescription is null", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+
+  expect(pivot.getChartAxisSetting(null, [], false)).toEqual({});
+  expect(pivot.getChartAxisSetting(undefined, [], true)).toEqual({});
+});
+
+test("getChartAxisSetting title text is the question title matched by dataName", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+
+  const result = pivot.getChartAxisSetting(
+    { dataName: "question2", valueName: undefined, aggregation: "count" },
+    ["Item 1", "Item 2"],
+    false
+  );
+
+  expect(result.title.text).toBe("Item kind");
+});
+
+test("getChartAxisSetting title text is empty string when question is not found", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+
+  const result = pivot.getChartAxisSetting(
+    { dataName: "nonExistent", valueName: "alsoNonExistent", aggregation: "count" },
+    [],
+    false
+  );
+
+  expect(result.title.text).toBe("");
+});
+
+test("getChartAxisSetting opposite flag is set correctly", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  const axis = { dataName: "question1", valueName: "question1", aggregation: "count" };
+
+  expect(pivot.getChartAxisSetting(axis, [], false).opposite).toBe(false);
+  expect(pivot.getChartAxisSetting(axis, [], true).opposite).toBe(true);
+});
+
+test("getChartAxisSetting seriesName contains provided series labels", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  const labels = ["female", "male"];
+
+  const result = pivot.getChartAxisSetting(
+    { dataName: "question1", valueName: "question1", aggregation: "count" },
+    labels,
+    false
+  );
+
+  expect(result.seriesName).toEqual(["female", "male"]);
+});

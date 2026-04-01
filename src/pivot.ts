@@ -236,13 +236,14 @@ export class PivotModel extends HistogramModel {
     }
   }
 
-  private getChartAxisSetting(axisDescription: IAxisDescription, seriesLabels: Array<string>, opposite: boolean) {
+  public getChartAxisSetting(axisDescription: IAxisDescription, seriesLabels: Array<string>, opposite: boolean) {
     if(!axisDescription) return {};
 
-    const question = this.questions.find(q => q.name === axisDescription.dataName || q.name === axisDescription.valueName);
+    const dataQuestion = this.questions.find(q => q.name === axisDescription.dataName);
+    // const valueQuestion = this.questions.find(q => q.name === axisDescription.valueName);
     const setting = {
       title: {
-        text: question ? this.getTitle(question) : ""
+        text: dataQuestion ? super.getTitle(dataQuestion) : ""
       },
       opposite: opposite,
       seriesName: seriesLabels
