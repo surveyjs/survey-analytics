@@ -1,7 +1,7 @@
 import { Event, Question, SurveyModel, surveyLocalization } from "survey-core";
 import { IsTouch } from "survey-core";
 import { ICalculationResult, VisualizerBase } from "./visualizerBase";
-import { SelectBase, IVisualizerWithSelection } from "./selectBase";
+import { SelectBase, IVisualizerWithSelection, ISelectBaseVisualizerOptions } from "./selectBase";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 import { createCommercialLicenseLink } from "./utils/index";
 import { localization } from "./localizationManager";
@@ -85,7 +85,7 @@ export class PanelElement implements IVisualizerPanelRenderedElement {
 /**
  * Obsolete. Use the [`IDashboardOptions`](https://surveyjs.io/dashboard/documentation/api-reference/idashboardoptions) configuration object and the [`Dashboard`](https://surveyjs.io/dashboard/documentation/api-reference/dashboard) class instead.
  */
-export interface IVisualizationPanelOptions {
+export interface IVisualizationPanelOptions extends ISelectBaseVisualizerOptions {
   // An object named after a question that it configures.
   // questionName: {
   //   intervals: []
