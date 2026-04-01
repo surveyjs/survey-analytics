@@ -122,45 +122,16 @@ export class PivotModel extends HistogramModel {
 
   public get series(): IPivotSeriesOptions[] {
     const mapAxisToSeries = (axis: IAxisDescription, yAxis: "primary" | "secondary"): IPivotSeriesOptions => {
-      const dataName = axis?.dataName;
-      const valueName = axis?.valueName;
-      const axisQuestionName = dataName || valueName;
-      const axisQuestion = this.questions.find((q) => q.name === axisQuestionName);
-      const axisQuestionType = this.getQuestionValueType(axisQuestion);
-
-      if(dataName === undefined && valueName !== undefined) {
-        return {
-          valueField: undefined,
-          seriesField: valueName,
-          aggregation: (axis?.aggregation as "sum" | "count") || "count",
-          yAxis,
-        };
-      }
-
-      if(dataName !== undefined && valueName === undefined) {
-        return {
-          valueField: dataName,
-          seriesField: undefined,
-          aggregation: (axis?.aggregation as "sum" | "count") || "count",
-          yAxis,
-        };
-      }
-
-      if(dataName !== undefined && valueName !== undefined && dataName !== valueName) {
-        return {
-          valueField: dataName,
-          seriesField: valueName,
-          aggregation: (axis?.aggregation as "sum" | "count") || "count",
-          yAxis,
-        };
-      }
-
-      return {
-        valueField: axisQuestionType === "number" ? axisQuestionName : undefined,
-        seriesField: axisQuestionType === "number" ? undefined : axisQuestionName,
+      const series = {
+        seriesField: axis.dataName,
+        valueField: axis.valueName || axis.dataName,
         aggregation: (axis?.aggregation as "sum" | "count") || "count",
         yAxis,
       };
+      if(series.valueField === series.seriesField) {
+        delete series.valueField;
+      }
+      return series;
     };
 
     return [
@@ -240,13 +211,13 @@ export class PivotModel extends HistogramModel {
       };
 
       const axis: IAxisDescription = {
-        dataName: normalizedOption.valueField,
-        valueName: normalizedOption.seriesField,
+        dataName: normalizedOption.seriesField,
+        valueName: normalizedOption.valueField,
         aggregation: normalizedOption.aggregation,
       };
 
-      if(normalizedOption.valueField !== undefined && normalizedOption.seriesField === undefined) {
-        axis.valueName = normalizedOption.valueField;
+      if(normalizedOption.seriesField !== undefined && normalizedOption.valueField === undefined) {
+        axis.valueName = normalizedOption.seriesField;
       }
 
       if(normalizedOption.yAxis === "secondary") {

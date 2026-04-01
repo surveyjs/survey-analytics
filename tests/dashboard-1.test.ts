@@ -51,14 +51,12 @@ test("Create pivot visualizer with axis options", async () => {
     "series": [
       {
         "aggregation": "count",
-        "seriesField": undefined,
-        "valueField": "question1",
+        "seriesField": "question1",
         "yAxis": "primary",
       },
       {
         "aggregation": "count",
-        "seriesField": undefined,
-        "valueField": "question3",
+        "seriesField": "question3",
         "yAxis": "primary",
       },
     ],
@@ -264,8 +262,8 @@ test("IPivotVisualizerOptions passed to pivot", () => {
           categoryField: "question1",
           series: [
             {
-              valueField: "question2",
-              seriesField: "question3",
+              seriesField: "question2",
+              valueField: "question3",
               aggregation: "sum"
             },
             {
@@ -288,8 +286,8 @@ test("IPivotVisualizerOptions passed to pivot", () => {
   expect(pivot.axisXQuestionName).toBe("question1");
 
   expect(pivot.series).toHaveLength(2);
-  expect(pivot.series[0].valueField).toBe("question2");
-  expect(pivot.series[0].seriesField).toBe("question3");
+  expect(pivot.series[0].seriesField).toBe("question2");
+  expect(pivot.series[0].valueField).toBe("question3");
   expect(pivot.series[0].aggregation).toBe("sum");
   expect(pivot.series[0].yAxis).toBe("primary");
   expect(pivot.series[1].seriesField).toBe("question2");
@@ -301,7 +299,7 @@ test("IPivotVisualizerOptions passed to pivot", () => {
   expect(pivot.primaryYAxes[0].valueName).toBe("question3");
   expect(pivot.primaryYAxes[0].aggregation).toBe("sum");
   expect(pivot.secondaryYAxes).toHaveLength(1);
-  expect(pivot.secondaryYAxes[0].dataName).toBeUndefined();
+  expect(pivot.secondaryYAxes[0].dataName).toBe("question2");
   expect(pivot.secondaryYAxes[0].valueName).toBe("question2");
   expect(pivot.secondaryYAxes[0].aggregation).toBe("count");
 });
