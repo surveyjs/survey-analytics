@@ -7,10 +7,14 @@ export var russianStrings = {
   ungroupButton: "Разгруппировать",
   // "Select Me"
   selectButton: "Выбрать",
+  // [Auto-translated] "Column reorder"
+  columnReorder: "Изменение порядка столбцов",
   // "Hide column"
   hideColumn: "Скрыть столбец",
   // "Show column"
   showColumn: "Показать столбец",
+  // [Auto-translated] "Columns"
+  columns: "Колонки",
   // "Make column private"
   makePrivateColumn: "Сделать столбец приватным",
   // "Make column public"
@@ -27,6 +31,8 @@ export var russianStrings = {
   showLabel: "Показать",
   // "entries"
   entriesLabel: "записей",
+  // [Auto-translated] "Entries on Page:"
+  entriesOnPageLabel: "Записи на странице:",
   // "Texts in table"
   visualizer_text: "Таблица",
   // "Wordcloud"
@@ -35,6 +41,8 @@ export var russianStrings = {
   visualizer_histogram: "Гистограмма",
   // "Average"
   visualizer_number: "Среднее значение",
+  // [Auto-translated] "Average"
+  visualizer_average: "Средний показатель",
   // "Table"
   visualizer_choices: "Таблица",
   // "Chart"
@@ -61,6 +69,12 @@ export var russianStrings = {
   chartType_line: "Линия",
   // [Auto-translated] "Radar"
   chartType_radar: "Радар",
+  // [Auto-translated] "Histogram"
+  chartType_histogram: "Гистограмма",
+  // [Auto-translated] "Vertical Histogram"
+  chartType_vhistogram: "Вертикальная гистограмма",
+  // [Auto-translated] "Stacked Histogram"
+  chartType_stackedhistogram: "Сложенная гистограмма",
   // "Hide"
   hideButton: "Скрыть",
   // "Make private"
@@ -79,6 +93,12 @@ export var russianStrings = {
   clearButton: "Очистить",
   // "Choose question to show..."
   addElement: "Выберите вопрос...",
+  // [Auto-translated] "All questions"
+  allQuestions: "Все вопросы",
+  // [Auto-translated] "Select all"
+  selectAll: "Выберите все",
+  // [Auto-translated] "Clear selection"
+  clearSelection: "Чистый выбор",
   // "Default Order"
   defaultOrder: "Порядок по умолчанию",
   // "Ascending"
@@ -95,14 +115,54 @@ export var russianStrings = {
   showPercentages: "Показать проценты",
   // "Hide percentages"
   hidePercentages: "Скрыть проценты",
-  // "PDF"
+  // [Auto-translated] "Export As..."
+  exportAs: "Экспортировать как...",
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Скачать диаграмму в формате PNG",
+  // [Auto-translated] "response(s)"
+  responsesText: "Ответ(ы)",
+  // [Auto-translated] "No data"
+  noData: "Нет данных",
+  // [Auto-translated] "Select date range..."
+  selectDateRange: "Выберите диапазон дат...",
+  // [Auto-translated] "Include today"
+  includeToday: "Включить сегодняшний день",
+  // [Auto-translated] "Custom"
+  reportingPeriodCustom: "Обычай",
+  // [Auto-translated] "Last 7 days"
+  reportingPeriodLast7days: "Последние 7 дней",
+  // [Auto-translated] "Last 14 days"
+  reportingPeriodLast14days: "Последние 14 дней",
+  // [Auto-translated] "Last 28 days"
+  reportingPeriodLast28days: "Последние 28 дней",
+  // [Auto-translated] "Last 30 days"
+  reportingPeriodLast30days: "Последние 30 дней",
+  // [Auto-translated] "Last week (starts Monday)"
+  reportingPeriodLastWeekMon: "На прошлой неделе (начинается в понедельник)",
+  // [Auto-translated] "Last week (starts Sunday)"
+  reportingPeriodLastWeekSun: "На прошлой неделе (начинается в воскресенье)",
+  // [Auto-translated] "Last month"
+  reportingPeriodLastMonth: "В прошлом месяце",
+  // [Auto-translated] "Last quarter"
+  reportingPeriodLastQuarter: "Последняя четверть",
+  // [Auto-translated] "Last year"
+  reportingPeriodLastYear: "В прошлом году",
+  // [Auto-translated] "This week to date (starts Sunday)"
+  reportingPeriodWtdSun: "С этой недели (начинается в воскресенье)",
+  // [Auto-translated] "This week to date (starts Monday)"
+  reportingPeriodWtdMon: "С этой недели на данный момент (начинается в понедельник)",
+  // [Auto-translated] "This month to date"
+  reportingPeriodMtd: "С этого месяца на сегодняшний день",
+  // [Auto-translated] "This quarter to date"
+  reportingPeriodQtd: "За этот квартал на сегодняшний день",
+  // [Auto-translated] "This year to date"
+  reportingPeriodYtd: "С этого года на сегодняшний день",
   // "Hide empty answers"
   hideEmptyAnswers: "Скрыть пустые ответы",
   // "Show empty answers"
@@ -155,14 +215,18 @@ export var russianStrings = {
   npsPassives: "Пассивные способности",
   // [Auto-translated] "Detractors"
   npsDetractors: "Критики",
-  // [Auto-translated] "Category (X Axis):"
-  axisXSelectorTitle: "Категория (ось X):",
-  // [Auto-translated] "Legend (Series):"
-  axisYSelectorTitle: "Легенда (Серия):",
+  // [Auto-translated] "Category (X Axis)"
+  axisXSelectorTitle: "Категория (ось X)",
+  // [Auto-translated] "Legend (Series)"
+  axisYSelectorTitle: "Легенда (серия)",
   // [Auto-translated] "Segments:"
   axisXAlternativeSelectorTitle: "Сегментов:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Группы:",
+  // [Auto-translated] "Second Y axis"
+  secondYAxisToggleTitle: "Вторая ось Y",
+  // [Auto-translated] "Select a data field..."
+  selectDataField: "Выберите поле данных...",
   // [Auto-translated] "Default"
   intervalMode_default: "По умолчанию",
   // [Auto-translated] "Decades"
@@ -194,7 +258,27 @@ export var russianStrings = {
   // [Auto-translated] "Aggregate:"
   selectAggregateText: "Совокупность:",
   // [Auto-translated] "Year ends with"
-  groupedYearsAxisTitle: "Год заканчивается с"
+  groupedYearsAxisTitle: "Год заканчивается с",
+  // [Auto-translated] "Series {0}"
+  seriesListSeries: "Серия {0}",
+  // [Auto-translated] "Values"
+  seriesListValuesLabel: "Ценности",
+  // [Auto-translated] "Remove"
+  seriesListRemove: "Удалить",
+  // [Auto-translated] "Add Series"
+  seriesListAdd: "Серия Add",
+  // [Auto-translated] "Move to second axis"
+  seriesListMoveToSecondAxis: "Переход ко второй оси",
+  // [Auto-translated] "Move to first axis"
+  seriesListMoveToFirstAxis: "Переход к первой оси",
+  // [Auto-translated] "Count"
+  aggregationCount: "Граф",
+  // [Auto-translated] "Sum"
+  aggregationSum: "Сумма",
+  // [Auto-translated] "Average"
+  aggregationAverage: "Средний показатель",
+  // [Auto-translated] "Close"
+  close: "Закрыть"
 };
 
 setupLocale({ localeCode: "ru", strings: russianStrings, nativeName: "Русский" });

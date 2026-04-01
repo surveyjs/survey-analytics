@@ -7,10 +7,14 @@ export var farsiStrings = {
   ungroupButton: "حذف گروه",
   // "Select Me"
   selectButton: "انتخاب",
+  // [Auto-translated] "Column reorder"
+  columnReorder: "بازآرایی ستون ها",
   // "Hide column"
   hideColumn: "مخفی کردن ستون",
   // "Show column"
   showColumn: "نمایش ستون",
+  // [Auto-translated] "Columns"
+  columns: "ستون ها",
   // "Make column private"
   makePrivateColumn: "خصوصی کردن ستون",
   // "Make column public"
@@ -27,6 +31,8 @@ export var farsiStrings = {
   showLabel: "نمایش",
   // "entries"
   entriesLabel: "ورودی",
+  // [Auto-translated] "Entries on Page:"
+  entriesOnPageLabel: "ورودی ها در صفحه:",
   // "Texts in table"
   visualizer_text: "متون در جدول",
   // "Wordcloud"
@@ -35,6 +41,8 @@ export var farsiStrings = {
   visualizer_histogram: "هیستوگرام",
   // "Average"
   visualizer_number: "متوسط",
+  // [Auto-translated] "Average"
+  visualizer_average: "میانگین",
   // "Table"
   visualizer_choices: "جدول",
   // "Chart"
@@ -55,12 +63,18 @@ export var farsiStrings = {
   chartType_scatter: "پراکندگی(Scatter)",
   // "Gauge"
   chartType_gauge: "عقربه ای",
-  // "Bullet"
-  chartType_bullet: "Bullet",
+  // [Auto-translated] "Bullet"
+  chartType_bullet: "بولت",
   // [Auto-translated] "Line"
   chartType_line: "خط",
   // [Auto-translated] "Radar"
   chartType_radar: "رادار",
+  // [Auto-translated] "Histogram"
+  chartType_histogram: "هیستوگرام",
+  // [Auto-translated] "Vertical Histogram"
+  chartType_vhistogram: "هیستوگرام عمودی",
+  // [Auto-translated] "Stacked Histogram"
+  chartType_stackedhistogram: "هیستوگرام انباشته شده",
   // "Hide"
   hideButton: "مخفی",
   // "Make private"
@@ -79,6 +93,12 @@ export var farsiStrings = {
   clearButton: "پاک کردن",
   // "Choose question to show..."
   addElement: "انتخاب سوال برای نمایش...",
+  // [Auto-translated] "All questions"
+  allQuestions: "همه سوالات",
+  // [Auto-translated] "Select all"
+  selectAll: "همه را انتخاب کنید",
+  // [Auto-translated] "Clear selection"
+  clearSelection: "انتخاب شفاف",
   // "Default Order"
   defaultOrder: "ترتیب پیشفرض",
   // "Ascending"
@@ -95,6 +115,8 @@ export var farsiStrings = {
   showPercentages: "نمایش درصد",
   // "Hide percentages"
   hidePercentages: "درصدهای مخفی",
+  // [Auto-translated] "Export As..."
+  exportAs: "صادرات به عنوان...",
   // "PDF"
   pdfDownloadCaption: "پی دی اف",
   // "Excel"
@@ -103,6 +125,44 @@ export var farsiStrings = {
   csvDownloadCaption: "Csv",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "دانلود طرح به عنوان یک فایل PNG",
+  // [Auto-translated] "response(s)"
+  responsesText: "پاسخ(ها)",
+  // [Auto-translated] "No data"
+  noData: "داده ای وجود ندارد",
+  // [Auto-translated] "Select date range..."
+  selectDateRange: "بازه زمانی را انتخاب کنید...",
+  // [Auto-translated] "Include today"
+  includeToday: "امروز را شامل کنید",
+  // [Auto-translated] "Custom"
+  reportingPeriodCustom: "عرف",
+  // [Auto-translated] "Last 7 days"
+  reportingPeriodLast7days: "۷ روز آخر",
+  // [Auto-translated] "Last 14 days"
+  reportingPeriodLast14days: "۱۴ روز آخر",
+  // [Auto-translated] "Last 28 days"
+  reportingPeriodLast28days: "۲۸ روز آخر",
+  // [Auto-translated] "Last 30 days"
+  reportingPeriodLast30days: "۳۰ روز آخر",
+  // [Auto-translated] "Last week (starts Monday)"
+  reportingPeriodLastWeekMon: "هفته گذشته (از دوشنبه شروع می شود)",
+  // [Auto-translated] "Last week (starts Sunday)"
+  reportingPeriodLastWeekSun: "هفته گذشته (از یکشنبه شروع می شود)",
+  // [Auto-translated] "Last month"
+  reportingPeriodLastMonth: "ماه گذشته",
+  // [Auto-translated] "Last quarter"
+  reportingPeriodLastQuarter: "سه ماهه آخر",
+  // [Auto-translated] "Last year"
+  reportingPeriodLastYear: "سال گذشته",
+  // [Auto-translated] "This week to date (starts Sunday)"
+  reportingPeriodWtdSun: "این هفته تا به امروز (از یکشنبه شروع می شود)",
+  // [Auto-translated] "This week to date (starts Monday)"
+  reportingPeriodWtdMon: "این هفته تا به امروز (از دوشنبه شروع می شود)",
+  // [Auto-translated] "This month to date"
+  reportingPeriodMtd: "این ماه تا به امروز",
+  // [Auto-translated] "This quarter to date"
+  reportingPeriodQtd: "این سه ماهه تا به امروز",
+  // [Auto-translated] "This year to date"
+  reportingPeriodYtd: "امسال تا به امروز",
   // "Hide empty answers"
   hideEmptyAnswers: "مخفی کردن پاسخهای خالی",
   // "Show empty answers"
@@ -155,14 +215,18 @@ export var farsiStrings = {
   npsPassives: "منفعل ها",
   // [Auto-translated] "Detractors"
   npsDetractors: "بدهیدان",
-  // [Auto-translated] "Category (X Axis):"
-  axisXSelectorTitle: "دسته (محور X):",
-  // [Auto-translated] "Legend (Series):"
-  axisYSelectorTitle: "افسانه (سری):",
+  // [Auto-translated] "Category (X Axis)"
+  axisXSelectorTitle: "دسته بندی (محور X)",
+  // [Auto-translated] "Legend (Series)"
+  axisYSelectorTitle: "افسانه (مجموعه)",
   // [Auto-translated] "Segments:"
   axisXAlternativeSelectorTitle: "بخش:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "گروه:",
+  // [Auto-translated] "Second Y axis"
+  secondYAxisToggleTitle: "محور دوم Y",
+  // [Auto-translated] "Select a data field..."
+  selectDataField: "یک فیلد داده انتخاب کنید...",
   // [Auto-translated] "Default"
   intervalMode_default: "پیش فرض",
   // [Auto-translated] "Decades"
@@ -194,7 +258,27 @@ export var farsiStrings = {
   // [Auto-translated] "Aggregate:"
   selectAggregateText: "مجموع:",
   // [Auto-translated] "Year ends with"
-  groupedYearsAxisTitle: "سال به پایان می رسد با"
+  groupedYearsAxisTitle: "سال به پایان می رسد با",
+  // [Auto-translated] "Series {0}"
+  seriesListSeries: "سری {0}",
+  // [Auto-translated] "Values"
+  seriesListValuesLabel: "ارزش ها",
+  // [Auto-translated] "Remove"
+  seriesListRemove: "حذف",
+  // [Auto-translated] "Add Series"
+  seriesListAdd: "سری Add",
+  // [Auto-translated] "Move to second axis"
+  seriesListMoveToSecondAxis: "حرکت به محور دوم",
+  // [Auto-translated] "Move to first axis"
+  seriesListMoveToFirstAxis: "حرکت به محور اول",
+  // [Auto-translated] "Count"
+  aggregationCount: "کنت",
+  // [Auto-translated] "Sum"
+  aggregationSum: "جمع",
+  // [Auto-translated] "Average"
+  aggregationAverage: "میانگین",
+  // [Auto-translated] "Close"
+  close: "بسته شدن"
 };
 
 setupLocale({ localeCode: "fa", strings: farsiStrings, nativeName: "فارسی" });

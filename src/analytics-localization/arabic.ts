@@ -7,10 +7,14 @@ export var arabicStrings = {
   ungroupButton: "تم التحديث من خلالى",
   // "Select Me"
   selectButton: "اختر",
+  // [Auto-translated] "Column reorder"
+  columnReorder: "إعادة ترتيب الأعمدة",
   // "Hide column"
   hideColumn: "اخفاء العمود",
   // "Show column"
   showColumn: "اظهار",
+  // [Auto-translated] "Columns"
+  columns: "الأعمدة",
   // "Make column private"
   makePrivateColumn: "أجعل العمود خاص",
   // "Make column public"
@@ -27,6 +31,8 @@ export var arabicStrings = {
   showLabel: "اظهار",
   // "entries"
   entriesLabel: "مدخلات",
+  // [Auto-translated] "Entries on Page:"
+  entriesOnPageLabel: "المشاركات على الصفحة:",
   // "Texts in table"
   visualizer_text: "جداول",
   // "Wordcloud"
@@ -35,6 +41,8 @@ export var arabicStrings = {
   visualizer_histogram: "الرسم البياني",
   // "Average"
   visualizer_number: "متوسط",
+  // [Auto-translated] "Average"
+  visualizer_average: "المتوسط",
   // "Table"
   visualizer_choices: "جدول",
   // "Chart"
@@ -61,6 +69,12 @@ export var arabicStrings = {
   chartType_line: "سطر",
   // [Auto-translated] "Radar"
   chartType_radar: "رادار",
+  // [Auto-translated] "Histogram"
+  chartType_histogram: "مخطط التكرار الوظيفي",
+  // [Auto-translated] "Vertical Histogram"
+  chartType_vhistogram: "المخطط التكراري العمودي",
+  // [Auto-translated] "Stacked Histogram"
+  chartType_stackedhistogram: "مخطط التكرار المكدس",
   // "Hide"
   hideButton: "اخفاء",
   // "Make private"
@@ -79,6 +93,12 @@ export var arabicStrings = {
   clearButton: "مسح",
   // "Choose question to show..."
   addElement: "اختر سؤالاً للعرض ...",
+  // [Auto-translated] "All questions"
+  allQuestions: "جميع الأسئلة",
+  // [Auto-translated] "Select all"
+  selectAll: "اختر الجميع",
+  // [Auto-translated] "Clear selection"
+  clearSelection: "اختيار واضح",
   // "Default Order"
   defaultOrder: "الترتيب الافتراضي",
   // "Ascending"
@@ -95,14 +115,54 @@ export var arabicStrings = {
   showPercentages: "عرض النسب المئوية",
   // "Hide percentages"
   hidePercentages: "إخفاء النسب",
-  // "PDF"
+  // [Auto-translated] "Export As..."
+  exportAs: "تصدير ك...",
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
-  xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "Excel"
+  xlsxDownloadCaption: "إكسل",
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "تنزيل بصيغة png",
+  // [Auto-translated] "response(s)"
+  responsesText: "الردود (الردود)",
+  // [Auto-translated] "No data"
+  noData: "لا توجد بيانات",
+  // [Auto-translated] "Select date range..."
+  selectDateRange: "اختر نطاق التاريخ...",
+  // [Auto-translated] "Include today"
+  includeToday: "أدرج اليوم",
+  // [Auto-translated] "Custom"
+  reportingPeriodCustom: "العرف",
+  // [Auto-translated] "Last 7 days"
+  reportingPeriodLast7days: "آخر 7 أيام",
+  // [Auto-translated] "Last 14 days"
+  reportingPeriodLast14days: "آخر 14 يوما",
+  // [Auto-translated] "Last 28 days"
+  reportingPeriodLast28days: "آخر 28 يوما",
+  // [Auto-translated] "Last 30 days"
+  reportingPeriodLast30days: "آخر 30 يوما",
+  // [Auto-translated] "Last week (starts Monday)"
+  reportingPeriodLastWeekMon: "الأسبوع الماضي (يبدأ يوم الاثنين)",
+  // [Auto-translated] "Last week (starts Sunday)"
+  reportingPeriodLastWeekSun: "الأسبوع الماضي (يبدأ يوم الأحد)",
+  // [Auto-translated] "Last month"
+  reportingPeriodLastMonth: "الشهر الماضي",
+  // [Auto-translated] "Last quarter"
+  reportingPeriodLastQuarter: "الربع الأخير",
+  // [Auto-translated] "Last year"
+  reportingPeriodLastYear: "العام الماضي",
+  // [Auto-translated] "This week to date (starts Sunday)"
+  reportingPeriodWtdSun: "هذا الأسبوع حتى الآن (يبدأ يوم الأحد)",
+  // [Auto-translated] "This week to date (starts Monday)"
+  reportingPeriodWtdMon: "هذا الأسبوع حتى الآن (يبدأ يوم الاثنين)",
+  // [Auto-translated] "This month to date"
+  reportingPeriodMtd: "هذا الشهر حتى الآن",
+  // [Auto-translated] "This quarter to date"
+  reportingPeriodQtd: "هذا الربع حتى الآن",
+  // [Auto-translated] "This year to date"
+  reportingPeriodYtd: "من هذا العام حتى الآن",
   // "Hide empty answers"
   hideEmptyAnswers: "إخفاء الإجابات الفارغة",
   // "Show empty answers"
@@ -155,14 +215,18 @@ export var arabicStrings = {
   npsPassives: "سلبيات",
   // [Auto-translated] "Detractors"
   npsDetractors: "المنتقدين",
-  // [Auto-translated] "Category (X Axis):"
-  axisXSelectorTitle: "الفئة (المحور X):",
-  // [Auto-translated] "Legend (Series):"
-  axisYSelectorTitle: "أسطورة (سلسلة):",
+  // [Auto-translated] "Category (X Axis)"
+  axisXSelectorTitle: "الفئة (المحور العاشر)",
+  // [Auto-translated] "Legend (Series)"
+  axisYSelectorTitle: "الأسطورة (السلسلة)",
   // [Auto-translated] "Segments:"
   axisXAlternativeSelectorTitle: "قطاعات:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "المجموعات:",
+  // [Auto-translated] "Second Y axis"
+  secondYAxisToggleTitle: "المحور الثاني Y",
+  // [Auto-translated] "Select a data field..."
+  selectDataField: "اختر حقل بيانات...",
   // [Auto-translated] "Default"
   intervalMode_default: "افتراضي",
   // [Auto-translated] "Decades"
@@ -194,7 +258,27 @@ export var arabicStrings = {
   // [Auto-translated] "Aggregate:"
   selectAggregateText: "تجميع:",
   // [Auto-translated] "Year ends with"
-  groupedYearsAxisTitle: "ينتهي العام ب"
+  groupedYearsAxisTitle: "ينتهي العام ب",
+  // [Auto-translated] "Series {0}"
+  seriesListSeries: "السلسلة {0}",
+  // [Auto-translated] "Values"
+  seriesListValuesLabel: "القيم",
+  // [Auto-translated] "Remove"
+  seriesListRemove: "إزالة",
+  // [Auto-translated] "Add Series"
+  seriesListAdd: "سلسلة إضافة",
+  // [Auto-translated] "Move to second axis"
+  seriesListMoveToSecondAxis: "الانتقال إلى المحور الثاني",
+  // [Auto-translated] "Move to first axis"
+  seriesListMoveToFirstAxis: "الانتقال إلى المحور الأول",
+  // [Auto-translated] "Count"
+  aggregationCount: "الكونت",
+  // [Auto-translated] "Sum"
+  aggregationSum: "المجموع",
+  // [Auto-translated] "Average"
+  aggregationAverage: "المتوسط",
+  // [Auto-translated] "Close"
+  close: "إغلاق"
 };
 
 setupLocale({ localeCode: "ar", strings: arabicStrings, nativeName: "العربية" });
