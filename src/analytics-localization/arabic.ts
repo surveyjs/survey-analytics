@@ -223,7 +223,7 @@ export var arabicStrings = {
   axisXAlternativeSelectorTitle: "قطاعات:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "المجموعات:",
-  // [Auto-translated] "Second Y axis"
+  // [Auto-translated] "Secondary Y axis"
   secondYAxisToggleTitle: "المحور الثاني Y",
   // [Auto-translated] "Select a data field..."
   selectDataField: "اختر حقل بيانات...",

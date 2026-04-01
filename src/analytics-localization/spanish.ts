@@ -223,7 +223,7 @@ export var spanishStrings = {
   axisXAlternativeSelectorTitle: "Segmentos:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupos:",
-  // [Auto-translated] "Second Y axis"
+  // [Auto-translated] "Secondary Y axis"
   secondYAxisToggleTitle: "Segundo eje Y",
   // [Auto-translated] "Select a data field..."
   selectDataField: "Seleccionar un campo de datos...",

@@ -223,7 +223,7 @@ export var dutchStrings = {
   axisXAlternativeSelectorTitle: "Segmenten:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Groepen:",
-  // [Auto-translated] "Second Y axis"
+  // [Auto-translated] "Secondary Y axis"
   secondYAxisToggleTitle: "Tweede Y-as",
   // [Auto-translated] "Select a data field..."
   selectDataField: "Selecteer een dataveld...",

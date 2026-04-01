@@ -223,7 +223,7 @@ export var norwegianStrings = {
   axisXAlternativeSelectorTitle: "Segmenter:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupper:",
-  // [Auto-translated] "Second Y axis"
+  // [Auto-translated] "Secondary Y axis"
   secondYAxisToggleTitle: "Andre Y-akse",
   // [Auto-translated] "Select a data field..."
   selectDataField: "Velg et datafelt...",

@@ -113,7 +113,7 @@ export var englishStrings = {
   axisYSelectorTitle: "Legend (Series)",
   axisXAlternativeSelectorTitle: "Segments:",
   axisYAlternativeSelectorTitle: "Groups:",
-  secondYAxisToggleTitle: "Second Y axis",
+  secondYAxisToggleTitle: "Secondary Y axis",
   selectDataField: "Select a data field...",
   intervalMode_default: "Default",
   intervalMode_decades: "Decades",

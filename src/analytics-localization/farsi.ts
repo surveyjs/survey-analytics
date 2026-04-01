@@ -223,7 +223,7 @@ export var farsiStrings = {
   axisXAlternativeSelectorTitle: "بخش:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "گروه:",
-  // [Auto-translated] "Second Y axis"
+  // [Auto-translated] "Secondary Y axis"
   secondYAxisToggleTitle: "محور دوم Y",
   // [Auto-translated] "Select a data field..."
   selectDataField: "یک فیلد داده انتخاب کنید...",

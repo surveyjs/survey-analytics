@@ -223,7 +223,7 @@ export var japaneseStrings = {
   axisXAlternativeSelectorTitle: "セグメント：",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "グループ：",
-  // [Auto-translated] "Second Y axis"
+  // [Auto-translated] "Secondary Y axis"
   secondYAxisToggleTitle: "第二のY軸",
   // [Auto-translated] "Select a data field..."
   selectDataField: "データフィールドを選択してください...",

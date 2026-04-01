@@ -223,7 +223,7 @@ export var swedishStrings = {
   axisXAlternativeSelectorTitle: "Segment:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupper:",
-  // [Auto-translated] "Second Y axis"
+  // [Auto-translated] "Secondary Y axis"
   secondYAxisToggleTitle: "Andra Y-axeln",
   // [Auto-translated] "Select a data field..."
   selectDataField: "Välj ett datafält...",

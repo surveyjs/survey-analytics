@@ -223,7 +223,7 @@ export var plStrings = {
   axisXAlternativeSelectorTitle: "Segmenty:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupy:",
-  // [Auto-translated] "Second Y axis"
+  // [Auto-translated] "Secondary Y axis"
   secondYAxisToggleTitle: "Druga oś Y",
   // [Auto-translated] "Select a data field..."
   selectDataField: "Wybierz pole danych...",

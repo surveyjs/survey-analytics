@@ -223,7 +223,7 @@ export var russianStrings = {
   axisXAlternativeSelectorTitle: "Сегментов:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Группы:",
-  // [Auto-translated] "Second Y axis"
+  // [Auto-translated] "Secondary Y axis"
   secondYAxisToggleTitle: "Вторая ось Y",
   // [Auto-translated] "Select a data field..."
   selectDataField: "Выберите поле данных...",

@@ -223,7 +223,7 @@ export var finnishStrings = {
   axisXAlternativeSelectorTitle: "Segmentit:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Ryhmät:",
-  // [Auto-translated] "Second Y axis"
+  // [Auto-translated] "Secondary Y axis"
   secondYAxisToggleTitle: "Toinen Y-akseli",
   // [Auto-translated] "Select a data field..."
   selectDataField: "Valitse tietokenttä...",

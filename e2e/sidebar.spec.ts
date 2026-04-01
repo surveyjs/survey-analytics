@@ -25,7 +25,7 @@ test("Series editor", async ({ page }) => {
   await page.getByText("Add Series").first().click();
   await compareScreenshot(page, seriesList.first(), "primary-series-two-series.png");
 
-  await page.getByText("Second Y axis").click();
+  await page.getByText("Secondary Y axis").click();
   await compareScreenshot(page, seriesList.first(), "primary-series-if-secondary-series-add.png");
   await compareScreenshot(page, seriesList.nth(1), "secondary-series-one-series.png");
 

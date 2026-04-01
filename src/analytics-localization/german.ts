@@ -223,7 +223,7 @@ export var germanStrings = {
   axisXAlternativeSelectorTitle: "Segmente:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Gruppen:",
-  // [Auto-translated] "Second Y axis"
+  // [Auto-translated] "Secondary Y axis"
   secondYAxisToggleTitle: "Zweite Y-Achse",
   // [Auto-translated] "Select a data field..."
   selectDataField: "Wähle ein Datenfeld aus...",
