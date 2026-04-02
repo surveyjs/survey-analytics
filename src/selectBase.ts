@@ -402,6 +402,21 @@ export class SelectBase
     return this.selectedItem;
   }
 
+  protected onDataChanged(): void {
+    const filter = this.dataProvider.getFilters().find(f => f.field === this.name);
+    const newFilterValue = filter?.value;
+    const currentSelectionValue = this.selectedItem?.value;
+    if(newFilterValue !== currentSelectionValue) {
+      if(newFilterValue !== undefined) {
+        const choices = (this.question as QuestionSelectBase).visibleChoices;
+        this.selectedItem = ItemValue.getItemByValue(choices, newFilterValue) ?? new ItemValue(newFilterValue);
+      } else {
+        this.selectedItem = undefined;
+      }
+    }
+    super.onDataChanged();
+  }
+
   /**
    * Gets and sets whether chart should show percentages only.
    */

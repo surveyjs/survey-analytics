@@ -1,4 +1,4 @@
-import { Event, Question, SurveyModel, surveyLocalization, ItemValue } from "survey-core";
+import { Event, Question, SurveyModel, surveyLocalization } from "survey-core";
 import { IsTouch } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection } from "./selectBase";
@@ -1036,29 +1036,6 @@ export class VisualizationPanel extends VisualizerBase {
         this.dataProvider.setFilter(this.dataPath, undefined);
       }
     }
-    this.syncFilterToVisualizer(questionName, selectedValue);
-  }
-
-  private syncFilterToVisualizer(questionName: string, selectedValue: any) {
-    const visualizer = this.getVisualizer(questionName);
-    if(!visualizer || !visualizer.supportSelection) return;
-
-    const vizWithSelection = <IVisualizerWithSelection>(<any>visualizer);
-    const currentSelectionValue = vizWithSelection.selection?.value;
-    const normalizedSelected = selectedValue !== null ? selectedValue : undefined;
-    if(currentSelectionValue === normalizedSelected) return;
-
-    const savedCallback = vizWithSelection.onDataItemSelected;
-    vizWithSelection.onDataItemSelected = undefined;
-    if(normalizedSelected !== undefined) {
-      const choices: Array<ItemValue> = (visualizer.question as any).visibleChoices || (visualizer.question as any).choices || [];
-      const item = ItemValue.getItemByValue(choices, normalizedSelected) ?? new ItemValue(normalizedSelected);
-      vizWithSelection.setSelection(item);
-    } else {
-      vizWithSelection.setSelection(undefined);
-    }
-    vizWithSelection.onDataItemSelected = savedCallback;
-    visualizer.updateToolbar();
   }
 
   public getState(): IState {
