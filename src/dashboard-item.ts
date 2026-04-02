@@ -15,7 +15,7 @@ export interface IDashboardItemOptions {
   /**
    * A unique identifier for the item.
    */
-  name: string;
+  name?: string;
   /**
    * The data field the item is bound to. If not specified, the [`name`](#name) value is used.
    */
@@ -40,6 +40,7 @@ export interface IDashboardItemOptions {
    * - [`"choices"`](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table)
    * - [`"nps"`](https://surveyjs.io/dashboard/documentation/chart-types#nps-visualizer)
    * - `"card"`
+  * - `"responsecount"`
    * - `"pivot"`
    *
    * To prevent end users from changing the item type at runtime, set [`allowChangeType`](#allowChangeType) to `false`.
@@ -117,7 +118,7 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
   }
 
   constructor(public readonly options: IDashboardItemOptions, public question?: Question) {
-    super(options?.name || question?.name || options?.dataField, question?.title || options?.title);
+    super(options?.name || question?.name || options?.dataField || options?.type || "", question?.title || options?.title);
     this._initialAvailableTypes = options?.availableTypes?.slice();
     this.initialize();
   }

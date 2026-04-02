@@ -227,6 +227,8 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
       dashboardItem = new DashboardItem(item as any, item.question);
     } else if(item instanceof Question) {
       dashboardItem = new DashboardItem({} as any, item);
+    } else {
+      dashboardItem = new DashboardItem(item as IDashboardItemOptions);
     }
     if(!!dashboardItem) {
       this.addElement(dashboardItem);

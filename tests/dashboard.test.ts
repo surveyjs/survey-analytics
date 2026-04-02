@@ -185,6 +185,58 @@ test("Create number visualizer from definition", async () => {
   expect(dashboard.visibleElements[0].name).toEqual(itemDefinition.name);
 });
 
+test("Create responsecount visualizer from string item", async () => {
+  const data = [{ q1: "a" }, { q1: "b" }, { q1: "c" }];
+  const dashboard = new Dashboard({ items: ["responsecount"], data });
+
+  expect(dashboard.items.length).toBe(1);
+  expect(dashboard.items[0].name).toBe("responsecount");
+  expect(dashboard.items[0].dataField).toBe("responsecount");
+  expect(dashboard.items[0].visualizerType).toBe("responsecount");
+
+  const visualizer = dashboard.visualizers[0] as NumberModel;
+  const result = await visualizer.getCalculatedValues();
+
+  expect(visualizer.type).toBe("responsecount");
+  expect(visualizer.displayValueName).toBe("count");
+  expect(result.data[0][result.values.indexOf("count")]).toBe(3);
+});
+
+test("Create responsecount visualizer from descriptor with title", async () => {
+  const data = [{}, {}];
+  const dashboard = new Dashboard({
+    items: [{ type: "responsecount", title: "Total response count" }],
+    data
+  });
+
+  expect(dashboard.items.length).toBe(1);
+  expect(dashboard.items[0].name).toBe("responsecount");
+  expect(dashboard.items[0].title).toBe("Total response count");
+
+  const visualizer = dashboard.visualizers[0] as NumberModel;
+  const result = await visualizer.getCalculatedValues();
+  expect(result.data[0][result.values.indexOf("count")]).toBe(2);
+});
+
+test("Dashboard.addItem supports responsecount descriptor", async () => {
+  const data = [{}, {}, {}];
+  const dashboard = new Dashboard({ items: [], data });
+
+  const added = dashboard.addItem({
+    type: "responsecount",
+    title: "Total response count"
+  });
+
+  expect(added).toBeDefined();
+  expect(dashboard.items.length).toBe(1);
+  expect(dashboard.items[0].name).toBe("responsecount");
+  expect(dashboard.items[0].title).toBe("Total response count");
+
+  const visualizer = dashboard.visualizers[0] as NumberModel;
+  const result = await visualizer.getCalculatedValues();
+  expect(result.data[0][result.values.indexOf("count")]).toBe(3);
+});
+
 test("Options passed to root panel and visualizer", async () => {
   const itemDefinition: IDashboardItemOptions = {
     type: "gauge",

@@ -734,6 +734,10 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
           } else {
             // If no matching question is found, create a simple visualizer description
             // or throw an error?
+            // This code was added to support responsecount visualizer
+            const descriptor = { name: element, dataField: element, type: element } as any;
+            el = this.createElement(descriptor, undefined);
+            el.setState(descriptor);
           }
         } else {
           const descriptor = Object.assign({}, element) as any;

@@ -87,4 +87,17 @@ export class CardVisualizer extends NumberModel {
   }
 }
 
+export class ResponseCountVisualizer extends CardVisualizer {
+  constructor(
+    question: Question,
+    data: Array<{ [index: string]: any }>,
+    options?: Object,
+    type?: string
+  ) {
+    super(question, data, options, type || "responsecount");
+    this.displayValueName = "count";
+  }
+}
+
 VisualizationManager.registerVisualizer("card", CardVisualizer, undefined, "card");
+VisualizationManager.registerVisualizer("responsecount", ResponseCountVisualizer, undefined, "responsecount");
