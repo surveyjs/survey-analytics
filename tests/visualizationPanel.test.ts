@@ -1028,3 +1028,33 @@ test("allowChangeVisualizerType", () => {
   expect(visPanel["visualizers"][1].type).toBe("alternative");
   expect(visPanel["visualizers"][1]["toolbarItemCreators"]["changeVisualizer"]).toBeDefined();
 });
+
+test("hideEmptyAnswers=true causes hard update on data change", () => {
+  PostponeHelper.postponeFunction = ((callback: () => void) => callback()) as any;
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "question1",
+      },
+    ],
+  };
+  const data = [{ question1: "testValue" }];
+  const survey = new SurveyModel(json);
+  const vis = new VisualizationPanel(survey.getAllQuestions(), data, {
+    allowDynamicLayout: false,
+  });
+  const selectBaseVisualizer = vis.getVisualizer("question1") as SelectBase;
+  selectBaseVisualizer["_hideEmptyAnswers"] = true;
+  const destroyContentSpy = jest.spyOn(selectBaseVisualizer, "destroyContent");
+  const renderContentSpy = jest.spyOn(selectBaseVisualizer, "renderContent");
+
+  vis.render(document.createElement("div"));
+  expect(destroyContentSpy).toHaveBeenCalledTimes(0);
+  expect(renderContentSpy).toHaveBeenCalledTimes(1);
+
+  vis.updateData([]);
+  // With hideEmptyAnswers=true, hard update is triggered: destroyContent + renderContent
+  expect(destroyContentSpy).toHaveBeenCalledTimes(1);
+  expect(renderContentSpy).toHaveBeenCalledTimes(2);
+});

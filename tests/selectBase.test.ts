@@ -1,6 +1,7 @@
 import { QuestionDropdownModel, ItemValue, QuestionImagePickerModel, SurveyModel, ComponentCollection, QuestionRatingModel } from "survey-core";
 import { SelectBase, hideEmptyAnswersInData } from "../src/selectBase";
 import { VisualizationManager } from "../src/visualizationManager";
+import { DataProvider } from "../src/dataProvider";
 
 let selectBase: SelectBase;
 let choices = [
@@ -168,6 +169,56 @@ test("hide empty items", async () => {
   expect(await selectBase.getAnswersData()).toEqual({ "colors": ["#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198", "#86e1fb", "#3999fb", "#ff6771", "#1eb496", "#ffc152", "#aba1ff", "#7d8da5", "#4ec46c", "#cf37a6", "#4e6198"], "datasets": [[2, 1, 0, 1, 0, 0].reverse()], "labels": ["father_text", "mother_text", "brother_text", "sister_text", "son_text", "daughter_text"].reverse(), "seriesLabels": [], "texts": [[2, 1, 0, 1, 0, 0].reverse()] },);
   selectBase.hideEmptyAnswers = true;
   expect(await selectBase.getAnswersData()).toEqual({ "colors": ["#ff6771", "#ffc152", "#aba1ff"], "datasets": [[2, 1, 1].reverse()], "labels": ["father_text", "mother_text", "sister_text"].reverse(), "texts": [[2, 1, 1].reverse()], "seriesLabels": [] });
+});
+
+test("hideEmptyAnswers applied after setFilter", async () => {
+  const question = new QuestionDropdownModel("q1");
+  question.choices = [
+    { value: "father", text: "father_text" },
+    { value: "mother", text: "mother_text" },
+    { value: "sister", text: "sister_text" },
+  ];
+  const data = [
+    { q1: "father", category: "A" },
+    { q1: "father", category: "A" },
+    { q1: "mother", category: "B" },
+    { q1: "sister", category: "A" },
+  ];
+  const dataProvider = new DataProvider(data);
+  const sb = new SelectBase(question, data, { dataProvider });
+
+  sb.hideEmptyAnswers = true;
+  dataProvider.setFilter("category", "B");
+
+  const result = await sb.getAnswersData();
+  // After filter: father=0, mother=1, sister=0; with hideEmptyAnswers only mother_text shown
+  expect(result.labels).toEqual(["mother_text"]);
+  expect(result.datasets[0]).toEqual([1]);
+});
+
+test("isSupportSoftUpdateContent returns false when hideEmptyAnswers is true", () => {
+  expect(selectBase["isSupportSoftUpdateContent"]()).toBe(true);
+  selectBase["_hideEmptyAnswers"] = true;
+  expect(selectBase["isSupportSoftUpdateContent"]()).toBe(false);
+  selectBase["_hideEmptyAnswers"] = false;
+  expect(selectBase["isSupportSoftUpdateContent"]()).toBe(true);
+});
+
+test("onDataChanged calls updateEmptyAnswersBtn", () => {
+  const question = new QuestionDropdownModel("q1");
+  question.choices = [{ value: "a", text: "A" }, { value: "b", text: "B" }];
+  const sb = new SelectBase(question, [], { allowHideEmptyAnswers: true });
+  // Force toolbar creation so emptyAnswersBtn is populated
+  const toolbarContainer = document.createElement("div");
+  sb["createToolbarItems"](toolbarContainer);
+
+  sb.hideEmptyAnswers = true;
+  expect(sb["emptyAnswersBtn"].innerText).toBe("Show empty answers");
+
+  // Simulate data change (e.g. setFilter)
+  sb["_hideEmptyAnswers"] = false; // manually change flag without triggering setter
+  sb["onDataChanged"](); // onDataChanged should sync button to current flag
+  expect(sb["emptyAnswersBtn"].innerText).toBe("Hide empty answers");
 });
 
 test("change answers order", async () => {

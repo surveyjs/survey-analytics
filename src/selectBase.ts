@@ -356,8 +356,13 @@ export class SelectBase
     return resultValues.map((value: any) => ItemValue.getTextOrHtmlByValue(selectBaseQuestion.choices, value)).join(", ");
   }
 
+  protected onDataChanged(): void {
+    super.onDataChanged();
+    this.updateEmptyAnswersBtn();
+  }
+
   protected isSupportSoftUpdateContent(): boolean {
-    return true;
+    return !this._hideEmptyAnswers;
   }
 
   protected softUpdateContent(): void {
