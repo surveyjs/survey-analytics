@@ -786,3 +786,22 @@ test("Dashboard filter by date range", () => {
     }
   ]);
 });
+
+test("showToolbar: false option disables the toolbar", () => {
+  const json = {
+    elements: [
+      { type: "text", name: "question1" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+
+  const dashboardDefault = new Dashboard({ questions: survey.getAllQuestions() });
+  expect(dashboardDefault.showToolbar).toBe(true);
+
+  const dashboard = new Dashboard({ questions: survey.getAllQuestions(), showToolbar: false });
+  expect(dashboard.showToolbar).toBe(false);
+
+  const container = document.createElement("div");
+  dashboard.render(container);
+  expect(container.querySelector(".sa-toolbar")).toBeNull();
+});

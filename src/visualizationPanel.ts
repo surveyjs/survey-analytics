@@ -202,7 +202,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   ) {
     super(null, data, options, type || "panel");
     this.loadingData = false;
-    this.showToolbar = _isRoot;
+    this.showToolbar = options.showToolbar !== undefined ? options.showToolbar : _isRoot;
     if(this.options.survey) {
       localization.currentLocale = this.options.survey.locale;
     }
