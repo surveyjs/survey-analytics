@@ -413,6 +413,7 @@ export class SelectBase
       } else {
         this.selectedItem = undefined;
       }
+      this.updateToolbar();
     }
     super.onDataChanged();
   }

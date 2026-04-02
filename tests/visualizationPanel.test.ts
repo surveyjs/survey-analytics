@@ -406,6 +406,34 @@ test("setFilter syncs selection state in SelectBase visualizer", () => {
   expect(visualizer.selection).toBeUndefined();
 });
 
+test("Clear filter button via setSelection clears dataProvider filter", () => {
+  const json = {
+    elements: [
+      {
+        name: "q1",
+        type: "dropdown",
+        choices: ["father", "mother", "sister"],
+      },
+    ],
+  };
+  const data = [
+    { q1: "father" },
+    { q1: "mother" },
+    { q1: "sister" },
+  ];
+  const survey = new SurveyModel(json);
+  const panel = new VisualizationPanel(survey.getAllQuestions(), data, { allowDynamicLayout: false });
+  panel.render(document.createElement("div"));
+
+  panel.setFilter("q1", "mother");
+
+  const visualizer = panel.getVisualizer("q1");
+  (visualizer as any).setSelection(undefined);
+
+  const filters = (panel as any).dataProvider.getFilters();
+  expect(filters.length).toBe(0);
+});
+
 test("moveVisibleElement if hidden elements exist", () => {
   const originalElements = [
     { name: "el0", isVisible: true },
