@@ -75,7 +75,7 @@
     "puppeteer": "22.13.1",
     "replace-in-file": "^6.3.2",
     "rollup": "^4.59.0",
-    "rollup-plugin-license": "^3.6.0",
+    "rollup-plugin-license": "^3.7.0",
     "sass": "^1.62.1",
     "sass-loader": "^16.0.4",
     "standard-version": "^9.5.0",
