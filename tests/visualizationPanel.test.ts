@@ -376,6 +376,36 @@ test("setFilter method", () => {
   ]);
 });
 
+test("setFilter syncs selection state in SelectBase visualizer", () => {
+  const json = {
+    elements: [
+      {
+        name: "q1",
+        type: "dropdown",
+        choices: ["father", "mother", "sister"],
+      },
+    ],
+  };
+  const data = [
+    { q1: "father" },
+    { q1: "mother" },
+    { q1: "sister" },
+  ];
+  const survey = new SurveyModel(json);
+  const panel = new VisualizationPanel(survey.getAllQuestions(), data, { allowDynamicLayout: false });
+  panel.render(document.createElement("div"));
+
+  const visualizer = panel.getVisualizer("q1") as SelectBase;
+  expect(visualizer.selection).toBeUndefined();
+
+  panel.setFilter("q1", "mother");
+  expect(visualizer.selection).toBeDefined();
+  expect(visualizer.selection.value).toBe("mother");
+
+  panel.setFilter("q1", undefined);
+  expect(visualizer.selection).toBeUndefined();
+});
+
 test("moveVisibleElement if hidden elements exist", () => {
   const originalElements = [
     { name: "el0", isVisible: true },
