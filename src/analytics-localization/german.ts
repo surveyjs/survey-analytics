@@ -29,7 +29,7 @@ export var germanStrings = {
   entriesLabel: "Einträge",
   // "Texts in table"
   visualizer_text: "Texte in Tabellenform",
-  // "Wordcloud"
+  // [Auto-translated] "Wordcloud"
   visualizer_wordcloud: "Wordcloud",
   // "Histogram"
   visualizer_histogram: "Histogramm",
@@ -69,7 +69,7 @@ export var germanStrings = {
   makePublicButton: "Öffentlich machen",
   // "Show"
   showButton: "Anzeigen",
-  // "Filter"
+  // [Auto-translated] "Filter"
   filter: "Filter",
   // "Reset Filter"
   resetFilter: "Filter zurücksetzen",
@@ -95,11 +95,11 @@ export var germanStrings = {
   showPercentages: "Prozentsätze anzeigen",
   // "Hide percentages"
   hidePercentages: "Prozentsätze ausblenden",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Diagramm als PNG herunterladen",
@@ -141,13 +141,13 @@ export var germanStrings = {
   statistics_chart: "Diagramm",
   // "Responses"
   responses: "Antworten",
-  // "NPS"
+  // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"
   visualizer_boolean: "Diagramm",
   // "Table"
   visualizer_options: "Tabelle",
-  // "NPS"
+  // [Auto-translated] "NPS"
   npsScore: "NPS",
   // "Promoters"
   npsPromoters: "Promotoren",
@@ -163,6 +163,8 @@ export var germanStrings = {
   axisXAlternativeSelectorTitle: "Segmente:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Gruppen:",
+  // [Auto-translated] "Not selected"
+  notSelected: "Nicht ausgewählt",
   // [Auto-translated] "Default"
   intervalMode_default: "Vorgabe",
   // [Auto-translated] "Decades"

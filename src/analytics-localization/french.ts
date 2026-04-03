@@ -35,8 +35,8 @@ export var frenchStrings = {
   visualizer_histogram: "Histogramme",
   // "Average"
   visualizer_number: "Moyenne",
-  // "Table"
-  visualizer_choices: "Table",
+  // [Auto-translated] "Table"
+  visualizer_choices: "Tableau",
   // "Chart"
   visualizer_selectBase: "Graphique",
   // [Auto-translated] "Chart"
@@ -95,7 +95,7 @@ export var frenchStrings = {
   showPercentages: "Afficher les pourcentages",
   // "Hide percentages"
   hidePercentages: "Masquer les pourcentages",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
   // "Excel"
   xlsxDownloadCaption: "Fichier Excel",
@@ -163,6 +163,8 @@ export var frenchStrings = {
   axisXAlternativeSelectorTitle: "Segments:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Groupes:",
+  // [Auto-translated] "Not selected"
+  notSelected: "Non sélectionné",
   // [Auto-translated] "Default"
   intervalMode_default: "Par défaut",
   // [Auto-translated] "Decades"

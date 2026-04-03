@@ -31,7 +31,7 @@ export var norwegianStrings = {
   visualizer_text: "Tabellvisning",
   // "Wordcloud"
   visualizer_wordcloud: "Ordsky",
-  // "Histogram"
+  // [Auto-translated] "Histogram"
   visualizer_histogram: "Histogram",
   // "Average"
   visualizer_number: "Gjennomsnitt",
@@ -69,7 +69,7 @@ export var norwegianStrings = {
   makePublicButton: "Gjør offentlig",
   // "Show"
   showButton: "Vis",
-  // "Filter"
+  // [Auto-translated] "Filter"
   filter: "Filter",
   // "Reset Filter"
   resetFilter: "Nullstill filter",
@@ -95,11 +95,11 @@ export var norwegianStrings = {
   showPercentages: "Vis prosenter",
   // "Hide percentages"
   hidePercentages: "Skjul prosenter",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
   // "Excel"
   xlsxDownloadCaption: "Overgå",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Last ned plott som en PNG-fil",
@@ -163,6 +163,8 @@ export var norwegianStrings = {
   axisXAlternativeSelectorTitle: "Segmenter:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupper:",
+  // [Auto-translated] "Not selected"
+  notSelected: "Ikke valgt",
   // [Auto-translated] "Default"
   intervalMode_default: "Standard",
   // [Auto-translated] "Decades"

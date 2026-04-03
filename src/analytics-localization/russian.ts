@@ -95,11 +95,11 @@ export var russianStrings = {
   showPercentages: "Показать проценты",
   // "Hide percentages"
   hidePercentages: "Скрыть проценты",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Скачать диаграмму в формате PNG",
@@ -163,6 +163,8 @@ export var russianStrings = {
   axisXAlternativeSelectorTitle: "Сегментов:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Группы:",
+  // [Auto-translated] "Not selected"
+  notSelected: "Не выбран",
   // [Auto-translated] "Default"
   intervalMode_default: "По умолчанию",
   // [Auto-translated] "Decades"

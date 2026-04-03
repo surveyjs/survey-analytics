@@ -29,8 +29,8 @@ export var spanishStrings = {
   entriesLabel: "Entradas",
   // "Texts in table"
   visualizer_text: "Textos en tabla",
-  // "Wordcloud"
-  visualizer_wordcloud: "Wordcloud",
+  // [Auto-translated] "Wordcloud"
+  visualizer_wordcloud: "Nube de palabras",
   // "Histogram"
   visualizer_histogram: "Histograma",
   // "Average"
@@ -49,14 +49,14 @@ export var spanishStrings = {
   chartType_stackedbar: "Barra apilada",
   // "Doughnut"
   chartType_doughnut: "Donut",
-  // "Pie"
-  chartType_pie: "Pie",
+  // [Auto-translated] "Pie"
+  chartType_pie: "Pastel",
   // "Scatter"
   chartType_scatter: "Dispersión",
-  // "Gauge"
-  chartType_gauge: "Gauge",
-  // "Bullet"
-  chartType_bullet: "Bullet",
+  // [Auto-translated] "Gauge"
+  chartType_gauge: "Vía",
+  // [Auto-translated] "Bullet"
+  chartType_bullet: "Bala",
   // [Auto-translated] "Line"
   chartType_line: "Línea",
   // [Auto-translated] "Radar"
@@ -95,11 +95,11 @@ export var spanishStrings = {
   showPercentages: "Mostrar porcentajes",
   // "Hide percentages"
   hidePercentages: "Ocultar porcentajes",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Descargar el gráfico como png",
@@ -163,6 +163,8 @@ export var spanishStrings = {
   axisXAlternativeSelectorTitle: "Segmentos:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupos:",
+  // [Auto-translated] "Not selected"
+  notSelected: "No seleccionado",
   // [Auto-translated] "Default"
   intervalMode_default: "Predeterminado",
   // [Auto-translated] "Decades"

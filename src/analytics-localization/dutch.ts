@@ -29,9 +29,9 @@ export var dutchStrings = {
   entriesLabel: "inzendingen",
   // "Texts in table"
   visualizer_text: "Teksten in tabel",
-  // "Wordcloud"
+  // [Auto-translated] "Wordcloud"
   visualizer_wordcloud: "Wordcloud",
-  // "Histogram"
+  // [Auto-translated] "Histogram"
   visualizer_histogram: "Histogram",
   // "Average"
   visualizer_number: "Gemiddeld",
@@ -69,7 +69,7 @@ export var dutchStrings = {
   makePublicButton: "Openbaar maken",
   // "Show"
   showButton: "Tonen",
-  // "Filter"
+  // [Auto-translated] "Filter"
   filter: "Filter",
   // "Reset Filter"
   resetFilter: "Filter resetten",
@@ -95,11 +95,11 @@ export var dutchStrings = {
   showPercentages: "Percentages weergeven",
   // "Hide percentages"
   hidePercentages: "Verberg percentages",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Download plot als PNG",
@@ -163,6 +163,8 @@ export var dutchStrings = {
   axisXAlternativeSelectorTitle: "Segmenten:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Groepen:",
+  // [Auto-translated] "Not selected"
+  notSelected: "Niet geselecteerd",
   // [Auto-translated] "Default"
   intervalMode_default: "Verstek",
   // [Auto-translated] "Decades"

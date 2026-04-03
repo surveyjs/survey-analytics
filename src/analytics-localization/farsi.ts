@@ -55,8 +55,8 @@ export var farsiStrings = {
   chartType_scatter: "پراکندگی(Scatter)",
   // "Gauge"
   chartType_gauge: "عقربه ای",
-  // "Bullet"
-  chartType_bullet: "Bullet",
+  // [Auto-translated] "Bullet"
+  chartType_bullet: "بولت",
   // [Auto-translated] "Line"
   chartType_line: "خط",
   // [Auto-translated] "Radar"
@@ -163,6 +163,8 @@ export var farsiStrings = {
   axisXAlternativeSelectorTitle: "بخش:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "گروه:",
+  // [Auto-translated] "Not selected"
+  notSelected: "انتخاب نشده",
   // [Auto-translated] "Default"
   intervalMode_default: "پیش فرض",
   // [Auto-translated] "Decades"

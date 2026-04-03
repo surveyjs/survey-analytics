@@ -95,11 +95,11 @@ export var japaneseStrings = {
   showPercentages: "パーセンテージを表示",
   // "Hide percentages"
   hidePercentages: "パーセンテージを非表示",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "プロットをPNGファイルとして保存",
@@ -163,6 +163,8 @@ export var japaneseStrings = {
   axisXAlternativeSelectorTitle: "セグメント：",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "グループ：",
+  // [Auto-translated] "Not selected"
+  notSelected: "選ばれませんでした",
   // [Auto-translated] "Default"
   intervalMode_default: "デフォルト",
   // [Auto-translated] "Decades"

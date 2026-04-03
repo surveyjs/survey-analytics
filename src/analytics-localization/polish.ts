@@ -31,7 +31,7 @@ export var plStrings = {
   visualizer_text: "Teksty w tabeli",
   // "Wordcloud"
   visualizer_wordcloud: "Chmura słów",
-  // "Histogram"
+  // [Auto-translated] "Histogram"
   visualizer_histogram: "Histogram",
   // "Average"
   visualizer_number: "Średnia",
@@ -95,11 +95,11 @@ export var plStrings = {
   showPercentages: "Pokaż procenty",
   // "Hide percentages"
   hidePercentages: "Ukryj procenty",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Pobierz diagram jako PNG",
@@ -163,6 +163,8 @@ export var plStrings = {
   axisXAlternativeSelectorTitle: "Segmenty:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupy:",
+  // [Auto-translated] "Not selected"
+  notSelected: "Nie wybrany",
   // [Auto-translated] "Default"
   intervalMode_default: "Domyślny",
   // [Auto-translated] "Decades"

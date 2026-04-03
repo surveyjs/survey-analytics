@@ -95,11 +95,11 @@ export var italianStrings = {
   showPercentages: "Mostra percentuali",
   // "Hide percentages"
   hidePercentages: "Nascondi percentuali",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Scarica il grafico in formato png",
@@ -163,6 +163,8 @@ export var italianStrings = {
   axisXAlternativeSelectorTitle: "Segmenti:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Gruppi:",
+  // [Auto-translated] "Not selected"
+  notSelected: "Non selezionato",
   // [Auto-translated] "Default"
   intervalMode_default: "Default",
   // [Auto-translated] "Decades"

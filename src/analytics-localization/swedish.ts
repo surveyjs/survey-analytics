@@ -31,7 +31,7 @@ export var swedishStrings = {
   visualizer_text: "Texter i tabell",
   // "Wordcloud"
   visualizer_wordcloud: "Ordmoln",
-  // "Histogram"
+  // [Auto-translated] "Histogram"
   visualizer_histogram: "Histogram",
   // "Average"
   visualizer_number: "Genomsnitt",
@@ -55,11 +55,11 @@ export var swedishStrings = {
   chartType_scatter: "Punkt",
   // "Gauge"
   chartType_gauge: "Mätare",
-  // "Bullet"
+  // [Auto-translated] "Bullet"
   chartType_bullet: "Bullet",
   // "Line"
   chartType_line: "Linje",
-  // "Radar"
+  // [Auto-translated] "Radar"
   chartType_radar: "Radar",
   // "Hide"
   hideButton: "Göm",
@@ -69,7 +69,7 @@ export var swedishStrings = {
   makePublicButton: "Gör offentlig",
   // "Show"
   showButton: "Visa",
-  // "Filter"
+  // [Auto-translated] "Filter"
   filter: "Filter",
   // "Reset Filter"
   resetFilter: "Återställ filter",
@@ -95,11 +95,11 @@ export var swedishStrings = {
   showPercentages: "Visa procent",
   // "Hide percentages"
   hidePercentages: "Göm procent",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Ladda ner diagram som PNG-fil",
@@ -141,13 +141,13 @@ export var swedishStrings = {
   statistics_chart: "Diagram",
   // "Responses"
   responses: "Svar",
-  // "NPS"
+  // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"
   visualizer_boolean: "Diagram",
   // [Auto-translated] "Table"
   visualizer_options: "Bord",
-  // "NPS"
+  // [Auto-translated] "NPS"
   npsScore: "NPS",
   // "Promoters"
   npsPromoters: "Promotorer",
@@ -163,6 +163,8 @@ export var swedishStrings = {
   axisXAlternativeSelectorTitle: "Segment:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupper:",
+  // [Auto-translated] "Not selected"
+  notSelected: "Ej utvald",
   // [Auto-translated] "Default"
   intervalMode_default: "Standard",
   // [Auto-translated] "Decades"
