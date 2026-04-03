@@ -106,7 +106,7 @@ var matrixTabulator = new SurveyAnalyticsTabulator.Tabulator(
   survey,
   surveyData,
   {
-    nestedTables: "tabulator",
+    nestedTables: "table",
   }
 );
 matrixTabulator.render("tabulatorContainer");
