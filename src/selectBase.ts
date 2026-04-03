@@ -365,11 +365,6 @@ export class SelectBase
     return resultValues.map((value: any) => ItemValue.getTextOrHtmlByValue(selectBaseQuestion.choices, value)).join(", ");
   }
 
-  protected onDataChanged(): void {
-    super.onDataChanged();
-    this.updateEmptyAnswersBtn();
-  }
-
   protected isSupportSoftUpdateContent(): boolean {
     return !this._hideEmptyAnswers;
   }
@@ -411,6 +406,7 @@ export class SelectBase
       this.updateToolbar();
     }
     super.onDataChanged();
+    this.updateEmptyAnswersBtn();
   }
 
   protected onSelectionChanged(item: ItemValue): void {
