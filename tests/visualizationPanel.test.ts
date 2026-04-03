@@ -376,6 +376,93 @@ test("setFilter method", () => {
   ]);
 });
 
+test("setFilter syncs selection state in SelectBase visualizer", () => {
+  const json = {
+    elements: [
+      {
+        name: "q1",
+        type: "dropdown",
+        choices: ["father", "mother", "sister"],
+      },
+    ],
+  };
+  const data = [
+    { q1: "father" },
+    { q1: "mother" },
+    { q1: "sister" },
+  ];
+  const survey = new SurveyModel(json);
+  const panel = new VisualizationPanel(survey.getAllQuestions(), data, { allowDynamicLayout: false });
+  panel.render(document.createElement("div"));
+
+  const visualizer = panel.getVisualizer("q1") as SelectBase;
+  expect(visualizer.selection).toBeUndefined();
+
+  panel.setFilter("q1", "mother");
+  expect(visualizer.selection).toBeDefined();
+  expect(visualizer.selection.value).toBe("mother");
+
+  panel.setFilter("q1", undefined);
+  expect(visualizer.selection).toBeUndefined();
+});
+
+test("Clear filter button via setSelection clears dataProvider filter", () => {
+  const json = {
+    elements: [
+      {
+        name: "q1",
+        type: "dropdown",
+        choices: ["father", "mother", "sister"],
+      },
+    ],
+  };
+  const data = [
+    { q1: "father" },
+    { q1: "mother" },
+    { q1: "sister" },
+  ];
+  const survey = new SurveyModel(json);
+  const panel = new VisualizationPanel(survey.getAllQuestions(), data, { allowDynamicLayout: false });
+  panel.render(document.createElement("div"));
+
+  panel.setFilter("q1", "mother");
+
+  const visualizer = panel.getVisualizer("q1");
+  (visualizer as any).setSelection(undefined);
+
+  const filters = (panel as any).dataProvider.getFilters();
+  expect(filters.length).toBe(0);
+});
+
+test("Clear filter button via setSelection clears dataProvider filter for questions with valueName", () => {
+  const json = {
+    elements: [
+      {
+        name: "q1",
+        valueName: "q2",
+        type: "dropdown",
+        choices: ["father", "mother", "sister"],
+      },
+    ],
+  };
+  const data = [
+    { q2: "father" },
+    { q2: "mother" },
+    { q2: "sister" },
+  ];
+  const survey = new SurveyModel(json);
+  const panel = new VisualizationPanel(survey.getAllQuestions(), data, { allowDynamicLayout: false });
+  panel.render(document.createElement("div"));
+
+  panel.setFilter("q2", "mother");
+
+  const visualizer = panel.getVisualizer("q1");
+  (visualizer as any).setSelection(undefined);
+
+  const filters = (panel as any).dataProvider.getFilters();
+  expect(filters.length).toBe(0);
+});
+
 test("moveVisibleElement if hidden elements exist", () => {
   const originalElements = [
     { name: "el0", isVisible: true },
