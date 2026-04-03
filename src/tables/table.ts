@@ -61,12 +61,11 @@ export interface ITableOptions {
    */
   paginationEnabled?: boolean;
   /**
-   * Specifies whether to use nested tables for displaying Matrix Dynamic and Panel Dynamic questions.
+   * Specifies whether responses to [Dynamic Matrix](https://surveyjs.io/form-library/examples/dynamic-matrix-add-new-rows/) and [Dynamic Panel](https://surveyjs.io/form-library/examples/duplicate-group-of-fields-in-form/) questions are rendered using nested tables.
    *
-   * Default value: `true` nested tables are used
+   * Default value: `true`
    *
-   * When enabled, Matrix Dynamic and Panel Dynamic question responses will be displayed as nested tables
-   * within the main table row, providing a better visualization of complex data structures.
+   * If disabled, responses are displayed as stringified JSON objects instead of a tabular structure.
    */
   useNestedTables?: boolean;
   /**
