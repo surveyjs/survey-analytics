@@ -60,11 +60,11 @@ test("createToolbarItems", () => {
   selectBase["chartTypes"] = ["one", "two"];
   var toolbarContainer = document.createElement("div");
   selectBase["createToolbarItems"](toolbarContainer);
-  expect(toolbarContainer.children.length).toBe(2);
+  expect(toolbarContainer.children.length).toBe(3);
   selectBase["chartTypes"] = ["one"];
   toolbarContainer = document.createElement("div");
   selectBase["createToolbarItems"](toolbarContainer);
-  expect(toolbarContainer.children.length).toBe(1);
+  expect(toolbarContainer.children.length).toBe(2);
 });
 
 test("setSelection", () => {
