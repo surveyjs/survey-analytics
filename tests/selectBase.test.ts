@@ -2,6 +2,7 @@ import { QuestionDropdownModel, ItemValue, QuestionImagePickerModel, SurveyModel
 import { SelectBase, hideEmptyAnswersInData } from "../src/selectBase";
 import { VisualizationManager } from "../src/visualizationManager";
 import { VisualizerBase } from "../src/visualizerBase";
+import { DataProvider } from "../src/dataProvider";
 
 let selectBase: SelectBase;
 let choices = [
@@ -61,11 +62,11 @@ test("createToolbarItems", () => {
   selectBase["chartTypes"] = ["one", "two"];
   var toolbarContainer = document.createElement("div");
   selectBase["createToolbarItems"](toolbarContainer);
-  expect(toolbarContainer.children.length).toBe(2);
+  expect(toolbarContainer.children.length).toBe(3);
   selectBase["chartTypes"] = ["one"];
   toolbarContainer = document.createElement("div");
   selectBase["createToolbarItems"](toolbarContainer);
-  expect(toolbarContainer.children.length).toBe(1);
+  expect(toolbarContainer.children.length).toBe(2);
 });
 
 test("setSelection", () => {
@@ -189,6 +190,58 @@ test("hide empty items", async () => {
     "texts": [[2, 1, 1].reverse()],
     "seriesLabels": [],
   });
+});
+
+test("hideEmptyAnswers applied after setFilter", async () => {
+  const question = new QuestionDropdownModel("q1");
+  question.choices = [
+    { value: "father", text: "father_text" },
+    { value: "mother", text: "mother_text" },
+    { value: "sister", text: "sister_text" },
+  ];
+  const data = [
+    { q1: "father", category: "A" },
+    { q1: "father", category: "A" },
+    { q1: "mother", category: "B" },
+    { q1: "sister", category: "A" },
+  ];
+  const dataProvider = new DataProvider(data);
+  const sb = new SelectBase(question, data, { dataProvider });
+
+  sb.hideEmptyAnswers = true;
+  dataProvider.setFilter("category", "B");
+
+  const result = await sb.getAnswersData();
+  // After filter: father=0, mother=1, sister=0; with hideEmptyAnswers only mother_text shown
+  expect(result.labels).toEqual(["mother_text"]);
+  expect(result.datasets[0]).toEqual([1]);
+});
+
+test("isSupportSoftUpdateContent returns false when hideEmptyAnswers is true", () => {
+  expect(selectBase["isSupportSoftUpdateContent"]()).toBe(true);
+  selectBase["_hideEmptyAnswers"] = true;
+  expect(selectBase["isSupportSoftUpdateContent"]()).toBe(false);
+  selectBase["_hideEmptyAnswers"] = false;
+  expect(selectBase["isSupportSoftUpdateContent"]()).toBe(true);
+});
+
+test("onDataChanged calls updateEmptyAnswersBtn", () => {
+  const question = new QuestionDropdownModel("q1");
+  question.choices = [{ value: "a", text: "A" }, { value: "b", text: "B" }];
+  const sb = new SelectBase(question, [], { allowHideEmptyAnswers: true });
+  // Force toolbar creation so emptyAnswersBtn is populated
+  const toolbarContainer = document.createElement("div");
+  sb["createToolbarItems"](toolbarContainer);
+  const buttonSpan = sb["emptyAnswersBtn"].children[0];
+
+  expect(buttonSpan.innerHTML).toBe("Hide empty answers");
+  sb.hideEmptyAnswers = true;
+  expect(buttonSpan.innerHTML).toBe("Show empty answers");
+
+  // Simulate data change (e.g. setFilter)
+  sb["_hideEmptyAnswers"] = false; // manually change flag without triggering setter
+  sb["onDataChanged"](); // onDataChanged should sync button to current flag
+  expect(buttonSpan.innerHTML).toBe("Hide empty answers");
 });
 
 test("change answers order", async () => {

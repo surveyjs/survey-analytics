@@ -578,20 +578,14 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
       const visualizerWithSelection = <IVisualizerWithSelection>(
           (<any>visualizer)
         );
-      let filterInfo = new FilterInfo(visualizerWithSelection);
-
-      visualizer.registerToolbarItem("questionFilterInfo", () => {
-        filterInfo.update(visualizerWithSelection.selection);
-        return filterInfo.htmlElement;
-      }, "filter", 900);
-
       visualizerWithSelection.onDataItemSelected = (
         selectedValue: any,
         selectedText: string
       ) => {
-        filterInfo.update({ value: selectedValue, text: selectedText });
-        // TODO: possible issues with visuazlier descriptions
-        const dataName = question.name || question.question?.name || question.dataField || question.questionName;
+        // visualizer.dataNames[0] ?
+        const dataName = question.valueName || question.name
+          || question.question?.valueName || question.question?.name
+          || question.dataField || question.questionName;
         this.setFilter(dataName, selectedValue);
       };
     }

@@ -1440,3 +1440,184 @@ test("Multiple file names appear as a single unreadable string - https://github.
   expect(table.columns[1].getCellData(table, data).displayValue).toBe("<div><a download=\"presentation.pptx\" href=\"http://localhost:8080/files/presentation.pptx\"></a><br><a download=\"slides.pptx\" href=\"http://localhost:8080/files/slides.pptx\"></a><br><a download=\"data.json\" href=\"http://localhost:8080/files/data.json\"></a></div>");
   expect(table.columns[2].getCellData(table, data).displayValue).toBe("<div><a download=\"image.png\" href=\"http://localhost:8080/files/image.png\"></a></div>");
 });
+
+test("check flattened checkbox columns", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "fav_cars",
+        title: "Favorite Cars",
+        choices: [
+          { value: "car1", text: "Car 1" },
+          { value: "car2", text: "Car 2" },
+          { value: "car3", text: "Car 3" }
+        ]
+      }
+    ]
+  };
+
+  const data1 = { fav_cars: ["car1", "car2"] };
+  const data2 = { fav_cars: ["car2"] };
+  const data3 = { fav_cars: [] };
+
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [data1, data2, data3], { splitMultiSelectIntoColumns: true });
+
+  // Should create 3 columns, one for each choice
+  expect(table.columns.length).toEqual(3);
+
+  // Check column names
+  expect(table.columns[0].name).toBe("fav_cars.car1");
+  expect(table.columns[1].name).toBe("fav_cars.car2");
+  expect(table.columns[2].name).toBe("fav_cars.car3");
+
+  // Check column display names
+  expect(table.columns[0].displayName).toBe("Favorite Cars - Car 1");
+  expect(table.columns[1].displayName).toBe("Favorite Cars - Car 2");
+  expect(table.columns[2].displayName).toBe("Favorite Cars - Car 3");
+
+  // Check values for first data row (selected car1 first, car2 second)
+  // Default is checkmark mode
+  expect(table.columns[0].getCellData(table, data1).displayValue).toBe("&#10004;");
+  expect(table.columns[1].getCellData(table, data1).displayValue).toBe("&#10004;");
+  expect(table.columns[2].getCellData(table, data1).displayValue).toBe("");
+
+  // Check values for second data row (only car2 selected)
+  expect(table.columns[0].getCellData(table, data2).displayValue).toBe("");
+  expect(table.columns[1].getCellData(table, data2).displayValue).toBe("&#10004;");
+  expect(table.columns[2].getCellData(table, data2).displayValue).toBe("");
+
+  // Check values for third data row (nothing selected)
+  expect(table.columns[0].getCellData(table, data3).displayValue).toBe("");
+  expect(table.columns[1].getCellData(table, data3).displayValue).toBe("");
+  expect(table.columns[2].getCellData(table, data3).displayValue).toBe("");
+});
+
+test("check flattened checkbox columns with useNamesAsTitles", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "fav_cars",
+        title: "Favorite Cars",
+        choices: [
+          { value: "car1", text: "Car 1" },
+          { value: "car2", text: "Car 2" }
+        ]
+      }
+    ]
+  };
+
+  const data = { fav_cars: ["car1"] };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [data], { splitMultiSelectIntoColumns: true, useNamesAsTitles: true });
+
+  expect(table.columns.length).toEqual(2);
+  expect(table.columns[0].displayName).toBe("fav_cars - car1");
+  expect(table.columns[1].displayName).toBe("fav_cars - car2");
+});
+
+test("check flattened checkbox columns with order mode", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "fav_cars",
+        title: "Favorite Cars",
+        choices: [
+          { value: "car1", text: "Car 1" },
+          { value: "car2", text: "Car 2" },
+          { value: "car3", text: "Car 3" }
+        ]
+      }
+    ]
+  };
+
+  const data1 = { fav_cars: ["car1", "car2"] };
+  const data2 = { fav_cars: ["car2"] };
+
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [data1, data2], { splitMultiSelectIntoColumns: true, multiSelectColumnValueFormat: "selectionOrder" });
+
+  expect(table.columns.length).toEqual(3);
+
+  // Check values for first data row (selected car1 first, car2 second) - should show order
+  expect(table.columns[0].getCellData(table, data1).displayValue).toBe("1");
+  expect(table.columns[1].getCellData(table, data1).displayValue).toBe("2");
+  expect(table.columns[2].getCellData(table, data1).displayValue).toBe("");
+
+  // Check values for second data row (only car2 selected)
+  expect(table.columns[0].getCellData(table, data2).displayValue).toBe("");
+  expect(table.columns[1].getCellData(table, data2).displayValue).toBe("1");
+  expect(table.columns[2].getCellData(table, data2).displayValue).toBe("");
+});
+
+test("check non-flattened checkbox columns still work", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "question1",
+        choices: [
+          { value: "item1", text: "Item 1" },
+          { value: "item2", text: "Item 2" },
+          { value: "item3", text: "Item 3" }
+        ]
+      }
+    ]
+  };
+
+  const data = { question1: ["item1", "item3"] };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [data], { splitMultiSelectIntoColumns: false });
+
+  // Should create only 1 column for the checkbox question
+  expect(table.columns.length).toEqual(1);
+  expect(table.columns[0].name).toBe("question1");
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("Item 1, Item 3");
+});
+
+test("tagbox questions support splitMultiSelectIntoColumns", () => {
+  const json = {
+    elements: [
+      {
+        type: "tagbox",
+        name: "tags",
+        title: "Select Tags",
+        choices: [
+          { value: "tag1", text: "Tag 1" },
+          { value: "tag2", text: "Tag 2" },
+          { value: "tag3", text: "Tag 3" }
+        ]
+      }
+    ]
+  };
+
+  const data1 = { tags: ["tag1", "tag2"] };
+  const data2 = { tags: ["tag2"] };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [data1, data2], { splitMultiSelectIntoColumns: true });
+
+  // Should create 3 columns for the 3 choices
+  expect(table.columns.length).toEqual(3);
+
+  // Check column names and display names
+  expect(table.columns[0].name).toBe("tags.tag1");
+  expect(table.columns[1].name).toBe("tags.tag2");
+  expect(table.columns[2].name).toBe("tags.tag3");
+  expect(table.columns[0].displayName).toBe("Select Tags - Tag 1");
+  expect(table.columns[1].displayName).toBe("Select Tags - Tag 2");
+  expect(table.columns[2].displayName).toBe("Select Tags - Tag 3");
+
+  // Check values for first data row (selected tag1 and tag2)
+  // Default is checkmark mode
+  expect(table.columns[0].getCellData(table, data1).displayValue).toBe("&#10004;");
+  expect(table.columns[1].getCellData(table, data1).displayValue).toBe("&#10004;");
+  expect(table.columns[2].getCellData(table, data1).displayValue).toBe("");
+
+  // Check values for second data row (only tag2 selected)
+  expect(table.columns[0].getCellData(table, data2).displayValue).toBe("");
+  expect(table.columns[1].getCellData(table, data2).displayValue).toBe("&#10004;");
+  expect(table.columns[2].getCellData(table, data2).displayValue).toBe("");
+});

@@ -5,6 +5,7 @@ import { DataHelper } from "./utils/index";
 import { DocumentHelper } from "./utils/documentHelper";
 import { VisualizationManager } from "./visualizationManager";
 import { ToggleWidget } from "./utils/toggle";
+import { FilterInfo } from "./filterInfo";
 import { createDropdown } from "./utils/dropdownWidget";
 
 export interface ISelectBaseVisualizerOptions {
@@ -202,6 +203,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
   protected _transposeData: boolean = false;
   private _showMissingAnswers: boolean = false;
   private missingAnswersBtn: HTMLElement = undefined;
+  protected filterInfo: FilterInfo;
 
   private initChartTypes(): void {
     if(this.options.allowExperimentalFeatures) {
@@ -354,6 +356,13 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
       }
       return this.missingAnswersBtn;
     }, "button");
+    this.registerToolbarItem("questionFilterInfo", () => {
+      if(this.supportSelection) {
+        this.filterInfo = new FilterInfo(this);
+        this.filterInfo.update(this.selection);
+      }
+      return this.filterInfo?.htmlElement;
+    }, "filter", 900);
   }
 
   protected chartTypes: string[] = [];
@@ -458,7 +467,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
   }
 
   protected isSupportSoftUpdateContent(): boolean {
-    return true;
+    return !this._hideEmptyAnswers;
   }
 
   protected softUpdateContent(): void {
@@ -466,6 +475,11 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     if(chartNode) {
       this._chartAdapter.update(chartNode);
     }
+  }
+
+  public getSelectedItemByValue(value: any): ItemValue {
+    const choices = (this.question as QuestionSelectBase).visibleChoices;
+    return ItemValue.getItemByValue(choices, value) ?? undefined;
   }
 
   public getSelectedItemByText(itemText: string) {
@@ -483,6 +497,19 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     }
   }
 
+  protected onDataChanged(): void {
+    const filter = this.dataProvider.getFilters().find(f => f.field === this.dataNames[0]);
+    const newFilterValue = filter?.value;
+    const currentSelectionValue = this.selectedItem?.value;
+    if(newFilterValue !== currentSelectionValue) {
+      const newSelectedItem = this.getSelectedItemByValue(newFilterValue);
+      this.setSelection(newSelectedItem, true);
+      this.updateToolbar();
+    }
+    super.onDataChanged();
+    this.updateEmptyAnswersBtn();
+  }
+
   protected onSelectionChanged(item: ItemValue): void {
     if(this.onDataItemSelected !== undefined) {
       this.onDataItemSelected(
@@ -493,10 +520,13 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     this.stateChanged("filter", this.selectedItem?.value);
   }
 
-  setSelection(item: ItemValue): void {
+  setSelection(item: ItemValue, quiet: boolean = false): void {
     if(this.selectedItem !== item) {
       this.selectedItem = item;
-      this.onSelectionChanged(item);
+      this.filterInfo?.update({ value: this.selectedItem?.value, text: this.selectedItem?.text });
+      if(!quiet) {
+        this.onSelectionChanged(item);
+      }
     }
   }
   get selection() {
@@ -870,8 +900,8 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
 
   protected setStateCore(state: any): void {
     super.setStateCore(state);
-    const selectedItem = ItemValue.getItemByValue((this.question as QuestionSelectBase).visibleChoices, state.filter);
-    this.setSelection(selectedItem ?? undefined);
+    const selectedItem = this.getSelectedItemByValue(state.filter);
+    this.setSelection(selectedItem);
   }
 
   public resetState(): void {

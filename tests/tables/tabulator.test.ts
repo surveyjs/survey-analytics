@@ -509,3 +509,73 @@ test("onStateChanged for question ready from choicesByUrl", async () => {
   }
   expect(stateChangedCounter).toBe(0);
 });
+
+test("check splitMultiSelectIntoColumns option in Tabulator", () => {
+  const surveyJson = {
+    questions: [
+      {
+        type: "checkbox",
+        name: "fav_cars",
+        title: "Favorite Cars",
+        choices: [
+          { value: "car1", text: "Car 1" },
+          { value: "car2", text: "Car 2" },
+          { value: "car3", text: "Car 3" }
+        ]
+      }
+    ]
+  };
+
+  const survey = new SurveyModel(surveyJson);
+  const data = [
+    { fav_cars: ["car1", "car2"] },
+    { fav_cars: ["car2"] },
+    { fav_cars: [] }
+  ];
+
+  const tabulator = new Tabulator(survey, data, { splitMultiSelectIntoColumns: true });
+  const columns = tabulator.getColumns();
+
+  // First column is the actions column, next 3 are the flattened checkbox columns
+  expect(columns.length).toBe(4);
+  expect(columns[1].field).toBe("fav_cars.car1");
+  expect(columns[1].title).toBe("Favorite Cars - Car 1");
+  expect(columns[2].field).toBe("fav_cars.car2");
+  expect(columns[2].title).toBe("Favorite Cars - Car 2");
+  expect(columns[3].field).toBe("fav_cars.car3");
+  expect(columns[3].title).toBe("Favorite Cars - Car 3");
+});
+
+test("check splitMultiSelectIntoColumns option with order mode in Tabulator", () => {
+  const surveyJson = {
+    questions: [
+      {
+        type: "checkbox",
+        name: "fav_cars",
+        title: "Favorite Cars",
+        choices: [
+          { value: "car1", text: "Car 1" },
+          { value: "car2", text: "Car 2" },
+          { value: "car3", text: "Car 3" }
+        ]
+      }
+    ]
+  };
+
+  const survey = new SurveyModel(surveyJson);
+  const data = [
+    { fav_cars: ["car1", "car2"] },
+    { fav_cars: ["car2"] },
+    { fav_cars: [] }
+  ];
+
+  const tabulator = new Tabulator(survey, data, { splitMultiSelectIntoColumns: true, multiSelectColumnValueFormat: "selectionOrder" });
+  const columns = tabulator.getColumns();
+
+  // Verify columns are created correctly
+  expect(columns.length).toBe(4);
+  expect(columns[1].field).toBe("fav_cars.car1");
+  expect(columns[2].field).toBe("fav_cars.car2");
+  expect(columns[3].field).toBe("fav_cars.car3");
+});
+

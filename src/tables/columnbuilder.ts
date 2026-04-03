@@ -1,5 +1,5 @@
 import { Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionRadiogroupModel, QuestionSelectBase } from "survey-core";
-import { BaseColumn, CheckboxColumn, CommentColumn, CompositeQuestionColumn, CustomQuestionColumn, FileColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn, OtherColumn, SelectBaseColumn, SingleChoiceColumn } from "./columns";
+import { BaseColumn, CheckboxColumn, CommentColumn, CompositeQuestionColumn, CustomQuestionColumn, FileColumn, FlattenedCheckboxColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn, OtherColumn, SelectBaseColumn, SingleChoiceColumn } from "./columns";
 import { IColumn, QuestionLocation } from "./config";
 import { ITable } from "./table-interfaces";
 
@@ -53,6 +53,16 @@ export class SelectBaseColumnsBuilder<T extends QuestionSelectBase> extends Defa
 export class CheckboxColumnsBuilder extends SelectBaseColumnsBuilder<QuestionCheckboxModel> {
   protected createColumn(question: QuestionCheckboxModel, table: ITable): BaseColumn<QuestionCheckboxModel> {
     return new CheckboxColumn(question, table);
+  }
+  protected buildColumnsCore(question: QuestionCheckboxModel, table: ITable): Array<IColumn> {
+    if(table.options.splitMultiSelectIntoColumns) {
+      const columns: Array<IColumn> = [];
+      question.visibleChoices.forEach(choice => {
+        columns.push(new FlattenedCheckboxColumn(question, choice.value, choice.text, table));
+      });
+      return columns;
+    }
+    return super.buildColumnsCore(question, table);
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("checkbox", new CheckboxColumnsBuilder());

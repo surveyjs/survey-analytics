@@ -46,6 +46,26 @@ export interface ITableOptions {
    * @see pageSize
    */
   paginationEnabled?: boolean;
+  /**
+   * Specifies whether to split responses to multi-select questions (Checkboxes and Multi-Select Dropdown) into separate columns.
+   *
+   * When enabled, each choice is represented as an individual column. Cell values indicate whether the choice was selected or the selection order, depending on the `multiSelectColumnValueFormat` setting. Empty cells indicate that the choice was not selected.
+   *
+   * Default value: `false`
+   *
+   */
+  splitMultiSelectIntoColumns?: boolean;
+  /**
+   * Specifies how selected values are represented in columns generated from multi-select questions. Applies only when `splitMultiSelectIntoColumns` is `true`.
+   *
+   * Accepted values:
+   *
+   * - `"checkmark"` &ndash; Displays a checkmark symbol for selected choices.
+   * - `"selectionOrder"` &ndash; Displays the order in which choices were selected (1, 2, 3, ...).
+   *
+   * Default value: `"checkmark"`
+   */
+  multiSelectColumnValueFormat?: "checkmark" | "selectionOrder";
 }
 
 export interface ITable {

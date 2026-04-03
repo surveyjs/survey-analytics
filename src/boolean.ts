@@ -33,6 +33,12 @@ export class BooleanModel extends SelectBase {
   public static trueColor = "";
   public static falseColor = "";
 
+  public getSelectedItemByValue(value: any): ItemValue {
+    const labels = this.getLabels();
+    const values = this.getValues();
+    return new ItemValue(value, labels[values.indexOf(value)]);
+  }
+
   public getSelectedItemByText(itemText: string) {
     const labels = this.getLabels();
     const values = this.getValues();
