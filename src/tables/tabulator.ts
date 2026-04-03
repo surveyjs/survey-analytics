@@ -403,7 +403,7 @@ export class Tabulator extends Table {
         const el: any = tableEl as any;
 
         // Avoid creating multiple nested tables for the same cell element.
-        if (el._nestedTabulator) {
+        if(el._nestedTabulator) {
           return;
         }
 
@@ -426,16 +426,16 @@ export class Tabulator extends Table {
         try {
           const row = cell.getRow && cell.getRow();
           const parentTable = row && row.getTable && row.getTable();
-          if (parentTable && parentTable.on) {
+          if(parentTable && parentTable.on) {
             parentTable.on("rowDeleted", (deletedRow: any) => {
-              if (deletedRow === row && el._nestedTabulator) {
+              if(deletedRow === row && el._nestedTabulator) {
                 // Destroy nested Tabulator and clear cache.
                 el._nestedTabulator.destroy();
                 el._nestedTabulator = null;
               }
             });
           }
-        } catch {
+        } catch(e) {
           // Fail-safe: if lifecycle hooks are unavailable, we still avoid
           // multiple instances per cell via the cached _nestedTabulator.
         }
