@@ -144,7 +144,7 @@ export class Tabulator extends Table {
     if(((options && options.jspdf) || (!!window && window["jspdf"] !== undefined)) && defaultOptions.downloadButtons.indexOf("pdf") === -1) {
       defaultOptions.downloadButtons.unshift("pdf");
     }
-    this._options = Object.assign({}, defaultOptions, options);
+    this._options = Object.assign({}, defaultOptions, this._options);
   }
 
   private readonly COLUMN_MIN_WIDTH = 155;
@@ -390,7 +390,7 @@ export class Tabulator extends Table {
         }));
       }
 
-      if(this.options.nestedTables === "table") {
+      if(this.options.useNestedTables === true) {
         return this.createNestedTable(nestedTableColumns, cellData);
       }
 
@@ -444,54 +444,6 @@ export class Tabulator extends Table {
       return tableEl;
     };
   }
-
-  // private renderNestedTables(row: RowComponent): void {
-  //   const rowData = row.getData();
-
-  //   const nestedColumns = this.columns.filter(col => col.dataType === ColumnDataType.NestedTable);
-
-  //   nestedColumns.forEach(column => {
-  //     const nestedData = rowData[column.name];
-
-  //     if(!Array.isArray(nestedData) || nestedData.length === 0) {
-  //       return;
-  //     }
-
-  //     const question = this._survey.getQuestionByName(column.name);
-  //     if(!question) {
-  //       return;
-  //     }
-
-  //     let tabulatorColumns: any[] = [];
-  //     if(question.getType() === "matrixdynamic") {
-  //       const matrixQuestion = question as any;
-  //       tabulatorColumns = matrixQuestion.columns.map((col: any) => ({
-  //         title: col.title || col.name,
-  //         field: col.name,
-  //       }));
-  //     } else if(question.getType() === "paneldynamic") {
-  //       const panelQuestion = question as any;
-  //       const templateQuestions = panelQuestion.template.questions;
-  //       tabulatorColumns = templateQuestions.map((q: any) => ({
-  //         title: q.title || q.name,
-  //         field: q.name,
-  //       }));
-  //     }
-
-  //     const holderEl = document.createElement("div");
-  //     holderEl.classList.add("sa-nested-table-holder");
-  //     const tableEl = document.createElement("div");
-  //     holderEl.appendChild(tableEl);
-  //     row.getElement().appendChild(holderEl);
-
-  //     new Tabulator.tabulatorTablesConstructor(tableEl, {
-  //       layout: "fitDataFill",
-  //       data: nestedData,
-  //       columns: tabulatorColumns,
-  //       pagination: false,
-  //     });
-  //   });
-  // }
 
   private formatNestedDataForExport(nestedData: any[], column: IColumn): string {
     if(!Array.isArray(nestedData) || nestedData.length === 0) {

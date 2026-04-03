@@ -63,12 +63,12 @@ export interface ITableOptions {
   /**
    * Specifies whether to use nested tables for displaying Matrix Dynamic and Panel Dynamic questions.
    *
-   * Default value: undefined (nested tables are not used)
+   * Default value: `true` nested tables are used
    *
    * When enabled, Matrix Dynamic and Panel Dynamic question responses will be displayed as nested tables
    * within the main table row, providing a better visualization of complex data structures.
    */
-  nestedTables?: undefined | "table" | "tabulator";
+  useNestedTables?: boolean;
   /**
    * Specifies whether to split responses to multi-select questions (Checkboxes and Multi-Select Dropdown) into separate columns.
    *
@@ -115,6 +115,9 @@ export abstract class Table {
   ) {
     if(!this._options) {
       this._options = {};
+    }
+    if(typeof this._options.useNestedTables === "undefined") {
+      this._options.useNestedTables = true;
     }
 
     this.initialize();

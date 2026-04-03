@@ -328,11 +328,11 @@ export class CompositeQuestionColumn extends BaseColumn<QuestionCompositeModel> 
 
 export class MatrixDynamicColumn extends BaseColumn<QuestionMatrixDynamicModel> {
   protected getDataType(): ColumnDataType {
-    return this.table.options.nestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
+    return this.table.options.useNestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
   }
 
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
-    if(table.options.nestedTables) {
+    if(table.options.useNestedTables) {
       return this.getDisplayValueCore(data);
     }
     return super.getDisplayValue(data, table, options);
@@ -340,7 +340,7 @@ export class MatrixDynamicColumn extends BaseColumn<QuestionMatrixDynamicModel> 
 
   public getCellData(table: Table, data: any): ICellData {
     const displayValue = this.getDisplayValue(data, table, table.options);
-    const formattedValue = table.options.nestedTables && Array.isArray(displayValue)
+    const formattedValue = table.options.useNestedTables && Array.isArray(displayValue)
       ? displayValue
       : (typeof displayValue === "string" ? displayValue : JSON.stringify(displayValue) || "");
     return { question: this.question, displayValue: formattedValue };
@@ -349,11 +349,11 @@ export class MatrixDynamicColumn extends BaseColumn<QuestionMatrixDynamicModel> 
 
 export class PanelDynamicColumn extends BaseColumn<QuestionPanelDynamicModel> {
   protected getDataType(): ColumnDataType {
-    return this.table.options.nestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
+    return this.table.options.useNestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
   }
 
   protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
-    if(table.options.nestedTables) {
+    if(table.options.useNestedTables) {
       return this.getDisplayValueCore(data);
     }
     return super.getDisplayValue(data, table, options);
@@ -361,7 +361,7 @@ export class PanelDynamicColumn extends BaseColumn<QuestionPanelDynamicModel> {
 
   public getCellData(table: Table, data: any): ICellData {
     const displayValue = this.getDisplayValue(data, table, table.options);
-    const formattedValue = table.options.nestedTables && Array.isArray(displayValue)
+    const formattedValue = table.options.useNestedTables && Array.isArray(displayValue)
       ? displayValue
       : (typeof displayValue === "string" ? displayValue : JSON.stringify(displayValue) || "");
     return { question: this.question, displayValue: formattedValue };

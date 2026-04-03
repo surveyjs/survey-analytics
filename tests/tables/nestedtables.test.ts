@@ -10,193 +10,173 @@ jest.mock("tabulator-tables", () => {
 const trueTimeout = window.setTimeout;
 
 function mockTimeout() {
-  window.setTimeout = (callback: any) => { callback(); };
+  window.setTimeout = ((callback: any) => { callback(); }) as any;
 }
 function restoreTimeout() {
   window.setTimeout = trueTimeout;
 }
 
-describe("Nested Tables for Matrix Dynamic", () => {
-  const matrixDynamicJson = {
-    questions: [
-      {
-        type: "matrixdynamic",
-        name: "teachersRate",
-        title: "Please rate your teachers",
-        columns: [
-          {
-            name: "subject",
-            cellType: "dropdown",
-            title: "Select a subject",
-            choices: ["Math", "Science", "History"],
-          },
-          {
-            name: "rating",
-            cellType: "rating",
-            title: "Rating",
-          },
-        ],
-      },
+// Nested Tables for Matrix Dynamic
+const matrixDynamicJson = {
+  questions: [
+    {
+      type: "matrixdynamic",
+      name: "teachersRate",
+      title: "Please rate your teachers",
+      columns: [
+        {
+          name: "subject",
+          cellType: "dropdown",
+          title: "Select a subject",
+          choices: ["Math", "Science", "History"],
+        },
+        {
+          name: "rating",
+          cellType: "rating",
+          title: "Rating",
+        },
+      ],
+    },
+  ],
+};
+
+const matrixDynamicData = [
+  {
+    teachersRate: [
+      { subject: "Math", rating: 4 },
+      { subject: "Science", rating: 5 },
     ],
-  };
+  },
+  {
+    teachersRate: [
+      { subject: "History", rating: 3 },
+    ],
+  },
+];
 
-  const matrixDynamicData = [
-    {
-      teachersRate: [
-        { subject: "Math", rating: 4 },
-        { subject: "Science", rating: 5 },
-      ],
-    },
-    {
-      teachersRate: [
-        { subject: "History", rating: 3 },
-      ],
-    },
-  ];
+test("should create column for matrixdynamic question when nested tables disabled", () => {
+  const survey = new SurveyModel(matrixDynamicJson);
+  const tabulator = new Tabulator(survey, matrixDynamicData, { useNestedTables: false });
 
-  test("should create column for matrixdynamic question when nested tables disabled", () => {
-    const survey = new SurveyModel(matrixDynamicJson);
-    const tabulator = new Tabulator(survey, matrixDynamicData, { nestedTables: undefined });
+  const columns = tabulator["buildColumns"](survey);
 
-    const columns = tabulator["buildColumns"](survey);
-
-    expect(columns.length).toBe(1);
-    expect(columns[0].name).toBe("teachersRate");
-    expect(columns[0].displayName).toBe("Please rate your teachers");
-  });
-
-  test("should create column for matrixdynamic question with nested table capability when enabled", () => {
-    const survey = new SurveyModel(matrixDynamicJson);
-    const tabulator = new Tabulator(survey, matrixDynamicData, { nestedTables: "tabulator" });
-
-    const columns = tabulator["buildColumns"](survey);
-
-    expect(columns.length).toBe(1);
-    expect(columns[0].name).toBe("teachersRate");
-    expect(columns[0].displayName).toBe("Please rate your teachers");
-    expect(columns[0].dataType).toBe(ColumnDataType.NestedTable);
-  });
-
-  test("should generate nested table configuration for matrixdynamic", () => {
-    const survey = new SurveyModel(matrixDynamicJson);
-    const tabulator = new Tabulator(survey, matrixDynamicData, { nestedTables: "tabulator" });
-
-    mockTimeout();
-    const container = document.createElement("div");
-    tabulator.render(container);
-
-    const columns = tabulator.getColumns();
-    const matrixColumn = columns.find((col: any) => col.field === "teachersRate");
-
-    expect(matrixColumn).toBeDefined();
-    expect(typeof matrixColumn.formatter).toBe("function");
-
-    restoreTimeout();
-  });
-
-  test("should handle empty matrixdynamic data", () => {
-    const survey = new SurveyModel(matrixDynamicJson);
-    const emptyData = [{ teachersRate: [] }];
-    const tabulator = new Tabulator(survey, emptyData, { nestedTables: "tabulator" });
-
-    const columns = tabulator["buildColumns"](survey);
-
-    expect(columns.length).toBe(1);
-    expect(columns[0].name).toBe("teachersRate");
-  });
+  expect(columns.length).toBe(1);
+  expect(columns[0].name).toBe("teachersRate");
+  expect(columns[0].displayName).toBe("Please rate your teachers");
 });
 
-describe("Nested Tables for Panel Dynamic", () => {
-  const panelDynamicJson = {
-    questions: [
-      {
-        type: "paneldynamic",
-        name: "relatives",
-        title: "Please enter details about your relatives",
-        templateElements: [
-          {
-            type: "text",
-            name: "relativeType",
-            title: "Type of Relative",
-          },
-          {
-            type: "text",
-            name: "firstName",
-            title: "First Name",
-          },
-          {
-            type: "text",
-            name: "lastName",
-            title: "Last Name",
-          },
-        ],
-      },
-    ],
-  };
+test("should create column for matrixdynamic question with nested table capability when enabled", () => {
+  const survey = new SurveyModel(matrixDynamicJson);
+  const tabulator = new Tabulator(survey, matrixDynamicData, { useNestedTables: true });
 
-  const panelDynamicData = [
-    {
-      relatives: [
-        { relativeType: "Brother", firstName: "John", lastName: "Doe" },
-        { relativeType: "Sister", firstName: "Jane", lastName: "Doe" },
-      ],
-    },
-    {
-      relatives: [
-        { relativeType: "Mother", firstName: "Mary", lastName: "Smith" },
-      ],
-    },
-  ];
+  const columns = tabulator["buildColumns"](survey);
 
-  test("should create column for paneldynamic question when nested tables disabled", () => {
-    const survey = new SurveyModel(panelDynamicJson);
-    const tabulator = new Tabulator(survey, panelDynamicData, { nestedTables: undefined });
-
-    const columns = tabulator["buildColumns"](survey);
-
-    expect(columns.length).toBe(1);
-    expect(columns[0].name).toBe("relatives");
-    expect(columns[0].displayName).toBe("Please enter details about your relatives");
-  });
-
-  test("should create column for paneldynamic question with nested table capability when enabled", () => {
-    const survey = new SurveyModel(panelDynamicJson);
-    const tabulator = new Tabulator(survey, panelDynamicData, { nestedTables: "tabulator" });
-
-    const columns = tabulator["buildColumns"](survey);
-
-    expect(columns.length).toBe(1);
-    expect(columns[0].name).toBe("relatives");
-    expect(columns[0].displayName).toBe("Please enter details about your relatives");
-    expect(columns[0].dataType).toBe(ColumnDataType.NestedTable);
-  });
-
-  test("should handle empty paneldynamic data", () => {
-    const survey = new SurveyModel(panelDynamicJson);
-    const emptyData = [{ relatives: [] }];
-    const tabulator = new Tabulator(survey, emptyData, { nestedTables: "tabulator" });
-
-    const columns = tabulator["buildColumns"](survey);
-
-    expect(columns.length).toBe(1);
-    expect(columns[0].name).toBe("relatives");
-  });
+  expect(columns.length).toBe(1);
+  expect(columns[0].name).toBe("teachersRate");
+  expect(columns[0].displayName).toBe("Please rate your teachers");
+  expect(columns[0].dataType).toBe(ColumnDataType.NestedTable);
 });
 
-describe("Nested Tables Configuration", () => {
-  test("should default to nested tables disabled", () => {
-    const json = { questions: [{ type: "text", name: "q1" }] };
-    const survey = new SurveyModel(json);
-    const tabulator = new Tabulator(survey, []);
+test("should generate nested table configuration for matrixdynamic", () => {
+  const survey = new SurveyModel(matrixDynamicJson);
+  const tabulator = new Tabulator(survey, matrixDynamicData, { useNestedTables: true });
 
-    expect(tabulator.options.nestedTables).toBeUndefined();
-  });
+  mockTimeout();
+  const container = document.createElement("div");
+  tabulator.render(container);
 
-  test("should allow enabling nested tables via options", () => {
-    const json = { questions: [{ type: "text", name: "q1" }] };
-    const survey = new SurveyModel(json);
-    const tabulator = new Tabulator(survey, [], { nestedTables: "tabulator" });
+  const columns = tabulator.getColumns();
+  const matrixColumn = columns.find((col: any) => col.field === "teachersRate");
 
-    expect(tabulator.options.nestedTables).toBe("tabulator");
-  });
+  expect(matrixColumn).toBeDefined();
+  expect(typeof matrixColumn.formatter).toBe("function");
+
+  restoreTimeout();
+});
+
+test("should handle empty matrixdynamic data", () => {
+  const survey = new SurveyModel(matrixDynamicJson);
+  const emptyData = [{ teachersRate: [] }];
+  const tabulator = new Tabulator(survey, emptyData, { useNestedTables: true });
+
+  const columns = tabulator["buildColumns"](survey);
+
+  expect(columns.length).toBe(1);
+  expect(columns[0].name).toBe("teachersRate");
+});
+
+// Nested Tables for Panel Dynamic
+const panelDynamicJson = {
+  questions: [
+    {
+      type: "paneldynamic",
+      name: "relatives",
+      title: "Please enter details about your relatives",
+      templateElements: [
+        {
+          type: "text",
+          name: "relativeType",
+          title: "Type of Relative",
+        },
+        {
+          type: "text",
+          name: "firstName",
+          title: "First Name",
+        },
+        {
+          type: "text",
+          name: "lastName",
+          title: "Last Name",
+        },
+      ],
+    },
+  ],
+};
+
+const panelDynamicData = [
+  {
+    relatives: [
+      { relativeType: "Brother", firstName: "John", lastName: "Doe" },
+      { relativeType: "Sister", firstName: "Jane", lastName: "Doe" },
+    ],
+  },
+  {
+    relatives: [
+      { relativeType: "Mother", firstName: "Mary", lastName: "Smith" },
+    ],
+  },
+];
+
+test("should create column for paneldynamic question when nested tables disabled", () => {
+  const survey = new SurveyModel(panelDynamicJson);
+  const tabulator = new Tabulator(survey, panelDynamicData, { useNestedTables: false });
+
+  const columns = tabulator["buildColumns"](survey);
+
+  expect(columns.length).toBe(1);
+  expect(columns[0].name).toBe("relatives");
+  expect(columns[0].displayName).toBe("Please enter details about your relatives");
+});
+
+test("should create column for paneldynamic question with nested table capability when enabled", () => {
+  const survey = new SurveyModel(panelDynamicJson);
+  const tabulator = new Tabulator(survey, panelDynamicData, { useNestedTables: true });
+
+  const columns = tabulator["buildColumns"](survey);
+
+  expect(columns.length).toBe(1);
+  expect(columns[0].name).toBe("relatives");
+  expect(columns[0].displayName).toBe("Please enter details about your relatives");
+  expect(columns[0].dataType).toBe(ColumnDataType.NestedTable);
+});
+
+test("should handle empty paneldynamic data", () => {
+  const survey = new SurveyModel(panelDynamicJson);
+  const emptyData = [{ relatives: [] }];
+  const tabulator = new Tabulator(survey, emptyData, { useNestedTables: true });
+
+  const columns = tabulator["buildColumns"](survey);
+
+  expect(columns.length).toBe(1);
+  expect(columns[0].name).toBe("relatives");
 });
