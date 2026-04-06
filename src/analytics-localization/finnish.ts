@@ -95,11 +95,11 @@ export var finnishStrings = {
   showPercentages: "Näytä prosentit",
   // "Hide percentages"
   hidePercentages: "Piilota prosentit",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Lataa kuvaaja PNG kuvana",
@@ -141,13 +141,13 @@ export var finnishStrings = {
   statistics_chart: "Kuvaaja",
   // "Responses"
   responses: "Vastaukset",
-  // "NPS"
+  // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"
   visualizer_boolean: "Kaavio",
   // [Auto-translated] "Table"
   visualizer_options: "Taulukko",
-  // "NPS"
+  // [Auto-translated] "NPS"
   npsScore: "NPS",
   // "Promoters"
   npsPromoters: "Suosittelija",

@@ -1,4 +1,4 @@
-import { ItemValue, MatrixRowModel, Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionRadiogroupModel, QuestionSelectBase, QuestionTagboxModel, settings } from "survey-core";
+import { ItemValue, MatrixRowModel, Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixDynamicModel, QuestionMatrixModel, QuestionPanelDynamicModel, QuestionRadiogroupModel, QuestionSelectBase, QuestionTagboxModel, settings } from "survey-core";
 import { createImagesContainer, createLinksContainer } from "../utils";
 import { ICellData, IColumn, ColumnDataType, QuestionLocation, IColumnData } from "./config";
 import { ITableOptions, Table } from "./table";
@@ -136,6 +136,42 @@ export class CheckboxColumn extends SelectBaseColumn<QuestionCheckboxModel | Que
       return res.join(table.itemsDelimiter);
     }
     return super.getDisplayValue(data, table, options);
+  }
+}
+
+export class FlattenedCheckboxColumn extends BaseColumn<QuestionCheckboxModel | QuestionTagboxModel> {
+  constructor(question: QuestionCheckboxModel | QuestionTagboxModel, private choiceValue: any, private choiceText: string, table: Table) {
+    super(question, table);
+  }
+
+  protected getDataType(): ColumnDataType {
+    return ColumnDataType.Html;
+  }
+
+  protected getName(): string {
+    return `${this.question.name}.${this.choiceValue}`;
+  }
+
+  protected getDisplayName(): string {
+    const questionDisplayName = this.table.useNamesAsTitles
+      ? this.question.name
+      : (this.question.locTitle?.renderedHtml || this.question.title || "").trim() || this.question.name;
+    const choiceDisplayText = this.table.useNamesAsTitles ? this.choiceValue : this.choiceText;
+    return `${questionDisplayName} - ${choiceDisplayText}`;
+  }
+
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
+    const questionValue = data[this.question.name];
+    if(!Array.isArray(questionValue)) {
+      return "";
+    }
+    const index = questionValue.indexOf(this.choiceValue);
+    if(index < 0) {
+      return "";
+    }
+    // Default to checkmark if not specified
+    const displayMode = options.multiSelectColumnValueFormat || "checkmark";
+    return displayMode === "checkmark" ? "&#10004;" : (index + 1).toString();
   }
 }
 
@@ -287,5 +323,47 @@ export class CompositeQuestionColumn extends BaseColumn<QuestionCompositeModel> 
     questionList.forEach((q: Question) => {
       this.updateWhenQuestionIsReady(q, table);
     });
+  }
+}
+
+export class MatrixDynamicColumn extends BaseColumn<QuestionMatrixDynamicModel> {
+  protected getDataType(): ColumnDataType {
+    return this.table.options.useNestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
+  }
+
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
+    if(table.options.useNestedTables) {
+      return this.getDisplayValueCore(data);
+    }
+    return super.getDisplayValue(data, table, options);
+  }
+
+  public getCellData(table: Table, data: any): ICellData {
+    const displayValue = this.getDisplayValue(data, table, table.options);
+    const formattedValue = table.options.useNestedTables && Array.isArray(displayValue)
+      ? displayValue
+      : (typeof displayValue === "string" ? displayValue : JSON.stringify(displayValue) || "");
+    return { question: this.question, displayValue: formattedValue };
+  }
+}
+
+export class PanelDynamicColumn extends BaseColumn<QuestionPanelDynamicModel> {
+  protected getDataType(): ColumnDataType {
+    return this.table.options.useNestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
+  }
+
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
+    if(table.options.useNestedTables) {
+      return this.getDisplayValueCore(data);
+    }
+    return super.getDisplayValue(data, table, options);
+  }
+
+  public getCellData(table: Table, data: any): ICellData {
+    const displayValue = this.getDisplayValue(data, table, table.options);
+    const formattedValue = table.options.useNestedTables && Array.isArray(displayValue)
+      ? displayValue
+      : (typeof displayValue === "string" ? displayValue : JSON.stringify(displayValue) || "");
+    return { question: this.question, displayValue: formattedValue };
   }
 }

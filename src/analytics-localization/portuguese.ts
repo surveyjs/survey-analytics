@@ -95,11 +95,11 @@ export var portugueseStrings = {
   showPercentages: "Mostrar percentuais",
   // "Hide percentages"
   hidePercentages: "Esconder percentuais",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Baixar diagrama como PNG",

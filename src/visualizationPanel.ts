@@ -643,19 +643,11 @@ export class VisualizationPanel extends VisualizerBase {
         const visualizerWithSelection = <IVisualizerWithSelection>(
           (<any>visualizer)
         );
-        let filterInfo = new FilterInfo(visualizerWithSelection);
-
-        visualizer.registerToolbarItem("questionFilterInfo", () => {
-          filterInfo.update(visualizerWithSelection.selection);
-          return filterInfo.htmlElement;
-        }, 900);
-
         visualizerWithSelection.onDataItemSelected = (
           selectedValue: any,
           selectedText: string
         ) => {
-          filterInfo.update({ value: selectedValue, text: selectedText });
-          this.setFilter(question.name, selectedValue);
+          this.setFilter(visualizer.name, selectedValue);
         };
       }
 

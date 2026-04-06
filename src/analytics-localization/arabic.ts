@@ -95,11 +95,11 @@ export var arabicStrings = {
   showPercentages: "عرض النسب المئوية",
   // "Hide percentages"
   hidePercentages: "إخفاء النسب",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
-  xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "Excel"
+  xlsxDownloadCaption: "إكسل",
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "تنزيل بصيغة png",
@@ -164,7 +164,7 @@ export var arabicStrings = {
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "المجموعات:",
   // [Auto-translated] "Not selected"
-  notSelected: "غير محدد",
+  notSelected: "لم يتم اختياره",
   // [Auto-translated] "Default"
   intervalMode_default: "افتراضي",
   // [Auto-translated] "Decades"

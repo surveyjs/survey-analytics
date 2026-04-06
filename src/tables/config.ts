@@ -9,6 +9,8 @@ export enum ColumnDataType {
   Text,
   FileLink,
   Image,
+  NestedTable,
+  Html
 }
 
 export interface ICellData {

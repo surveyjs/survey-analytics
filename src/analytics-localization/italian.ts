@@ -95,11 +95,11 @@ export var italianStrings = {
   showPercentages: "Mostra percentuali",
   // "Hide percentages"
   hidePercentages: "Nascondi percentuali",
-  // "PDF"
+  // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
-  // "Excel"
+  // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
-  // "CSV"
+  // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Scarica il grafico in formato png",

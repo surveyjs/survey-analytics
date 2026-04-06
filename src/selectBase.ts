@@ -3,6 +3,7 @@ import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DataHelper, DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
+import { FilterInfo } from "./filterInfo";
 
 export interface IVisualizerWithSelection {
   selection: ItemValue;
@@ -101,6 +102,7 @@ export class SelectBase
   protected _transposeData: boolean = false;
   private _showMissingAnswers: boolean = false;
   private missingAnswersBtn: HTMLElement = undefined;
+  protected filterInfo: FilterInfo;
 
   constructor(
     question: Question,
@@ -241,6 +243,13 @@ export class SelectBase
       }
       return this.missingAnswersBtn;
     });
+    this.registerToolbarItem("questionFilterInfo", () => {
+      if(this.supportSelection) {
+        this.filterInfo = new FilterInfo(this);
+        this.filterInfo.update(this.selection);
+      }
+      return this.filterInfo?.htmlElement;
+    }, 900);
   }
 
   protected chartTypes: string[] = [];
@@ -357,7 +366,7 @@ export class SelectBase
   }
 
   protected isSupportSoftUpdateContent(): boolean {
-    return true;
+    return !this._hideEmptyAnswers;
   }
 
   protected softUpdateContent(): void {
@@ -365,6 +374,11 @@ export class SelectBase
     if(chartNode) {
       this._chartAdapter.update(chartNode);
     }
+  }
+
+  public getSelectedItemByValue(value: any): ItemValue {
+    const choices = (this.question as QuestionSelectBase).visibleChoices;
+    return ItemValue.getItemByValue(choices, value) ?? undefined;
   }
 
   public getSelectedItemByText(itemText: string) {
@@ -382,6 +396,19 @@ export class SelectBase
     }
   }
 
+  protected onDataChanged(): void {
+    const filter = this.dataProvider.getFilters().find(f => f.field === this.name);
+    const newFilterValue = filter?.value;
+    const currentSelectionValue = this.selectedItem?.value;
+    if(newFilterValue !== currentSelectionValue) {
+      const newSelectedItem = this.getSelectedItemByValue(newFilterValue);
+      this.setSelection(newSelectedItem, true);
+      this.updateToolbar();
+    }
+    super.onDataChanged();
+    this.updateEmptyAnswersBtn();
+  }
+
   protected onSelectionChanged(item: ItemValue): void {
     if(this.onDataItemSelected !== undefined) {
       this.onDataItemSelected(
@@ -392,10 +419,13 @@ export class SelectBase
     this.stateChanged("filter", this.selectedItem?.value);
   }
 
-  setSelection(item: ItemValue): void {
+  setSelection(item: ItemValue, quiet: boolean = false): void {
     if(this.selectedItem !== item) {
       this.selectedItem = item;
-      this.onSelectionChanged(item);
+      this.filterInfo?.update({ value: this.selectedItem?.value, text: this.selectedItem?.text });
+      if(!quiet) {
+        this.onSelectionChanged(item);
+      }
     }
   }
   get selection() {
@@ -839,8 +869,8 @@ export class SelectBase
         (<any>this)[propertyName] = state[propertyName];
       }
     });
-    const selectedItem = ItemValue.getItemByValue((this.question as QuestionSelectBase).visibleChoices, state.filter);
-    this.setSelection(selectedItem ?? undefined);
+    const selectedItem = this.getSelectedItemByValue(state.filter);
+    this.setSelection(selectedItem);
   }
   public resetState(): void {
     super.resetState();

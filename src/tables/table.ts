@@ -10,7 +10,7 @@ import {
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { ITableExtension, TableExtensions } from "./extensions/tableextensions";
-import { createCommercialLicenseLink, createImagesContainer, createLinksContainer, DocumentHelper } from "../utils";
+import { createCommercialLicenseLink } from "../utils";
 import { ColumnsBuilderFactory } from "./columnbuilder";
 import { DefaultColumn } from "./columns";
 
@@ -60,6 +60,34 @@ export interface ITableOptions {
    * @see pageSize
    */
   paginationEnabled?: boolean;
+  /**
+   * Specifies whether responses to [Dynamic Matrix](https://surveyjs.io/form-library/examples/dynamic-matrix-add-new-rows/) and [Dynamic Panel](https://surveyjs.io/form-library/examples/duplicate-group-of-fields-in-form/) questions are rendered using nested tables.
+   *
+   * Default value: `true`
+   *
+   * If disabled, responses are displayed as stringified JSON objects instead of a tabular structure.
+   */
+  useNestedTables?: boolean;
+  /**
+   * Specifies whether to split responses to multi-select questions (Checkboxes and Multi-Select Dropdown) into separate columns.
+   *
+   * When enabled, each choice is represented as an individual column. Cell values indicate whether the choice was selected or the selection order, depending on the `multiSelectColumnValueFormat` setting. Empty cells indicate that the choice was not selected.
+   *
+   * Default value: `false`
+   *
+   */
+  splitMultiSelectIntoColumns?: boolean;
+  /**
+   * Specifies how selected values are represented in columns generated from multi-select questions. Applies only when `splitMultiSelectIntoColumns` is `true`.
+   *
+   * Accepted values:
+   *
+   * - `"checkmark"` &ndash; Displays a checkmark symbol for selected choices.
+   * - `"selectionOrder"` &ndash; Displays the order in which choices were selected (1, 2, 3, ...).
+   *
+   * Default value: `"checkmark"`
+   */
+  multiSelectColumnValueFormat?: "checkmark" | "selectionOrder";
 }
 
 export type TabulatorFilter = { field: string, type: string, value: any };
@@ -86,6 +114,9 @@ export abstract class Table {
   ) {
     if(!this._options) {
       this._options = {};
+    }
+    if(typeof this._options.useNestedTables === "undefined") {
+      this._options.useNestedTables = true;
     }
 
     this.initialize();

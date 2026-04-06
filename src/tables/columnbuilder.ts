@@ -1,5 +1,5 @@
-import { Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionRadiogroupModel, QuestionSelectBase } from "survey-core";
-import { BaseColumn, CheckboxColumn, CommentColumn, CompositeQuestionColumn, CustomQuestionColumn, FileColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn, OtherColumn, SelectBaseColumn, SingleChoiceColumn } from "./columns";
+import { Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixDynamicModel, QuestionMatrixModel, QuestionPanelDynamicModel, QuestionRadiogroupModel, QuestionSelectBase } from "survey-core";
+import { BaseColumn, CheckboxColumn, CommentColumn, CompositeQuestionColumn, CustomQuestionColumn, FileColumn, FlattenedCheckboxColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn, MatrixDynamicColumn, OtherColumn, PanelDynamicColumn, SelectBaseColumn, SingleChoiceColumn } from "./columns";
 import { IColumn, QuestionLocation } from "./config";
 import { Table } from "./table";
 
@@ -53,6 +53,16 @@ export class SelectBaseColumnsBuilder<T extends QuestionSelectBase> extends Defa
 export class CheckboxColumnsBuilder extends SelectBaseColumnsBuilder<QuestionCheckboxModel> {
   protected createColumn(question: QuestionCheckboxModel, table: Table): BaseColumn<QuestionCheckboxModel> {
     return new CheckboxColumn(question, table);
+  }
+  protected buildColumnsCore(question: QuestionCheckboxModel, table: Table): Array<IColumn> {
+    if(table.options.splitMultiSelectIntoColumns) {
+      const columns: Array<IColumn> = [];
+      question.visibleChoices.forEach(choice => {
+        columns.push(new FlattenedCheckboxColumn(question, choice.value, choice.text, table));
+      });
+      return columns;
+    }
+    return super.buildColumnsCore(question, table);
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("checkbox", new CheckboxColumnsBuilder());
@@ -147,3 +157,17 @@ export class CompositeColumnsBuilder extends DefaultColumnsBuilder<QuestionCompo
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("composite", new CompositeColumnsBuilder());
+
+export class MatrixDynamicColumnsBuilder extends DefaultColumnsBuilder<QuestionMatrixDynamicModel> {
+  protected createColumn(question: QuestionMatrixDynamicModel, table: Table): MatrixDynamicColumn {
+    return new MatrixDynamicColumn(question, table);
+  }
+}
+ColumnsBuilderFactory.Instance.registerBuilderColumn("matrixdynamic", new MatrixDynamicColumnsBuilder());
+
+export class PanelDynamicColumnsBuilder extends DefaultColumnsBuilder<QuestionPanelDynamicModel> {
+  protected createColumn(question: QuestionPanelDynamicModel, table: Table): PanelDynamicColumn {
+    return new PanelDynamicColumn(question, table);
+  }
+}
+ColumnsBuilderFactory.Instance.registerBuilderColumn("paneldynamic", new PanelDynamicColumnsBuilder());
