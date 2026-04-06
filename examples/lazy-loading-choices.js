@@ -92,4 +92,5 @@ visPanel.render(document.getElementById("summaryContainer"));
 console.log("Total countries available:", allCountries.length);
 console.log("Initially loaded choices:", initialChoices.length);
 console.log("Unique values in response data:", [...new Set(data.map(d => d.country))]);
-console.log("The visualizer will show all values from the data, even those not in the initially loaded 25 choices.");
+console.log("The visualizer will show ONLY the values that appear in the response data (ALB, ATG, FRA, ZWE),");
+console.log("not all 25 initially loaded choices. This keeps the visualization focused on actual responses.");

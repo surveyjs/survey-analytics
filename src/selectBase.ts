@@ -608,38 +608,11 @@ export class SelectBase
   }
 
   getValues(): Array<any> {
-    const values: Array<any> = this.valuesSource().map(
-      (choice) => choice.value
-    );
-
-    // For questions with lazy loading, we need to include all values that appear in the data
-    // even if they're not in the currently loaded choices
-    const valuesSet = new Set(values);
+    // Collect only the values that actually appear in the survey response data
     const uniqueDataValues = this.collectUniqueValuesFromData();
+    const values: Array<any> = Array.from(uniqueDataValues);
 
-    uniqueDataValues.forEach((value) => {
-      // Skip special values that are handled separately
-      if(value === "other" || value === undefined) {
-        return;
-      }
-      // Add values that are in the data but not in the choices
-      if(!valuesSet.has(value)) {
-        const question = this.question as QuestionSelectBase;
-        // Check if this might be a none item value
-        if(question.hasNone && value === question.noneItem.value) {
-          return;
-        }
-        values.push(value);
-        valuesSet.add(value);
-      }
-    });
-
-    if((<QuestionSelectBase>this.question).hasNone) {
-      values.push((<QuestionSelectBase>this.question).noneItem.value);
-    }
-    if(this.question.hasOther) {
-      values.push("other");
-    }
+    // Add missing answers if needed
     if(this.showMissingAnswers) {
       values.unshift(undefined);
     }
@@ -673,40 +646,15 @@ export class SelectBase
       valueLabelMap.set("other", selBase.otherText);
     }
 
-    // Start with labels from loaded choices
-    valuesSource.forEach((choice) => {
-      labels.push(valueLabelMap.get(choice.value));
-    });
-
-    // Add labels for values from data that aren't in the loaded choices
-    const valuesSet = new Set(valuesSource.map(c => c.value));
+    // Get only the values that appear in the data
     const uniqueDataValues = this.collectUniqueValuesFromData();
 
+    // Create labels for each value that appears in the data
     uniqueDataValues.forEach((value) => {
-      // Skip special values that are handled separately
-      if(value === "other" || value === undefined) {
-        return;
-      }
-      // Add values that are in the data but not in the choices
-      if(!valuesSet.has(value)) {
-        const question = this.question as QuestionSelectBase;
-        // Check if this might be a none item value
-        if(question.hasNone && value === question.noneItem.value) {
-          return;
-        }
-        // Use the value as its own label if no choice is defined for it
-        labels.push(String(value));
-        valuesSet.add(value);
-      }
+      // Use the label from choices if available, otherwise use the value itself
+      const label = valueLabelMap.get(value) || String(value);
+      labels.push(label);
     });
-
-    // Add none and other labels
-    if(selBase.hasNone) {
-      labels.push(selBase.noneText);
-    }
-    if(selBase.hasOther) {
-      labels.push(selBase.otherText);
-    }
 
     // Add missing answers label at the beginning
     if(this.showMissingAnswers) {

@@ -44,9 +44,10 @@
     <p>The country dropdown has 1000+ choices but only the first 25 are loaded initially via lazy loading.
     However, the survey response data contains values (Albania, France, Zimbabwe) that span the full range of choices,
     including some outside the initially loaded 25.</p>
-    <p><strong>Solution:</strong> The visualizer now collects all unique values from the response data and includes them
-    in the visualization, even if they weren't in the initially loaded choices. Values without loaded choice definitions
-    are displayed using their value as the label.</p>
+    <p><strong>Solution:</strong> The visualizer now shows ONLY the values that actually appear in the survey response data,
+    rather than showing all loaded choices. This keeps the visualization focused on actual responses and works efficiently
+    with lazy loading. Values are displayed using their choice labels when available, or using the value itself as the label
+    if no choice definition exists.</p>
   </div>
 
   <div id="summaryContainer"></div>
