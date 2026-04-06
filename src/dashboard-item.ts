@@ -10,6 +10,8 @@ import { VisualizerFactory } from "./visualizerFactory";
  * Defines configuration options for a dashboard item.
  *
  * Pass an array of `IDashboardItemOptions` objects to the [`items`](https://surveyjs.io/dashboard/documentation/api-reference/dashboard#items) array when initializing the Dashboard.
+ *
+ * [View Demo](https://surveyjs.io/dashboard/examples/customer-satisfaction-analysis/ (linkStyle))
  */
 export interface IDashboardItemOptions {
   /**
@@ -39,9 +41,8 @@ export interface IDashboardItemOptions {
    * - [`"text"`](https://surveyjs.io/dashboard/documentation/chart-types#text-table)
    * - [`"choices"`](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table)
    * - [`"nps"`](https://surveyjs.io/dashboard/documentation/chart-types#nps-visualizer)
-   * - `"card"`
-  * - `"responsecount"`
-   * - `"pivot"`
+   * - [`"responsecount"`](https://surveyjs.io/dashboard/documentation/chart-types#response-count)
+   * - [`"pivot"`](https://surveyjs.io/dashboard/documentation/chart-types#pivot-chart)
    *
    * To prevent end users from changing the item type at runtime, set [`allowChangeType`](#allowChangeType) to `false`.
    */
