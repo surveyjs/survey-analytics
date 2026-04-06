@@ -19,11 +19,12 @@
     "build:all": "npm run build && npm run build:themes && npm run build:extras && npm run build:types && npm run build:types:extras",
     "build:extras": "webpack --config webpack.extras.config.js --env buildType=dev --env emitStyles && webpack --config webpack.extras.config.js --env buildType=prod --env emitStyles && npm run build:types:extras",
     "build": "webpack --env buildType=dev --env emitNonSourceFiles --env emitStyles && webpack --env buildType=prod --env emitStyles && rollup -c && npm run build:types",
-    "build:types": "npm run build:types:core && npm run build:types:apexcharts",
+    "build:types": "npm run build:types:core && npm run build:types:apexcharts && npm run build:types:chartjs",
     "build:types:extras": "npm run build:types:tabulator && npm run build:types:plotly && npm run build:types:mongo",
     "build:types:core": "tsc --p tsconfig.types.summary.core.json && echo \"export * from './survey-analytics.types/entries/summary.core';\" >> build/survey.analytics.core.d.ts",
     "build:types:tabulator": "tsc --p tsconfig.types.tabulator.json && echo \"export * from './survey-analytics-tabulator.types/entries/tabulator';\" >> build/survey.analytics.tabulator.d.ts",
     "build:types:apexcharts": "tsc --p tsconfig.types.apexcharts.json && echo \"export * from './survey-analytics-apexcharts.types/entries/apexcharts';\" >> build/survey.analytics.d.ts",
+    "build:types:chartjs": "tsc --p tsconfig.types.chartjs.json && echo \"export * from './survey-analytics-chartjs.types/entries/chartjs';\" >> build/survey.analytics.chartjs.d.ts",
     "build:types:plotly": "tsc --p tsconfig.types.plotly.json && echo \"export * from './survey-analytics-plotly.types/entries/plotly';\" >> build/survey.analytics.plotly.d.ts",
     "build:types:mongo": "tsc --p tsconfig.types.mongo.json && echo \"export * from './survey-analytics.types/entries/mongo';\" >> build/survey.analytics.mongo.d.ts",
     "build:themes": "webpack --config ./webpack.themes.config.js --env buildType=dev --env emitDeclarations && webpack --config ./webpack.themes.config.js --env buildType=prod && rollup -c rollup.themes.config.js",
@@ -45,6 +46,7 @@
     "url": "https://github.com/surveyjs/survey-analytics.git"
   },
   "dependencies": {
+    "chart.js": "^4.5.1",
     "mongodb": "^6.20.0",
     "muuri": "^0.8.0",
     "plotly.js-dist-min": "^2.28.0",
