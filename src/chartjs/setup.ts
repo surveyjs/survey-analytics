@@ -77,9 +77,11 @@ export class ChartJsSetup {
   }
 
   static defaultLegendConfig(model: SelectBase) {
+    const isMobile = window.innerWidth <= 600;
     const font = model.theme.legendLabelFont;
+    const position = isMobile ? "bottom" : model.legendPosition;
     return {
-      position: model.legendPosition as "left" | "right" | "top" | "bottom",
+      position: position as "left" | "right" | "top" | "bottom",
       align: "start" as const,
       labels: {
         color: font.color,
@@ -91,6 +93,8 @@ export class ChartJsSetup {
         usePointStyle: true,
         pointStyle: "rect",
         pointStyleWidth: 10,
+        boxWidth: 20,
+        padding: 12,
       },
     };
   }
@@ -124,6 +128,7 @@ export class ChartJsSetup {
         family: font.family,
         weight: font.weight,
       },
+      padding: 8,
     };
   }
 
@@ -262,6 +267,9 @@ export class ChartJsSetup {
     const options: any = {
       responsive: true,
       maintainAspectRatio: false,
+      layout: {
+        padding: 10
+      },
       cutout: isDoughnut ? "40%" : 0,
       plugins: {
         legend: {
@@ -344,7 +352,7 @@ export class ChartJsSetup {
           backgroundColor: colors[index % colors.length],
           borderWidth: 0,
           barPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
-          categoryPercentage: 0.8,
+          categoryPercentage: 0.9,
         });
       });
     } else {
@@ -354,7 +362,7 @@ export class ChartJsSetup {
         backgroundColor: isHistogram ? colors[0] : colors,
         borderWidth: 0,
         barPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
-        categoryPercentage: 0.8,
+        categoryPercentage: 0.9,
       });
     }
 
@@ -390,10 +398,13 @@ export class ChartJsSetup {
       indexAxis: "y" as const,
       responsive: true,
       maintainAspectRatio: false,
+      layout: {
+        padding: 10
+      },
       plugins: {
         legend: {
           ...ChartJsSetup.defaultLegendConfig(model),
-          display: hasSeries,
+          display: seriesLabels.length > 1,
         },
         tooltip: {
           ...ChartJsSetup.defaultTooltipConfig(model.theme),
@@ -509,10 +520,13 @@ export class ChartJsSetup {
     const options: any = {
       responsive: true,
       maintainAspectRatio: false,
+      layout: {
+        padding: 10
+      },
       plugins: {
         legend: {
           ...ChartJsSetup.defaultLegendConfig(model),
-          display: hasSeries,
+          display: seriesLabels.length > 1,
         },
         tooltip: {
           ...ChartJsSetup.defaultTooltipConfig(model.theme),
@@ -619,10 +633,13 @@ export class ChartJsSetup {
     const options: any = {
       responsive: true,
       maintainAspectRatio: false,
+      layout: {
+        padding: 10
+      },
       plugins: {
         legend: {
           ...ChartJsSetup.defaultLegendConfig(model),
-          display: hasSeries,
+          display: seriesLabels.length > 1,
         },
         tooltip: {
           ...ChartJsSetup.defaultTooltipConfig(model.theme),
@@ -669,7 +686,7 @@ export class ChartJsSetup {
           backgroundColor: colors[index % colors.length],
           borderWidth: 0,
           barPercentage: 1 - ChartJsSetup.defaultBarGap,
-          categoryPercentage: 0.8,
+          categoryPercentage: 0.9,
         });
       });
     } else {
@@ -679,7 +696,7 @@ export class ChartJsSetup {
         backgroundColor: colors,
         borderWidth: 0,
         barPercentage: 1 - ChartJsSetup.defaultBarGap,
-        categoryPercentage: 0.8,
+        categoryPercentage: 0.9,
       });
     }
 
@@ -694,10 +711,13 @@ export class ChartJsSetup {
       indexAxis: "y" as const,
       responsive: true,
       maintainAspectRatio: false,
+      layout: {
+        padding: 10
+      },
       plugins: {
         legend: {
           ...ChartJsSetup.defaultLegendConfig(model),
-          display: hasSeries,
+          display: seriesLabels.length > 1,
         },
         tooltip: {
           ...ChartJsSetup.defaultTooltipConfig(model.theme),
@@ -783,10 +803,13 @@ export class ChartJsSetup {
     const options: any = {
       responsive: true,
       maintainAspectRatio: false,
+      layout: {
+        padding: 10
+      },
       plugins: {
         legend: {
           ...ChartJsSetup.defaultLegendConfig(model),
-          display: hasSeries,
+          display: seriesLabels.length > 1,
         },
         tooltip: {
           ...ChartJsSetup.defaultTooltipConfig(model.theme),
@@ -796,6 +819,14 @@ export class ChartJsSetup {
       scales: {
         x: {
           ...ChartJsSetup.defaultAxisConfig(model.theme),
+          ticks: {
+            ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+            callback: function(value: string | number) {
+              const index = Number(value);
+              const label = Number.isInteger(index) ? labels[index] : value;
+              return ChartJsSetup.getTruncatedLabel(String(label ?? value), model.labelTruncateLength);
+            },
+          },
         },
         y: {
           ...ChartJsSetup.defaultAxisConfig(model.theme),
@@ -916,9 +947,13 @@ export class ChartJsSetup {
       indexAxis: "y" as const,
       responsive: true,
       maintainAspectRatio: false,
+      layout: {
+        padding: 10
+      },
       plugins: {
         legend: { display: false },
         tooltip: { enabled: false },
+        datalabels: { display: false },
       },
       scales: {
         x: {
@@ -981,10 +1016,13 @@ export class ChartJsSetup {
     const options: any = {
       responsive: true,
       maintainAspectRatio: false,
+      layout: {
+        padding: 10
+      },
       plugins: {
         legend: {
           ...ChartJsSetup.defaultLegendConfig(model),
-          display: hasSeries,
+          display: seriesLabels.length > 1,
           labels: {
             ...ChartJsSetup.defaultLegendConfig(model).labels,
             usePointStyle: true,
@@ -1018,6 +1056,9 @@ export class ChartJsSetup {
               size: ChartJsSetup.parseFontSize(radarLabelFont.size),
               family: radarLabelFont.family,
               weight: radarLabelFont.weight,
+            },
+            callback: (label: string) => {
+              return ChartJsSetup.getTruncatedLabel(String(label), model.labelTruncateLength);
             },
           },
           ticks: {
