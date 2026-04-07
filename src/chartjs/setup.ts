@@ -281,6 +281,9 @@ export class ChartJsSetup {
         },
         datalabels: {
           ...ChartJsSetup.defaultDataLabelsConfig(model.theme),
+          display: function(context: any) {
+            return context.dataset.data[context.dataIndex] !== 0;
+          },
           formatter: function(value: number, context: any) {
             const label = context.chart.data.labels[context.dataIndex] || "";
             const text = label.length > 15 ? label.substring(0, 15) + "..." : label;
@@ -700,7 +703,10 @@ export class ChartJsSetup {
           ...ChartJsSetup.defaultTooltipConfig(model.theme),
         },
         datalabels: {
-          ...ChartJsSetup.defaultDataLabelsConfig(model.theme)
+          ...ChartJsSetup.defaultDataLabelsConfig(model.theme),
+          display: function(context: any) {
+            return context.dataset.data[context.dataIndex] !== 0;
+          },
         }
       },
       scales: {
