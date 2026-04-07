@@ -1,6 +1,7 @@
 import { QuestionDropdownModel, QuestionSelectBase } from "survey-core";
 import { SelectBase } from "../src/selectBase";
 import { ChartJsSetup } from "../src/chartjs/setup";
+import { HistogramModel } from "../src/histogram";
 
 const choices = [
   { value: "father", text: "father_text" },
@@ -109,4 +110,28 @@ test("left non-empty pies only for hasSeries mode", async () => {
   expect(config.pieSeries.length).toEqual(1);
   expect(config.pieSeries[0].title).toEqual("s2");
   expect(config.height).toEqual(250);
+});
+
+test("vertical histogram bars use full category width", async () => {
+  const histogramQuestion: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "number",
+    name: "age",
+  };
+  const histogramData = [
+    { age: 17 },
+    { age: 18 },
+    { age: 18 },
+    { age: 19 },
+    { age: 20 },
+    { age: 21 },
+  ];
+  const histogram = new HistogramModel(histogramQuestion, histogramData);
+
+  const config = ChartJsSetup.setupVBar(histogram, await histogram.getAnswersData());
+  const firstDataset = config.data.datasets[0] as any;
+
+  expect(firstDataset.barPercentage).toBe(1);
+  expect(firstDataset.categoryPercentage).toBe(1);
 });
