@@ -7,6 +7,8 @@ import { DashboardTheme } from "../theme";
 import { isAllZeros, reverseAll } from "../utils/utils";
 import { localization } from "../localizationManager";
 
+import "./styles.scss";
+
 export interface ChartJsOptions {
   type: string;
   data: {

@@ -8,6 +8,7 @@ import { isAllZeros, reverseAll } from "../utils/utils";
 import { localization } from "../localizationManager";
 
 import "./styles.scss";
+
 export interface ApexChartsOptions {
   series: Array<any>;
   chart: any;

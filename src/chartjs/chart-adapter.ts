@@ -167,6 +167,7 @@ export class ChartJsAdapter implements IChartAdapter {
     }
 
     if((_chartType === "pie" || _chartType === "doughnut") && chartOptions.pieSeries && chartOptions.pieSeries.length > 0) {
+      chartNode.style.height = "auto";
       this.updatePieCharts(chartOptions, chartNode);
     } else {
       if(this._chart && this._chart.canvas && this._chart.canvas.getRootNode() === document) {

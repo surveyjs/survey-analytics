@@ -1,0 +1,12 @@
+@use "../typography-mixins.scss" as *;
+
+.sa-visualizer {
+  .sa-pie-charts {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .sa-pie-chart {
+    width: 50%;
+  }
+}
