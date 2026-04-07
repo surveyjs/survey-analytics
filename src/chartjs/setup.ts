@@ -7,6 +7,8 @@ import { DashboardTheme } from "../theme";
 import { isAllZeros, reverseAll } from "../utils/utils";
 import { localization } from "../localizationManager";
 
+import "./styles.scss";
+
 export interface ChartJsOptions {
   type: string;
   data: {
@@ -200,6 +202,18 @@ export class ChartJsSetup {
     return this.setups[chartType](model, answersData);
   }
 
+  static getTruncatedLabel = (label: string, labelTruncateLength: number) => {
+    const truncateSymbols = "...";
+    const truncateSymbolsLength = truncateSymbols.length;
+
+    if(!labelTruncateLength) return label;
+    if(labelTruncateLength === -1) return label;
+    if(label.length <= labelTruncateLength + truncateSymbolsLength)
+      return label;
+
+    return label.substring(0, labelTruncateLength) + truncateSymbols;
+  };
+
   static setupPie(model: SelectBase, answersData: IAnswersData): ChartJsOptions {
     let {
       datasets,
@@ -360,6 +374,13 @@ export class ChartJsSetup {
 
     const yAxisConfig = {
       ...ChartJsSetup.defaultAxisConfig(model.theme),
+      ticks: {
+        ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+        callback: function(value: string | number, index: number) {
+          const label = labels[index];
+          return ChartJsSetup.getTruncatedLabel(String(label ?? value), model.labelTruncateLength);
+        },
+      },
     };
 
     const options: any = {
@@ -427,7 +448,7 @@ export class ChartJsSetup {
           backgroundColor: colors[index % colors.length],
           borderWidth: 0,
           barPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
-          categoryPercentage: 0.8,
+          categoryPercentage: isHistogram ? 1.0 : 0.8,
         });
       });
     } else {
@@ -437,7 +458,7 @@ export class ChartJsSetup {
         backgroundColor: isHistogram ? colors[0] : colors,
         borderWidth: 0,
         barPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
-        categoryPercentage: 0.8,
+        categoryPercentage: isHistogram ? 1.0 : 0.8,
       });
     }
 
@@ -473,6 +494,13 @@ export class ChartJsSetup {
 
     const xAxisConfig = {
       ...ChartJsSetup.defaultAxisConfig(model.theme),
+      ticks: {
+        ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+        callback: function(value: string | number, index: number) {
+          const label = labels[index];
+          return ChartJsSetup.getTruncatedLabel(String(label ?? value), model.labelTruncateLength);
+        },
+      },
     };
 
     const options: any = {
@@ -576,6 +604,13 @@ export class ChartJsSetup {
 
     const xAxisConfig = {
       ...ChartJsSetup.defaultAxisConfig(model.theme),
+      ticks: {
+        ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+        callback: function(value: string | number, index: number) {
+          const label = labels[index];
+          return ChartJsSetup.getTruncatedLabel(String(label ?? value), model.labelTruncateLength);
+        },
+      },
     };
 
     const options: any = {
@@ -680,6 +715,13 @@ export class ChartJsSetup {
         y: {
           ...ChartJsSetup.defaultAxisConfig(model.theme),
           stacked: true,
+          ticks: {
+            ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+            callback: function(value: string | number, index: number) {
+              const label = labels[index];
+              return ChartJsSetup.getTruncatedLabel(String(label ?? value), model.labelTruncateLength);
+            },
+          },
         },
       },
     };
