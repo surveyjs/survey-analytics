@@ -1,5 +1,5 @@
 import { Event } from "survey-core";
-import { SelectBase } from "../selectBase";
+import { dataListFormatter, SelectBase } from "../selectBase";
 import { IAnswersData, VisualizerBase } from "../visualizerBase";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
@@ -49,7 +49,10 @@ export class ChartJsSetup {
   static defaultDataLabelsConfig(theme: DashboardTheme) {
     const font = theme.insideLabelFont;
     return {
-      display: true,
+      anchor: "center",
+      align: "center",
+      offset: 0,
+      backgroundColor: null,
       color: font.color,
       font: {
         size: ChartJsSetup.parseFontSize(font.size),
@@ -177,17 +180,6 @@ export class ChartJsSetup {
     };
   }
 
-  static dataListFormatter(model: SelectBase, text: string, value: string): string {
-    if(model.showPercentages) {
-      if(model.showOnlyPercentages) {
-        return text + "%";
-      } else {
-        return value + " (" + text + "%)";
-      }
-    }
-    return value;
-  }
-
   static setups: { [type: string]: (model: VisualizerBase, answersData: IAnswersData) => ChartJsOptions } = {
     bar: ChartJsSetup.setupBar,
     vbar: ChartJsSetup.setupVBar,
@@ -264,7 +256,7 @@ export class ChartJsSetup {
         tooltip: {
           ...tooltipConfig,
           callbacks: {
-            label: function(context) {
+            label: function(context: any) {
               const label = context.label || "";
               const value = context.parsed;
               const total = (context.dataset.data as number[]).reduce((a: number, b: number) => a + b, 0);
@@ -273,6 +265,17 @@ export class ChartJsSetup {
             },
           },
         },
+        datalabels: {
+          ...ChartJsSetup.defaultDataLabelsConfig(model.theme),
+          formatter: function(value: number, context: any) {
+            const label = context.chart.data.labels[context.dataIndex] || "";
+            const text = label.length > 15 ? label.substring(0, 15) + "..." : label;
+            const dataset: number[] = context.dataset.data;
+            const total = dataset.reduce((sum: number, val: number) => sum + val, 0);
+            const percentage = total > 0 ? ((value / total) * 100).toFixed(model.percentagePrecision) : "0";
+            return [text, percentage + "%"];
+          }
+        }
       },
     };
 
@@ -371,11 +374,17 @@ export class ChartJsSetup {
         tooltip: {
           ...ChartJsSetup.defaultTooltipConfig(model.theme),
           callbacks: {
-            label: function(context) {
-              return ChartJsSetup.dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], context.parsed.x.toString());
+            label: function(context: any) {
+              return dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], context.parsed.x.toString());
             },
           },
         },
+        datalabels: {
+          ...ChartJsSetup.defaultDataLabelsConfig(model.theme),
+          formatter: function(val: number, context: any) {
+            return dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], val.toString());
+          }
+        }
       },
       scales: {
         x: xAxisConfig,
@@ -477,11 +486,17 @@ export class ChartJsSetup {
         tooltip: {
           ...ChartJsSetup.defaultTooltipConfig(model.theme),
           callbacks: {
-            label: function(context) {
-              return ChartJsSetup.dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], context.parsed.y.toString());
+            label: function(context: any) {
+              return dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], context.parsed.y.toString());
             },
           },
         },
+        datalabels: {
+          ...ChartJsSetup.defaultDataLabelsConfig(model.theme),
+          formatter: function(val: number, context: any) {
+            return dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], val.toString());
+          }
+        }
       },
       scales: {
         x: xAxisConfig,
@@ -574,6 +589,7 @@ export class ChartJsSetup {
         tooltip: {
           ...ChartJsSetup.defaultTooltipConfig(model.theme),
         },
+        datalabels: { display: false },
       },
       scales: {
         x: xAxisConfig,
@@ -648,6 +664,9 @@ export class ChartJsSetup {
         tooltip: {
           ...ChartJsSetup.defaultTooltipConfig(model.theme),
         },
+        datalabels: {
+          ...ChartJsSetup.defaultDataLabelsConfig(model.theme)
+        }
       },
       scales: {
         x: {
@@ -724,6 +743,7 @@ export class ChartJsSetup {
         tooltip: {
           ...ChartJsSetup.defaultTooltipConfig(model.theme),
         },
+        datalabels: { display: false },
       },
       scales: {
         x: {
@@ -775,6 +795,7 @@ export class ChartJsSetup {
       plugins: {
         legend: { display: false },
         tooltip: { enabled: false },
+        datalabels: { display: false },
       },
     };
 
@@ -914,7 +935,7 @@ export class ChartJsSetup {
           enabled: true,
           ...ChartJsSetup.defaultTooltipConfig(model.theme),
           callbacks: {
-            label: function(context) {
+            label: function(context: any) {
               const seriesName = context.dataset.label;
               const label = context.label;
               const val = context.parsed.r;
