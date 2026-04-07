@@ -1,11 +1,12 @@
 import { Chart, registerables } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { ItemValue } from "survey-core";
 import { SelectBase } from "../selectBase";
-import { localization } from "../localizationManager";
 import { ChartJsOptions, ChartJsSetup } from "./setup";
 import { IChartAdapter, VisualizerBase } from "../visualizerBase";
 
 Chart.register(...registerables);
+Chart.register(ChartDataLabels);
 
 export const chartTypes = {
   "boolean": ["pie", "doughnut", "bar"],

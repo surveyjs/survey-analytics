@@ -1,5 +1,5 @@
 import { Event } from "survey-core";
-import { SelectBase } from "../selectBase";
+import { dataListFormatter, SelectBase } from "../selectBase";
 import { IAnswersData, VisualizerBase } from "../visualizerBase";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
@@ -247,17 +247,6 @@ export class ApexChartsSetup {
     any
   >();
 
-  static dataListFormatter(model: SelectBase, text: string, value: string): string {
-    if(model.showPercentages) {
-      if(model.showOnlyPercentages) {
-        return text + "%";
-      } else {
-        return value + " (" + text + "%)";
-      }
-    }
-    return value;
-  }
-
   static setups: { [type: string]: (model: VisualizerBase, answersData: IAnswersData) => ApexChartsOptions } = {
     bar: ApexChartsSetup.setupBar,
     vbar: ApexChartsSetup.setupVBar,
@@ -474,7 +463,7 @@ export class ApexChartsSetup {
     const dataLabels: any = {
       ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
       formatter: function(val, opts) {
-        return ApexChartsSetup.dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], val);
+        return dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], val);
       },
     };
 
@@ -589,7 +578,7 @@ export class ApexChartsSetup {
     const dataLabels: any = {
       ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
       formatter: function(val, opts) {
-        return ApexChartsSetup.dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], val);
+        return dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], val);
       }
     };
 
