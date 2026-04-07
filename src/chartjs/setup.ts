@@ -14,6 +14,7 @@ export interface ChartJsOptions {
     datasets: any[],
   };
   options: any;
+  height?: number;
   hasSeries?: boolean;
   pieSeries?: Array<{
     data: number[],
@@ -280,6 +281,7 @@ export class ChartJsSetup {
         type: chartType,
         data: { labels: chartLabels, datasets: chartDatasets },
         options,
+        height: diameter,
         hasSeries,
         pieSeries,
       };
@@ -289,6 +291,7 @@ export class ChartJsSetup {
       type: chartType,
       data: { labels: chartLabels, datasets: chartDatasets },
       options,
+      height: diameter,
       hasSeries,
     };
   }
@@ -384,6 +387,7 @@ export class ChartJsSetup {
       type: "bar",
       data: { labels, datasets: chartDatasets },
       options,
+      height,
       hasSeries,
     };
   }
@@ -489,6 +493,7 @@ export class ChartJsSetup {
       type: "bar",
       data: { labels, datasets: chartDatasets },
       options,
+      height: ChartJsSetup.defaultChartHeight,
       hasSeries,
     };
   }
@@ -580,6 +585,7 @@ export class ChartJsSetup {
       type: "line",
       data: { labels, datasets: chartDatasets },
       options,
+      height: ChartJsSetup.defaultChartHeight,
       hasSeries,
     };
   }
@@ -663,6 +669,7 @@ export class ChartJsSetup {
       type: "bar",
       data: { labels, datasets: chartDatasets },
       options,
+      height,
       hasSeries,
     };
   }
@@ -732,6 +739,7 @@ export class ChartJsSetup {
       type: "scatter",
       data: { labels, datasets: chartDatasets },
       options,
+      height: ChartJsSetup.defaultChartHeight,
       hasSeries,
     };
   }
@@ -780,6 +788,7 @@ export class ChartJsSetup {
       type: "doughnut",
       data: { labels: [model.name], datasets: chartDatasets },
       options,
+      height: ChartJsSetup.defaultChartHeight,
     };
   }
 
@@ -859,6 +868,7 @@ export class ChartJsSetup {
       type: "bar",
       data: { labels: [value.toString()], datasets: chartDatasets },
       options,
+      height: 100,
     };
   }
 
@@ -942,6 +952,7 @@ export class ChartJsSetup {
       type: "radar",
       data: { labels, datasets: chartDatasets },
       options,
+      height: ChartJsSetup.defaultChartHeight,
       hasSeries,
     };
   }

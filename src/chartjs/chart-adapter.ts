@@ -51,6 +51,9 @@ export class ChartJsAdapter implements IChartAdapter {
         const chartDiv = document.createElement("div");
         chartDiv.id = "sa-chart" + i;
         chartDiv.classList.add("sa-pie-chart");
+        if(chartJsOptions.height) {
+          chartDiv.style.height = chartJsOptions.height + "px";
+        }
         chartNode.appendChild(chartDiv);
 
         const canvas = this.createCanvas(chartDiv);
@@ -158,6 +161,10 @@ export class ChartJsAdapter implements IChartAdapter {
     this.patchConfigParameters(chartNode, config);
 
     ChartJsSetup.onChartCreating.fire(this.model, config);
+
+    if(chartOptions.height) {
+      chartNode.style.height = chartOptions.height + "px";
+    }
 
     if((_chartType === "pie" || _chartType === "doughnut") && chartOptions.pieSeries && chartOptions.pieSeries.length > 0) {
       this.updatePieCharts(chartOptions, chartNode);
