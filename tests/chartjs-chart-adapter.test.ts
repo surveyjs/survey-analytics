@@ -65,3 +65,49 @@ test("getChartTypesByVisualizerType returns empty array for unknown type", () =>
   const adapterTypes = ChartJsAdapter.getChartTypesByVisualizerType("unknown");
   expect(adapterTypes).toEqual([]);
 });
+
+test("custom gauge value plugin draws text at arc baseline with offsetY", () => {
+  const localAdapter = new ChartJsAdapter({} as any);
+  const chartOptions: any = {
+    type: "doughnut",
+    options: {
+      plugins: {
+        saGaugeValue: {
+          text: "55",
+          color: "#222",
+          offsetY: -3,
+          font: {
+            size: "16",
+            family: "Arial",
+            weight: "bold",
+          },
+        },
+      },
+    },
+  };
+
+  const plugin = (localAdapter as any).createGaugeValuePlugin(chartOptions);
+  expect(plugin).toBeTruthy();
+
+  const fillText = jest.fn();
+  const ctx = {
+    save: jest.fn(),
+    restore: jest.fn(),
+    fillStyle: "",
+    font: "",
+    textAlign: "",
+    textBaseline: "",
+    fillText,
+  };
+  const mockChart = {
+    ctx,
+    getDatasetMeta: () => ({
+      data: [{ x: 100, y: 200 }],
+    }),
+  };
+
+  plugin.afterDraw(mockChart);
+
+  expect(ctx.textBaseline).toBe("bottom");
+  expect(fillText).toHaveBeenCalledWith("55", 100, 197);
+});

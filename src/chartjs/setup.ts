@@ -807,6 +807,7 @@ export class ChartJsSetup {
     const remainder = 100 - percent;
 
     const gaugeValueFont = ChartJsSetup.defaultGaugeValueFont(model.theme);
+    const gaugeValue = value.toString();
 
     const options: any = {
       responsive: true,
@@ -814,9 +815,20 @@ export class ChartJsSetup {
       circumference: 180,
       rotation: 270,
       cutout: "70%",
+      layout: {
+        padding: {
+          top: 8,
+          bottom: 0,
+        },
+      },
       plugins: {
         legend: { display: false },
         tooltip: { enabled: false },
+        saGaugeValue: {
+          text: gaugeValue,
+          offsetY: 0,
+          ...gaugeValueFont,
+        },
       },
     };
 
@@ -830,7 +842,7 @@ export class ChartJsSetup {
       type: "doughnut",
       data: { labels: [model.name], datasets: chartDatasets },
       options,
-      height: ChartJsSetup.defaultChartHeight,
+      height: ChartJsSetup.defaultChartHeight / 2,
     };
   }
 

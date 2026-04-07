@@ -23,6 +23,40 @@ export class ChartJsAdapter implements IChartAdapter {
   private _chart: Chart | undefined;
   private _pieCharts: Chart[];
 
+  private createGaugeValuePlugin(chartOptions: ChartJsOptions): any {
+    const gaugePluginOptions = chartOptions?.options?.plugins?.saGaugeValue;
+    if(chartOptions.type !== "doughnut" || !gaugePluginOptions?.text) {
+      return undefined;
+    }
+
+    return {
+      id: "saGaugeValue",
+      afterDraw: (chart: any) => {
+        const meta = chart.getDatasetMeta(0);
+        const arc = meta?.data?.[0];
+        const text = String(gaugePluginOptions.text);
+        if(!arc || !text) {
+          return;
+        }
+
+        const ctx = chart.ctx;
+        const fontSize = parseInt(gaugePluginOptions.font?.size || "14", 10) || 14;
+        const fontFamily = gaugePluginOptions.font?.family || "sans-serif";
+        const fontWeight = gaugePluginOptions.font?.weight || "normal";
+        const offsetY = Number(gaugePluginOptions.offsetY ?? 0);
+
+        ctx.save();
+        ctx.fillStyle = gaugePluginOptions.color || "#000";
+        ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        // Draw text so its bottom aligns with the gauge arc baseline (diameter line).
+        ctx.fillText(text, arc.x, arc.y + offsetY);
+        ctx.restore();
+      }
+    };
+  }
+
   private createAxisLabelTooltipPlugin(labels: string[], labelTruncateLength: number): any {
     const isEnabled = !!labelTruncateLength && labelTruncateLength !== -1;
     if(!isEnabled || !Array.isArray(labels) || labels.length === 0) {
@@ -179,8 +213,12 @@ export class ChartJsAdapter implements IChartAdapter {
       (chartOptions.data?.labels || []).map((label: any) => String(label)),
       (this.model as any).labelTruncateLength
     );
+    const gaugeValuePlugin = this.createGaugeValuePlugin(chartOptions);
     if(axisLabelTooltipPlugin) {
       config.plugins = [...(config.plugins || []), axisLabelTooltipPlugin];
+    }
+    if(gaugeValuePlugin) {
+      config.plugins = [...(config.plugins || []), gaugeValuePlugin];
     }
 
     if(this.model instanceof SelectBase && this.model.supportSelection) {

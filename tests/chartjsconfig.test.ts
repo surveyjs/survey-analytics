@@ -2,6 +2,7 @@ import { QuestionDropdownModel, QuestionSelectBase } from "survey-core";
 import { SelectBase } from "../src/selectBase";
 import { ChartJsSetup } from "../src/chartjs/setup";
 import { HistogramModel } from "../src/histogram";
+import { NumberModel } from "../src/number";
 
 const choices = [
   { value: "father", text: "father_text" },
@@ -134,4 +135,32 @@ test("vertical histogram bars use full category width", async () => {
 
   expect(firstDataset.barPercentage).toBe(1);
   expect(firstDataset.categoryPercentage).toBe(1);
+});
+
+test("gauge setup includes custom value plugin with default offsetY", () => {
+  const model = {
+    displayValueName: "value",
+    dataType: "number",
+    theme: {
+      gaugeBarColor: "#00aa00",
+      gaugeBackground: "#dddddd",
+      gaugeValueFont: {
+        color: "#111111",
+        size: "14",
+        family: "Arial",
+        weight: "bold",
+      },
+    },
+  } as any as NumberModel;
+
+  const answersData = {
+    datasets: [[42, 0, 100]],
+    values: ["value", "min", "max"],
+  } as any;
+
+  const config = ChartJsSetup.setupGauge(model, answersData);
+
+  expect(config.type).toBe("doughnut");
+  expect(config.options.plugins.saGaugeValue.text).toBe("42");
+  expect(config.options.plugins.saGaugeValue.offsetY).toBe(0);
 });
