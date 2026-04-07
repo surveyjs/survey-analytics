@@ -210,6 +210,18 @@ export class ChartJsSetup {
     return this.setups[chartType](model, answersData);
   }
 
+  static getTruncatedLabel = (label: string, labelTruncateLength: number) => {
+    const truncateSymbols = "...";
+    const truncateSymbolsLength = truncateSymbols.length;
+
+    if(!labelTruncateLength) return label;
+    if(labelTruncateLength === -1) return label;
+    if(label.length <= labelTruncateLength + truncateSymbolsLength)
+      return label;
+
+    return label.substring(0, labelTruncateLength) + truncateSymbols;
+  };
+
   static setupPie(model: SelectBase, answersData: IAnswersData): ChartJsOptions {
     let {
       datasets,
@@ -359,6 +371,13 @@ export class ChartJsSetup {
 
     const yAxisConfig = {
       ...ChartJsSetup.defaultAxisConfig(model.theme),
+      ticks: {
+        ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+        callback: function(value: string | number, index: number) {
+          const label = labels[index];
+          return ChartJsSetup.getTruncatedLabel(String(label ?? value), model.labelTruncateLength);
+        },
+      },
     };
 
     const options: any = {
@@ -466,6 +485,13 @@ export class ChartJsSetup {
 
     const xAxisConfig = {
       ...ChartJsSetup.defaultAxisConfig(model.theme),
+      ticks: {
+        ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+        callback: function(value: string | number, index: number) {
+          const label = labels[index];
+          return ChartJsSetup.getTruncatedLabel(String(label ?? value), model.labelTruncateLength);
+        },
+      },
     };
 
     const options: any = {
@@ -563,6 +589,13 @@ export class ChartJsSetup {
 
     const xAxisConfig = {
       ...ChartJsSetup.defaultAxisConfig(model.theme),
+      ticks: {
+        ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+        callback: function(value: string | number, index: number) {
+          const label = labels[index];
+          return ChartJsSetup.getTruncatedLabel(String(label ?? value), model.labelTruncateLength);
+        },
+      },
     };
 
     const options: any = {
@@ -663,6 +696,13 @@ export class ChartJsSetup {
         y: {
           ...ChartJsSetup.defaultAxisConfig(model.theme),
           stacked: true,
+          ticks: {
+            ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+            callback: function(value: string | number, index: number) {
+              const label = labels[index];
+              return ChartJsSetup.getTruncatedLabel(String(label ?? value), model.labelTruncateLength);
+            },
+          },
         },
       },
     };

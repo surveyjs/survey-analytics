@@ -23,6 +23,59 @@ export class ChartJsAdapter implements IChartAdapter {
   private _chart: Chart | undefined;
   private _pieCharts: Chart[];
 
+  private createAxisLabelTooltipPlugin(labels: string[], labelTruncateLength: number): any {
+    const isEnabled = !!labelTruncateLength && labelTruncateLength !== -1;
+    if(!isEnabled || !Array.isArray(labels) || labels.length === 0) {
+      return undefined;
+    }
+
+    const threshold = 10;
+    return {
+      id: "saAxisLabelTooltip",
+      afterEvent: (chart: any, args: any) => {
+        const event = args?.event;
+        const canvas = chart?.canvas as HTMLCanvasElement;
+        if(!event || !canvas) {
+          return;
+        }
+
+        const xScale = chart.scales?.x;
+        const yScale = chart.scales?.y;
+        const chartArea = chart.chartArea;
+        const eventX = event.x;
+        const eventY = event.y;
+        let hoveredFullLabel = "";
+
+        if(xScale?.type === "category" && chartArea && eventY >= chartArea.bottom) {
+          for(let i = 0; i < labels.length; i++) {
+            const tickX = xScale.getPixelForTick(i);
+            if(Math.abs(eventX - tickX) <= threshold) {
+              hoveredFullLabel = String(labels[i] ?? "");
+              break;
+            }
+          }
+        }
+
+        if(!hoveredFullLabel && yScale?.type === "category" && chartArea && eventX <= chartArea.left) {
+          for(let i = 0; i < labels.length; i++) {
+            const tickY = yScale.getPixelForTick(i);
+            if(Math.abs(eventY - tickY) <= threshold) {
+              hoveredFullLabel = String(labels[i] ?? "");
+              break;
+            }
+          }
+        }
+
+        if(hoveredFullLabel) {
+          const truncated = ChartJsSetup.getTruncatedLabel(hoveredFullLabel, labelTruncateLength);
+          canvas.title = truncated !== hoveredFullLabel ? hoveredFullLabel : "";
+        } else if(canvas.title) {
+          canvas.title = "";
+        }
+      }
+    };
+  }
+
   static getChartTypesByVisualizerType(vType: string): Array<string> {
     return (chartTypes[vType] || []).slice();
   }
@@ -121,6 +174,14 @@ export class ChartJsAdapter implements IChartAdapter {
         ...chartOptions.options,
       },
     };
+
+    const axisLabelTooltipPlugin = this.createAxisLabelTooltipPlugin(
+      (chartOptions.data?.labels || []).map((label: any) => String(label)),
+      (this.model as any).labelTruncateLength
+    );
+    if(axisLabelTooltipPlugin) {
+      config.plugins = [...(config.plugins || []), axisLabelTooltipPlugin];
+    }
 
     if(this.model instanceof SelectBase && this.model.supportSelection) {
       const _model = this.model as SelectBase;
