@@ -181,3 +181,4 @@ VisualizationManager.registerVisualizer("dropdown", StatisticsTable, undefined, 
 VisualizationManager.registerVisualizer("checkbox", StatisticsTable, undefined, "choices");
 VisualizationManager.registerVisualizer("boolean", StatisticsTableBoolean, undefined, "options");
 VisualizationManager.registerVisualizer("table", StatisticsTable, undefined, "choices");
+VisualizationManager.registerVisualizer("choices", StatisticsTable, undefined, "choices");
