@@ -164,3 +164,32 @@ test("gauge setup includes custom value plugin with default offsetY", () => {
   expect(config.options.plugins.saGaugeValue.text).toBe("42");
   expect(config.options.plugins.saGaugeValue.offsetY).toBe(0);
 });
+
+test("gauge setup falls back to 0 and noData title for invalid values", () => {
+  const model = {
+    name: "Average score",
+    displayValueName: "value",
+    dataType: "number",
+    theme: {
+      gaugeBarColor: "#00aa00",
+      gaugeBackground: "#dddddd",
+      gaugeValueFont: {
+        color: "#111111",
+        size: "14",
+        family: "Arial",
+        weight: "bold",
+      },
+    },
+  } as any as NumberModel;
+
+  const answersData = {
+    datasets: [[NaN, 0, NaN]],
+    values: ["value", "min", "max"],
+  } as any;
+
+  const config = ChartJsSetup.setupGauge(model, answersData);
+
+  expect(config.options.plugins.saGaugeValue.text).toBe("0");
+  expect(config.data.labels[0]).toBe("No data");
+  expect(config.data.datasets[0].data[0]).toBe(0);
+});

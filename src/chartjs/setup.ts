@@ -844,9 +844,17 @@ export class ChartJsSetup {
   }
 
   static setupGauge(model: NumberModel, answersData: IAnswersData): ChartJsOptions {
-    let value = answersData.datasets[0][answersData.values.indexOf(model.displayValueName || "value")];
-    let minValue = answersData.datasets[0][answersData.values.indexOf("min")] || 0;
-    let maxValue = answersData.datasets[0][answersData.values.indexOf("max")] || value * 1.25;
+    const rawValue = answersData.datasets[0][answersData.values.indexOf(model.displayValueName || "value")];
+    const hasNoData = rawValue === undefined || rawValue === null || Number.isNaN(Number(rawValue));
+    let value = hasNoData ? 0 : Number(rawValue);
+    let minValue = Number(answersData.datasets[0][answersData.values.indexOf("min")]);
+    if(!Number.isFinite(minValue)) {
+      minValue = 0;
+    }
+    let maxValue = Number(answersData.datasets[0][answersData.values.indexOf("max")]);
+    if(!Number.isFinite(maxValue)) {
+      maxValue = value * 1.25;
+    }
 
     if(model.dataType === "rating") {
       const rateValues = model.question.visibleRateValues;
@@ -860,11 +868,13 @@ export class ChartJsSetup {
       maxValue = DataHelper.toPercentage(maxValue, maxValue);
     }
 
-    const percent = ((value - minValue) / (maxValue - minValue)) * 100;
+    const valueRange = maxValue - minValue;
+    const percent = valueRange > 0 ? ((value - minValue) / valueRange) * 100 : 0;
     const remainder = 100 - percent;
 
     const gaugeValueFont = ChartJsSetup.defaultGaugeValueFont(model.theme);
     const gaugeValue = value.toString();
+    const gaugeTitle = hasNoData ? localization.getString("noData") : model.name;
 
     const options: any = {
       responsive: true,
@@ -898,7 +908,7 @@ export class ChartJsSetup {
 
     return {
       type: "doughnut",
-      data: { labels: [model.name], datasets: chartDatasets },
+      data: { labels: [gaugeTitle], datasets: chartDatasets },
       options,
       height: ChartJsSetup.defaultChartHeight / 2,
     };
