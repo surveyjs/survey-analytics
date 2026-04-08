@@ -312,7 +312,7 @@ export class Tabulator extends Table {
     return container;
     */
 
-    const values = this._options.downloadButtons.map(val => { return { value: val, text: localization.getString(`${val}DownloadCaption`) }; });
+    const values = this._options.downloadButtons.map(val => { return { value: val, text: localization.getString(`${val}DownloadCaption`), title: localization.getString(`${val}DownloadHint`) }; });
     const exportAsAction = createActionDropdown({
       options: values,
       isSelected: (option: any) => false,

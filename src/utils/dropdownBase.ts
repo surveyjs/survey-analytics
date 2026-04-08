@@ -128,8 +128,9 @@ export abstract class DropdownBase {
   protected createOptionItem(option: IDropdownItemOption): HTMLLIElement {
     const dropdownItem = document.createElement("li");
     dropdownItem.className = this.className + "-item" + (option.className ? " " + option.className : "");
-    if(option.title) {
-      dropdownItem.title = option.title;
+    const itemTitle = option.title || option.text;
+    if(!!itemTitle) {
+      dropdownItem.title = itemTitle;
     }
     dropdownItem.dataset.value = option.value;
     dropdownItem.setAttribute("role", "option");
