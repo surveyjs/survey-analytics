@@ -96,23 +96,9 @@ var data = [
 
 var survey = new Survey.SurveyModel(json);
 
-// SurveyAnalytics.PlotlySetup.onImageSaving.add(function (
-//   selectBaseVisualizer,
-//   options
-// ) {
-//   options.filename = "Exported " + selectBaseVisualizer.question.name;
-// });
-
-// SurveyAnalytics.PlotlySetup.onPlotCreating.add(function (
-//   selectBaseVisualizer,
-//   options
-// ) {
-//   options.config.modeBarButtonsToRemove.push("lasso2d");
-// });
-
 var options = {};
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
   // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   survey.getAllQuestions(),
   data

@@ -723,7 +723,7 @@ const dataFromServer = [
 
 var survey = new Survey.SurveyModel(json);
 
-const vizPanel = new SurveyAnalytics.Dashboard({
+const vizPanel = new SurveyAnalyticsApexcharts.Dashboard({
   data: dataFromServer,
   items: [{
     type: "pivot",

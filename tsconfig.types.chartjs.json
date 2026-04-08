@@ -1,8 +1,5 @@
 {
   "extends": "./tsconfig.types.json",
-  "compilerOptions": {
-    "outDir": "build/survey-analytics-chartjs.types/"
-  },
   "include": [
     "src/entries/chartjs.ts"
   ]

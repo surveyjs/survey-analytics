@@ -2711,7 +2711,7 @@ function randomTimestamp(days = 100) {
 
 var survey = new Survey.SurveyModel(json);
 
-const dashboard = new SurveyAnalyticsChartjs.Dashboard({
+const dashboard = new SurveyAnalytics.Dashboard({
     questions: survey.getAllQuestions(),
     data: dataFromServer,
     items: [

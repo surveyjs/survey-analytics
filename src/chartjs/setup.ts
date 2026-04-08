@@ -352,7 +352,7 @@ export class ChartJsSetup {
           backgroundColor: colors[index % colors.length],
           borderWidth: 0,
           barPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
-          categoryPercentage: 0.9,
+          categoryPercentage: 0.95,
         });
       });
     } else {
@@ -362,7 +362,7 @@ export class ChartJsSetup {
         backgroundColor: isHistogram ? colors[0] : colors,
         borderWidth: 0,
         barPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
-        categoryPercentage: 0.9,
+        categoryPercentage: 0.95,
       });
     }
 
@@ -686,7 +686,7 @@ export class ChartJsSetup {
           backgroundColor: colors[index % colors.length],
           borderWidth: 0,
           barPercentage: 1 - ChartJsSetup.defaultBarGap,
-          categoryPercentage: 0.9,
+          categoryPercentage: 0.95,
         });
       });
     } else {
@@ -696,7 +696,7 @@ export class ChartJsSetup {
         backgroundColor: colors,
         borderWidth: 0,
         barPercentage: 1 - ChartJsSetup.defaultBarGap,
-        categoryPercentage: 0.9,
+        categoryPercentage: 0.95,
       });
     }
 

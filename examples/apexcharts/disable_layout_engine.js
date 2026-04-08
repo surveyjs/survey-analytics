@@ -18,7 +18,7 @@ var options = {
   allowDynamicLayout: false,
 };
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
   [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   // survey.getAllQuestions(),
   data,

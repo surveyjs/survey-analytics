@@ -63,14 +63,14 @@ var options = {
 
 var survey = new Survey.SurveyModel(json);
 
-var pivotChart = new SurveyAnalyticsChartjs.PivotModel(
+var pivotChart = new SurveyAnalytics.PivotModel(
   survey.getAllQuestions(),
   data,
   options
 );
 pivotChart.render(document.getElementById("pivotContainer"));
 
-var visPanel = new SurveyAnalyticsChartjs.VisualizationPanel(
+var visPanel = new SurveyAnalytics.VisualizationPanel(
   [ [ survey.getQuestionByName("question2"), survey.getQuestionByName("question1") ], [ survey.getQuestionByName("question1"), survey.getQuestionByName("question2") ] ],
   data,
   options

@@ -20,7 +20,7 @@ var options = {
   dateFieldName: "timestamp",
 };
 
-var visPanel = new SurveyAnalyticsChartjs.VisualizationPanel(
+var visPanel = new SurveyAnalytics.VisualizationPanel(
   // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   survey.getAllQuestions(),
   data,

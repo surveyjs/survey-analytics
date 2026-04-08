@@ -723,7 +723,7 @@ const dataFromServer = [
 
 var survey = new Survey.SurveyModel(json);
 
-const vizPanel = new SurveyAnalyticsChartjs.Dashboard({
+const vizPanel = new SurveyAnalytics.Dashboard({
   data: dataFromServer,
   items: [{
     type: "pivot",

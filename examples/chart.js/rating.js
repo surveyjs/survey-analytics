@@ -50,7 +50,7 @@ var options = {
 
 var survey = new Survey.SurveyModel(json);
 
-var visPanel = new SurveyAnalyticsChartjs.VisualizationPanel(
+var visPanel = new SurveyAnalytics.VisualizationPanel(
   survey.getAllQuestions(),
   data,
   options

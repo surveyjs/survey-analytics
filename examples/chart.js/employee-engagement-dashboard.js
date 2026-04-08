@@ -1401,7 +1401,7 @@ const data = [
   }
 ];
 
-var dashboard = new SurveyAnalyticsChartjs.Dashboard({
+var dashboard = new SurveyAnalytics.Dashboard({
   questions: survey.getAllQuestions(),
   data: data,
   showToolbar: false,

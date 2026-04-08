@@ -20,7 +20,7 @@ var options = {
   dateFieldName: "timestamp",
 };
 
-var dashboard = new SurveyAnalyticsChartjs.Dashboard({
+var dashboard = new SurveyAnalytics.Dashboard({
   // questions: [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   questions: survey.getAllQuestions(),
   data,

@@ -1,6 +1,6 @@
 var survey = new Survey.SurveyModel(json);
 
-var visPanel = new SurveyAnalyticsChartjs.Dashboard({
+var visPanel = new SurveyAnalytics.Dashboard({
     questions: survey.getAllQuestions(),
     data, 
     dateFieldName: "timestamp",

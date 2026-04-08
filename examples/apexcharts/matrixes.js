@@ -190,7 +190,7 @@ var options = {
   // allowHideQuestions: false
 };
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
   survey.getAllQuestions(),
   data,
   options

@@ -206,10 +206,8 @@ module.exports = function (options) {
     mode: isProductionBuild ? "production" : "development",
     entry: {
       "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core"),
-      "survey.analytics": path.resolve(__dirname, "./src/entries/apexcharts"),
-      "survey.analytics.fontless": path.resolve(__dirname, "./src/entries/apexcharts.fontless"),
-      "survey.analytics.chartjs": path.resolve(__dirname, "./src/entries/chartjs"),
-      "survey.analytics.chartjs.fontless": path.resolve(__dirname, "./src/entries/chartjs.fontless"),
+      "survey.analytics": path.resolve(__dirname, "./src/entries/chartjs"),
+      "survey.analytics.fontless": path.resolve(__dirname, "./src/entries/chartjs.fontless"),
     },
     resolve: {
       extensions: [".ts", ".js"],

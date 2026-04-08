@@ -609,7 +609,7 @@ const dataFromServer = sampleData.map(item => ({
   timestamp: randomTimestamp()
 }));
 
-var dashboard = new SurveyAnalyticsChartjs.Dashboard({
+var dashboard = new SurveyAnalytics.Dashboard({
   questions: survey.getAllQuestions(),
   data: dataFromServer,
   dateFieldName: "timestamp",
