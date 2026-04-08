@@ -102,6 +102,7 @@ export var englishStrings = {
   percentage: "Percentage",
   statistics_chart: "Chart",
   responses: "Responses",
+  totalResponses: "Total responses",
   visualizer_nps: "NPS",
   visualizer_boolean: "Chart",
   visualizer_options: "Table",
