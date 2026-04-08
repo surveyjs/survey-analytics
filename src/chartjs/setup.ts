@@ -53,9 +53,11 @@ export class ChartJsSetup {
     return {
       anchor: "center",
       align: "center",
+      textAlign: "center",
       offset: 0,
       backgroundColor: null,
       color: font.color,
+      textShadowColor: theme.axisLabelFont.color,
       font: {
         size: ChartJsSetup.parseFontSize(font.size),
         family: font.family,
@@ -352,7 +354,7 @@ export class ChartJsSetup {
           backgroundColor: colors[index % colors.length],
           borderWidth: 0,
           barPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
-          categoryPercentage: 0.95,
+          categoryPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
         });
       });
     } else {
@@ -362,7 +364,7 @@ export class ChartJsSetup {
         backgroundColor: isHistogram ? colors[0] : colors,
         borderWidth: 0,
         barPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
-        categoryPercentage: 0.95,
+        categoryPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
       });
     }
 
@@ -462,7 +464,7 @@ export class ChartJsSetup {
           backgroundColor: colors[index % colors.length],
           borderWidth: 0,
           barPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
-          categoryPercentage: isHistogram ? 1.0 : 0.8,
+          categoryPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
         });
       });
     } else {
@@ -472,7 +474,7 @@ export class ChartJsSetup {
         backgroundColor: isHistogram ? colors[0] : colors,
         borderWidth: 0,
         barPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
-        categoryPercentage: isHistogram ? 1.0 : 0.8,
+        categoryPercentage: isHistogram ? 1.0 : (1 - ChartJsSetup.defaultBarGap),
       });
     }
 
@@ -686,7 +688,7 @@ export class ChartJsSetup {
           backgroundColor: colors[index % colors.length],
           borderWidth: 0,
           barPercentage: 1 - ChartJsSetup.defaultBarGap,
-          categoryPercentage: 0.95,
+          categoryPercentage: (1 - ChartJsSetup.defaultBarGap),
         });
       });
     } else {
@@ -696,7 +698,7 @@ export class ChartJsSetup {
         backgroundColor: colors,
         borderWidth: 0,
         barPercentage: 1 - ChartJsSetup.defaultBarGap,
-        categoryPercentage: 0.95,
+        categoryPercentage: (1 - ChartJsSetup.defaultBarGap),
       });
     }
 
