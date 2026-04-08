@@ -6,7 +6,9 @@ import { ChartJsOptions, ChartJsSetup } from "./setup";
 import { IChartAdapter, VisualizerBase } from "../visualizerBase";
 
 Chart.register(...registerables);
-Chart.register(ChartDataLabels);
+if(ChartDataLabels) {
+  Chart.register(ChartDataLabels);
+}
 
 export const chartTypes = {
   "boolean": ["pie", "doughnut", "bar"],
