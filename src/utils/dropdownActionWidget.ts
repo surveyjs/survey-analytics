@@ -70,8 +70,9 @@ export class ActionDropdownWidget extends DropdownBase {
 
   protected updateOption(option: IDropdownItemOption, item: HTMLLIElement): void {
     this.options.updateOption?.(option);
-    if(item.title !== option.title) {
-      item.title = option.title;
+    const newTitle = option.title || option.text;
+    if(item.title !== newTitle) {
+      item.title = newTitle;
     }
     const span = item.querySelector("span");
     if(span && span.textContent !== option.text) {

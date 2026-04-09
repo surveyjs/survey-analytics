@@ -53,6 +53,15 @@ export default defineConfig({
       snapshotPathTemplate: "{testDir}/{testFilePath}-snapshots_apexcharts/{arg}{ext}",
     },
     {
+      name: "chromium+chartjs",
+      testDir: "./e2e/charts",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "http://localhost:8080/examples/chart.js/3",
+      },
+      snapshotPathTemplate: "{testDir}/{testFilePath}-snapshots_chartjs/{arg}{ext}",
+    },
+    {
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
     },

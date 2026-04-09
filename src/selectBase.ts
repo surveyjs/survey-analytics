@@ -184,6 +184,17 @@ export function hideEmptyAnswersInData(answersData: IAnswersData): IAnswersData 
   return result;
 }
 
+export function dataListFormatter(model: SelectBase, text: string, value: string): string {
+  if(model.showPercentages) {
+    if(model.showOnlyPercentages) {
+      return text + "%";
+    } else {
+      return value + " (" + text + "%)";
+    }
+  }
+  return value;
+}
+
 export class SelectBase extends VisualizerBase implements IVisualizerWithSelection {
   protected selectedItem: ItemValue = undefined;
   private choicesOrderSelector: HTMLDivElement = undefined;

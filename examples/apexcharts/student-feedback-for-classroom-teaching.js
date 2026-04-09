@@ -2716,7 +2716,7 @@ function randomTimestamp(days = 100) {
 
 var survey = new Survey.SurveyModel(json);
 
-// var visPanel = new SurveyAnalytics.VisualizationPanel(
+// var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
 //   survey.getAllQuestions(),
 //   // [survey.getQuestionByName("customer_email")],
 //   dataFromServer, { dateFieldName: "timestamp" }
@@ -2735,7 +2735,7 @@ var survey = new Survey.SurveyModel(json);
 // visPanel.render(document.getElementById("summaryContainer"));
 
 
-const dashboard = new SurveyAnalytics.Dashboard({
+const dashboard = new SurveyAnalyticsApexcharts.Dashboard({
     questions: survey.getAllQuestions(),
     data: dataFromServer,
     items: [

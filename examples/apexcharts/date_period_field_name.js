@@ -1,6 +1,6 @@
 var survey = new Survey.SurveyModel(json);
 
-var visPanel = new SurveyAnalytics.Dashboard({
+var visPanel = new SurveyAnalyticsApexcharts.Dashboard({
     questions: survey.getAllQuestions(), // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
     data, 
     dateFieldName: "timestamp",

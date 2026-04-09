@@ -609,7 +609,7 @@ const dataFromServer = sampleData.map(item => ({
   timestamp: randomTimestamp()
 }));
 
-var dashboard = new SurveyAnalytics.Dashboard({
+var dashboard = new SurveyAnalyticsApexcharts.Dashboard({
   questions: survey.getAllQuestions(),
   data: dataFromServer,
   dateFieldName: "timestamp",

@@ -6,6 +6,8 @@ const webpackCommonConfig = require("./webpack.config");
 const extrasEntry = {
   "survey.analytics.plotly": path.resolve(__dirname, "./src/entries/plotly"),
   "survey.analytics.plotly.fontless": path.resolve(__dirname, "./src/entries/plotly.fontless"),
+  "survey.analytics.apexcharts": path.resolve(__dirname, "./src/entries/apexcharts"),
+  "survey.analytics.apexcharts.fontless": path.resolve(__dirname, "./src/entries/apexcharts.fontless"),
   "survey.analytics.tabulator": path.resolve(__dirname, "./src/entries/tabulator-umd"),
   "survey.analytics.tabulator.fontless": path.resolve(__dirname, "./src/entries/tabulator.fontless"),
   "survey.analytics.mongo": path.resolve(__dirname, "./src/entries/mongo"),

@@ -3,6 +3,7 @@ import { ICalculationResult } from "./visualizerBase";
 import { DocumentHelper } from "./utils/documentHelper";
 import { NumberModel } from "./number";
 import { VisualizationManager } from "./visualizationManager";
+import { localization } from "./localizationManager";
 
 import "./card.scss";
 
@@ -96,6 +97,11 @@ export class ResponseCountVisualizer extends CardVisualizer {
   ) {
     super(question, data, options, type || "responsecount");
     this.displayValueName = "count";
+  }
+
+  protected getTitle(question: Question): string {
+    const explicit = super.getTitle(question);
+    return explicit || localization.getString("totalResponses");
   }
 }
 

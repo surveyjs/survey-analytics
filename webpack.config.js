@@ -155,6 +155,11 @@ function getPercentageHandler(emitNonSourceFiles, buildPath) {
             "import": "./fesm/survey.analytics.plotly.mjs",
             "require": "./survey.analytics.plotly.js"
           },
+          "./survey.analytics.chartjs": {
+            "types": "./survey.analytics.chartjs.d.ts",
+            "import": "./fesm/survey.analytics.chartjs.mjs",
+            "require": "./survey.analytics.chartjs.js"
+          },
         }
         packageJson.module = "fesm/survey.analytics.mjs";
         packageJson.homepage = "https://surveyjs.io/";
@@ -201,8 +206,8 @@ module.exports = function (options) {
     mode: isProductionBuild ? "production" : "development",
     entry: {
       "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core"),
-      "survey.analytics": path.resolve(__dirname, "./src/entries/apexcharts"),
-      "survey.analytics.fontless": path.resolve(__dirname, "./src/entries/apexcharts.fontless"),
+      "survey.analytics": path.resolve(__dirname, "./src/entries/chartjs"),
+      "survey.analytics.fontless": path.resolve(__dirname, "./src/entries/chartjs.fontless"),
     },
     resolve: {
       extensions: [".ts", ".js"],
@@ -283,6 +288,12 @@ module.exports = function (options) {
         commonjs2: "apexcharts",
         commonjs: "apexcharts",
         amd: "apexcharts",
+      },
+      "chart.js": {
+        root: "Chart",
+        commonjs2: "chart.js",
+        commonjs: "chart.js",
+        amd: "chart.js",
       },
     },
     plugins: [

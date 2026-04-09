@@ -426,7 +426,7 @@ var options = {
   // labelTruncateLength: 27,
 };
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsApexcharts.VisualizationPanel(
   survey.getAllQuestions(),
   data,
   {
