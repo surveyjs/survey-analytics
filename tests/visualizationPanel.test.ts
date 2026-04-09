@@ -1247,26 +1247,33 @@ test("allowChangeVisualizerType", () => {
 });
 
 test("Render the hide button and drag element if the panel have some elements", () => {
-  const json = {
-    elements: [
-      { type: "text", name: "question1" },
-      { type: "text", name: "question2" },
-    ]
-  };
-  const data = [
-    { question1: "1-1", question2: "1-2" },
-    { question1: "2-1", question2: "2-2" },
-  ];
-  const survey = new SurveyModel(json);
-  const vis = new VisualizationPanel(survey.getAllQuestions(), data);
+  const sc = require("survey-core") as any;
+  const originalIsTouch = sc.IsTouch;
+  sc._setIsTouch(false);
+  try {
+    const json = {
+      elements: [
+        { type: "text", name: "question1" },
+        { type: "text", name: "question2" },
+      ]
+    };
+    const data = [
+      { question1: "1-1", question2: "1-2" },
+      { question1: "2-1", question2: "2-2" },
+    ];
+    const survey = new SurveyModel(json);
+    const vis = new VisualizationPanel(survey.getAllQuestions(), data);
 
-  let container = document.createElement("div");
-  vis.render(container);
-  const hideAction = container.querySelector(".sa-question__hide-action") as HTMLElement;
-  expect(hideAction).not.toBeNull();
+    let container = document.createElement("div");
+    vis.render(container);
+    const hideAction = container.querySelector(".sa-question__hide-action") as HTMLElement;
+    expect(hideAction).not.toBeNull();
 
-  const dragAreaElement = container.querySelector(".sa-question__drag-area") as HTMLElement;
-  expect(dragAreaElement).not.toBeNull();
+    const dragAreaElement = container.querySelector(".sa-question__drag-area") as HTMLElement;
+    expect(dragAreaElement).not.toBeNull();
+  } finally {
+    sc._setIsTouch(originalIsTouch);
+  }
 });
 
 test("Not render the hide button and drag element if the panel has one element", () => {

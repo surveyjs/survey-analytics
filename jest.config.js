@@ -8,7 +8,6 @@ const uiConfig = {
       "outputName": "junit.xml"
     }]
   ],
-  collectCoverage: true,
   coverageReporters: ["json", "lcov", "text", "html", "text-summary", "cobertura"],
   roots: ["tests"],
   transform: {
@@ -40,5 +39,6 @@ nodeConfig.moduleNameMapper = {
 };
 
 module.exports = {
+  collectCoverage: true,
   projects: [uiConfig, nodeConfig]
 };
