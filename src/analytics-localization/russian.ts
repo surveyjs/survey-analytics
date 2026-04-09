@@ -123,6 +123,12 @@ export var russianStrings = {
   xlsxDownloadCaption: "Excel",
   // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
+  // [Auto-translated] "Export as PDF"
+  pdfDownloadHint: "Экспорт в формате PDF",
+  // [Auto-translated] "Export as Excel"
+  xlsxDownloadHint: "Экспорт в Excel",
+  // [Auto-translated] "Export as CSV"
+  csvDownloadHint: "Экспорт в формате CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Скачать диаграмму в формате PNG",
   // [Auto-translated] "response(s)"
@@ -201,6 +207,8 @@ export var russianStrings = {
   statistics_chart: "Диаграмма",
   // "Responses"
   responses: "ответов",
+  // [Auto-translated] "Total responses"
+  totalResponses: "Общее количество ответов",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"

@@ -123,6 +123,12 @@ export var farsiStrings = {
   xlsxDownloadCaption: "اکسل",
   // "CSV"
   csvDownloadCaption: "Csv",
+  // [Auto-translated] "Export as PDF"
+  pdfDownloadHint: "صادرات به صورت PDF",
+  // [Auto-translated] "Export as Excel"
+  xlsxDownloadHint: "صادرات به صورت اکسل",
+  // [Auto-translated] "Export as CSV"
+  csvDownloadHint: "صادرات به صورت CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "دانلود طرح به عنوان یک فایل PNG",
   // [Auto-translated] "response(s)"
@@ -201,6 +207,8 @@ export var farsiStrings = {
   statistics_chart: "نمودار",
   // "Responses"
   responses: "پاسخ",
+  // [Auto-translated] "Total responses"
+  totalResponses: "پاسخ های کلی",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"

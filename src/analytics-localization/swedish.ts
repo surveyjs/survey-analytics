@@ -123,6 +123,12 @@ export var swedishStrings = {
   xlsxDownloadCaption: "Excel",
   // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
+  // [Auto-translated] "Export as PDF"
+  pdfDownloadHint: "Exportera som PDF",
+  // [Auto-translated] "Export as Excel"
+  xlsxDownloadHint: "Exportera som Excel",
+  // [Auto-translated] "Export as CSV"
+  csvDownloadHint: "Exportera som CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Ladda ner diagram som PNG-fil",
   // [Auto-translated] "response(s)"
@@ -201,6 +207,8 @@ export var swedishStrings = {
   statistics_chart: "Diagram",
   // "Responses"
   responses: "Svar",
+  // [Auto-translated] "Total responses"
+  totalResponses: "Totalt antal svar",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"

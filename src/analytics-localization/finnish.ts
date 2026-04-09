@@ -123,6 +123,12 @@ export var finnishStrings = {
   xlsxDownloadCaption: "Excel",
   // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
+  // [Auto-translated] "Export as PDF"
+  pdfDownloadHint: "Vienti PDF-muodossa",
+  // [Auto-translated] "Export as Excel"
+  xlsxDownloadHint: "Vienti Exceliksi",
+  // [Auto-translated] "Export as CSV"
+  csvDownloadHint: "Vienti CSV-muodossa",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Lataa kuvaaja PNG kuvana",
   // [Auto-translated] "response(s)"
@@ -201,6 +207,8 @@ export var finnishStrings = {
   statistics_chart: "Kuvaaja",
   // "Responses"
   responses: "Vastaukset",
+  // [Auto-translated] "Total responses"
+  totalResponses: "Kokonaisvastauksia",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"

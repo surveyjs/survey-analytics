@@ -123,6 +123,12 @@ export var dutchStrings = {
   xlsxDownloadCaption: "Excel",
   // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
+  // [Auto-translated] "Export as PDF"
+  pdfDownloadHint: "Exporteren als PDF",
+  // [Auto-translated] "Export as Excel"
+  xlsxDownloadHint: "Export als Excel",
+  // [Auto-translated] "Export as CSV"
+  csvDownloadHint: "Export als CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Download plot als PNG",
   // [Auto-translated] "response(s)"
@@ -201,6 +207,8 @@ export var dutchStrings = {
   statistics_chart: "Zeekaart",
   // "Responses"
   responses: "Reacties",
+  // [Auto-translated] "Total responses"
+  totalResponses: "Totaal aantal reacties",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"

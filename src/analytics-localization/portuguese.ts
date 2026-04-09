@@ -123,6 +123,12 @@ export var portugueseStrings = {
   xlsxDownloadCaption: "Excel",
   // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
+  // [Auto-translated] "Export as PDF"
+  pdfDownloadHint: "Exportar como PDF",
+  // [Auto-translated] "Export as Excel"
+  xlsxDownloadHint: "Exportar como Excel",
+  // [Auto-translated] "Export as CSV"
+  csvDownloadHint: "Exportação como CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Baixar diagrama como PNG",
   // [Auto-translated] "response(s)"
@@ -201,6 +207,8 @@ export var portugueseStrings = {
   statistics_chart: "Gráfico",
   // "Responses"
   responses: "Respostas",
+  // [Auto-translated] "Total responses"
+  totalResponses: "Total de respostas",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"

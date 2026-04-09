@@ -123,6 +123,12 @@ export var norwegianStrings = {
   xlsxDownloadCaption: "Overgå",
   // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
+  // [Auto-translated] "Export as PDF"
+  pdfDownloadHint: "Eksporter som PDF",
+  // [Auto-translated] "Export as Excel"
+  xlsxDownloadHint: "Eksport som Excel",
+  // [Auto-translated] "Export as CSV"
+  csvDownloadHint: "Eksport som CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Last ned plott som en PNG-fil",
   // [Auto-translated] "response(s)"
@@ -201,6 +207,8 @@ export var norwegianStrings = {
   statistics_chart: "Sjøkart",
   // "Responses"
   responses: "Svar",
+  // [Auto-translated] "Total responses"
+  totalResponses: "Totalt antall svar",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"

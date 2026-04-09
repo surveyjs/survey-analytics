@@ -123,6 +123,12 @@ export var arabicStrings = {
   xlsxDownloadCaption: "إكسل",
   // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
+  // [Auto-translated] "Export as PDF"
+  pdfDownloadHint: "تصدير كملف PDF",
+  // [Auto-translated] "Export as Excel"
+  xlsxDownloadHint: "تصدير كإكسل",
+  // [Auto-translated] "Export as CSV"
+  csvDownloadHint: "التصدير ك CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "تنزيل بصيغة png",
   // [Auto-translated] "response(s)"
@@ -201,6 +207,8 @@ export var arabicStrings = {
   statistics_chart: "جدول",
   // "Responses"
   responses: "الاستجابات",
+  // [Auto-translated] "Total responses"
+  totalResponses: "إجمالي الردود",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"

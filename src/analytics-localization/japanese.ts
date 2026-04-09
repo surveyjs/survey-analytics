@@ -123,6 +123,12 @@ export var japaneseStrings = {
   xlsxDownloadCaption: "Excel",
   // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
+  // [Auto-translated] "Export as PDF"
+  pdfDownloadHint: "PDFとしてエクスポート",
+  // [Auto-translated] "Export as Excel"
+  xlsxDownloadHint: "Excelとしてエクスポート",
+  // [Auto-translated] "Export as CSV"
+  csvDownloadHint: "CSVとしてエクスポート",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "プロットをPNGファイルとして保存",
   // [Auto-translated] "response(s)"
@@ -201,6 +207,8 @@ export var japaneseStrings = {
   statistics_chart: "チャート",
   // "Responses"
   responses: "回答数",
+  // [Auto-translated] "Total responses"
+  totalResponses: "総回答数",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPSの",
   // [Auto-translated] "Chart"
