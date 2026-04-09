@@ -8,7 +8,7 @@ const mockOnDateRangeChanged = jest.fn();
 beforeEach(() => {
   mockOnDateRangeChanged.mockClear();
   jest.useFakeTimers();
-  jest.setSystemTime(new Date("2025-12-15"));
+  jest.setSystemTime(new Date("2025-12-15").getTime());
 });
 
 afterEach(() => {
@@ -51,7 +51,7 @@ test("DateRangeWidget render is not show dropdown & answerCoun", () => {
 
 test("verifies answer count when range is set by dateRange", async () => {
   jest.useFakeTimers();
-  jest.setSystemTime(new Date("2025-12-15"));
+  jest.setSystemTime(new Date("2025-12-15").getTime());
 
   const json = {
     elements: [{ type: "text", name: "question1" }],
@@ -79,7 +79,7 @@ test("verifies answer count when range is set by dateRange", async () => {
 
 test("verifies answer count when range is set by datePeriod", async () => {
   jest.useFakeTimers();
-  jest.setSystemTime(new Date("2025-12-15"));
+  jest.setSystemTime(new Date("2025-12-15").getTime());
 
   const json = {
     elements: [{ type: "text", name: "question1" }],
@@ -107,7 +107,7 @@ test("verifies answer count when range is set by datePeriod", async () => {
 
 test("verifies answer count when range is not set", async () => {
   jest.useFakeTimers();
-  jest.setSystemTime(new Date("2025-12-15"));
+  jest.setSystemTime(new Date("2025-12-15").getTime());
 
   const json = {
     elements: [{ type: "text", name: "question1" }],

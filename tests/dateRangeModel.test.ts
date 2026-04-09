@@ -6,7 +6,7 @@ const mockOnDateRangeChanged = jest.fn();
 beforeEach(() => {
   mockOnDateRangeChanged.mockClear();
   jest.useFakeTimers();
-  jest.setSystemTime(new Date("2025-12-15"));
+  jest.setSystemTime(new Date("2025-12-15").getTime());
 });
 
 afterEach(() => {

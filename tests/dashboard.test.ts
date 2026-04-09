@@ -747,7 +747,7 @@ test("allowChangeType", () => {
 
 test("Dashboard support date range options", () => {
   jest.useFakeTimers();
-  jest.setSystemTime(new Date("2025-12-15"));
+  jest.setSystemTime(new Date("2025-12-15").getTime());
 
   const availableDatePeriods: DatePeriodEnum[] = ["last7days", "last30days"];
   const dashboard = new Dashboard({
@@ -778,7 +778,7 @@ test("Dashboard support date range options", () => {
 
 test("Dashboard onDateRangeChanged event fires when date range changes", () => {
   jest.useFakeTimers();
-  jest.setSystemTime(new Date("2025-12-15"));
+  jest.setSystemTime(new Date("2025-12-15").getTime());
 
   const dashboard = new Dashboard({
     items: [{ type: "text", name: "q1" }],
