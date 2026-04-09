@@ -84,6 +84,7 @@
     "jest-canvas-mock": "^2.3.1",
     "jest-environment-jsdom": "^30.3.0",
     "jest-junit": "^16.0.0",
+    "jest-util": "^30.3.0",
     "lint-staged": "^15.4.3",
     "mini-css-extract-plugin": "^2.9.0",
     "mongodb-memory-server": "^10.2.1",
