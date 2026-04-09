@@ -11,7 +11,7 @@ import { VisualizerFactory } from "./visualizerFactory";
  *
  * Pass an array of `IDashboardItemOptions` objects to the [`items`](https://surveyjs.io/dashboard/documentation/api-reference/dashboard#items) array when initializing the Dashboard.
  *
- * [View Demo](https://surveyjs.io/dashboard/examples/customer-satisfaction-analysis/ (linkStyle))
+ * [View Demo](https://surveyjs.io/dashboard/examples/customer-satisfaction-survey-analysis/ (linkStyle))
  */
 export interface IDashboardItemOptions {
   /**
