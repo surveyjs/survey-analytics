@@ -360,13 +360,6 @@ test("toPrecision method", () => {
   expect(result).toBe(3.14);
 });
 
-test("convertFromExternalData", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-  const externalData = { some: "data" };
-  const result = pivot.convertFromExternalData(externalData);
-  expect(result.data).toEqual([externalData]);
-});
-
 test("updateStatisticsSeriesValue with enum values", () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
   pivot.setAxisQuestions("question1", "question2");

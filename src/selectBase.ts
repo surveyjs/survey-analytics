@@ -830,36 +830,6 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     return answersData;
   }
 
-  public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
-    const values = this.getValues();
-    const series = this.getSeriesValues();
-    const innerCalculatedData = [];
-    if(series.length > 0) {
-      for(let j = 0; j < series.length; j++) {
-        const seriesData = [];
-        for(let i = 0; i < values.length; i++) {
-          if(!!externalCalculatedData[series[j]]) {
-            seriesData.push(externalCalculatedData[series[j]][values[i]] || 0);
-          } else {
-            seriesData.push(0);
-          }
-        }
-        innerCalculatedData.push(seriesData);
-      }
-    } else {
-      const seriesData = [];
-      for(let i = 0; i < values.length; i++) {
-        seriesData.push(externalCalculatedData[values[i]] || 0);
-      }
-      innerCalculatedData.push(seriesData);
-    }
-    return {
-      data: innerCalculatedData,
-      values,
-      series
-    };
-  }
-
   protected transpose(data: Array<Array<number>>): Array<Array<number>> {
     const dim2 = data[0].length;
     const result = new Array<Array<number>>(dim2);

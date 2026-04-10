@@ -61,22 +61,3 @@ test("getCalculatedValues keeps umlauts", async () => {
   expect(data.data[0][0]).toBe(2);
 });
 
-test("convertFromExternalData", () => {
-  var wc = new WordCloud(new QuestionCommentModel("q1"), [
-    { q1: "Gro\u00DFmutter string one1" },
-    { q1: "Gro\u00DFmutter string two2" },
-  ]);
-  const externalCalculatedData = {
-    "gro\u00DFmutter": 2,
-    "string": 2,
-    "one1": 1,
-    "two2": 1,
-  };
-  const calculatedData = (wc as any).getCalculatedValuesCore();
-  expect(calculatedData).toEqual({
-    data: [[2, 2, 1, 1]],
-    // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
-    values: ["großmutter", "string", "one1", "two2"],
-  });
-  expect(wc.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
-});
