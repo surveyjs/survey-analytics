@@ -52,6 +52,7 @@ test("default settings", async () => {
 
   expect(pivot["isSupportMissingAnswers"]()).toBeFalsy();
   expect(pivot["isSupportAnswersOrder"]()).toBeFalsy();
+  expect(pivot.supportSelection).toBeFalsy();
 
   const values = pivot.getValues();
   const labels = pivot.getLabels();

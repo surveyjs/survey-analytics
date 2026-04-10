@@ -347,6 +347,7 @@ export class PivotModel extends HistogramModel {
     type?: string
   ) {
     super(null, data, options, type || "pivot");
+    this._supportSelection = false;
     if(!Array.isArray(this.questions)) {
       this._questionDefinition = this.questions;
       this.questions = [];
