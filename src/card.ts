@@ -97,11 +97,10 @@ export class ResponseCountVisualizer extends CardVisualizer {
   ) {
     super(question, data, options, type || "responsecount");
     this.displayValueName = "count";
-  }
-
-  protected getTitle(question: Question): string {
-    const explicit = super.getTitle(question);
-    return explicit || localization.getString("totalResponses");
+    if(!!question && question?.title === undefined) {
+      question.title = localization.getString("totalResponses");
+      this.provideTitle = true;
+    }
   }
 }
 

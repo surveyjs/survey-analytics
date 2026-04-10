@@ -482,6 +482,8 @@ export class VisualizerBase implements IDataInfo {
     return undefined;
   }
 
+  provideTitle: boolean;
+
   /**
    * Returns the visualizer's title.
    * @hidefor Dashboard, VisualizationPanel
