@@ -52,7 +52,9 @@ test("ResponseCountVisualizer: default title is 'Total responses'", () => {
     {}
   );
 
-  expect((visPanel.visualizers[0] as ResponseCountVisualizer).title).toBe("Total responses");
+  const visualizer = visPanel.visualizers[0] as ResponseCountVisualizer;
+  expect(visualizer.provideTitle).toBe(true);
+  expect(visualizer.title).toBe("Total responses");
 });
 
 test("ResponseCountVisualizer: pass custom title", () => {
@@ -63,7 +65,9 @@ test("ResponseCountVisualizer: pass custom title", () => {
     {}
   );
 
-  expect((visPanel.visualizers[0] as ResponseCountVisualizer).title).toBe("Custom Title");
+  const visualizer = visPanel.visualizers[0] as ResponseCountVisualizer;
+  expect(visualizer.provideTitle).toBe(undefined);
+  expect(visualizer.title).toBe("Custom Title");
 });
 
 test("ResponseCountVisualizer: getCalculatedValues returns correct response count", async () => {

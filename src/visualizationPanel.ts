@@ -379,9 +379,10 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
       headerElement.appendChild(hideElement);
     }
 
-    if(element.displayName) {
+    const elementTitle = element.displayName || element.visualizerInstance?.provideTitle === true && element.visualizerInstance?.title;
+    if(elementTitle) {
       const titleElement = DocumentHelper.createElement("h3");
-      titleElement.innerText = element.displayName;
+      titleElement.innerText = elementTitle;
       titleElement.id = "el_" + element.name;
       titleElement.className = questionElementClassName + "__title";
       if(this.allowDynamicLayout && this.allowDragDrop) {
