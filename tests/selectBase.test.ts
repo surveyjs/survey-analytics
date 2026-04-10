@@ -555,42 +555,6 @@ test("hideEmptyAnswersInData", () => {
   });
 });
 
-test("convertFromExternalData", async () => {
-  var question = new QuestionDropdownModel("q1");
-  question.choices = choices;
-  question.valueName = "q1value";
-  const data = [
-    {
-      q1value: "father",
-    },
-    {
-      q1value: "father",
-    },
-    {
-      q1value: "mother",
-    },
-    {
-      q1value: "sister",
-    },
-    {
-
-    }
-  ];
-  const externalCalculatedData = {
-    "father": 2,
-    "mother": 1,
-    "brother": 0,
-    "sister": 1,
-    "son": 0,
-    "daughter": 0
-  };
-  selectBase = new SelectBase(question, data, {});
-
-  const calculatedData = (selectBase as any).getCalculatedValuesCore().data;
-  expect(calculatedData).toEqual([[2, 1, 0, 1, 0, 0].reverse()]);
-  expect(selectBase.convertFromExternalData(externalCalculatedData).data).toStrictEqual(calculatedData);
-});
-
 test("isSupportAnswersOrder and allowSortAnswers or allowChangeAnswersOrder options", () => {
   expect(selectBase["isSupportAnswersOrder"]()).toBeTruthy();
 

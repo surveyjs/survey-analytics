@@ -693,21 +693,6 @@ test("number histogram answers order", async () => {
   expect(histData.data).toMatchObject([[5, 3, 0, 0, 0, 0, 1, 0, 0, 1]]);
 });
 
-test("convertFromExternalData", () => {
-  const question: any = {
-    getType: () => "text",
-    type: "text",
-    inputType: "number",
-    name: "age",
-  };
-  const histogram = new HistogramModel(question, data);
-
-  const externalCalculatedData = [3, 0, 0, 1, 0, 2, 0, 0, 0, 2];
-  const calculatedData = (histogram as any).getCalculatedValuesCore();
-  expect(calculatedData.data).toEqual([[3, 0, 0, 1, 0, 2, 0, 0, 0, 2]]);
-  expect(histogram.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
-});
-
 test("rating with rateValues with wrong order", () => {
   const question: any = {
     getType: () => "rating",
@@ -755,10 +740,8 @@ test("rating with rateValues with wrong order", () => {
   ];
   const histogram = new HistogramModel(question, ratingData);
 
-  const externalCalculatedData = [0, 1, 1, 1, 1, 0, 1];
   const calculatedData = (histogram as any).getCalculatedValuesCore();
-  expect(calculatedData.data).toEqual([externalCalculatedData]);
-  expect(histogram.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
+  expect(calculatedData.data).toEqual([[0, 1, 1, 1, 1, 0, 1]]);
 });
 
 test("getCalculatedValues", async () => {

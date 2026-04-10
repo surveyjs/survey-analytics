@@ -71,15 +71,6 @@ export class WordCloud extends VisualizerBase {
     this._wordcloudAdapter = new WordCloudAdapter(this);
   }
 
-  public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
-    this._values = Object.keys(externalCalculatedData || {});
-
-    return {
-      data: [this._values.map(w => externalCalculatedData[w])],
-      values: this._values
-    };
-  }
-
   public getValues(): Array<any> {
     return this._values;
   }

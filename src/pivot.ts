@@ -568,14 +568,6 @@ export class PivotModel extends HistogramModel {
     return seriesLabels;
   }
 
-  public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
-    return {
-      data: [externalCalculatedData],
-      values: this.getValues(),
-      series: this.getSeriesValues()
-    };
-  }
-
   getSeriesValueIndexes(): { [index: string]: number } {
     const seriesValueIndexes = {};
     let valueIndex = 0;
@@ -684,7 +676,8 @@ export class PivotModel extends HistogramModel {
     }
     return {
       data: statistics,
-      values: this.valueType === "enum" ? this.getValues() : this.intervals.map(i => i.label)
+      values: this.valueType === "enum" ? this.getValues() : this.intervals.map(i => i.label),
+      series: series,
     };
   }
 

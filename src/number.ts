@@ -169,13 +169,6 @@ export class NumberModel extends VisualizerBase implements INumericVisualizerOpt
     return colors;
   }
 
-  public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
-    return {
-      data: [[externalCalculatedData.value || 0, externalCalculatedData.minValue || 0, externalCalculatedData.maxValue || 0, externalCalculatedData.count || 0]],
-      values: ["average", "min", "max", "count"]
-    };
-  }
-
   protected getCalculatedValuesCore(): ICalculationResult {
     if(this._statistics === undefined) {
       this._statistics = mathStatisticsCalculator(this.surveyData, this);

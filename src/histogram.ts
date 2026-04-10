@@ -512,13 +512,6 @@ export class HistogramModel extends SelectBase {
     return this.questionOptions?.aggregateDataNames ?? [];
   }
 
-  public convertFromExternalData(externalCalculatedData: Array<number>): ICalculationResult {
-    return {
-      data: [externalCalculatedData],
-      values: this.intervals.map(i => i.label)
-    };
-  }
-
   protected getCalculatedValuesCore(): ICalculationResult {
     const continuousValues = this.getContinuousValues();
     return histogramStatisticsCalculator(this._continuousData, this.intervals, this, [this.aggregateDataName].filter(name => !!name));
