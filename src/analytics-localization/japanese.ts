@@ -286,7 +286,13 @@ export var japaneseStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "平均",
   // [Auto-translated] "Close"
-  close: "閉じる"
+  close: "閉じる",
+  // [Auto-translated] "K"
+  thousandsSuffix: "千",
+  // [Auto-translated] "M"
+  millionsSuffix: "百万",
+  // [Auto-translated] "B"
+  billionsSuffix: "十億"
 };
 
 setupLocale({ localeCode: "ja", strings: japaneseStrings, nativeName: "日本語" });

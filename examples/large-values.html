@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Large Values Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <script src="./plotly.min.js"></script>
+
+    <script src="../node_modules/survey-core/survey.core.js"></script>
+    <script src="../build/survey.analytics.plotly.js"></script>
+    <link rel="stylesheet" type="text/css" href="../build/survey.analytics.plotly.css" />
+  </head>
+
+  <body>
+    <div id="summaryContainer"></div>
+    <script src="./large-values.js"></script>
+    <script>
+      var survey = new Survey.SurveyModel(json);
+      var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
+        survey.getAllQuestions(),
+        data,
+        {}
+      );
+      visPanel.showToolbar = true;
+      visPanel.render(document.getElementById("summaryContainer"));
+    </script>
+  </body>
+
+</html>

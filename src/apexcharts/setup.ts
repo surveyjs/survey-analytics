@@ -4,7 +4,7 @@ import { IAnswersData, VisualizerBase } from "../visualizerBase";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
 import { DashboardTheme } from "../theme";
-import { isAllZeros, reverseAll } from "../utils/utils";
+import { isAllZeros, reverseAll, formatLargeNumber } from "../utils/utils";
 import { localization } from "../localizationManager";
 
 import "./styles.scss";
@@ -437,6 +437,10 @@ export class ApexChartsSetup {
       axisBorder: {
         show: false,
       },
+      labels: {
+        ...ApexChartsSetup.defaultAxisConfig(model.theme).labels,
+        formatter: function(val: number) { return formatLargeNumber(Number(val)); }
+      },
     };
 
     const yaxis: any = {
@@ -463,7 +467,7 @@ export class ApexChartsSetup {
     const dataLabels: any = {
       ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
       formatter: function(val, opts) {
-        return dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], val);
+        return dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], formatLargeNumber(Number(val)));
       },
     };
 
@@ -552,9 +556,13 @@ export class ApexChartsSetup {
     };
 
     const yaxis: any = model.getYAxisInfo().map(info => {
-      const setting = Object.assign(ApexChartsSetup.defaultAxisConfig(model.theme), info);
+      const setting: any = Object.assign(ApexChartsSetup.defaultAxisConfig(model.theme), info);
       setting.title.style = {
         ...ApexChartsSetup.defaultAxisTitleFont(model.theme),
+      };
+      setting.labels = {
+        ...setting.labels,
+        formatter: function(val: number) { return formatLargeNumber(Number(val)); }
       };
       return setting;
     });
@@ -578,7 +586,7 @@ export class ApexChartsSetup {
     const dataLabels: any = {
       ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
       formatter: function(val, opts) {
-        return dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], val);
+        return dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], formatLargeNumber(Number(val)));
       }
     };
 
@@ -666,9 +674,13 @@ export class ApexChartsSetup {
     };
 
     const yaxis: any = model.getYAxisInfo().map(info => {
-      const setting = Object.assign(ApexChartsSetup.defaultAxisConfig(model.theme), info);
+      const setting: any = Object.assign(ApexChartsSetup.defaultAxisConfig(model.theme), info);
       setting.title.style = {
         ...ApexChartsSetup.defaultAxisTitleFont(model.theme),
+      };
+      setting.labels = {
+        ...setting.labels,
+        formatter: function(val: number) { return formatLargeNumber(Number(val)); }
       };
       return setting;
     });
@@ -774,6 +786,10 @@ export class ApexChartsSetup {
       categories: labels,
       max: Math.ceil(maxValue),
       axisBorder: { ...ApexChartsSetup.defaultAxisZerolineConfig(model.theme) },
+      labels: {
+        ...ApexChartsSetup.defaultAxisConfig(model.theme).labels,
+        formatter: function(val: number) { return formatLargeNumber(Number(val)); }
+      },
     };
 
     const yaxis: any = {

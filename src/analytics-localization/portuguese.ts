@@ -286,7 +286,13 @@ export var portugueseStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "Média",
   // [Auto-translated] "Close"
-  close: "Fechar"
+  close: "Fechar",
+  // [Auto-translated] "K"
+  thousandsSuffix: "K",
+  // [Auto-translated] "M"
+  millionsSuffix: "M",
+  // [Auto-translated] "B"
+  billionsSuffix: "B"
 };
 
 setupLocale({ localeCode: "pt", strings: portugueseStrings, nativeName: "Português" });

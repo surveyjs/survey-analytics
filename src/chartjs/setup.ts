@@ -4,7 +4,7 @@ import { IAnswersData, VisualizerBase } from "../visualizerBase";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
 import { DashboardTheme } from "../theme";
-import { isAllZeros, reverseAll } from "../utils/utils";
+import { isAllZeros, reverseAll, formatLargeNumber } from "../utils/utils";
 import { localization } from "../localizationManager";
 
 import "./styles.scss";
@@ -383,6 +383,12 @@ export class ChartJsSetup {
         ...ChartJsSetup.defaultGridConfig(model.theme),
         display: true,
       },
+      ticks: {
+        ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+        callback: function(value: number | string) {
+          return formatLargeNumber(Number(value));
+        },
+      },
     };
 
     const yAxisConfig = {
@@ -419,7 +425,7 @@ export class ChartJsSetup {
         datalabels: {
           ...ChartJsSetup.defaultDataLabelsConfig(model.theme),
           formatter: function(val: number, context: any) {
-            return dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], val.toString());
+            return dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], formatLargeNumber(val));
           }
         }
       },
@@ -496,6 +502,12 @@ export class ChartJsSetup {
             ...ChartJsSetup.defaultGridConfig(model.theme),
             display: true,
           },
+          ticks: {
+            ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+            callback: function(value: number | string) {
+              return formatLargeNumber(Number(value));
+            },
+          },
         };
       });
     } else {
@@ -504,6 +516,12 @@ export class ChartJsSetup {
         grid: {
           ...ChartJsSetup.defaultGridConfig(model.theme),
           display: true,
+        },
+        ticks: {
+          ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+          callback: function(value: number | string) {
+            return formatLargeNumber(Number(value));
+          },
         },
       };
     }
@@ -541,7 +559,7 @@ export class ChartJsSetup {
         datalabels: {
           ...ChartJsSetup.defaultDataLabelsConfig(model.theme),
           formatter: function(val: number, context: any) {
-            return dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], val.toString());
+            return dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], formatLargeNumber(val));
           }
         }
       },
@@ -613,11 +631,23 @@ export class ChartJsSetup {
             text: info.title?.text || "",
             ...ChartJsSetup.defaultAxisTitleFont(model.theme),
           },
+          ticks: {
+            ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+            callback: function(value: number | string) {
+              return formatLargeNumber(Number(value));
+            },
+          },
         };
       });
     } else {
       yScales.y = {
         ...ChartJsSetup.defaultAxisConfig(model.theme),
+        ticks: {
+          ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+          callback: function(value: number | string) {
+            return formatLargeNumber(Number(value));
+          },
+        },
       };
     }
 
@@ -738,6 +768,12 @@ export class ChartJsSetup {
           grid: {
             ...ChartJsSetup.defaultGridConfig(model.theme),
             display: true,
+          },
+          ticks: {
+            ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
+            callback: function(value: number | string) {
+              return formatLargeNumber(Number(value));
+            },
           },
         },
         y: {

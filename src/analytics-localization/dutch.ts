@@ -286,7 +286,13 @@ export var dutchStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "Gemiddeld",
   // [Auto-translated] "Close"
-  close: "Sluit"
+  close: "Sluit",
+  // [Auto-translated] "K"
+  thousandsSuffix: "K",
+  // [Auto-translated] "M"
+  millionsSuffix: "M",
+  // [Auto-translated] "B"
+  billionsSuffix: "B"
 };
 
 setupLocale({ localeCode: "nl", strings: dutchStrings, nativeName: "Nederlands" });

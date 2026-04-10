@@ -286,7 +286,13 @@ export var germanStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "Durchschnitt",
   // [Auto-translated] "Close"
-  close: "Schließen"
+  close: "Schließen",
+  // [Auto-translated] "K"
+  thousandsSuffix: "Tsd",
+  // [Auto-translated] "M"
+  millionsSuffix: "Mio",
+  // [Auto-translated] "B"
+  billionsSuffix: "Mrd"
 };
 
 setupLocale({ localeCode: "de", strings: germanStrings, nativeName: "Deutsch" });

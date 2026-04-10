@@ -146,7 +146,10 @@ export var englishStrings = {
   aggregationCount: "Count",
   aggregationSum: "Sum",
   aggregationAverage: "Average",
-  close: "Close"
+  close: "Close",
+  thousandsSuffix: "K",
+  millionsSuffix: "M",
+  billionsSuffix: "B"
 };
 
 // Uncomment the line below if you create a custom dictionary.
