@@ -663,7 +663,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   }
 
   /**
-   * Returns the [`allowDynamicLayout`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDynamicLayout) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
+   * Returns the [`allowDynamicLayout`](https://surveyjs.io/dashboard/documentation/api-reference/idashboardoptions#allowDynamicLayout) property value passed to the constructor.
    */
   public get allowDynamicLayout() {
     return (
@@ -673,7 +673,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   }
 
   /**
-   * Returns the [`allowDragDrop`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDragDrop) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
+   * Returns the [`allowDragDrop`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDragDrop) property value passed to the constructor.
    */
   public get allowDragDrop() {
     if(IsTouch) {
@@ -686,7 +686,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   }
 
   /**
-   * Returns the [`allowHideQuestions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
+   * Returns the [`allowHideQuestions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions) property value passed to the constructor.
    */
   public get allowHideQuestions() {
     return (
@@ -705,7 +705,8 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
 
   private _layoutEngine: LayoutEngine;
   /**
-   * Returns a [`LayoutEngine`](https://surveyjs.io/dashboard/documentation/api-reference/layoutengine) instance used to arrange visualization items on `VisualizationPanel`.
+   * Returns a [`LayoutEngine`](https://surveyjs.io/dashboard/documentation/api-reference/layoutengine) instance that arranges visualization items within the dashboard.
+   * @hidefor Dashboard
    */
   public get layoutEngine() {
     return this._layoutEngine;
@@ -765,6 +766,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
    * @param questionNames Question [names](https://surveyjs.io/form-library/documentation/api-reference/question#name). Do not specify this parameter to get an array of all visualization items.
    * @see visibleElements
    * @see hiddenElements
+   * @hidefor Dashboard
    */
   public getElements(questionNames?: Array<string>): IVisualizerPanelElement[] {
     const result = [];
@@ -782,6 +784,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
    * If you want to disallow users to hide visualization items, set the [`allowHideQuestions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions) property to `false`.
    * @see hiddenElements
    * @see getElements
+   * @hidefor Dashboard
    */
   public get visibleElements() {
     return this._elements.filter((el: IVisualizerPanelElement) => el.isVisible);
@@ -793,6 +796,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
    * If you want to disallow users to hide visualization items, set the [`allowHideQuestions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions) property to `false`.
    * @see visibleElements
    * @see getElements
+   * @hidefor Dashboard
    */
   public get hiddenElements() {
     return this._elements.filter(
@@ -816,6 +820,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   /**
    * Returns a visualization item with a specified question name.
    * @param name A question [name](https://surveyjs.io/form-library/documentation/api-reference/question#name).
+   * @hidefor Dashboard
    */
   public getElement(questionName: string) {
     return this._elements.filter((el) => el.name === questionName)[0];
@@ -824,6 +829,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   /**
    * Returns a [visualizer](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase) that visualizes a specified survey question.
    * @param questionName A question [name](https://surveyjs.io/form-library/documentation/api-reference/question#name).
+   * @hidefor Dashboard
    */
   public getVisualizer(questionName: string) {
     return this.getElement(questionName)?.visualizerInstance;
@@ -831,6 +837,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
 
   /**
    * @deprecated Use [`onElementShown`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#onElementShown), [`onElementHidden`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#onElementHidden), or [`onElementMoved`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#onElementMoved) instead.
+   * @hidefor Dashboard
    */
   public onVisibleElementsChanged = new Event<
     (sender: VisualizationPanel, options: any) => any, VisualizationPanel,
@@ -850,6 +857,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
    *
    * - `options.element`: [`IVisualizerPanelElement`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizerpanelelement)\
    * A visualization item that has been shown.
+   * @hidefor Dashboard
    */
   public onElementShown = new Event<
     (sender: VisualizationPanel, options: any) => any, VisualizationPanel,
@@ -869,6 +877,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
    *
    * - `options.element`: [`IVisualizerPanelElement`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizerpanelelement)\
    * A visualization item that has been hidden.
+   * @hidefor Dashboard
    */
   public onElementHidden = new Event<
     (sender: VisualizationPanel, options: any) => any, VisualizationPanel,
@@ -888,6 +897,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
    *
    * - `options.element`: [`IVisualizerPanelElement`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizerpanelelement)\
    * A visualization item that has been moved.
+   * @hidefor Dashboard
    */
   public onElementMoved = new Event<
     (sender: VisualizationPanel, options: any) => any, VisualizationPanel,
@@ -993,7 +1003,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   }
 
   /**
-   * Redraws the `VisualizationPanel` and all its content.
+   * Redraws the dashboard and all its content.
    */
   public refresh() {
     if(!!this.toolbarContainer) {
@@ -1010,8 +1020,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   /**
    * Filters visualized data based on a specified question name and value. This method is called when a user clicks a chart point.
    * @param questionName A question [name](https://surveyjs.io/form-library/documentation/api-reference/question#name).
-   * @param selectedValue
-   * @see IVisualizationPanelOptions.allowSelection
+   * @param selectedValue A filter value.
    */
   public setFilter(questionName: string, selectedValue: any) {
     if(!this.dataPath) {

@@ -453,6 +453,7 @@ export class VisualizerBase implements IDataInfo {
    * @param name A custom name for the toolbar item.
    * @param creator A function that accepts the toolbar and should return an `HTMLElement` with the toolbar item.
    * @see unregisterToolbarItem
+   * @hidefor Dashboard
    */
   public registerToolbarItem(
     name: string,
@@ -470,6 +471,7 @@ export class VisualizerBase implements IDataInfo {
    * @param name A toolbar item name.
    * @returns A function previously used to [register](#registerToolbarItem) the removed toolbar item.
    * @see registerToolbarItem
+   * @hidefor Dashboard
    */
   public unregisterToolbarItem(
     name: string
@@ -537,7 +539,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Updates the data used by the visualizer.
+   * Updates the visualized data.
    * @param data An array of survey result objects or a data-loading function.
    */
   updateData(data: Array<{ [index: string]: any }> | GetDataFn) {
@@ -1017,7 +1019,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Gets or sets the visibility of the visualizer's toolbar.
+   * Gets or sets whether the toolbar is visible.
    *
    * Default value: `true`
    */
