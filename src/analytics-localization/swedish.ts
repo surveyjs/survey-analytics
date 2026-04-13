@@ -286,7 +286,13 @@ export var swedishStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "Genomsnitt",
   // [Auto-translated] "Close"
-  close: "Stäng"
+  close: "Stäng",
+  // [Auto-translated] "K"
+  thousandsSuffix: "K",
+  // [Auto-translated] "M"
+  millionsSuffix: "M",
+  // [Auto-translated] "B"
+  billionsSuffix: "Mdr"
 };
 
 setupLocale({ localeCode: "sv", strings: swedishStrings, nativeName: "Svenska" });

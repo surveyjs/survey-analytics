@@ -286,7 +286,13 @@ export var finnishStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "Keskiarvo",
   // [Auto-translated] "Close"
-  close: "Sulje"
+  close: "Sulje",
+  // [Auto-translated] "K"
+  thousandsSuffix: "t",
+  // [Auto-translated] "M"
+  millionsSuffix: "milj.",
+  // [Auto-translated] "B"
+  billionsSuffix: "mrd"
 };
 
 setupLocale({ localeCode: "fi", strings: finnishStrings, nativeName: "Suomi" });

@@ -286,7 +286,13 @@ export var russianStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "Средний показатель",
   // [Auto-translated] "Close"
-  close: "Закрыть"
+  close: "Закрыть",
+  // [Auto-translated] "K"
+  thousandsSuffix: "тыс",
+  // [Auto-translated] "M"
+  millionsSuffix: "млн",
+  // [Auto-translated] "B"
+  billionsSuffix: "млрд"
 };
 
 setupLocale({ localeCode: "ru", strings: russianStrings, nativeName: "Русский" });

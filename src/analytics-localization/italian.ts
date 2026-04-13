@@ -286,7 +286,13 @@ export var italianStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "Media",
   // [Auto-translated] "Close"
-  close: "Chiudi"
+  close: "Chiudi",
+  // [Auto-translated] "K"
+  thousandsSuffix: "K",
+  // [Auto-translated] "M"
+  millionsSuffix: "M",
+  // [Auto-translated] "B"
+  billionsSuffix: "Mld"
 };
 
 setupLocale({ localeCode: "it", strings: italianStrings, nativeName: "Italiano" });

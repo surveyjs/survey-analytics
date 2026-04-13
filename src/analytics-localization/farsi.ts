@@ -286,7 +286,13 @@ export var farsiStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "میانگین",
   // [Auto-translated] "Close"
-  close: "بسته شدن"
+  close: "بسته شدن",
+  // [Auto-translated] "K"
+  thousandsSuffix: "هزار",
+  // [Auto-translated] "M"
+  millionsSuffix: "میلیون",
+  // [Auto-translated] "B"
+  billionsSuffix: "میلیارد"
 };
 
 setupLocale({ localeCode: "fa", strings: farsiStrings, nativeName: "فارسی" });

@@ -286,7 +286,13 @@ export var spanishStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "Promedio",
   // [Auto-translated] "Close"
-  close: "Cierre"
+  close: "Cierre",
+  // [Auto-translated] "K"
+  thousandsSuffix: "K",
+  // [Auto-translated] "M"
+  millionsSuffix: "M",
+  // [Auto-translated] "B"
+  billionsSuffix: "B"
 };
 
 setupLocale({ localeCode: "es", strings: spanishStrings, nativeName: "Español" });

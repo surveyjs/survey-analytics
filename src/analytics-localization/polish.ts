@@ -286,7 +286,13 @@ export var plStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "Średnia",
   // [Auto-translated] "Close"
-  close: "Zamknij"
+  close: "Zamknij",
+  // [Auto-translated] "K"
+  thousandsSuffix: "tys.",
+  // [Auto-translated] "M"
+  millionsSuffix: "mln",
+  // [Auto-translated] "B"
+  billionsSuffix: "mld"
 };
 
 setupLocale({ localeCode: "pl", strings: plStrings, nativeName: "Polski" });

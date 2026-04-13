@@ -286,7 +286,13 @@ export var norwegianStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "Gjennomsnitt",
   // [Auto-translated] "Close"
-  close: "Lukk"
+  close: "Lukk",
+  // [Auto-translated] "K"
+  thousandsSuffix: "K",
+  // [Auto-translated] "M"
+  millionsSuffix: "M",
+  // [Auto-translated] "B"
+  billionsSuffix: "Mrd"
 };
 
 setupLocale({ localeCode: "no", strings: norwegianStrings, nativeName: "Norsk" });

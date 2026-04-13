@@ -5,7 +5,7 @@ import { localization } from "../localizationManager";
 import { DataHelper } from "../utils";
 import { NumberModel } from "../number";
 import { DashboardTheme } from "../theme";
-import { isAllZeros, reverseAll } from "../utils/utils";
+import { isAllZeros, reverseAll, formatLargeNumber, getFormattedValueTicks } from "../utils/utils";
 
 export interface PlotlyOptions {
   traces: Array<any>;
@@ -402,10 +402,11 @@ export class PlotlySetup {
     datasets.forEach((dataset: Array<number>, index: number) => {
       const traceName = hasSeries ? seriesLabels[index] : labels[index];
       const percentString = model.showPercentages ? "%" : "";
+
       const trace = Object.assign({}, traceConfig, {
         x: dataset,
         name: traceName,
-        text: texts[index],
+        text: model.showPercentages ? texts[index] : dataset.map((v: number) => formatLargeNumber(v)),
         hovertext: labels.map((label: string, labelIndex: number) => {
           if(model.showOnlyPercentages) {
             return `${texts[index][labelIndex]}${percentString}`;
@@ -415,13 +416,27 @@ export class PlotlySetup {
         }),
       });
       if(model.showPercentages) {
-        let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
-        trace.texttemplate = texttemplate;
+        trace.texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
       }
       traces.push(trace);
     });
 
     const height = (labels.length + 1) * lineHeight + topMargin + bottomMargin;
+
+    const isStacked = hasSeries && model.chartType === "stackedbar";
+    let maxDataValue: number;
+    if(isStacked) {
+      const numPoints = datasets[0].length;
+      maxDataValue = 0;
+      for(let i = 0; i < numPoints; i++) {
+        const sum = datasets.reduce((s, d) => s + (d[i] || 0), 0);
+        maxDataValue = Math.max(maxDataValue, sum);
+      }
+    } else {
+      maxDataValue = Math.max(...datasets.flat(), 0);
+    }
+    const valueTicks = getFormattedValueTicks(maxDataValue);
+    const valueAxisTickConfig = valueTicks ? { tickmode: "array", tickvals: valueTicks.tickvals, ticktext: valueTicks.ticktext } : {};
 
     const layout: any = {
       bargap: isHistogram ? 0 : PlotlySetup.defaultBarGap,
@@ -439,6 +454,7 @@ export class PlotlySetup {
       xaxis: {
         ...PlotlySetup.defaultAxisXWithGridLineConfig(model.theme),
         rangemode: "nonnegative",
+        ...valueAxisTickConfig,
       },
       yaxis: {
         ...PlotlySetup.defaultAxisYConfig(model.theme),
@@ -530,7 +546,7 @@ export class PlotlySetup {
       var trace = Object.assign({}, traceConfig, {
         y: dataset,
         name: hasSeries ? seriesLabels[index] : labels[index],
-        text: texts[index],
+        text: model.showPercentages ? texts[index] : dataset.map((v: number) => formatLargeNumber(v)),
         offsetgroup: index,
       });
       if(hasDualAxis && hasSeries) {
@@ -541,8 +557,7 @@ export class PlotlySetup {
         }
       }
       if(model.showPercentages) {
-        let texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
-        trace.texttemplate = texttemplate;
+        trace.texttemplate = model.showOnlyPercentages ? "%{text}%" : "%{value} (%{text}%)";
       }
       traces.push(trace);
     });
@@ -552,6 +567,10 @@ export class PlotlySetup {
 
     const primaryYAxisTitle = (yAxisInfo[0]?.title?.text) || valuesTitle;
     const secondaryYAxisTitle = yAxisInfo[1]?.title?.text || "";
+
+    const maxDataValue = Math.max(...datasets.flat(), 0);
+    const valueTicks = getFormattedValueTicks(maxDataValue);
+    const valueAxisTickConfig = valueTicks ? { tickmode: "array", tickvals: valueTicks.tickvals, ticktext: valueTicks.ticktext } : {};
 
     const layout: any = {
       margin: {
@@ -571,6 +590,7 @@ export class PlotlySetup {
         rangemode: "nonnegative",
         automargin: true,
         title: primaryYAxisTitle ? { text: primaryYAxisTitle, font: PlotlySetup.defaultAxisTitleFont(model.theme) } : undefined,
+        ...valueAxisTickConfig,
       },
       xaxis: {
         ...PlotlySetup.defaultAxisXConfig(model.theme),
@@ -601,6 +621,7 @@ export class PlotlySetup {
         anchor: "x",
         side: "right",
         title: secondaryYAxisTitle ? { text: secondaryYAxisTitle, font: PlotlySetup.defaultAxisTitleFont(model.theme) } : undefined,
+        ...valueAxisTickConfig,
       };
     }
 

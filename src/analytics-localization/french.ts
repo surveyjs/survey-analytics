@@ -286,7 +286,13 @@ export var frenchStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "Moyenne",
   // [Auto-translated] "Close"
-  close: "Fermer"
+  close: "Fermer",
+  // [Auto-translated] "K"
+  thousandsSuffix: "K",
+  // [Auto-translated] "M"
+  millionsSuffix: "M",
+  // [Auto-translated] "B"
+  billionsSuffix: "Md"
 };
 
 setupLocale({ localeCode: "fr", strings: frenchStrings, nativeName: "Français" });

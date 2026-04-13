@@ -286,7 +286,13 @@ export var arabicStrings = {
   // [Auto-translated] "Average"
   aggregationAverage: "المتوسط",
   // [Auto-translated] "Close"
-  close: "إغلاق"
+  close: "إغلاق",
+  // [Auto-translated] "K"
+  thousandsSuffix: "ألف",
+  // [Auto-translated] "M"
+  millionsSuffix: "مليون",
+  // [Auto-translated] "B"
+  billionsSuffix: "مليار"
 };
 
 setupLocale({ localeCode: "ar", strings: arabicStrings, nativeName: "العربية" });
