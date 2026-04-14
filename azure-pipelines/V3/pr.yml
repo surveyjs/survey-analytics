@@ -22,7 +22,7 @@ pr:
       - V3
 
 pool:
-  vmImage: "Ubuntu-22.04"
+  name: main-selfhosted
 
 steps:
   - checkout: self
