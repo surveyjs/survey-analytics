@@ -47,7 +47,7 @@ export interface ISelectBaseVisualizerOptions {
    */
   percentagePrecision?: number;
   /**
-   * Enables sorting answers by response count in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table). Adds a **Sorting** dropdown to each supported dashboard item.
+   * Enables sorting answers by response count in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart) and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table). Adds a **Sorting** dropdown to each supported dashboard item.
    *
    * Default value: `true`
    * @see answersOrder
@@ -58,7 +58,7 @@ export interface ISelectBaseVisualizerOptions {
    */
   allowChangeAnswersOrder?: boolean;
   /**
-   * Specifies the answer sorting order in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
+   * Specifies the answer sorting order in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart) and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
    *
    * Accepted values:
    *
@@ -70,13 +70,13 @@ export interface ISelectBaseVisualizerOptions {
    */
   answersOrder?: "default" | "asc" | "desc";
   /**
-   * Enables hiding answers with zero responses in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table). Adds a **Hide Empty Answers** button to each supported visualizer.
+   * Enables hiding answers with zero responses in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart) and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table). Adds a **Hide Empty Answers** button to each supported visualizer.
    *
    * Default value: `false`
    */
   allowHideEmptyAnswers?: boolean;
   /**
-   * Hides answers with zero responses in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
+   * Hides answers with zero responses in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart) and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
    *
    * Default value: `false`
    *
