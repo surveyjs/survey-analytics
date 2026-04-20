@@ -53,20 +53,20 @@ export interface IDashboardOptions extends IVisualizationPanelOptions {
    *
    * Supported values:
    *
-   * - `"last7days"`
-   * - `"last14days"`
-   * - `"last28days"`
-   * - `"last30days"`
-   * - `"lastWeekSun"`
-   * - `"lastWeekMon"`
-   * - `"lastMonth"`
-   * - `"lastQuarter"`
-   * - `"lastYear"`
-   * - `"ytd"`
-   * - `"mtd"`
-   * - `"wtdSun"`
-   * - `"wtdMon"`
-   * - `"qtd"`
+   * - `"last7days"` &ndash; Last 7 days
+   * - `"last14days"` &ndash; Last 14 days
+   * - `"last28days"` &ndash; Last 28 days
+   * - `"last30days"` &ndash; Last 30 days
+   * - `"lastWeekSun"` &ndash; Last week (starts Sunday)
+   * - `"lastWeekMon"` &ndash; Last week (starts Monday)
+   * - `"lastMonth"` &ndash; Last month
+   * - `"lastQuarter"` &ndash; Last quarter
+   * - `"lastYear"` &ndash; Last year
+   * - `"ytd"` &ndash; This year to date
+   * - `"mtd"` &ndash; This month to date
+   * - `"wtdSun"` &ndash; This week to date (starts Sunday)
+   * - `"wtdMon"` &ndash; This week to date (starts Monday)
+   * - `"qtd"` &ndash; This quarter to date
    * @see availableDatePeriods
    * @see showDatePanel
    */
