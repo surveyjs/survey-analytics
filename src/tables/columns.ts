@@ -1,4 +1,4 @@
-import { ItemValue, MatrixRowModel, Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixModel, QuestionRadiogroupModel, QuestionSelectBase, QuestionTagboxModel, settings } from "survey-core";
+import { ItemValue, MatrixRowModel, Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixDynamicModel, QuestionMatrixModel, QuestionPanelDynamicModel, QuestionRadiogroupModel, QuestionSelectBase, QuestionTagboxModel, settings } from "survey-core";
 import { createImagesContainer, createLinksContainer } from "../utils";
 import { ICellData, IColumn, ColumnDataType, QuestionLocation, IColumnData } from "./config";
 import { ITableOptions, ITable } from "./table-interfaces";
@@ -323,5 +323,47 @@ export class CompositeQuestionColumn extends BaseColumn<QuestionCompositeModel> 
     questionList.forEach((q: Question) => {
       this.updateWhenQuestionIsReady(q, table);
     });
+  }
+}
+
+export class MatrixDynamicColumn extends BaseColumn<QuestionMatrixDynamicModel> {
+  protected getDataType(): ColumnDataType {
+    return this.table.options.useNestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
+  }
+
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
+    if(table.options.useNestedTables) {
+      return this.getDisplayValueCore(data);
+    }
+    return super.getDisplayValue(data, table, options);
+  }
+
+  public getCellData(table: Table, data: any): ICellData {
+    const displayValue = this.getDisplayValue(data, table, table.options);
+    const formattedValue = table.options.useNestedTables && Array.isArray(displayValue)
+      ? displayValue
+      : (typeof displayValue === "string" ? displayValue : JSON.stringify(displayValue) || "");
+    return { question: this.question, displayValue: formattedValue };
+  }
+}
+
+export class PanelDynamicColumn extends BaseColumn<QuestionPanelDynamicModel> {
+  protected getDataType(): ColumnDataType {
+    return this.table.options.useNestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
+  }
+
+  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
+    if(table.options.useNestedTables) {
+      return this.getDisplayValueCore(data);
+    }
+    return super.getDisplayValue(data, table, options);
+  }
+
+  public getCellData(table: Table, data: any): ICellData {
+    const displayValue = this.getDisplayValue(data, table, table.options);
+    const formattedValue = table.options.useNestedTables && Array.isArray(displayValue)
+      ? displayValue
+      : (typeof displayValue === "string" ? displayValue : JSON.stringify(displayValue) || "");
+    return { question: this.question, displayValue: formattedValue };
   }
 }

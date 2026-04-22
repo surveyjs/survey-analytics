@@ -85,7 +85,17 @@ Open the `angular.json` file and reference the SurveyJS Dashboard style sheet:
 
 ## Load Survey Results
 
-You can access survey results as a JSON object within the `SurveyModel`'s `onComplete` event handler. Send the results to your server and store them with a specific survey ID. Refer to the [Handle Survey Completion](/Documentation/Library?id=get-started-angular#handle-survey-completion) help topic for more information.  
+When a respondent completes a survey, a JSON object with their answers is passed to the `SurveyModel`'s [`onComplete`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#onComplete) event handler. Send this object to your server and store it with a specific survey ID (see [Handle Survey Completion](/form-library/documentation/get-started-angular#handle-survey-completion)). A collection of these JSON objects forms the data source for the Dashboard. You can aggregate this data either on the server or on the client.
+
+### Server-Side Data Processing
+
+By default, the Dashboard loads all stored responses and processes them in the browser, which can degrade performance as the dataset grows. To optimize load times, move aggregation logic to the server and return only precomputed statistics to the client. See the following demo for a reference implementation:
+
+[SurveyJS Dashboard: Server-Side Data Processing Demo Example](https://github.com/surveyjs/surveyjs-dashboard-nodejs-mongodb (linkStyle))
+
+### Client-Side Data Processing
+
+With client-side processing, the Dashboard loads the full dataset at startup and performs aggregation in the browser. This approach requires more bandwidth and client-side resources, but is sufficient and often simpler for smaller datasets.
 
 To load the survey results, send the survey ID to your server and return an array of JSON objects:
 

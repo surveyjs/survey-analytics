@@ -9,6 +9,7 @@ export enum ColumnDataType {
   Text,
   FileLink,
   Image,
+  NestedTable,
   Html
 }
 

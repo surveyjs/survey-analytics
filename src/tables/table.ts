@@ -43,6 +43,9 @@ export abstract class Table implements ITable {
     if(!this._options) {
       this._options = {};
     }
+    if(typeof this._options.useNestedTables === "undefined") {
+      this._options.useNestedTables = true;
+    }
 
     this.initialize();
 

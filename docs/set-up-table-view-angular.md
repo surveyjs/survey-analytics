@@ -77,7 +77,7 @@ When a respondent completes a survey, a JSON object with their answers is passed
 
 Server-side data processing enables the Table View to load survey results in small batches on demand and delegate sorting and filtering to the server. For this feature to work, the server must support these data operations. Refer to the following demo example on GitHub for information on how to configure the server and the client for this usage scenario:
 
-[SurveyJS Dashboard: Table View - Server-Side Data Processing Demo Example](https://github.com/surveyjs/surveyjs-dashboard-table-view-nodejs-mongodb (linkStyle))
+[SurveyJS Dashboard: Server-Side Data Processing Demo Example](https://github.com/surveyjs/surveyjs-dashboard-nodejs-mongodb (linkStyle))
 
 ### Client-Side Data Processing
 

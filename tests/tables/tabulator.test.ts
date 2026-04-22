@@ -579,3 +579,18 @@ test("check splitMultiSelectIntoColumns option with order mode in Tabulator", ()
   expect(columns[3].field).toBe("fav_cars.car3");
 });
 
+test("should default to nested tables disabled", () => {
+  const json = { questions: [{ type: "text", name: "q1" }] };
+  const survey = new SurveyModel(json);
+  const tabulator = new Tabulator(survey, []);
+
+  expect(tabulator.options.useNestedTables).toBeTruthy();
+});
+
+test("should allow enabling nested tables via options", () => {
+  const json = { questions: [{ type: "text", name: "q1" }] };
+  const survey = new SurveyModel(json);
+  const tabulator = new Tabulator(survey, [], { useNestedTables: "tabulator" });
+
+  expect(tabulator.options.useNestedTables).toBe("tabulator");
+});
