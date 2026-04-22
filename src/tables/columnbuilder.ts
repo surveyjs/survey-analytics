@@ -159,14 +159,14 @@ export class CompositeColumnsBuilder extends DefaultColumnsBuilder<QuestionCompo
 ColumnsBuilderFactory.Instance.registerBuilderColumn("composite", new CompositeColumnsBuilder());
 
 export class MatrixDynamicColumnsBuilder extends DefaultColumnsBuilder<QuestionMatrixDynamicModel> {
-  protected createColumn(question: QuestionMatrixDynamicModel, table: Table): MatrixDynamicColumn {
+  protected createColumn(question: QuestionMatrixDynamicModel, table: ITable): MatrixDynamicColumn {
     return new MatrixDynamicColumn(question, table);
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("matrixdynamic", new MatrixDynamicColumnsBuilder());
 
 export class PanelDynamicColumnsBuilder extends DefaultColumnsBuilder<QuestionPanelDynamicModel> {
-  protected createColumn(question: QuestionPanelDynamicModel, table: Table): PanelDynamicColumn {
+  protected createColumn(question: QuestionPanelDynamicModel, table: ITable): PanelDynamicColumn {
     return new PanelDynamicColumn(question, table);
   }
 }

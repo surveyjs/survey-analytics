@@ -331,14 +331,14 @@ export class MatrixDynamicColumn extends BaseColumn<QuestionMatrixDynamicModel> 
     return this.table.options.useNestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
   }
 
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
+  protected getDisplayValue(data: any, table: ITable, options: ITableOptions): any {
     if(table.options.useNestedTables) {
       return this.getDisplayValueCore(data);
     }
     return super.getDisplayValue(data, table, options);
   }
 
-  public getCellData(table: Table, data: any): ICellData {
+  public getCellData(table: ITable, data: any): ICellData {
     const displayValue = this.getDisplayValue(data, table, table.options);
     const formattedValue = table.options.useNestedTables && Array.isArray(displayValue)
       ? displayValue
@@ -352,14 +352,14 @@ export class PanelDynamicColumn extends BaseColumn<QuestionPanelDynamicModel> {
     return this.table.options.useNestedTables ? ColumnDataType.NestedTable : ColumnDataType.Text;
   }
 
-  protected getDisplayValue(data: any, table: Table, options: ITableOptions): any {
+  protected getDisplayValue(data: any, table: ITable, options: ITableOptions): any {
     if(table.options.useNestedTables) {
       return this.getDisplayValueCore(data);
     }
     return super.getDisplayValue(data, table, options);
   }
 
-  public getCellData(table: Table, data: any): ICellData {
+  public getCellData(table: ITable, data: any): ICellData {
     const displayValue = this.getDisplayValue(data, table, table.options);
     const formattedValue = table.options.useNestedTables && Array.isArray(displayValue)
       ? displayValue
