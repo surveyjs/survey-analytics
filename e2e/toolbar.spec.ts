@@ -28,6 +28,18 @@ test.describe("Toolbar visualizers", () => {
     await compareScreenshot(page, dropdownPopupLocator, "visualizer-toolbar-mobile-view-popup.png");
   });
 
+  test("Toolbar visualizer dropdowns", async ({ page }) => {
+    await page.goto("http://localhost:8080/examples/apexcharts/histogram.html");
+    await page.setViewportSize({ width: 900, height: 1000 });
+
+    const dropdownPopupLocator = page.locator(".sa-dropdown-list.sa-dropdown--opened");
+    await page.locator(".sa-dropdown").first().click();
+    await expect(dropdownPopupLocator.count()).toBe(1);
+
+    await page.locator(".sa-dropdown").nth(1).click();
+    await expect(dropdownPopupLocator.count()).toBe(1);
+  });
+
   test("Toolbar visualizer if disable the layout engine", async ({ page }) => {
     await page.goto("http://localhost:8080/examples/apexcharts/disable_layout_engine.html");
 
