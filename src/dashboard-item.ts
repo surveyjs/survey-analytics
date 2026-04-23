@@ -66,6 +66,12 @@ export interface IDashboardItemOptions {
    */
   allowChangeType?: boolean;
   /**
+   * Specifies whether this item is visible.
+   *
+   * Default value: `true`
+   */
+  visible?: boolean;
+  /**
    * A configuration object with visualizer settings that control how this item's data is rendered.
    */
   visualizer?: { [index: string]: any };
@@ -122,6 +128,9 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
     super(options?.name || question?.name || options?.dataField || options?.type || "", question?.title || options?.title);
     this._initialAvailableTypes = options?.availableTypes?.slice();
     this.initialize();
+    if(options?.visible !== undefined) {
+      this.visible = options.visible;
+    }
   }
 
   allowChangeType?: boolean;
@@ -278,6 +287,21 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
     return ["type"].concat(super.getStateProperties());
   }
 
+  setState(elementState: any) {
+    if(elementState?.visible !== undefined && elementState?.isVisible === undefined) {
+      elementState = { ...elementState, isVisible: elementState.visible };
+    }
+    super.setState(elementState);
+  }
+  getState() {
+    const state = super.getState();
+    if(state.isVisible !== undefined) {
+      state.visible = state.isVisible;
+      delete state.isVisible;
+    }
+    return state;
+  }
+
   private changeType(newType: string) {
     const match = this.findVisualizerAndChartType(newType);
     if(match.visualizerType && match.chartType) {
@@ -369,5 +393,14 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
   }
   set title(value: string) {
     this.displayName = value;
+  }
+  /**
+   * Gets or sets item visibility.
+   */
+  get visible(): boolean {
+    return this.isVisible;
+  }
+  set visible(value: boolean) {
+    this.isVisible = value;
   }
 }
