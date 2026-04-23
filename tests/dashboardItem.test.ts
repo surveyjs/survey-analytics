@@ -91,6 +91,12 @@ test("constructor without question should keep custom type when no chart config 
   expect(item.type).toBe("custom");
 });
 
+test("constructor should set default title for responsecount type", () => {
+  const item = new DashboardItem({ name: "responses", type: "responsecount" } as any);
+
+  expect(item.title).toBe("Total responses");
+});
+
 test("dataField getter should fallback to question valueName then name", () => {
   const survey = new SurveyModel({
     elements: [{ type: "text", name: "q1" }],
