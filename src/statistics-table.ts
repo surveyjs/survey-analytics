@@ -123,6 +123,10 @@ export class StatisticsTable extends SelectBase {
     this.chartTypes = [];
   }
 
+  protected isSupportSoftUpdateContent(): boolean {
+    return false;
+  }
+
   protected destroyContent(container: HTMLElement) {
     this._statisticsTableAdapter.destroy(container);
     super.destroyContent(container);
@@ -155,6 +159,10 @@ export class StatisticsTableBoolean extends BooleanModel {
     this._statisticsTableAdapter = new StatisticsTableAdapter(this);
     this.showPercentages = true;
     this.chartTypes = [];
+  }
+
+  protected isSupportSoftUpdateContent(): boolean {
+    return false;
   }
 
   protected destroyContent(container: HTMLElement) {
