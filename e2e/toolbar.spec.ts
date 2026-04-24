@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { compareScreenshot, getListItemByText, resetFocusToBody } from "./helper";
 
 process.env.SNAPSHOT_SUFFIX = undefined;
@@ -34,10 +34,10 @@ test.describe("Toolbar visualizers", () => {
 
     const dropdownPopupLocator = page.locator(".sa-dropdown-list.sa-dropdown--opened");
     await page.locator(".sa-dropdown").first().click();
-    await expect(dropdownPopupLocator.count()).toBe(1);
+    expect(await dropdownPopupLocator.count()).toBe(1);
 
     await page.locator(".sa-dropdown").nth(1).click();
-    await expect(dropdownPopupLocator.count()).toBe(1);
+    expect(await dropdownPopupLocator.count()).toBe(1);
   });
 
   test("Toolbar visualizer if disable the layout engine", async ({ page }) => {
