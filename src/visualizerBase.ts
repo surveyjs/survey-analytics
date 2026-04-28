@@ -933,7 +933,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   getRandomColor() {
-    const colors = VisualizerBase.getColors();
+    const colors = this.getColors();
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
@@ -978,44 +978,8 @@ export class VisualizerBase implements IDataInfo {
     this.onThemeChanged();
   }
 
-  static customColors: string[] = [];
-  private static colors = [
-    "#84CAD4",
-    "#3a99fb",
-    "#ff6771",
-    "#1db496",
-    "#ffc152",
-    "#aba1ff",
-    "#7d8ca5",
-    "#4fc46c",
-    "#e87bcb",
-    "#4e6198"
-    // "#86e1fb",
-    // "#3999fb",
-    // "#ff6771",
-    // "#1eb496",
-    // "#ffc152",
-    // "#aba1ff",
-    // "#7d8da5",
-    // "#4ec46c",
-    // "#cf37a6",
-    // "#4e6198",
-  ];
-
-  static getColors(count = 10) {
-    const colors =
-      Array.isArray(VisualizerBase.customColors) &&
-        VisualizerBase.customColors.length > 0
-        ? VisualizerBase.customColors
-        : VisualizerBase.colors;
-
-    let manyColors: any = [];
-
-    for(let index = 0; index < count; index++) {
-      manyColors = manyColors.concat(colors);
-    }
-
-    return manyColors;
+  getColors() {
+    return this.theme.chartColors;
   }
 
   /**
@@ -1070,7 +1034,7 @@ export class VisualizerBase implements IDataInfo {
       // TODO: remove unused or add missing values
       values: calculatedValues.values || this.getValues(),
       labels: this.getLabels(),
-      colors: VisualizerBase.getColors(),
+      colors: this.getColors(),
       texts: calculatedValues.data,
       seriesLabels: calculatedValues.series || this.getSeriesLabels()
     };

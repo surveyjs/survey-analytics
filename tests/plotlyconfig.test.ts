@@ -136,7 +136,7 @@ test("check bar config with non default label ordering", async () => {
   selectBase.answersOrder = "desc";
   const data = await selectBase.getAnswersData();
   var config = PlotlySetup.setupBar(selectBase, data);
-  var trueColors = ["#84CAD4", "#3a99fb", "#1db496", "#ff6771", "#ffc152", "#aba1ff"];
+  var trueColors = ["#84CAD4", "#3A99FB", "#1DB496", "#FF6771", "#FFC152", "#ABA1FF"];
   var trueY = [
     "daughter_text",
     "son_text",
@@ -157,7 +157,7 @@ test("check bar config with non default label ordering and enabled showPercentag
   selectBase.showPercentages = true;
   const data = await selectBase.getAnswersData();
   var config = PlotlySetup.setupBar(selectBase, data);
-  var trueColors = ["#84CAD4", "#3a99fb", "#1db496", "#ff6771", "#ffc152", "#aba1ff"];
+  var trueColors = ["#84CAD4", "#3A99FB", "#1DB496", "#FF6771", "#FFC152", "#ABA1FF"];
   var trueY = [
     "daughter_text",
     "son_text",
@@ -185,7 +185,7 @@ test("check bar config with non default label ordering and enabled showPercentag
     "son_text",
     "brother_text",
   ]);
-  expect(config.traces[0].marker.color).toEqual(["#aba1ff", "#ff6771", "#ffc152", "#84CAD4", "#3a99fb", "#1db496"]);
+  expect(config.traces[0].marker.color).toEqual(["#ABA1FF", "#FF6771", "#FFC152", "#84CAD4", "#3A99FB", "#1DB496"]);
   expect(config.traces[0].text).toEqual(truePercentages.reverse());
 
   selectBase.answersOrder = "default";

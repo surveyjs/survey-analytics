@@ -15,16 +15,6 @@ var survey = new Survey.SurveyModel(json);
 // xhr.onload = function() {
 //   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
-//   // SurveyAnalyticsPlotly.SelectBasePlotly.types = ["pie", "scatter"];
-//   // SurveyAnalyticsPlotly.VisualizerBase.customColors = [
-//   //   "F85A40",
-//   //   "185A32",
-//   //   "BC1CEC",
-//   //   "DC4E75",
-//   //   "747F4B",
-//   //   "000000"
-//   // ];
-
 //   var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
 //     survey.getAllQuestions(),
 //     data

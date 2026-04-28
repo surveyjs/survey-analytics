@@ -177,7 +177,7 @@ test("hide empty answers", async () => {
   var matrix = new Matrix(question, data);
   matrix.hideEmptyAnswers = true;
   expect(await matrix.getAnswersData()).toEqual({
-    colors: ["#84CAD4", "#3a99fb"],
+    colors: ["#84CAD4", "#3A99FB"],
     datasets: [
       [2, 0],
       [0, 2],
@@ -205,7 +205,7 @@ test("hide empty answers", async () => {
   var matrix = new Matrix(question, data);
   matrix.hideEmptyAnswers = true;
   expect(await matrix.getAnswersData()).toEqual({
-    colors: ["#84CAD4", "#3a99fb"],
+    colors: ["#84CAD4", "#3A99FB"],
     datasets: [[1, 1]],
     labels: ["Monday", "Tuesday"],
     values: ["Monday", "Tuesday"],

@@ -160,7 +160,7 @@ export class NumberModel extends VisualizerBase implements INumericVisualizerOpt
   }
 
   generateColors(maxValue: number, minValue: number, stepsCount: number): string[] {
-    const palette = VisualizerBase.getColors();
+    const palette = this.getColors();
     const colors = [];
     for(let i = 0; i < stepsCount; i++) {
       colors.push(palette[i]);

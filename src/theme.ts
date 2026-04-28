@@ -25,6 +25,8 @@ export class DashboardTheme implements IDashboardTheme {
       value = this._computedValuesCache[propertyName];
     } else if(!!this._cssStyleDeclaration) {
       value = this._cssStyleDeclaration.getPropertyValue(propertyName);
+    } else {
+      value = this.cssVariables[propertyName];
     }
 
     if(checkIsNumber) {
@@ -217,6 +219,17 @@ export class DashboardTheme implements IDashboardTheme {
       size: this.getCssVariableValue("--sjs2-typography-font-size-small", true),
       weight: 400
     };
+  }
+
+  public get chartColors(): string[] {
+    const colors: string[] = [];
+    for(let i = 1; i <= 10; i++) {
+      const color = this.getCssVariableValue(`--sjs2-color-data-chart-bg-color-${i}`);
+      if(color) {
+        colors.push(color);
+      }
+    }
+    return colors;
   }
 
   public get radarLabelFont(): FontSettings {
