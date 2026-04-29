@@ -44,7 +44,7 @@ test("Create pivot visualizer with axis options", async () => {
   expect(dashboard.getElements().length).toBe(1);
   expect(dashboard.getElement("visualizer1").getState()).toStrictEqual({
     "isPublic": true,
-    "isVisible": true,
+    "visible": true,
     "name": "visualizer1",
     "type": "pivot",
     "categoryField": "question2",

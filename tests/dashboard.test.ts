@@ -614,7 +614,7 @@ test("getState, setState, onStateChanged", () => {
       {
         "displayName": "question1",
         name: "question1",
-        isVisible: true,
+        visible: true,
         isPublic: true,
         type: "bar",
       },
@@ -626,7 +626,7 @@ test("getState, setState, onStateChanged", () => {
       {
         displayName: "question1",
         name: "question1",
-        isVisible: false,
+        visible: false,
         isPublic: true,
         chartType: "scatter",
         answersOrder: "asc",
@@ -743,6 +743,52 @@ test("allowChangeType", () => {
   expect(visualizers[1]["toolbarItemCreators"]["changeVisualizer"]).toBeUndefined();
   expect(visualizers[2].type).toBe("alternative");
   expect(visualizers[2]["toolbarItemCreators"]["changeVisualizer"]).toBeDefined();
+});
+
+test("Dashboard item supports visible option in configuration and runtime", () => {
+  const survey = new SurveyModel({
+    elements: [
+      { type: "rating", name: "overall-satisfaction" },
+      { type: "checkbox", name: "smartphone-features", choices: ["battery", "camera"] },
+      { type: "comment", name: "upgrade-reasons" }
+    ]
+  });
+  const dataFromServer = [
+    {
+      timestamp: "2025-01-01",
+      "overall-satisfaction": 5,
+      "smartphone-features": ["battery"],
+      "upgrade-reasons": "longer battery life"
+    }
+  ];
+
+  const dashboard = new Dashboard({
+    questions: survey.getAllQuestions(),
+    data: dataFromServer,
+    dateFieldName: "timestamp",
+    items: [
+      {
+        name: "overall-satisfaction",
+        type: "gauge",
+        // Case 1: Hide when configuring
+        visible: false
+      },
+      {
+        name: "smartphone-features",
+        type: "radar",
+        allowChangeType: false
+      },
+      "upgrade-reasons"
+    ]
+  });
+
+  expect(dashboard.getItem("overall-satisfaction")!.visible).toBe(false);
+  expect(dashboard.visibleElements.map(el => el.name)).toStrictEqual(["smartphone-features", "upgrade-reasons"]);
+
+  // Case 2: Hide after/instead of configuring
+  dashboard.getItem("upgrade-reasons")!.visible = false;
+  expect(dashboard.getItem("upgrade-reasons")!.visible).toBe(false);
+  expect(dashboard.visibleElements.map(el => el.name)).toStrictEqual(["smartphone-features"]);
 });
 
 test("Dashboard support date range options", () => {

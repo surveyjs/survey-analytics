@@ -121,7 +121,7 @@ test("state should include type property", () => {
 
   expect(state.name).toBe("q1");
   expect(state.type).toBe("wordcloud");
-  expect(state.isVisible).toBe(true);
+  expect(state.visible).toBe(true);
   expect(state.isPublic).toBe(true);
 });
 
