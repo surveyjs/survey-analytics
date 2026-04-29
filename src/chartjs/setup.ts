@@ -153,6 +153,13 @@ export class ChartJsSetup {
     };
   }
 
+  static createLabelAxisAfterFit(theme: DashboardTheme) {
+    const fontSize = ChartJsSetup.parseFontSize(theme.axisLabelFont.size);
+    return function(axis: any) {
+      axis.width = axis.width + fontSize;
+    };
+  }
+
   static defaultGaugeValueFont(theme: DashboardTheme) {
     const font = theme.gaugeValueFont;
     return {
@@ -209,7 +216,7 @@ export class ChartJsSetup {
     return this.setups[chartType](model, answersData);
   }
 
-  static getTruncatedLabel = (label: string, labelTruncateLength: number) => {
+  static getTruncatedLabel = (label: string, labelTruncateLength: number = 20) => {
     const truncateSymbols = "...";
     const truncateSymbolsLength = truncateSymbols.length;
 
@@ -393,11 +400,12 @@ export class ChartJsSetup {
 
     const yAxisConfig = {
       ...ChartJsSetup.defaultAxisConfig(model.theme),
+      afterFit: ChartJsSetup.createLabelAxisAfterFit(model.theme),
       ticks: {
         ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
         callback: function(value: string | number, index: number) {
           const label = labels[index];
-          return ChartJsSetup.getTruncatedLabel(String(label ?? value), model.labelTruncateLength);
+          return ChartJsSetup.getTruncatedLabel(String(label ?? value));
         },
       },
     };
@@ -779,11 +787,12 @@ export class ChartJsSetup {
         y: {
           ...ChartJsSetup.defaultAxisConfig(model.theme),
           stacked: true,
+          afterFit: ChartJsSetup.createLabelAxisAfterFit(model.theme),
           ticks: {
             ...ChartJsSetup.defaultAxisConfig(model.theme).ticks,
             callback: function(value: string | number, index: number) {
               const label = labels[index];
-              return ChartJsSetup.getTruncatedLabel(String(label ?? value), model.labelTruncateLength);
+              return ChartJsSetup.getTruncatedLabel(String(label ?? value));
             },
           },
         },

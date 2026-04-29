@@ -60,19 +60,6 @@ test("check bar tooltip config with showPercentages", async () => {
   selectBase.showPercentages = false;
 });
 
-test("check bar config tick labels", async () => {
-  const labelTruncateLength = selectBase.labelTruncateLength;
-  selectBase.labelTruncateLength = 5;
-
-  const config = ChartJsSetup.setupBar(selectBase, await selectBase.getAnswersData());
-  const tickCallback = config.options.scales.y.ticks.callback;
-
-  expect(tickCallback(0, 0)).toEqual(ChartJsSetup.getTruncatedLabel(config.data.labels[0], 5));
-  expect(tickCallback(0, 1)).toEqual(ChartJsSetup.getTruncatedLabel(config.data.labels[1], 5));
-
-  selectBase.labelTruncateLength = labelTruncateLength;
-});
-
 test("getTruncatedLabel method", () => {
   const label = "Some very very very very long string for unit testing !";
 
