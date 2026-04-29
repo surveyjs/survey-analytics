@@ -10,6 +10,8 @@ export interface IDropdownItemOption {
 }
 
 export abstract class DropdownBase {
+  private static openedDropdowns: Set<DropdownBase> = new Set<DropdownBase>();
+
   protected className: string;
   protected dropdownOpenedClass: string;
   protected itemClassSelected: string;
@@ -78,10 +80,12 @@ export abstract class DropdownBase {
   }
 
   protected showPopup() {
+    this.closeOtherOpenedDropdowns();
     this.updateItemSelection();
     this.dropdownHeader.classList.add(this.dropdownOpenedClass);
     this.dropdownList.classList.add(this.dropdownOpenedClass);
     this.dropdownHeader.setAttribute("aria-expanded", "true");
+    DropdownBase.openedDropdowns.add(this);
     this.onDropdownOpened();
   }
 
@@ -90,6 +94,15 @@ export abstract class DropdownBase {
     this.dropdownList.classList.remove(this.dropdownOpenedClass);
     this.dropdownHeader.setAttribute("aria-expanded", "false");
     this.currentFocusIndex = -1;
+    DropdownBase.openedDropdowns.delete(this);
+  }
+
+  private closeOtherOpenedDropdowns(): void {
+    DropdownBase.openedDropdowns.forEach((dropdown) => {
+      if(dropdown !== this) {
+        dropdown.hidePopup();
+      }
+    });
   }
 
   protected focusItem(index: number, updateAriaSelected = false): void {

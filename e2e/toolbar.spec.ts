@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { compareScreenshot, getListItemByText, resetFocusToBody } from "./helper";
 
 process.env.SNAPSHOT_SUFFIX = undefined;
@@ -26,6 +26,18 @@ test.describe("Toolbar visualizers", () => {
 
     await page.locator(".sa-dropdown").first().click();
     await compareScreenshot(page, dropdownPopupLocator, "visualizer-toolbar-mobile-view-popup.png");
+  });
+
+  test("Toolbar visualizer dropdowns", async ({ page }) => {
+    await page.goto("http://localhost:8080/examples/apexcharts/histogram.html");
+    await page.setViewportSize({ width: 900, height: 1000 });
+
+    const dropdownPopupLocator = page.locator(".sa-dropdown-list.sa-dropdown--opened");
+    await page.locator(".sa-dropdown").first().click();
+    expect(await dropdownPopupLocator.count()).toBe(1);
+
+    await page.locator(".sa-dropdown").nth(1).click();
+    expect(await dropdownPopupLocator.count()).toBe(1);
   });
 
   test("Toolbar visualizer if disable the layout engine", async ({ page }) => {
