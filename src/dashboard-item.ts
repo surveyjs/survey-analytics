@@ -5,6 +5,7 @@ import { VisualizationManager } from "./visualizationManager";
 import { IVisualizerPanelRenderedElement, PanelElement } from "./visualizationPanel";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
 import { VisualizerFactory } from "./visualizerFactory";
+import { localization } from "./localizationManager";
 
 /**
  * Defines configuration options for a dashboard item.
@@ -261,6 +262,13 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
     return this._availableTypesOverride === undefined ? this._initialAvailableTypes : this._availableTypesOverride;
   }
 
+  private initTitle(): void {
+    this.title = this.options.title || this.title;
+    if(!this.title && this._type === "responsecount") {
+      this.title = localization.getString("totalResponses");
+    }
+  }
+
   private initialize(requestedType?: string) {
     const configuredAvailableTypes = this.getConfiguredAvailableTypes();
     const requestedDashboardItemType = requestedType || this.options.type || (configuredAvailableTypes || [])[0];
@@ -275,7 +283,7 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
 
     this.synchronizeTypeWithAvailableTypes(requestedDashboardItemType);
     this._dataField = this.options.dataField;
-    this.title = this.options.title || this.title;
+    this.initTitle();
     this.ensureSyntheticQuestion();
   }
 
