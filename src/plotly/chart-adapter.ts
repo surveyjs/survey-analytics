@@ -35,7 +35,7 @@ export class PlotlyChartAdapter implements IChartAdapter {
     config: any
   ) {
     if(this.model.dataType === "boolean") {
-      const colors = VisualizerBase.getColors();
+      const colors = this.model.getColors();
       const boolColors = [
         BooleanModel.trueColor || colors[0],
         BooleanModel.falseColor || colors[1],

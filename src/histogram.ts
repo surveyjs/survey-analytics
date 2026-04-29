@@ -533,7 +533,7 @@ export class HistogramModel extends SelectBase {
 
   private async getGroupedDateAnswersData(): Promise<IAnswersData> {
     let datasets = ((await this.getCalculatedValues()).data) as number[][];
-    let colors = VisualizerBase.getColors();
+    let colors = this.getColors();
     let labels = this.getLabels();
     let seriesLabels = this.getSeriesLabels();
 

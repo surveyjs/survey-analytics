@@ -44,7 +44,7 @@ export class WordCloudAdapter {
     };
     WordCloudAdapter.onWordcloudCreating.fire(this.model, options);
     this._wordcloud = new WordCloudWidget(config);
-    this._wordcloud.colors = VisualizerBase.getColors();
+    this._wordcloud.colors = this.model.getColors();
     this._wordcloud.words = answersData.values.map((w, i) => [w, answersData.datasets[0][i]]);
     this._wordcloud.render(element);
     return this._wordcloud;

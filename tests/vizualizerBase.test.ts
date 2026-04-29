@@ -1,20 +1,6 @@
-import { VisualizerBase, IDataInfo } from "../src/visualizerBase";
 import { QuestionDropdownModel, SurveyModel } from "survey-core";
-
-test("custom colors", () => {
-  expect(VisualizerBase.getColors(1)).toEqual(VisualizerBase["colors"]);
-
-  VisualizerBase.customColors = ["red", "green", "blue"];
-
-  expect(VisualizerBase.getColors(2)).toEqual([
-    "red",
-    "green",
-    "blue",
-    "red",
-    "green",
-    "blue",
-  ]);
-});
+import { VisualizerBase, IDataInfo } from "../src/visualizerBase";
+import { DashboardTheme } from "../src/theme";
 
 test("series options", () => {
   const seriesValues = ["1", "2"];
@@ -179,3 +165,25 @@ test("footer should render or hide the footer content depending on isFooterColla
   expect(contentDivExpanded.style.display).toBe("block");
 });
 
+test("default theme provides chart colors", () => {
+  const visualizer = new VisualizerBase(null, null);
+  const colors = visualizer.getColors();
+  expect(colors.length).toBeGreaterThan(0);
+  expect(colors[0]).toBe("#84CAD4");
+});
+
+test("theme chart colors override default colors", () => {
+  const customTheme = {
+    cssVariables: {
+      "--sjs2-color-data-chart-bg-color-1": "#FF0000",
+      "--sjs2-color-data-chart-bg-color-2": "#00FF00",
+      "--sjs2-color-data-chart-bg-color-3": "#0000FF",
+    }
+  };
+  const theme = new DashboardTheme(customTheme);
+  expect(theme.chartColors).toEqual(["#FF0000", "#00FF00", "#0000FF"]);
+
+  const visualizer = new VisualizerBase(null, null);
+  visualizer.theme = theme;
+  expect(visualizer.getColors()).toEqual(["#FF0000", "#00FF00", "#0000FF"]);
+});

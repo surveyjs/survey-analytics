@@ -779,7 +779,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     let datasets = (await this.getCalculatedValues()).data;
     let values = this.getValues();
     let labels = this.getLabels();
-    let colors = VisualizerBase.getColors();
+    let colors = this.getColors();
     if(this.transposeData) {
       datasets = this.transpose(datasets);
       const temp = seriesLabels;

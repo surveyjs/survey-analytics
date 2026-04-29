@@ -3,6 +3,7 @@ import { SelectBase, hideEmptyAnswersInData } from "../src/selectBase";
 import { VisualizationManager } from "../src/visualizationManager";
 import { VisualizerBase } from "../src/visualizerBase";
 import { DataProvider } from "../src/dataProvider";
+import { getDefaultColors } from "./helpers";
 
 let selectBase: SelectBase;
 let choices = [
@@ -162,7 +163,7 @@ test("check that getSelectedItemByText take into account other item", () => {
 });
 
 test("getAnswersData method", async () => {
-  const colors = VisualizerBase.getColors();
+  const colors = getDefaultColors();
   expect(await selectBase.getAnswersData()).toEqual({
     "colors": colors,
     "datasets": [[2, 1, 0, 1, 0, 0].reverse()],
@@ -173,7 +174,7 @@ test("getAnswersData method", async () => {
 });
 
 test("hide empty items", async () => {
-  const colors = VisualizerBase.getColors();
+  const colors = getDefaultColors();
   expect(selectBase.hideEmptyAnswers).toBe(false);
   expect(await selectBase.getAnswersData()).toEqual({
     "colors": colors, "datasets": [[2, 1, 0, 1, 0, 0].reverse()],
@@ -183,7 +184,7 @@ test("hide empty items", async () => {
   },);
   selectBase.hideEmptyAnswers = true;
   expect(await selectBase.getAnswersData()).toEqual({
-    "colors": ["#ff6771", "#ffc152", "#aba1ff"],
+    "colors": ["#FF6771", "#FFC152", "#ABA1FF"],
     "datasets": [[2, 1, 1].reverse()],
     "values": ["sister", "mother", "father"],
     "labels": ["father_text", "mother_text", "sister_text"].reverse(),
@@ -246,9 +247,9 @@ test("onDataChanged calls updateEmptyAnswersBtn", () => {
 
 test("change answers order", async () => {
   selectBase.hideEmptyAnswers = true;
-  const color1 = "#ff6771";
-  const color2 = "#ffc152";
-  const color3 = "#aba1ff";
+  const color1 = "#FF6771";
+  const color2 = "#FFC152";
+  const color3 = "#ABA1FF";
   expect(selectBase.answersOrder).toBe("default");
   expect(await selectBase.getAnswersData()).toEqual({
     "colors": [color1, color2, color3],

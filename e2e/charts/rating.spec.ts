@@ -27,6 +27,7 @@ test.describe("Rating common", () => {
 
     await visualizerTypeSelector.click();
     await getListItemByText(page, "Vertical Histogram").click();
+    await page.mouse.move(0, 0);
     await compareScreenshot(page, chartContentSelector, "rating-number-histogram.png");
   });
 
