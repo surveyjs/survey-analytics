@@ -362,7 +362,7 @@ export class SelectBase
     const correctAnswerValue = super.getCorrectAnswerText();
     const resultValues = Array.isArray(correctAnswerValue) ? correctAnswerValue : [correctAnswerValue];
     const selectBaseQuestion = this.question as QuestionSelectBase;
-    return resultValues.map((value: any) => ItemValue.getTextOrHtmlByValue(selectBaseQuestion.choices, value)).join(", ");
+    return resultValues.map((value: any) => ItemValue.getTextOrHtmlByValue(selectBaseQuestion.visibleChoices, value)).join(", ");
   }
 
   protected isSupportSoftUpdateContent(): boolean {
@@ -390,7 +390,7 @@ export class SelectBase
     if(this.question.hasOther && itemText == selBase.otherText) {
       return selBase.otherItem;
     } else {
-      return selBase.choices.filter(
+      return selBase.visibleChoices.filter(
         (choice: ItemValue) => choice.text === itemText
       )[0];
     }

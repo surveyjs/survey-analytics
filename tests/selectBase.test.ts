@@ -646,3 +646,45 @@ test("getSelectedItemByText works for QuestionRatingModel", () => {
   expect(item.value).toEqual(10);
   expect(item.text).toEqual("10");
 });
+
+test("getSelectedItemByText works for choicesFromQuestion", () => {
+  const survey = new SurveyModel({
+    elements: [
+      {
+        type: "checkbox",
+        name: "liked_features",
+        choices: ["Ease of use", "Performance", "Design"],
+      },
+      {
+        type: "checkbox",
+        name: "improvement_areas",
+        choicesFromQuestion: "liked_features",
+      },
+    ],
+  });
+  const vis = new SelectBase(survey.getQuestionByName("improvement_areas"), []);
+  const item = vis.getSelectedItemByText("Performance");
+  expect(item).toBeDefined();
+  expect(item.value).toEqual("Performance");
+});
+
+test("getSelectedItemByValue works for choicesFromQuestion", () => {
+  const survey = new SurveyModel({
+    elements: [
+      {
+        type: "checkbox",
+        name: "liked_features",
+        choices: ["Ease of use", "Performance", "Design"],
+      },
+      {
+        type: "checkbox",
+        name: "improvement_areas",
+        choicesFromQuestion: "liked_features",
+      },
+    ],
+  });
+  const vis = new SelectBase(survey.getQuestionByName("improvement_areas"), []);
+  const item = vis.getSelectedItemByValue("Performance");
+  expect(item).toBeDefined();
+  expect(item.value).toEqual("Performance");
+});
