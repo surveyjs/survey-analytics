@@ -500,6 +500,8 @@ test("cross-filtering works for questions with choicesFromQuestion", () => {
   panel.setFilter("improvement_areas", undefined);
   expect(visualizer.selection).toBeUndefined();
 });
+
+test("moveVisibleElement if hidden elements exist", () => {
   const originalElements = [
     { name: "el0", isVisible: true },
     { name: "el1", isVisible: false },
