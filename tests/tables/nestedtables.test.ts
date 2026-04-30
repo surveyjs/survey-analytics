@@ -371,11 +371,11 @@ test("should display stringified JSON for complex nested values in nested table 
   );
 
   const tbody = nestedTable.querySelector("tbody");
-  const cells2 = tbody.querySelectorAll("td");
+  const nestedTableCells = tbody.querySelectorAll("td");
 
-  expect(cells2[0].textContent).toBe("John");
-  expect(cells2[1].textContent).toBe(JSON.stringify([{ subject: "Math", score: 90 }, { subject: "Science", score: 85 }]));
-  expect(cells2[2].textContent).toBe(JSON.stringify([{ hobbyName: "Reading" }, { hobbyName: "Swimming" }]));
+  expect(nestedTableCells[0].textContent).toBe("John");
+  expect(nestedTableCells[1].textContent).toBe(JSON.stringify([{ subject: "Math", score: 90 }, { subject: "Science", score: 85 }]));
+  expect(nestedTableCells[2].textContent).toBe(JSON.stringify([{ hobbyName: "Reading" }, { hobbyName: "Swimming" }]));
 
   restoreTimeout();
 });
