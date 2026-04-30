@@ -372,7 +372,7 @@ export class Tabulator extends Table {
         const td = document.createElement("td");
         const rawValue = row[col.field];
         const value = question ? this.getNestedCellDisplayValue(question, col.field, rawValue) : rawValue;
-        td.textContent = value !== undefined && value !== null ? String(value) : "";
+        td.textContent = value !== undefined && value !== null ? (typeof value === "object" ? JSON.stringify(value) : String(value)) : "";
         tr.appendChild(td);
       });
       tbody.appendChild(tr);
@@ -506,7 +506,7 @@ export class Tabulator extends Table {
       return nestedColumns.map(col => {
         const rawValue = rowData[col.field];
         const value = this.getNestedCellDisplayValue(question, col.field, rawValue);
-        return value !== undefined && value !== null ? String(value) : "";
+        return value !== undefined && value !== null ? (typeof value === "object" ? JSON.stringify(value) : String(value)) : "";
       }).join(" | ");
     });
 

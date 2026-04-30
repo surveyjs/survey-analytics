@@ -224,6 +224,59 @@ test("should display choice text instead of value in paneldynamic nested table",
 
   const survey = new SurveyModel(panelWithChoicesJson);
   const tabulator = new Tabulator(survey, data, { useNestedTables: true });
+// Nested Tables for Panel Dynamic with complex nested questions
+const panelDynamicWithComplexJson = {
+  questions: [
+    {
+      type: "paneldynamic",
+      name: "members",
+      title: "Family Members",
+      templateElements: [
+        {
+          type: "text",
+          name: "name",
+          title: "Name",
+        },
+        {
+          type: "matrixdynamic",
+          name: "scores",
+          title: "Scores",
+          columns: [
+            { name: "subject", cellType: "text", title: "Subject" },
+            { name: "score", cellType: "text", title: "Score" },
+          ],
+        },
+        {
+          type: "paneldynamic",
+          name: "hobbies",
+          title: "Hobbies",
+          templateElements: [
+            { type: "text", name: "hobbyName", title: "Hobby Name" },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+const panelDynamicWithComplexData = [
+  {
+    members: [
+      {
+        name: "John",
+        scores: [
+          { subject: "Math", score: 90 },
+          { subject: "Science", score: 85 },
+        ],
+        hobbies: [{ hobbyName: "Reading" }, { hobbyName: "Swimming" }],
+      },
+    ],
+  },
+];
+
+test("should display stringified JSON for complex nested values in nested table cells", () => {
+  const survey = new SurveyModel(panelDynamicWithComplexJson);
+  const tabulator = new Tabulator(survey, panelDynamicWithComplexData, { useNestedTables: true });
 
   mockTimeout();
   const container = document.createElement("div");
@@ -250,6 +303,45 @@ test("should display choice text instead of value in paneldynamic nested table",
   expect(cellTexts).toContain("Alice");
   expect(cellTexts).toContain("Mango");
   expect(cellTexts).not.toContain("item1");
+  const membersColumn = columns.find((col: any) => col.field === "members");
+  expect(membersColumn).toBeDefined();
+  expect(membersColumn.formatter).toBeDefined();
+
+  // Simulate the formatter to verify complex values are stringified
+  const nestedTable = tabulator["createNestedTable"](
+    [
+      { title: "Name", field: "name" },
+      { title: "Scores", field: "scores" },
+      { title: "Hobbies", field: "hobbies" },
+    ],
+    panelDynamicWithComplexData[0].members
+  );
+
+  const tbody = nestedTable.querySelector("tbody");
+  const cells = tbody.querySelectorAll("td");
+
+  expect(cells[0].textContent).toBe("John");
+  expect(cells[1].textContent).toBe(JSON.stringify([{ subject: "Math", score: 90 }, { subject: "Science", score: 85 }]));
+  expect(cells[2].textContent).toBe(JSON.stringify([{ hobbyName: "Reading" }, { hobbyName: "Swimming" }]));
+
+  restoreTimeout();
+});
+
+test("should format complex nested values as stringified JSON for export", () => {
+  const survey = new SurveyModel(panelDynamicWithComplexJson);
+  const tabulator = new Tabulator(survey, panelDynamicWithComplexData, { useNestedTables: true });
+
+  mockTimeout();
+  const container = document.createElement("div");
+  tabulator.render(container);
+
+  const column = tabulator["columns"].find((col: any) => col.name === "members");
+  const result = tabulator["formatNestedDataForExport"](panelDynamicWithComplexData[0].members, column);
+
+  expect(result).toContain("Name");
+  expect(result).toContain("John");
+  expect(result).toContain(JSON.stringify([{ subject: "Math", score: 90 }, { subject: "Science", score: 85 }]));
+  expect(result).toContain(JSON.stringify([{ hobbyName: "Reading" }, { hobbyName: "Swimming" }]));
 
   restoreTimeout();
 });
