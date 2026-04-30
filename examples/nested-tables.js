@@ -27,7 +27,12 @@ var surveyJson = {
           name: "experience",
           cellType: "dropdown",
           title: "Teaching Experience",
-          choices: ["Excellent", "Good", "Average", "Poor"]
+          choices: [
+            { value: "item1", text: "Excellent" },
+            { value: "item2", text: "Good" },
+            { value: "item3", text: "Average" },
+            { value: "item4", text: "Poor" },
+          ]
         },
         {
           name: "feedback",
@@ -99,9 +104,9 @@ var surveyJson = {
 var surveyData = [
   {
     teachersRate: [
-      { subject: "Math", rating: 5, experience: "Excellent", feedback: "Great teacher!" },
-      { subject: "Science", rating: 4, experience: "Good", feedback: "Very knowledgeable" },
-      { subject: "History", rating: 3, experience: "Average", feedback: "Could improve" },
+      { subject: "Math", rating: 5, experience: "item1", feedback: "Great teacher!" },
+      { subject: "Science", rating: 4, experience: "item2", feedback: "Very knowledgeable" },
+      { subject: "History", rating: 3, experience: "item3", feedback: "Could improve" },
     ],
     relatives: [
       { relativeType: "Sibling", firstName: "John", lastName: "Doe", age: "28", contactInfo: [{ type: "Email", value: "john@example.com" }, { type: "Phone", value: "555-0101" }], children: [{ childName: "Tommy", childAge: "5" }], availability: { Monday: { morning: true, afternoon: false }, Tuesday: { morning: false, afternoon: true } } },
@@ -111,8 +116,8 @@ var surveyData = [
   },
   {
     teachersRate: [
-      { subject: "English", rating: 5, experience: "Excellent", feedback: "Inspiring!" },
-      { subject: "Physical Education", rating: 4, experience: "Good", feedback: "Motivating" },
+      { subject: "English", rating: 5, experience: "item1", feedback: "Inspiring!" },
+      { subject: "Physical Education", rating: 4, experience: "item2", feedback: "Motivating" },
     ],
     relatives: [
       { relativeType: "Spouse", firstName: "Mary", lastName: "Smith", age: "30", contactInfo: [{ type: "Email", value: "mary@example.com" }, { type: "Phone", value: "555-0201" }], children: [{ childName: "Tommy", childAge: "5" }], availability: { Monday: { morning: true, afternoon: true }, Tuesday: { morning: false, afternoon: true } } },
@@ -121,7 +126,7 @@ var surveyData = [
   },
   {
     teachersRate: [
-      { subject: "Math", rating: 4, experience: "Good", feedback: "Clear explanations" },
+      { subject: "Math", rating: 4, experience: "item2", feedback: "Clear explanations" },
     ],
     relatives: [
       { relativeType: "Parent", firstName: "Alice", lastName: "Johnson", age: "65", contactInfo: [{ type: "Address", value: "123 Main St" }], children: [{ childName: "Mark", childAge: "35" }], availability: { Monday: { morning: true, afternoon: false }, Tuesday: { morning: true, afternoon: false } } },

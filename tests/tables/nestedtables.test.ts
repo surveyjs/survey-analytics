@@ -35,6 +35,17 @@ const matrixDynamicJson = {
           cellType: "rating",
           title: "Rating",
         },
+        {
+          name: "experience",
+          cellType: "dropdown",
+          title: "Teaching Experience",
+          choices: [
+            { value: "item1", text: "Excellent" },
+            { value: "item2", text: "Good" },
+            { value: "item3", text: "Average" },
+            { value: "item4", text: "Poor" },
+          ],
+        },
       ],
     },
   ],
@@ -43,13 +54,13 @@ const matrixDynamicJson = {
 const matrixDynamicData = [
   {
     teachersRate: [
-      { subject: "Math", rating: 4 },
-      { subject: "Science", rating: 5 },
+      { subject: "Math", rating: 4, experience: "item1" },
+      { subject: "Science", rating: 5, experience: "item2" },
     ],
   },
   {
     teachersRate: [
-      { subject: "History", rating: 3 },
+      { subject: "History", rating: 3, experience: "item3" },
     ],
   },
 ];
@@ -224,6 +235,68 @@ test("should display choice text instead of value in paneldynamic nested table",
 
   const survey = new SurveyModel(panelWithChoicesJson);
   const tabulator = new Tabulator(survey, data, { useNestedTables: true });
+
+  mockTimeout();
+  const container = document.createElement("div");
+  tabulator.render(container);
+
+  const columns = tabulator.getColumns();
+  const panelColumn = columns.find((col: any) => col.field === "question1");
+  expect(panelColumn).toBeDefined();
+
+  // Use the formatter to get the rendered nested table
+  const mockCell = {
+    getValue: () => [{ userName: "Alice", favFruit: "item1" }],
+    getRow: () => ({ getTable: () => ({ on: jest.fn() }) }),
+  };
+  const result = panelColumn.formatter(mockCell, {}, jest.fn());
+
+  // The result should be an HTML element with the nested table
+  expect(result).toBeDefined();
+  expect(result instanceof HTMLElement).toBe(true);
+
+  // Check that the table displays "Mango" instead of "item1"
+  const cells = result.querySelectorAll("td");
+  const cellTexts = Array.from(cells).map((cell: any) => cell.textContent);
+  expect(cellTexts).toContain("Alice");
+  expect(cellTexts).toContain("Mango");
+  expect(cellTexts).not.toContain("item1");
+
+  restoreTimeout();
+});
+
+test("should display choice text instead of value in matrixdynamic nested table", () => {
+  const survey = new SurveyModel(matrixDynamicJson);
+  const tabulator = new Tabulator(survey, matrixDynamicData, { useNestedTables: true });
+
+  mockTimeout();
+  const container = document.createElement("div");
+  tabulator.render(container);
+
+  const columns = tabulator.getColumns();
+  const matrixColumn = columns.find((col: any) => col.field === "teachersRate");
+  expect(matrixColumn).toBeDefined();
+
+  // Use the formatter to get the rendered nested table
+  const mockCell = {
+    getValue: () => [{ subject: "Math", rating: 4, experience: "item1" }],
+    getRow: () => ({ getTable: () => ({ on: jest.fn() }) }),
+  };
+  const result = matrixColumn.formatter(mockCell, {}, jest.fn());
+
+  expect(result).toBeDefined();
+  expect(result instanceof HTMLElement).toBe(true);
+
+  // Check that the table displays "Excellent" instead of "item1"
+  const cells = result.querySelectorAll("td");
+  const cellTexts = Array.from(cells).map((cell: any) => cell.textContent);
+  expect(cellTexts).toContain("Math");
+  expect(cellTexts).toContain("Excellent");
+  expect(cellTexts).not.toContain("item1");
+
+  restoreTimeout();
+});
+
 // Nested Tables for Panel Dynamic with complex nested questions
 const panelDynamicWithComplexJson = {
   questions: [
@@ -283,26 +356,6 @@ test("should display stringified JSON for complex nested values in nested table 
   tabulator.render(container);
 
   const columns = tabulator.getColumns();
-  const panelColumn = columns.find((col: any) => col.field === "question1");
-  expect(panelColumn).toBeDefined();
-
-  // Use the formatter to get the rendered nested table
-  const mockCell = {
-    getValue: () => [{ userName: "Alice", favFruit: "item1" }],
-    getRow: () => ({ getTable: () => ({ on: jest.fn() }) }),
-  };
-  const result = panelColumn.formatter(mockCell, {}, jest.fn());
-
-  // The result should be an HTML element with the nested table
-  expect(result).toBeDefined();
-  expect(result instanceof HTMLElement).toBe(true);
-
-  // Check that the table displays "Mango" instead of "item1"
-  const cells = result.querySelectorAll("td");
-  const cellTexts = Array.from(cells).map((cell: any) => cell.textContent);
-  expect(cellTexts).toContain("Alice");
-  expect(cellTexts).toContain("Mango");
-  expect(cellTexts).not.toContain("item1");
   const membersColumn = columns.find((col: any) => col.field === "members");
   expect(membersColumn).toBeDefined();
   expect(membersColumn.formatter).toBeDefined();
@@ -318,11 +371,11 @@ test("should display stringified JSON for complex nested values in nested table 
   );
 
   const tbody = nestedTable.querySelector("tbody");
-  const cells = tbody.querySelectorAll("td");
+  const cells2 = tbody.querySelectorAll("td");
 
-  expect(cells[0].textContent).toBe("John");
-  expect(cells[1].textContent).toBe(JSON.stringify([{ subject: "Math", score: 90 }, { subject: "Science", score: 85 }]));
-  expect(cells[2].textContent).toBe(JSON.stringify([{ hobbyName: "Reading" }, { hobbyName: "Swimming" }]));
+  expect(cells2[0].textContent).toBe("John");
+  expect(cells2[1].textContent).toBe(JSON.stringify([{ subject: "Math", score: 90 }, { subject: "Science", score: 85 }]));
+  expect(cells2[2].textContent).toBe(JSON.stringify([{ hobbyName: "Reading" }, { hobbyName: "Swimming" }]));
 
   restoreTimeout();
 });

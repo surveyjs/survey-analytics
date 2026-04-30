@@ -330,20 +330,31 @@ export class Tabulator extends Table {
 
   private getNestedCellDisplayValue(question: Question, field: string, value: any): any {
     if(value === undefined || value === null) return value;
-    if(question.getType() === "paneldynamic") {
+    let choices: any[];
+    const questionType = question.getType();
+    if(questionType === "paneldynamic") {
       const panelQuestion = question as any;
       const templateQuestion = panelQuestion.template.questions.find((q: any) => q.name === field);
-      if(templateQuestion && templateQuestion.choices) {
-        if(Array.isArray(value)) {
-          return value.map((v: any) => {
-            const item = ItemValue.getItemByValue(templateQuestion.choices, v);
-            return item ? item.locText.textOrHtml : v;
-          });
-        }
-        const item = ItemValue.getItemByValue(templateQuestion.choices, value);
-        if(item) {
-          return item.locText.textOrHtml;
-        }
+      if(templateQuestion) {
+        choices = templateQuestion.choices;
+      }
+    } else if(questionType === "matrixdynamic" || questionType === "matrixdropdown") {
+      const matrixQuestion = question as any;
+      const column = matrixQuestion.columns.find((col: any) => col.name === field);
+      if(column) {
+        choices = column.choices;
+      }
+    }
+    if(choices && choices.length > 0) {
+      if(Array.isArray(value)) {
+        return value.map((v: any) => {
+          const item = ItemValue.getItemByValue(choices, v);
+          return item ? item.locText.textOrHtml : v;
+        });
+      }
+      const item = ItemValue.getItemByValue(choices, value);
+      if(item) {
+        return item.locText.textOrHtml;
       }
     }
     return value;
