@@ -1,5 +1,5 @@
 import { GetDataFn, ITableOptions, Table, TableRow, TabulatorSortOrder } from "./table";
-import { SurveyModel, Event, Question } from "survey-core";
+import { SurveyModel, Event, Question, ItemValue } from "survey-core";
 import { ColumnDataType, IColumn, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils";
 import { localization } from "../localizationManager";
@@ -328,7 +328,28 @@ export class Tabulator extends Table {
     this._rows.push(tableRow);
   };
 
-  private createNestedTable(nestedTableColumns: any[], cellData: any): HTMLElement {
+  private getNestedCellDisplayValue(question: Question, field: string, value: any): any {
+    if(value === undefined || value === null) return value;
+    if(question.getType() === "paneldynamic") {
+      const panelQuestion = question as any;
+      const templateQuestion = panelQuestion.template.questions.find((q: any) => q.name === field);
+      if(templateQuestion && templateQuestion.choices) {
+        if(Array.isArray(value)) {
+          return value.map((v: any) => {
+            const item = ItemValue.getItemByValue(templateQuestion.choices, v);
+            return item ? item.locText.textOrHtml : v;
+          });
+        }
+        const item = ItemValue.getItemByValue(templateQuestion.choices, value);
+        if(item) {
+          return item.locText.textOrHtml;
+        }
+      }
+    }
+    return value;
+  }
+
+  private createNestedTable(nestedTableColumns: any[], cellData: any, question?: Question): HTMLElement {
     const container = document.createElement("div");
     container.className = "sa-nested-table-container";
     const table = document.createElement("table");
@@ -349,7 +370,8 @@ export class Tabulator extends Table {
       const tr = document.createElement("tr");
       nestedTableColumns.forEach((col: any) => {
         const td = document.createElement("td");
-        const value = row[col.field];
+        const rawValue = row[col.field];
+        const value = question ? this.getNestedCellDisplayValue(question, col.field, rawValue) : rawValue;
         td.textContent = value !== undefined && value !== null ? String(value) : "";
         tr.appendChild(td);
       });
@@ -391,7 +413,7 @@ export class Tabulator extends Table {
       }
 
       if(this.options.useNestedTables === true) {
-        return this.createNestedTable(nestedTableColumns, cellData);
+        return this.createNestedTable(nestedTableColumns, cellData, question);
       }
 
       const tableEl = document.createElement("div");
@@ -407,9 +429,17 @@ export class Tabulator extends Table {
           return;
         }
 
+        const displayData = cellData.map((row: any) => {
+          const transformedRow: any = {};
+          nestedTableColumns.forEach((col: any) => {
+            transformedRow[col.field] = this.getNestedCellDisplayValue(question, col.field, row[col.field]);
+          });
+          return transformedRow;
+        });
+
         const nestedTable = new (Tabulator as any).tabulatorTablesConstructor(tableEl, {
           // layout: "fitDataFill",
-          data: cellData,
+          data: displayData,
           columns: nestedTableColumns,
           pagination: false,
         });
@@ -474,7 +504,8 @@ export class Tabulator extends Table {
     const header = nestedColumns.map(col => col.title).join(" | ");
     const rows = nestedData.map(rowData => {
       return nestedColumns.map(col => {
-        const value = rowData[col.field];
+        const rawValue = rowData[col.field];
+        const value = this.getNestedCellDisplayValue(question, col.field, rawValue);
         return value !== undefined && value !== null ? String(value) : "";
       }).join(" | ");
     });

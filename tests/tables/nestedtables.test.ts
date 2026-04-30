@@ -180,3 +180,76 @@ test("should handle empty paneldynamic data", () => {
   expect(columns.length).toBe(1);
   expect(columns[0].name).toBe("relatives");
 });
+
+test("should display choice text instead of value in paneldynamic nested table", () => {
+  const panelWithChoicesJson = {
+    questions: [
+      {
+        type: "paneldynamic",
+        name: "question1",
+        templateElements: [
+          {
+            type: "text",
+            name: "userName",
+            title: "User Name",
+          },
+          {
+            type: "radiogroup",
+            name: "favFruit",
+            title: "Favorite Fruit",
+            choices: [
+              { value: "item1", text: "Mango" },
+              { value: "item2", text: "Apple" },
+              { value: "item3", text: "Banana" },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+
+  const data = [
+    {
+      question1: [
+        { userName: "Alice", favFruit: "item1" },
+      ],
+    },
+    {
+      question1: [
+        { userName: "Bob", favFruit: "item2" },
+        { userName: "Charlie", favFruit: "item3" },
+      ],
+    },
+  ];
+
+  const survey = new SurveyModel(panelWithChoicesJson);
+  const tabulator = new Tabulator(survey, data, { useNestedTables: true });
+
+  mockTimeout();
+  const container = document.createElement("div");
+  tabulator.render(container);
+
+  const columns = tabulator.getColumns();
+  const panelColumn = columns.find((col: any) => col.field === "question1");
+  expect(panelColumn).toBeDefined();
+
+  // Use the formatter to get the rendered nested table
+  const mockCell = {
+    getValue: () => [{ userName: "Alice", favFruit: "item1" }],
+    getRow: () => ({ getTable: () => ({ on: jest.fn() }) }),
+  };
+  const result = panelColumn.formatter(mockCell, {}, jest.fn());
+
+  // The result should be an HTML element with the nested table
+  expect(result).toBeDefined();
+  expect(result instanceof HTMLElement).toBe(true);
+
+  // Check that the table displays "Mango" instead of "item1"
+  const cells = result.querySelectorAll("td");
+  const cellTexts = Array.from(cells).map((cell: any) => cell.textContent);
+  expect(cellTexts).toContain("Alice");
+  expect(cellTexts).toContain("Mango");
+  expect(cellTexts).not.toContain("item1");
+
+  restoreTimeout();
+});
