@@ -350,7 +350,7 @@ export class Tabulator extends Table {
       nestedTableColumns.forEach((col: any) => {
         const td = document.createElement("td");
         const value = row[col.field];
-        td.textContent = value !== undefined && value !== null ? String(value) : "";
+        td.textContent = value !== undefined && value !== null ? (typeof value === "object" ? JSON.stringify(value) : String(value)) : "";
         tr.appendChild(td);
       });
       tbody.appendChild(tr);
@@ -475,7 +475,7 @@ export class Tabulator extends Table {
     const rows = nestedData.map(rowData => {
       return nestedColumns.map(col => {
         const value = rowData[col.field];
-        return value !== undefined && value !== null ? String(value) : "";
+        return value !== undefined && value !== null ? (typeof value === "object" ? JSON.stringify(value) : String(value)) : "";
       }).join(" | ");
     });
 
