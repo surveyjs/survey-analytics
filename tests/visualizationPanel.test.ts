@@ -469,6 +469,44 @@ test("Clear filter button via setSelection clears dataProvider filter for questi
   expect(filters.length).toBe(0);
 });
 
+test("cross-filtering works for questions with choicesFromQuestion", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "liked_features",
+        choices: ["Ease of use", "Performance", "Design", "Customer support", "Price"],
+      },
+      {
+        type: "checkbox",
+        name: "improvement_areas",
+        choicesFromQuestion: "liked_features",
+      },
+    ],
+  };
+  const data = [
+    { liked_features: ["Ease of use", "Performance"], improvement_areas: ["Design", "Price"] },
+    { liked_features: ["Design"], improvement_areas: ["Ease of use", "Performance"] },
+    { liked_features: ["Performance", "Price"], improvement_areas: ["Customer support"] },
+  ];
+  const survey = new SurveyModel(json);
+  const panel = new VisualizationPanel(survey.getAllQuestions(), data, { allowDynamicLayout: false });
+  panel.render(document.createElement("div"));
+
+  panel.setFilter("improvement_areas", "Design");
+  const filters = (panel as any).dataProvider.getFilters();
+  expect(filters.length).toBe(1);
+  expect(filters[0].field).toBe("improvement_areas");
+  expect(filters[0].value).toBe("Design");
+
+  const visualizer = panel.getVisualizer("improvement_areas") as SelectBase;
+  expect(visualizer.selection).toBeDefined();
+  expect(visualizer.selection.value).toBe("Design");
+
+  panel.setFilter("improvement_areas", undefined);
+  expect(visualizer.selection).toBeUndefined();
+});
+
 test("moveVisibleElement if hidden elements exist", () => {
   const originalElements = [
     { name: "el0", isVisible: true },

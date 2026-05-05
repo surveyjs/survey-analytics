@@ -1,4 +1,4 @@
-import { Question, QuestionSelectBase, ItemValue, Event, QuestionRatingModel } from "survey-core";
+import { Question, QuestionSelectBase, ItemValue, Event, QuestionRatingModel, SurveyModel } from "survey-core";
 import { IAnswersData, ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DataHelper } from "./utils/index";
@@ -256,6 +256,12 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
       (<any>question).visibleChoicesChangedCallback = () => {
         this.dataProvider.raiseDataChanged();
       };
+      if(typeof question.getSurvey == "function") {
+        const survey = question.getSurvey() as SurveyModel;
+        if(!!survey) {
+          survey.showInvisibleElements = true;
+        }
+      }
     }
     this._supportSelection = true;
 
@@ -474,7 +480,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     const correctAnswerValue = super.getCorrectAnswerText();
     const resultValues = Array.isArray(correctAnswerValue) ? correctAnswerValue : [correctAnswerValue];
     const selectBaseQuestion = this.question as QuestionSelectBase;
-    return resultValues.map((value: any) => ItemValue.getTextOrHtmlByValue(selectBaseQuestion.choices, value)).join(", ");
+    return resultValues.map((value: any) => ItemValue.getTextOrHtmlByValue(selectBaseQuestion.visibleChoices, value)).join(", ");
   }
 
   protected isSupportSoftUpdateContent(): boolean {
@@ -502,7 +508,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     if(this.question.hasOther && itemText == selBase.otherText) {
       return selBase.otherItem;
     } else {
-      return selBase.choices.filter(
+      return selBase.visibleChoices.filter(
         (choice: ItemValue) => choice.text === itemText
       )[0];
     }
