@@ -115,9 +115,11 @@ export class SelectBase
       (<any>question).visibleChoicesChangedCallback = () => {
         this.dataProvider.raiseDataChanged();
       };
-      const survey = question.getSurvey() as SurveyModel;
-      if(!!survey) {
-        survey.showInvisibleElements = true;
+      if(typeof question.getSurvey == "function") {
+        const survey = question.getSurvey() as SurveyModel;
+        if(!!survey) {
+          survey.showInvisibleElements = true;
+        }
       }
     }
     this._supportSelection = true;
