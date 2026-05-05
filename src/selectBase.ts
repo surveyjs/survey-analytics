@@ -1,4 +1,4 @@
-import { Question, QuestionSelectBase, ItemValue, Event, QuestionRatingModel } from "survey-core";
+import { Question, QuestionSelectBase, ItemValue, Event, QuestionRatingModel, SurveyModel } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { DataHelper, DocumentHelper } from "./utils/index";
@@ -115,6 +115,10 @@ export class SelectBase
       (<any>question).visibleChoicesChangedCallback = () => {
         this.dataProvider.raiseDataChanged();
       };
+      const survey = question.getSurvey() as SurveyModel;
+      if(!!survey) {
+        survey.showInvisibleElements = true;
+      }
     }
     this._supportSelection = true;
     this._showOnlyPercentages = this.options.showOnlyPercentages === true;
