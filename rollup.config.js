@@ -5,10 +5,8 @@ const replace = require("@rollup/plugin-replace");
 const bannerPlugin = require("rollup-plugin-license");
 
 const path = require("path");
-const svgLoader = require("svg-inline-loader");
-const fg = require("fast-glob");
-const readFile = require("fs").readFileSync;
 const VERSION = require("./package.json").version;
+const { createIconsPlugin, createRemoveScssImportsPlugin } = require("./rollup.umd.plugins");
 
 const banner = [
   "surveyjs - SurveyJS Dashboard library v" + VERSION,
@@ -34,29 +32,8 @@ module.exports = (options) => {
     input,
     context: "this",
     plugins: [
-      {
-        name: "icons",
-        resolveId: (id) => {
-          if (id === "icons") {
-            return id;
-          }
-        },
-        load: async (id) => {
-          if (id === "icons") {
-            const icons = {};
-            for (const iconPath of await fg.glob(fg.convertPathToPattern(path.resolve(__dirname, "./src/images")) + "/*.svg")) {
-              icons[path.basename(iconPath).replace(/\.svg$/, "").toLocaleLowerCase()] = svgLoader.getExtractedSVG(readFile(iconPath).toString());
-            }
-            return `export default ${JSON.stringify(icons, undefined, "\t")}`;
-          }
-        }
-      },
-      {
-        name: "remove-scss-imports",
-        load: (id) => {
-          if(id.match(/\.scss$/)) return "";
-        }
-      },
+      createIconsPlugin(__dirname),
+      createRemoveScssImportsPlugin(),
       nodeResolve(),
       commonjs(),
       typescript({ inlineSources: true, sourceMap: true, tsconfig: options.tsconfig, compilerOptions: {
