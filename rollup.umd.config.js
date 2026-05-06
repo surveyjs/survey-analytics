@@ -32,7 +32,7 @@ const globals = {
 const umdEntries = [
   {
     key: "survey.analytics",
-    input: path.join(rootDir, "src", "entries", "summary.ts"),
+    input: path.join(rootDir, "src", "entries", "chartjs.ts"),
     cssFiles: [
       path.join(rootDir, "src", "visualizerBase.scss"),
       path.join(rootDir, "src", "visualizationPanel.scss"),
