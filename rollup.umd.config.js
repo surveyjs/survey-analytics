@@ -60,7 +60,13 @@ const umdEntries = [
   {
     key: "survey.analytics.apexcharts",
     input: path.join(rootDir, "src", "entries", "apexcharts.ts"),
-    cssFiles: []
+    cssFiles: [
+      path.join(rootDir, "src", "visualizerBase.scss"),
+      path.join(rootDir, "src", "visualizationPanel.scss"),
+      path.join(rootDir, "src", "text.scss"),
+      path.join(rootDir, "src", "statistics-table.scss"),
+      path.join(rootDir, "src", "nps.scss")
+    ]
   },
   {
     key: "survey.analytics.chartjs",
@@ -70,7 +76,13 @@ const umdEntries = [
   {
     key: "survey.analytics.plotly",
     input: path.join(rootDir, "src", "entries", "plotly.ts"),
-    cssFiles: []
+    cssFiles: [
+      path.join(rootDir, "src", "visualizerBase.scss"),
+      path.join(rootDir, "src", "visualizationPanel.scss"),
+      path.join(rootDir, "src", "text.scss"),
+      path.join(rootDir, "src", "statistics-table.scss"),
+      path.join(rootDir, "src", "nps.scss")
+    ]
   },
   {
     key: "survey.analytics.mongo",
