@@ -34,10 +34,13 @@ const umdEntries = [
     key: "survey.analytics",
     input: path.join(rootDir, "src", "entries", "chartjs.ts"),
     cssFiles: [
+      path.join(rootDir, "src", "typography-mixins.scss"),
       path.join(rootDir, "src", "visualizerBase.scss"),
       path.join(rootDir, "src", "visualizationPanel.scss"),
+      path.join(rootDir, "src", "card.scss"),
       path.join(rootDir, "src", "text.scss"),
       path.join(rootDir, "src", "statistics-table.scss"),
+      path.join(rootDir, "src", "chartjs", "styles.scss"),
       path.join(rootDir, "src", "nps.scss")
     ]
   },
@@ -45,8 +48,10 @@ const umdEntries = [
     key: "survey.analytics.core",
     input: path.join(rootDir, "src", "entries", "summary.core.ts"),
     cssFiles: [
+      path.join(rootDir, "src", "typography-mixins.scss"),
       path.join(rootDir, "src", "visualizerBase.scss"),
       path.join(rootDir, "src", "visualizationPanel.scss"),
+      path.join(rootDir, "src", "card.scss"),
       path.join(rootDir, "src", "text.scss"),
       path.join(rootDir, "src", "statistics-table.scss"),
       path.join(rootDir, "src", "nps.scss")
@@ -61,24 +66,38 @@ const umdEntries = [
     key: "survey.analytics.apexcharts",
     input: path.join(rootDir, "src", "entries", "apexcharts.ts"),
     cssFiles: [
+      path.join(rootDir, "src", "typography-mixins.scss"),
       path.join(rootDir, "src", "visualizerBase.scss"),
       path.join(rootDir, "src", "visualizationPanel.scss"),
+      path.join(rootDir, "src", "card.scss"),
       path.join(rootDir, "src", "text.scss"),
       path.join(rootDir, "src", "statistics-table.scss"),
+      path.join(rootDir, "src", "apexcharts", "styles.scss"),
       path.join(rootDir, "src", "nps.scss")
     ]
   },
   {
     key: "survey.analytics.chartjs",
     input: path.join(rootDir, "src", "entries", "chartjs.ts"),
-    cssFiles: []
+    cssFiles: [
+      path.join(rootDir, "src", "typography-mixins.scss"),
+      path.join(rootDir, "src", "visualizerBase.scss"),
+      path.join(rootDir, "src", "visualizationPanel.scss"),
+      path.join(rootDir, "src", "card.scss"),
+      path.join(rootDir, "src", "text.scss"),
+      path.join(rootDir, "src", "statistics-table.scss"),
+      path.join(rootDir, "src", "chartjs", "styles.scss"),
+      path.join(rootDir, "src", "nps.scss")
+    ]
   },
   {
     key: "survey.analytics.plotly",
     input: path.join(rootDir, "src", "entries", "plotly.ts"),
     cssFiles: [
+      path.join(rootDir, "src", "typography-mixins.scss"),
       path.join(rootDir, "src", "visualizerBase.scss"),
       path.join(rootDir, "src", "visualizationPanel.scss"),
+      path.join(rootDir, "src", "card.scss"),
       path.join(rootDir, "src", "text.scss"),
       path.join(rootDir, "src", "statistics-table.scss"),
       path.join(rootDir, "src", "nps.scss")
