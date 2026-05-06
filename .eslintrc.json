@@ -31,7 +31,13 @@
             }
         ],
         "no-trailing-spaces": "error",
-        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "brace-style": [
+            "error",
+            "1tbs",
+            {
+                "allowSingleLine": true
+            }
+        ],
         "space-infix-ops": "error",
         "no-multi-spaces": "error",
         "block-spacing": "error",
@@ -55,18 +61,39 @@
             "never"
         ],
         "computed-property-spacing": "error",
-        "keyword-spacing": ["error", { 
-        	"overrides": { 
-        		"if": { "after": false }, 
-        		"for": { "after": false }, 
-        		"while": { "after": false }, 
-        		"switch": { "after": false },
-        		"this": { "after": false, "before": false },
-        		"new": { "before": false },
-        		"function":  { "after": false, "before": false },
-        		"catch": { "after": false }
-        	} 
-        }],
+        "keyword-spacing": [
+            "error",
+            {
+                "overrides": {
+                    "if": {
+                        "after": false
+                    },
+                    "for": {
+                        "after": false
+                    },
+                    "while": {
+                        "after": false
+                    },
+                    "switch": {
+                        "after": false
+                    },
+                    "this": {
+                        "after": false,
+                        "before": false
+                    },
+                    "new": {
+                        "before": false
+                    },
+                    "function": {
+                        "after": false,
+                        "before": false
+                    },
+                    "catch": {
+                        "after": false
+                    }
+                }
+            }
+        ],
         "no-multiple-empty-lines": [
             "error",
             {
@@ -161,10 +188,25 @@
     },
     "overrides": [
         {
-        "files": ["src/analytics-localization/*.ts", "src/wordcloud/stopwords/*.ts"],
-        "rules": {
-            "surveyjs/eslint-plugin-i18n/only-english-or-code": "off"
-        }
+            "files": [
+                "src/analytics-localization/*.ts",
+                "src/wordcloud/stopwords/*.ts"
+            ],
+            "rules": {
+                "surveyjs/eslint-plugin-i18n/only-english-or-code": "off"
+            }
+        },
+        {
+            "files": [
+                "rollup.umd.plugins.js"
+            ],
+            "env": {
+                "node": true,
+                "commonjs": true
+            },
+            "parserOptions": {
+                "sourceType": "script"
+            }
         }
     ]
 }
