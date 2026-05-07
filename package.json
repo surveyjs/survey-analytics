@@ -2,6 +2,7 @@
   "version": "2.5.23",
   "name": "survey-analytics",
   "scripts": {
+    "start": "http-server --silent",
     "test": "jest",
     "test:dev": "jest --watch",
     "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
