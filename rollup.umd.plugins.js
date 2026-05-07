@@ -246,11 +246,33 @@ function createPostBuildAssetsPlugin(options) {
   };
 }
 
+function createNonSourceFilesPlugin(options) {
+  const { rootDir, buildDir, packageJsonPath } = options;
+  return {
+    name: "emit-non-source-files",
+    writeBundle() {
+      emitNonSourceFiles({ rootDir, buildDir, packageJsonPath });
+    }
+  };
+}
+
+function createCssPlugin(options) {
+  const { rootDir, buildDir, entry, isProduction } = options;
+  return {
+    name: "emit-css",
+    writeBundle() {
+      emitCssFile({ rootDir, buildDir, entry, isProduction });
+    }
+  };
+}
+
 module.exports = {
   toBool,
   createIconsPlugin,
   createRemoveScssImportsPlugin,
   createTabulatorUmdCastCompatPlugin,
   createMinifyChunkPlugin,
-  createPostBuildAssetsPlugin
+  createPostBuildAssetsPlugin,
+  createCssPlugin,
+  createNonSourceFilesPlugin
 };
