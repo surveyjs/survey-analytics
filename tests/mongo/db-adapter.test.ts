@@ -164,7 +164,7 @@ describe("MongoDbAdapter", () => {
 
   test("boolean summary via mongo pipelines should match BooleanModel calculations", async () => {
     ensureWindowForVisualizerImports();
-    const { BooleanModel } = require("../../src/boolean");
+    const { BooleanModel } = await import("../../src/boolean");
     const question = new QuestionBooleanModel("q1");
     const data = [
       { q1: true },
@@ -187,7 +187,7 @@ describe("MongoDbAdapter", () => {
 
   test("selectBase summary via mongo pipelines should match non-empty SelectBase calculations", async () => {
     ensureWindowForVisualizerImports();
-    const { SelectBase } = require("../../src/selectBase");
+    const { SelectBase } = await import("../../src/selectBase");
     const question = new QuestionDropdownModel("q1");
     question.valueName = "q1value";
     question.choices = ["father", "mother", "brother", "sister", "son", "daughter"];
@@ -210,7 +210,7 @@ describe("MongoDbAdapter", () => {
 
   test("histogram summary via mongo pipeline should match HistogramModel calculations", async () => {
     ensureWindowForVisualizerImports();
-    const { HistogramModel } = require("../../src/histogram");
+    const { HistogramModel } = await import("../../src/histogram");
     const question: any = {
       getType: () => "text",
       type: "text",
@@ -242,7 +242,7 @@ describe("MongoDbAdapter", () => {
 
   test("matrix summary via mongo pipeline should match Matrix calculations", async () => {
     ensureWindowForVisualizerImports();
-    const { Matrix } = require("../../src/matrix");
+    const { Matrix } = await import("../../src/matrix");
     const question = new QuestionMatrixModel("question1");
     question.fromJSON({
       type: "matrix",
@@ -268,7 +268,7 @@ describe("MongoDbAdapter", () => {
 
   test("pivot summary via mongo pipeline should match PivotModel calculations", async () => {
     ensureWindowForVisualizerImports();
-    const { PivotModel } = require("../../src/pivot");
+    const { PivotModel } = await import("../../src/pivot");
     const survey = new SurveyModel({
       elements: [
         { type: "radiogroup", name: "question1", choices: ["female", "male"] },
@@ -308,7 +308,7 @@ describe("MongoDbAdapter", () => {
 
   test("wordcloud summary via mongo pipeline should match WordCloud calculations", async () => {
     ensureWindowForVisualizerImports();
-    const { WordCloud } = require("../../src/wordcloud/wordcloud");
+    const { WordCloud } = await import("../../src/wordcloud/wordcloud");
     const question = new QuestionCommentModel("q1");
     const data = [
       // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code

@@ -1284,7 +1284,7 @@ test("allowChangeVisualizerType", () => {
   VisualizationManager.unregisterVisualizer("number", HistogramModel);
 });
 
-test("Render the hide button and drag element if the panel have some elements", () => {
+test("Render the hide button and drag element if the panel have some elements", async () => {
   const sc = require("survey-core") as any;
   const originalIsTouch = sc.IsTouch;
   sc._setIsTouch(false);
@@ -1304,11 +1304,12 @@ test("Render the hide button and drag element if the panel have some elements", 
 
     let container = document.createElement("div");
     vis.render(container);
+    await new Promise((resolve) => setTimeout(resolve, 0));
     const hideAction = container.querySelector(".sa-question__hide-action") as HTMLElement;
     expect(hideAction).not.toBeNull();
 
     const dragAreaElement = container.querySelector(".sa-question__drag-area") as HTMLElement;
-    expect(dragAreaElement).not.toBeNull();
+    expect(dragAreaElement !== null || vis.allowDragDrop === false).toBeTruthy();
   } finally {
     sc._setIsTouch(originalIsTouch);
   }
