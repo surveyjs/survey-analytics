@@ -17,11 +17,18 @@ const globals = {
 
 const sharedScss = [
   src("typography-mixins.scss"),
+  src("visualizerBase.scss"),
   src("visualizationPanel.scss"),
   src("card.scss"),
   src("text.scss"),
   src("statistics-table.scss"),
   src("nps.scss"),
+  src("utils", "dateRangeWidget.scss"),
+  src("utils", "dropdown.scss"),
+  src("utils", "editableSeriesListWidget.scss"),
+  src("utils", "sidebar.scss"),
+  src("utils", "toggle.scss"),
+  src("utils", "utils.scss"),
 ];
 
 const fontsScss = entry("fonts.scss");
@@ -30,7 +37,7 @@ const entries = [
   { key: "survey.analytics",            globalName: "SurveyAnalytics",           inputFile: entry("chartjs.ts"),       cssFiles: [fontsScss, ...sharedScss, src("chartjs", "styles.scss")],    fontlessCssFiles: [...sharedScss, src("chartjs", "styles.scss")],    external, globals },
   { key: "survey.analytics.core",       globalName: "SurveyAnalyticsCore",       inputFile: entry("summary.core.ts"),  cssFiles: sharedScss,                                                    external, globals },
   { key: "survey.analytics.mongo",      globalName: "SurveyAnalyticsMongo",      inputFile: entry("mongo.ts"),         cssFiles: [],                                                            external, globals },
-  { key: "survey.analytics.tabulator",  globalName: "SurveyAnalyticsTabulator",  inputFile: entry("tabulator-es.ts"),  cssFiles: [fontsScss, src("tables", "tabulator.scss")],                  fontlessCssFiles: [src("tables", "tabulator.scss")],                 external, globals },
+  { key: "survey.analytics.tabulator",  globalName: "SurveyAnalyticsTabulator",  inputFile: entry("tabulator-es.ts"),  cssFiles: [fontsScss, src("tables", "table.scss"), src("tables", "tabulator.scss")],                  fontlessCssFiles: [src("tables", "table.scss"), src("tables", "tabulator.scss")],                 external, globals },
   { key: "survey.analytics.apexcharts", globalName: "SurveyAnalyticsApexcharts", inputFile: entry("apexcharts.ts"),    cssFiles: [fontsScss, ...sharedScss, src("apexcharts", "styles.scss")],  fontlessCssFiles: [...sharedScss, src("apexcharts", "styles.scss")], external, globals },
   { key: "survey.analytics.chartjs",    globalName: "SurveyAnalyticsChartjs",    inputFile: entry("chartjs.ts"),       cssFiles: [fontsScss, ...sharedScss, src("chartjs", "styles.scss")],    fontlessCssFiles: [...sharedScss, src("chartjs", "styles.scss")],    external, globals },
   { key: "survey.analytics.plotly",     globalName: "SurveyAnalyticsPlotly",     inputFile: entry("plotly.ts"),        cssFiles: [fontsScss, ...sharedScss],                                    fontlessCssFiles: sharedScss,                                        external, globals },
