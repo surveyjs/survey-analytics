@@ -96,6 +96,7 @@
     "standard-version": "^9.5.0",
     "surveyjs-doc-generator": "git+https://github.com/surveyjs/surveyjs-doc-generator.git",
     "svg-inline-loader": "^0.8.2",
+    "terser": "^5.47.1",
     "ts-jest": "^29.4.9",
     "ts-loader": "^8.0.0",
     "typescript": "^5.7.0"
