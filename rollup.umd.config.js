@@ -36,7 +36,8 @@ const umdEntries = [
       path.join(rootDir, "src", "visualizationPanel.scss"),
       path.join(rootDir, "src", "text.scss"),
       path.join(rootDir, "src", "statistics-table.scss"),
-      path.join(rootDir, "src", "nps.scss")
+      path.join(rootDir, "src", "nps.scss"),
+      path.join(rootDir, "src", "utils", "utils.scss")
     ]
   },
   {
@@ -47,13 +48,17 @@ const umdEntries = [
       path.join(rootDir, "src", "visualizationPanel.scss"),
       path.join(rootDir, "src", "text.scss"),
       path.join(rootDir, "src", "statistics-table.scss"),
-      path.join(rootDir, "src", "nps.scss")
+      path.join(rootDir, "src", "nps.scss"),
+      path.join(rootDir, "src", "utils", "utils.scss")
     ]
   },
   {
     key: "survey.analytics.tabulator",
     input: path.join(rootDir, "src", "entries", "tabulator-umd.ts"),
-    cssFiles: [path.join(rootDir, "src", "tables", "tabulator.scss")]
+    cssFiles: [
+      path.join(rootDir, "src", "tables", "tabulator.scss"),
+      path.join(rootDir, "src", "utils", "utils.scss")
+    ]
   },
   {
     key: "survey.analytics.mongo",
