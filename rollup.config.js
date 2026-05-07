@@ -24,14 +24,16 @@ const sharedScss = [
   src("nps.scss"),
 ];
 
+const fontsScss = entry("fonts.scss");
+
 const entries = [
-  { key: "survey.analytics",           globalName: "SurveyAnalytics",           inputFile: entry("chartjs.ts"),       cssFiles: [...sharedScss, src("chartjs", "styles.scss")],    external, globals },
-  { key: "survey.analytics.core",      globalName: "SurveyAnalyticsCore",       inputFile: entry("summary.core.ts"),  cssFiles: sharedScss,                                        external, globals },
-  { key: "survey.analytics.mongo",     globalName: "SurveyAnalyticsMongo",      inputFile: entry("mongo.ts"),         cssFiles: [],                                                external, globals },
-  { key: "survey.analytics.tabulator", globalName: "SurveyAnalyticsTabulator",  inputFile: entry("tabulator-es.ts"),  cssFiles: [src("tables", "tabulator.scss")],                 external, globals },
-  { key: "survey.analytics.apexcharts",globalName: "SurveyAnalyticsApexcharts", inputFile: entry("apexcharts.ts"),    cssFiles: [...sharedScss, src("apexcharts", "styles.scss")], external, globals },
-  { key: "survey.analytics.chartjs",   globalName: "SurveyAnalyticsChartjs",    inputFile: entry("chartjs.ts"),       cssFiles: [...sharedScss, src("chartjs", "styles.scss")],    external, globals },
-  { key: "survey.analytics.plotly",    globalName: "SurveyAnalyticsPlotly",     inputFile: entry("plotly.ts"),        cssFiles: sharedScss,                                        external, globals },
+  { key: "survey.analytics",            globalName: "SurveyAnalytics",           inputFile: entry("chartjs.ts"),       cssFiles: [fontsScss, ...sharedScss, src("chartjs", "styles.scss")],    fontlessCssFiles: [...sharedScss, src("chartjs", "styles.scss")],    external, globals },
+  { key: "survey.analytics.core",       globalName: "SurveyAnalyticsCore",       inputFile: entry("summary.core.ts"),  cssFiles: sharedScss,                                                    external, globals },
+  { key: "survey.analytics.mongo",      globalName: "SurveyAnalyticsMongo",      inputFile: entry("mongo.ts"),         cssFiles: [],                                                            external, globals },
+  { key: "survey.analytics.tabulator",  globalName: "SurveyAnalyticsTabulator",  inputFile: entry("tabulator-es.ts"),  cssFiles: [fontsScss, src("tables", "tabulator.scss")],                  fontlessCssFiles: [src("tables", "tabulator.scss")],                 external, globals },
+  { key: "survey.analytics.apexcharts", globalName: "SurveyAnalyticsApexcharts", inputFile: entry("apexcharts.ts"),    cssFiles: [fontsScss, ...sharedScss, src("apexcharts", "styles.scss")],  fontlessCssFiles: [...sharedScss, src("apexcharts", "styles.scss")], external, globals },
+  { key: "survey.analytics.chartjs",    globalName: "SurveyAnalyticsChartjs",    inputFile: entry("chartjs.ts"),       cssFiles: [fontsScss, ...sharedScss, src("chartjs", "styles.scss")],    fontlessCssFiles: [...sharedScss, src("chartjs", "styles.scss")],    external, globals },
+  { key: "survey.analytics.plotly",     globalName: "SurveyAnalyticsPlotly",     inputFile: entry("plotly.ts"),        cssFiles: [fontsScss, ...sharedScss],                                    fontlessCssFiles: sharedScss,                                        external, globals },
 ];
 
 module.exports = async (commandLineArgs) => {
@@ -47,7 +49,7 @@ module.exports = async (commandLineArgs) => {
   if(mode === "dev" || mode === "prod") {
     const isProduction = mode === "prod";
     const buildDir = path.resolve(__dirname, "./build");
-    return entries.map(({ key, inputFile, cssFiles, globalName, external, globals }, index) => {
+    return entries.map(({ key, inputFile, cssFiles, fontlessCssFiles, globalName, external, globals }, index) => {
       const umdEntryName = isProduction ? `${key}.min` : key;
       return createUmdConfig({
         input: { [umdEntryName]: inputFile },
@@ -60,7 +62,7 @@ module.exports = async (commandLineArgs) => {
         version: packageJson.version,
         plugins: [
           ...sharedPlugins,
-          ...(cssFiles.length > 0 ? [createCssPlugin({ rootDir: __dirname, buildDir, entry: { key, cssFiles }, isProduction })] : []),
+          ...(cssFiles.length > 0 ? [createCssPlugin({ rootDir: __dirname, buildDir, entry: { key, cssFiles, fontlessCssFiles }, isProduction })] : []),
           ...(isProduction && index === 0 ? [createNonSourceFilesPlugin({ rootDir: __dirname, buildDir, packageJsonPath: path.resolve(__dirname, "./package.json") })] : [])
         ]
       });

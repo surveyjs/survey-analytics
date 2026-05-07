@@ -262,6 +262,9 @@ function createCssPlugin(options) {
     name: "emit-css",
     writeBundle() {
       emitCssFile({ rootDir, buildDir, entry, isProduction });
+      if(entry.fontlessCssFiles && entry.fontlessCssFiles.length > 0) {
+        emitCssFile({ rootDir, buildDir, entry: { key: entry.key + ".fontless", cssFiles: entry.fontlessCssFiles }, isProduction });
+      }
     }
   };
 }
