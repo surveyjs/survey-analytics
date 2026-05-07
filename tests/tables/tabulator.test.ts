@@ -3,9 +3,12 @@ import { Question, SurveyModel } from "survey-core";
 import { Tabulator } from "../../src/entries/tabulator-umd";
 import { TableExtensions } from "../../src/tables/extensions/tableextensions";
 import { Table } from "../../src/tables/table";
+import { vi } from "vitest";
 
-jest.mock("tabulator-tables", () => {
-  return { default: jest.requireActual("tabulator-tables") };
+vi.mock("tabulator-tables", async () => {
+  const actual = await vi.importActual<any>("tabulator-tables");
+  const tabulatorConstructor = actual.default ?? actual.TabulatorFull ?? actual;
+  return { default: tabulatorConstructor };
 });
 
 const trueTimeout = window.setTimeout;

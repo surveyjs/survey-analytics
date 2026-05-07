@@ -1,6 +1,8 @@
-jest.mock("plotly.js", () => { }, { virtual: true });
-jest.mock("plotly.js-dist-min", () => ({ default: { Icons: {}, react: () => { } } }), { virtual: true });
-(<any>global).URL.createObjectURL = jest.fn();
+import { vi } from "vitest";
+
+vi.mock("plotly.js", () => { }, { virtual: true });
+vi.mock("plotly.js-dist-min", () => ({ default: { Icons: {}, react: () => { } } }), { virtual: true });
+(<any>global).URL.createObjectURL = vi.fn();
 
 import { PlotlySetup } from "../src/plotly/setup";
 import { SelectBasePlotly, MatrixPlotly } from "../src/plotly/legacy";
@@ -568,7 +570,7 @@ test("data is present in onPlotCreating options", async () => {
     callCount++;
   };
   PlotlySetup.onPlotCreating.add(creatingHandler);
-  await (numberModel as any)._chartAdapter.update({ appendChild: jest.fn(), on: jest.fn() });
+  await (numberModel as any)._chartAdapter.update({ appendChild: vi.fn(), on: vi.fn() });
   expect(callCount).toBe(1);
   expect(lastData).toEqual([5, 2, 9]);
 });

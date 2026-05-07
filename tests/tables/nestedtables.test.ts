@@ -2,9 +2,12 @@ import { SurveyModel } from "survey-core";
 // eslint-disable-next-line surveyjs/no-imports-from-entries
 import { Tabulator } from "../../src/entries/tabulator-umd";
 import { ColumnDataType } from "../../src/tables/config";
+import { vi } from "vitest";
 
-jest.mock("tabulator-tables", () => {
-  return { default: jest.requireActual("tabulator-tables") };
+vi.mock("tabulator-tables", async () => {
+  const actual = await vi.importActual<any>("tabulator-tables");
+  const tabulatorConstructor = actual.default ?? actual.TabulatorFull ?? actual;
+  return { default: tabulatorConstructor };
 });
 
 const trueTimeout = window.setTimeout;
@@ -247,9 +250,9 @@ test("should display choice text instead of value in paneldynamic nested table",
   // Use the formatter to get the rendered nested table
   const mockCell = {
     getValue: () => [{ userName: "Alice", favFruit: "item1" }],
-    getRow: () => ({ getTable: () => ({ on: jest.fn() }) }),
+    getRow: () => ({ getTable: () => ({ on: vi.fn() }) }),
   };
-  const result = panelColumn.formatter(mockCell, {}, jest.fn());
+  const result = panelColumn.formatter(mockCell, {}, vi.fn());
 
   // The result should be an HTML element with the nested table
   expect(result).toBeDefined();
@@ -280,9 +283,9 @@ test("should display choice text instead of value in matrixdynamic nested table"
   // Use the formatter to get the rendered nested table
   const mockCell = {
     getValue: () => [{ subject: "Math", rating: 4, experience: "item1" }],
-    getRow: () => ({ getTable: () => ({ on: jest.fn() }) }),
+    getRow: () => ({ getTable: () => ({ on: vi.fn() }) }),
   };
-  const result = matrixColumn.formatter(mockCell, {}, jest.fn());
+  const result = matrixColumn.formatter(mockCell, {}, vi.fn());
 
   expect(result).toBeDefined();
   expect(result instanceof HTMLElement).toBe(true);
