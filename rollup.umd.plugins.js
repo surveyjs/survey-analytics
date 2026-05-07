@@ -56,22 +56,6 @@ function createRemoveScssImportsPlugin() {
   };
 }
 
-function createTabulatorUmdCastCompatPlugin(rootDir) {
-  const tabulatorUmdPath = path.join(rootDir, "src", "entries", "tabulator-umd.ts").replace(/\\/g, "/");
-  return {
-    name: "tabulator-umd-cast-compat",
-    transform(code, id) {
-      if(id.replace(/\\/g, "/") !== tabulatorUmdPath) {
-        return null;
-      }
-      return {
-        code: code.replace("TabulatorTables as any", "TabulatorTables"),
-        map: null
-      };
-    }
-  };
-}
-
 function createMinifyChunkPlugin(options) {
   const isProduction = toBool(options && options.isProduction, false);
   if(!isProduction) {
@@ -273,7 +257,6 @@ module.exports = {
   toBool,
   createIconsPlugin,
   createRemoveScssImportsPlugin,
-  createTabulatorUmdCastCompatPlugin,
   createMinifyChunkPlugin,
   createPostBuildAssetsPlugin,
   createCssPlugin,
