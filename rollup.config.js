@@ -1,107 +1,89 @@
-const typescript = require("@rollup/plugin-typescript");
-const nodeResolve = require("@rollup/plugin-node-resolve");
-const commonjs = require("@rollup/plugin-commonjs");
-const replace = require("@rollup/plugin-replace");
-const bannerPlugin = require("rollup-plugin-license");
-
 const path = require("path");
-const svgLoader = require("svg-inline-loader");
-const fg = require("fast-glob");
-const readFile = require("fs").readFileSync;
-const VERSION = require("./package.json").version;
+const packageJson = require("./package.json");
+const { createIconsPlugin, createRemoveScssImportsPlugin, createCssPlugin, createNonSourceFilesPlugin } = require("./rollup.umd.plugins");
 
-const banner = [
-  "surveyjs - SurveyJS Dashboard library v" + VERSION,
-  "Copyright (c) 2015-" + new Date().getFullYear() + " Devsoft Baltic OÜ  - http://surveyjs.io/",
-  "License: MIT (http://www.opensource.org/licenses/mit-license.php)",
-].join("\n");
+const src = (...p) => path.resolve(__dirname, "src", ...p);
+const entry = (file) => path.resolve(__dirname, "src", "entries", file);
 
-const input = { 
-  "survey.analytics": path.resolve(__dirname, "./src/entries/summary.ts"),
-  "survey.analytics.core": path.resolve(__dirname, "./src/entries/summary.core.ts"),
-  "survey.analytics.mongo": path.resolve(__dirname, "./src/entries/mongo.ts"),
-  "survey.analytics.tabulator": path.resolve(__dirname, "./src/entries/tabulator-es.ts"),
-  "survey.analytics.apexcharts": path.resolve(__dirname, "./src/entries/apexcharts.ts"),
-  "survey.analytics.chartjs": path.resolve(__dirname, "./src/entries/chartjs.ts"),
-  "survey.analytics.plotly": path.resolve(__dirname, "./src/entries/plotly.ts"),
+const external = ["survey-core", "plotly.js-dist-min", "tabulator-tables", "apexcharts", "chart.js", "mongodb"];
+const globals = {
+  "survey-core": "Survey",
+  "plotly.js-dist-min": "Plotly",
+  "tabulator-tables": "Tabulator",
+  apexcharts: "ApexCharts",
+  "chart.js": "Chart",
+  mongodb: "MongoDB"
 };
-module.exports = (options) => {
-  options = options ?? {};
-  if(!options.tsconfig) {
-    options.tsconfig = path.resolve(__dirname, "./tsconfig.fesm.json");
+
+const sharedScss = [
+  src("typography-mixins.scss"),
+  src("visualizerBase.scss"),
+  src("visualizationPanel.scss"),
+  src("card.scss"),
+  src("text.scss"),
+  src("statistics-table.scss"),
+  src("nps.scss"),
+  src("utils", "dateRangeWidget.scss"),
+  src("utils", "dropdown.scss"),
+  src("utils", "editableSeriesListWidget.scss"),
+  src("utils", "sidebar.scss"),
+  src("utils", "toggle.scss"),
+  src("utils", "utils.scss"),
+];
+
+const fontsScss = entry("fonts.scss");
+
+const entries = [
+  { key: "survey.analytics",            globalName: "SurveyAnalytics",           inputFile: entry("chartjs.ts"),       cssFiles: [fontsScss, ...sharedScss, src("chartjs", "styles.scss")],    fontlessCssFiles: [...sharedScss, src("chartjs", "styles.scss")],    external, globals },
+  { key: "survey.analytics.core",       globalName: "SurveyAnalyticsCore",       inputFile: entry("summary.core.ts"),  cssFiles: sharedScss,                                                    external, globals },
+  { key: "survey.analytics.mongo",      globalName: "SurveyAnalyticsMongo",      inputFile: entry("mongo.ts"),         cssFiles: [],                                                            external, globals },
+  { key: "survey.analytics.tabulator",  globalName: "SurveyAnalyticsTabulator",  inputFile: entry("tabulator-umd.ts"),  cssFiles: [fontsScss, src("tables", "table.scss"), src("tables", "tabulator.scss")],                  fontlessCssFiles: [src("tables", "table.scss"), src("tables", "tabulator.scss")],                 external, globals },
+  { key: "survey.analytics.apexcharts", globalName: "SurveyAnalyticsApexcharts", inputFile: entry("apexcharts.ts"),    cssFiles: [fontsScss, ...sharedScss, src("apexcharts", "styles.scss")],  fontlessCssFiles: [...sharedScss, src("apexcharts", "styles.scss")], external, globals },
+  { key: "survey.analytics.chartjs",    globalName: "SurveyAnalyticsChartjs",    inputFile: entry("chartjs.ts"),       cssFiles: [fontsScss, ...sharedScss, src("chartjs", "styles.scss")],    fontlessCssFiles: [...sharedScss, src("chartjs", "styles.scss")],    external, globals },
+  { key: "survey.analytics.plotly",     globalName: "SurveyAnalyticsPlotly",     inputFile: entry("plotly.ts"),        cssFiles: [fontsScss, ...sharedScss],                                    fontlessCssFiles: sharedScss,                                        external, globals },
+];
+
+module.exports = async (commandLineArgs) => {
+  const args = commandLineArgs ?? {};
+  const mode = (args.mode || process.env.mode || process.env.MODE || "").toLowerCase();
+  const { createEsmConfig, createUmdConfig } = await import("./rollup.helpers.mjs");
+
+  const sharedPlugins = [
+    createIconsPlugin(__dirname),
+    createRemoveScssImportsPlugin()
+  ];
+
+  if(mode === "dev" || mode === "prod") {
+    const isProduction = mode === "prod";
+    const buildDir = path.resolve(__dirname, "./build");
+    return entries.map(({ key, inputFile, cssFiles, fontlessCssFiles, globalName, external, globals }, index) => {
+      const umdEntryName = isProduction ? `${key}.min` : key;
+      return createUmdConfig({
+        input: { [umdEntryName]: inputFile },
+        globalName,
+        external,
+        globals,
+        dir: buildDir,
+        tsconfig: path.resolve(__dirname, "./tsconfig.json"),
+        emitMinified: false,
+        version: packageJson.version,
+        plugins: [
+          ...sharedPlugins,
+          ...(cssFiles.length > 0 ? [createCssPlugin({ rootDir: __dirname, buildDir, entry: { key, cssFiles, fontlessCssFiles }, isProduction })] : []),
+          ...(isProduction && index === 0 ? [createNonSourceFilesPlugin({ rootDir: __dirname, buildDir, packageJsonPath: path.resolve(__dirname, "./package.json") })] : [])
+        ]
+      });
+    });
   }
-  if(!options.dir) {
-    options.dir = path.resolve(__dirname, "./build/fesm");
-  }
-  return {
-    input,
-    context: "this",
-    plugins: [
-      {
-        name: "icons",
-        resolveId: (id) => {
-          if (id === "icons") {
-            return id;
-          }
-        },
-        load: async (id) => {
-          if (id === "icons") {
-            const icons = {};
-            for (const iconPath of await fg.glob(fg.convertPathToPattern(path.resolve(__dirname, "./src/images")) + "/*.svg")) {
-              icons[path.basename(iconPath).replace(/\.svg$/, "").toLocaleLowerCase()] = svgLoader.getExtractedSVG(readFile(iconPath).toString());
-            }
-            return `export default ${JSON.stringify(icons, undefined, "\t")}`;
-          }
-        }
-      },
-      {
-        name: "remove-scss-imports",
-        load: (id) => {
-          if(id.match(/\.scss$/)) return "";
-        }
-      },
-      nodeResolve(),
-      commonjs(),
-      typescript({ inlineSources: true, sourceMap: true, tsconfig: options.tsconfig, compilerOptions: {
-        declaration: false,
-        declarationDir: null
-      } }),
-      replace({
-        preventAssignment: false,
-        values: {
-          "process.env.RELEASE_DATE": JSON.stringify(new Date().toISOString().slice(0, 10)),
-          "process.env.VERSION": JSON.stringify(VERSION),
-        }
-      }),
-      bannerPlugin({
-        banner: {
-          content: banner,
-          commentStyle: "ignored",
-        }
-      })
-    ],
-    external: [
-      "survey-core",
-      "plotly.js-dist-min",
-      "tabulator-tables",
-      "apexcharts",
-      "chart.js",
-      "mongodb"
-    ],
-    output: [
-      {
-        preserveModules: false,
-        dir: options.dir,
-        entryFileNames: "[name].mjs",
-        chunkFileNames: (chunkInfo) => {
-          if(!chunkInfo.isEntry) {
-            return "shared.mjs"
-          }
-        },
-        format: "esm",
-        exports: "named",
-        sourcemap: true,
-      },
-    ],
-  };
+
+  const esmInput = Object.fromEntries(entries.map(({ key, inputFile }) => [key, inputFile]));
+  return createEsmConfig({
+    input: esmInput,
+    external: entries[0].external,
+    dir: args.dir || path.resolve(__dirname, "./build/fesm"),
+    tsconfig: args.tsconfig || path.resolve(__dirname, "./tsconfig.fesm.json"),
+    sharedFileName: "shared.mjs",
+    version: packageJson.version,
+    plugins: sharedPlugins
+  });
 };
