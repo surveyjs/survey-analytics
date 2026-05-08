@@ -93,7 +93,7 @@ function emitCssFile(options) {
   const scssContent = entry.cssFiles
     .map((cssFile) => {
       const relFromRoot = path.relative(rootDir, cssFile).replace(/\\/g, "/");
-      return "@import \"" + relFromRoot + "\";";
+      return "@use \"" + relFromRoot + "\";";
     })
     .join("\n");
 
