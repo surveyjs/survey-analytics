@@ -999,9 +999,9 @@ test("invoke updateContent for child visualizers on updateData", () => {
   });
   const selectBaseVisualizer = vis.getVisualizer("question1") as Text;
   selectBaseVisualizer.updateContent = () => {}; //
-  const updateContentSpy = jest.spyOn(selectBaseVisualizer, "updateContent");
-  const destroyContentSpy = jest.spyOn(selectBaseVisualizer, "destroyContent");
-  const renderContentSpy = jest.spyOn(selectBaseVisualizer, "renderContent");
+  const updateContentSpy = vi.spyOn(selectBaseVisualizer, "updateContent");
+  const destroyContentSpy = vi.spyOn(selectBaseVisualizer, "destroyContent");
+  const renderContentSpy = vi.spyOn(selectBaseVisualizer, "renderContent");
 
   expect(updateContentSpy).toHaveBeenCalledTimes(0);
   expect(destroyContentSpy).toHaveBeenCalledTimes(0);
@@ -1171,8 +1171,8 @@ test("hideEmptyAnswers=true causes hard update on data change", () => {
   });
   const selectBaseVisualizer = vis.getVisualizer("question1") as SelectBase;
   selectBaseVisualizer["_hideEmptyAnswers"] = true;
-  const destroyContentSpy = jest.spyOn(selectBaseVisualizer, "destroyContent");
-  const renderContentSpy = jest.spyOn(selectBaseVisualizer, "renderContent");
+  const destroyContentSpy = vi.spyOn(selectBaseVisualizer, "destroyContent");
+  const renderContentSpy = vi.spyOn(selectBaseVisualizer, "renderContent");
 
   vis.render(document.createElement("div"));
   expect(destroyContentSpy).toHaveBeenCalledTimes(0);

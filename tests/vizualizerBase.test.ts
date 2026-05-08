@@ -58,18 +58,20 @@ test("footer visualizer data, updateData", () => {
   expect(visualizer.footerVisualizer["surveyData"]).toEqual(newData);
 });
 
-test("check onAfterRender", (done) => {
+test("check onAfterRender", async () => {
   var question = new QuestionDropdownModel("q1");
   question.hasOther = true;
 
   let count = 0;
   let visualizer = new VisualizerBase(question, []);
-  visualizer.onAfterRender.add(() => {
-    count++;
-    expect(count).toEqual(1);
-    done();
+  await new Promise<void>((resolve) => {
+    visualizer.onAfterRender.add(() => {
+      count++;
+      expect(count).toEqual(1);
+      resolve();
+    });
+    (<any>visualizer).renderContent(document.createElement("div"));
   });
-  (<any>visualizer).renderContent(document.createElement("div"));
 });
 
 test("Use valueName for data https://surveyjs.answerdesk.io/internal/ticket/details/T9071", () => {

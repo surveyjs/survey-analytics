@@ -413,7 +413,7 @@ test("onAxisYSelectorChanged removes subsequent selectors when value is empty", 
 
   // Mock the unregisterToolbarItem method
   const originalUnregister = pivot["unregisterToolbarItem"];
-  const mockUnregister = jest.fn();
+  const mockUnregister = vi.fn();
   pivot["unregisterToolbarItem"] = mockUnregister;
 
   // Mock the axisYSelectors array to have the expected length
@@ -434,7 +434,7 @@ test("onAxisYSelectorChanged adds new selector when value is set", () => {
 
   // Mock the registerToolbarItem method
   const originalRegister = pivot["registerToolbarItem"];
-  const mockRegister = jest.fn();
+  const mockRegister = vi.fn();
   pivot["registerToolbarItem"] = mockRegister;
 
   // Mock the axisYSelectors array to have the expected length
@@ -453,7 +453,7 @@ test("updateQuestionsSelection prevents duplicate question selection", () => {
 
   // Mock the onAxisYSelectorChanged method
   const originalOnAxisYSelectorChanged = pivot.onAxisYSelectorChanged;
-  const mockOnAxisYSelectorChanged = jest.fn();
+  const mockOnAxisYSelectorChanged = vi.fn();
   pivot.onAxisYSelectorChanged = mockOnAxisYSelectorChanged;
 
   pivot.setAxisQuestions("question1", "question1");

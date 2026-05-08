@@ -1,4 +1,6 @@
-window.URL.createObjectURL = jest.fn();
+import { vi } from "vitest";
+
+window.URL.createObjectURL = vi.fn();
 import { RankingModel } from "../src/ranking";
 
 test("applyResultToPlotlyData method", () => {
