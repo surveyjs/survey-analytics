@@ -1,6 +1,8 @@
-jest.mock("plotly.js", () => { }, { virtual: true });
-jest.mock("plotly.js-dist-min", () => ({ default: { Icons: {}, react: () => { } } }), { virtual: true });
-(<any>global).URL.createObjectURL = jest.fn();
+import { vi } from "vitest";
+
+vi.mock("plotly.js", () => { }, { virtual: true });
+vi.mock("plotly.js-dist-min", () => ({ default: { Icons: {}, react: () => { } } }), { virtual: true });
+(<any>global).URL.createObjectURL = vi.fn();
 
 import { chartTypes, PlotlyChartAdapter } from "../src/plotly/chart-adapter";
 import { QuestionBooleanModel, QuestionDropdownModel, QuestionRatingModel } from "survey-core";

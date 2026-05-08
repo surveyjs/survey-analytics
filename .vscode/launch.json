@@ -7,9 +7,12 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Jest Test",
-      "program": "${workspaceFolder}\\node_modules\\jest\\bin\\jest",
-      "args": ["--runInBand", "--config=${workspaceFolder}\\jest.config.js"],
+      "name": "Vitest Test",
+      "program": "${workspaceFolder}\\node_modules\\vitest\\vitest.mjs",
+      "args": [
+        "run",
+        "--no-file-parallelism"
+      ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     }

@@ -1,11 +1,13 @@
 import { Question, SurveyModel } from "survey-core";
+import { vi } from "vitest";
 // eslint-disable-next-line surveyjs/no-imports-from-entries
 import { Tabulator } from "../../src/entries/tabulator-umd";
 import { TableExtensions } from "../../src/tables/extensions/tableextensions";
 import { Table } from "../../src/tables/table";
 
-jest.mock("tabulator-tables", () => {
-  return { default: jest.requireActual("tabulator-tables") };
+vi.mock("tabulator-tables", async () => {
+  const tabulatorModule = await vi.importActual<any>("tabulator-tables");
+  return { default: tabulatorModule.TabulatorFull || tabulatorModule.Tabulator };
 });
 
 const trueTimeout = window.setTimeout;

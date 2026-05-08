@@ -2,12 +2,20 @@
   "compilerOptions": {
     "target": "es5",
     "module": "es2015",
-    "lib": ["DOM", "ES5", "ES2015.Promise", "es6"],
+    "lib": [
+      "DOM",
+      "ES5",
+      "ES2015.Promise",
+      "es6"
+    ],
     "sourceMap": true,
     "importHelpers": false,
     "experimentalDecorators": true,
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "vitest/globals"
+    ]
   },
   "exclude": [
     "src/entries/**/*.ts"
