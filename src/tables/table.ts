@@ -90,13 +90,13 @@ export interface ITableOptions {
   multiSelectColumnValueFormat?: "checkmark" | "selectionOrder";
 
   /**
-   * Specifies how many generated Matrix Dropdown columns are kept in the main table.
-   *
-   * Columns with indexes less than this value remain in the main table (`QuestionLocation.Column`);
-   * columns with greater indexes are moved to the detail row (`QuestionLocation.Row`).
-   * Set this property to -1 to keep all generated Matrix Dropdown columns in the main table.
+   * Specifies the maximum number of table columns generated for a [Multi-Select Matrix](https://surveyjs.io/form-library/examples/multi-select-matrix-question/) that remain in the main table. Additional columns are moved to the detail row.
    *
    * Default value: 5
+   *
+   * A Multi-Select Matrix creates a separate table column for each matrix cell (row &times; column pair). For example, a 5 &times; 3 matrix produces 15 table columns. Use the `matrixDropdownDetailRowThreshold` property to control how many of these generated columns are displayed in the main table. Remaining columns are displayed in the detail row.
+   *
+   * Set this property to `-1` to display all generated table columns in the main table.
    */
   matrixDropdownDetailRowThreshold?: number;
 }
