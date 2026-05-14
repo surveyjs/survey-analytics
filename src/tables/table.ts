@@ -88,6 +88,17 @@ export interface ITableOptions {
    * Default value: `"checkmark"`
    */
   multiSelectColumnValueFormat?: "checkmark" | "selectionOrder";
+
+  /**
+   * Specifies how many generated Matrix Dropdown columns are kept in the main table.
+   *
+   * Columns with indexes less than this value remain in the main table (`QuestionLocation.Column`);
+   * columns with greater indexes are moved to the detail row (`QuestionLocation.Row`).
+   * Set this property to -1 to keep all generated Matrix Dropdown columns in the main table.
+   *
+   * Default value: 5
+   */
+  matrixDropdownDetailRowThreshold?: number;
 }
 
 export type TabulatorFilter = { field: string, type: string, value: any };
@@ -117,6 +128,9 @@ export abstract class Table {
     }
     if(typeof this._options.useNestedTables === "undefined") {
       this._options.useNestedTables = true;
+    }
+    if(typeof this._options.matrixDropdownDetailRowThreshold === "undefined") {
+      this._options.matrixDropdownDetailRowThreshold = 5;
     }
 
     this.initialize();
