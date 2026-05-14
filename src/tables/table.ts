@@ -88,6 +88,17 @@ export interface ITableOptions {
    * Default value: `"checkmark"`
    */
   multiSelectColumnValueFormat?: "checkmark" | "selectionOrder";
+
+  /**
+   * Specifies the maximum number of table columns generated for a [Multi-Select Matrix](https://surveyjs.io/form-library/examples/multi-select-matrix-question/) that remain in the main table. Additional columns are moved to the detail row.
+   *
+   * Default value: 5
+   *
+   * A Multi-Select Matrix creates a separate table column for each matrix cell (row &times; column pair). For example, a 5 &times; 3 matrix produces 15 table columns. Use the `matrixDropdownDetailRowThreshold` property to control how many of these generated columns are displayed in the main table. Remaining columns are displayed in the detail row.
+   *
+   * Set this property to `-1` to display all generated table columns in the main table.
+   */
+  matrixDropdownDetailRowThreshold?: number;
 }
 
 export type TabulatorFilter = { field: string, type: string, value: any };
@@ -117,6 +128,9 @@ export abstract class Table {
     }
     if(typeof this._options.useNestedTables === "undefined") {
       this._options.useNestedTables = true;
+    }
+    if(typeof this._options.matrixDropdownDetailRowThreshold === "undefined") {
+      this._options.matrixDropdownDetailRowThreshold = 5;
     }
 
     this.initialize();
