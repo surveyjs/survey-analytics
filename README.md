@@ -31,8 +31,9 @@ The SurveyJS Dashboard library lets you build survey data dashboards and simplif
 - Customizable colors
 - Dynamic layout
 - Drag-and-drop chart reordering
+<br>
+<img width="750" height="474" alt="3-chart-selector- USE AS MAIN" src="https://github.com/user-attachments/assets/2b302f6f-5a23-4e88-97cb-00e3ae2faa6c" />
 
-![SurveyJS Dashboard](docs/images/survey-analytics-overview.png)
 
 ## Get Started
 
