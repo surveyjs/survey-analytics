@@ -32,14 +32,14 @@ var dashboard = new SurveyAnalyticsApexcharts.Dashboard({
 const checkbox = document.getElementById('toggle-checkbox');
 checkbox.addEventListener('change', () => {
   if (checkbox.checked) {
-    dashboard.applyTheme(SurveyAnalyticsTheme.DefaultDark);
+    dashboard.applyTheme(SurveyTheme.DefaultDark);
   } else {
-    dashboard.applyTheme(SurveyAnalyticsTheme.DefaultLight);
+    dashboard.applyTheme(SurveyTheme.DefaultLight);
   }
 });
 
-// dashboard.applyTheme(SurveyAnalyticsTheme.DefaultDark);
-// dashboard.applyTheme(SurveyAnalyticsTheme.DefaultLight);
+// dashboard.applyTheme(SurveyTheme.DefaultDark);
+// dashboard.applyTheme(SurveyTheme.DefaultLight);
 dashboard.showToolbar = true;
 dashboard.render(document.getElementById("summaryContainer"));
 

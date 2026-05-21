@@ -38,10 +38,10 @@ var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   options
 );
 
-// visPanel.applyTheme(SurveyAnalyticsTheme.DefaultDark);
-// visPanel.applyTheme(SurveyAnalyticsTheme.DefaultLight);
+// visPanel.applyTheme(SurveyTheme.DefaultDark);
+// visPanel.applyTheme(SurveyTheme.DefaultLight);
 const newTheme = {};
-Object.assign(newTheme, SurveyAnalyticsTheme.DefaultLight, {
+Object.assign(newTheme, SurveyTheme.DefaultLight, {
   cssVariables: {
     "--sjs2-color-utility-surface-muted": "#1f2420",
     "--sjs2-color-bg-basic-primary": "gray",
@@ -57,8 +57,8 @@ visPanel.render(document.getElementById("summaryContainer"));
 const checkbox = document.getElementById('toggle-checkbox');
 checkbox.addEventListener('change', () => {
   if (checkbox.checked) {
-    visPanel.applyTheme(SurveyAnalyticsTheme.DefaultDark);
+    visPanel.applyTheme(SurveyTheme.DefaultDark);
   } else {
-    visPanel.applyTheme(SurveyAnalyticsTheme.DefaultLight);
+    visPanel.applyTheme(SurveyTheme.DefaultLight);
   }
 });

@@ -80,3 +80,17 @@ export function getFormattedValueTicks(maxValue: number): { tickvals: number[], 
   const ticktext = tickvals.map(t => formatLargeNumber(t));
   return { tickvals, ticktext };
 }
+
+export function mergeObjects(dest:any, ...sources:Array<any>):any {
+  sources.forEach(source => {
+    if(!source) return;
+    Object.keys(source).forEach(key=>{
+      if(typeof source[key] == "object" && source[key] !== null && !Array.isArray(source[key])) {
+        dest[key] = mergeObjects(dest[key] ?? {}, source[key]);
+      } else {
+        dest[key] = source[key];
+      }
+    });
+  });
+  return dest;
+}

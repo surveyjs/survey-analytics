@@ -1,10 +1,7 @@
-import { getRGBaColor } from "survey-core";
+import { getRGBaColor, ITheme } from "survey-core";
+import { DefaultLight } from "survey-core/themes";
 import { DocumentHelper } from "./utils/documentHelper";
-import DefaultLight from "./themes/default-light";
-
-export interface IDashboardTheme {
-  cssVariables?: { [index: string]: string | any };
-}
+import { mergeObjects } from "./utils/utils";
 
 export interface FontSettings {
   family: string;
@@ -13,7 +10,7 @@ export interface FontSettings {
   weight: number;
 }
 
-export class DashboardTheme implements IDashboardTheme {
+export class DashboardTheme implements ITheme {
   static barGap = 0.05;
   static fontFamily = "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif";
   private _cssStyleDeclaration;
@@ -40,6 +37,7 @@ export class DashboardTheme implements IDashboardTheme {
 
   private initComputedValuesCache(rootElement: HTMLElement) {
     const tempElement = document.createElement("div");
+    tempElement.classList.add("sd-theme-root");
     tempElement.style.position = "absolute";
     tempElement.style.visibility = "hidden";
     tempElement.style.top = "0";
@@ -65,7 +63,7 @@ export class DashboardTheme implements IDashboardTheme {
     rootElement.removeChild(tempElement);
   }
 
-  constructor(private theme: IDashboardTheme = DefaultLight) {
+  constructor(private theme?: ITheme) {
     this.setTheme(theme);
   }
 
@@ -78,6 +76,7 @@ export class DashboardTheme implements IDashboardTheme {
       return;
     }
 
+    element.classList.add("sd-theme-root");
     DocumentHelper.setStyles(element, this.cssVariables);
     if(!!getComputedStyle) {
       this._cssStyleDeclaration = getComputedStyle(element);
@@ -85,8 +84,8 @@ export class DashboardTheme implements IDashboardTheme {
     this.initComputedValuesCache(element);
   }
 
-  public setTheme(theme: IDashboardTheme): void {
-    this.theme = theme;
+  public setTheme(theme?: ITheme): void {
+    this.theme = mergeObjects({}, DefaultLight, theme);
     this._computedValuesCache = {};
     // const calculater = DocumentHelper.createElement("div");
     // document.body.appendChild(calculater);
