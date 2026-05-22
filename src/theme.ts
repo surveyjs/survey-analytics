@@ -15,6 +15,7 @@ export class DashboardTheme implements ITheme {
   static fontFamily = "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif";
   private _cssStyleDeclaration;
   private _computedValuesCache: { [key: string]: string } = {};
+  private _appliedCssVariableKeys: string[] = [];
 
   private getCssVariableValue(propertyName: string, checkIsNumber = false) {
     let value = undefined;
@@ -37,7 +38,6 @@ export class DashboardTheme implements ITheme {
 
   private initComputedValuesCache(rootElement: HTMLElement) {
     const tempElement = document.createElement("div");
-    tempElement.classList.add("sd-theme-root");
     tempElement.style.position = "absolute";
     tempElement.style.visibility = "hidden";
     tempElement.style.top = "0";
@@ -69,19 +69,27 @@ export class DashboardTheme implements ITheme {
 
   public applyThemeToElement(element: HTMLElement): void {
     if(!element) return;
+    this.removeThemeStylesFromElement(element);
 
     if(!this.theme) {
-      element.removeAttribute("style");
       this._cssStyleDeclaration = undefined;
       return;
     }
 
     element.classList.add("sd-theme-root");
     DocumentHelper.setStyles(element, this.cssVariables);
+    this._appliedCssVariableKeys = Object.keys(this.cssVariables);
     if(!!getComputedStyle) {
       this._cssStyleDeclaration = getComputedStyle(element);
     }
     this.initComputedValuesCache(element);
+  }
+
+  private removeThemeStylesFromElement(element: HTMLElement): void {
+    if(this._appliedCssVariableKeys.length) {
+      DocumentHelper.removeStyles(element, this._appliedCssVariableKeys);
+      this._appliedCssVariableKeys = [];
+    }
   }
 
   public setTheme(theme?: ITheme): void {
