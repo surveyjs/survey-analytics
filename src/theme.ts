@@ -1,4 +1,4 @@
-import { ensureBaseThemeStyles, getComputedCssVariableValues, ITheme } from "survey-core";
+import { ensureBaseThemeStyles, ITheme } from "survey-core";
 import { DefaultLight } from "survey-core/themes";
 import { DocumentHelper } from "./utils/documentHelper";
 import { mergeObjects } from "./utils/utils";
