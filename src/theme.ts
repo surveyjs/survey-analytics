@@ -1,4 +1,4 @@
-import { getRGBaColor, ITheme } from "survey-core";
+import { ensureBaseThemeStyles, getComputedCssVariableValues, ITheme } from "survey-core";
 import { DefaultLight } from "survey-core/themes";
 import { DocumentHelper } from "./utils/documentHelper";
 import { mergeObjects } from "./utils/utils";
@@ -110,6 +110,7 @@ export class DashboardTheme implements ITheme {
     }
 
     element.classList.add("sd-theme-root");
+    ensureBaseThemeStyles(element);
     DocumentHelper.setStyles(element, this.cssVariables);
     this._appliedCssVariableKeys = Object.keys(this.cssVariables);
     if(!!getComputedStyle) {
