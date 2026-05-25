@@ -10,6 +10,39 @@ export interface FontSettings {
   weight: number;
 }
 
+const cssVariableMap = {
+  defaultFontFamily: "--sjs2-typography-font-family-text",
+  backgroundColor: "--sjs2-color-bg-basic-primary",
+  axisGridColor: "--sjs2-color-data-grid-border-line",
+  axisBorderColor: "--sjs2-color-data-grid-border-axis",
+  modebarActiveColor: "--sjs2-color-fg-brand-primary",
+  modebarColor: "--sjs2-color-bg-brand-secondary-dim",
+  axisLabelColor: "--sjs2-color-data-grid-fg-label",
+  smallFontSize: "--sjs2-typography-font-size-small",
+  insideLabelColor: "--sjs2-color-data-chart-fg-on-color-1",
+  primaryFontColor: "--sjs2-color-fg-basic-primary",
+  legendBorderWidth: "--sjs2-border-width-default",
+  legendBorderColor: "--sjs2-color-border-basic-secondary",
+  legendBorderRadius: "--sjs2-radius-x250",
+  tooltipBackground: "--sjs2-color-bg-neutral-primary",
+  tooltipFontColor: "--sjs2-color-fg-neutral-on-primary",
+  secondaryFontColor: "--sjs2-color-fg-basic-secondary",
+  defaultFontSize: "--sjs2-typography-font-size-default",
+  gaugeBackground: "--sjs2-color-bg-basic-secondary",
+  largeFontSize: "--sjs2-typography-font-size-large"
+} as const;
+
+const chartColorCssVariableKeys = Array.from(
+  { length: 10 },
+  (_, index) => `--sjs2-color-data-chart-bg-color-${index + 1}`
+);
+
+const cssVariableKeys = Object.keys(cssVariableMap) as Array<keyof typeof cssVariableMap>;
+const usedCssVariableKeys: string[] = [
+  ...cssVariableKeys.map(key => cssVariableMap[key]),
+  ...chartColorCssVariableKeys
+];
+
 export class DashboardTheme implements ITheme {
   static barGap = 0.05;
   static fontFamily = "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif";
@@ -44,7 +77,7 @@ export class DashboardTheme implements ITheme {
     tempElement.style.left = "0";
     rootElement.appendChild(tempElement);
 
-    Object.keys(this.cssVariables).forEach(key => {
+    usedCssVariableKeys.forEach(key => {
       let value;
       if(key.indexOf("palette") !== -1 || key.indexOf("color") !== -1) {
         tempElement.style.setProperty("color", `var(${key})`);
@@ -106,27 +139,27 @@ export class DashboardTheme implements ITheme {
   }
 
   public get defaultFontFamily() {
-    return this.getCssVariableValue("--sjs2-typography-font-family-text") || DashboardTheme.fontFamily;
+    return this.getCssVariableValue(cssVariableMap.defaultFontFamily) || DashboardTheme.fontFamily;
   }
 
   public get backgroundColor(): string {
-    return this.getCssVariableValue("--sjs2-color-bg-basic-primary");
+    return this.getCssVariableValue(cssVariableMap.backgroundColor);
   }
 
   public get axisGridColor(): string {
-    return this.getCssVariableValue("--sjs2-color-data-grid-border-line");
+    return this.getCssVariableValue(cssVariableMap.axisGridColor);
   }
 
   public get axisBorderColor(): string {
-    return this.getCssVariableValue("--sjs2-color-data-grid-border-axis");
+    return this.getCssVariableValue(cssVariableMap.axisBorderColor);
   }
 
   public get modebarActiveColor(): string {
-    return this.getCssVariableValue("--sjs2-color-fg-brand-primary");
+    return this.getCssVariableValue(cssVariableMap.modebarActiveColor);
   }
 
   public get modebarColor(): string {
-    return this.getCssVariableValue("--sjs2-color-bg-brand-secondary-dim");
+    return this.getCssVariableValue(cssVariableMap.modebarColor);
   }
 
   public isFontLoaded(fontFaceName: string) {
@@ -139,111 +172,111 @@ export class DashboardTheme implements ITheme {
 
   public get axisLabelFont(): FontSettings {
     return <FontSettings>{
-      color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
+      color: this.getCssVariableValue(cssVariableMap.axisLabelColor),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-typography-font-size-small", true),
+      size: this.getCssVariableValue(cssVariableMap.smallFontSize, true),
       weight: 400
     };
   }
 
   public get axisTitleFont(): FontSettings {
     return <FontSettings>{
-      color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
+      color: this.getCssVariableValue(cssVariableMap.axisLabelColor),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-typography-font-size-small", true),
+      size: this.getCssVariableValue(cssVariableMap.smallFontSize, true),
       weight: 400
     };
   }
 
   public get insideLabelFont(): FontSettings {
     return <FontSettings>{
-      color: this.getCssVariableValue("--sjs2-color-data-chart-fg-on-color-1"),
+      color: this.getCssVariableValue(cssVariableMap.insideLabelColor),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-typography-font-size-small", true),
+      size: this.getCssVariableValue(cssVariableMap.smallFontSize, true),
       weight: 600
     };
   }
 
   public get legendLabelFont(): FontSettings {
     return <FontSettings>{
-      color: this.getCssVariableValue("--sjs2-color-fg-basic-primary"),
+      color: this.getCssVariableValue(cssVariableMap.primaryFontColor),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-typography-font-size-small", true),
+      size: this.getCssVariableValue(cssVariableMap.smallFontSize, true),
       weight: 400
     };
   }
 
   public get legendSetting() {
     return {
-      borderWidth: this.getCssVariableValue("--sjs2-border-width-default"),
-      borderColor: this.getCssVariableValue("--sjs2-color-border-basic-secondary"),
-      borderRadius: this.getCssVariableValue("--sjs2-radius-x250"),
+      borderWidth: this.getCssVariableValue(cssVariableMap.legendBorderWidth),
+      borderColor: this.getCssVariableValue(cssVariableMap.legendBorderColor),
+      borderRadius: this.getCssVariableValue(cssVariableMap.legendBorderRadius),
     };
   }
 
   public get tooltipBackground() {
-    return this.getCssVariableValue("--sjs2-color-bg-neutral-primary");
+    return this.getCssVariableValue(cssVariableMap.tooltipBackground);
   }
 
   public get tooltipFont(): FontSettings {
     return <FontSettings>{
-      color: this.getCssVariableValue("--sjs2-color-fg-neutral-on-primary"),
+      color: this.getCssVariableValue(cssVariableMap.tooltipFontColor),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-typography-font-size-small", true),
+      size: this.getCssVariableValue(cssVariableMap.smallFontSize, true),
       weight: 400
     };
   }
 
   public get noDataFont(): FontSettings {
     return <FontSettings>{
-      color: this.getCssVariableValue("--sjs2-color-fg-basic-secondary"),
+      color: this.getCssVariableValue(cssVariableMap.secondaryFontColor),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-typography-font-size-default", true),
+      size: this.getCssVariableValue(cssVariableMap.defaultFontSize, true),
       weight: 400
     };
   }
 
   public get gaugeBackground() {
-    return this.getCssVariableValue("--sjs2-color-bg-basic-secondary");
+    return this.getCssVariableValue(cssVariableMap.gaugeBackground);
   }
   public get gaugeBarColor() {
-    return this.getCssVariableValue("--sjs2-color-fg-brand-primary");
+    return this.getCssVariableValue(cssVariableMap.modebarActiveColor);
   }
 
   public get gaugeValueFont(): FontSettings {
     return <FontSettings>{
-      color: this.getCssVariableValue("--sjs2-color-fg-basic-primary"),
+      color: this.getCssVariableValue(cssVariableMap.primaryFontColor),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-typography-font-size-large", true),
+      size: this.getCssVariableValue(cssVariableMap.largeFontSize, true),
       weight: 600
     };
   }
 
   public get gaugeTickFont(): FontSettings {
     return <FontSettings>{
-      color: this.getCssVariableValue("--sjs2-color-data-grid-fg-label"),
+      color: this.getCssVariableValue(cssVariableMap.axisLabelColor),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-typography-font-size-small", true),
+      size: this.getCssVariableValue(cssVariableMap.smallFontSize, true),
       weight: 400
     };
   }
 
   public get chartColors(): string[] {
     const colors: string[] = [];
-    for(let i = 1; i <= 10; i++) {
-      const color = this.getCssVariableValue(`--sjs2-color-data-chart-bg-color-${i}`);
+    chartColorCssVariableKeys.forEach(key => {
+      const color = this.getCssVariableValue(key);
       if(color) {
         colors.push(color);
       }
-    }
+    });
     return colors;
   }
 
   public get radarLabelFont(): FontSettings {
     return <FontSettings>{
-      color: this.getCssVariableValue("--sjs2-color-fg-basic-primary"),
+      color: this.getCssVariableValue(cssVariableMap.primaryFontColor),
       family: this.defaultFontFamily,
-      size: this.getCssVariableValue("--sjs2-typography-font-size-small", true),
+      size: this.getCssVariableValue(cssVariableMap.smallFontSize, true),
       weight: 400
     };
   }
