@@ -46,7 +46,7 @@
   background: var(--sjs2-color-bg-basic-primary, #fff);
 
   /* sjs2/border-effect/surface/default */
-  box-shadow: var(--sjs2-border-offset-x-surface-default, 0) var(--sjs2-border-offset-y-surface-default, 0) var(--sjs2-border-blur-surface-default, 0) var(--sjs2-border-spread-surface-default, 1px) var(--sjs2-color-utility-shadow-surface-default, rgba(17, 16, 20, 0.10));
+  box-shadow: var(--sjs2-border-effect-surface-default);
 }
 
 .sa-tabulator__header {

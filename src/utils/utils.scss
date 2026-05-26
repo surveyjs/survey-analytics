@@ -80,9 +80,7 @@
   &:focus {
     border-radius: var(--sjs2-radius-form, 8px);
     background: var(--sjs2-color-component-formbox-focused-bg, #f5f5f5);
-    box-shadow: var(--sjs2-border-offset-x-form-focused, 0) var(--sjs2-border-offset-y-form-focused, 0)
-      var(--sjs2-border-blur-form-focused, 0) var(--sjs2-border-spread-form-focused, 2px)
-      var(--sjs2-color-component-formbox-focused-border, #19b394) inset;
+    box-shadow: var(--sjs2-border-effect-component-formbox-focused);
     outline: none;
   }
 }
@@ -214,9 +212,7 @@
   background: var(--sjs2-color-utility-sheet, #fff);
 
   /* sjs2/border-effect/floating/default */
-  box-shadow: var(--sjs2-border-offset-x-floating-default, 0) var(--sjs2-border-offset-y-floating-default, 6px)
-    var(--sjs2-border-blur-floating-default, 12px) var(--sjs2-border-spread-floating-default, 4px)
-    var(--sjs2-color-utility-shadow-floating-default, rgba(0, 76, 68, 0.2));
+  box-shadow: var(--sjs2-border-effect-floating-default);
 }
 
 .sa-action-dropdown-list.sa-action-dropdown--up.sa-action-dropdown--opened {
@@ -251,17 +247,13 @@
     .sa-action-dropdown-icon {
       border-radius: var(--sjs2-radius-component-checkbox, 4px);
       background: var(--sjs2-color-component-check-false-hovered-bg, rgba(28, 27, 32, 0.1));
-      box-shadow: var(--sjs2-border-offset-x-form-hovered, 0) var(--sjs2-border-offset-y-form-hovered, 0)
-        var(--sjs2-border-blur-form-hovered, 0) var(--sjs2-border-spread-form-hovered, 1px)
-        var(--sjs2-color-component-check-false-hovered-border, #d4d4d4) inset;
+      box-shadow: var(--sjs2-border-effect-component-check-false-hovered);
     }
 
     &.sa-action-dropdown-item--selected .sa-action-dropdown-icon {
       border-radius: var(--sjs2-radius-component-checkbox, 4px);
       background: var(--sjs2-color-component-check-true-hovered-bg, #15987e);
-      box-shadow: var(--sjs2-border-offset-x-form-hovered, 0) var(--sjs2-border-offset-y-form-hovered, 0)
-        var(--sjs2-border-blur-form-hovered, 0) var(--sjs2-border-spread-form-hovered, 1px)
-        var(--sjs2-color-component-check-true-hovered-border, #15987e) inset;
+      box-shadow: var(--sjs2-border-effect-component-check-true-hovered);
     }
   }
 }
@@ -277,9 +269,7 @@
 .sa-action-dropdown-item--selected .sa-action-dropdown-icon {
   border-radius: var(--sjs2-radius-component-checkbox, 4px);
   background: var(--sjs2-color-component-check-true-default-bg, #19b394);
-  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
-    var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
-    var(--sjs2-color-component-check-true-default-border, #19b394) inset;
+  box-shadow: var(--sjs2-border-effect-component-check-true-default);
 
   svg {
     display: block;
@@ -302,9 +292,7 @@
 
   border-radius: var(--sjs2-radius-component-checkbox, 4px);
   background: var(--sjs2-color-component-check-false-default-bg, #f5f5f5);
-  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
-    var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
-    var(--sjs2-color-component-check-false-default-border, #d4d4d4) inset;
+  box-shadow: var(--sjs2-border-effect-component-check-false-default);
 
   svg {
     display: none;

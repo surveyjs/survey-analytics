@@ -41,9 +41,7 @@
 
   &:focus-visible {
     background: var(--sjs2-color-component-formbox-focused-bg, #f5f5f5);
-    box-shadow: var(--sjs2-border-offset-x-form-focused, 0) var(--sjs2-border-offset-y-form-focused, 0)
-      var(--sjs2-border-blur-form-focused, 0) var(--sjs2-border-spread-form-focused, 2px)
-      var(--sjs2-color-component-formbox-focused-border, #19b394) inset;
+    box-shadow: var(--sjs2-border-effect-component-formbox-focused);
   }
 }
 
@@ -70,9 +68,7 @@
   align-items: center;
   border-radius: var(--sjs2-radius-component-checkbox, 4px);
   background: var(--sjs2-color-component-check-false-default-bg, #f5f5f5);
-  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
-    var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
-    var(--sjs2-color-component-check-false-default-border, #d4d4d4) inset;
+  box-shadow: var(--sjs2-border-effect-component-check-false-default);
 
   .sa-date-range_include-today-check {
     display: none;
@@ -84,9 +80,7 @@
 
 .sa-date-range_include-today-checkbox--checked {
   background: var(--sjs2-color-component-check-true-default-bg, #19b394);
-  box-shadow: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
-    var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
-    var(--sjs2-color-component-check-true-default-border, #19b394) inset;
+  box-shadow: var(--sjs2-border-effect-component-check-true-default);
 
   .sa-date-range_include-today-check {
     display: block;
@@ -152,9 +146,7 @@
 
 .sa-date-range_editor--invalid .sa-date-range_editor-formbox {
   background: var(--sjs2-color-component-formbox-invalid-bg, #f5f5f5);
-  box-shadow: var(--sjs2-border-offset-x-form-invalid, 0) var(--sjs2-border-offset-y-form-invalid, 0)
-    var(--sjs2-border-blur-form-invalid, 0) var(--sjs2-border-spread-form-invalid, 2px)
-    var(--sjs2-color-component-formbox-invalid-border, #e50a3e) inset;
+  box-shadow: var(--sjs2-border-effect-component-formbox-invalid);
 }
 
 .sa-date-range_editor-content {
