@@ -1,4 +1,4 @@
-import { Question, QuestionCommentModel, Event, settings, hasLicense, ITheme } from "survey-core";
+import { Question, QuestionCommentModel, Event, settings, hasLicense, ITheme, mergeObjects } from "survey-core";
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { VisualizationManager } from "./visualizationManager";
@@ -965,10 +965,13 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * Applies a theme to the Dashboard.
-   * @param theme An `ITheme` object that defines visual settings.
+   * @param theme An [`ITheme`](https://surveyjs.io/form-library/documentation/api-reference/itheme) object with theme settings.
+   * @param baseTheme An optional [`ITheme`](https://surveyjs.io/form-library/documentation/api-reference/itheme) object used as the base theme. When specified, it is deep-merged with `theme`, and the merged result is applied.
    */
-  public applyTheme(theme: ITheme): void {
-    this.theme.setTheme(theme);
+  public applyTheme(theme: ITheme, baseTheme?: ITheme): void {
+    if(!theme && !baseTheme) return;
+    const themeToApply = baseTheme ? mergeObjects({}, baseTheme, theme) : theme;
+    this.theme.setTheme(themeToApply);
     this._appliedTheme = this.theme;
     if(this.renderResult) {
       this._appliedTheme.applyThemeToElement(this.renderResult);
