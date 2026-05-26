@@ -1,4 +1,4 @@
-import { ensureBaseThemeStyles, ITheme, getRGBaColor } from "survey-core";
+import { ensureBaseThemeStyles, ITheme, getRGBaColor, BaseTheme } from "survey-core";
 import { DefaultLight } from "survey-core/themes";
 import { DocumentHelper } from "./utils/documentHelper";
 import { mergeObjects } from "./utils/utils";
@@ -9,6 +9,7 @@ export interface FontSettings {
   size: string;
   weight: number;
 }
+const chartColorCssVariablePrefix = "--sjs2-color-data-chart-bg-color-";
 
 const cssVariableMap = {
   defaultFontFamily: "--sjs2-typography-font-family-text",
@@ -34,7 +35,7 @@ const cssVariableMap = {
 
 const chartColorCssVariableKeys = Array.from(
   { length: 10 },
-  (_, index) => `--sjs2-color-data-chart-bg-color-${index + 1}`
+  (_, index) => `${chartColorCssVariablePrefix}${index + 1}`
 );
 
 const cssVariableKeys = Object.keys(cssVariableMap) as Array<keyof typeof cssVariableMap>;
@@ -56,8 +57,10 @@ export class DashboardTheme implements ITheme {
       value = this._computedValuesCache[propertyName];
     } else if(!!this._cssStyleDeclaration) {
       value = this._cssStyleDeclaration.getPropertyValue(propertyName);
-    } else {
+    } else if(Object.keys(this.cssVariables).length > 0) {
       value = this.cssVariables[propertyName];
+    } else {
+      value = BaseTheme.cssVariables[propertyName];
     }
 
     if(checkIsNumber) {
