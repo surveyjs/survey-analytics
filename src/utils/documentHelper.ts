@@ -118,6 +118,14 @@ export class DocumentHelper {
     });
   }
 
+  public static removeStyles(element: HTMLElement, properties: string[]): void {
+    if(!element || !properties) return;
+
+    properties.forEach(property => {
+      element.style.removeProperty(property);
+    });
+  }
+
   public static createElement(
     tagName: string,
     className: string = "",

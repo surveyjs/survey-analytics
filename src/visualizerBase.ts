@@ -1,11 +1,11 @@
-import { Question, QuestionCommentModel, Event, settings, hasLicense, Base } from "survey-core";
+import { Question, QuestionCommentModel, Event, settings, hasLicense, ITheme } from "survey-core";
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { VisualizationManager } from "./visualizationManager";
 import { createLoadingIndicator, getDiffsFromDefaults } from "./utils";
 import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
-import { DashboardTheme, IDashboardTheme } from "./theme";
+import { DashboardTheme } from "./theme";
 import { SidebarWidget } from "./utils/sidebarWidget";
 import { DocumentHelper } from "./utils/documentHelper";
 import { SideBarItemCreators } from "./sideBarItemCreators";
@@ -965,9 +965,9 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * Applies a theme to the Dashboard.
-   * @param theme An `IDashboardTheme` object that defines visual settings.
+   * @param theme An `ITheme` object that defines visual settings.
    */
-  public applyTheme(theme: IDashboardTheme): void {
+  public applyTheme(theme: ITheme): void {
     this.theme.setTheme(theme);
     this._appliedTheme = this.theme;
     if(this.renderResult) {

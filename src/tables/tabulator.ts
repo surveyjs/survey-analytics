@@ -1,6 +1,6 @@
 import { GetDataFn, Table, TableRow } from "./table";
 import { ITableOptions } from "./table-interfaces";
-import { SurveyModel, Event, Question, ItemValue } from "survey-core";
+import { SurveyModel, Event, Question, ItemValue, ITheme } from "survey-core";
 import { ColumnDataType, IColumn, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils/documentHelper";
 import { localization } from "../localizationManager";
@@ -8,7 +8,7 @@ import { ARIAL_FONT } from "./custom_jspdf_font";
 import { svgTemplate } from "../svgbundle";
 import type { DownloadType, SortDirection, TabulatorFull, RowComponent } from "tabulator-tables";
 import { TableExtensions } from "./extensions/tableextensions";
-import { DashboardTheme, IDashboardTheme } from "../theme";
+import { DashboardTheme } from "../theme";
 import { createActionDropdown } from "../utils/dropdownActionWidget";
 
 import "./tabulator.scss";
@@ -804,7 +804,7 @@ export class Tabulator extends Table {
     this._appliedTheme = undefined;
   }
 
-  public applyTheme(theme: IDashboardTheme): void {
+  public applyTheme(theme: ITheme): void {
     this.theme.setTheme(theme);
     this._appliedTheme = this.theme;
     if(this.renderResult) {
