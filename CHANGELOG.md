@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [3.0.0-beta.5](https://github.com/surveyjs/survey-analytics/compare/v3.0.0-beta.4...v3.0.0-beta.5) (2026-05-21)
 
+### 2.5.25 (2026-05-18)
+
+### 2.5.24 (2026-05-12)
+
+### 2.5.23 (2026-05-05)
+
+### 2.5.22 (2026-04-28)
+
 ## [3.0.0-beta.4](https://github.com/surveyjs/survey-analytics/compare/v2.5.22...v3.0.0-beta.4) (2026-05-20)
 
 ### [2.5.21](https://github.com/surveyjs/survey-analytics/compare/v3.0.0-beta.3...v2.5.21) (2026-04-22)

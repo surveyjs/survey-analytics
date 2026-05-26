@@ -74,6 +74,8 @@ test("date default histogram", async () => {
 
   expect(date["valueType"]).toBe("date");
   // expect(histValues).toMatchObject([1097625600000, 1151271360000, 1204917120000, 1258562880000, 1312208640000, 1365854400000, 1419500160000, 1473145920000, 1526791680000, 1580437440000]);
+  expect(histValues).toMatchObject([1097625600000, 1151271360000, 1204917120000, 1258562880000, 1312208640000, 1365854400000, 1419500160000, 1473145920000, 1526791680000, 1580437440000]);
+  expect(histLabels).toHaveLength(10);
   // expect(histLabels).toMatchObject([
   //   "10/13/2004-6/25/2006",
   //   "6/25/2006-3/7/2008",
@@ -92,6 +94,7 @@ test("date default histogram", async () => {
   expect(histLabels.length).toBe(10);
   expect(histLabels[0]).toMatch(/^10\/13\/2004-6\/(25|26)\/2006$/);
   expect(histLabels[1]).toMatch(/^6\/(25|26)\/2006-3\/7\/2008$/);
+  expect(histLabels[histLabels.length - 1]).toBe("1/31/2020-10/13/2021");
   expect(histData.data).toMatchObject([[2, 0, 0, 0, 2, 0, 0, 1, 0, 3]]);
 
   expect(date["isSupportMissingAnswers"]()).toBeFalsy();

@@ -929,7 +929,7 @@ test("check matrix dropdown columns name with dots", () => {
   expect(expect(tableData["question.name.row 2.col 2"]).toEqual(""));
 });
 
-test("check matrix dropdown shown in detail row if have more than 5 rows", () => {
+test("check matrix dropdown columns after default threshold are shown in detail row", () => {
   const matrixDotsNameDropdownJson = {
     "elements": [
       {
@@ -974,9 +974,103 @@ test("check matrix dropdown shown in detail row if have more than 5 rows", () =>
   expect(columns[3].name).toBe("shortMatrix.row2.col 2");
   expect(columns[3].location).toBe(QuestionLocation.Column);
   expect(columns[4].name).toBe("longMatrix.row1.col 1");
-  expect(columns[4].location).toBe(QuestionLocation.Row);
+  expect(columns[4].location).toBe(QuestionLocation.Column);
   expect(columns[5].name).toBe("longMatrix.row1.col 2");
+  expect(columns[5].location).toBe(QuestionLocation.Column);
+  expect(columns[8].name).toBe("longMatrix.row3.col 1");
+  expect(columns[8].location).toBe(QuestionLocation.Column);
+  expect(columns[9].name).toBe("longMatrix.row3.col 2");
+  expect(columns[9].location).toBe(QuestionLocation.Row);
+});
+
+test("check matrixDropdownDetailRowThreshold option", () => {
+  const matrixDropdownJson = {
+    elements: [
+      {
+        type: "matrixdropdown",
+        name: "matrixQ",
+        columns: [
+          { name: "c1" },
+          { name: "c2" },
+        ],
+        rows: ["r1", "r2", "r3"]
+      }
+    ]
+  };
+
+  const survey = new SurveyModel(matrixDropdownJson);
+  const table = new TableTest(survey, [], { matrixDropdownDetailRowThreshold: 2 }, []);
+  const columns = table.columns;
+
+  expect(columns.length).toBe(6);
+  expect(columns[0].name).toBe("matrixQ.r1.c1");
+  expect(columns[0].location).toBe(QuestionLocation.Column);
+  expect(columns[1].name).toBe("matrixQ.r1.c2");
+  expect(columns[1].location).toBe(QuestionLocation.Column);
+  expect(columns[2].name).toBe("matrixQ.r2.c1");
+  expect(columns[2].location).toBe(QuestionLocation.Row);
+  expect(columns[5].name).toBe("matrixQ.r3.c2");
   expect(columns[5].location).toBe(QuestionLocation.Row);
+});
+
+test("check matrixDropdownDetailRowThreshold equals 0", () => {
+  const matrixDropdownJson = {
+    elements: [
+      {
+        type: "matrixdropdown",
+        name: "matrixQ",
+        columns: [
+          { name: "c1" },
+          { name: "c2" },
+        ],
+        rows: ["r1", "r2"]
+      }
+    ]
+  };
+
+  const survey = new SurveyModel(matrixDropdownJson);
+  const table = new TableTest(survey, [], { matrixDropdownDetailRowThreshold: 0 }, []);
+  const columns = table.columns;
+
+  expect(columns.length).toBe(4);
+  expect(columns[0].name).toBe("matrixQ.r1.c1");
+  expect(columns[0].location).toBe(QuestionLocation.Row);
+  expect(columns[1].name).toBe("matrixQ.r1.c2");
+  expect(columns[1].location).toBe(QuestionLocation.Row);
+  expect(columns[2].name).toBe("matrixQ.r2.c1");
+  expect(columns[2].location).toBe(QuestionLocation.Row);
+  expect(columns[3].name).toBe("matrixQ.r2.c2");
+  expect(columns[3].location).toBe(QuestionLocation.Row);
+});
+
+test("check matrixDropdownDetailRowThreshold equals -1", () => {
+  const matrixDropdownJson = {
+    elements: [
+      {
+        type: "matrixdropdown",
+        name: "matrixQ",
+        columns: [
+          { name: "c1" },
+          { name: "c2" },
+        ],
+        rows: ["r1", "r2", "r3"]
+      }
+    ]
+  };
+
+  const survey = new SurveyModel(matrixDropdownJson);
+  const table = new TableTest(survey, [], { matrixDropdownDetailRowThreshold: -1 }, []);
+  const columns = table.columns;
+
+  expect(columns.length).toBe(6);
+  expect(columns[0].name).toBe("matrixQ.r1.c1");
+  expect(columns[0].location).toBe(QuestionLocation.Column);
+  expect(columns[1].name).toBe("matrixQ.r1.c2");
+  expect(columns[1].location).toBe(QuestionLocation.Column);
+  expect(columns[4].name).toBe("matrixQ.r3.c1");
+  expect(columns[4].location).toBe(QuestionLocation.Column);
+  expect(columns[5].name).toBe("matrixQ.r3.c2");
+  expect(columns[5].location).toBe(QuestionLocation.Column);
 });
 
 test("check set state with columns which not inside survey", () => {

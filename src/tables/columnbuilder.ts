@@ -104,15 +104,17 @@ ColumnsBuilderFactory.Instance.registerBuilderColumn("file", new FileColumnsBuil
 export class MatrixDropdownColumnBuilder extends DefaultColumnsBuilder {
   public buildColumns(questionBase: QuestionMatrixDropdownModel, table: ITable): Array<IColumn> {
     const question = <QuestionMatrixDropdownModel>questionBase;
-    const isDetailRowLocation = question.rows.length > 5;
+    const detailRowThreshold = table.options.matrixDropdownDetailRowThreshold ?? 5;
     const columns = [];
+    let columnIndex = 0;
     question.rows.forEach(row => {
       question.columns.forEach(col => {
         const column = new MatrixDropdownColumn(question, row, col, table);
-        if(isDetailRowLocation) {
+        if(detailRowThreshold >= 0 && columnIndex >= detailRowThreshold) {
           column.location = QuestionLocation.Row;
         }
         columns.push(column);
+        columnIndex++;
       });
     });
     return columns;

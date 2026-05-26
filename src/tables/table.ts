@@ -46,6 +46,9 @@ export abstract class Table implements ITable {
     if(typeof this._options.useNestedTables === "undefined") {
       this._options.useNestedTables = true;
     }
+    if(typeof this._options.matrixDropdownDetailRowThreshold === "undefined") {
+      this._options.matrixDropdownDetailRowThreshold = 5;
+    }
 
     this.initialize();
 
