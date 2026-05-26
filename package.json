@@ -46,7 +46,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
-    "@playwright/test": "1.58.0",
+    "@playwright/test": "1.60.0",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-replace": "^6.0.2",
@@ -65,7 +65,7 @@
     "lint-staged": "^15.4.3",
     "mongodb-memory-server": "^10.2.1",
     "node-uuid": "1.4.7",
-    "playwright": "1.58.0",
+    "playwright": "1.60.0",
     "puppeteer": "22.13.1",
     "replace-in-file": "^6.3.2",
     "rollup": "^4.59.0",
