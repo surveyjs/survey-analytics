@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-beta.6](https://github.com/surveyjs/survey-analytics/compare/v3.0.0-beta.5...v3.0.0-beta.6) (2026-05-26)
+
 ## [3.0.0-beta.5](https://github.com/surveyjs/survey-analytics/compare/v3.0.0-beta.4...v3.0.0-beta.5) (2026-05-21)
 
 ### 2.5.25 (2026-05-18)
