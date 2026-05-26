@@ -110,22 +110,6 @@ export class DocumentHelper {
     return buttonElement;
   }
 
-  public static setStyles(element: HTMLElement, styles: Record<string, any>): void {
-    if(!element || !styles) return;
-
-    Object.keys(styles).forEach(property => {
-      element.style.setProperty(property, styles[property]);
-    });
-  }
-
-  public static removeStyles(element: HTMLElement, properties: string[]): void {
-    if(!element || !properties) return;
-
-    properties.forEach(property => {
-      element.style.removeProperty(property);
-    });
-  }
-
   public static createElement(
     tagName: string,
     className: string = "",
