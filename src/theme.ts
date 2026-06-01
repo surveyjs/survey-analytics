@@ -1,7 +1,6 @@
-import { ensureBaseThemeStyles, ITheme, getRGBaColor, BaseTheme } from "survey-core";
+import { ensureBaseThemeStyles, ITheme, getRGBaColor, BaseTheme, mergeObjects } from "survey-core";
 import { DefaultLight } from "survey-core/themes";
 import { DocumentHelper } from "./utils/documentHelper";
-import { mergeObjects } from "./utils/utils";
 
 export interface FontSettings {
   family: string;
