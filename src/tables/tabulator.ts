@@ -1,6 +1,6 @@
 import { GetDataFn, Table, TableRow } from "./table";
 import { ITableOptions } from "./table-interfaces";
-import { SurveyModel, Event, Question, ItemValue, ITheme } from "survey-core";
+import { SurveyModel, Event, Question, ItemValue, ITheme, mergeObjects } from "survey-core";
 import { ColumnDataType, IColumn, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils/documentHelper";
 import { localization } from "../localizationManager";
@@ -804,8 +804,15 @@ export class Tabulator extends Table {
     this._appliedTheme = undefined;
   }
 
-  public applyTheme(theme: ITheme): void {
-    this.theme.setTheme(theme);
+  /**
+   * Applies a theme to the Dashboard.
+   * @param theme An [`ITheme`](https://surveyjs.io/form-library/documentation/api-reference/itheme) object with theme settings.
+   * @param baseTheme An optional [`ITheme`](https://surveyjs.io/form-library/documentation/api-reference/itheme) object used as the base theme. When specified, it is deep-merged with `theme`, and the merged result is applied.
+   */
+  public applyTheme(theme: ITheme, baseTheme?: ITheme): void {
+    if(!theme && !baseTheme) return;
+    const themeToApply = baseTheme ? mergeObjects({}, baseTheme, theme) : theme;
+    this.theme.setTheme(themeToApply);
     this._appliedTheme = this.theme;
     if(this.renderResult) {
       this._appliedTheme.applyThemeToElement(this.renderResult);
