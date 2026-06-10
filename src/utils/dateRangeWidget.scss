@@ -29,15 +29,16 @@
 
 .sa-date-range_editor-formbox {
   display: flex;
-  padding: var(--sjs2-spacing-x050, 4px) var(--sjs2-spacing-x050, 4px);
+  box-sizing: border-box;
+  padding: var(--sjs2-layout-component-formbox-small-padding-vertical)
+    var(--sjs2-layout-component-formbox-small-padding-horizontal);
+  height: var(--sjs2-size-semantic-small);
   align-items: flex-start;
-  gap: var(--sjs2-spacing-x050, 4px);
+  gap: var(--sjs2-layout-component-formbox-small-gap);
   align-self: stretch;
   border-radius: var(--sjs2-radius-form, 8px);
   background: var(--sjs2-color-component-formbox-default-bg, rgba(28, 27, 32, 0.05));
-  outline: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
-    var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
-    var(--sjs2-color-component-formbox-default-border, #d4d4d4) inset;
+  box-shadow: var(--sjs2-border-effect-component-formbox-default);
 
   &:focus-visible {
     background: var(--sjs2-color-component-formbox-focused-bg, #f5f5f5);
@@ -103,14 +104,6 @@
 
 .sa-date-range_dropdown {
   align-self: self-start;
-
-  .sa-dropdown-header-content {
-    padding: var(--sjs2-spacing-x050, 4px) var(--sjs2-spacing-x100, 8px);
-  }
-
-  .sa-dropdown-action {
-    padding: var(--sjs2-spacing-x050, 4px) var(--sjs2-spacing-x050, 4px);
-  }
 }
 
 .sa-range-error {
@@ -151,7 +144,8 @@
 
 .sa-date-range_editor-content {
   display: flex;
-  padding: var(--sjs2-spacing-x050, 4px) var(--sjs2-spacing-x100, 8px);
+  padding: var(--sjs2-layout-component-input-small-content-padding-vertical)
+    var(--sjs2-layout-component-input-small-content-padding-horizontal);
   align-items: flex-start;
   flex: 1 0 0;
 }
