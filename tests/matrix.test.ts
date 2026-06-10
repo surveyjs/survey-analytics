@@ -154,6 +154,16 @@ test("getPercentages percentagePrecision option", async () => {
   }
 
   expect(result).toEqual(100.01);
+
+  matrixVizualizer = new Matrix(matrix, data, { percentagePrecision: 0 });
+  datasets = (await matrixVizualizer.getAnswersData()).datasets;
+
+  percentages = matrixVizualizer.getPercentages(datasets);
+  percentages.forEach(row => {
+    row.forEach(value => {
+      expect(value % 1).toEqual(0);
+    });
+  });
 });
 
 test("hide empty answers", async () => {
