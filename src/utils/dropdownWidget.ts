@@ -11,6 +11,8 @@ export function createDropdown(options: IDropdownOptions): HTMLDivElement {
   return widget.render();
 }
 
+export type DropdownSize = "medium" | "small";
+
 export interface IDropdownOptions {
   /** Array of options or function that returns options */
   options: Array<IDropdownItemOption> | (() => Array<IDropdownItemOption>);
@@ -24,6 +26,8 @@ export interface IDropdownOptions {
   title?: string | (() => string);
   /** CSS class name for the dropdown */
   className?: string;
+  /** Dropdown size variant */
+  size?: DropdownSize;
   resetHandler?: () => void;
 }
 
@@ -40,6 +44,13 @@ export class DropdownWidget extends DropdownBase {
     this.options = options;
     this.optionsSource = options.options || [];
     this.placeholder = options.placeholder ?? "Select...";
+  }
+
+  protected createDropdownElement(): HTMLDivElement {
+    const element = document.createElement("div");
+    const size = this.options.size ?? "medium";
+    element.className = `${this.className} ${this.className}--${size}`;
+    return element;
   }
 
   protected createHeader(): HTMLDivElement {
