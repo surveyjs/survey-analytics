@@ -38,9 +38,7 @@
   align-self: stretch;
   border-radius: var(--sjs2-radius-form, 8px);
   background: var(--sjs2-color-component-formbox-default-bg, rgba(28, 27, 32, 0.05));
-  outline: var(--sjs2-border-offset-x-form-default, 0) var(--sjs2-border-offset-y-form-default, 0)
-    var(--sjs2-border-blur-form-default, 0) var(--sjs2-border-spread-form-default, 1px)
-    var(--sjs2-color-component-formbox-default-border, #d4d4d4) inset;
+  box-shadow: var(--sjs2-border-effect-component-formbox-default);
 
   &:focus-visible {
     background: var(--sjs2-color-component-formbox-focused-bg, #f5f5f5);
