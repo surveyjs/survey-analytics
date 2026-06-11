@@ -55,6 +55,7 @@ export interface ISelectBaseVisualizerOptions {
   allowSortAnswers?: boolean;
   /**
    * @deprecated Use the [`allowSortAnswers`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowSortAnswers) property instead.
+   * @hidden
    */
   allowChangeAnswersOrder?: boolean;
   /**

@@ -84,6 +84,7 @@ export class PanelElement implements IVisualizerPanelRenderedElement {
 
 /**
  * Obsolete. Use the [`IDashboardOptions`](https://surveyjs.io/dashboard/documentation/api-reference/idashboardoptions) configuration object and the [`Dashboard`](https://surveyjs.io/dashboard/documentation/api-reference/dashboard) class instead.
+ * @deprecated
  */
 export interface IVisualizationPanelOptions extends ISelectBaseVisualizerOptions {
   // An object named after a question that it configures.
@@ -836,7 +837,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
 
   /**
    * @deprecated Use [`onElementShown`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#onElementShown), [`onElementHidden`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#onElementHidden), or [`onElementMoved`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#onElementMoved) instead.
-   * @hidefor Dashboard
+   * @hidden
    */
   public onVisibleElementsChanged = new Event<
     (sender: VisualizationPanel, options: any) => any, VisualizationPanel,
