@@ -264,6 +264,14 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
       }
     }
     this._supportSelection = true;
+    this._showOnlyPercentages = this.options.showOnlyPercentages === true;
+
+    if(this.options.percentagePrecision !== undefined) {
+      this._percentagePrecision = this.options.percentagePrecision;
+    }
+    if(this.options.transposeData !== undefined) {
+      this._transposeData = this.options.transposeData;
+    }
 
     this._showOnlyPercentages = this.options.showOnlyPercentages === true;
     this._percentagePrecision = this.options.percentagePrecision !== undefined ? this.options.percentagePrecision : 2;
@@ -747,7 +755,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
     if(data.length < 2) {
       var sum = data[0].reduce((sum, val) => sum + val, 0);
       percentages[0] = data[0].map((val) => {
-        var value = percentagePrecision ? + (val / sum * 100).toFixed(percentagePrecision) : Math.round(val / sum * 100);
+        var value = +(val / sum * 100).toFixed(percentagePrecision);
         return sum && value;
       });
     } else {
@@ -758,7 +766,7 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
         }
         for(var j = 0; j < data.length; j++) {
           if(!Array.isArray(percentages[j])) percentages[j] = [];
-          var value = percentagePrecision ? + (data[j][i] / sum * 100).toFixed(percentagePrecision) : Math.round(data[j][i] / sum * 100);
+          var value = +(data[j][i] / sum * 100).toFixed(percentagePrecision);
           percentages[j][i] = sum && value;
         }
       }
