@@ -2735,4 +2735,5 @@ const dashboard = new SurveyAnalytics.Dashboard({
 ]
 });
 
+SurveyAnalyticsExamples.setupThemeSelector("theme-selector", dashboard);
 dashboard.render(document.getElementById("summaryContainer"));
