@@ -978,6 +978,7 @@ export class VisualizerBase implements IDataInfo {
       this._appliedTheme.applyThemeToElement(this.renderResult);
     }
     this.onThemeChanged();
+    this.refreshContent();
   }
 
   getColors() {
