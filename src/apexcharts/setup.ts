@@ -24,6 +24,7 @@ export interface ApexChartsOptions {
   grid?: any;
   title?: any;
   noData?: any;
+  fill?: any;
   responsive?: Array<any>;
 }
 
@@ -1133,6 +1134,7 @@ export class ApexChartsSetup {
       seriesLabels,
     } = answersData;
     const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
+    const tintedColors = model.theme.chartTintedColors;
 
     const series = datasets.map((dataset: Array<number>, index: number) => {
       const seriesName = hasSeries ? seriesLabels[index] : "";
@@ -1210,6 +1212,10 @@ export class ApexChartsSetup {
       chart,
       labels,
       colors,
+      fill: tintedColors.length ? {
+        colors: tintedColors,
+        opacity: 1,
+      } : undefined,
       plotOptions,
       xaxis,
       yaxis,

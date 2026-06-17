@@ -805,6 +805,7 @@ export class PlotlySetup {
       seriesLabels,
     } = answersData;
     const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
+    const tintedColors = model.theme.chartTintedColors;
     const traces: any = [];
 
     const traceConfig: any = {
@@ -830,6 +831,9 @@ export class PlotlySetup {
         customdata: labels,
         hovertemplate: "%{theta}: %{r}" +
                       "<extra></extra>",
+        fillcolor: tintedColors.length
+          ? tintedColors[index % tintedColors.length]
+          : colors[index % colors.length],
         line: {
           ...traceConfig.line,
           color: colors[index % colors.length]
