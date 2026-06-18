@@ -14,6 +14,7 @@
   <script src="../node_modules/survey-core/survey.core.js"></script>
   <script src="../node_modules/survey-core/survey.i18n.js"></script>
   <script src="../build/survey.analytics.plotly.js"></script>
+  <script src="../node_modules/survey-core/themes/index.js"></script>
 </head>
 
 <body>
@@ -89,8 +90,8 @@
     }
   </style>
 
-  <input type="checkbox" id="toggle-checkbox">
-  <label for="toggle-checkbox">Dark theme</label>
+  <label for="theme-selector">Theme</label>
+  <select id="theme-selector"></select>
   <br><br>
   
   <div class="tabs">
@@ -118,6 +119,7 @@
   </div>
   <div id="surveyElement" style="display:inline-block;width:100%;"></div>
   <div id="surveyResult"></div>
+  <script type="text/javascript" src="./theme-selector.js"></script>
   <script type="text/javascript" src="./customDateRange.js"></script>
 </body>
 

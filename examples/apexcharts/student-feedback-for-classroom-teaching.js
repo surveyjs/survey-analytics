@@ -2722,14 +2722,7 @@ var survey = new Survey.SurveyModel(json);
 //   dataFromServer, { dateFieldName: "timestamp" }
 // );
 
-// const checkbox = document.getElementById('toggle-checkbox');
-// checkbox.addEventListener('change', () => {
-//   if (checkbox.checked) {
-//     visPanel.applyTheme(SurveyTheme.DefaultDark);
-//   } else {
-//     visPanel.applyTheme(SurveyTheme.DefaultLight);
-//   }
-// });
+// SurveyAnalyticsExamples.setupThemeSelector("theme-selector", visPanel);
 
 // visPanel.showToolbar = true;
 // visPanel.render(document.getElementById("summaryContainer"));
@@ -2760,4 +2753,5 @@ const dashboard = new SurveyAnalyticsApexcharts.Dashboard({
 ]
 });
 
+SurveyAnalyticsExamples.setupThemeSelector("theme-selector", dashboard);
 dashboard.render(document.getElementById("summaryContainer"));

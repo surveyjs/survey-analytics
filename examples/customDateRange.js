@@ -200,6 +200,7 @@ fetch("https://api.surveyjs.io/private/surveys/nps/").then(response => response.
   vizPanels = createVizPanels(data.Data, customerSegmentationQuestions, npsQuestions, frameworksQuestions);
   setupDateRange(vizPanels[0], data.Data);
   renderVizPanels(vizPanels);
+  SurveyAnalyticsExamples.setupThemeSelector("theme-selector", vizPanels);
 });
 function openTabNo(evt, number) {
   const tabcontent = document.getElementsByClassName("tabcontent");

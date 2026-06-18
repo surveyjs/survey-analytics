@@ -59,14 +59,7 @@ var surveyAnalyticsDataTables = new SurveyAnalyticsTabulator.Tabulator(
   normalizedData
 );
 
-const checkbox = document.getElementById('toggle-checkbox');
-checkbox.addEventListener('change', () => {
-  if (checkbox.checked) {
-    surveyAnalyticsTabulator.applyTheme(SurveyTheme.DefaultDark);
-  } else {
-    surveyAnalyticsTabulator.applyTheme(SurveyTheme.DefaultLight);
-  }
-});
+SurveyAnalyticsExamples.setupThemeSelector("theme-selector", surveyAnalyticsTabulator);
 // surveyAnalyticsTabulator.applyTheme(SurveyTheme.DefaultDark);
 // surveyAnalyticsTabulator.applyTheme(SurveyTheme.DefaultLight);
 

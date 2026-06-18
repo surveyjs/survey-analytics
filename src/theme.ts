@@ -37,10 +37,16 @@ const chartColorCssVariableKeys = Array.from(
   (_, index) => `${chartColorCssVariablePrefix}${index + 1}`
 );
 
+const chartColorTintedCssVariableKeys = Array.from(
+  { length: 10 },
+  (_, index) => `${chartColorCssVariablePrefix}${index + 1}-tinted`
+);
+
 const cssVariableKeys = Object.keys(cssVariableMap) as Array<keyof typeof cssVariableMap>;
 const usedCssVariableKeys: string[] = [
   ...cssVariableKeys.map(key => cssVariableMap[key]),
-  ...chartColorCssVariableKeys
+  ...chartColorCssVariableKeys,
+  ...chartColorTintedCssVariableKeys
 ];
 
 export class DashboardTheme implements ITheme {
@@ -267,6 +273,17 @@ export class DashboardTheme implements ITheme {
   public get chartColors(): string[] {
     const colors: string[] = [];
     chartColorCssVariableKeys.forEach(key => {
+      const color = this.getCssVariableValue(key);
+      if(color) {
+        colors.push(color);
+      }
+    });
+    return colors;
+  }
+
+  public get chartTintedColors(): string[] {
+    const colors: string[] = [];
+    chartColorTintedCssVariableKeys.forEach(key => {
       const color = this.getCssVariableValue(key);
       if(color) {
         colors.push(color);
