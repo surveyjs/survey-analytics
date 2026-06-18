@@ -49,6 +49,10 @@
 .sa-panel__content.muuri {
   margin-inline-start: calc(-1 * var(--sjs2-spacing-x300, 24px));
 
+  @media screen and (min-width: 1400px) {
+    padding-inline-end: var(--sjs2-spacing-x300, 24px);
+  }
+
   @media screen and (max-width: 600px) {
     margin-inline-start: calc(-1 * var(--sjs2-spacing-x150, 12px));
   }
@@ -192,7 +196,8 @@
 
   &:focus-visible {
     border-radius: var(--sjs2-radius-component-action, 8px);
-    outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.6));
+    box-shadow: var(--sjs2-border-effect-component-action-a11y);
+    outline: none;
     background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0));
   }
 }
@@ -245,9 +250,8 @@
 }
 
 .sa-toolbar__button:focus-visible {
-  border-radius: var(--sjs2-radius-component-action, 8px);
-  outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.6));
-  background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0));
+  box-shadow: var(--sjs2-border-effect-component-action-a11y);
+  outline: none;
 }
 
 .sa-toolbar__button--disabled,
@@ -277,7 +281,7 @@
   align-items: center;
 
   use {
-    fill: var(--sjs2-color-project-accent-600, rgba(25, 179, 148, 1));
+    fill: var(--sjs2-color-project-brand-600, rgba(25, 179, 148, 1));
   }
 }
 

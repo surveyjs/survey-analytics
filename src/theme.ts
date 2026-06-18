@@ -21,7 +21,7 @@ const cssVariableMap = {
   smallFontSize: "--sjs2-typography-font-size-small",
   insideLabelColor: "--sjs2-color-data-chart-fg-on-color-1",
   primaryFontColor: "--sjs2-color-fg-basic-primary",
-  legendBorderWidth: "--sjs2-border-width-default",
+  legendBorderWidth: "--sjs2-border-width-x100",
   legendBorderColor: "--sjs2-color-border-basic-secondary",
   legendBorderRadius: "--sjs2-radius-x250",
   tooltipBackground: "--sjs2-color-bg-neutral-primary",

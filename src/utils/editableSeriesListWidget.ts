@@ -223,6 +223,13 @@ export class EditableSeriesListWidget {
     addBtn.addEventListener("click", () => this.addItem());
 
     const box = DocumentHelper.createElement("div", "sa-series-list__add-button-box");
+    box.setAttribute("tabindex", "0");
+    box.addEventListener("keydown", (e) => {
+      if(e.key === "Enter") {
+        e.preventDefault();
+        addBtn.click();
+      }
+    });
     const plus = DocumentHelper.createSvgElement("plus-24x24");
     plus.classList.add("sa-series-list__add-button-icon");
 

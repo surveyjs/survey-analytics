@@ -77,13 +77,18 @@
   justify-content: center;
   align-items: center;
   padding: var(--sjs2-spacing-x100, 8px);
+  border-radius: var(--sjs2-radius-component-action, 8px);
 
   background: transparent;
   border: none;
   cursor: pointer;
 
+  &:focus-visible {
+    box-shadow: var(--sjs2-border-effect-component-action-a11y);
+    outline: none;
+  }
+
   .sa-sidebar:hover {
-    border-radius: var(--sjs2-radius-component-action, 8px);
     background: var(--sjs2-color-bg-neutral-tertiary-dim, rgba(95, 94, 97, 0.1));
 
     use {

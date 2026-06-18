@@ -55,7 +55,7 @@
   align-items: flex-start;
   flex: 1 0 0;
   align-self: stretch;
-  border-bottom: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
+  border-bottom: var(--sjs2-border-width-x100, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
 
   // &:after {
   //   content: "";
@@ -83,7 +83,7 @@
   align-items: center;
   flex: 1 0 0;
   align-self: stretch;
-  border-top: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
+  border-top: var(--sjs2-border-width-x100, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
 }
 
 .sa-tabulator__header {
@@ -101,7 +101,7 @@
 }
 
 .tabulator-headers {
-  border-bottom: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
+  border-bottom: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
 }
 
 .sa-tabulator__downloads-bar {
@@ -156,7 +156,8 @@
     &:focus-visible {
       border-radius: var(--sjs2-radius-component-action, 8px);
       border: unset;
-      outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.6));
+      box-shadow: var(--sjs2-border-effect-component-action-a11y);
+      outline: none;
       background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0));
     }
 
@@ -187,6 +188,11 @@
 
       &:hover {
         background: var(--sjs2-color-bg-brand-tertiary-dim, rgba(25, 179, 148, 0.1));
+      }
+
+      &:focus-visible {
+        box-shadow: var(--sjs2-border-effect-component-action-a11y);
+        outline: none;
       }
     }
   }
@@ -220,7 +226,7 @@
     gap: var(--sjs2-spacing-x000, 0);
 
     border-radius: var(--sjs2-radius-component-action, 8px);
-    border: var(--sjs2-border-width-default, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
+    border: var(--sjs2-border-width-x100, 1px) solid var(--sjs2-color-border-basic-secondary, #d4d4d4);
     background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0));
 
     color: var(--sjs2-color-fg-basic-primary, #1c1b20);
@@ -231,6 +237,11 @@
     &:hover {
       cursor: default;
       background-color: transparent;
+    }
+
+    &:focus-visible {
+      box-shadow: var(--sjs2-border-effect-component-action-a11y);
+      outline: none;
     }
   }
 
@@ -244,8 +255,8 @@
 
     .tabulator-row .tabulator-cell {
       padding: var(--sjs2-spacing-x200, 16px) var(--sjs2-spacing-x300, 24px);
-      border-top: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
-      border-right: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
+      border-top: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
+      border-right: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
 
       color: var(--sjs2-color-fg-basic-primary, #1c1b20);
       @include sjs2--typography--default;
@@ -260,7 +271,7 @@
     }
 
     .tabulator-header .tabulator-col {
-      border-right: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
+      border-right: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
     }
 
     .tabulator-header .tabulator-col .tabulator-col-content {
@@ -281,7 +292,7 @@
     }
 
     .tabulator-col.tabulator-moving {
-      border: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
+      border: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
     }
 
     .tabulator-header .tabulator-col:first-child {
