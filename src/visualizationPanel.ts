@@ -187,8 +187,10 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
       const buttonDisabledClass = "sa-toolbar__button--disabled";
       if(this.dataProvider.getFilters().length == 0) {
         this._resetFilterButton.classList.add(buttonDisabledClass);
+        this._resetFilterButton.setAttribute("tabindex", "-1");
       } else {
         this._resetFilterButton.classList.remove(buttonDisabledClass);
+        this._resetFilterButton.setAttribute("tabindex", "0");
       }
     }
   }

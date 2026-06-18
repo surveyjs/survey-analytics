@@ -95,7 +95,7 @@
 }
 
 .sa-table__detail {
-  border-top: var(--sjs2-border-width-default, 1px) dashed var(--sjs2-color-border-basic-secondary, #D4D4D4);
+  border-top: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
 
   td {
     box-sizing: border-box;
@@ -151,6 +151,11 @@ a.sa-table__btn {
     background: var(--sjs2-color-component-action-neutral-tertiary-hovered-bg, rgba(95, 94, 97, 0.10));
     color: var(--sjs2-color-component-action-neutral-tertiary-hovered-label, #1C1B20);
   }
+
+  &:focus-visible {
+    outline: var(--sjs2-border-effect-component-action-a11y);
+    outline: none;
+  }
 }
 
 .sa-table__btn--green {
@@ -177,7 +182,8 @@ a.sa-table__btn {
   }
   &:focus-visible {
     border-radius: var(--sjs2-radius-component-action, 8px);
-    outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.6));
+    box-shadow: var(--sjs2-border-effect-component-action-a11y);
+    outline: none;
     background: var(--sjs2-color-bg-brand-tertiary, rgba(25, 179, 148, 0));
   }
   svg {

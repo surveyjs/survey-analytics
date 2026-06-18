@@ -71,7 +71,7 @@
   gap: var(--sjs2-layout-component-formbox-medium-gap);
   align-self: stretch;
   width: 100%;
-  height: var(--sjs2-size-semantic-medium);
+  height: var(--sjs2-size-medium);
   box-sizing: border-box;
 
   border-radius: var(--sjs2-radius-form, 8px);
@@ -347,7 +347,7 @@
     padding: var(--sjs2-layout-component-formbox-small-padding-vertical)
       var(--sjs2-layout-component-formbox-small-padding-horizontal);
     gap: var(--sjs2-layout-component-formbox-small-gap);
-    height: var(--sjs2-size-semantic-small);
+    height: var(--sjs2-size-small);
   }
 
   .sa-dropdown-header-content {
@@ -380,7 +380,8 @@
 
   &:focus-visible {
     border-radius: var(--sjs2-radius-component-action, 8px);
-    outline: var(--sjs2-border-width-a11y, 4px) solid var(--sjs2-color-utility-a11y, rgba(102, 180, 252, 0.6));
+    box-shadow: var(--sjs2-border-effect-component-action-a11y);
+    outline: none;
     background: var(--sjs2-color-bg-positive-tertiary, rgba(25, 179, 148, 0));
   }
 }
@@ -404,7 +405,7 @@
   align-items: center;
 
   use {
-    fill: var(--sjs2-color-project-accent-600, rgba(25, 179, 148, 1));
+    fill: var(--sjs2-color-project-brand-600, rgba(25, 179, 148, 1));
   }
 }
 
@@ -445,6 +446,11 @@
 
   &:hover {
     background: var(--sjs2-color-bg-brand-secondary-dim, rgba(25, 179, 148, 0.15));
+  }
+
+  &:focus-visible {
+    box-shadow: var(--sjs2-border-effect-component-action-a11y);
+    outline: none;
   }
 }
 
