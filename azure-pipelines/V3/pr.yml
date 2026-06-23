@@ -103,13 +103,6 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)
-      npm run build:types:summary:core
-      npm run build:types:summary
-      npm run build:types:tabulator
-    displayName: "NPM build typings"
-
-  - script: |
-      cd $(Build.SourcesDirectory)
       npm test
     displayName: "Run unit tests"
 
