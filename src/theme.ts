@@ -28,7 +28,8 @@ const cssVariableMap = {
   tooltipFontColor: "--sjs2-color-fg-neutral-on-primary",
   secondaryFontColor: "--sjs2-color-fg-basic-secondary",
   defaultFontSize: "--sjs2-typography-font-size-default",
-  gaugeBackground: "--sjs2-color-bg-basic-secondary",
+  gaugeBackground: "--sjs2-color-data-chart-track-color-0",
+  gaugeBarColor: "--sjs2-color-data-chart-bg-color-0",
   largeFontSize: "--sjs2-typography-font-size-large"
 } as const;
 
@@ -249,7 +250,7 @@ export class DashboardTheme implements ITheme {
     return this.getCssVariableValue(cssVariableMap.gaugeBackground);
   }
   public get gaugeBarColor() {
-    return this.getCssVariableValue(cssVariableMap.modebarActiveColor);
+    return this.getCssVariableValue(cssVariableMap.gaugeBarColor);
   }
 
   public get gaugeValueFont(): FontSettings {
