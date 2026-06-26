@@ -207,7 +207,8 @@ export class DateRangeWidget {
         resetHandler: () => {
           this.setDatePeriod(undefined);
         },
-        placeholder: localization.getString("selectDateRange")
+        placeholder: localization.getString("selectDateRange"),
+        size: "small"
       });
       this.datePeriodContainer.classList.add("sa-date-range_dropdown");
 

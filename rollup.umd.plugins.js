@@ -162,7 +162,7 @@ function emitNonSourceFiles(options) {
       require: "./survey.analytics.mongo.js"
     },
     "./survey.analytics.apexcharts": {
-      types: "./survey.analytics.d.ts",
+      types: "./survey.analytics.apexcharts.d.ts",
       import: "./fesm/survey.analytics.apexcharts.mjs",
       require: "./survey.analytics.apexcharts.js"
     },

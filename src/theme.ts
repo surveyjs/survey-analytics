@@ -20,14 +20,15 @@ const cssVariableMap = {
   smallFontSize: "--sjs2-typography-font-size-small",
   insideLabelColor: "--sjs2-color-data-chart-fg-on-color-1",
   primaryFontColor: "--sjs2-color-fg-basic-primary",
-  legendBorderWidth: "--sjs2-border-width-default",
+  legendBorderWidth: "--sjs2-border-width-x100",
   legendBorderColor: "--sjs2-color-border-basic-secondary",
   legendBorderRadius: "--sjs2-radius-x250",
   tooltipBackground: "--sjs2-color-bg-neutral-primary",
   tooltipFontColor: "--sjs2-color-fg-neutral-on-primary",
   secondaryFontColor: "--sjs2-color-fg-basic-secondary",
   defaultFontSize: "--sjs2-typography-font-size-default",
-  gaugeBackground: "--sjs2-color-bg-basic-secondary",
+  gaugeBackground: "--sjs2-color-data-chart-track-color-0",
+  gaugeBarColor: "--sjs2-color-data-chart-bg-color-0",
   largeFontSize: "--sjs2-typography-font-size-large"
 } as const;
 
@@ -36,10 +37,16 @@ const chartColorCssVariableKeys = Array.from(
   (_, index) => `${chartColorCssVariablePrefix}${index + 1}`
 );
 
+const chartColorTintedCssVariableKeys = Array.from(
+  { length: 10 },
+  (_, index) => `${chartColorCssVariablePrefix}${index + 1}-tinted`
+);
+
 const cssVariableKeys = Object.keys(cssVariableMap) as Array<keyof typeof cssVariableMap>;
 const usedCssVariableKeys: string[] = [
   ...cssVariableKeys.map(key => cssVariableMap[key]),
-  ...chartColorCssVariableKeys
+  ...chartColorCssVariableKeys,
+  ...chartColorTintedCssVariableKeys
 ];
 
 export class DashboardTheme implements ITheme {
@@ -208,7 +215,7 @@ export class DashboardTheme implements ITheme {
     return this.getCssVariableValue(cssVariableMap.gaugeBackground);
   }
   public get gaugeBarColor() {
-    return this.getCssVariableValue(cssVariableMap.modebarActiveColor);
+    return this.getCssVariableValue(cssVariableMap.gaugeBarColor);
   }
 
   public get gaugeValueFont(): FontSettings {
@@ -232,6 +239,17 @@ export class DashboardTheme implements ITheme {
   public get chartColors(): string[] {
     const colors: string[] = [];
     chartColorCssVariableKeys.forEach(key => {
+      const color = this.getCssVariableValue(key);
+      if(color) {
+        colors.push(color);
+      }
+    });
+    return colors;
+  }
+
+  public get chartTintedColors(): string[] {
+    const colors: string[] = [];
+    chartColorTintedCssVariableKeys.forEach(key => {
       const color = this.getCssVariableValue(key);
       if(color) {
         colors.push(color);

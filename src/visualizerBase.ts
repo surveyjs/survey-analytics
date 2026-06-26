@@ -518,6 +518,7 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * @deprecated Use the [`surveyData`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#surveyData) property instead.
+   * @hidden
    */
   protected get data() {
     return this.dataProvider.filteredData;
@@ -977,6 +978,7 @@ export class VisualizerBase implements IDataInfo {
       this._appliedTheme.applyThemeToElement(this.renderResult);
     }
     this.onThemeChanged();
+    this.refreshContent();
   }
 
   getColors() {
@@ -1003,6 +1005,7 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * @deprecated Use the [`getCalculatedValues()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#getCalculatedValues) method instead.
+   * @hidden
    */
   getData(): any {
     return this.getCalculatedValuesCore();

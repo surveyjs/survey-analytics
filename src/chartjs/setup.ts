@@ -1054,6 +1054,7 @@ export class ChartJsSetup {
       seriesLabels,
     } = answersData;
     const hasSeries = seriesLabels.length > 1 || model.dataType === "matrix";
+    const tintedColors = model.theme.chartTintedColors;
 
     const chartDatasets = datasets.map((dataset: Array<number>, index: number) => {
       const seriesName = hasSeries ? seriesLabels[index] : "";
@@ -1061,7 +1062,9 @@ export class ChartJsSetup {
         label: seriesName,
         data: dataset,
         borderColor: colors[index % colors.length],
-        backgroundColor: colors[index % colors.length] + "33",
+        backgroundColor: tintedColors.length
+          ? tintedColors[index % tintedColors.length]
+          : colors[index % colors.length],
         borderWidth: 2,
         pointRadius: 3,
         pointBackgroundColor: colors[index % colors.length],

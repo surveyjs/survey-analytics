@@ -15,15 +15,16 @@
   <script src="../node_modules/survey-core/survey.core.js"></script>
   <script src="../node_modules/survey-core/survey.i18n.js"></script>
   <script src="../build/survey.analytics.tabulator.js"></script>
-  <script src="../node_modules/survey-core/themes/index.js" defer></script>
+  <script src="../node_modules/survey-core/themes/index.js"></script>
 </head>
 
 <body>
-  <input type="checkbox" id="toggle-checkbox">
-  <label for="toggle-checkbox">Dark theme</label>
+  <label for="theme-selector">Theme</label>
+  <select id="theme-selector"></select>
   <br><br>
   <div id="tabulatorContainer"></div>
   <script src="./data_multi_lang.js"></script>
+  <script src="./theme-selector.js"></script>
   <script src="./custom_tabulator.js"></script>
 </body>
 

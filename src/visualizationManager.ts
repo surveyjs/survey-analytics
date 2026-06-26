@@ -74,6 +74,7 @@ export class VisualizationManager {
   /**
    * @deprecated Call the [`unregisterVisualizer()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationmanager#unregisterVisualizer) method instead.
    * @param constructor A function that returns a visualizer constructor to unregister.
+   * @hidden
    */
   public static unregisterVisualizerForAll(constructor: VisualizerConstructor): void {
     VisualizationManager.unregisterVisualizer(undefined, constructor);

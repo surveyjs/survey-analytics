@@ -29,14 +29,7 @@ var dashboard = new SurveyAnalyticsApexcharts.Dashboard({
   data,
 });
 
-const checkbox = document.getElementById('toggle-checkbox');
-checkbox.addEventListener('change', () => {
-  if (checkbox.checked) {
-    dashboard.applyTheme(SurveyTheme.DefaultDark);
-  } else {
-    dashboard.applyTheme(SurveyTheme.DefaultLight);
-  }
-});
+SurveyAnalyticsExamples.setupThemeSelector("theme-selector", dashboard);
 
 // dashboard.applyTheme(SurveyTheme.DefaultDark);
 // dashboard.applyTheme(SurveyTheme.DefaultLight);

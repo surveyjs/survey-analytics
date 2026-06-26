@@ -2712,14 +2712,7 @@ var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   dataFromServer, { dateFieldName: "timestamp" }
 );
 
-const checkbox = document.getElementById('toggle-checkbox');
-checkbox.addEventListener('change', () => {
-  if (checkbox.checked) {
-    visPanel.applyTheme(SurveyTheme.DefaultDark);
-  } else {
-    visPanel.applyTheme(SurveyTheme.DefaultLight);
-  }
-});
+SurveyAnalyticsExamples.setupThemeSelector("theme-selector", visPanel);
 
 visPanel.showToolbar = true;
 visPanel.render(document.getElementById("summaryContainer"));
