@@ -119,5 +119,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
 
 VisualizationManager.registerVisualizer(
   "matrixdropdown",
-  VisualizationMatrixDropdown
+  VisualizationMatrixDropdown,
+  undefined,
+  "matrixdropdown"
 );

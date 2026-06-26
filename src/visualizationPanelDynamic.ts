@@ -66,5 +66,7 @@ export class VisualizationPanelDynamic extends VisualizerBase {
 
 VisualizationManager.registerVisualizer(
   "paneldynamic",
-  VisualizationPanelDynamic
+  VisualizationPanelDynamic,
+  undefined,
+  "paneldynamic"
 );

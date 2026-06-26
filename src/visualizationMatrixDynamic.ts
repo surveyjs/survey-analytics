@@ -24,5 +24,7 @@ export class VisualizationMatrixDynamic extends VisualizationPanelDynamic {
 
 VisualizationManager.registerVisualizer(
   "matrixdynamic",
-  VisualizationMatrixDynamic
+  VisualizationMatrixDynamic,
+  undefined,
+  "matrixdynamic"
 );
