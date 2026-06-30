@@ -4,6 +4,9 @@ import { AlternativeVisualizersWrapper } from "../src/alternativeVizualizersWrap
 import { ApexChartsAdapter } from "../src/apexcharts/chart-adapter";
 import { VisualizerBase } from "../src/visualizerBase";
 import { VisualizerFactory } from "../src/visualizerFactory";
+import { VisualizationPanelDynamic } from "../src/visualizationPanelDynamic";
+import { VisualizationMatrixDynamic } from "../src/visualizationMatrixDynamic";
+import { VisualizationMatrixDropdown } from "../src/visualizationMatrixDropdown";
 
 export * from "../src/card";
 export * from "../src/text";
@@ -277,4 +280,76 @@ test("availableTypes setter should rerender recreated visualizer when item is re
 
   expect(newVisualizer.render).toHaveBeenCalledWith(renderHost, false);
   createSpy.mockRestore();
+});
+
+test("paneldynamic item should expose a defined visualizerType", () => {
+  const survey = new SurveyModel({
+    elements: [{ type: "paneldynamic", name: "employees", templateElements: [{ type: "text", name: "firstName" }] }],
+  });
+  const question = survey.getQuestionByName("employees");
+
+  const item = new DashboardItem({} as any, question);
+
+  expect(item.visualizerType).toBe("paneldynamic");
+});
+
+test("VisualizerFactory should create a paneldynamic visualizer instead of the default stub", () => {
+  const survey = new SurveyModel({
+    elements: [{ type: "paneldynamic", name: "employees", templateElements: [{ type: "text", name: "firstName" }] }],
+  });
+  const question = survey.getQuestionByName("employees");
+
+  const item = new DashboardItem({} as any, question);
+  const visualizer = VisualizerFactory.createVisualizer(item, []);
+
+  expect(visualizer).toBeInstanceOf(VisualizationPanelDynamic);
+  expect(visualizer.constructor).not.toBe(VisualizerBase);
+});
+
+test("matrixdynamic item should expose a defined visualizerType", () => {
+  const survey = new SurveyModel({
+    elements: [{ type: "matrixdynamic", name: "matrix1", columns: [{ cellType: "text", name: "col1" }] }],
+  });
+  const question = survey.getQuestionByName("matrix1");
+
+  const item = new DashboardItem({} as any, question);
+
+  expect(item.visualizerType).toBe("matrixdynamic");
+});
+
+test("VisualizerFactory should create a matrixdynamic visualizer instead of the default stub", () => {
+  const survey = new SurveyModel({
+    elements: [{ type: "matrixdynamic", name: "matrix1", columns: [{ cellType: "text", name: "col1" }] }],
+  });
+  const question = survey.getQuestionByName("matrix1");
+
+  const item = new DashboardItem({} as any, question);
+  const visualizer = VisualizerFactory.createVisualizer(item, []);
+
+  expect(visualizer).toBeInstanceOf(VisualizationMatrixDynamic);
+  expect(visualizer.constructor).not.toBe(VisualizerBase);
+});
+
+test("matrixdropdown item should expose a defined visualizerType", () => {
+  const survey = new SurveyModel({
+    elements: [{ type: "matrixdropdown", name: "matrix2", rows: ["row1"], columns: [{ cellType: "text", name: "col1" }] }],
+  });
+  const question = survey.getQuestionByName("matrix2");
+
+  const item = new DashboardItem({} as any, question);
+
+  expect(item.visualizerType).toBe("matrixdropdown");
+});
+
+test("VisualizerFactory should create a matrixdropdown visualizer instead of the default stub", () => {
+  const survey = new SurveyModel({
+    elements: [{ type: "matrixdropdown", name: "matrix2", rows: ["row1"], columns: [{ cellType: "text", name: "col1" }] }],
+  });
+  const question = survey.getQuestionByName("matrix2");
+
+  const item = new DashboardItem({} as any, question);
+  const visualizer = VisualizerFactory.createVisualizer(item, []);
+
+  expect(visualizer).toBeInstanceOf(VisualizationMatrixDropdown);
+  expect(visualizer.constructor).not.toBe(VisualizerBase);
 });
