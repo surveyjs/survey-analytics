@@ -47,7 +47,7 @@ The SurveyJS Dashboard library lets you build survey data dashboards and simplif
 - [Website](https://surveyjs.io/)
 - [Documentation](https://surveyjs.io/dashboard/documentation/overview)
 - [Live Examples](https://surveyjs.io/dashboard/examples/)
-- [What's New](https://surveyjs.io/stay-updated/major-updates/2024)
+- [What's New](https://surveyjs.io/WhatsNew)
 
 ## Build SurveyJS Dashboard from Sources
 
