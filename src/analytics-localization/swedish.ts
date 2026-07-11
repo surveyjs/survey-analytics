@@ -1,12 +1,6 @@
 import { setupLocale } from "../localizationManager";
 
 export var swedishStrings = {
-  // "Group By Me"
-  groupButton: "Gruppera av mig",
-  // "Ungroup By Me"
-  ungroupButton: "Avgruppera av mig",
-  // "Select Me"
-  selectButton: "Välj mig",
   // "Hide column"
   hideColumn: "Göm kolumn",
   // "Show column"
@@ -133,8 +127,6 @@ export var swedishStrings = {
   answer: "Svar",
   // "Correct answer: "
   correctAnswer: "Rätt svar: ",
-  // "Percent"
-  percent: "Procent",
   // "Percentage"
   percentage: "Procent",
   // "Chart"
@@ -165,8 +157,6 @@ export var swedishStrings = {
   axisYAlternativeSelectorTitle: "Grupper:",
   // [Auto-translated] "Not selected"
   notSelected: "Ej utvald",
-  // [Auto-translated] "Default"
-  intervalMode_default: "Standard",
   // [Auto-translated] "Decades"
   intervalMode_decades: "Årtionden",
   // [Auto-translated] "Years"
@@ -177,8 +167,6 @@ export var swedishStrings = {
   intervalMode_months: "Månader",
   // [Auto-translated] "Days"
   intervalMode_days: "Dagar",
-  // [Auto-translated] "Custom"
-  intervalMode_custom: "Sed",
   // [Auto-translated] "Auto"
   intervalMode_auto: "Bil",
   // [Auto-translated] "Intervals:"

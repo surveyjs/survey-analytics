@@ -1,12 +1,6 @@
 import { setupLocale } from "../localizationManager";
 
 export var italianStrings = {
-  // "Group By Me"
-  groupButton: "Raggruppa",
-  // "Ungroup By Me"
-  ungroupButton: "Dividi",
-  // "Select Me"
-  selectButton: "Selezionami",
   // "Hide column"
   hideColumn: "Nascondi colonna",
   // "Show column"
@@ -133,8 +127,6 @@ export var italianStrings = {
   answer: "Risposta",
   // "Correct answer: "
   correctAnswer: "Risposta esatta: ",
-  // "Percent"
-  percent: "Percentuale",
   // [Auto-translated] "Percentage"
   percentage: "Percentuale",
   // [Auto-translated] "Chart"
@@ -165,8 +157,6 @@ export var italianStrings = {
   axisYAlternativeSelectorTitle: "Gruppi:",
   // [Auto-translated] "Not selected"
   notSelected: "Non selezionato",
-  // [Auto-translated] "Default"
-  intervalMode_default: "Default",
   // [Auto-translated] "Decades"
   intervalMode_decades: "Decenni",
   // [Auto-translated] "Years"
@@ -177,8 +167,6 @@ export var italianStrings = {
   intervalMode_months: "Mesi",
   // [Auto-translated] "Days"
   intervalMode_days: "Giorni",
-  // [Auto-translated] "Custom"
-  intervalMode_custom: "Costume",
   // [Auto-translated] "Auto"
   intervalMode_auto: "Automatico",
   // [Auto-translated] "Intervals:"

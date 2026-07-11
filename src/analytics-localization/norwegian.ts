@@ -1,12 +1,6 @@
 import { setupLocale } from "../localizationManager";
 
 export var norwegianStrings = {
-  // "Group By Me"
-  groupButton: "Grupper",
-  // "Ungroup By Me"
-  ungroupButton: "Opphev gruppering",
-  // "Select Me"
-  selectButton: "Velg",
   // "Hide column"
   hideColumn: "Skjul kolonne",
   // "Show column"
@@ -133,8 +127,6 @@ export var norwegianStrings = {
   answer: "Svare",
   // "Correct answer: "
   correctAnswer: "Riktig svar: ",
-  // "Percent"
-  percent: "Prosent",
   // [Auto-translated] "Percentage"
   percentage: "Prosent",
   // [Auto-translated] "Chart"
@@ -165,8 +157,6 @@ export var norwegianStrings = {
   axisYAlternativeSelectorTitle: "Grupper:",
   // [Auto-translated] "Not selected"
   notSelected: "Ikke valgt",
-  // [Auto-translated] "Default"
-  intervalMode_default: "Standard",
   // [Auto-translated] "Decades"
   intervalMode_decades: "Tiår",
   // [Auto-translated] "Years"
@@ -177,8 +167,6 @@ export var norwegianStrings = {
   intervalMode_months: "Måneder",
   // [Auto-translated] "Days"
   intervalMode_days: "Dager",
-  // [Auto-translated] "Custom"
-  intervalMode_custom: "Skikk",
   // [Auto-translated] "Auto"
   intervalMode_auto: "Auto",
   // [Auto-translated] "Intervals:"

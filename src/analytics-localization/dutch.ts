@@ -1,12 +1,6 @@
 import { setupLocale } from "../localizationManager";
 
 export var dutchStrings = {
-  // "Group By Me"
-  groupButton: "Groeperen op",
-  // "Ungroup By Me"
-  ungroupButton: "Groepering verwijderen",
-  // "Select Me"
-  selectButton: "Selecteer mij",
   // "Hide column"
   hideColumn: "Kolom verbergen",
   // "Show column"
@@ -133,8 +127,6 @@ export var dutchStrings = {
   answer: "Antwoorden",
   // "Correct answer: "
   correctAnswer: "Goed antwoord: ",
-  // "Percent"
-  percent: "Procent",
   // [Auto-translated] "Percentage"
   percentage: "Percentage",
   // [Auto-translated] "Chart"
@@ -165,8 +157,6 @@ export var dutchStrings = {
   axisYAlternativeSelectorTitle: "Groepen:",
   // [Auto-translated] "Not selected"
   notSelected: "Niet geselecteerd",
-  // [Auto-translated] "Default"
-  intervalMode_default: "Verstek",
   // [Auto-translated] "Decades"
   intervalMode_decades: "Decennia",
   // [Auto-translated] "Years"
@@ -177,8 +167,6 @@ export var dutchStrings = {
   intervalMode_months: "Maanden",
   // [Auto-translated] "Days"
   intervalMode_days: "Dagen",
-  // [Auto-translated] "Custom"
-  intervalMode_custom: "Gewoonte",
   // [Auto-translated] "Auto"
   intervalMode_auto: "Auto",
   // [Auto-translated] "Intervals:"

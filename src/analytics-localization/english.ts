@@ -2,9 +2,6 @@
 // import { setupLocale } from "../localizationManager";
 
 export var englishStrings = {
-  groupButton: "Group By Me",
-  ungroupButton: "Ungroup By Me",
-  selectButton: "Select Me",
   hideColumn: "Hide column",
   showColumn: "Show column",
   makePrivateColumn: "Make column private",
@@ -68,7 +65,6 @@ export var englishStrings = {
   showPerColumns: "Per Columns",
   answer: "Answer",
   correctAnswer: "Correct answer: ",
-  percent: "Percent",
   percentage: "Percentage",
   statistics_chart: "Chart",
   responses: "Responses",
@@ -84,13 +80,11 @@ export var englishStrings = {
   axisXAlternativeSelectorTitle: "Segments:",
   axisYAlternativeSelectorTitle: "Groups:",
   notSelected: "Not selected",
-  intervalMode_default: "Default",
   intervalMode_decades: "Decades",
   intervalMode_years: "Years",
   intervalMode_quarters: "Quarters",
   intervalMode_months: "Months",
   intervalMode_days: "Days",
-  intervalMode_custom: "Custom",
   intervalMode_auto: "Auto",
   intervalModeTitle: "Intervals:",
   noRunningTotals: "Show individual values",

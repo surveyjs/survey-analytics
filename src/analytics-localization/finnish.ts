@@ -1,12 +1,6 @@
 import { setupLocale } from "../localizationManager";
 
 export var finnishStrings = {
-  // "Group By Me"
-  groupButton: "Erottele minulla",
-  // "Ungroup By Me"
-  ungroupButton: "Poista erottele minulla",
-  // "Select Me"
-  selectButton: "Valitse minut",
   // "Hide column"
   hideColumn: "Piilota sarake",
   // "Show column"
@@ -133,8 +127,6 @@ export var finnishStrings = {
   answer: "Vastaus",
   // "Correct answer: "
   correctAnswer: "Oikea vastaus: ",
-  // "Percent"
-  percent: "Prosentti",
   // "Percentage"
   percentage: "Prosenttiyksikkö",
   // "Chart"
@@ -165,8 +157,6 @@ export var finnishStrings = {
   axisYAlternativeSelectorTitle: "Ryhmät:",
   // [Auto-translated] "Not selected"
   notSelected: "Ei valittu",
-  // [Auto-translated] "Default"
-  intervalMode_default: "Laiminlyönti",
   // [Auto-translated] "Decades"
   intervalMode_decades: "Vuosikymmeniä",
   // [Auto-translated] "Years"
@@ -177,8 +167,6 @@ export var finnishStrings = {
   intervalMode_months: "Kuukautta",
   // [Auto-translated] "Days"
   intervalMode_days: "Päivää",
-  // [Auto-translated] "Custom"
-  intervalMode_custom: "Tapa",
   // [Auto-translated] "Auto"
   intervalMode_auto: "Auto",
   // [Auto-translated] "Intervals:"

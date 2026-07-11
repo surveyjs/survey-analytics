@@ -1,12 +1,6 @@
 import { setupLocale } from "../localizationManager";
 
 export var farsiStrings = {
-  // "Group By Me"
-  groupButton: "گروه بندی با",
-  // "Ungroup By Me"
-  ungroupButton: "حذف گروه",
-  // "Select Me"
-  selectButton: "انتخاب",
   // "Hide column"
   hideColumn: "مخفی کردن ستون",
   // "Show column"
@@ -133,8 +127,6 @@ export var farsiStrings = {
   answer: "پاسخ",
   // "Correct answer: "
   correctAnswer: "پاسخ صحیح: ",
-  // "Percent"
-  percent: "درصد",
   // [Auto-translated] "Percentage"
   percentage: "درصد",
   // [Auto-translated] "Chart"
@@ -165,8 +157,6 @@ export var farsiStrings = {
   axisYAlternativeSelectorTitle: "گروه:",
   // [Auto-translated] "Not selected"
   notSelected: "انتخاب نشده",
-  // [Auto-translated] "Default"
-  intervalMode_default: "پیش فرض",
   // [Auto-translated] "Decades"
   intervalMode_decades: "دهه",
   // [Auto-translated] "Years"
@@ -177,8 +167,6 @@ export var farsiStrings = {
   intervalMode_months: "ماه‌ها",
   // [Auto-translated] "Days"
   intervalMode_days: "روز‌ها",
-  // [Auto-translated] "Custom"
-  intervalMode_custom: "سفارشی",
   // [Auto-translated] "Auto"
   intervalMode_auto: "خودکار",
   // [Auto-translated] "Intervals:"

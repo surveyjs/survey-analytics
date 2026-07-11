@@ -1,12 +1,6 @@
 import { setupLocale } from "../localizationManager";
 
 export var russianStrings = {
-  // "Group By Me"
-  groupButton: "Сгруппировать",
-  // "Ungroup By Me"
-  ungroupButton: "Разгруппировать",
-  // "Select Me"
-  selectButton: "Выбрать",
   // "Hide column"
   hideColumn: "Скрыть столбец",
   // "Show column"
@@ -133,8 +127,6 @@ export var russianStrings = {
   answer: "Ответ",
   // "Correct answer: "
   correctAnswer: "Правильный ответ: ",
-  // "Percent"
-  percent: "процентов",
   // [Auto-translated] "Percentage"
   percentage: "Процент",
   // [Auto-translated] "Chart"
@@ -165,8 +157,6 @@ export var russianStrings = {
   axisYAlternativeSelectorTitle: "Группы:",
   // [Auto-translated] "Not selected"
   notSelected: "Не выбран",
-  // [Auto-translated] "Default"
-  intervalMode_default: "По умолчанию",
   // [Auto-translated] "Decades"
   intervalMode_decades: "Десятилетий",
   // [Auto-translated] "Years"
@@ -177,8 +167,6 @@ export var russianStrings = {
   intervalMode_months: "Месяцы",
   // [Auto-translated] "Days"
   intervalMode_days: "Дни недели",
-  // [Auto-translated] "Custom"
-  intervalMode_custom: "Обычай",
   // [Auto-translated] "Auto"
   intervalMode_auto: "Авто",
   // [Auto-translated] "Intervals:"

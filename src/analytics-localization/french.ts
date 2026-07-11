@@ -1,12 +1,6 @@
 import { setupLocale } from "../localizationManager";
 
 export var frenchStrings = {
-  // "Group By Me"
-  groupButton: "Grouper",
-  // "Ungroup By Me"
-  ungroupButton: "Dissocier",
-  // "Select Me"
-  selectButton: "Sélectionner",
   // "Hide column"
   hideColumn: "Masquer la colonne",
   // "Show column"
@@ -133,8 +127,6 @@ export var frenchStrings = {
   answer: "Réponse",
   // "Correct answer: "
   correctAnswer: "Réponse correcte: ",
-  // "Percent"
-  percent: "Pourcentage",
   // [Auto-translated] "Percentage"
   percentage: "Pourcentage",
   // [Auto-translated] "Chart"
@@ -165,8 +157,6 @@ export var frenchStrings = {
   axisYAlternativeSelectorTitle: "Groupes:",
   // [Auto-translated] "Not selected"
   notSelected: "Non sélectionné",
-  // [Auto-translated] "Default"
-  intervalMode_default: "Par défaut",
   // [Auto-translated] "Decades"
   intervalMode_decades: "Décennies",
   // [Auto-translated] "Years"
@@ -177,8 +167,6 @@ export var frenchStrings = {
   intervalMode_months: "Mois",
   // [Auto-translated] "Days"
   intervalMode_days: "Jours",
-  // [Auto-translated] "Custom"
-  intervalMode_custom: "Personnalisé",
   // [Auto-translated] "Auto"
   intervalMode_auto: "Auto",
   // [Auto-translated] "Intervals:"

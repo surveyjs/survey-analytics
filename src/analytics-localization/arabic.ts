@@ -1,12 +1,6 @@
 import { setupLocale } from "../localizationManager";
 
 export var arabicStrings = {
-  // "Group By Me"
-  groupButton: "زرار المجموعة",
-  // "Ungroup By Me"
-  ungroupButton: "تم التحديث من خلالى",
-  // "Select Me"
-  selectButton: "اختر",
   // "Hide column"
   hideColumn: "اخفاء العمود",
   // "Show column"
@@ -133,8 +127,6 @@ export var arabicStrings = {
   answer: "إجب",
   // "Correct answer: "
   correctAnswer: "الاجابة الصحيحة: ",
-  // "Percent"
-  percent: "النسبه المئويه",
   // [Auto-translated] "Percentage"
   percentage: "النسبه المئويه",
   // [Auto-translated] "Chart"
@@ -165,8 +157,6 @@ export var arabicStrings = {
   axisYAlternativeSelectorTitle: "المجموعات:",
   // [Auto-translated] "Not selected"
   notSelected: "لم يتم اختياره",
-  // [Auto-translated] "Default"
-  intervalMode_default: "افتراضي",
   // [Auto-translated] "Decades"
   intervalMode_decades: "عقود",
   // [Auto-translated] "Years"
@@ -177,8 +167,6 @@ export var arabicStrings = {
   intervalMode_months: "أشهر",
   // [Auto-translated] "Days"
   intervalMode_days: "أيام",
-  // [Auto-translated] "Custom"
-  intervalMode_custom: "تقليد",
   // [Auto-translated] "Auto"
   intervalMode_auto: "تلقائي",
   // [Auto-translated] "Intervals:"

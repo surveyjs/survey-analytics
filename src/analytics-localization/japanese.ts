@@ -1,12 +1,6 @@
 import { setupLocale } from "../localizationManager";
 
 export var japaneseStrings = {
-  // "Group By Me"
-  groupButton: "グループ化",
-  // "Ungroup By Me"
-  ungroupButton: "グループ解除",
-  // "Select Me"
-  selectButton: "選択",
   // "Hide column"
   hideColumn: "列を非表示",
   // "Show column"
@@ -133,8 +127,6 @@ export var japaneseStrings = {
   answer: "回答",
   // "Correct answer: "
   correctAnswer: "正解: ",
-  // "Percent"
-  percent: "パーセント",
   // [Auto-translated] "Percentage"
   percentage: "百分率",
   // [Auto-translated] "Chart"
@@ -165,8 +157,6 @@ export var japaneseStrings = {
   axisYAlternativeSelectorTitle: "グループ：",
   // [Auto-translated] "Not selected"
   notSelected: "選ばれませんでした",
-  // [Auto-translated] "Default"
-  intervalMode_default: "デフォルト",
   // [Auto-translated] "Decades"
   intervalMode_decades: "数 十 年",
   // [Auto-translated] "Years"
@@ -177,8 +167,6 @@ export var japaneseStrings = {
   intervalMode_months: "月",
   // [Auto-translated] "Days"
   intervalMode_days: "日",
-  // [Auto-translated] "Custom"
-  intervalMode_custom: "習慣",
   // [Auto-translated] "Auto"
   intervalMode_auto: "自動",
   // [Auto-translated] "Intervals:"

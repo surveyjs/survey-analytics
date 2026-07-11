@@ -1,12 +1,6 @@
 import { setupLocale } from "../localizationManager";
 
 export var spanishStrings = {
-  // "Group By Me"
-  groupButton: "Grupo Por Mí",
-  // "Ungroup By Me"
-  ungroupButton: "Desagrupar por mí",
-  // "Select Me"
-  selectButton: "Seleccionarme",
   // "Hide column"
   hideColumn: "Ocultar columna",
   // "Show column"
@@ -133,8 +127,6 @@ export var spanishStrings = {
   answer: "Respuesta",
   // "Correct answer: "
   correctAnswer: "Respuesta correcta: ",
-  // "Percent"
-  percent: "Por ciento",
   // [Auto-translated] "Percentage"
   percentage: "Porcentaje",
   // [Auto-translated] "Chart"
@@ -165,8 +157,6 @@ export var spanishStrings = {
   axisYAlternativeSelectorTitle: "Grupos:",
   // [Auto-translated] "Not selected"
   notSelected: "No seleccionado",
-  // [Auto-translated] "Default"
-  intervalMode_default: "Predeterminado",
   // [Auto-translated] "Decades"
   intervalMode_decades: "Décadas",
   // [Auto-translated] "Years"
@@ -177,8 +167,6 @@ export var spanishStrings = {
   intervalMode_months: "Meses",
   // [Auto-translated] "Days"
   intervalMode_days: "Días",
-  // [Auto-translated] "Custom"
-  intervalMode_custom: "Costumbre",
   // [Auto-translated] "Auto"
   intervalMode_auto: "Automático",
   // [Auto-translated] "Intervals:"

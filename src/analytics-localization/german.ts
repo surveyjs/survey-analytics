@@ -1,12 +1,6 @@
 import { setupLocale } from "../localizationManager";
 
 export var germanStrings = {
-  // "Group By Me"
-  groupButton: "Gruppieren",
-  // "Ungroup By Me"
-  ungroupButton: "Gruppierung aufheben",
-  // "Select Me"
-  selectButton: "Mich auswählen",
   // "Hide column"
   hideColumn: "Spalte ausblenden",
   // "Show column"
@@ -133,8 +127,6 @@ export var germanStrings = {
   answer: "Antwort",
   // "Correct answer: "
   correctAnswer: "Korrekte Antwort: ",
-  // "Percent"
-  percent: "Prozent",
   // [Auto-translated] "Percentage"
   percentage: "Prozentsatz",
   // [Auto-translated] "Chart"
@@ -165,8 +157,6 @@ export var germanStrings = {
   axisYAlternativeSelectorTitle: "Gruppen:",
   // [Auto-translated] "Not selected"
   notSelected: "Nicht ausgewählt",
-  // [Auto-translated] "Default"
-  intervalMode_default: "Vorgabe",
   // [Auto-translated] "Decades"
   intervalMode_decades: "Dekaden",
   // [Auto-translated] "Years"
@@ -177,8 +167,6 @@ export var germanStrings = {
   intervalMode_months: "Monate",
   // [Auto-translated] "Days"
   intervalMode_days: "Tage",
-  // [Auto-translated] "Custom"
-  intervalMode_custom: "Gewohnheit",
   // [Auto-translated] "Auto"
   intervalMode_auto: "Auto",
   // [Auto-translated] "Intervals:"
