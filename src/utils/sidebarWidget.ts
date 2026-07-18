@@ -5,20 +5,34 @@ import "./sidebar.scss";
 
 /**
  * Options for the sidebar widget (toolbar button + sliding panel).
+ * @since 3.0.0
  */
 export interface ISidebarOptions {
-  /** Panel title shown in the header */
+  /**
+   * Panel title shown in the header
+   * @since 3.0.0
+   */
   title: string;
   /**
    * Array of sidebar item entries (creator + optional groupIndex). Items with different groupIndex are separated by a divider.
    * For backward compatibility, a plain array of creator functions is also accepted (all items are treated as one group).
+   * @since 3.0.0
    */
   itemCreators: SideBarItemCreators;
-  /** SVG icon name for the toolbar button (e.g. "settings_24x24"). */
+  /**
+   * SVG icon name for the toolbar button (e.g. "settings_24x24").
+   * @since 3.0.0
+   */
   buttonIcon?: string;
-  /** Accessible title for the toolbar button. */
+  /**
+   * Accessible title for the toolbar button.
+   * @since 3.0.0
+   */
   buttonTitle?: string;
-  /** Optional CSS class for the panel root. */
+  /**
+   * Optional CSS class for the panel root.
+   * @since 3.0.0
+   */
   panelClassName?: string;
 }
 
@@ -29,6 +43,7 @@ const SIDEBAR_BACKDROP_OPEN_CLASS = "sa-sidebar__backdrop--opened";
 /**
  * Widget that renders a toolbar button which opens a sidebar (sliding) panel.
  * The panel is rendered on the side (e.g. right), shows a title with close button, and renders content from toolbarItemCreators.
+ * @since 3.0.0
  */
 export class SidebarWidget {
   private options: ISidebarOptions;
@@ -45,6 +60,7 @@ export class SidebarWidget {
    * Renders the toolbar button. When clicked, opens the sidebar panel.
    * @param _toolbar - Optional toolbar container (for API compatibility with toolbar item creators).
    * @returns The button element to be placed in the toolbar.
+   * @since 3.0.0
    */
   render(_toolbar?: HTMLDivElement): HTMLDivElement {
     this.buttonElement = DocumentHelper.createElement("div", "sa-toolbar__button sa-toolbar__button-with-icon sa-sidebar__trigger") as HTMLDivElement;

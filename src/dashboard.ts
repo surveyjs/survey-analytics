@@ -15,12 +15,14 @@ import { DocumentHelper } from "./utils/documentHelper";
  * [Get Started with SurveyJS Dashboard](https://surveyjs.io/dashboard/documentation/get-started (linkStyle))
  *
  * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
+ * @since 3.0.0
  */
 export interface IDashboardOptions extends IVisualizationPanelOptions {
   /**
    * An array of data field names and [dashboard item configuration objects](https://surveyjs.io/dashboard/documentation/idashboarditemoptions).
    *
    * Specify this property to define dashboard items explicitly or customize items generated from the [`questions`](#questions) array. The array order determines the item order in the Dashboard.
+   * @since 3.0.0
    */
   items?: Array<string | IDashboardItemOptions>;
   /**
@@ -29,6 +31,7 @@ export interface IDashboardOptions extends IVisualizationPanelOptions {
    * To populate this array, instantiate a [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model), call its [`getAllQuestions()`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#getAllQuestions) method, optionally filter the result, and assign it to this property.
    *
    * When `questions` are specified, the Dashboard generates items automatically according to question configuration. Use the [`items`](#items) array to customize the generated items.
+   * @since 3.0.0
    */
   questions?: Question[];
   /**
@@ -42,10 +45,12 @@ export interface IDashboardOptions extends IVisualizationPanelOptions {
    * Dashboard items are defined explicitly.
    * - Both `questions` and `items`\
    * Items are generated from `questions` and then customized using `items`.
+   * @since 3.0.0
    */
   data?: any[];
   /**
    * The name of a data field that contains date values used by the date panel.
+   * @since 3.0.0
    */
   dateFieldName?: string;
   /**
@@ -67,6 +72,7 @@ export interface IDashboardOptions extends IVisualizationPanelOptions {
    * - `"wtdSun"` &ndash; This week to date (starts Sunday)
    * - `"wtdMon"` &ndash; This week to date (starts Monday)
    * - `"qtd"` &ndash; This quarter to date
+   * @since 3.0.0
    * @see availableDatePeriods
    * @see showDatePanel
    */
@@ -75,18 +81,21 @@ export interface IDashboardOptions extends IVisualizationPanelOptions {
    * An array of date periods available for selection in the date panel.
    *
    * Refer to [`datePeriod`](#datePeriod) for supported values.
+   * @since 3.0.0
    */
   availableDatePeriods?: DatePeriodEnum[];
   /**
    * A `[startDate, endDate]` tuple that defines a custom date range. Applies only if [`dateFieldName`](#dateFieldName) is specified.
    *
    * If both [`datePeriod`](#datePeriod) and `dateRange` are specified, `dateRange` takes precedence.
+   * @since 3.0.0
    */
   dateRange?: DateRangeTuple;
   /**
    * Specifies whether to display the total number of answers in the date panel. Applies only if [`dateFieldName`](#dateFieldName) is specified.
    *
    * Default value: `true`
+   * @since 3.0.0
    */
   showDatePanel?: boolean;
   showAnswerCount?: boolean;
@@ -98,6 +107,7 @@ export interface IDashboardOptions extends IVisualizationPanelOptions {
  * [Get Started with SurveyJS Dashboard](https://surveyjs.io/dashboard/documentation/get-started (linkStyle))
  *
  * [View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
+ * @since 3.0.0
  */
 export class Dashboard extends VisualizationPanel<DashboardItem> {
   private _dateRangeWidget: DateRangeWidget;
@@ -119,6 +129,7 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
    * The selected `[startDate, endDate]` range.
    * - `options.datePeriod`: `"last7days"` | `"last14days"` | `"last28days"` | `"last30days"` | `"lastWeekMon"` | `"lastWeekSun"` | `"lastMonth"` | `"lastQuarter"` | `"lastYear"` | `"ytd"` | `"mtd"` | `"wtdSun"` | `"wtdMon"` | `"qtd"`\
    * The selected predefined date period. `undefined` if the user selected a custom range.
+   * @since 3.0.0
    */
   public onDateRangeChanged = new Event<(sender: Dashboard, options: IDateRangeChangedOptions) => any, Dashboard, any>();
   public createDateRangeWidget(): void {
@@ -194,6 +205,7 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
    * Gets an array of [dashboard items](https://surveyjs.io/dashboard/documentation/api-reference/dashboarditem).
    *
    * Each item represents a single data visualization within the Dashboard.
+   * @since 3.0.0
    */
   public get items(): DashboardItem[] {
     return this._elements;
@@ -204,6 +216,7 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
    * If the [`questions`](https://surveyjs.io/dashboard/documentation/api-reference/idashboardoptions#questions) array is specified when initializing the Dashboard, item names are generated automatically based on the associated question names.
    * @param name The item identifier.
    * @returns A [`DashboardItem`](https://surveyjs.io/dashboard/documentation/api-reference/dashboarditem) instance, or `undefined` if no matching item is found.
+   * @since 3.0.0
    */
   public getItem(name: string): DashboardItem | undefined {
     return this.getElement(name) as DashboardItem;
@@ -218,6 +231,7 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
    * Adds an item to the Dashboard.
    * @param item A [`DashboardItem`](https://surveyjs.io/dashboard/documentation/api-reference/dashboarditem) instance, an [`IDashboardItemOptions`](https://surveyjs.io/dashboard/documentation/api-reference/idashboarditemoptions) object, or a survey question used to create a new item.
    * @returns The added `DashboardItem` instance.
+   * @since 3.0.0
    */
   public addItem(item: DashboardItem | IDashboardItemOptions | Question): DashboardItem {
     let dashboardItem: DashboardItem;
@@ -239,6 +253,7 @@ export class Dashboard extends VisualizationPanel<DashboardItem> {
    * Removes an item from the Dashboard.
    *
    * @param item A [`DashboardItem`](https://surveyjs.io/dashboard/documentation/api-reference/dashboarditem) instance or the name of the item to remove.
+   * @since 3.0.0
    */
   public removeItem(item: DashboardItem | string) {
     if(!!item) {

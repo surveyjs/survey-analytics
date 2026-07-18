@@ -71,6 +71,7 @@ export class PanelElement implements IVisualizerPanelRenderedElement {
    * A unique identifier for the dashboard item.
    *
    * If the [`questions`](https://surveyjs.io/dashboard/documentation/api-reference/idashboardoptions#questions) array is specified when initializing the Dashboard, item names are generated automatically based on the associated question names.
+   * @since 3.0.0
    */
   name: string;
   displayName: string;
@@ -168,6 +169,7 @@ export interface IVisualizationPanelOptions extends ISelectBaseVisualizerOptions
    * Specifies whether to display the toolbar.
    *
    * Default value: `true`
+   * @since 3.0.0
    */
   showToolbar?: boolean;
 }

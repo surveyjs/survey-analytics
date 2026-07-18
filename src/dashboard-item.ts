@@ -13,14 +13,17 @@ import { localization } from "./localizationManager";
  * Pass an array of `IDashboardItemOptions` objects to the [`items`](https://surveyjs.io/dashboard/documentation/api-reference/dashboard#items) array when initializing the Dashboard.
  *
  * [View Demo](https://surveyjs.io/dashboard/examples/customer-satisfaction-survey-analysis/ (linkStyle))
+ * @since 3.0.0
  */
 export interface IDashboardItemOptions {
   /**
    * A unique identifier for the item.
+   * @since 3.0.0
    */
   name?: string;
   /**
    * The data field the item is bound to. If not specified, the [`name`](#name) value is used.
+   * @since 3.0.0
    */
   dataField?: string;
   /**
@@ -46,23 +49,27 @@ export interface IDashboardItemOptions {
    * - [`"pivot"`](https://surveyjs.io/dashboard/documentation/chart-types#pivot-chart)
    *
    * To prevent end users from changing the item type at runtime, set [`allowChangeType`](#allowChangeType) to `false`.
+   * @since 3.0.0
    */
   type?: string;
   /**
    * A list of item types available for user selection.
    *
    * Refer to [`type`](#type) for supported values.
+   * @since 3.0.0
    * @see allowChangeType
    */
   availableTypes?: string[];
   /**
    * The item title.
+   * @since 3.0.0
    */
   title?: string;
   /**
    * Specifies whether users can change the item [`type`](#type).
    *
    * Default value: `true`
+   * @since 3.0.0
    * @see availableTypes
    */
   allowChangeType?: boolean;
@@ -70,16 +77,19 @@ export interface IDashboardItemOptions {
    * Specifies whether this item is visible.
    *
    * Default value: `true`
+   * @since 3.0.0
    */
   visible?: boolean;
   /**
    * A configuration object with visualizer settings that control how this item's data is rendered.
+   * @since 3.0.0
    */
   visualizer?: { [index: string]: any };
 }
 
 /**
  * Visualizes an individual dashboard item.
+ * @since 3.0.0
  */
 export class DashboardItem extends PanelElement implements IDashboardItemOptions, IVisualizerPanelRenderedElement {
   private _visualizerType: string;
@@ -210,6 +220,7 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
   /**
    * Returns the currently active visualizer.
    * @returns The currently active visualizer.
+   * @since 3.0.0
    */
   public get visualizer(): VisualizerBase | undefined {
     let currentVisualizer = this.visualizerInstance;
@@ -342,6 +353,7 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
    * Gets or sets the list of item types available for user selection.
    *
    * Refer to [`IDashboardItemOptions.type`](https://surveyjs.io/dashboard/documentation/api-reference/idashboarditemoptions#type) for supported values.
+   * @since 3.0.0
    */
   get availableTypes(): string[] {
     const at = [];
@@ -375,6 +387,7 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
    * Gets or sets the current dashboard item type.
    *
    * Refer to [`IDashboardItemOptions.type`](https://surveyjs.io/dashboard/documentation/api-reference/idashboarditemoptions#type) for supported values.
+   * @since 3.0.0
    */
   get type(): string {
     return this._type;
@@ -386,6 +399,7 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
   }
   /**
    * Gets or sets the data field the item is bound to.
+   * @since 3.0.0
    */
   get dataField(): string | undefined {
     return this._dataField || this.getDataField();
@@ -395,6 +409,7 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
   }
   /**
    * Gets or sets the item title.
+   * @since 3.0.0
    */
   get title(): string {
     return this.displayName;
@@ -404,6 +419,7 @@ export class DashboardItem extends PanelElement implements IDashboardItemOptions
   }
   /**
    * Gets or sets item visibility.
+   * @since 3.0.0
    */
   get visible(): boolean {
     return this.isVisible;

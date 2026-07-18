@@ -7,12 +7,14 @@ export interface ITableOptions {
    * Specifies whether to use question names instead of question titles as column headings.
    *
    * Default value: `false`
+   * @since 3.0.0
    */
   useNamesAsTitles?: boolean;
   /**
    * Specifies the delimiter used to separate multiple choice items in a list.
    *
    * Default value: `", "`
+   * @since 3.0.0
    */
   itemsDelimiter?: string;
   /**
@@ -24,6 +26,7 @@ export interface ITableOptions {
    * The question for which the callback is executed.
    * - `options.displayValue`: `any`\
    * The question's display value. You can modify this parameter to change the output.
+   * @since 3.0.0
    */
   onGetQuestionValue?: (options: {
     question: Question,
@@ -34,6 +37,7 @@ export interface ITableOptions {
    * Specifies the number of data items to load and display per page. Applies only if `paginationEnabled` is `true`.
    *
    * Default value: 10
+   * @since 3.0.0
    * @see paginationEnabled
    */
   pageSize?: number;
@@ -43,6 +47,7 @@ export interface ITableOptions {
    * Default value: `true`
    *
    * > Pagination cannot be disabled if the dataset is loaded from a server (that is, if the second parameter passed to the `Tabulator` constructor is a function).
+   * @since 3.0.0
    * @see pageSize
    */
   paginationEnabled?: boolean;
@@ -53,6 +58,7 @@ export interface ITableOptions {
    *
    * Default value: `false`
    *
+   * @since 3.0.0
    */
   splitMultiSelectIntoColumns?: boolean;
   /**
@@ -64,6 +70,7 @@ export interface ITableOptions {
    * - `"selectionOrder"` &ndash; Displays the order in which choices were selected (1, 2, 3, ...).
    *
    * Default value: `"checkmark"`
+   * @since 3.0.0
    */
   multiSelectColumnValueFormat?: "checkmark" | "selectionOrder";
 }

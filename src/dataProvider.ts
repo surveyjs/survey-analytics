@@ -134,6 +134,7 @@ export class DataProvider {
 
   /**
    * Sets filter by question name and value.
+   * @since 3.0.0
    */
   public setSystemFilter(questionName: string, selectedValue: any): void {
     this.setFilterCore(questionName, selectedValue, this.systemFilterValues);
@@ -141,6 +142,7 @@ export class DataProvider {
 
   /**
    * Resets filter.
+   * @since 3.0.0
    */
   public resetSystemFilter(): void {
     this.resetFilterCore(this.systemFilterValues);
