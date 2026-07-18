@@ -27,6 +27,7 @@ export interface ITableOptions {
    * Specifies the delimiter used to separate multiple choice items in a list.
    *
    * Default value: `", "`
+   * @since 2.3.7
    */
   itemsDelimiter?: string;
   /**
@@ -58,6 +59,7 @@ export interface ITableOptions {
    *
    * > Pagination cannot be disabled if the dataset is loaded from a server (that is, if the second parameter passed to the `Tabulator` constructor is a function).
    * @see pageSize
+   * @since 2.3.12
    */
   paginationEnabled?: boolean;
   /**
@@ -66,6 +68,7 @@ export interface ITableOptions {
    * Default value: `true`
    *
    * If disabled, responses are displayed as stringified JSON objects instead of a tabular structure.
+   * @since 2.5.19
    */
   useNestedTables?: boolean;
   /**
@@ -75,6 +78,7 @@ export interface ITableOptions {
    *
    * Default value: `false`
    *
+   * @since 2.5.18
    */
   splitMultiSelectIntoColumns?: boolean;
   /**
@@ -86,6 +90,7 @@ export interface ITableOptions {
    * - `"selectionOrder"` &ndash; Displays the order in which choices were selected (1, 2, 3, ...).
    *
    * Default value: `"checkmark"`
+   * @since 2.5.18
    */
   multiSelectColumnValueFormat?: "checkmark" | "selectionOrder";
 
@@ -97,6 +102,7 @@ export interface ITableOptions {
    * A Multi-Select Matrix creates a separate table column for each matrix cell (row &times; column pair). For example, a 5 &times; 3 matrix produces 15 table columns. Use the `matrixDropdownDetailRowThreshold` property to control how many of these generated columns are displayed in the main table. Remaining columns are displayed in the detail row.
    *
    * Set this property to `-1` to display all generated table columns in the main table.
+   * @since 2.5.25
    */
   matrixDropdownDetailRowThreshold?: number;
 }
@@ -461,6 +467,7 @@ export abstract class Table {
   }
   /**
    * Resets table state.
+   * @since 2.3.5
    */
   public resetState(): void {
     this._survey.locale = surveyLocalization.defaultLocale;

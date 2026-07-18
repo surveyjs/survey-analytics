@@ -373,6 +373,7 @@ export class VisualizerBase implements IDataInfo {
 
   /**
    * Returns the visualizer's title.
+   * @since 2.3.8
    */
   public get title(): string {
     return this.getTitle(this.question);
@@ -891,6 +892,7 @@ export class VisualizerBase implements IDataInfo {
    * @see getState
    * @see setState
    * @see onStateChanged
+   * @since 2.3.5
    */
   public resetState(): void {
   }

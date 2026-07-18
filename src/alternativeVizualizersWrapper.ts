@@ -200,6 +200,7 @@ export class AlternativeVisualizersWrapper
    *
    * @see getState
    * @see setState
+   * @since 2.3.5
    */
   public resetState(): void {
     super.resetState();

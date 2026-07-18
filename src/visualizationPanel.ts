@@ -273,6 +273,7 @@ export interface IVisualizationPanelOptions {
    * Allows users to switch between different visualizer types.
    *
    * Default value: `true`
+   * @since 2.3.8
    */
   allowChangeVisualizerType?: boolean;
 }

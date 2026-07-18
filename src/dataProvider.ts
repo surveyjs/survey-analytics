@@ -118,6 +118,7 @@ export class DataProvider {
 
   /**
    * Fires when data has been changed.
+   * @since 2.3.11
    */
   public onFilterChanged = new Event<
     (sender: DataProvider, options: any) => any,
