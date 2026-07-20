@@ -22,7 +22,10 @@ trigger:
 pool:
   vmImage: "Ubuntu-22.04"
 
-steps:
+jobs:
+- job: SurveyAnalytics
+  timeoutInMinutes: 90
+  steps:
   - checkout: self
   - checkout: Service
     persistCredentials: true
@@ -42,13 +45,6 @@ steps:
       OverWrite: true
     displayName: "Copy package.json for cache key"
 
-  - task: Cache@2
-    inputs:
-      key: 'npm-cache-analytics | $(Build.SourcesDirectory)/Temp/package.json'
-      path: $(Build.SourcesDirectory)/survey-analytics/node_modules
-      cacheHitVar: NPM_CACHE_RESTORED
-    displayName: Cache NPM
-
   - powershell: |
       $env:GIT_REDIRECT_STDERR = '2>&1'
       git config --global user.email "surveyjs.org@gmail.com"
@@ -62,7 +58,6 @@ steps:
       customCommand: install --legacy-peer-deps 
       verbose: false
       workingDir: $(Build.SourcesDirectory)/survey-analytics
-    condition: ne(variables.NPM_CACHE_RESTORED, 'true')
 
   - script: |
       cd $(Build.SourcesDirectory)/survey-analytics
