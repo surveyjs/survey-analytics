@@ -3,6 +3,7 @@ import { Question, SurveyModel } from "survey-core";
 import { Tabulator } from "../../src/entries/tabulator-umd";
 import { TableExtensions } from "../../src/tables/extensions/tableextensions";
 import { Table } from "../../src/tables/table";
+import { ColumnDataType } from "../../src/tables/config";
 import { vi } from "vitest";
 
 vi.mock("tabulator-tables", async () => {
@@ -309,6 +310,24 @@ test("image and file export formatter", () => {
 
   const imageCell = accessorDownload(undefined, data[0], undefined, undefined, { getDefinition: () => ({ field: "signature" }) }, { getData: () => { return { "surveyOriginalData": data[0] }; } });
   expect(imageCell).toBe("signature");
+
+  // After state introduces an extra column, download accessor must still resolve columns via refreshed cache.
+  tabulator.state = {
+    ...tabulator.state,
+    elements: [
+      ...tabulator.state.elements,
+      {
+        name: "extra",
+        displayName: "extra",
+        dataType: ColumnDataType.Text,
+        isVisible: true,
+        isPublic: true,
+        location: 0,
+      }
+    ]
+  };
+  expect(tabulator.getColumnByName("extra")?.name).toBe("extra");
+  expect(tabulator.getColumnByName("image")?.name).toBe("image");
 });
 test("check getDataPosition returns correct index", () => {
   const surveyJson = {

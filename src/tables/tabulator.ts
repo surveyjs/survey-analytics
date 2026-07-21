@@ -528,7 +528,7 @@ export class Tabulator extends Table {
     if(Array.isArray(this.data)) {
       const columnDefinition = columnComponent.getDefinition();
       const questionName = columnDefinition.field;
-      const column = this.columns.filter(col => col.name === questionName)[0];
+      const column = this.getColumnByName(questionName);
       if(!!column && rowComponent) {
         const dataRow = rowComponent.getData().surveyOriginalData;
         const dataCell = dataRow[questionName];

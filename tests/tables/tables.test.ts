@@ -1108,6 +1108,40 @@ test("check set state with columns which not inside survey", () => {
   expect(table.columns[1].getCellData(table, data).question).toBe(undefined);
 });
 
+test("getColumnByName uses Map cache and invalidates after state adds columns", () => {
+  const survey = new SurveyModel({
+    questions: [{ type: "text", name: "q1" }]
+  });
+  const table = new TableTest(survey, [{ q1: "text1", q2: "text2" }], {}, []);
+
+  expect(table.getColumnByName("q1").name).toBe("q1");
+  expect(table.getColumnByName("q2")).toBeUndefined();
+
+  table.state = {
+    elements: [
+      {
+        dataType: ColumnDataType.Text,
+        displayName: "q1",
+        isPublic: true,
+        isVisible: true,
+        location: QuestionLocation.Column,
+        name: "q1"
+      },
+      {
+        dataType: ColumnDataType.Text,
+        displayName: "q2",
+        isPublic: true,
+        isVisible: true,
+        location: QuestionLocation.Column,
+        name: "q2"
+      }
+    ]
+  };
+
+  expect(table.getColumnByName("q2").name).toBe("q2");
+  expect(table.getColumnByName("q1").name).toBe("q1");
+});
+
 test("check checkbox column with multi comments", () => {
   const json = { "elements":
          [{

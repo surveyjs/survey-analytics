@@ -117,6 +117,7 @@ export abstract class Table {
   protected extensions: TableExtensions;
   private haveCommercialLicense = false;
   protected _columns: Array<IColumn>;
+  private _columnsByName: Map<string, IColumn> | null = null;
   constructor(
     protected _survey: SurveyModel,
     protected data: Array<Object> | GetDataFn,
@@ -155,7 +156,7 @@ export abstract class Table {
     this.isInitialized = false;
     this.currentPageSize = this.options.pageSize || 5;
     this.currentPageNumber = 1;
-    this._columns = this.buildColumns(this._survey);
+    this.setColumns(this.buildColumns(this._survey));
     this.initTableData(this.data);
     localization.currentLocale = this._survey.locale;
 
@@ -282,9 +283,18 @@ export abstract class Table {
   }
 
   public set columns(columns: Array<IColumn>) {
-    this._columns = columns;
+    this.setColumns(columns);
     this.refresh(true);
     this.stateChanged();
+  }
+
+  protected setColumns(columns: Array<IColumn>): void {
+    this._columns = columns;
+    this.invalidateColumnsByNameCache();
+  }
+
+  protected invalidateColumnsByNameCache(): void {
+    this._columnsByName = null;
   }
 
   private isInitTableDataProcessingValue: boolean;
@@ -327,7 +337,13 @@ export abstract class Table {
   }
 
   public getColumnByName(columnName: string): IColumn {
-    return this._columns.filter((column) => column.name === columnName)[0];
+    if(!this._columnsByName) {
+      this._columnsByName = new Map<string, IColumn>();
+      for(const column of this._columns) {
+        this._columnsByName.set(column.name, column);
+      }
+    }
+    return this._columnsByName.get(columnName);
   }
 
   public setColumnVisibility(columnName: string, isVisible: boolean) {
@@ -487,7 +503,7 @@ export abstract class Table {
         columns.push(column);
       }
     });
-    this._columns = this._columns.sort((col1, col2) => col1.visibleIndex - col2.visibleIndex);
+    this.setColumns(this._columns.sort((col1, col2) => col1.visibleIndex - col2.visibleIndex));
   }
 
   /**
@@ -518,7 +534,7 @@ export abstract class Table {
 
       return column;
     });
-    this._columns = [].concat(updatedElements);
+    this.setColumns([].concat(updatedElements));
     this.onPermissionsChangedCallback &&
       this.onPermissionsChangedCallback(this);
   }
