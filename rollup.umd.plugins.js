@@ -6,6 +6,8 @@ const sass = require("sass");
 const fg = require("fast-glob");
 const svgLoader = require("svg-inline-loader");
 const { minify } = require("terser");
+const postcss = require("postcss");
+const sjs2Fallbacks = require("./postcss-sjs2-fallbacks");
 
 function toBool(val, fallback = false) {
   if(val === undefined || val === null) {
@@ -100,6 +102,19 @@ function createMinifyChunkPlugin(options) {
   };
 }
 
+// survey-core is installed as a relative directory dependency
+// (../survey-library/packages/survey-core/build). The base theme defaults
+// file (base-theme.ts) is not part of the build output, so resolve it from
+// the package's source folder next to the linked build folder.
+function resolveCssVariableDefaultsPath(rootDir) {
+  const packageDir = fs.realpathSync(path.join(rootDir, "node_modules", "survey-core"));
+  const defaultsPath = path.resolve(packageDir, "..", "src", "default-theme", "base-theme.ts");
+  if(!fs.existsSync(defaultsPath)) {
+    throw new Error("sjs2-fallbacks: cannot find survey-core base theme defaults at " + defaultsPath);
+  }
+  return defaultsPath;
+}
+
 function emitCssFile(options) {
   const { rootDir, buildDir, entry, isProduction } = options;
   if(!entry.cssFiles || entry.cssFiles.length === 0) {
@@ -121,11 +136,21 @@ function emitCssFile(options) {
     url: new URL("file://" + rootDir.replace(/\\/g, "/") + "/")
   });
 
-  fs.writeFileSync(cssOutPath, compileResult.css, "utf8");
+  // Bakes survey-core base-theme defaults into var() fallback chains so the
+  // runtime does not need to declare them (keeps DevTools' Styles panel fast).
+  const processResult = postcss([
+    sjs2Fallbacks({ defaultsPath: resolveCssVariableDefaultsPath(rootDir) })
+  ]).process(compileResult.css, {
+    from: cssOutPath,
+    to: cssOutPath,
+    map: compileResult.sourceMap ? { prev: compileResult.sourceMap, inline: false, annotation: false } : false
+  });
 
-  if(!isProduction && compileResult.sourceMap) {
+  fs.writeFileSync(cssOutPath, processResult.css, "utf8");
+
+  if(!isProduction && processResult.map) {
     const mapPath = cssOutPath + ".map";
-    fs.writeFileSync(mapPath, JSON.stringify(compileResult.sourceMap), "utf8");
+    fs.writeFileSync(mapPath, processResult.map.toString(), "utf8");
     fs.appendFileSync(cssOutPath, "\n/*# sourceMappingURL=" + path.basename(mapPath) + " */\n", "utf8");
   }
 }
@@ -271,6 +296,7 @@ function createCssPlugin(options) {
 
 module.exports = {
   toBool,
+  resolveCssVariableDefaultsPath,
   createIconsPlugin,
   createRemoveScssImportsPlugin,
   createMinifyChunkPlugin,

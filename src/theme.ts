@@ -1,4 +1,4 @@
-import { ensureBaseThemeStyles, ITheme, getRGBaColor, BaseTheme, mergeObjects } from "survey-core";
+import { ensureBaseThemeStyles, expandThemeCssVariables, ITheme, getRGBaColor, BaseTheme, mergeObjects } from "survey-core";
 import { DefaultLight } from "survey-core/themes";
 import { DocumentHelper } from "./utils/documentHelper";
 
@@ -50,6 +50,23 @@ const usedCssVariableKeys: string[] = [
   ...chartColorTintedCssVariableKeys
 ];
 
+// Bare var(--sjs2-*) references resolve to nothing at runtime: base theme
+// defaults are baked into the compiled CSS as var() fallback chains instead of
+// being declared on the dashboard root. Values read back via getComputedStyle
+// need the same fallback chains expanded from the base theme defaults.
+let expandedCssVariableReferences: { [index: string]: string } | undefined;
+function getExpandedCssVariableReference(key: string): string {
+  if(!expandedCssVariableReferences) {
+    const references: { [index: string]: string } = {};
+    usedCssVariableKeys.forEach(varKey => {
+      references[varKey] = `var(${varKey})`;
+    });
+    expandThemeCssVariables(references);
+    expandedCssVariableReferences = references;
+  }
+  return expandedCssVariableReferences[key] || `var(${key})`;
+}
+
 export class DashboardTheme implements ITheme {
   static barGap = 0.05;
   static fontFamily = "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif";
@@ -89,16 +106,18 @@ export class DashboardTheme implements ITheme {
     usedCssVariableKeys.forEach(key => {
       let value;
       if(key.indexOf("palette") !== -1 || key.indexOf("color") !== -1) {
-        tempElement.style.setProperty("color", `var(${key})`);
+        tempElement.style.setProperty("color", getExpandedCssVariableReference(key));
         const computedStyle = getComputedStyle(tempElement);
         value = computedStyle.getPropertyValue("color");
         value = getRGBaColor(value);
       } else if(key.indexOf("font-family") === -1 && key.indexOf("opacity") === -1 && key.indexOf("scale") === -1) {
-        tempElement.style.setProperty("width", `var(${key})`);
+        tempElement.style.setProperty("width", getExpandedCssVariableReference(key));
         const computedStyle = getComputedStyle(tempElement);
         value = computedStyle.getPropertyValue("width");
       } else {
-        value = this._cssStyleDeclaration.getPropertyValue(key);
+        // The variable is not declared at runtime unless a theme overrides it,
+        // so fall back to the base theme default (e.g. the font family name).
+        value = this._cssStyleDeclaration.getPropertyValue(key) || BaseTheme.cssVariables[key];
       }
       this._computedValuesCache[key] = value;
     });
@@ -137,6 +156,10 @@ export class DashboardTheme implements ITheme {
 
   public setTheme(theme?: ITheme): void {
     this.theme = mergeObjects({}, DefaultLight, theme);
+    // Theme values are applied as inline styles on the dashboard root, where
+    // the fallbacks baked into the compiled CSS do not reach, so var()
+    // references to base variables need their defaults expanded here.
+    expandThemeCssVariables(this.theme.cssVariables);
     this._computedValuesCache = {};
     // const calculater = DocumentHelper.createElement("div");
     // document.body.appendChild(calculater);

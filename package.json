@@ -83,6 +83,7 @@
     "mongodb-memory-server": "^10.2.1",
     "node-uuid": "1.4.7",
     "playwright": "1.60.0",
+    "postcss": "^8.5.21",
     "puppeteer": "22.13.1",
     "replace-in-file": "^6.3.2",
     "rollup": "^4.59.0",
