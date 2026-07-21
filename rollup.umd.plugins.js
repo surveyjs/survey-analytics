@@ -102,17 +102,20 @@ function createMinifyChunkPlugin(options) {
   };
 }
 
-// survey-core is installed as a relative directory dependency
-// (../survey-library/packages/survey-core/build). The base theme defaults
-// file (base-theme.ts) is not part of the build output, so resolve it from
-// the package's source folder next to the linked build folder.
-function resolveCssVariableDefaultsPath(rootDir) {
-  const packageDir = fs.realpathSync(path.join(rootDir, "node_modules", "survey-core"));
-  const defaultsPath = path.resolve(packageDir, "..", "src", "default-theme", "base-theme.ts");
-  if(!fs.existsSync(defaultsPath)) {
-    throw new Error("sjs2-fallbacks: cannot find survey-core base theme defaults at " + defaultsPath);
+// survey-core lands in node_modules either as a linked relative directory
+// dependency (local dev: ../survey-library/packages/survey-core/build) or as
+// a plain copy of the build artifact (CI), so no sibling source folder with
+// base-theme.ts is guaranteed to exist. The build output itself does not ship
+// base-theme.ts, but its data is bundled and exported as BaseTheme, so load
+// the defaults from the installed package.
+function resolveCssVariableDefaults(rootDir) {
+  const packagePath = require.resolve("survey-core", { paths: [rootDir] });
+  const baseTheme = require(packagePath).BaseTheme;
+  const variables = baseTheme && baseTheme.cssVariables;
+  if(!variables || Object.keys(variables).length === 0) {
+    throw new Error("sjs2-fallbacks: no cssVariables in the BaseTheme export of " + packagePath);
   }
-  return defaultsPath;
+  return variables;
 }
 
 function emitCssFile(options) {
@@ -139,7 +142,10 @@ function emitCssFile(options) {
   // Bakes survey-core base-theme defaults into var() fallback chains so the
   // runtime does not need to declare them (keeps DevTools' Styles panel fast).
   const processResult = postcss([
-    sjs2Fallbacks({ defaultsPath: resolveCssVariableDefaultsPath(rootDir) })
+    sjs2Fallbacks({
+      defaults: resolveCssVariableDefaults(rootDir),
+      defaultsSource: "the BaseTheme export of survey-core"
+    })
   ]).process(compileResult.css, {
     from: cssOutPath,
     to: cssOutPath,
@@ -296,7 +302,7 @@ function createCssPlugin(options) {
 
 module.exports = {
   toBool,
-  resolveCssVariableDefaultsPath,
+  resolveCssVariableDefaults,
   createIconsPlugin,
   createRemoveScssImportsPlugin,
   createMinifyChunkPlugin,

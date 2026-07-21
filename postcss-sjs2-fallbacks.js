@@ -23,10 +23,14 @@ const { readFileSync } = require("fs");
  *   processed stylesheet itself are exempt - they are guaranteed to exist at
  *   runtime without a baked-in fallback.
  *
- * Options:
+ * Options (one of the two is required):
+ *   defaults     - a css variable name -> default value map used as the
+ *                  single source of defaults.
  *   defaultsPath - path to survey-core's generated base-theme.ts (or a JSON
  *                  file with a cssVariables map) used as the single source of
  *                  defaults.
+ *   defaultsSource - human-readable description of where the defaults came
+ *                  from, used in error messages (defaults to defaultsPath).
  */
 // TEMPORARY exclusion list: --sjs2-* variables that are known to be used
 // without a fallback and have no default in base-theme. They do NOT fail the
@@ -36,7 +40,8 @@ const { readFileSync } = require("fs");
 const KNOWN_VARIABLES_WITHOUT_FALLBACK = [];
 
 function sjs2Fallbacks(opts = {}) {
-  const defaults = loadDefaults(opts.defaultsPath);
+  const defaults = loadDefaults(opts);
+  const defaultsSource = opts.defaultsSource || opts.defaultsPath;
   const BARE_VAR = /var\(\s*(--[\w-]+)\s*\)/g;
   const SJS2_PREFIX = "--sjs2-";
   const cache = Object.create(null);
@@ -121,7 +126,7 @@ function sjs2Fallbacks(opts = {}) {
       });
       throw new Error(
         `sjs2-fallbacks: ${variablesWithoutFallback.size} --sjs2-* variable(s) are used without a fallback ` +
-        `and have no default value in ${opts.defaultsPath}.\n` +
+        `and have no default value in ${defaultsSource}.\n` +
         "Add each variable to the base theme defaults or give the reference an explicit fallback:\n" +
         details.join("\n")
       );
@@ -130,8 +135,15 @@ function sjs2Fallbacks(opts = {}) {
 }
 sjs2Fallbacks.postcss = true;
 
-function loadDefaults(path) {
-  if(!path) throw new Error("sjs2-fallbacks: defaultsPath option is required");
+function loadDefaults(opts) {
+  if(opts.defaults) {
+    if(Object.keys(opts.defaults).length === 0) {
+      throw new Error(`sjs2-fallbacks: the defaults option is empty (${opts.defaultsSource || "no defaultsSource given"})`);
+    }
+    return opts.defaults;
+  }
+  const path = opts.defaultsPath;
+  if(!path) throw new Error("sjs2-fallbacks: either the defaults or the defaultsPath option is required");
   const text = readFileSync(path, "utf8");
   // base-theme.ts is auto-generated as "// comment\nexport default { <pure JSON> };"
   const start = text.indexOf("{");

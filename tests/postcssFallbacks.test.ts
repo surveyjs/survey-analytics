@@ -5,7 +5,7 @@ import postcss from "postcss";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const sjs2Fallbacks = require("../postcss-sjs2-fallbacks");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { resolveCssVariableDefaultsPath } = require("../rollup.umd.plugins");
+const { resolveCssVariableDefaults } = require("../rollup.umd.plugins");
 
 let tempDir: string;
 
@@ -88,9 +88,7 @@ test("cyclic variable definitions do not hang the build", () => {
 });
 
 test("every bare --sjs2 reference in src scss has a base theme default", () => {
-  const realDefaultsPath = resolveCssVariableDefaultsPath(path.resolve(__dirname, ".."));
-  const text = fs.readFileSync(realDefaultsPath, "utf8");
-  const defaults = JSON.parse(text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1)).cssVariables;
+  const defaults = resolveCssVariableDefaults(path.resolve(__dirname, ".."));
   expect(Object.keys(defaults).length).toBeGreaterThan(1000);
 
   const missing = new Set<string>();
