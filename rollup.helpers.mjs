@@ -125,7 +125,7 @@ export function createEsmConfig(options) {
         compilerOptions: {
           declaration: false,
           declarationDir: null,
-          "target": "ES6"
+          "target": "ES2019"
         }
       }),
       bannerPlugin({
