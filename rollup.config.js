@@ -66,6 +66,7 @@ module.exports = async (commandLineArgs) => {
         dir: buildDir,
         tsconfig: path.resolve(__dirname, "./tsconfig.json"),
         emitMinified: false,
+        minified: isProduction,
         version: packageJson.version,
         plugins: [
           ...sharedPlugins,
