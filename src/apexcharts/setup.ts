@@ -231,6 +231,7 @@ export class ApexChartsSetup {
 
   /**
    * Fires when end user clicks on the 'save as image' button.
+   * @since 3.0.0
    */
   public static onImageSaving = new Event<
     (sender: VisualizerBase, options: any) => any,
@@ -241,6 +242,7 @@ export class ApexChartsSetup {
   /**
    * Fires before chart will be created. User can change series, chart options and config of the chart.
    * Options is an object with the following fields: series, chart, xaxis, yaxis, labels, colors, plotOptions, dataLabels, legend, tooltip, grid and hasSeries.
+   * @since 3.0.0
    */
   public static onChartCreating = new Event<
     (sender: VisualizerBase, options: any) => any,

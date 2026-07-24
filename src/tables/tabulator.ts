@@ -808,6 +808,7 @@ export class Tabulator extends Table {
    * Applies a theme to the Dashboard.
    * @param theme An [`ITheme`](https://surveyjs.io/form-library/documentation/api-reference/itheme) object with theme settings.
    * @param baseTheme An optional [`ITheme`](https://surveyjs.io/form-library/documentation/api-reference/itheme) object used as the base theme. When specified, it is deep-merged with `theme`, and the merged result is applied.
+   * @since 3.0.0
    */
   public applyTheme(theme: ITheme, baseTheme?: ITheme): void {
     if(!theme && !baseTheme) return;

@@ -47,6 +47,7 @@ export class DocumentHelper {
   /**
    * Destroys dropdown and removes all event handlers
    * @param {HTMLElement} dropdownElement - Root dropdown element
+   * @since 3.0.0
    */
   public static destroyDropdown(dropdownElement: any) {
     if(dropdownElement && dropdownElement._handleClickOutside) {

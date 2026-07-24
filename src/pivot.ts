@@ -17,14 +17,17 @@ import { DocumentHelper } from "./utils/documentHelper";
  * Assign an array of `IPivotSeriesOptions` objects to the [`visualizer.series`](/dashboard/documentation/api-reference/IPivotVisualizerOptions#series) property to define chart series.
  *
  * [View Demo](/dashboard/examples/household-income-analysis-pivot-chart/ (linkStyle))
+ * @since 3.0.0
  */
 export interface IPivotSeriesOptions {
   /**
    * The data field whose values are aggregated and plotted on the Y axis. If not specified, the [`seriesField`](#seriesField) is used.
+   * @since 3.0.0
    */
   valueField?: string;
   /**
    * The data field whose values define individual series and appear in the legend.
+   * @since 3.0.0
    */
   seriesField?: string;
   /**
@@ -34,6 +37,7 @@ export interface IPivotSeriesOptions {
    *
    * - `"count"` (default)
    * - `"sum"`
+   * @since 3.0.0
    */
   aggregation?: "sum" | "count";
   /**
@@ -43,6 +47,7 @@ export interface IPivotSeriesOptions {
    *
    * - `"primary"`
    * - `"secondary"`
+   * @since 3.0.0
    */
   yAxis?: "primary" | "secondary";
 }
@@ -51,6 +56,7 @@ export interface IPivotSeriesOptions {
  * Defines configuration options for a pivot chart visualizer.
  *
  * [View Demo](/dashboard/examples/household-income-analysis-pivot-chart/ (linkStyle))
+ * @since 3.0.0
  */
 export interface IPivotVisualizerOptions {
   /**
@@ -59,20 +65,24 @@ export interface IPivotVisualizerOptions {
    * To populate this array, instantiate a [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model), call its [`getAllQuestions()`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#getAllQuestions) method, optionally filter the result, and assign it to this property.
    *
    * [View Demo](/dashboard/examples/household-income-analysis-pivot-chart/ (linkStyle))
+   * @since 3.0.0
    */
   questions?: Question[] | string[];
   /**
    * The data field whose values define categories on the X axis.
+   * @since 3.0.0
    */
   categoryField?: string;
   /**
    * [Series definitions](/dashboard/documentation/api-reference/IPivotSeriesOptions) for the pivot chart.
+   * @since 3.0.0
    */
   series?: IPivotSeriesOptions[];
   /**
    * The maximum number of series per axis.
    *
    * Default value: `undefined` (no limit)
+   * @since 3.0.0
    */
   maxSeriesCount?: number;
   /**
@@ -81,6 +91,7 @@ export interface IPivotVisualizerOptions {
    * Default value: `false`
    *
    * If you enable this option, use the [`series[].yAxis`](/dashboard/documentation/api-reference/IPivotSeriesOptions#yAxis) property to assign individual series to the secondary axis.
+   * @since 3.0.0
    */
   useSecondaryYAxis?: boolean;
 }

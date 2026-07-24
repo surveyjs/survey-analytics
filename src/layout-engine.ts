@@ -1,5 +1,6 @@
 /**
  * A base class used to implement custom layout engines or integrate third-party layout engines with SurveyJS Dashboard.
+ * @since 3.0.0
  */
 export class LayoutEngine {
   constructor(protected _allowed: boolean) { }
@@ -16,6 +17,7 @@ export class LayoutEngine {
    * Enables the dynamic layout in a given HTML element.
    *
    * This method should arrange visualization items based on the available screen space and allow users to reorder them via drag and drop.
+   * @since 3.0.0
    */
   start(container: HTMLElement) {
     if(this._allowed) {
@@ -24,6 +26,7 @@ export class LayoutEngine {
   }
   /**
    * Disables the dynamic layout.
+   * @since 3.0.0
    */
   stop() {
     if(this._allowed) {
@@ -32,6 +35,7 @@ export class LayoutEngine {
   }
   /**
    * Updates the dynamic layout.
+   * @since 3.0.0
    */
   update() {
     if(this._allowed) {

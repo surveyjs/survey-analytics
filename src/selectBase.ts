@@ -13,6 +13,7 @@ export interface ISelectBaseVisualizerOptions {
    * Allows users to toggle between absolute values and percentages in bar charts. Adds a **Show Percentages** button to each bar chart.
    *
    * Default value: `false`
+   * @since 3.0.0
    * @see showPercentages
    * @see showOnlyPercentages
    * @see percentagePrecision
@@ -41,6 +42,7 @@ export interface ISelectBaseVisualizerOptions {
    * Number of decimal places used when displaying percentages.
    *
    * Default value: `2`
+   * @since 3.0.0
    * @see allowShowPercentages
    * @see showPercentages
    * @see showOnlyPercentages
@@ -50,12 +52,14 @@ export interface ISelectBaseVisualizerOptions {
    * Enables sorting answers by response count in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart) and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table). Adds a **Sorting** dropdown to each supported dashboard item.
    *
    * Default value: `true`
+   * @since 3.0.0
    * @see answersOrder
    */
   allowSortAnswers?: boolean;
   /**
    * @deprecated Use the [`allowSortAnswers`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowSortAnswers) property instead.
    * @hidden
+   * @since 3.0.0
    */
   allowChangeAnswersOrder?: boolean;
   /**
@@ -74,6 +78,7 @@ export interface ISelectBaseVisualizerOptions {
    * Enables hiding answers with zero responses in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart) and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table). Adds a **Hide Empty Answers** button to each supported visualizer.
    *
    * Default value: `false`
+   * @since 3.0.0
    */
   allowHideEmptyAnswers?: boolean;
   /**
@@ -88,12 +93,14 @@ export interface ISelectBaseVisualizerOptions {
    * Enables selection of top 5, 10, or 20 answers by response count. Adds a **Top N Answers** dropdown to each chart.
    *
    * Default value: `false`
+   * @since 3.0.0
    */
   allowTopNAnswers?: boolean;
   /**
    * Enables displaying the number of respondents who skipped a question. Adds a **Show Missing Answers** button to each chart.
    *
    * Default value: `false`
+   * @since 3.0.0
    */
   allowShowMissingAnswers?: boolean;
   /**
@@ -105,12 +112,14 @@ export interface ISelectBaseVisualizerOptions {
    * - **Per Columns** &ndash; Matrix rows become series, columns become arguments.
    *
    * Default value: `false`
+   * @since 3.0.0
    */
   allowTransposeData?: boolean;
   /**
    * Default chart legend position.
    *
    * You can override this setting per dashboard item using the [`items`](#items) array.
+   * @since 3.0.0
    */
   legendPosition?: "left" | "right" | "top" | "bottom";
 }

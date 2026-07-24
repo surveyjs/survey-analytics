@@ -23,7 +23,10 @@ export function toRange(start: Date | number, end: Date | number): IDateRange {
   return { start: startValue, end: endValue };
 }
 
-/** Last 7 days (excl. today): refDate minus 7 days through yesterday */
+/**
+ * Last 7 days (excl. today): refDate minus 7 days through yesterday
+ * @since 3.0.0
+ */
 export function getLast7Days(refDate = new Date()): IDateRange {
   const end = endOfDay(refDate);
   end.setUTCDate(refDate.getUTCDate() - 1);
@@ -32,7 +35,10 @@ export function getLast7Days(refDate = new Date()): IDateRange {
   return toRange(start, end);
 }
 
-/** Last 14 days (excl. today): refDate minus 14 days through yesterday */
+/**
+ * Last 14 days (excl. today): refDate minus 14 days through yesterday
+ * @since 3.0.0
+ */
 export function getLast14Days(refDate = new Date()): IDateRange {
   const end = endOfDay(refDate);
   end.setUTCDate(refDate.getUTCDate() - 1);
@@ -41,7 +47,10 @@ export function getLast14Days(refDate = new Date()): IDateRange {
   return toRange(start, end);
 }
 
-/** Last 28 days (excl. today): refDate minus 28 days through yesterday */
+/**
+ * Last 28 days (excl. today): refDate minus 28 days through yesterday
+ * @since 3.0.0
+ */
 export function getLast28Days(refDate = new Date()): IDateRange {
   const end = endOfDay(refDate);
   end.setUTCDate(refDate.getUTCDate() - 1);
@@ -50,7 +59,10 @@ export function getLast28Days(refDate = new Date()): IDateRange {
   return toRange(start, end);
 }
 
-/** Last 30 days (excl. today): refDate minus 30 days through yesterday */
+/**
+ * Last 30 days (excl. today): refDate minus 30 days through yesterday
+ * @since 3.0.0
+ */
 export function getLast30Days(refDate = new Date()): IDateRange {
   const end = endOfDay(refDate);
   end.setUTCDate(refDate.getUTCDate() - 1);
@@ -59,7 +71,10 @@ export function getLast30Days(refDate = new Date()): IDateRange {
   return toRange(start, end);
 }
 
-/** Last week (Monday-Sunday): previous Monday through previous Sunday */
+/**
+ * Last week (Monday-Sunday): previous Monday through previous Sunday
+ * @since 3.0.0
+ */
 export function getLastWeekMon(refDate = new Date()): IDateRange {
   const d = startOfDay(refDate);
   const day = d.getUTCDay();
@@ -73,7 +88,10 @@ export function getLastWeekMon(refDate = new Date()): IDateRange {
   return toRange(lastMonday, lastSunday);
 }
 
-/** Last week (Sunday-Saturday): previous Sunday through previous Saturday */
+/**
+ * Last week (Sunday-Saturday): previous Sunday through previous Saturday
+ * @since 3.0.0
+ */
 export function getLastWeekSun(refDate = new Date()): IDateRange {
   const d = startOfDay(refDate);
   const daysToSunday = d.getUTCDay();
@@ -86,7 +104,10 @@ export function getLastWeekSun(refDate = new Date()): IDateRange {
   return toRange(lastSunday, lastSaturday);
 }
 
-/** Last month: first day through last day of previous month */
+/**
+ * Last month: first day through last day of previous month
+ * @since 3.0.0
+ */
 export function getLastMonth(refDate = new Date()): IDateRange {
   const date = startOfDay(refDate);
   const end = new Date(Date.UTC(date.getFullYear(), date.getMonth(), 0));
@@ -94,7 +115,10 @@ export function getLastMonth(refDate = new Date()): IDateRange {
   return toRange(start, end);
 }
 
-/** Last quarter: first day through last day of previous quarter */
+/**
+ * Last quarter: first day through last day of previous quarter
+ * @since 3.0.0
+ */
 export function getLastQuarter(refDate = new Date()): IDateRange {
   const date = startOfDay(refDate);
   const q = Math.floor(date.getUTCMonth() / 3) + 1;
@@ -105,7 +129,10 @@ export function getLastQuarter(refDate = new Date()): IDateRange {
   return toRange(start, end);
 }
 
-/** Last year: January 1 through December 31 of previous year */
+/**
+ * Last year: January 1 through December 31 of previous year
+ * @since 3.0.0
+ */
 export function getLastYear(refDate = new Date()): IDateRange {
   const date = startOfDay(refDate);
   const start = new Date(Date.UTC(date.getFullYear() - 1, 0, 1));
@@ -113,7 +140,10 @@ export function getLastYear(refDate = new Date()): IDateRange {
   return toRange(start, end);
 }
 
-/** This week to date (starts Sunday): Sunday through yesterday or today */
+/**
+ * This week to date (starts Sunday): Sunday through yesterday or today
+ * @since 3.0.0
+ */
 export function getThisWeekToDateSun(refDate = new Date(), includeToday = false): IDateRange {
   const ref = startOfDay(refDate);
   const end = endOfDay(ref);
@@ -123,7 +153,10 @@ export function getThisWeekToDateSun(refDate = new Date(), includeToday = false)
   return toRange(start.getTime() <= end.getTime() ? start : end, end);
 }
 
-/** This week to date (starts Monday): Monday through yesterday or today */
+/**
+ * This week to date (starts Monday): Monday through yesterday or today
+ * @since 3.0.0
+ */
 export function getThisWeekToDateMon(refDate = new Date(), includeToday = false): IDateRange {
   const ref = startOfDay(refDate);
   const end = endOfDay(ref);
@@ -135,7 +168,10 @@ export function getThisWeekToDateMon(refDate = new Date(), includeToday = false)
   return toRange(start.getTime() <= end.getTime() ? start : end, end);
 }
 
-/** This month to date: first day of month through yesterday or today */
+/**
+ * This month to date: first day of month through yesterday or today
+ * @since 3.0.0
+ */
 export function getThisMonthToDate(refDate = new Date(), includeToday = false): IDateRange {
   const date = startOfDay(refDate);
   const end = endOfDay(date);
@@ -144,7 +180,10 @@ export function getThisMonthToDate(refDate = new Date(), includeToday = false): 
   return toRange(start.getTime() <= end.getTime() ? start : end, end);
 }
 
-/** This quarter to date: first day of quarter through yesterday or today */
+/**
+ * This quarter to date: first day of quarter through yesterday or today
+ * @since 3.0.0
+ */
 export function getThisQuarterToDate(refDate = new Date(), includeToday = false): IDateRange {
   const date = startOfDay(refDate);
   const end = endOfDay(date);
@@ -154,7 +193,10 @@ export function getThisQuarterToDate(refDate = new Date(), includeToday = false)
   return toRange(start.getTime() <= end.getTime() ? start : end, end);
 }
 
-/** This year to date: January 1 through yesterday or today */
+/**
+ * This year to date: January 1 through yesterday or today
+ * @since 3.0.0
+ */
 export function getThisYearToDate(refDate = new Date(), includeToday = false): IDateRange {
   const date = startOfDay(refDate);
   const end = endOfDay(date);

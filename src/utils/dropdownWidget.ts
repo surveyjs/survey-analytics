@@ -5,6 +5,7 @@ import { DropdownBase, IDropdownItemOption } from "./dropdownBase";
    * Creates a custom dropdown element with icon support
    * @param options - Configuration object for the dropdown
    * @returns Created dropdown element
+   * @since 3.0.0
    */
 export function createDropdown(options: IDropdownOptions): HTMLDivElement {
   const widget = new DropdownWidget(options);
@@ -14,19 +15,40 @@ export function createDropdown(options: IDropdownOptions): HTMLDivElement {
 export type DropdownSize = "medium" | "small";
 
 export interface IDropdownOptions {
-  /** Array of options or function that returns options */
+  /**
+   * Array of options or function that returns options
+   * @since 3.0.0
+   */
   options: Array<IDropdownItemOption> | (() => Array<IDropdownItemOption>);
-  /** Function to check if option is selected */
+  /**
+   * Function to check if option is selected
+   * @since 3.0.0
+   */
   isSelected: (option: IDropdownItemOption) => boolean;
-  /** Selection handler */
+  /**
+   * Selection handler
+   * @since 3.0.0
+   */
   handler: (value: string, option: IDropdownItemOption) => void;
-  /** Placeholder text when no option is selected */
+  /**
+   * Placeholder text when no option is selected
+   * @since 3.0.0
+   */
   placeholder?: string;
-  /** Title text above the dropdown */
+  /**
+   * Title text above the dropdown
+   * @since 3.0.0
+   */
   title?: string | (() => string);
-  /** CSS class name for the dropdown */
+  /**
+   * CSS class name for the dropdown
+   * @since 3.0.0
+   */
   className?: string;
-  /** Dropdown size variant */
+  /**
+   * Dropdown size variant
+   * @since 3.0.0
+   */
   size?: DropdownSize;
   resetHandler?: () => void;
 }
