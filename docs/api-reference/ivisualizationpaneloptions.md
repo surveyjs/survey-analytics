@@ -32,6 +32,8 @@ Allows users to switch between different visualizer types.
 
 Default value: `true`
 
+Available since: v2.3.8
+
 ### `allowDragDrop`
 
 **Type**: `boolean`

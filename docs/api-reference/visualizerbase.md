@@ -99,6 +99,8 @@ Indicates whether users can select series points to cross-filter charts. To allo
 
 Returns the visualizer's title.
 
+Available since: v2.3.8
+
 ### `type`
 
 **Type**: `string`
@@ -208,6 +210,8 @@ Renders the visualizer in a specified container.
 Resets the visualizer's state.
 
 > This method is overriden in classes descendant from `VisualizerBase`.
+
+Available since: v2.3.5
 
 **Related APIs:** [`getState`](#getState), [`setState`](#setState), [`onStateChanged`](#onStateChanged)
 
