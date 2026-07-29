@@ -20,7 +20,7 @@ function wrapBanner(e) {
 
 export function createUmdConfig(options) {
 
-  const { input, globalName, external, globals, dir, tsconfig, declarationDir, emitMinified, exports, version, plugins = [] } = options;
+  const { input, globalName, external, globals, dir, tsconfig, declarationDir, emitMinified, minified, exports, version, plugins = [] } = options;
 
   const commonOutput = {
     dir: dir,
@@ -63,6 +63,7 @@ export function createUmdConfig(options) {
         entryFileNames: "[name].js",
         sourcemap: true,
         plugins: [
+          ...(minified ? [minify()] : []),
           bannerPlugin({
             banner: {
               content: getOwnBanner(version),
@@ -125,7 +126,7 @@ export function createEsmConfig(options) {
         compilerOptions: {
           declaration: false,
           declarationDir: null,
-          "target": "ES6"
+          "target": "ES2019"
         }
       }),
       bannerPlugin({

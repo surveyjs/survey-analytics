@@ -5,7 +5,9 @@ import { SelectBase } from "../selectBase";
 import { ChartJsOptions, ChartJsSetup } from "./setup";
 import { IChartAdapter, VisualizerBase } from "../visualizerBase";
 
-Chart.register(...registerables);
+if(registerables) {
+  Chart.register(...registerables);
+}
 if(ChartDataLabels) {
   Chart.register(ChartDataLabels);
 }
