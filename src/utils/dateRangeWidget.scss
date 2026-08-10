@@ -151,13 +151,9 @@
 }
 
 .sa-date-range_editor-input {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  flex: 1 0 0;
-  overflow: hidden;
+  flex: 1 0 auto;
+  min-width: max-content;
   color: var(--sjs2-color-component-input-default-value, #1c1b20);
-  text-overflow: ellipsis;
   background: transparent;
   border: none;
   outline: none;
