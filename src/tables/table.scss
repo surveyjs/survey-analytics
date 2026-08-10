@@ -401,12 +401,12 @@ a.sa-table__btn {
   padding: 0;
 
   border-radius: var(--sjs2-radius-component-checkbox, 4px);
-  background: var(--sjs2-color-component-check-false-default-bg, #f5f5f5);
-  box-shadow: var(--sjs2-border-effect-component-check-false-default);
+  background: var(--sjs2-color-component-checkbox-false-default-bg);
+  box-shadow: var(--sjs2-border-effect-component-checkbox-false-default);
 
   &:hover {
-    background: var(--sjs2-color-component-check-false-hovered-bg, rgba(28, 27, 32, 0.1));
-    box-shadow: var(--sjs2-border-effect-component-check-false-hovered);
+    background: var(--sjs2-color-component-checkbox-false-hovered-bg);
+    box-shadow: var(--sjs2-border-effect-component-checkbox-false-hovered);
   }
 
   svg {
@@ -419,17 +419,17 @@ a.sa-table__btn {
   }
 
   use {
-    fill: var(--sjs2-color-component-check-true-default-icon, #fff);
+    fill: var(--sjs2-color-component-checkbox-true-default-icon);
   }
 }
 
 .sa-checkbox--checked.sa-checkbox--checked {
-  background: var(--sjs2-color-component-check-true-default-bg, #19b394);
-  box-shadow: var(--sjs2-border-effect-component-check-true-default);
+  background: var(--sjs2-color-component-checkbox-true-default-bg);
+  box-shadow: var(--sjs2-border-effect-component-checkbox-true-default);
 
   &:hover {
-    background: var(--sjs2-color-component-check-true-hovered-bg, #15987e);
-    box-shadow: var(--sjs2-border-effect-component-check-true-hovered);
+    background: var(--sjs2-color-component-checkbox-true-hovered-bg);
+    box-shadow: var(--sjs2-border-effect-component-checkbox-true-hovered);
   }
 
   svg {
