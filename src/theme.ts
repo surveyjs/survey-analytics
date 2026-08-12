@@ -1,6 +1,5 @@
-import { ensureBaseThemeStyles, ITheme, getRGBaColor, BaseTheme, mergeObjects } from "survey-core";
+import { ensureBaseThemeStyles, ITheme, getComputedCssVariableValues, DomDocumentHelper, BaseTheme, mergeObjects } from "survey-core";
 import { DefaultLight } from "survey-core/themes";
-import { DocumentHelper } from "./utils/documentHelper";
 
 export interface FontSettings {
   family: string;
@@ -53,7 +52,6 @@ const usedCssVariableKeys: string[] = [
 export class DashboardTheme implements ITheme {
   static barGap = 0.05;
   static fontFamily = "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif";
-  private _cssStyleDeclaration;
   private _computedValuesCache: { [key: string]: string } = {};
   private _appliedCssVariableKeys: string[] = [];
 
@@ -61,8 +59,6 @@ export class DashboardTheme implements ITheme {
     let value = undefined;
     if(this._computedValuesCache[propertyName]) {
       value = this._computedValuesCache[propertyName];
-    } else if(!!this._cssStyleDeclaration) {
-      value = this._cssStyleDeclaration.getPropertyValue(propertyName);
     } else if(Object.keys(this.cssVariables).length > 0) {
       value = this.cssVariables[propertyName];
     } else {
@@ -78,33 +74,6 @@ export class DashboardTheme implements ITheme {
     return value;
   }
 
-  private initComputedValuesCache(rootElement: HTMLElement) {
-    const tempElement = document.createElement("div");
-    tempElement.style.position = "absolute";
-    tempElement.style.visibility = "hidden";
-    tempElement.style.top = "0";
-    tempElement.style.left = "0";
-    rootElement.appendChild(tempElement);
-
-    usedCssVariableKeys.forEach(key => {
-      let value;
-      if(key.indexOf("palette") !== -1 || key.indexOf("color") !== -1) {
-        tempElement.style.setProperty("color", `var(${key})`);
-        const computedStyle = getComputedStyle(tempElement);
-        value = computedStyle.getPropertyValue("color");
-        value = getRGBaColor(value);
-      } else if(key.indexOf("font-family") === -1 && key.indexOf("opacity") === -1 && key.indexOf("scale") === -1) {
-        tempElement.style.setProperty("width", `var(${key})`);
-        const computedStyle = getComputedStyle(tempElement);
-        value = computedStyle.getPropertyValue("width");
-      } else {
-        value = this._cssStyleDeclaration.getPropertyValue(key);
-      }
-      this._computedValuesCache[key] = value;
-    });
-    rootElement.removeChild(tempElement);
-  }
-
   constructor(private theme?: ITheme) {
     this.setTheme(theme);
   }
@@ -114,23 +83,19 @@ export class DashboardTheme implements ITheme {
     this.removeThemeStylesFromElement(element);
 
     if(!this.theme) {
-      this._cssStyleDeclaration = undefined;
       return;
     }
 
     element.classList.add("sd-theme-root");
     ensureBaseThemeStyles(element);
-    DocumentHelper.setStyles(element, this.cssVariables);
+    DomDocumentHelper.setStyles(element, this.cssVariables);
     this._appliedCssVariableKeys = Object.keys(this.cssVariables);
-    if(!!getComputedStyle) {
-      this._cssStyleDeclaration = getComputedStyle(element);
-    }
-    this.initComputedValuesCache(element);
+    this._computedValuesCache = getComputedCssVariableValues({}, usedCssVariableKeys, element);
   }
 
   private removeThemeStylesFromElement(element: HTMLElement): void {
     if(this._appliedCssVariableKeys.length) {
-      DocumentHelper.removeStyles(element, this._appliedCssVariableKeys);
+      DomDocumentHelper.removeStyles(element, this._appliedCssVariableKeys);
       this._appliedCssVariableKeys = [];
     }
   }
