@@ -1,10 +1,14 @@
-import { Question, QuestionCommentModel, Event, settings, hasLicense } from "survey-core";
+import { Question, QuestionCommentModel, Event, settings, hasLicense, ITheme, mergeObjects } from "survey-core";
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { VisualizationManager } from "./visualizationManager";
-import { DocumentHelper, createLoadingIndicator } from "./utils";
+import { createLoadingIndicator, getDiffsFromDefaults } from "./utils";
 import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
+import { DashboardTheme } from "./theme";
+import { SidebarWidget } from "./utils/sidebarWidget";
+import { DocumentHelper } from "./utils/documentHelper";
+import { SideBarItemCreators } from "./sideBarItemCreators";
 
 import "./visualizerBase.scss";
 
@@ -13,6 +17,31 @@ export interface IChartAdapter {
   create(chartNode: HTMLElement): Promise<any>;
   update(chartNode: HTMLElement): Promise<any> ;
   destroy(node: HTMLElement): void;
+}
+
+export interface ICalculatedDataInfo {
+  dataPath?: string;
+  valueNames: Array<string>;
+  seriesNames?: Array<string>;
+  getLabel?(value: string): string;
+  getSeriesLabel?(series: string): string;
+}
+
+export declare type ICalculationResult<T = number> = {
+  data: Array<Array<T>>,
+  values: Array<string>,
+  series?: Array<string>,
+};
+
+export interface IAnswersData {
+  datasets: Array<Array<any>>;
+  values: Array<string>;
+  labels: Array<string>;
+  colors: Array<string>;
+  texts: Array<Array<any>>;
+  seriesLabels: Array<string>;
+  labelsTitle?: string;
+  valuesTitle?: string;
 }
 
 export interface IDataInfo {
@@ -25,12 +54,14 @@ export interface IDataInfo {
   getSeriesLabels(): Array<string>;
 }
 
+export type ToolbarItemType = "button" | "dropdown" | "filter"| "license";
+
 type ToolbarItemCreators = {
   [name: string]: {
     creator: (toolbar?: HTMLDivElement) => HTMLElement,
-    // type: ToolbarItemType,
-    order: number,
-    // groupIndex: number,
+    type: ToolbarItemType,
+    index: number,
+    groupIndex: number,
   },
 };
 
@@ -74,12 +105,19 @@ export class PostponeHelper {
 export class VisualizerBase implements IDataInfo {
   public static haveCommercialLicense: boolean = false;
   public static suppressVisualizerStubRendering: boolean = false;
-  public static chartAdapterType: any = undefined;
+  public static get chartAdapterType(): any {
+    return VisualizationManager.chartAdapterType;
+  }
+  public static set chartAdapterType(value: any) {
+    VisualizationManager.chartAdapterType = value;
+  }
 
+  private _appliedTheme: DashboardTheme;
+  private _theme = new DashboardTheme();
   private _showToolbar = true;
   private _footerVisualizer: VisualizerBase = undefined;
   private _dataProvider: DataProvider = undefined;
-  private _getDataCore: (dataInfo: IDataInfo) => number[][] = undefined;
+  private _getDataCore: (dataInfo: IDataInfo) => ICalculationResult = undefined;
   public labelTruncateLength: number = 27;
   protected haveCommercialLicense: boolean = false;
   protected renderResult: HTMLElement = undefined;
@@ -94,17 +132,17 @@ export class VisualizerBase implements IDataInfo {
   protected _footerIsCollapsed: boolean = undefined;
 
   /**
-   * An event that is raised after the visualizer's content is rendered.
+   * Raised after the visualizer content is rendered.
    *
    * Parameters:
    *
    * - `sender`: `VisualizerBase`\
-   * A `VisualizerBase` instance that raised the event.
-   *
+   * The current `VisualizerBase` instance.
    * - `options.htmlElement`: `HTMLElement`\
-   * A page element with the visualizer's content.
+   * An `HTMLElement` that contains the rendered content.
    * @see render
    * @see refresh
+   * @hidefor Dashboard, VisualizationPanel
    **/
   public onAfterRender: Event<
     (sender: VisualizerBase, options: any) => any,
@@ -117,15 +155,14 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * An event that is raised after a new locale is set.
+   * Raised after the locale changes.
    *
    * Parameters:
    *
    * - `sender`: `VisualizerBase`\
-   * A `VisualizerBase` instance that raised the event.
-   *
+   * The current `VisualizerBase` instance.
    * - `options.locale`: `string`\
-   * The indentifier of a new locale (for example, "en").
+   * The indentifier of a new locale (for example, `"en"`).
    * @see locale
    */
   public onLocaleChanged = new Event<
@@ -140,21 +177,18 @@ export class VisualizerBase implements IDataInfo {
   //   any
   // >();
   /**
-   * An event that is raised when the visualizer's state has changed.
+   * Raised when the visualizer [state](#state) changes.
    *
-   * The state includes selected chart types, chart layout, sorting, filtering, and other customizations that a user has made while using the dashboard. Handle the `onStateChanged` event to save these customizations, for example, in `localStorage` and restore them when the user reloads the page.
+   * The state contains user-defined settings such as selected chart type, layout, sorting, filtering, and other runtime customizations. Handle this event to persist these customizations (for example, in `localStorage`) and restore them later.
    *
    * Parameters:
    *
    * - `sender`: `VisualizerBase`\
-   * A `VisualizerBase` instance that raised the event.
-   *
+   * The current `VisualizerBase` instance.
    * - `state`: `any`\
-   * A new state of the visualizer. Includes information about the visualized elements and current locale.
+   * The new state of the visualizer.
    *
    * [View Demo](https://surveyjs.io/dashboard/examples/save-dashboard-state-to-local-storage/ (linkStyle))
-   * @see getState
-   * @see setState
    */
   public onStateChanged: Event<
     (sender: VisualizerBase, options: any) => any,
@@ -173,8 +207,62 @@ export class VisualizerBase implements IDataInfo {
 
   public onGetToolbarItemCreators: () => ToolbarItemCreators;
 
+  protected sideBarItemCreators: SideBarItemCreators = {};
+
+  public onGetSideBarItemCreators: () => SideBarItemCreators;
+
+  protected _sidebarWidget: SidebarWidget | undefined;
+
   protected getToolbarItemCreators(): ToolbarItemCreators {
-    return Object.assign({}, this.toolbarItemCreators, this.onGetToolbarItemCreators && this.onGetToolbarItemCreators() || {});
+    const base = Object.assign({}, this.toolbarItemCreators, this.onGetToolbarItemCreators && this.onGetToolbarItemCreators() || {});
+
+    const hasSideBarItems = Object.keys(this.sideBarItemCreators).length > 0 ||
+      (this.onGetSideBarItemCreators && Object.keys(this.onGetSideBarItemCreators() || {}).length > 0);
+    if(hasSideBarItems) {
+      base["sidebarPanel"] = {
+        creator: (toolbar?: HTMLDivElement) => this.createSidebarPanelButton(toolbar),
+        type: "button",
+        index: 950,
+        groupIndex: 0,
+      };
+    }
+
+    return base;
+  }
+
+  protected createSidebarPanelButton(_toolbar?: HTMLDivElement): HTMLElement {
+    if(!this._sidebarWidget) {
+      const creators = Object.assign(
+        {},
+        this.sideBarItemCreators,
+        this.onGetSideBarItemCreators && this.onGetSideBarItemCreators() || {}
+      );
+      this._sidebarWidget = new SidebarWidget({
+        title: this.title,
+        itemCreators: creators,
+        buttonIcon: "settings_24x24",
+        buttonTitle: "Open panel",
+      });
+    }
+    return this._sidebarWidget.render(_toolbar);
+  }
+
+  public registerSideBarItem(
+    name: string,
+    creator: (container: HTMLDivElement) => HTMLElement,
+    index: number = 100,
+    groupIndex: number = 0
+  ): void {
+    this.sideBarItemCreators[name] = { creator, index, groupIndex };
+  }
+
+  public unregisterSideBarItem(name: string): ((container: HTMLDivElement) => HTMLElement) | undefined {
+    if(this.sideBarItemCreators[name] !== undefined) {
+      const item = this.sideBarItemCreators[name];
+      delete this.sideBarItemCreators[name];
+      return item.creator;
+    }
+    return undefined;
   }
 
   constructor(
@@ -208,15 +296,28 @@ export class VisualizerBase implements IDataInfo {
     this.refresh();
   }
 
+  protected getName(): string {
+    return this.question.name || this.question.valueName;
+  }
+
+  protected get allowChangeType() {
+    return this.options.allowChangeType
+      ?? this.questionOptions?.allowChangeType
+      ?? this.options.allowChangeVisualizerType
+      ?? this.questionOptions?.allowChangeVisualizerType
+      ?? true;
+  }
+
   /**
    * Returns the identifier of a visualized question.
+   * @hidefor Dashboard, VisualizationPanel
    */
   get name(): string {
-    return this.question.valueName || this.question.name;
+    return this.getName();
   }
 
   get dataNames(): Array<string> {
-    return [this.name];
+    return [this.question.valueName || this.question.name];
   }
 
   get dataPath(): string {
@@ -224,8 +325,9 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Indicates whether the visualizer displays a header. This property is `true` when a visualized question has a correct answer.
+   * Indicates whether the visualizer renders a header. Returns `true` if the question defines a [`correctAnswer`](https://surveyjs.io/form-library/documentation/api-reference/question#correctAnswer).
    * @see hasFooter
+   * @hidefor Dashboard, VisualizationPanel
    */
   get hasHeader(): boolean {
     if(!this.options || !this.options.showCorrectAnswers) {
@@ -235,8 +337,9 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Indicates whether the visualizer displays a footer. This property is `true` when a visualized question has a comment.
+   * Indicates whether the visualizer renders a footer. Returns `true` if the question supports comments or an "Other" option.
    * @see hasHeader
+   * @hidefor Dashboard, VisualizationPanel
    */
   get hasFooter(): boolean {
     return (
@@ -253,8 +356,9 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Allows you to access the footer visualizer. Returns `undefined` if the footer is absent.
+   * Returns the footer visualizer instance or `undefined` if the footer is not applicable.
    * @see hasFooter
+   * @hidefor Dashboard, VisualizationPanel
    */
   get footerVisualizer(): VisualizerBase {
     if(!this.hasFooter) {
@@ -268,6 +372,7 @@ export class VisualizerBase implements IDataInfo {
 
       let visualizerOptions = Object.assign({}, this.options);
       visualizerOptions.renderContent = undefined;
+      delete visualizerOptions.allowChangeVisualizerType;
       this._footerVisualizer = this.createVisualizer(question, visualizerOptions);
       if(!!this._footerVisualizer) {
         this._footerVisualizer.onUpdate = () => this.invokeOnUpdate();
@@ -277,7 +382,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Indicates whether users can select series points to cross-filter charts. To allow or disallow selection, set the [`allowSelection`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowSelection) property of the `IVisualizationPanelOptions` object in the [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel) constructor.
+   * Indicates whether users can select chart elements to apply cross-filtering. Controlled by the [`allowSelection`](https://surveyjs.io/dashboard/documentation/api-reference/idashboardoptions#allowSelection) option passed to the Dashboard.
    */
   public get supportSelection(): boolean {
     return (this.options.allowSelection === undefined ||
@@ -299,6 +404,10 @@ export class VisualizerBase implements IDataInfo {
 
   public getLabels(): Array<string> {
     return this.getValues();
+  }
+
+  public getChartAdapter(): IChartAdapter {
+    return this._chartAdapter;
   }
 
   /**
@@ -344,13 +453,16 @@ export class VisualizerBase implements IDataInfo {
    * @param name A custom name for the toolbar item.
    * @param creator A function that accepts the toolbar and should return an `HTMLElement` with the toolbar item.
    * @see unregisterToolbarItem
+   * @hidefor Dashboard
    */
   public registerToolbarItem(
     name: string,
     creator: (toolbar?: HTMLDivElement) => HTMLElement,
-    order = 100
+    type: ToolbarItemType,
+    index: number = 100,
+    groupIndex: number = 0
   ): void {
-    this.toolbarItemCreators[name] = { creator, order };
+    this.toolbarItemCreators[name] = { creator, type, index, groupIndex };
   }
 
   /**
@@ -359,6 +471,7 @@ export class VisualizerBase implements IDataInfo {
    * @param name A toolbar item name.
    * @returns A function previously used to [register](#registerToolbarItem) the removed toolbar item.
    * @see registerToolbarItem
+   * @hidefor Dashboard
    */
   public unregisterToolbarItem(
     name: string
@@ -374,6 +487,7 @@ export class VisualizerBase implements IDataInfo {
   /**
    * Returns the visualizer's title.
    * @since 2.3.8
+   * @hidefor Dashboard, VisualizationPanel
    */
   public get title(): string {
     return this.getTitle(this.question);
@@ -385,23 +499,36 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Returns the visualizer's type.
+   * Returns the visualizer's type identifier.
+   * @hidefor Dashboard, VisualizationPanel
    */
   public get type(): string {
     return this._type || "visualizer";
   }
 
+  public get dataType(): string {
+    if(this.question) {
+      if(typeof this.question.getType == "function") {
+        return this.question.getType();
+      } else if("dataType" in this.question) {
+        return this.question["dataType"];
+      }
+    }
+    return undefined;
+  }
+
   /**
-   * @deprecated Use [`surveyData`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#surveyData) instead.
+   * @deprecated Use the [`surveyData`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#surveyData) property instead.
+   * @hidden
    */
   protected get data() {
     return this.dataProvider.filteredData;
   }
 
   /**
-   * Returns an array of survey results used to calculate values for visualization. If a user applies a filter, the array is also filtered.
+   * Returns an array of survey result objects used to calculate values for visualization. If a user applies a filter, the array is also filtered.
    *
-   * To get an array of calculated and visualized values, call the [`getCalculatedValues()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#getCalculatedValues) method.
+   * To obtain calculated values, call [`getCalculatedValues()`](#getCalculatedValues).
    */
   protected get surveyData() {
     return this.dataProvider.filteredData;
@@ -412,8 +539,8 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Updates visualized data.
-   * @param data A data array with survey results to be visualized.
+   * Updates the visualized data.
+   * @param data An array of survey result objects or a data-loading function.
    */
   updateData(data: Array<{ [index: string]: any }> | GetDataFn) {
     this.dataProvider.data = data;
@@ -429,7 +556,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Deletes the visualizer and all its elements from the DOM.
+   * Deletes the visualizer and removes its DOM elements.
    * @see clear
    */
   destroy() {
@@ -450,9 +577,9 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Empties the toolbar, header, footer, and content containers.
+   * Clears the toolbar, header, content, and footer containers.
    *
-   * If you want to empty and delete the visualizer and all its elements from the DOM, call the [`destroy()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#destroy) method instead.
+   * Does not remove the visualizer root element from the DOM. Use [`destroy()`](#destroy) to fully dispose of the visualizer.
    */
   public clear() {
     if(!!this.toolbarContainer) {
@@ -469,13 +596,52 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
-  protected createToolbarItems(toolbar: HTMLDivElement) {
+  public getSortedToolbarItemCreators(): Array<any> {
     const toolbarItemCreators = this.getToolbarItemCreators();
-    const sortedItems = Object.keys(toolbarItemCreators || {})
-      .map(name => ({ name, ...toolbarItemCreators[name] }))
-      .sort((a, b) => a.order - b.order);
 
-    sortedItems.forEach((item) => {
+    const groupedItems: { [type: string]: Array<{ name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement, type: ToolbarItemType, index: number, groupIndex: number }> } = {};
+
+    Object.keys(toolbarItemCreators).forEach((toolbarItemName) => {
+      const item = toolbarItemCreators[toolbarItemName];
+      const type = item.type;
+
+      if(!groupedItems[type]) {
+        groupedItems[type] = [];
+      }
+
+      groupedItems[type].push({
+        name: toolbarItemName,
+        ...item
+      });
+    });
+
+    Object.keys(groupedItems).forEach((type) => {
+      groupedItems[type].sort((a, b) => {
+        const indexA = a.index || 0;
+        const indexB = b.index || 0;
+        return indexA - indexB;
+      });
+    });
+
+    const sortedItems: Array<{ name: string, creator: (toolbar?: HTMLDivElement) => HTMLElement, type: ToolbarItemType, index: number, groupIndex: number }> = [];
+
+    const sortedGroups = Object.keys(groupedItems).sort((typeA, typeB) => {
+      const groupA = groupedItems[typeA][0]?.groupIndex || 0;
+      const groupB = groupedItems[typeB][0]?.groupIndex || 0;
+      return groupA - groupB;
+    });
+
+    sortedGroups.forEach((type) => {
+      sortedItems.push(...groupedItems[type]);
+    });
+
+    return sortedItems;
+  }
+
+  protected createToolbarItems(toolbar: HTMLDivElement) {
+    const toolbarItemCreators = this.getSortedToolbarItemCreators();
+
+    toolbarItemCreators.forEach((item) => {
       let toolbarItem = item.creator(toolbar);
       if(!!toolbarItem) {
         toolbar.appendChild(toolbarItem);
@@ -487,7 +653,15 @@ export class VisualizerBase implements IDataInfo {
     return !!this.question ? this.question.correctAnswer : "";
   }
 
+  public resetContentFilter(): void { }
+
+  protected renderBanner(container: HTMLElement) { }
+
   protected destroyToolbar(container: HTMLElement) {
+    if(this._sidebarWidget) {
+      this._sidebarWidget.destroy();
+      this._sidebarWidget = undefined;
+    }
     container.innerHTML = "";
   }
 
@@ -497,7 +671,11 @@ export class VisualizerBase implements IDataInfo {
         DocumentHelper.createElement("div", "sa-toolbar")
       );
       this.createToolbarItems(toolbar);
-      container.appendChild(toolbar);
+
+      if(!!toolbar && !!toolbar.innerHTML) {
+        container.appendChild(toolbar);
+        container.classList.add("sa-toolbar--has-content");
+      }
     }
   }
 
@@ -512,8 +690,8 @@ export class VisualizerBase implements IDataInfo {
   protected destroyContent(container: HTMLElement) {
     if(!!this.options && typeof this.options.destroyContent === "function") {
       this.options.destroyContent(container, this);
-    } else if(this._chartAdapter) {
-      this._chartAdapter.destroy(<HTMLElement>container.children[0]);
+    } else if(this.getChartAdapter()) {
+      this.getChartAdapter().destroy(<HTMLElement>container.children[0]);
     }
     container.innerHTML = "";
   }
@@ -584,6 +762,7 @@ export class VisualizerBase implements IDataInfo {
   protected renderFooter(container: HTMLElement) {
     container.innerHTML = "";
     if(this.hasFooter) {
+      container.classList.add("sa-visualizer__footer--has-content");
       const footerTitleElement = DocumentHelper.createElement(
         "h4",
         "sa-visualizer__footer-title",
@@ -601,11 +780,11 @@ export class VisualizerBase implements IDataInfo {
       const visibilityButton = DocumentHelper.createButton(() => {
         if(footerContentElement.style.display === "none") {
           footerContentElement.style.display = "block";
-          visibilityButton.innerText = localization.getString("hideButton");
+          (visibilityButton as any).setText(localization.getString("hideButton"));
           this._footerIsCollapsed = false;
         } else {
           footerContentElement.style.display = "none";
-          visibilityButton.innerText = localization.getString("showButton");
+          (visibilityButton as any).setText(localization.getString("showButton"));
           this._footerIsCollapsed = true;
         }
         this.footerVisualizer.invokeOnUpdate();
@@ -614,25 +793,43 @@ export class VisualizerBase implements IDataInfo {
 
       container.appendChild(footerContentElement);
 
-      this.footerVisualizer.render(footerContentElement);
+      this.footerVisualizer.render(footerContentElement, false);
+    } else {
+      container.classList.remove("sa-visualizer__footer--has-content");
     }
   }
 
   /**
-   * Renders the visualizer in a specified container.
-   * @param targetElement An `HTMLElement` or an `id` of a page element in which you want to render the visualizer.
+   * Renders the visualizer inside a specified container.
+   * @param targetElement An `HTMLElement` or the `id` of a DOM element.
    */
-  render(targetElement: HTMLElement | string) {
+  render(targetElement: HTMLElement | string, isRoot = true) {
     if(typeof targetElement === "string") {
       targetElement = document.getElementById(targetElement);
     }
     this.renderResult = targetElement;
+    if(isRoot && !this._appliedTheme) {
+      this._appliedTheme = this.theme;
+      this.onThemeChanged();
+    }
+    if(this._appliedTheme) {
+      this._appliedTheme.applyThemeToElement(this.renderResult);
+    }
 
+    this.renderBanner(targetElement);
+
+    let container = targetElement;
+    if(isRoot) {
+      container = DocumentHelper.createElement("div", "sa-visualizer-wrapper");
+      targetElement.appendChild(container);
+    } else {
+      container.className = "sa-visualizer";
+    }
     this.toolbarContainer = DocumentHelper.createElement(
       "div",
       "sa-visualizer__toolbar"
     );
-    targetElement.appendChild(this.toolbarContainer);
+    container.appendChild(this.toolbarContainer);
     this.renderToolbar(this.toolbarContainer);
 
     if(this.hasHeader) {
@@ -640,7 +837,7 @@ export class VisualizerBase implements IDataInfo {
         "div",
         "sa-visualizer__header"
       );
-      targetElement.appendChild(this.headerContainer);
+      container.appendChild(this.headerContainer);
       this.renderHeader(this.headerContainer);
     }
 
@@ -648,14 +845,15 @@ export class VisualizerBase implements IDataInfo {
       "div",
       "sa-visualizer__content"
     );
-    targetElement.appendChild(this.contentContainer);
+    this.contentContainer.role = "presentation";
+    container.appendChild(this.contentContainer);
     this.renderContent(this.contentContainer);
 
     this.footerContainer = DocumentHelper.createElement(
       "div",
       "sa-visualizer__footer"
     );
-    targetElement.appendChild(this.footerContainer);
+    container.appendChild(this.footerContainer);
     this.renderFooter(this.footerContainer);
   }
 
@@ -689,7 +887,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Re-renders the visualizer and its content.
+   * Redraws the visualizer and its content.
    */
   public refresh(): void {
     if(!!this.headerContainer) {
@@ -714,6 +912,17 @@ export class VisualizerBase implements IDataInfo {
     }
   }
 
+  public refreshContent(): void {
+    if(this._settingState) {
+      return;
+    }
+    if(!!this.contentContainer) {
+      this.destroyContent(this.contentContainer);
+      this.renderContent(this.contentContainer);
+    }
+    this.invokeOnUpdate();
+  }
+
   protected processText(text: string): string {
     if(this.options.stripHtmlFromTitles !== false) {
       let originalText = text || "";
@@ -728,51 +937,58 @@ export class VisualizerBase implements IDataInfo {
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
-  private _backgroundColor = "#f7f7f7";
+  private _backgroundColor;
 
   get backgroundColor() { return this.getBackgroundColorCore(); }
   set backgroundColor(value) { this.setBackgroundColorCore(value); }
 
   protected getBackgroundColorCore() {
-    return this._backgroundColor;
+    return this._backgroundColor || this._theme.backgroundColor;
   }
   protected setBackgroundColorCore(color: string) {
     this._backgroundColor = color;
     if(this.footerVisualizer)this.footerVisualizer.backgroundColor = color;
   }
 
-  static customColors: string[] = [];
-  private static colors = [
-    "#86e1fb",
-    "#3999fb",
-    "#ff6771",
-    "#1eb496",
-    "#ffc152",
-    "#aba1ff",
-    "#7d8da5",
-    "#4ec46c",
-    "#cf37a6",
-    "#4e6198",
-  ];
-
-  getColors(count = 10) {
-    const colors =
-      Array.isArray(VisualizerBase.customColors) &&
-        VisualizerBase.customColors.length > 0
-        ? VisualizerBase.customColors
-        : VisualizerBase.colors;
-
-    let manyColors: any = [];
-
-    for(let index = 0; index < count; index++) {
-      manyColors = manyColors.concat(colors);
+  protected onThemeChanged(): void {
+    if(this.footerVisualizer) {
+      this.footerVisualizer.theme = this.theme;
     }
+  }
 
-    return manyColors;
+  get theme() : DashboardTheme {
+    return this._theme;
+  }
+  set theme(theme: DashboardTheme) {
+    this._theme = theme;
+    this._appliedTheme = undefined;
+    this.onThemeChanged();
   }
 
   /**
-   * Gets or sets the visibility of the visualizer's toolbar.
+   * Applies a theme to the Dashboard.
+   * @param theme An [`ITheme`](https://surveyjs.io/form-library/documentation/api-reference/itheme) object with theme settings.
+   * @param baseTheme An optional [`ITheme`](https://surveyjs.io/form-library/documentation/api-reference/itheme) object used as the base theme. When specified, it is deep-merged with `theme`, and the merged result is applied.
+   * @since 3.0.0
+   */
+  public applyTheme(theme: ITheme, baseTheme?: ITheme): void {
+    if(!theme && !baseTheme) return;
+    const themeToApply = baseTheme ? mergeObjects({}, baseTheme, theme) : theme;
+    this.theme.setTheme(themeToApply);
+    this._appliedTheme = this.theme;
+    if(this.renderResult) {
+      this._appliedTheme.applyThemeToElement(this.renderResult);
+    }
+    this.onThemeChanged();
+    this.refreshContent();
+  }
+
+  getColors() {
+    return this.theme.chartColors;
+  }
+
+  /**
+   * Gets or sets whether the toolbar is visible.
    *
    * Default value: `true`
    */
@@ -790,15 +1006,16 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * @deprecated Use [`getCalculatedValues()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#getCalculatedValues) instead.
+   * @deprecated Use the [`getCalculatedValues()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel#getCalculatedValues) method instead.
+   * @hidden
    */
   getData(): any {
     return this.getCalculatedValuesCore();
   }
 
-  private _calculationsCache: Array<any> = undefined;
+  private _calculationsCache: ICalculationResult = undefined;
 
-  protected getCalculatedValuesCore(): Array<any> {
+  protected getCalculatedValuesCore(): ICalculationResult {
     if(!!this._getDataCore) {
       return this._getDataCore(this);
     }
@@ -812,17 +1029,30 @@ export class VisualizerBase implements IDataInfo {
     contentContainer.appendChild(createLoadingIndicator());
   }
 
-  public convertFromExternalData(externalCalculatedData: any): any[] {
+  public convertFromExternalData(externalCalculatedData: any): ICalculationResult {
     return externalCalculatedData;
   }
 
+  public async getAnswersData(): Promise<IAnswersData> {
+    const calculatedValues = await this.getCalculatedValues();
+    return {
+      datasets: calculatedValues.data,
+      // TODO: remove unused or add missing values
+      values: calculatedValues.values || this.getValues(),
+      labels: this.getLabels(),
+      colors: this.getColors(),
+      texts: calculatedValues.data,
+      seriesLabels: calculatedValues.series || this.getSeriesLabels()
+    };
+  }
+
   /**
-   * Returns an array of calculated and visualized values. If a user applies a filter, the array is also filtered.
+   * Returns calculated values used for visualization. If a user applies a filter, the array is also filtered.
    *
-   * To get an array of source survey results, use the [`surveyData`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#surveyData) property.
+   * To access an array of source survey results, use the [`surveyData`](#surveyData) property.
    */
-  public getCalculatedValues(): Promise<Array<Object>> {
-    return new Promise<Array<Object>>((resolve, reject) => {
+  public getCalculatedValues(): Promise<ICalculationResult> {
+    return new Promise<ICalculationResult>((resolve, reject) => {
       if(this._calculationsCache !== undefined) {
         resolve(this._calculationsCache);
       }
@@ -830,7 +1060,7 @@ export class VisualizerBase implements IDataInfo {
         this.loadingData = true;
         const dataLoadingPromise = this.dataProvider.dataFn({
           visualizer: this,
-          filter: this.dataProvider.getFilters(),
+          filter: this.dataProvider.getAllFilters(),
           callback: (loadedData: { data: Array<Object>, error?: any }) => {
             this.loadingData = false;
             if(!loadedData.error && Array.isArray(loadedData.data)) {
@@ -862,19 +1092,40 @@ export class VisualizerBase implements IDataInfo {
 
   protected _settingState = false;
 
+  protected _defaultStateValue = undefined;
+
+  public getDefaultState(): any {
+    return {};
+  }
+
   /**
-   * Returns an object with properties that describe a current visualizer state. The properties are different for each individual visualizer.
+   * Returns an object with properties that describe the current visualizer state. The properties are different for each individual visualizer.
    *
    * > This method is overriden in classes descendant from `VisualizerBase`.
    * @see setState
    * @see resetState
    * @see onStateChanged
+   * @hidefor Dashboard, VisualizationPanel
    */
   public getState(): any {
-    return {};
+    const state: any = {};
+    const defaultState = this.getDefaultState();
+    Object.keys(defaultState).forEach(propertyName => {
+      state[propertyName] = (<any>this)[propertyName];
+    });
+    return getDiffsFromDefaults(state, defaultState);
   }
+
+  protected setStateCore(state: any): void {
+    Object.keys(this.getDefaultState()).forEach(propertyName => {
+      if(state[propertyName] !== undefined) {
+        (<any>this)[propertyName] = state[propertyName];
+      }
+    });
+  }
+
   /**
-   * Sets the visualizer's state.
+   * Sets the visualizer state.
    *
    * [View Demo](https://surveyjs.io/dashboard/examples/save-dashboard-state-to-local-storage/ (linkStyle))
    *
@@ -882,27 +1133,39 @@ export class VisualizerBase implements IDataInfo {
    * @see getState
    * @see resetState
    * @see onStateChanged
+   * @hidefor Dashboard, VisualizationPanel
    */
   public setState(state: any): void {
+    if(this._settingState) return;
+    this._settingState = true;
+    try {
+      this.setStateCore(state);
+    } finally {
+      this._settingState = false;
+    }
+    this.refreshContent();
   }
+
   /**
-   * Resets the visualizer's state.
+   * Resets the visualizer state.
    *
    * > This method is overriden in classes descendant from `VisualizerBase`.
    * @see getState
    * @see setState
    * @see onStateChanged
    * @since 2.3.5
+   * @hidefor Dashboard, VisualizationPanel
    */
   public resetState(): void {
+    this.setState(this.getDefaultState());
   }
 
   /**
    * Gets or sets the current locale.
    *
-   * If you want to inherit the locale from a visualized survey, assign a [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model) instance to the [`survey`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#survey) property of the `IVisualizationPanelOptions` object in the [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel) constructor.
+   * If you want to inherit the locale from a visualized survey, assign a [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model) instance to the [`survey`](https://surveyjs.io/dashboard/documentation/api-reference/idashboardoptions#survey) option passed to the Dashboard.
    *
-   * If the survey is [translated into more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the toolbar displays a language selection drop-down menu.
+   * If the survey is [translated into more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the dashboard toolbar displays a language selection drop-down menu.
    *
    * [View Demo](https://surveyjs.io/dashboard/examples/localize-survey-data-dashboard-ui/ (linkStyle))
    * @see onLocaleChanged

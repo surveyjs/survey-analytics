@@ -70,7 +70,7 @@ function CustomVisualizer(question, data) {
       var toolbar = document.createElement("div");
       toolbar.className = "sa-toolbar";
       toolbarNodeContainer.appendChild(toolbar);
-      SurveyAnalytics.VisualizerBase.prototype.createToolbarItems.apply(self, [
+      SurveyAnalyticsPlotly.VisualizerBase.prototype.createToolbarItems.apply(self, [
         toolbar,
       ]);
 
@@ -79,7 +79,7 @@ function CustomVisualizer(question, data) {
     },
 
     registerToolbarItem: function (itemName, creator) {
-      SurveyAnalytics.VisualizerBase.prototype.registerToolbarItem.apply(self, [
+      SurveyAnalyticsPlotly.VisualizerBase.prototype.registerToolbarItem.apply(self, [
         itemName,
         creator,
       ]);
@@ -94,7 +94,7 @@ function CustomVisualizer(question, data) {
   };
 }
 
-SurveyAnalytics.VisualizationManager.registerVisualizer(
+SurveyAnalyticsPlotly.VisualizationManager.registerVisualizer(
   "matrix",
   CustomVisualizer
 );

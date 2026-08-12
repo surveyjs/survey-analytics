@@ -3,7 +3,7 @@ var accessKey = "";
 
 var survey = new Survey.SurveyModel(json);
 
-SurveyAnalytics.PlotlySetup.onImageSaving.add(function (selectBaseVisualizer, options) {
+SurveyAnalyticsPlotly.PlotlySetup.onImageSaving.add(function (selectBaseVisualizer, options) {
   options.filename = "Exported " + selectBaseVisualizer.question.name;
 });
 
@@ -27,7 +27,7 @@ var options = {
 };
 
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   [survey.getQuestionByName("backend_language")],
   data,
   options

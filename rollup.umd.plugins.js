@@ -1,5 +1,7 @@
+/* eslint-env node */
 const fs = require("fs");
 const path = require("path");
+const { URL } = require("url");
 const sass = require("sass");
 const fg = require("fast-glob");
 const svgLoader = require("svg-inline-loader");
@@ -159,6 +161,21 @@ function emitNonSourceFiles(options) {
       import: "./fesm/survey.analytics.mongo.mjs",
       require: "./survey.analytics.mongo.js"
     },
+    "./survey.analytics.apexcharts": {
+      types: "./survey.analytics.apexcharts.d.ts",
+      import: "./fesm/survey.analytics.apexcharts.mjs",
+      require: "./survey.analytics.apexcharts.js"
+    },
+    "./survey.analytics.chartjs": {
+      types: "./survey.analytics.chartjs.d.ts",
+      import: "./fesm/survey.analytics.chartjs.mjs",
+      require: "./survey.analytics.chartjs.js"
+    },
+    "./survey.analytics.plotly": {
+      types: "./survey.analytics.plotly.d.ts",
+      import: "./fesm/survey.analytics.plotly.mjs",
+      require: "./survey.analytics.plotly.js"
+    },
     "./*.css": "./*.css",
     "./survey.analytics.tabulator": {
       types: "./survey.analytics.tabulator.d.ts",
@@ -229,11 +246,35 @@ function createPostBuildAssetsPlugin(options) {
   };
 }
 
+function createNonSourceFilesPlugin(options) {
+  const { rootDir, buildDir, packageJsonPath } = options;
+  return {
+    name: "emit-non-source-files",
+    writeBundle() {
+      emitNonSourceFiles({ rootDir, buildDir, packageJsonPath });
+    }
+  };
+}
+
+function createCssPlugin(options) {
+  const { rootDir, buildDir, entry, isProduction } = options;
+  return {
+    name: "emit-css",
+    writeBundle() {
+      emitCssFile({ rootDir, buildDir, entry, isProduction });
+      if(entry.fontlessCssFiles && entry.fontlessCssFiles.length > 0) {
+        emitCssFile({ rootDir, buildDir, entry: { key: entry.key + ".fontless", cssFiles: entry.fontlessCssFiles }, isProduction });
+      }
+    }
+  };
+}
+
 module.exports = {
   toBool,
   createIconsPlugin,
   createRemoveScssImportsPlugin,
-  createTabulatorUmdCastCompatPlugin,
   createMinifyChunkPlugin,
-  createPostBuildAssetsPlugin
+  createPostBuildAssetsPlugin,
+  createCssPlugin,
+  createNonSourceFilesPlugin
 };

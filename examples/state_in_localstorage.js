@@ -15,17 +15,7 @@ var survey = new Survey.SurveyModel(json);
 // xhr.onload = function() {
 //   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
-//   // SurveyAnalytics.SelectBasePlotly.types = ["pie", "scatter"];
-//   // SurveyAnalytics.VisualizerBase.customColors = [
-//   //   "F85A40",
-//   //   "185A32",
-//   //   "BC1CEC",
-//   //   "DC4E75",
-//   //   "747F4B",
-//   //   "000000"
-//   // ];
-
-//   var visPanel = new SurveyAnalytics.VisualizationPanel(
+//   var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
 //     survey.getAllQuestions(),
 //     data
 //   );
@@ -34,7 +24,7 @@ var survey = new Survey.SurveyModel(json);
 // };
 // xhr.send();
 
-// SurveyAnalytics.SelectBasePlotly.displayModeBar = false;
+// SurveyAnalyticsPlotly.SelectBasePlotly.displayModeBar = false;
 
 var options = {
   // allowDynamicLayout: false,
@@ -52,7 +42,7 @@ if (localStorageState) {
   elements = JSON.parse(localStorageState).elements;
 }
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   survey.getAllQuestions(),
   data,

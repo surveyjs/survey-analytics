@@ -1,5 +1,5 @@
 import { IVisualizerWithSelection } from "./selectBase";
-import { DocumentHelper } from "./utils";
+import { DocumentHelper } from "./utils/documentHelper";
 import { localization } from "./localizationManager";
 
 export class FilterInfo {
@@ -14,11 +14,11 @@ export class FilterInfo {
       "span",
       "sa-question__filter-text"
     );
-    this._htmlElement.appendChild(this.text);
     const filterClear = DocumentHelper.createButton(() => {
       visualizer.setSelection(undefined);
-    }, localization.getString("clearButton"));
+    }, undefined, undefined, "close-16x16");
     this._htmlElement.appendChild(filterClear);
+    this._htmlElement.appendChild(this.text);
   }
 
   public get htmlElement() {

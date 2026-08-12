@@ -1,4 +1,5 @@
 export function createPipeline(surveyId: string, questionId: string, visualizerType: string, questionType: string): any[] {
+  const [pivotValueName, pivotSeriesName] = (questionId || "").split("|");
   const singleChoicePipeline = [
     { $match: { postid: surveyId } },
     { $project: { value: "$json." + questionId } },
@@ -8,7 +9,8 @@ export function createPipeline(surveyId: string, questionId: string, visualizerT
         _id: "$value",
         count: { $sum: 1 },
       }
-    }
+    },
+    { $sort: { _id: 1 } }
   ];
   const multipleChoicePipeline = [
     { $match: { postid: surveyId } },
@@ -20,7 +22,8 @@ export function createPipeline(surveyId: string, questionId: string, visualizerT
         _id: "$value",
         count: { $sum: 1 },
       }
-    }
+    },
+    { $sort: { _id: 1 } }
   ];
   const numberPipeline = [
     { $match: { postid: surveyId } },
@@ -66,7 +69,49 @@ export function createPipeline(surveyId: string, questionId: string, visualizerT
         },
         count: 1
       }
-    }
+    },
+    { $sort: { start: 1, end: 1 } }
+  ];
+  const matrixPipeline = [
+    { $match: { postid: surveyId } },
+    { $project: { value: "$json." + questionId } },
+    { $match: { value: { $exists: true } } },
+    { $project: { pairs: { $objectToArray: "$value" } } },
+    { $unwind: "$pairs" },
+    {
+      $group: {
+        _id: { series: "$pairs.k", value: "$pairs.v" },
+        count: { $sum: 1 }
+      }
+    },
+    { $sort: { "_id.series": 1, "_id.value": 1 } }
+  ];
+  const pivotPipeline = [
+    { $match: { postid: surveyId } },
+    { $project: { value: "$json." + pivotValueName, series: "$json." + pivotSeriesName } },
+    { $match: { value: { $exists: true }, series: { $exists: true } } },
+    {
+      $group: {
+        _id: { series: "$series", value: "$value" },
+        count: { $sum: 1 }
+      }
+    },
+    { $sort: { "_id.series": 1, "_id.value": 1 } }
+  ];
+  const wordcloudPipeline = [
+    { $match: { postid: surveyId } },
+    { $project: { value: "$json." + questionId } },
+    { $match: { value: { $exists: true } } },
+    { $project: { words: { $split: [{ $toLower: "$value" }, " "] } } },
+    { $unwind: "$words" },
+    { $match: { words: { $ne: "" } } },
+    {
+      $group: {
+        _id: "$words",
+        count: { $sum: 1 }
+      }
+    },
+    { $sort: { _id: 1 } }
   ];
   const mongoPipelines = {
     "boolean": singleChoicePipeline,
@@ -76,7 +121,10 @@ export function createPipeline(surveyId: string, questionId: string, visualizerT
     "tagbox": multipleChoicePipeline,
     "number": numberPipeline,
     "rating": numberPipeline,
-    "histogram": histogramPipeline
+    "histogram": histogramPipeline,
+    "matrix": matrixPipeline,
+    "pivot": pivotPipeline,
+    "wordcloud": wordcloudPipeline
   };
   const pipeline = mongoPipelines[visualizerType] || mongoPipelines[questionType] || [];
   return pipeline;

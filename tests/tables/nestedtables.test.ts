@@ -1,13 +1,12 @@
 import { SurveyModel } from "survey-core";
+import { vi } from "vitest";
 // eslint-disable-next-line surveyjs/no-imports-from-entries
 import { Tabulator } from "../../src/entries/tabulator-umd";
 import { ColumnDataType } from "../../src/tables/config";
-import { vi } from "vitest";
 
 vi.mock("tabulator-tables", async () => {
-  const actual = await vi.importActual<any>("tabulator-tables");
-  const tabulatorConstructor = actual.default ?? actual.TabulatorFull ?? actual;
-  return { default: tabulatorConstructor };
+  const tabulatorModule = await vi.importActual<any>("tabulator-tables");
+  return { default: tabulatorModule.TabulatorFull || tabulatorModule.Tabulator };
 });
 
 const trueTimeout = window.setTimeout;

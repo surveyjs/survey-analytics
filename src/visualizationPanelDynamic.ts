@@ -1,7 +1,7 @@
+import { Question, QuestionPanelDynamicModel, IQuestion } from "survey-core";
 import { VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 import { VisualizationPanel } from "./visualizationPanel";
-import { Question, QuestionPanelDynamicModel, IQuestion } from "survey-core";
 
 export class VisualizationPanelDynamic extends VisualizerBase {
   protected _contentVisualizer: VisualizationPanel = undefined;
@@ -9,9 +9,9 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options: { [index: string]: any } = {},
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "panelDynamic");
+    super(question, data, options, type || "panelDynamic");
     this.loadingData = false;
     var options = Object.assign({}, options);
     options.allowHideQuestions = false;
@@ -35,7 +35,7 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     this.afterRender(this.contentContainer);
   };
 
-  public resetFilter(): void {
+  public resetContentFilter(): void {
     this.contentVisualizer.resetFilter();
   }
 
@@ -44,13 +44,18 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     return paneldynamic.template.questions;
   }
 
+  protected onThemeChanged(): void {
+    super.onThemeChanged();
+    this._contentVisualizer.theme = this.theme;
+  }
+
   destroyContent(container: HTMLElement) {
     this._contentVisualizer.clear();
     super.destroyContent(this.contentContainer);
   }
 
   renderContent(container: HTMLElement): void {
-    this._contentVisualizer.render(container);
+    this._contentVisualizer.render(container, false);
   }
 
   public destroy() {
@@ -61,5 +66,7 @@ export class VisualizationPanelDynamic extends VisualizerBase {
 
 VisualizationManager.registerVisualizer(
   "paneldynamic",
-  VisualizationPanelDynamic
+  VisualizationPanelDynamic,
+  undefined,
+  "paneldynamic"
 );

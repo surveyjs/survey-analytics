@@ -5,19 +5,24 @@
   <title>Date and number histogram visualization Example</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="stylesheet" type="text/css" href="../build/survey.analytics.css" />
+  <link rel="stylesheet" type="text/css" href="../build/survey.analytics.plotly.css" />
 
   <script src="https://unpkg.com/plotly.js-dist-min/plotly.min.js"></script>
   <!-- <script src="./plotly.min.js"></script> -->
 
   <script src="../node_modules/survey-core/survey.core.js"></script>
-  <script src="../build/survey.analytics.js"></script>
+  <script src="../build/survey.analytics.plotly.js"></script>
+  <script src="../node_modules/survey-core/themes/index.js"></script>
 </head>
 
 <body>
+  <label for="theme-selector">Theme</label>
+  <select id="theme-selector"></select>
+  <br><br>
   <div id="summaryContainer"></div>
 
   <script src="./sales-data.js"></script>
+  <script src="./theme-selector.js"></script>
   <script src="./histogram.js"></script>
 </body>
 

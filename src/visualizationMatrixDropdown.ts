@@ -34,9 +34,9 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     question: QuestionMatrixDropdownModel,
     data: Array<{ [index: string]: any }>,
     options: { [index: string]: any } = {},
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "matrixDropdown");
+    super(question, data, options, type || "matrixDropdown");
     this.loadingData = false;
     this._childOptions = Object.assign({}, options);
     this._childOptions.disableLocaleSwitch = true;
@@ -97,13 +97,18 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     );
   }
 
+  protected onThemeChanged(): void {
+    super.onThemeChanged();
+    this._contentVisualizer.theme = this.theme;
+  }
+
   destroyContent(container: HTMLElement) {
     this._contentVisualizer.clear();
     super.destroyContent(this.contentContainer);
   }
 
   renderContent(container: HTMLElement): void {
-    this._contentVisualizer.render(container);
+    this._contentVisualizer.render(container, false);
   }
 
   destroy() {
@@ -114,5 +119,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
 
 VisualizationManager.registerVisualizer(
   "matrixdropdown",
-  VisualizationMatrixDropdown
+  VisualizationMatrixDropdown,
+  undefined,
+  "matrixdropdown"
 );

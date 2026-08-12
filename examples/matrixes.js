@@ -190,7 +190,7 @@ var options = {
   // allowHideQuestions: false
 };
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   survey.getAllQuestions(),
   data,
   options

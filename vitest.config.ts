@@ -16,12 +16,16 @@ export default defineConfig({
   },
   test: {
     globals: true,
+    fileParallelism: false,
     css: false,
+    env: {
+      TZ: "UTC",
+    },
     environment: "jsdom",
     environmentMatchGlobs: [["tests/mongo/**", "node"]],
     alias: [
       {
-        find: /^.*\.(html|svg)$/,
+        find: /^.*\.(css|scss|html|svg)$/,
         replacement: path.resolve(__dirname, "tests/empty-module.js"),
       },
     ],

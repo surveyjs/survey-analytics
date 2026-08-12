@@ -15,17 +15,7 @@ var survey = new Survey.SurveyModel(json);
 // xhr.onload = function() {
 //   var result = xhr.response ? JSON.parse(xhr.response) : [];
 
-//   // SurveyAnalytics.SelectBasePlotly.types = ["pie", "scatter"];
-//   // SurveyAnalytics.VisualizerBase.customColors = [
-//   //   "F85A40",
-//   //   "185A32",
-//   //   "BC1CEC",
-//   //   "DC4E75",
-//   //   "747F4B",
-//   //   "000000"
-//   // ];
-
-//   var visPanel = new SurveyAnalytics.VisualizationPanel(
+//   var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
 //     survey.getAllQuestions(),
 //     data
 //   );
@@ -34,17 +24,17 @@ var survey = new Survey.SurveyModel(json);
 // };
 // xhr.send();
 
-// SurveyAnalytics.SelectBasePlotly.displayModeBar = false;
+// SurveyAnalyticsPlotly.SelectBasePlotly.displayModeBar = false;
 
-// SurveyAnalytics.VisualizerBase.suppressVisualizerStubRendering = true;
+// SurveyAnalyticsPlotly.VisualizerBase.suppressVisualizerStubRendering = true;
 
-// SurveyAnalytics.VisualizationManager.registerVisualizer("rating", SurveyAnalytics.NpsVisualizer);
+// SurveyAnalyticsPlotly.VisualizationManager.registerVisualizer("rating", SurveyAnalyticsPlotly.NpsVisualizer);
 
-SurveyAnalytics.PlotlySetup.onImageSaving.add(function (selectBaseVisualizer, options) {
+SurveyAnalyticsPlotly.PlotlySetup.onImageSaving.add(function (selectBaseVisualizer, options) {
   options.filename = "Exported " + selectBaseVisualizer.question.name;
 });
 
-// SurveyAnalytics.PlotlySetup.onPlotCreating.add(function(selectBaseVisualizer, options) {
+// SurveyAnalyticsPlotly.PlotlySetup.onPlotCreating.add(function(selectBaseVisualizer, options) {
 //   options.config.modeBarButtonsToRemove.push("lasso2d");
 // });
 
@@ -67,15 +57,20 @@ var options = {
   // labelTruncateLength: 27,
 };
 
-// SurveyAnalytics.WordCloudAdapter.drawOutOfBound = false;
-// SurveyAnalytics.WordCloudAdapter.shrinkToFit = true;
-// SurveyAnalytics.WordCloudAdapter.weightFactor = 30;
+// SurveyAnalyticsPlotly.WordCloudAdapter.drawOutOfBound = false;
+// SurveyAnalyticsPlotly.WordCloudAdapter.shrinkToFit = true;
+// SurveyAnalyticsPlotly.WordCloudAdapter.weightFactor = 30;
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   survey.getAllQuestions(),
   data,
   options
 );
+
+SurveyAnalyticsExamples.setupThemeSelector("theme-selector", visPanel);
+
+// visPanel.applyTheme(SurveyTheme.DefaultDark);
+// visPanel.applyTheme(SurveyTheme.DefaultLight);
 visPanel.showToolbar = true;
 visPanel.render(document.getElementById("summaryContainer"));

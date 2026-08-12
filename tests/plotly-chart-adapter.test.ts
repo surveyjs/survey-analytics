@@ -4,13 +4,13 @@ vi.mock("plotly.js", () => { }, { virtual: true });
 vi.mock("plotly.js-dist-min", () => ({ default: { Icons: {}, react: () => { } } }), { virtual: true });
 (<any>global).URL.createObjectURL = vi.fn();
 
-import { PlotlyChartAdapter } from "../src/plotly/chart-adapter";
+import { chartTypes, PlotlyChartAdapter } from "../src/plotly/chart-adapter";
 import { QuestionBooleanModel, QuestionDropdownModel, QuestionRatingModel } from "survey-core";
 import { SelectBase } from "../src/selectBase";
 import { BooleanModel } from "../src/boolean";
 import { NumberModel } from "../src/number";
 import { VisualizerBase } from "../src/visualizerBase";
-import { BooleanPlotly, SelectBasePlotly } from "../src/plotly/legacy";
+import { VisualizationPanel } from "../src/visualizationPanel";
 
 VisualizerBase.chartAdapterType = PlotlyChartAdapter;
 
@@ -156,7 +156,7 @@ test("should add color for missing answers if showMissingAnswers is enabled", ()
 });
 
 test("should not modify traces if chartType is not supported", () => {
-  BooleanPlotly.types.push("line");
+  chartTypes["boolean"].push("line");
 
   var booleanQuestion = new QuestionBooleanModel("q1");
   booleanQuestion.labelTrue = "Yes";
@@ -180,7 +180,7 @@ test("should not modify traces if chartType is not supported", () => {
 
   expect(traces).toEqual(originalTraces);
 
-  BooleanPlotly.types.pop();
+  chartTypes["boolean"].pop();
 });
 
 test("should create marker object if it doesn't exist", () => {
@@ -368,8 +368,28 @@ test("should handle null/undefined values correctly", () => {
   expect(traces[2].marker.colors).toBeDefined();
 });
 
+test("Use chart type from itemDefinition", async () => {
+  const itemDefinition = {
+    visualizerType: "average",
+    chartType: "bullet",
+    name: "test",
+    visualizer: {
+      displayValueName: "count"
+    },
+    title: "Total answers count"
+  };
+
+  const data = [{ test: 1 }, { test: 10 }, { test: 8 }, { test: 7 }, { test: 9 }, { test: 9 }, {}];
+  let visPanel = new VisualizationPanel([itemDefinition], data, {});
+
+  expect(visPanel.visualizers.length).toEqual(1);
+  expect(visPanel.visualizers[0].type).toEqual("average");
+  expect((visPanel.visualizers[0] as NumberModel).chartType).toEqual("bullet");
+  expect((visPanel.visualizers[0] as NumberModel).displayValueName).toEqual("count");
+});
+
 test("Determine the default charts", () => {
-  const originalTypes = SelectBasePlotly.types;
+  const originalTypes = chartTypes["selectBase"];
   var selectQuestion = new QuestionDropdownModel("q1");
   selectQuestion.choices = [
     { value: "option1", text: "Option 1" },
@@ -385,8 +405,8 @@ test("Determine the default charts", () => {
 
   expect(adapter.getChartTypes()).toStrictEqual(["bar", "vbar", "pie", "doughnut"]);
 
-  SelectBasePlotly.types = ["pie", "bar", "scatter"];
+  chartTypes["selectBase"] = ["pie", "bar", "scatter"];
   expect(adapter.getChartTypes()).toStrictEqual(["pie", "bar", "scatter"]);
 
-  SelectBasePlotly.types = originalTypes;
+  chartTypes["selectBase"] = originalTypes;
 });
