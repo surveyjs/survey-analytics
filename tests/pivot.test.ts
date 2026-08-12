@@ -52,6 +52,7 @@ test("default settings", async () => {
 
   expect(pivot["isSupportMissingAnswers"]()).toBeFalsy();
   expect(pivot["isSupportAnswersOrder"]()).toBeFalsy();
+  expect(pivot.supportSelection).toBeFalsy();
 
   const values = pivot.getValues();
   const labels = pivot.getLabels();
@@ -59,13 +60,13 @@ test("default settings", async () => {
   const seriesLabels = pivot.getSeriesLabels();
 
   expect(pivot.axisXQuestionName).toBe("question1");
-  expect(pivot.axisYQuestionNames).toStrictEqual([]);
+  expect(pivot.primaryYAxes).toStrictEqual([]);
   expect(values).toStrictEqual(["female", "male"]);
   expect(labels).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual([]);
   expect(seriesLabels).toStrictEqual([]);
 
-  expect(await pivot.getCalculatedValues()).toStrictEqual([[8, 4]]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[8, 4]]);
 });
 
 test("getSeriesValues and getSeriesLabels + values and labels", async () => {
@@ -77,7 +78,7 @@ test("getSeriesValues and getSeriesLabels + values and labels", async () => {
   let seriesLabels = pivot.getSeriesLabels();
 
   expect(pivot.axisXQuestionName).toBe("question1");
-  expect(pivot.axisYQuestionNames).toStrictEqual([]);
+  expect(pivot.primaryYAxes).toStrictEqual([]);
   expect(values).toStrictEqual(["female", "male"]);
   expect(labels).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual([]);
@@ -91,7 +92,7 @@ test("getSeriesValues and getSeriesLabels + values and labels", async () => {
   seriesLabels = pivot.getSeriesLabels();
 
   expect(pivot.axisXQuestionName).toBe("question2");
-  expect(pivot.axisYQuestionNames).toStrictEqual(["question1"]);
+  expect(pivot.primaryYAxes).toStrictEqual([{ dataName: "question1", valueName: "question1", aggregation: "count" }]);
   expect(values).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(labels).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(seriesValues).toStrictEqual(["female", "male"]);
@@ -109,35 +110,35 @@ test("getCalculatedValues", async () => {
   let seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
-  expect(await pivot.getCalculatedValues()).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
 
   pivot.setAxisQuestions("question2", "question1");
   values = pivot.getValues();
   seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(seriesValues).toStrictEqual(["female", "male"]);
-  expect(await pivot.getCalculatedValues()).toStrictEqual([[1, 3, 4], [2, 1, 1]]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 3, 4], [2, 1, 1]]);
 
   pivot.setAxisQuestions("question1", "question3");
   values = pivot.getValues();
   seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual(["question3"]);
-  expect(await pivot.getCalculatedValues()).toStrictEqual([[2500, 1000]]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[2500, 1000]]);
 
   pivot.setAxisQuestions("question2", "question3");
   values = pivot.getValues();
   seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
   expect(seriesValues).toStrictEqual(["question3"]);
-  expect(await pivot.getCalculatedValues()).toStrictEqual([[550, 1500, 1450]]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[550, 1500, 1450]]);
 
   pivot.setAxisQuestions("question3", "question1");
   values = pivot.getValues();
   seriesValues = pivot.getSeriesValues();
   expect(values).toStrictEqual([100, 150, 200, 250, 300, 350, 400, 450, 500, 550]);
   expect(seriesValues).toStrictEqual(["female", "male"]);
-  expect(await pivot.getCalculatedValues()).toStrictEqual([[1, 1, 1, 1, 1, 0, 1, 0, 1, 1], [1, 0, 1, 0, 1, 0, 1, 0, 0, 0]]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 1, 1, 1, 1, 0, 1, 0, 1, 1], [1, 0, 1, 0, 1, 0, 1, 0, 0, 0]]);
 });
 
 test("getQuestionValueType", async () => {
@@ -162,7 +163,7 @@ test("getCalculatedValues multi-Y-axes", async () => {
   expect(values).toStrictEqual(["female", "male"]);
   expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3", "question3"]);
   expect(pivot.getSeriesValueIndexes()).toStrictEqual({ "question2_Item 1": 0, "question2_Item 2": 1, "question2_Item 3": 2, "question3": 3 });
-  const calculatedValues = await pivot.getCalculatedValues();
+  const calculatedValues = (await pivot.getCalculatedValues()).data;
   expect(calculatedValues).toHaveLength(4);
   expect(calculatedValues).toStrictEqual([[1, 2], [3, 1], [4, 1], [2500, 1000]]);
 });
@@ -359,13 +360,6 @@ test("toPrecision method", () => {
   expect(result).toBe(3.14);
 });
 
-test("convertFromExternalData", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-  const externalData = { some: "data" };
-  const result = pivot.convertFromExternalData(externalData);
-  expect(result).toEqual([externalData]);
-});
-
 test("updateStatisticsSeriesValue with enum values", () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
   pivot.setAxisQuestions("question1", "question2");
@@ -403,75 +397,6 @@ test("setAxisQuestions with empty array", () => {
 
   pivot.setAxisQuestions();
   expect(pivot.axisXQuestionName).toBe(originalAxisX);
-});
-
-test("onAxisYSelectorChanged removes subsequent selectors when value is empty", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-  pivot.setAxisQuestions("question1", "question2", "question3");
-
-  expect(pivot.axisYQuestionNames.length).toBe(2);
-
-  // Mock the unregisterToolbarItem method
-  const originalUnregister = pivot["unregisterToolbarItem"];
-  const mockUnregister = vi.fn();
-  pivot["unregisterToolbarItem"] = mockUnregister;
-
-  // Mock the axisYSelectors array to have the expected length
-  pivot["axisYSelectors"] = [{} as HTMLDivElement, {} as HTMLDivElement];
-
-  pivot.onAxisYSelectorChanged(0, "");
-
-  expect(mockUnregister).toHaveBeenCalledWith("axisYSelector1");
-  expect(pivot.axisYQuestionNames.length).toBe(1);
-
-  // Restore original method
-  pivot["unregisterToolbarItem"] = originalUnregister;
-});
-
-test("onAxisYSelectorChanged adds new selector when value is set", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-  pivot.setAxisQuestions("question1", "question2");
-
-  // Mock the registerToolbarItem method
-  const originalRegister = pivot["registerToolbarItem"];
-  const mockRegister = vi.fn();
-  pivot["registerToolbarItem"] = mockRegister;
-
-  // Mock the axisYSelectors array to have the expected length
-  pivot["axisYSelectors"] = [{} as HTMLDivElement, {} as HTMLDivElement];
-
-  pivot.onAxisYSelectorChanged(1, "question3");
-
-  expect(mockRegister).toHaveBeenCalledWith("axisYSelector2", expect.any(Function));
-
-  // Restore original method
-  pivot["registerToolbarItem"] = originalRegister;
-});
-
-test("updateQuestionsSelection prevents duplicate question selection", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-
-  // Mock the onAxisYSelectorChanged method
-  const originalOnAxisYSelectorChanged = pivot.onAxisYSelectorChanged;
-  const mockOnAxisYSelectorChanged = vi.fn();
-  pivot.onAxisYSelectorChanged = mockOnAxisYSelectorChanged;
-
-  pivot.setAxisQuestions("question1", "question1");
-  pivot["updateQuestionsSelection"]();
-
-  expect(mockOnAxisYSelectorChanged).toHaveBeenCalledWith(0, undefined);
-
-  // Restore original method
-  pivot.onAxisYSelectorChanged = originalOnAxisYSelectorChanged;
-});
-
-test("createAxisYSelector returns undefined when no choices available", () => {
-  const pivot = new PivotModel(survey.getAllQuestions(), data);
-  pivot.setAxisQuestions("question1", "question2", "question3");
-
-  // All questions are already selected, so no choices should be available
-  const selector = pivot["createAxisYSelector"](2);
-  expect(selector).toBeUndefined();
 });
 
 test("isXYChart method", () => {
@@ -576,14 +501,14 @@ test("getCalculatedValuesCore with empty data", async () => {
   pivot.setAxisQuestions("question1", "question2");
 
   const calculatedValues = pivot["getCalculatedValuesCore"]();
-  expect(calculatedValues).toEqual([[0, 0], [0, 0], [0, 0]]);
+  expect(calculatedValues.data).toEqual([[0, 0], [0, 0], [0, 0]]);
 });
 
 test("getCalculatedValuesCore with number type and no Y questions", async () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
   pivot.setAxisQuestions("question3");
 
-  const calculatedValues = pivot["getCalculatedValuesCore"]();
+  const calculatedValues = pivot["getCalculatedValuesCore"]().data;
   expect(calculatedValues.length).toBe(1);
   expect(calculatedValues[0].length).toBe(PivotModel.IntervalsCount);
 });
@@ -592,7 +517,449 @@ test("getCalculatedValuesCore with number type and Y questions", async () => {
   const pivot = new PivotModel(survey.getAllQuestions(), data);
   pivot.setAxisQuestions("question3", "question1");
 
-  const calculatedValues = pivot["getCalculatedValuesCore"]();
+  const calculatedValues = pivot["getCalculatedValuesCore"]().data;
   expect(calculatedValues.length).toBe(2); // female, male
   expect(calculatedValues[0].length).toBe(PivotModel.IntervalsCount);
+});
+
+test("getCalculatedValues for array in answer data", async () => {
+  const json = {
+    "pages": [
+      {
+        "name": "additional_info",
+        "title": "Additional Information",
+        "elements": [
+          {
+            "type": "checkbox",
+            "name": "income_sources",
+            "choices": [
+              "Salary / Wages",
+              "Business income",
+              "Pension / Retirement",
+              "Government assistance",
+              "Investments / Dividends"
+            ],
+            "showOtherItem": true,
+            "otherText": "Other (specify)"
+          }
+        ]
+      }
+    ],
+  };
+  const data = [
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["other"] },
+    { "income_sources": ["other", "Pension / Retirement"] },
+    { "income_sources": ["Pension / Retirement", "Salary / Wages", "Government assistance"] },
+    { "income_sources": ["other"] },
+    { "income_sources": ["other", "Investments / Dividends", "Business income"] },
+    { "income_sources": ["Pension / Retirement"] },
+    { "income_sources": ["Business income", "other"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["other"] },
+    { "income_sources": ["Pension / Retirement"] },
+    { "income_sources": ["Government assistance", "Business income"] },
+    { "income_sources": ["Salary / Wages", "other", "Business income"] },
+    { "income_sources": ["Business income", "Government assistance", "Investments / Dividends"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["Investments / Dividends"] },
+    { "income_sources": ["Government assistance", "Business income"] },
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["Investments / Dividends", "Government assistance"] },
+    { "income_sources": ["Investments / Dividends"] },
+    { "income_sources": ["Government assistance", "Business income"] },
+    { "income_sources": ["other"] },
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["Salary / Wages", "other", "Business income"] },
+    { "income_sources": ["Business income", "Pension / Retirement", "Salary / Wages"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["Pension / Retirement", "Government assistance", "other"] },
+    { "income_sources": ["other", "Business income", "Salary / Wages"] },
+    { "income_sources": ["other", "Investments / Dividends", "Government assistance"] },
+    { "income_sources": ["Pension / Retirement", "Business income"] },
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["other", "Pension / Retirement"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["Investments / Dividends", "Salary / Wages", "other"] },
+    { "income_sources": ["Government assistance"] },
+    { "income_sources": ["Salary / Wages"] },
+    { "income_sources": ["Pension / Retirement"] },
+    { "income_sources": ["Investments / Dividends"] },
+    { "income_sources": ["other", "Investments / Dividends"] },
+    { "income_sources": ["Salary / Wages", "Business income"] },
+    { "income_sources": ["Investments / Dividends", "Pension / Retirement", "Business income"] },
+    { "income_sources": ["other", "Salary / Wages", "Pension / Retirement"] },
+    { "income_sources": ["Salary / Wages", "Government assistance", "Business income"] },
+    { "income_sources": ["Business income", "other", "Pension / Retirement"] },
+    { "income_sources": ["Salary / Wages", "Business income"] },
+    { "income_sources": ["Investments / Dividends", "Government assistance"] },
+    { "income_sources": ["Salary / Wages", "other", "Government assistance"] },
+    { "income_sources": ["Salary / Wages", "other", "Business income"] },
+    { "income_sources": ["Pension / Retirement"] },
+    { "income_sources": ["Government assistance"] }
+  ];
+
+  const survey = new SurveyModel(json);
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("income_sources");
+  let values = pivot.getValues();
+  let seriesValues = pivot.getSeriesValues();
+  expect(values).toStrictEqual(["Salary / Wages", "Business income", "Pension / Retirement", "Government assistance", "Investments / Dividends", "other"]);
+  expect(seriesValues).toStrictEqual([]);
+  const result = (await pivot.getCalculatedValues()).data;
+  expect(result).toStrictEqual([[17, 17, 13, 17, 11, 19,]]);
+});
+
+test("getCalculatedValues with value aggregation", async () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("question1", "question2");
+  let values = pivot.getValues();
+  let seriesValues = pivot.getSeriesValues();
+  expect(values).toStrictEqual(["female", "male"]);
+  expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1]]);
+
+  pivot.primaryYAxes = [{
+    dataName: "question2",
+    valueName: "question3",
+    aggregation: "sum",
+  }];
+  pivot["setupPivot"]();
+  values = pivot.getValues();
+  seriesValues = pivot.getSeriesValues();
+  expect(values).toStrictEqual(["female", "male"]);
+  expect(seriesValues).toStrictEqual(["Item 1", "Item 2", "Item 3"]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[250, 300], [1200, 300], [1050, 400]]);
+
+  pivot.primaryYAxes = [];
+  pivot["setupPivot"]();
+  values = pivot.getValues();
+  seriesValues = pivot.getSeriesValues();
+  expect(values).toStrictEqual(["female", "male"]);
+  expect(seriesValues).toStrictEqual([]);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[8, 4]]);
+});
+
+test("useSecondaryYAxis clears secondaryYAxes when set to false and restores when set back to true", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+
+  pivot.secondaryYAxes.push(
+    { dataName: "question2", valueName: "question2", aggregation: "count" },
+    { dataName: "question3", valueName: "question3", aggregation: "sum" }
+  );
+  const stateBeforeOff = pivot.secondaryYAxes.map((axis) => ({ ...axis }));
+
+  expect(pivot.useSecondaryYAxis).toBe(true);
+  expect(pivot.secondaryYAxes).toHaveLength(2);
+
+  pivot.useSecondaryYAxis = false;
+  expect(pivot.useSecondaryYAxis).toBe(false);
+  expect(pivot.secondaryYAxes).toEqual([]);
+
+  pivot.useSecondaryYAxis = true;
+  expect(pivot.useSecondaryYAxis).toBe(true);
+  expect(pivot.secondaryYAxes).toHaveLength(2);
+  expect(pivot.secondaryYAxes).toStrictEqual(stateBeforeOff);
+});
+
+test("useSecondaryYAxis leaves secondaryYAxes empty when re-enabled if it was empty before disabling", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2");
+
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+
+  pivot.useSecondaryYAxis = false;
+  expect(pivot.secondaryYAxes).toEqual([]);
+
+  pivot.useSecondaryYAxis = true;
+  expect(pivot.secondaryYAxes).toEqual([]);
+});
+
+test("movePrimaryItemToSecondary moves item from primary to secondary Y axis", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+
+  expect(pivot.primaryYAxes).toHaveLength(2);
+  expect(pivot.primaryYAxes[0].dataName).toBe("question2");
+  expect(pivot.primaryYAxes[1].dataName).toBe("question3");
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+
+  pivot["movePrimaryItemToSecondary"](0);
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.primaryYAxes[0].dataName).toBe("question3");
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes[0].dataName).toBe("question2");
+  expect(pivot.secondaryYAxes[0].aggregation).toBe("count");
+});
+
+test("movePrimaryItemToSecondary does nothing when index is out of range", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+
+  pivot["movePrimaryItemToSecondary"](10);
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+});
+
+test("moveSecondaryItemToPrimary moves item from secondary to primary Y axis", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+  pivot["movePrimaryItemToSecondary"](0);
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+
+  pivot["moveSecondaryItemToPrimary"](0);
+
+  expect(pivot.primaryYAxes).toHaveLength(2);
+  expect(pivot.primaryYAxes[0].dataName).toBe("question3");
+  expect(pivot.primaryYAxes[1].dataName).toBe("question2");
+  expect(pivot.secondaryYAxes).toHaveLength(0);
+});
+
+test("moveSecondaryItemToPrimary does nothing when index is out of range", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.secondaryYAxes.push(
+    { dataName: "question2", valueName: "question2", aggregation: "count" }
+  );
+  pivot.secondaryYAxesSeriesListWidget.setItems(pivot.secondaryYAxes);
+
+  expect(pivot.primaryYAxes).toHaveLength(0);
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+
+  pivot["moveSecondaryItemToPrimary"](5);
+
+  expect(pivot.primaryYAxes).toHaveLength(0);
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+});
+
+test("moveToolbarItemsToSidebar: all toolbar items except changeChartType are moved to sidebar", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  const toolbarNames = Object.keys(pivot["toolbarItemCreators"]);
+  const sidebarNames = Object.keys(pivot["sideBarItemCreators"]);
+
+  expect(toolbarNames).toEqual(["changeChartType"]);
+
+  const pivotSidebarItems = ["axisXSelector", "primaryYAxes", "secondaryYAxisBlock"];
+  pivotSidebarItems.forEach((name) => expect(sidebarNames).toContain(name));
+
+  const movedFromToolbar = [
+    "changeAnswersOrder",
+    "showPercentages",
+    "hideEmptyAnswers",
+    "topNAnswers",
+    "transposeData",
+    "showMissingAnswers",
+  ];
+  movedFromToolbar.forEach((name) => expect(sidebarNames).toContain(name));
+});
+
+test("getYAxisInfo returns single empty object when secondary Y axis is not used", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("question1", "question2");
+
+  const result = pivot.getYAxisInfo();
+
+  expect(result).toHaveLength(1);
+  expect(result[0]).toEqual({});
+});
+
+test("getYAxisInfo returns single empty object when secondaryYAxes is empty", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2");
+
+  const result = pivot.getYAxisInfo();
+
+  expect(result).toHaveLength(1);
+  expect(result[0]).toEqual({});
+});
+
+test("getYAxisInfo returns two axis settings when secondary Y axis has series", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+  pivot["movePrimaryItemToSecondary"](0);
+
+  const result = pivot.getYAxisInfo() as Array<{ title?: { text: string }, opposite?: boolean, seriesName?: string[] }>;
+  expect(result).toHaveLength(2);
+
+  const [primary, secondary] = result;
+  expect(primary).toStrictEqual({
+    title: { text: "Bill amount" },
+    opposite: false,
+    seriesName: ["Bill amount"]
+  });
+  expect(secondary).toStrictEqual({
+    title: { text: "Item kind" },
+    opposite: true,
+    seriesName: ["Item 1", "Item 2", "Item 3"]
+  });
+});
+
+test("primaryYAxesSeriesListWidget renders movePrimaryItemToSecondary button when useSecondaryYAxis is true", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+
+  const root = pivot.primaryYAxesSeriesListWidget.render();
+  const actionButtons = root.querySelectorAll(".sa-series-settings__action-button");
+  expect(actionButtons.length).toBeGreaterThan(0);
+});
+
+test("primaryYAxesSeriesListWidget does not render movePrimaryItemToSecondary button when useSecondaryYAxis is false", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+
+  const root = pivot.primaryYAxesSeriesListWidget.render();
+  const actionButtons = root.querySelectorAll(".sa-series-settings__action-button");
+  expect(actionButtons.length).toBe(0);
+});
+
+test("primaryYAxesSeriesListWidget hides movePrimaryItemToSecondary button after switching chart type to bar", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot["chartTypes"] = ["vbar", "bar", "line", "pie", "doughnut"];
+  pivot.chartType = "vbar";
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+
+  let primaryYAxesElement = pivot.primaryYAxesSeriesListWidget.render();
+  const buttonsBefore = primaryYAxesElement.querySelectorAll(".sa-series-settings__action-button");
+  expect(buttonsBefore.length).toBeGreaterThan(0);
+
+  pivot.chartType = "bar";
+
+  primaryYAxesElement = pivot.primaryYAxesSeriesListWidget.render();
+  const buttonsAfter = primaryYAxesElement.querySelectorAll(".sa-series-settings__action-button");
+  expect(buttonsAfter.length).toBe(0);
+});
+
+test("IPivotVisualizerOptions and IPivotSeriesOptions interfaces", () => {
+  const pivotOptions = {
+    questions: survey.getAllQuestions(),
+    categoryField: "question1",
+    series: [
+      {
+        seriesField: "question2",
+        valueField: "question3",
+        aggregation: "sum"
+      },
+      {
+        seriesField: "question2",
+        aggregation: "count",
+        yAxis: "secondary"
+      }
+    ],
+    useSecondaryYAxis: true
+  } as any;
+  const pivot = new PivotModel(survey.getAllQuestions(), data, pivotOptions);
+  expect(pivot.axisXQuestionName).toBe("question1");
+
+  expect(pivot.series).toHaveLength(2);
+  expect(pivot.series[0].seriesField).toBe("question2");
+  expect(pivot.series[0].valueField).toBe("question3");
+  expect(pivot.series[0].aggregation).toBe("sum");
+  expect(pivot.series[0].yAxis).toBe("primary");
+  expect(pivot.series[1].seriesField).toBe("question2");
+  expect(pivot.series[1].aggregation).toBe("count");
+  expect(pivot.series[1].yAxis).toBe("secondary");
+
+  expect(pivot.primaryYAxes).toHaveLength(1);
+  expect(pivot.primaryYAxes[0].dataName).toBe("question2");
+  expect(pivot.primaryYAxes[0].valueName).toBe("question3");
+  expect(pivot.primaryYAxes[0].aggregation).toBe("sum");
+  expect(pivot.secondaryYAxes).toHaveLength(1);
+  expect(pivot.secondaryYAxes[0].dataName).toBe("question2");
+  expect(pivot.secondaryYAxes[0].valueName).toBe("question2");
+  expect(pivot.secondaryYAxes[0].aggregation).toBe("count");
+});
+
+test("Pivot series saved to state and restored correctly", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.primaryYAxesSeriesListWidget.setItems(pivot.primaryYAxes);
+  pivot["movePrimaryItemToSecondary"](0);
+  pivot.series[0].aggregation = "sum";
+
+  const state = pivot.getState();
+  expect(state).toStrictEqual({
+    chartType: "bar",
+    categoryField: "question1",
+    series: [
+      {
+        seriesField: "question3",
+        aggregation: "sum",
+        yAxis: "primary"
+      },
+      {
+        seriesField: "question2",
+        aggregation: "count",
+        yAxis: "secondary"
+      }
+    ]
+  });
+  const newPivot = new PivotModel(survey.getAllQuestions(), data, { useSecondaryYAxis: true } as any);
+  newPivot.setState(state);
+  expect(newPivot.series).toEqual(pivot.series);
+});
+
+test("getChartAxisSetting returns empty object when axisDescription is null", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+
+  expect(pivot.getChartAxisSetting(null, [], false)).toEqual({});
+  expect(pivot.getChartAxisSetting(undefined, [], true)).toEqual({});
+});
+
+test("getChartAxisSetting title text is the question title matched by dataName", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+
+  const result = pivot.getChartAxisSetting(
+    { dataName: "question2", valueName: undefined, aggregation: "count" },
+    ["Item 1", "Item 2"],
+    false
+  );
+
+  expect(result.title.text).toBe("Item kind");
+});
+
+test("getChartAxisSetting title text is empty string when question is not found", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+
+  const result = pivot.getChartAxisSetting(
+    { dataName: "nonExistent", valueName: "alsoNonExistent", aggregation: "count" },
+    [],
+    false
+  );
+
+  expect(result.title.text).toBe("");
+});
+
+test("getChartAxisSetting opposite flag is set correctly", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  const axis = { dataName: "question1", valueName: "question1", aggregation: "count" };
+
+  expect(pivot.getChartAxisSetting(axis, [], false).opposite).toBe(false);
+  expect(pivot.getChartAxisSetting(axis, [], true).opposite).toBe(true);
+});
+
+test("getChartAxisSetting seriesName contains provided series labels", () => {
+  const pivot = new PivotModel(survey.getAllQuestions(), data);
+  const labels = ["female", "male"];
+
+  const result = pivot.getChartAxisSetting(
+    { dataName: "question1", valueName: "question1", aggregation: "count" },
+    labels,
+    false
+  );
+
+  expect(result.seriesName).toEqual(["female", "male"]);
 });

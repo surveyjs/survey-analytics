@@ -90,7 +90,7 @@ var options = {
   // labelTruncateLength: 27,
 };
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   survey2.getAllQuestions().filter(q => q.category !== "Category 1"),
   data2.concat(data1),

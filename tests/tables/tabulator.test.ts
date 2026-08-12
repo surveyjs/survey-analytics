@@ -1,15 +1,14 @@
 import { Question, SurveyModel } from "survey-core";
+import { vi } from "vitest";
 // eslint-disable-next-line surveyjs/no-imports-from-entries
 import { Tabulator } from "../../src/entries/tabulator-umd";
 import { TableExtensions } from "../../src/tables/extensions/tableextensions";
 import { Table } from "../../src/tables/table";
 import { ColumnDataType } from "../../src/tables/config";
-import { vi } from "vitest";
 
 vi.mock("tabulator-tables", async () => {
-  const actual = await vi.importActual<any>("tabulator-tables");
-  const tabulatorConstructor = actual.default ?? actual.TabulatorFull ?? actual;
-  return { default: tabulatorConstructor };
+  const tabulatorModule = await vi.importActual<any>("tabulator-tables");
+  return { default: tabulatorModule.TabulatorFull || tabulatorModule.Tabulator };
 });
 
 const trueTimeout = window.setTimeout;
@@ -55,7 +54,7 @@ test("getColumns method", () => {
   const columns = <any>tabulator["getColumns"]();
 
   expect(JSON.parse(JSON.stringify(columns))).toEqual(
-    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "car", "title": "What car are you driving?", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 248, "formatter": "plaintext", headerTooltip: true, "headerWordWrap": true }, { "field": "photo", "title": "photo", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 248, "formatter": "html", headerTooltip: true, "headerWordWrap": true }]
+    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 56, "width": 56 }, { "field": "car", "title": "What car are you driving?", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 384, "formatter": "plaintext", headerTooltip: true, "headerWordWrap": true }, { "field": "photo", "title": "photo", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 384, "formatter": "html", headerTooltip: true, "headerWordWrap": true }]
   );
 });
 
@@ -213,13 +212,13 @@ test("useNamesAsTitles option", () => {
   let tabulator = new Tabulator(survey, [], null);
   let columns = <any>tabulator.getColumns();
   expect(JSON.parse(JSON.stringify(columns))).toEqual(
-    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "str", "title": "String", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 248, headerTooltip: true, "headerWordWrap": true }]
+    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 56, "width": 56 }, { "field": "str", "title": "String", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 384, headerTooltip: true, "headerWordWrap": true }]
   );
 
   tabulator = new Tabulator(survey, [], <any>{ useNamesAsTitles: true });
   columns = <any>tabulator.getColumns();
   expect(JSON.parse(JSON.stringify(columns))).toEqual(
-    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "str", "title": "str", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 248, headerTooltip: true, "headerWordWrap": true }]
+    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 56, "width": 56 }, { "field": "str", "title": "str", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 384, headerTooltip: true, "headerWordWrap": true }]
   );
 });
 

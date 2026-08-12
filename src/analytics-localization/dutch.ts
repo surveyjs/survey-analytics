@@ -1,10 +1,20 @@
 import { setupLocale } from "../localizationManager";
 
 export var dutchStrings = {
+  // "Group By Me"
+  groupButton: "Groeperen op",
+  // "Ungroup By Me"
+  ungroupButton: "Groepering verwijderen",
+  // "Select Me"
+  selectButton: "Selecteer mij",
+  // [Auto-translated] "Column reorder"
+  columnReorder: "Kolomherschikking",
   // "Hide column"
   hideColumn: "Kolom verbergen",
   // "Show column"
   showColumn: "Toon kolom",
+  // [Auto-translated] "Columns"
+  columns: "Kolommen",
   // "Make column private"
   makePrivateColumn: "Kolom privé maken",
   // "Make column public"
@@ -21,6 +31,8 @@ export var dutchStrings = {
   showLabel: "Tonen",
   // "entries"
   entriesLabel: "inzendingen",
+  // [Auto-translated] "Entries on Page:"
+  entriesOnPageLabel: "Vermeldingen op pagina:",
   // "Texts in table"
   visualizer_text: "Teksten in tabel",
   // [Auto-translated] "Wordcloud"
@@ -29,6 +41,8 @@ export var dutchStrings = {
   visualizer_histogram: "Histogram",
   // "Average"
   visualizer_number: "Gemiddeld",
+  // [Auto-translated] "Average"
+  visualizer_average: "Gemiddeld",
   // "Table"
   visualizer_choices: "Tabel",
   // "Chart"
@@ -55,6 +69,12 @@ export var dutchStrings = {
   chartType_line: "Lijn",
   // [Auto-translated] "Radar"
   chartType_radar: "Radar",
+  // [Auto-translated] "Histogram"
+  chartType_histogram: "Histogram",
+  // [Auto-translated] "Vertical Histogram"
+  chartType_vhistogram: "Verticale histogram",
+  // [Auto-translated] "Stacked Histogram"
+  chartType_stackedhistogram: "Gestapeld histogram",
   // "Hide"
   hideButton: "Verbergen",
   // "Make private"
@@ -73,6 +93,12 @@ export var dutchStrings = {
   clearButton: "Wissen",
   // "Choose question to show..."
   addElement: "Kies een vraag om weer te geven ...",
+  // [Auto-translated] "All questions"
+  allQuestions: "Alle vragen",
+  // [Auto-translated] "Select all"
+  selectAll: "Selecteer alles",
+  // [Auto-translated] "Clear selection"
+  clearSelection: "Duidelijke selectie",
   // "Default Order"
   defaultOrder: "Standaardvolgorde",
   // "Ascending"
@@ -89,14 +115,60 @@ export var dutchStrings = {
   showPercentages: "Percentages weergeven",
   // "Hide percentages"
   hidePercentages: "Verberg percentages",
+  // [Auto-translated] "Export As..."
+  exportAs: "Exporteren als...",
   // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
   // [Auto-translated] "Excel"
   xlsxDownloadCaption: "Excel",
   // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
+  // [Auto-translated] "Export as PDF"
+  pdfDownloadHint: "Exporteren als PDF",
+  // [Auto-translated] "Export as Excel"
+  xlsxDownloadHint: "Export als Excel",
+  // [Auto-translated] "Export as CSV"
+  csvDownloadHint: "Export als CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Download plot als PNG",
+  // [Auto-translated] "response(s)"
+  responsesText: "Reactie(s)",
+  // [Auto-translated] "No data"
+  noData: "Geen gegevens",
+  // [Auto-translated] "Select date range..."
+  selectDateRange: "Selecteer datumbereik...",
+  // [Auto-translated] "Include today"
+  includeToday: "Vandaag opnemen",
+  // [Auto-translated] "Custom"
+  reportingPeriodCustom: "Gewoonte",
+  // [Auto-translated] "Last 7 days"
+  reportingPeriodLast7days: "Laatste 7 dagen",
+  // [Auto-translated] "Last 14 days"
+  reportingPeriodLast14days: "Laatste 14 dagen",
+  // [Auto-translated] "Last 28 days"
+  reportingPeriodLast28days: "Laatste 28 dagen",
+  // [Auto-translated] "Last 30 days"
+  reportingPeriodLast30days: "Laatste 30 dagen",
+  // [Auto-translated] "Last week (starts Monday)"
+  reportingPeriodLastWeekMon: "Vorige week (begint maandag)",
+  // [Auto-translated] "Last week (starts Sunday)"
+  reportingPeriodLastWeekSun: "Vorige week (begint zondag)",
+  // [Auto-translated] "Last month"
+  reportingPeriodLastMonth: "Vorige maand",
+  // [Auto-translated] "Last quarter"
+  reportingPeriodLastQuarter: "Laatste kwart",
+  // [Auto-translated] "Last year"
+  reportingPeriodLastYear: "Vorig jaar",
+  // [Auto-translated] "This week to date (starts Sunday)"
+  reportingPeriodWtdSun: "Deze week tot nu toe (begint zondag)",
+  // [Auto-translated] "This week to date (starts Monday)"
+  reportingPeriodWtdMon: "Deze week tot nu toe (begint maandag)",
+  // [Auto-translated] "This month to date"
+  reportingPeriodMtd: "Deze maand tot nu toe",
+  // [Auto-translated] "This quarter to date"
+  reportingPeriodQtd: "Dit kwartaal tot nu toe",
+  // [Auto-translated] "This year to date"
+  reportingPeriodYtd: "Dit jaar tot nu toe",
   // "Hide empty answers"
   hideEmptyAnswers: "Verberg lege antwoorden",
   // "Show empty answers"
@@ -133,6 +205,8 @@ export var dutchStrings = {
   statistics_chart: "Zeekaart",
   // "Responses"
   responses: "Reacties",
+  // [Auto-translated] "Total responses"
+  totalResponses: "Totaal aantal reacties",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"
@@ -147,16 +221,22 @@ export var dutchStrings = {
   npsPassives: "Passief personeel",
   // [Auto-translated] "Detractors"
   npsDetractors: "Tegenstanders",
-  // [Auto-translated] "Category (X Axis):"
-  axisXSelectorTitle: "Categorie (X-as):",
-  // [Auto-translated] "Legend (Series):"
-  axisYSelectorTitle: "Legende (serie):",
+  // [Auto-translated] "Category (X Axis)"
+  axisXSelectorTitle: "Categorie (X-as)",
+  // [Auto-translated] "Legend (Series)"
+  axisYSelectorTitle: "Legend (serie)",
   // [Auto-translated] "Segments:"
   axisXAlternativeSelectorTitle: "Segmenten:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Groepen:",
   // [Auto-translated] "Not selected"
   notSelected: "Niet geselecteerd",
+  // [Auto-translated] "Secondary Y axis"
+  secondYAxisToggleTitle: "Tweede Y-as",
+  // [Auto-translated] "Select a data field..."
+  selectDataField: "Selecteer een dataveld...",
+  // [Auto-translated] "Default"
+  intervalMode_default: "Verstek",
   // [Auto-translated] "Decades"
   intervalMode_decades: "Decennia",
   // [Auto-translated] "Years"
@@ -184,7 +264,33 @@ export var dutchStrings = {
   // [Auto-translated] "Aggregate:"
   selectAggregateText: "Aggregaat:",
   // [Auto-translated] "Year ends with"
-  groupedYearsAxisTitle: "Het jaar eindigt met"
+  groupedYearsAxisTitle: "Het jaar eindigt met",
+  // [Auto-translated] "Series {0}"
+  seriesListSeries: "Serie {0}",
+  // [Auto-translated] "Values"
+  seriesListValuesLabel: "Waarden",
+  // [Auto-translated] "Remove"
+  seriesListRemove: "Verwijder",
+  // [Auto-translated] "Add Series"
+  seriesListAdd: "Toevoegen van series",
+  // [Auto-translated] "Move to second axis"
+  seriesListMoveToSecondAxis: "Verplaats naar de tweede as",
+  // [Auto-translated] "Move to first axis"
+  seriesListMoveToFirstAxis: "Verplaats naar de eerste as",
+  // [Auto-translated] "Count"
+  aggregationCount: "Graaf",
+  // [Auto-translated] "Sum"
+  aggregationSum: "Som",
+  // [Auto-translated] "Average"
+  aggregationAverage: "Gemiddeld",
+  // [Auto-translated] "Close"
+  close: "Sluit",
+  // [Auto-translated] "K"
+  thousandsSuffix: "K",
+  // [Auto-translated] "M"
+  millionsSuffix: "M",
+  // [Auto-translated] "B"
+  billionsSuffix: "B"
 };
 
 setupLocale({ localeCode: "nl", strings: dutchStrings, nativeName: "Nederlands" });

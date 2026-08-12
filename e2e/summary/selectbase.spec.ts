@@ -1,5 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
-import { url_summary, initSummary, RGBToHex, getYAxisValues } from "../helper";
+import { url_summary, initSummary, RGBToHex, getYAxisValues, getListItemByText } from "../helper";
 
 let json = {
   elements: [
@@ -46,13 +46,14 @@ test.describe("selectbase", () => {
 
     // check data filtering for regular choice
     // await page.locator(".trace.bars .point").nth(1).click();
-    await page.locator(".nsewdrag").click({ position: { x: 100, y: 60 } }); //selector for choice with value 1
+    const box = await page.locator(".nsewdrag").boundingBox();
+    await page.mouse.click(box.x + 100, box.y + 10); //selector for choice with value 1
     await page.waitForTimeout(500);
-    expect(await isBarVisible(3)).toBeFalsy();
     expect(await isBarVisible(1)).toBeFalsy();
-    expect(await isBarVisible(2)).toBeTruthy();
+    expect(await isBarVisible(2)).toBeFalsy();
+    expect(await isBarVisible(3)).toBeTruthy();
 
-    await page.click('span:text("Clear")');
+    await page.locator(".sa-question__filter .sa-toolbar__button").click();
     await page.waitForTimeout(500);
     expect(await isBarVisible(3)).toBeTruthy();
     expect(await isBarVisible(2)).toBeTruthy();
@@ -60,13 +61,13 @@ test.describe("selectbase", () => {
 
     // check data filtering for other choice
     // await page.locator(".trace.bars .point").nth(0).click();
-    await page.locator(".nsewdrag").click({ position: { x: 100, y: 100 } }); //selector for 'other' choice
+    await page.mouse.click(box.x + 100, box.y + box.height - 20); //selector for 'other' choice
     await page.waitForTimeout(500);
-    expect(await isBarVisible(3)).toBeFalsy();
-    expect(await isBarVisible(2)).toBeFalsy();
     expect(await isBarVisible(1)).toBeTruthy();
+    expect(await isBarVisible(2)).toBeFalsy();
+    expect(await isBarVisible(3)).toBeFalsy();
 
-    await page.click('span:text("Clear")');
+    await page.locator(".sa-question__filter .sa-toolbar__button").click();
     await page.waitForTimeout(500);
     expect(await isBarVisible(3)).toBeTruthy();
     expect(await isBarVisible(2)).toBeTruthy();
@@ -93,16 +94,18 @@ test.describe("selectbase", () => {
     await initSummary(page, json, data, options);
 
     // check that percentages aren't shown
-    await expect(page.locator(".trace.bars .point text")).not.toBeVisible();
+    // await expect(page.locator(".trace.bars .point text")).not.toBeVisible();
+    await expect(await getValuesInsideBars()).toEqual(["2", "1", "2"].reverse());
 
     // check that percentages are shown when button is clicked
-    await page.click('span:text("Show percentages")');
+    await page.getByText("Show %").click();
     const valuesInsideBars = await getValuesInsideBars();
     expect(valuesInsideBars).toEqual(["2 (40%)", "1 (20%)", "2 (40%)"]);
 
     // check that percentage are hided when button is double-clicked
-    await page.click('span:text("Hide percentages")');
-    await expect(page.locator(".trace.bars .point text")).not.toBeVisible();
+    await page.getByText("Show %").click();
+    // await expect(page.locator(".trace.bars .point text")).not.toBeVisible();
+    await expect(await getValuesInsideBars()).toEqual(["2", "1", "2"].reverse());
   });
 
   test("check comment actions", async ({ page }) => {
@@ -118,24 +121,26 @@ test.describe("selectbase", () => {
     await initSummary(page, json, data, options);
 
     // check that comment's footer doesn't exists
-    await expect(page.locator(".sa-visualizer__footer-content")).not.toBeVisible();
+    await expect(page.locator(".sa-visualizer__footer .sa-visualizer__content")).not.toBeVisible();
 
     // check comment's actions
     await page.click('.sa-visualizer__footer span:text("Show")');
-    await expect(page.locator(".sa-visualizer__footer-content")).toBeVisible();
+    await expect(page.locator(".sa-visualizer__footer .sa-visualizer__content")).toBeVisible();
 
     // check that wordcloud exists
-    await expect(page.locator(".sa-visualizer__footer-content .sa-visualizer-wordcloud")).toHaveCount(1);
+    await expect(page.locator(".sa-visualizer__footer .sa-visualizer__content .sa-visualizer-wordcloud")).toHaveCount(1);
 
     // check comment's table
-    await page.locator("div").filter({ hasText: /^WordcloudTexts in tablecommenttext$/ }).getByRole("combobox").selectOption("text");
+    await page.locator(".sa-dropdown").nth(2).click();
+    await getListItemByText(page, "Texts in table").click();
+    await page.waitForTimeout(100);
 
     const cells = await getTableCells();
     expect(cells).toEqual(["Comment text", "Another comment text"]);
 
     // check that comment's footer is hided
     await page.click('.sa-visualizer__footer span:text("Hide")');
-    await expect(page.locator(".sa-visualizer__footer-content")).not.toBeVisible();
+    await expect(page.locator(".sa-visualizer__footer .sa-visualizer__content")).not.toBeVisible();
   });
 
   test("check sign when there is no comment data", async ({ page }) => {
@@ -175,20 +180,27 @@ test.describe("selectbase", () => {
     ];
 
     await initSummary(page, json, data, options);
-    const orderingSelect = page.locator("select").nth(3);
+    const orderingSelect = page.locator(".sa-dropdown").nth(1);
+    const color1 = "#84cad4";
+    const color2 = "#3a99fb";
+    const color3 = "#ff6771";
 
     // check default order
     expect(await getYAxisValues(page)).toEqual(["Other  ", "Two  ", "One  "]);
-    expect((await getColorsOrder()).map(RGBToHex)).toEqual(["#86e1fb", "#3999fb", "#ff6771"]);
+    expect((await getColorsOrder()).map(RGBToHex)).toEqual([color1, color2, color3]);
 
     // check ascending order
-    await orderingSelect.selectOption("asc");
+    await orderingSelect.click();
+    await getListItemByText(page, "Ascending").click();
+
     expect(await getYAxisValues(page)).toEqual(["One  ", "Other  ", "Two  "]);
-    expect((await getColorsOrder()).map(RGBToHex)).toEqual(["#ff6771", "#86e1fb", "#3999fb"]);
+    expect((await getColorsOrder()).map(RGBToHex)).toEqual([color3, color1, color2]);
 
     // check descending order
-    await orderingSelect.selectOption("desc");
+    await orderingSelect.click();
+    await getListItemByText(page, "Descending").click();
+
     expect(await getYAxisValues(page)).toEqual(["Two  ", "Other  ", "One  "]);
-    expect((await getColorsOrder()).map(RGBToHex)).toEqual(["#3999fb", "#86e1fb", "#ff6771"]);
+    expect((await getColorsOrder()).map(RGBToHex)).toEqual([color2, color1, color3]);
   });
 });

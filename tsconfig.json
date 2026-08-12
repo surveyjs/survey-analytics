@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "es2015",
-    "lib": ["dom", "es5", "es2015.promise", "es6"],
+    "target": "ES2019",
+    "module": "ES2020",
+    "lib": ["DOM", "ES2019"],
     "sourceMap": true,
     "importHelpers": true,
     "experimentalDecorators": true,

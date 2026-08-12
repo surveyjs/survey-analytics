@@ -1,23 +1,23 @@
 import { Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixDynamicModel, QuestionMatrixModel, QuestionPanelDynamicModel, QuestionRadiogroupModel, QuestionSelectBase } from "survey-core";
 import { BaseColumn, CheckboxColumn, CommentColumn, CompositeQuestionColumn, CustomQuestionColumn, FileColumn, FlattenedCheckboxColumn, ImageColumn, MatrixColumn, MatrixDropdownColumn, MatrixDynamicColumn, OtherColumn, PanelDynamicColumn, SelectBaseColumn, SingleChoiceColumn } from "./columns";
 import { IColumn, QuestionLocation } from "./config";
-import { Table } from "./table";
+import { ITable } from "./table-interfaces";
 
 export interface IColumnsBuilder {
-  buildColumns(question: Question, table: Table): Array<IColumn>;
+  buildColumns(question: Question, table: ITable): Array<IColumn>;
 }
 export class DefaultColumnsBuilder<T extends Question = Question> implements IColumnsBuilder {
-  protected createColumn(question: T, table: Table) {
+  protected createColumn(question: T, table: ITable) {
     return new BaseColumn(question, table);
   }
 
-  protected buildColumnsCore(question: T, table: Table): Array<IColumn> {
+  protected buildColumnsCore(question: T, table: ITable): Array<IColumn> {
     const columns: Array<IColumn> = [];
     columns.push(this.createColumn(question, table));
     return columns;
   }
 
-  public buildColumns(question: T, table: Table): Array<IColumn> {
+  public buildColumns(question: T, table: ITable): Array<IColumn> {
     const columns = this.buildColumnsCore(question, table);
     if(question.hasComment) {
       columns.push(new CommentColumn(question, table));
@@ -42,7 +42,7 @@ export class ColumnsBuilderFactory {
 }
 
 export class SelectBaseColumnsBuilder<T extends QuestionSelectBase> extends DefaultColumnsBuilder<T> {
-  public buildColumns(question: T, table: Table): Array<IColumn> {
+  public buildColumns(question: T, table: ITable): Array<IColumn> {
     const columns = super.buildColumns(question, table);
     if(question.hasOther && question.getStoreOthersAsComment()) {
       columns.push(new OtherColumn(question, table));
@@ -51,10 +51,10 @@ export class SelectBaseColumnsBuilder<T extends QuestionSelectBase> extends Defa
   }
 }
 export class CheckboxColumnsBuilder extends SelectBaseColumnsBuilder<QuestionCheckboxModel> {
-  protected createColumn(question: QuestionCheckboxModel, table: Table): BaseColumn<QuestionCheckboxModel> {
+  protected createColumn(question: QuestionCheckboxModel, table: ITable): BaseColumn<QuestionCheckboxModel> {
     return new CheckboxColumn(question, table);
   }
-  protected buildColumnsCore(question: QuestionCheckboxModel, table: Table): Array<IColumn> {
+  protected buildColumnsCore(question: QuestionCheckboxModel, table: ITable): Array<IColumn> {
     if(table.options.splitMultiSelectIntoColumns) {
       const columns: Array<IColumn> = [];
       question.visibleChoices.forEach(choice => {
@@ -68,7 +68,7 @@ export class CheckboxColumnsBuilder extends SelectBaseColumnsBuilder<QuestionChe
 ColumnsBuilderFactory.Instance.registerBuilderColumn("checkbox", new CheckboxColumnsBuilder());
 ColumnsBuilderFactory.Instance.registerBuilderColumn("tagbox", new CheckboxColumnsBuilder());
 export class SingleChoiceColumnsBuilder extends SelectBaseColumnsBuilder<QuestionDropdownModel | QuestionRadiogroupModel> {
-  protected createColumn(question: QuestionDropdownModel | QuestionRadiogroupModel, table: Table): BaseColumn<QuestionDropdownModel | QuestionRadiogroupModel> {
+  protected createColumn(question: QuestionDropdownModel | QuestionRadiogroupModel, table: ITable): BaseColumn<QuestionDropdownModel | QuestionRadiogroupModel> {
     return new SingleChoiceColumn(question, table);
   }
 }
@@ -76,7 +76,7 @@ ColumnsBuilderFactory.Instance.registerBuilderColumn("radiogroup", new SingleCho
 ColumnsBuilderFactory.Instance.registerBuilderColumn("dropdown", new SingleChoiceColumnsBuilder());
 
 export class MatrixColumnsBuilder extends DefaultColumnsBuilder<QuestionMatrixModel> {
-  protected buildColumnsCore(questionBase: Question, table: Table): IColumn[] {
+  protected buildColumnsCore(questionBase: Question, table: ITable): IColumn[] {
     const question = <QuestionMatrixModel>questionBase;
     const columns = [];
     question.rows.forEach(row => {
@@ -88,21 +88,21 @@ export class MatrixColumnsBuilder extends DefaultColumnsBuilder<QuestionMatrixMo
 ColumnsBuilderFactory.Instance.registerBuilderColumn("matrix", new MatrixColumnsBuilder());
 
 export class ImageColumnsBuilder extends DefaultColumnsBuilder {
-  protected createColumn(question: Question, table: Table): ImageColumn {
+  protected createColumn(question: Question, table: ITable): ImageColumn {
     return new ImageColumn(question, table);
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("signaturepad", new ImageColumnsBuilder());
 
 export class FileColumnsBuilder extends DefaultColumnsBuilder<QuestionFileModel> {
-  protected createColumn(question: QuestionFileModel, table: Table): FileColumn {
+  protected createColumn(question: QuestionFileModel, table: ITable): FileColumn {
     return new FileColumn(question, table);
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("file", new FileColumnsBuilder());
 
 export class MatrixDropdownColumnBuilder extends DefaultColumnsBuilder {
-  public buildColumns(questionBase: QuestionMatrixDropdownModel, table: Table): Array<IColumn> {
+  public buildColumns(questionBase: QuestionMatrixDropdownModel, table: ITable): Array<IColumn> {
     const question = <QuestionMatrixDropdownModel>questionBase;
     const detailRowThreshold = table.options.matrixDropdownDetailRowThreshold ?? 5;
     const columns = [];
@@ -123,7 +123,7 @@ export class MatrixDropdownColumnBuilder extends DefaultColumnsBuilder {
 ColumnsBuilderFactory.Instance.registerBuilderColumn("matrixdropdown", new MatrixDropdownColumnBuilder());
 
 export class CustomColumnsBuilder extends DefaultColumnsBuilder<QuestionCustomModel> {
-  protected createColumn(question: QuestionCustomModel, table: Table): CustomQuestionColumn {
+  protected createColumn(question: QuestionCustomModel, table: ITable): CustomQuestionColumn {
     return new CustomQuestionColumn(question, table);
   }
 }
@@ -131,12 +131,12 @@ ColumnsBuilderFactory.Instance.registerBuilderColumn("custom", new CustomColumns
 
 export class CompositeColumnsBuilder extends DefaultColumnsBuilder<QuestionCompositeModel> {
   public static ShowAsSeparateColumns = true;
-  protected getDisplayName(question: QuestionCompositeModel, table: Table): string {
+  protected getDisplayName(question: QuestionCompositeModel, table: ITable): string {
     return table.useNamesAsTitles
       ? question.name
       : (question.locTitle?.renderedHtml || question.title || "").trim() || question.name;
   }
-  protected buildColumnsCore(question: QuestionCompositeModel, table: Table): Array<IColumn> {
+  protected buildColumnsCore(question: QuestionCompositeModel, table: ITable): Array<IColumn> {
     if(CompositeColumnsBuilder.ShowAsSeparateColumns) {
       const innerQuestions = [];
       question.contentPanel.addQuestionsToList(innerQuestions);
@@ -154,21 +154,21 @@ export class CompositeColumnsBuilder extends DefaultColumnsBuilder<QuestionCompo
     }
     return super.buildColumnsCore(question, table);
   }
-  protected createColumn(question: QuestionCompositeModel, table: Table): CompositeQuestionColumn {
+  protected createColumn(question: QuestionCompositeModel, table: ITable): CompositeQuestionColumn {
     return new CompositeQuestionColumn(question, table);
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("composite", new CompositeColumnsBuilder());
 
 export class MatrixDynamicColumnsBuilder extends DefaultColumnsBuilder<QuestionMatrixDynamicModel> {
-  protected createColumn(question: QuestionMatrixDynamicModel, table: Table): MatrixDynamicColumn {
+  protected createColumn(question: QuestionMatrixDynamicModel, table: ITable): MatrixDynamicColumn {
     return new MatrixDynamicColumn(question, table);
   }
 }
 ColumnsBuilderFactory.Instance.registerBuilderColumn("matrixdynamic", new MatrixDynamicColumnsBuilder());
 
 export class PanelDynamicColumnsBuilder extends DefaultColumnsBuilder<QuestionPanelDynamicModel> {
-  protected createColumn(question: QuestionPanelDynamicModel, table: Table): PanelDynamicColumn {
+  protected createColumn(question: QuestionPanelDynamicModel, table: ITable): PanelDynamicColumn {
     return new PanelDynamicColumn(question, table);
   }
 }

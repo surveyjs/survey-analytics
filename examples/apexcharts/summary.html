@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Summary Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" type="text/css" href="../../build/survey.analytics.apexcharts.css" />
+
+  <script src="./apexcharts.js"></script>
+
+  <script src="../../node_modules/survey-core/survey.core.js"></script>
+  <!-- <script src="../../build/survey.analytics.core.js"></script> -->
+  <script src="../../build/survey.analytics.apexcharts.js"></script>
+  <script src="../../node_modules/survey-core/themes/index.js"></script>
+</head>
+
+<body>
+  <style>
+    #summaryContainer>.sa-question:nth-child(2) {
+      width: 100%;
+    }
+  </style>
+
+  <label for="theme-selector">Theme</label>
+  <select id="theme-selector"></select>
+  <br><br>
+  <div id="summaryContainer"></div>
+  <script src="../data.js"></script>
+  <script src="../theme-selector.js"></script>
+  <script src="./summary.js"></script>
+</body>
+
+</html>

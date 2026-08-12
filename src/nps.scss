@@ -1,34 +1,51 @@
+@use "typography-mixins.scss" as *;
+
 .sa-visualizer-nps {
   display: flex;
-  flex-direction: row;
-  gap: 16px;
-  overflow-x: auto;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 16px var(--sjs2-spacing-x200, 16px);
+  align-self: stretch;
+  flex-wrap: wrap;
 }
 
 .sa-visualizer-nps__score-part {
   display: flex;
+  min-width: calc(var(--sjs2-base-unit-size, 8px) * 32);
+  padding: var(--sjs2-spacing-x200, 16px) var(--sjs2-spacing-x300, 24px);
   flex-direction: column;
-  padding: 0 16px;
+  align-items: flex-start;
+  gap: var(--sjs2-spacing-x300, 24px);
+  flex: 1 0 0;
+
+  border-radius: var(--sjs2-radius-form, 8px);
+  border: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
+  background: var(--sjs2-color-bg-basic-primary, #fff);
 }
 
 .sa-visualizer-nps__score-part-title {
-  font-size: 32px;
-  text-align: center;
-  color: #909090;
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+
+  @include sjs2--typography--default-strong;
 }
 
 .sa-visualizer-nps__score-part-values {
   display: flex;
-  flex-direction: row;
-  gap: 16px;
-  align-items: baseline;
+  align-items: flex-start;
+  gap: var(--sjs2-spacing-x300, 24px);
+  align-self: stretch;
 }
 
 .sa-visualizer-nps__score-part-value {
-  font-size: 48px;
+  flex: 1 0 0;
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+
+  @include sjs2--typography--large-strong;
 }
 
 .sa-visualizer-nps__score-part-percent {
-  font-size: 24px;
-  color: #606060;
+  color: var(--sjs2-color-fg-brand-primary, #19b394);
+  text-align: right;
+
+  @include sjs2--typography--large-strong;
 }

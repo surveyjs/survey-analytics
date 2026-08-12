@@ -6,20 +6,27 @@ declare type VisualizerConstructor = new (
   options?: Object
 ) => any;
 
+export interface IVisualizerTypeDescriptor {
+  visualizerType?: string;
+  visualizerTypes?: Array<string>;
+  question?: Question;
+}
+
 /**
  * An object with methods used to register and unregister visualizers for individual question types.
  *
- * [View Demo](https://surveyjs.io/dashboard/examples/custom-survey-data-visualizer/ (linkStyle))
+ * [How to Implement a Custom Data Visualizer](https://github.com/surveyjs/surveyjs-howtos-and-troubleshooting/blob/main/categories/data-visualization/custom-survey-data-visualizer.md (linkStyle))
  */
 export class VisualizationManager {
   static defaultVisualizer: any = undefined;
   static alternativesVisualizer: any = undefined;
   static pivotVisualizer: any = undefined;
-  static vizualizers: { [index: string]: Array<{ ctor: VisualizerConstructor, index: number }> } = {};
+  static chartAdapterType: any = undefined;
+  static vizualizers: { [index: string]: Array<{ ctor: VisualizerConstructor, index: number, visualizerType: string }> } = {};
   /**
    * Registers a visualizer for a specified question type.
    *
-   * [View Demo](https://surveyjs.io/dashboard/examples/custom-survey-data-visualizer/ (linkStyle))
+   * [How to Implement a Custom Data Visualizer](https://github.com/surveyjs/surveyjs-howtos-and-troubleshooting/blob/main/categories/data-visualization/custom-survey-data-visualizer.md (linkStyle))
    * @param questionType A question [type](https://surveyjs.io/form-library/documentation/api-reference/question#getType).
    * @param constructor A function that returns a visualizer constructor to register.
    * @param index A zero-based index that specifies the visualizer's position in the visualizer list for the specified question type. Pass `0` to insert the visualizer at the beginning of the list and use it by default. If `index` is not specified, the visualizer is added to the end of the list.
@@ -27,14 +34,15 @@ export class VisualizationManager {
   public static registerVisualizer(
     questionType: string,
     constructor: VisualizerConstructor,
-    index = Number.MAX_VALUE
+    index = Number.MAX_VALUE,
+    visualizerType?:string
   ) {
     let visualizers = VisualizationManager.vizualizers[questionType];
     if(!visualizers) {
       visualizers = [];
       VisualizationManager.vizualizers[questionType] = visualizers;
     }
-    visualizers.push({ ctor: constructor, index });
+    visualizers.push({ ctor: constructor, index, visualizerType });
   }
   /**
    * Unregisters a visualizer for a specified question type.
@@ -66,6 +74,7 @@ export class VisualizationManager {
   /**
    * @deprecated Call the [`unregisterVisualizer()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationmanager#unregisterVisualizer) method instead.
    * @param constructor A function that returns a visualizer constructor to unregister.
+   * @hidden
    */
   public static unregisterVisualizerForAll(constructor: VisualizerConstructor): void {
     VisualizationManager.unregisterVisualizer(undefined, constructor);
@@ -91,6 +100,24 @@ export class VisualizationManager {
     vDescrs = [].concat(vDescrs);
     vDescrs.sort((v1, v2) => v1.index - v2.index);
     return vDescrs.map(v => v.ctor);
+  }
+  public static getVisualizerNamesByType(
+    visualizerType: string,
+    fallbackVisualizerType?: string
+  ): Array<string> {
+    let vDescrs = VisualizationManager.vizualizers[visualizerType];
+    if(!!fallbackVisualizerType && (!vDescrs || vDescrs.length == 0)) {
+      vDescrs = VisualizationManager.vizualizers[fallbackVisualizerType];
+    }
+    if(!vDescrs) {
+      if(VisualizationManager.defaultVisualizer.suppressVisualizerStubRendering) {
+        return [];
+      }
+      return [VisualizationManager.defaultVisualizer];
+    }
+    vDescrs = [].concat(vDescrs);
+    vDescrs.sort((v1, v2) => v1.index - v2.index);
+    return vDescrs.map(v => v.visualizerType);
   }
   /**
    * Returns a constructor for an alternative visualizer selector.

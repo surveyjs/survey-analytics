@@ -27,4 +27,5 @@ export * from "./wordcloud/wordcloud";
 export * from "./wordcloud/stopwords/index";
 export * from "./text";
 
+export * from "./dashboard";
 export * from "./pivot";

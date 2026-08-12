@@ -1,14 +1,16 @@
 import { Question } from "survey-core";
-import { VisualizerBase } from "./visualizerBase";
+import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
-import { DocumentHelper } from "./utils/index";
 import { VisualizationManager } from "./visualizationManager";
 import { mathStatisticsCalculator } from "./statisticCalculators";
+import { createDropdown } from "./utils/dropdownWidget";
 
-export class NumberModel extends VisualizerBase {
-  private _resultAverage: number;
-  private _resultMin: number;
-  private _resultMax: number;
+export interface INumericVisualizerOptions {
+  displayValueName: string;
+}
+
+export class NumberModel extends VisualizerBase implements INumericVisualizerOptions {
+  private _statistics: ICalculationResult;
 
   public static stepsCount = 5;
   public static generateTextsCallback: (
@@ -19,50 +21,78 @@ export class NumberModel extends VisualizerBase {
     texts: string[]
   ) => string[];
 
-  protected chartTypes: Array<string>;
+  protected chartTypes: Array<string> = [];
   chartType: String;
 
   public static showAsPercentage = false;
+
+  public displayValueName = "average";
+
+  private initChartTypes(): void {
+    if(VisualizerBase.chartAdapterType) {
+      this._chartAdapter = new VisualizerBase.chartAdapterType(this);
+      this.chartTypes = this._chartAdapter.getChartTypes();
+    }
+    if(this.options.availableTypes) {
+      this.chartTypes = this.options.availableTypes;
+    }
+
+    if(this.chartTypes?.length > 0) {
+      [this.questionOptions?.chartType, this.options.defaultChartType].some(type => {
+        if(!!type && this.chartTypes.indexOf(type) !== -1) {
+          this.chartType = type;
+          return true;
+        }
+        return false;
+      });
+    }
+    if(!this.chartType) {
+      const chartTypeCandidate = this.questionOptions?.chartType || this.options.defaultChartType || this.chartTypes[0];
+      if(this.chartTypes.indexOf(chartTypeCandidate) !== -1) {
+        this.chartType = chartTypeCandidate;
+      } else if(this.chartTypes.length > 0) {
+        this.chartType = this.chartTypes[0];
+      }
+    }
+  }
 
   constructor(
     question: Question,
     data: Array<{ [index: string]: any }>,
     options: { [index: string]: any } = {},
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "number");
+    super(question, data, options, type || "average");
 
-    if(VisualizerBase.chartAdapterType) {
-      this._chartAdapter = new VisualizerBase.chartAdapterType(this);
-      this.chartTypes = this._chartAdapter.getChartTypes();
-      this.chartType = this.chartTypes[0];
+    if(!!this.question.displayValueName) {
+      this.displayValueName = this.question.displayValueName;
     }
 
-    if(this.options.allowChangeVisualizerType !== false) {
+    this.initChartTypes();
+
+    if(this.allowChangeType) {
       this.registerToolbarItem("changeChartType", () => {
         if(this.chartTypes.length > 1) {
-          return DocumentHelper.createSelector(
-            this.chartTypes.map((chartType) => {
+          return createDropdown({
+            options: this.chartTypes.map((chartType) => {
               return {
                 value: chartType,
                 text: localization.getString("chartType_" + chartType),
               };
             }),
-            (option: any) => this.chartType === option.value,
-            (e: any) => {
-              this.setChartType(e.target.value);
+            isSelected: (option: any) => this.chartType === option.value,
+            handler: (e: any) => {
+              this.setChartType(e);
             }
-          );
+          });
         }
         return null;
-      });
+      }, "dropdown");
     }
   }
 
   protected onDataChanged() {
-    this._resultAverage = undefined;
-    this._resultMin = undefined;
-    this._resultMax = undefined;
+    this._statistics = undefined;
     super.onDataChanged();
   }
 
@@ -84,9 +114,7 @@ export class NumberModel extends VisualizerBase {
   }
 
   destroy(): void {
-    this._resultAverage = undefined;
-    this._resultMin = undefined;
-    this._resultMax = undefined;
+    this._statistics = undefined;
     super.destroy();
   }
 
@@ -141,21 +169,20 @@ export class NumberModel extends VisualizerBase {
     return colors;
   }
 
-  public convertFromExternalData(externalCalculatedData: any): any[] {
-    return [externalCalculatedData.value || 0, externalCalculatedData.minValue || 0, externalCalculatedData.maxValue || 0];
-  }
-
-  protected getCalculatedValuesCore(): Array<any> {
-    if(this._resultAverage === undefined ||
-      this._resultMin === undefined ||
-      this._resultMax === undefined) {
-      [this._resultAverage, this._resultMin, this._resultMax] = mathStatisticsCalculator(this.surveyData, this);
+  protected getCalculatedValuesCore(): ICalculationResult {
+    if(this._statistics === undefined) {
+      this._statistics = mathStatisticsCalculator(this.surveyData, this);
     }
-    return [this._resultAverage, this._resultMin, this._resultMax];
+    return this._statistics;
   }
 
+  public getValues(): Array<any> {
+    return this._statistics ? this._statistics.values : [];
+  }
 }
 
-VisualizationManager.registerVisualizer("number", NumberModel, 200);
-VisualizationManager.registerVisualizer("rating", NumberModel, 200);
-VisualizationManager.registerVisualizer("expression", NumberModel);
+VisualizationManager.registerVisualizer("number", NumberModel, 200, "average");
+VisualizationManager.registerVisualizer("rating", NumberModel, 200, "average");
+VisualizationManager.registerVisualizer("expression", NumberModel, undefined, "average");
+VisualizationManager.registerVisualizer("gauge", NumberModel, undefined, "average");
+VisualizationManager.registerVisualizer("average", NumberModel, undefined, "average");

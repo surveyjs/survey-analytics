@@ -57,7 +57,7 @@ test("getSeriesLabels method", () => {
 });
 
 test("getCalculatedValues method", async () => {
-  expect(await matrix.getCalculatedValues()).toEqual([
+  expect((await matrix.getCalculatedValues()).data).toEqual([
     [0, 0, 0, 0, 2, 1],
     [0, 0, 0, 1, 1, 1],
   ]);
@@ -187,12 +187,13 @@ test("hide empty answers", async () => {
   var matrix = new Matrix(question, data);
   matrix.hideEmptyAnswers = true;
   expect(await matrix.getAnswersData()).toEqual({
-    colors: ["#86e1fb", "#3999fb"],
+    colors: ["#84CAD4", "#3A99FB"],
     datasets: [
       [2, 0],
       [0, 2],
     ].reverse(),
     labels: ["Monday", "Tuesday"],
+    values: ["Monday", "Tuesday"],
     seriesLabels: ["Morning", "Afternoon"].reverse(),
     texts: [
       [2, 0],
@@ -214,9 +215,10 @@ test("hide empty answers", async () => {
   var matrix = new Matrix(question, data);
   matrix.hideEmptyAnswers = true;
   expect(await matrix.getAnswersData()).toEqual({
-    colors: ["#86e1fb", "#3999fb"],
+    colors: ["#84CAD4", "#3A99FB"],
     datasets: [[1, 1]],
     labels: ["Monday", "Tuesday"],
+    values: ["Monday", "Tuesday"],
     seriesLabels: ["Afternoon"],
     texts: [[1, 1]],
   });
@@ -227,26 +229,3 @@ test("SupportMissingAnswers", () => {
   expect(matrix.showMissingAnswers).toBeFalsy();
 });
 
-test("convertFromExternalData", async () => {
-  const externalCalculatedData = {
-    "Lizol": {
-      "Excellent": 1,
-      "Very Good": 2,
-      "Good": 0,
-      "Fair": 0,
-      "Neither Fair Nor Poor": 0,
-      "Poor": 0,
-    },
-    "Harpic": {
-      "Excellent": 1,
-      "Very Good": 1,
-      "Good": 1,
-    }
-  };
-  const calculatedData = (matrix as any).getCalculatedValuesCore();
-  expect(calculatedData).toEqual([
-    [0, 0, 0, 0, 2, 1],
-    [0, 0, 0, 1, 1, 1],
-  ]);
-  expect(matrix.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
-});

@@ -1,10 +1,20 @@
 import { setupLocale } from "../localizationManager";
 
 export var norwegianStrings = {
+  // "Group By Me"
+  groupButton: "Grupper",
+  // "Ungroup By Me"
+  ungroupButton: "Opphev gruppering",
+  // "Select Me"
+  selectButton: "Velg",
+  // [Auto-translated] "Column reorder"
+  columnReorder: "Kolonneomorganisering",
   // "Hide column"
   hideColumn: "Skjul kolonne",
   // "Show column"
   showColumn: "Vis kolonne",
+  // [Auto-translated] "Columns"
+  columns: "Søyler",
   // "Make column private"
   makePrivateColumn: "Gjør kolonne privat",
   // "Make column public"
@@ -21,6 +31,8 @@ export var norwegianStrings = {
   showLabel: "Vis",
   // "entries"
   entriesLabel: "oppføringer",
+  // [Auto-translated] "Entries on Page:"
+  entriesOnPageLabel: "Oppføringer på siden:",
   // "Texts in table"
   visualizer_text: "Tabellvisning",
   // "Wordcloud"
@@ -29,6 +41,8 @@ export var norwegianStrings = {
   visualizer_histogram: "Histogram",
   // "Average"
   visualizer_number: "Gjennomsnitt",
+  // [Auto-translated] "Average"
+  visualizer_average: "Gjennomsnitt",
   // "Table"
   visualizer_choices: "Bord",
   // "Chart"
@@ -55,6 +69,12 @@ export var norwegianStrings = {
   chartType_line: "Linje",
   // [Auto-translated] "Radar"
   chartType_radar: "Radar",
+  // [Auto-translated] "Histogram"
+  chartType_histogram: "Histogram",
+  // [Auto-translated] "Vertical Histogram"
+  chartType_vhistogram: "Vertikalt histogram",
+  // [Auto-translated] "Stacked Histogram"
+  chartType_stackedhistogram: "Stablet histogram",
   // "Hide"
   hideButton: "Skjul",
   // "Make private"
@@ -73,6 +93,12 @@ export var norwegianStrings = {
   clearButton: "Tøm",
   // "Choose question to show..."
   addElement: "Velg spørsmål...",
+  // [Auto-translated] "All questions"
+  allQuestions: "Alle spørsmål",
+  // [Auto-translated] "Select all"
+  selectAll: "Velg alle",
+  // [Auto-translated] "Clear selection"
+  clearSelection: "Klart utvalg",
   // "Default Order"
   defaultOrder: "Standard",
   // "Ascending"
@@ -89,14 +115,60 @@ export var norwegianStrings = {
   showPercentages: "Vis prosenter",
   // "Hide percentages"
   hidePercentages: "Skjul prosenter",
+  // [Auto-translated] "Export As..."
+  exportAs: "Eksporter som...",
   // [Auto-translated] "PDF"
   pdfDownloadCaption: "PDF",
   // "Excel"
   xlsxDownloadCaption: "Overgå",
   // [Auto-translated] "CSV"
   csvDownloadCaption: "CSV",
+  // [Auto-translated] "Export as PDF"
+  pdfDownloadHint: "Eksporter som PDF",
+  // [Auto-translated] "Export as Excel"
+  xlsxDownloadHint: "Eksport som Excel",
+  // [Auto-translated] "Export as CSV"
+  csvDownloadHint: "Eksport som CSV",
   // "Download plot as a PNG file"
   saveDiagramAsPNG: "Last ned plott som en PNG-fil",
+  // [Auto-translated] "response(s)"
+  responsesText: "Respons(er)",
+  // [Auto-translated] "No data"
+  noData: "Ingen data",
+  // [Auto-translated] "Select date range..."
+  selectDateRange: "Velg datointervall...",
+  // [Auto-translated] "Include today"
+  includeToday: "Inkluder i dag",
+  // [Auto-translated] "Custom"
+  reportingPeriodCustom: "Skikk",
+  // [Auto-translated] "Last 7 days"
+  reportingPeriodLast7days: "De siste 7 dagene",
+  // [Auto-translated] "Last 14 days"
+  reportingPeriodLast14days: "De siste 14 dagene",
+  // [Auto-translated] "Last 28 days"
+  reportingPeriodLast28days: "De siste 28 dagene",
+  // [Auto-translated] "Last 30 days"
+  reportingPeriodLast30days: "De siste 30 dagene",
+  // [Auto-translated] "Last week (starts Monday)"
+  reportingPeriodLastWeekMon: "Forrige uke (starter mandag)",
+  // [Auto-translated] "Last week (starts Sunday)"
+  reportingPeriodLastWeekSun: "Forrige uke (starter søndag)",
+  // [Auto-translated] "Last month"
+  reportingPeriodLastMonth: "Forrige måned",
+  // [Auto-translated] "Last quarter"
+  reportingPeriodLastQuarter: "Siste kvartal",
+  // [Auto-translated] "Last year"
+  reportingPeriodLastYear: "I fjor",
+  // [Auto-translated] "This week to date (starts Sunday)"
+  reportingPeriodWtdSun: "Denne uken til dags dato (starter søndag)",
+  // [Auto-translated] "This week to date (starts Monday)"
+  reportingPeriodWtdMon: "Denne uken til dags dato (starter mandag)",
+  // [Auto-translated] "This month to date"
+  reportingPeriodMtd: "Denne måneden til dags dato",
+  // [Auto-translated] "This quarter to date"
+  reportingPeriodQtd: "Dette kvartalet til dags dato",
+  // [Auto-translated] "This year to date"
+  reportingPeriodYtd: "I år til dags dato",
   // "Hide empty answers"
   hideEmptyAnswers: "Skjul tomme svar",
   // "Show empty answers"
@@ -133,6 +205,8 @@ export var norwegianStrings = {
   statistics_chart: "Sjøkart",
   // "Responses"
   responses: "Svar",
+  // [Auto-translated] "Total responses"
+  totalResponses: "Totalt antall svar",
   // [Auto-translated] "NPS"
   visualizer_nps: "NPS",
   // [Auto-translated] "Chart"
@@ -147,16 +221,22 @@ export var norwegianStrings = {
   npsPassives: "Passive",
   // [Auto-translated] "Detractors"
   npsDetractors: "Motstandere",
-  // [Auto-translated] "Category (X Axis):"
-  axisXSelectorTitle: "Kategori (X-akse):",
-  // [Auto-translated] "Legend (Series):"
-  axisYSelectorTitle: "Legende (serie):",
+  // [Auto-translated] "Category (X Axis)"
+  axisXSelectorTitle: "Kategori (X-akse)",
+  // [Auto-translated] "Legend (Series)"
+  axisYSelectorTitle: "Legend (serie)",
   // [Auto-translated] "Segments:"
   axisXAlternativeSelectorTitle: "Segmenter:",
   // [Auto-translated] "Groups:"
   axisYAlternativeSelectorTitle: "Grupper:",
   // [Auto-translated] "Not selected"
   notSelected: "Ikke valgt",
+  // [Auto-translated] "Secondary Y axis"
+  secondYAxisToggleTitle: "Andre Y-akse",
+  // [Auto-translated] "Select a data field..."
+  selectDataField: "Velg et datafelt...",
+  // [Auto-translated] "Default"
+  intervalMode_default: "Standard",
   // [Auto-translated] "Decades"
   intervalMode_decades: "Tiår",
   // [Auto-translated] "Years"
@@ -184,7 +264,33 @@ export var norwegianStrings = {
   // [Auto-translated] "Aggregate:"
   selectAggregateText: "Samlet:",
   // [Auto-translated] "Year ends with"
-  groupedYearsAxisTitle: "Året avsluttes med"
+  groupedYearsAxisTitle: "Året avsluttes med",
+  // [Auto-translated] "Series {0}"
+  seriesListSeries: "Serie {0}",
+  // [Auto-translated] "Values"
+  seriesListValuesLabel: "Verdier",
+  // [Auto-translated] "Remove"
+  seriesListRemove: "Fjern",
+  // [Auto-translated] "Add Series"
+  seriesListAdd: "Legg til serier",
+  // [Auto-translated] "Move to second axis"
+  seriesListMoveToSecondAxis: "Flytt til andre akse",
+  // [Auto-translated] "Move to first axis"
+  seriesListMoveToFirstAxis: "Flytt til første akse",
+  // [Auto-translated] "Count"
+  aggregationCount: "Greve",
+  // [Auto-translated] "Sum"
+  aggregationSum: "Sum",
+  // [Auto-translated] "Average"
+  aggregationAverage: "Gjennomsnitt",
+  // [Auto-translated] "Close"
+  close: "Lukk",
+  // [Auto-translated] "K"
+  thousandsSuffix: "K",
+  // [Auto-translated] "M"
+  millionsSuffix: "M",
+  // [Auto-translated] "B"
+  billionsSuffix: "Mrd"
 };
 
 setupLocale({ localeCode: "no", strings: norwegianStrings, nativeName: "Norsk" });

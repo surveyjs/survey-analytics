@@ -1,164 +1,6 @@
 import { glc } from "survey-core";
 import { localization } from "../localizationManager";
-
-export class DocumentHelper {
-  public static createSelector(
-    options: Array<{ value: string, text: string }> | Function,
-    isSelected: (option: { value: string, text: string }) => boolean,
-    handler: (e: any) => void,
-    title?: string | Function
-  ) {
-    const selectWrapper = document.createElement("div");
-    selectWrapper.className = "sa-question__select-wrapper";
-    const titleElement = DocumentHelper.createElement("span", "sa-question__select-title");
-    const select = document.createElement("select");
-    select.className = "sa-question__select";
-    const updateTitle = () => {
-      const titleText = !!title && (typeof title == "string" ? title : title());
-      titleElement.innerText = titleText;
-      if(!!titleText) {
-        selectWrapper.insertBefore(titleElement, select);
-      } else if(titleElement.parentElement === selectWrapper) {
-        selectWrapper.removeChild(titleElement);
-      }
-    };
-    select.onchange = handler;
-    selectWrapper.appendChild(select);
-    const updateOptions = () => {
-      select.innerHTML = "";
-      const optionsSource = options || [];
-      const optionItems = Array.isArray(optionsSource) ? optionsSource : optionsSource();
-      optionItems.forEach((option) => {
-        let optionElement = DocumentHelper.createElement("option", "", {
-          value: option.value,
-          text: option.text,
-          selected: isSelected(option),
-        });
-        select.appendChild(optionElement);
-      });
-    };
-    selectWrapper["__updateSelect"] = () => {
-      updateTitle();
-      updateOptions();
-    };
-    selectWrapper["__updateSelect"]();
-    return selectWrapper;
-  }
-
-  public static createButton(
-    handler: (e: any) => void,
-    text = "",
-    className = "sa-toolbar__button"
-  ) {
-    const button = DocumentHelper.createElement("span", className, {
-      innerText: text,
-      onclick: handler,
-    });
-    return button;
-  }
-
-  public static createElement(
-    tagName: string,
-    className: string = "",
-    attrs?: any
-  ): HTMLElement {
-    var el = document.createElement(tagName);
-    if(!!className) {
-      el.className = className;
-    }
-    if(!!attrs) {
-      Object.keys(attrs).forEach(function (key) {
-        (<any>el)[key] = attrs[key];
-      });
-    }
-    return el;
-  }
-
-  public static createSvgElement(path: string): SVGSVGElement {
-    const svgElem = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "svg"
-    );
-    const useElem = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "use"
-    );
-    useElem.setAttributeNS(
-      "http://www.w3.org/1999/xlink",
-      "href",
-      "#sa-svg-" + path
-    );
-    svgElem.appendChild(useElem);
-    return svgElem;
-  }
-
-  public static createSvgButton(path: string): HTMLButtonElement {
-    const btn = <HTMLButtonElement>(
-      DocumentHelper.createElement("button", "sa-table__svg-button")
-    );
-    btn.appendChild(DocumentHelper.createSvgElement(path));
-    return btn;
-  }
-
-  public static createSvgToggleButton(
-    svgPath1: string,
-    svPpath2: string,
-    text1: string,
-    text2: string,
-    handler1: (e: any) => any,
-    handler2: (e: any) => any,
-    state = "first",
-    className = "sa-toolbar__button sa-toolbar__svg-button"
-  ): HTMLElement {
-    const svg1 = DocumentHelper.createSvgElement(svgPath1);
-    const svg2 = DocumentHelper.createSvgElement(svPpath2);
-    const button = DocumentHelper.createElement("button", className);
-
-    const toggle = (e: any) => {
-      if(state === "first") {
-        state = "second";
-        button.title = text2;
-        button.removeChild(svg1);
-        button.appendChild(svg2);
-        handler2(e);
-      } else if(state === "second") {
-        state = "first";
-        button.title = text1;
-        button.removeChild(svg2);
-        button.appendChild(svg1);
-        handler1(e);
-      }
-    };
-
-    if(state === "first") {
-      button.title = text1;
-      button.appendChild(svg1);
-    } else if((state = "second")) {
-      button.title = text2;
-      button.appendChild(svg2);
-    }
-
-    button.onclick = toggle;
-
-    return button;
-  }
-
-  public static createInput(
-    className: string,
-    placeholder = "",
-    defaultValue = ""
-  ): HTMLInputElement {
-    var el = <HTMLInputElement>DocumentHelper.createElement(
-      "input",
-      className,
-      {
-        placeholder: placeholder,
-        defaultValue: defaultValue,
-      }
-    );
-    return el;
-  }
-}
+import { DocumentHelper } from "./documentHelper";
 
 export var options = {
   runningInBrowser: typeof window.URL.createObjectURL === "function",
@@ -289,4 +131,21 @@ export function createImagesContainer(
 export function toPrecision(value: number, precision = 2): number {
   const base = Math.pow(10, precision);
   return Math.round(base * value) / base;
+}
+
+export function getDiffsFromDefaults(obj: any, defaultObj: any = {}): any {
+  const result: any = {};
+  Object.keys(obj).forEach(key => {
+    if(typeof obj[key] === "object") {
+      const childDiffs = getDiffsFromDefaults(obj[key], defaultObj[key]);
+      if(Object.keys(childDiffs).length > 0) {
+        result[key] = childDiffs;
+      }
+    } else {
+      if(obj[key] !== undefined && obj[key] != defaultObj[key]) {
+        result[key] = obj[key];
+      }
+    }
+  });
+  return result;
 }

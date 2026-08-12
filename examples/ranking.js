@@ -96,14 +96,14 @@ var data = [
 
 var survey = new Survey.SurveyModel(json);
 
-SurveyAnalytics.PlotlySetup.onImageSaving.add(function (
+SurveyAnalyticsPlotly.PlotlySetup.onImageSaving.add(function (
   selectBaseVisualizer,
   options
 ) {
   options.filename = "Exported " + selectBaseVisualizer.question.name;
 });
 
-SurveyAnalytics.PlotlySetup.onPlotCreating.add(function (
+SurveyAnalyticsPlotly.PlotlySetup.onPlotCreating.add(function (
   selectBaseVisualizer,
   options
 ) {
@@ -112,7 +112,7 @@ SurveyAnalytics.PlotlySetup.onPlotCreating.add(function (
 
 var options = {};
 
-var visPanel = new SurveyAnalytics.VisualizationPanel(
+var visPanel = new SurveyAnalyticsPlotly.VisualizationPanel(
   // [ survey.getQuestionByName("organization_type"), survey.getQuestionByName("backend_language") ],
   survey.getAllQuestions(),
   data

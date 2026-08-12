@@ -15,52 +15,21 @@ export interface IVisualizerPanelElement {
   /**
    * The title of a survey question visualized by this item. The visualization item displays the same title.
    */
-  displayName: string;
+  displayName?: string;
   /**
    * Indicates whether the visualization item is currently visible.
    *
    * If you want to disallow users to hide visualization items, set the [`allowHideQuestions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions) property to `false`.
    */
-  isVisible: boolean;
-  isPublic: boolean;
-  /**
-   * Indicates the selected chart type.
-   *
-   * Possible values:
-   *
-   * - `"bar"`
-   * - `"vbar"`
-   * - `"stackedbar"`
-   * - `"pie"`
-   * - `"doughnut"`
-   * - `"gauge"`
-   * - `"bullet"`
-   * - `"radar"`
-   */
-  chartType?: string;
-  /**
-   * Indicates the answer order in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
-   *
-   * Possible values:
-   *
-   * - `"default"` - Answers retain the initial sort order.
-   * - `"asc"` - Answers are sorted by ascending answer count.
-   * - `"desc"` - Answers are sorted by descending answer count.
-   */
-  answersOrder?: string;
-  /**
-   * Indicates whether answers with zero count are hidden in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
-   */
-  hideEmptyAnswers?: boolean;
-  /**
-   * Indicates whether the visualization item displays top 5, 10, or 20 answers by answer count. This property equals -1 if the Top N Answers feature is disabled.
-   */
-  topN?: number;
+  isVisible?: boolean;
+  isPublic?: boolean;
+  [key: string]: any;
 }
 
 export interface IState {
   locale?: string;
   elements?: IVisualizerPanelElement[];
+  [key: string]: any;
 }
 
 export interface IPermission {

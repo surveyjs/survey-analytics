@@ -1,15 +1,20 @@
 import { Question, Event } from "survey-core";
-import { VisualizerBase } from "./visualizerBase";
+import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
-import { DocumentHelper, toPrecision } from "./utils";
+import { toPrecision } from "./utils";
 import { localization } from "./localizationManager";
+import { DocumentHelper } from "./utils/documentHelper";
 
 import "./nps.scss";
 
 export class NpsVisualizerWidget {
   private _renderedTarget: HTMLDivElement = undefined;
+  private _data: { detractors: number, passive: number, promoters: number, total: number } = {} as any;
 
-  constructor(private _model: NpsVisualizer, private _data: { detractors: number, passive: number, promoters: number, total: number }) {
+  constructor(private _model: NpsVisualizer, data: ICalculationResult) {
+    (data.values || []).forEach((name, index) => {
+      this._data[name] = data.data[0][index];
+    });
   }
 
   private renderScorePart(partId: string, value: number, percent?: number) {
@@ -92,13 +97,13 @@ export class NpsVisualizer extends VisualizerBase {
     question: Question,
     data: Array<{ [index: string]: any }>,
     options?: Object,
-    name?: string
+    type?: string
   ) {
-    super(question, data, options, name || "nps");
+    super(question, data, options, type || "nps");
     this._npsAdapter = new NpsAdapter(this);
   }
 
-  protected getCalculatedValuesCore(): any {
+  protected getCalculatedValuesCore(): ICalculationResult {
     let result = {
       detractors: 0,
       passive: 0,
@@ -107,7 +112,7 @@ export class NpsVisualizer extends VisualizerBase {
     };
 
     this.data.forEach((row) => {
-      const rowValue: any = row[this.question.name];
+      const rowValue: any = row[this.dataNames[0]];
       const scoreValue = parseInt(rowValue);
       if(!Number.isNaN(scoreValue)) {
         if(scoreValue <= NpsVisualizer.DetractorScore) {
@@ -121,7 +126,10 @@ export class NpsVisualizer extends VisualizerBase {
       }
     });
 
-    return result;
+    return {
+      data: [Object.keys(result).map(k => result[k])],
+      values: Object.keys(result)
+    };
   }
 
   protected destroyContent(container: HTMLElement) {
@@ -145,3 +153,4 @@ export class NpsVisualizer extends VisualizerBase {
 }
 
 // VisualizationManager.registerVisualizer("rating", NpsVisualizer);
+VisualizationManager.registerVisualizer("nps", NpsVisualizer, undefined, "nps");

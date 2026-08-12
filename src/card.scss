@@ -1,0 +1,28 @@
+@use "typography-mixins.scss" as *;
+
+.sa-visualizer-card {
+  display: flex;
+  padding-top: var(--sjs2-spacing-x300, 24px);
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.sa-visualizer-card-content {
+  display: flex;
+  min-width: calc(var(--sjs2-base-unit-size, 8px) * 32);
+  padding: var(--sjs2-spacing-x200, 16px) var(--sjs2-spacing-x300, 24px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sjs2-spacing-x300, 24px);
+
+  border-radius: var(--sjs2-radius-form, 8px);
+  border: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
+  background: var(--sjs2-color-bg-basic-primary, #fff);
+}
+
+.sa-visualizer-card-value {
+  color: var(--sjs2-color-fg-basic-primary, #1c1b20);
+
+  @include sjs2--typography--large-strong;
+}

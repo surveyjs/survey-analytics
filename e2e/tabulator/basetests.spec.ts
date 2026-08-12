@@ -23,8 +23,8 @@ test.describe("basetests", () => {
     const xssText = "Which of the following best describes you or your organization?<button id='xyz' onclick='alert();'>hello</button><img src='dymmy' onerror='alert(\"xss\");'>";
 
     // Selectors adapted for Playwright
-    const headerSelector = ".tabulator-headers div:nth-of-type(6) span";
-    const cellSelector = ".tabulator-row div:nth-of-type(6)";
+    const headerSelector = ".tabulator-headers div:nth-of-type(7) span";
+    const cellSelector = ".tabulator-row div:nth-of-type(7)";
 
     const headerText = await page.locator(headerSelector).first().innerText();
     const cellText = await page.locator(cellSelector).first().innerText();
