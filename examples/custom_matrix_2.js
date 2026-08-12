@@ -51,7 +51,7 @@ function CustomVisualizer(question, data) {
     contentContainer.appendChild(table);
   };
 
-  var matrixVis = new SurveyAnalytics.Matrix(
+  var matrixVis = new SurveyAnalyticsPlotly.Matrix(
     question,
     data,
     {
@@ -62,7 +62,7 @@ function CustomVisualizer(question, data) {
   return matrixVis;
 }
 
-SurveyAnalytics.VisualizationManager.registerVisualizer(
+SurveyAnalyticsPlotly.VisualizationManager.registerVisualizer(
   "matrix",
   CustomVisualizer
 );

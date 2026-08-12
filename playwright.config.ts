@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { resolve } from "path";
 
 /**
  * Read environment variables from file.
@@ -31,15 +32,35 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
   },
-  snapshotPathTemplate: "{testDir}/{testFilePath}-snapshots/{arg}{ext}",
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "http://localhost:8080/examples/1",
+      },
+      snapshotPathTemplate: "{testDir}/{testFilePath}-snapshots/{arg}{ext}",
     },
-
+    {
+      name: "chromium+apexCharts",
+      testDir: "./e2e/charts",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "http://localhost:8080/examples/apexcharts/2",
+      },
+      snapshotPathTemplate: "{testDir}/{testFilePath}-snapshots_apexcharts/{arg}{ext}",
+    },
+    {
+      name: "chromium+chartjs",
+      testDir: "./e2e/charts",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "http://localhost:8080/examples/chart.js/3",
+      },
+      snapshotPathTemplate: "{testDir}/{testFilePath}-snapshots_chartjs/{arg}{ext}",
+    },
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
@@ -48,6 +69,10 @@ export default defineConfig({
     {
       name: "webkit",
       use: { ...devices["Desktop Safari"] },
+    },
+    {
+      name: "a11y",
+      testDir: resolve(__dirname, "./accessibilityTests")
     },
 
     /* Test against mobile viewports. */
@@ -73,7 +98,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run start",
+    command: "npm run serve",
     url: "http://localhost:8080",
     reuseExistingServer: !process.env.CI,
   },

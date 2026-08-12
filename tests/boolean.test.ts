@@ -34,7 +34,7 @@ test("getLabels method", () => {
 });
 
 test("getCalculatedValues method", async () => {
-  expect(await boolean.getCalculatedValues()).toEqual([[3, 1]]);
+  expect((await boolean.getCalculatedValues()).data).toEqual([[3, 1]]);
 });
 
 test("getCalculatedValues localized", async () => {
@@ -60,7 +60,7 @@ test("getCalculatedValues localized", async () => {
   var secondResult = { "bool": false, "organization_type": "In-house" };
   var test = [firstResult, secondResult];
   boolean = new BooleanModel(survey.getQuestionByName("bool"), test);
-  expect(await boolean.getCalculatedValues()).toEqual([[1, 1]]);
+  expect((await boolean.getCalculatedValues()).data).toEqual([[1, 1]]);
 });
 
 test("hasHeader and correct answer text", () => {
@@ -84,14 +84,4 @@ test("hasHeader and correct answer text", () => {
   boolean = new BooleanModel(survey.getQuestionByName("bool"), [], { showCorrectAnswers: true });
   expect(boolean.hasHeader).toBeTruthy();
   expect(boolean["getCorrectAnswerText"]()).toEqual("Label True");
-});
-
-test("convertFromExternalData", () => {
-  const externalCalculatedData = {
-    true: 3,
-    false: 1
-  };
-  const calculatedData = (boolean as any).getCalculatedValuesCore();
-  expect(calculatedData).toEqual([[3, 1]]);
-  expect(boolean.convertFromExternalData(externalCalculatedData)).toStrictEqual(calculatedData);
 });

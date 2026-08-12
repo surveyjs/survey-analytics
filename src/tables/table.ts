@@ -13,99 +13,7 @@ import { ITableExtension, TableExtensions } from "./extensions/tableextensions";
 import { createCommercialLicenseLink } from "../utils";
 import { ColumnsBuilderFactory } from "./columnbuilder";
 import { DefaultColumn } from "./columns";
-
-export interface ITableOptions {
-  [index: string]: any;
-
-  /**
-   * Specifies whether to use question names instead of question titles as column headings.
-   *
-   * Default value: `false`
-   */
-  useNamesAsTitles?: boolean;
-  /**
-   * Specifies the delimiter used to separate multiple choice items in a list.
-   *
-   * Default value: `", "`
-   * @since 2.3.7
-   */
-  itemsDelimiter?: string;
-  /**
-   * A callback function that allows you to customize a question's display value in the table.
-   *
-   * Parameters:
-   *
-   * - `options.question`: `Question`\
-   * The question for which the callback is executed.
-   * - `options.displayValue`: `any`\
-   * The question's display value. You can modify this parameter to change the output.
-   */
-  onGetQuestionValue?: (options: {
-    question: Question,
-    displayValue: any,
-  }) => void;
-
-  /**
-   * Specifies the number of data items to load and display per page. Applies only if `paginationEnabled` is `true`.
-   *
-   * Default value: 10
-   * @see paginationEnabled
-   */
-  pageSize?: number;
-  /**
-   * Specifies whether the dataset is split into pages.
-   *
-   * Default value: `true`
-   *
-   * > Pagination cannot be disabled if the dataset is loaded from a server (that is, if the second parameter passed to the `Tabulator` constructor is a function).
-   * @see pageSize
-   * @since 2.3.12
-   */
-  paginationEnabled?: boolean;
-  /**
-   * Specifies whether responses to [Dynamic Matrix](https://surveyjs.io/form-library/examples/dynamic-matrix-add-new-rows/) and [Dynamic Panel](https://surveyjs.io/form-library/examples/duplicate-group-of-fields-in-form/) questions are rendered using nested tables.
-   *
-   * Default value: `true`
-   *
-   * If disabled, responses are displayed as stringified JSON objects instead of a tabular structure.
-   * @since 2.5.19
-   */
-  useNestedTables?: boolean;
-  /**
-   * Specifies whether to split responses to multi-select questions (Checkboxes and Multi-Select Dropdown) into separate columns.
-   *
-   * When enabled, each choice is represented as an individual column. Cell values indicate whether the choice was selected or the selection order, depending on the `multiSelectColumnValueFormat` setting. Empty cells indicate that the choice was not selected.
-   *
-   * Default value: `false`
-   *
-   * @since 2.5.18
-   */
-  splitMultiSelectIntoColumns?: boolean;
-  /**
-   * Specifies how selected values are represented in columns generated from multi-select questions. Applies only when `splitMultiSelectIntoColumns` is `true`.
-   *
-   * Accepted values:
-   *
-   * - `"checkmark"` &ndash; Displays a checkmark symbol for selected choices.
-   * - `"selectionOrder"` &ndash; Displays the order in which choices were selected (1, 2, 3, ...).
-   *
-   * Default value: `"checkmark"`
-   * @since 2.5.18
-   */
-  multiSelectColumnValueFormat?: "checkmark" | "selectionOrder";
-
-  /**
-   * Specifies the maximum number of table columns generated for a [Multi-Select Matrix](https://surveyjs.io/form-library/examples/multi-select-matrix-question/) that remain in the main table. Additional columns are moved to the detail row.
-   *
-   * Default value: 5
-   *
-   * A Multi-Select Matrix creates a separate table column for each matrix cell (row &times; column pair). For example, a 5 &times; 3 matrix produces 15 table columns. Use the `matrixDropdownDetailRowThreshold` property to control how many of these generated columns are displayed in the main table. Remaining columns are displayed in the detail row.
-   *
-   * Set this property to `-1` to display all generated table columns in the main table.
-   * @since 2.5.25
-   */
-  matrixDropdownDetailRowThreshold?: number;
-}
+import { ITableOptions, ITable } from "./table-interfaces";
 
 export type TabulatorFilter = { field: string, type: string, value: any };
 export type TabulatorSortOrder = { field: string, direction: undefined | "asc" | "desc" };
@@ -116,8 +24,11 @@ export type GetDataFn = GetDataUsingCallbackFn | GetDataUsingPromiseFn;
 
 export class TableEvent extends EventBase<Table> {}
 
-export abstract class Table {
+export abstract class Table implements ITable {
   public static showFilesAsImages = false;
+  public getShowFilesAsImages(): boolean {
+    return Table.showFilesAsImages;
+  }
   public static haveCommercialLicense: boolean = false;
   protected tableData: any;
   protected extensions: TableExtensions;

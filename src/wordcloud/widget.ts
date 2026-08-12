@@ -31,7 +31,8 @@ export class WordCloudWidget {
     if(this._words.length > 0) {
       this._words.sort((a, b) => -1 * (a[1] - b[1]));
       this._minWeight = this._words[this._words.length - 1][1];
-      this._weightFactor = (this._words[0][1] - this._minWeight + 1) / this._options.weightFactor;
+      const weightFactor = (this._words[0][1] - this._minWeight + 1) / this._options.weightFactor;
+      this._weightFactor = Math.max(weightFactor, 0.1);
     }
   }
 

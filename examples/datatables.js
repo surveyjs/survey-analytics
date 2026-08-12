@@ -24,7 +24,7 @@ var survey = new Survey.SurveyModel(json);
 //     return item;
 //   });
 
-//   var surveyAnalyticsDataTables = new SurveyAnalytics.DataTables(
+//   var surveyAnalyticsDataTables = new SurveyAnalyticsPlotly.DataTables(
 //     document.getElementById("dataTablesContainer"),
 //     survey,
 //     data

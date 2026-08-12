@@ -1,5 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
-import { dragDropElement, initTabulator, url_tabulator } from "../helper";
+import { dragDropElement, getListItemByText, initTabulator, url_tabulator } from "../helper";
 
 test.describe("columnactions", () => {
   test.beforeEach(async ({ page }) => {
@@ -47,7 +47,7 @@ test.describe("columnactions", () => {
     //   "#tabulatorContainer .sa-table__show-column.sa-table__header-extension",
     //   { label: "Question 1" }
     // );
-    await page.getByRole("combobox").first().selectOption("Question 1");
+    await getListItemByText(page, "Question 1").click();
     await expect(page.locator("#tabulatorContainer .tabulator-col-title", { hasText: "Question 1" })).toBeVisible();
     await expect(await getColumnsVisibilityArray()).toEqual([true, true, true]);
   });
@@ -61,22 +61,22 @@ test.describe("columnactions", () => {
     await expect(page.locator('#tabulatorContainer .tabulator-col[tabulator-field="bool"]')).toBeVisible();
     await expect(await getColumnsLocationsArray()).toEqual([0, 0, 0]);
 
-    await page.click('#tabulatorContainer .tabulator-row:nth-child(1) button[title="Show minor columns"]');
+    await page.click('#tabulatorContainer .tabulator-row:nth-child(1) .sa-table__svg-button[title="Show minor columns"]');
     await expect(page.locator("#tabulatorContainer td", { hasText: "Question 1" })).toHaveCount(0);
 
-    await page.click('#tabulatorContainer .tabulator-col[tabulator-field="bool"] button[title="Move to Detail"]');
+    await page.click('#tabulatorContainer .tabulator-col[tabulator-field="bool"] .sa-table__svg-button[title="Move to Detail"]');
     await expect(page.locator('#tabulatorContainer .tabulator-col[tabulator-field="bool"]')).not.toBeVisible();
 
-    await page.click('#tabulatorContainer .tabulator-row:nth-child(1) button[title="Show minor columns"]');
+    await page.click('#tabulatorContainer .tabulator-row:nth-child(1) .sa-table__svg-button[title="Show minor columns"]');
     await expect(page.locator("#tabulatorContainer td", { hasText: "Question 1" })).toBeVisible();
     await expect(page.locator("#tabulatorContainer td", { hasText: "Yes" })).toBeVisible();
     await expect(await getColumnsLocationsArray()).toEqual([1, 0, 0]);
 
-    await page.click('#tabulatorContainer button:has-text("Show as Column")');
+    await page.click('#tabulatorContainer .tabulator-row:nth-child(1) .sa-table__svg-button[title="Show as Column"]');
     await expect(page.locator('#tabulatorContainer .tabulator-col[tabulator-field="bool"]')).toBeVisible();
     await expect(await getColumnsLocationsArray()).toEqual([0, 0, 0]);
 
-    await page.click('#tabulatorContainer .tabulator-row:nth-child(1) button[title="Show minor columns"]');
+    await page.click('#tabulatorContainer .tabulator-row:nth-child(1) .sa-table__svg-button[title="Show minor columns"]');
     await expect(page.locator("#tabulatorContainer td", { hasText: "Question 1" })).toHaveCount(0);
   });
 
@@ -85,7 +85,7 @@ test.describe("columnactions", () => {
       await page.evaluate(() => {
         const names: string[] = [];
         document.querySelectorAll(".tabulator .tabulator-col").forEach((col) => names.push((col as HTMLElement).innerText));
-        names.splice(0, 1);
+        names.splice(0, 2);
         return names;
       });
 
@@ -143,7 +143,7 @@ test.describe("columnactions", () => {
       await page.evaluate(() => {
         const names: string[] = [];
         document.querySelectorAll(".tabulator .tabulator-col").forEach((col) => names.push((col as HTMLElement).innerText));
-        names.splice(0, 1);
+        names.splice(0, 2);
         return names;
       });
 
@@ -152,7 +152,7 @@ test.describe("columnactions", () => {
     await expect(page.locator("#tabulatorContainer .tabulator-col", { hasText: "Question 2" })).not.toBeVisible();
 
     const columnSelector = page.locator("#tabulatorContainer .sa-table__show-column.sa-table__header-extension");
-    await expect(columnSelector.locator("option")).not.toHaveCount(0);
+    await expect(columnSelector.locator(".sa-action-dropdown-item")).not.toHaveCount(0);
 
     await page.click('#tabulatorContainer .tabulator-row:nth-child(1) button[title="Show minor columns"]');
     await expect(page.locator("#tabulatorContainer td", { hasText: "Question 2" })).toBeVisible();
