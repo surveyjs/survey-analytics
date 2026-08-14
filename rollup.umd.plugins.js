@@ -189,25 +189,40 @@ function emitNonSourceFiles(options) {
   packageData.author = "DevSoft Baltic O\u00dc <info@devsoftbaltic.com>";
   packageData.license = "SEE LICENSE IN LICENSE";
   packageData.licenseUrl = "https://surveyjs.io/licensing";
-  packageData.description = "SurveyJS Dashboard is a UI component for visualizing and analyzing survey data. It interprets the form JSON schema to identify question types and renders collected responses using interactive charts and tables.";
+  packageData.description = "Framework-independent dashboard that turns SurveyJS form results into interactive charts, pivots, and data tables, with cross-filtering, date-range filtering, and declarative state-based configuration. Renders with Chart.js by default; Plotly.js and ApexCharts are also supported.";
   packageData.keywords = [
     "survey",
     "form",
     "surveyjs",
+    "survey-library",
     "dashboard",
     "analytics",
+    "survey-analytics",
+    "reporting",
     "data-visualization",
+    "data-analysis",
+    "visualize-survey",
     "charts",
-    "tables",
+    "chartjs",
+    "plotly",
+    "apexcharts",
+    "tabulator",
+    "data-table",
+    "pivot-table",
+    "cross-filtering",
+    "histogram",
+    "word-cloud",
+    "nps",
     "survey-results",
     "survey-data",
     "survey-analysis",
-    "json",
-    "data-analysis",
-    "survey-library",
-    "reporting",
-    "data-management",
-    "visualize-survey"
+    "questionnaire",
+    "quiz",
+    "poll",
+    "business-intelligence",
+    "mongodb",
+    "javascript",
+    "typescript"
   ];
 
   fs.writeFileSync(path.join(buildDir, "package.json"), JSON.stringify(packageData, null, 2), "utf8");
