@@ -1,8 +1,6 @@
-# SurveyJS Dashboard
-
-
-<video src="https://github.com/surveyjs/survey-analytics/assets/22315929/2ebc84e1-dc43-4873-8c72-a1b4125e8749"></video>
-
+<div align="center">
+    
+[![SurveyJS Dashboard](https://github.com/user-attachments/assets/2b302f6f-5a23-4e88-97cb-00e3ae2faa6c)](https://surveyjs.io/dashboard/examples/)
 
 [![Build Status](https://dev.azure.com/SurveyJS/V2%20Libraries/_apis/build/status%2Fanalytics%2FAnalytics%20Main?repoName=surveyjs%2Fsurvey-analytics&branchName=master)](https://dev.azure.com/SurveyJS/V2%20Libraries/_build/latest?definitionId=161&repoName=surveyjs%2Fsurvey-analytics&branchName=master)
 <a href="https://github.com/microsoft/playwright">
@@ -14,18 +12,24 @@
 <a href="https://github.com/surveyjs/survey-analytics/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+">
 <img alt="Closed issues" title="Closed issues" src="https://img.shields.io/github/issues-closed/surveyjs/survey-analytics.svg">
 </a>
+   
+# SurveyJS Dashboard
+</div>
+<div align="justify">
 
-`survey-analytics` is the reporting layer of the [SurveyJS](https://surveyjs.io/) ecosystem. Give it a form JSON schema and an array of collected responses, and it reads the schema to work out each question's type, then renders the answers as interactive charts, data tables, word clouds, and aggregated statistics. It is framework-independent — the dashboard mounts into any DOM element, so it works in React, Angular, Vue, and plain HTML/CSS/JavaScript applications alike.
+SurveyJS Dashboard is a JavaScript library for visualizing and analyzing survey and form data with interactive charts, data tables, word clouds, and aggregated statistics. The `survey-analytics` package takes a SurveyJS JSON form definition and an array of collected responses, identifies question types from the form definition, and selects suitable visualizations for the response data.
 
-[![SurveyJS Dashboard](https://github.com/user-attachments/assets/2b302f6f-5a23-4e88-97cb-00e3ae2faa6c)](https://surveyjs.io/dashboard/examples/)
+The library is framework-independent and renders into a DOM element, so it can be used in React, Angular, Vue, and plain JavaScript applications.
+</div>
 
-## Install
+
+## Installation
 
 ```sh
 npm install survey-analytics
 ```
 
-`survey-core` is a peer dependency — install it alongside if it isn't in your project yet:
+`survey-core` is a peer dependency. If it isn't already installed in your project, install both packages:
 
 ```sh
 npm install survey-core survey-analytics
@@ -60,7 +64,7 @@ const dashboard = new Dashboard({
 dashboard.render(document.getElementById("dashboardContainer"));
 ```
 
-Everything a dashboard shows can be described declaratively. Items may be plain question names or objects that pin the chart type and other per-item settings; the array order is the display order:
+Dashboard content and visualization settings can be configured declaratively. Items may be specified as question names or configuration objects that define chart type and other per-item settings. The order of items in the array determines their display order.
 
 ```js
 const dashboard = new Dashboard({
@@ -79,7 +83,7 @@ const dashboard = new Dashboard({
 });
 ```
 
-Adjustments a user makes at runtime — chart type, sorting, item visibility, layout — are captured in a state object, so a dashboard can be restored exactly as it was left:
+Adjustments a user makes at runtime — chart type, sorting, item visibility, layout — are captured in a state object, so user-selected layout and visualization settings can be saved and restored:
 
 ```js
 dashboard.onStateChanged.add((_, state) => {
@@ -89,9 +93,9 @@ dashboard.onStateChanged.add((_, state) => {
 dashboard.state = JSON.parse(localStorage.getItem("dashboardState"));
 ```
 
-## Charting engines
+## Charting Engines
 
-The library ships three interchangeable chart back-ends. **[Chart.js](https://www.chartjs.org/) is the default** — it is what the main `survey-analytics` entry point renders with, and it produces a noticeably smaller bundle than the alternatives. To use a different engine, import the matching entry point and style sheet instead; the API is identical.
+SurveyJS Dashboard supports three interchangeable charting engines. **[Chart.js](https://www.chartjs.org/) is the default** — it is what the main `survey-analytics` entry point renders with, and it produces a noticeably smaller bundle than the alternatives. To use a different engine, import the matching entry point and style sheet instead; the API is identical.
 
 | Engine | Import path | Style sheet | UMD global |
 | --- | --- | --- | --- |
@@ -110,21 +114,24 @@ Import exactly one charting engine per application — each engine registers its
 
 Every style sheet has a `.min.css` build and a `fontless` variant (for example, `survey.analytics.fontless.css`) that omits the bundled font declarations when the host application supplies its own typography.
 
-## Features
+## Get Started
 
-**Visualizations**
+- [React](https://surveyjs.io/dashboard/documentation/get-started-react)
+- [Angular](https://surveyjs.io/dashboard/documentation/get-started-angular)
+- [Vue](https://surveyjs.io/dashboard/documentation/get-started-vue)
+- [HTML/CSS/JavaScript](https://surveyjs.io/dashboard/documentation/get-started-html-css-javascript)
 
-- Bar and column charts, stacked bar charts, line and scatter charts
-- Pie and doughnut charts
-- Gauge and bullet charts for numeric and rating questions
-- Histograms for numeric and date questions
-- Radar chart for ranking questions
-- Pivot chart with configurable category axis, multiple series, `sum`/`count` aggregation, and a secondary Y axis
-- Word cloud and response tables for free-text answers
-- NPS breakdown, response counters, and statistics tables — including a dedicated table for Boolean (Yes/No) questions
-- Matrix, matrix dropdown, matrix dynamic, panel dynamic, and composite/custom question types
+## Key Features
 
-**Interaction and analysis**
+### Visualizations
+
+- Bar, column, stacked bar, line, scatter, pie, doughnut, gauge, bullet, histogram, and radar charts
+- Pivot charts with configurable categories, multiple series, and aggregation
+- Word clouds and response tables for free-text answers
+- NPS breakdowns, response counters, and statistics tables
+- Visualization support for Single- and Multi-Select Matrix, Dynamic Matrix, Dynamic Panel, and Composite question types
+
+### Interaction and Analysis
 
 - Cross-filtering: selecting a value in one chart filters every other item in the dashboard, so users can drill down across several criteria at once
 - Built-in date filtering with a custom range picker and 14 presets (`last7days`, `last30days`, `lastQuarter`, `lastYear`, `mtd`, `ytd`, and more), plus a live count of matching responses
@@ -132,30 +139,25 @@ Every style sheet has a `.min.css` build and a `fontless` variant (for example, 
 - Dynamic layout with drag-and-drop reordering and resizing
 - Choose which questions appear on the dashboard, from configuration or from the toolbar
 
-**Configuration and integration**
+### Configuration and Integration
 
 - Declarative setup: an entire dashboard is described by one options object instead of a sequence of API calls
 - State persistence via `getState()` / `state` and the `onStateChanged` event
 - Localization independent of `survey-core`, covering the dashboard's own UI strings
 - Accessibility: dashboard items are exposed as labelled groups, interactive controls carry ARIA roles and states, and the suite is verified with automated `axe-core` tests against WCAG 2.1 AA and Section 508 rules
 
-## Get Started
-
-- [Angular](https://surveyjs.io/dashboard/documentation/get-started-angular)
-- [Vue](https://surveyjs.io/dashboard/documentation/get-started-vue)
-- [React](https://surveyjs.io/dashboard/documentation/get-started-react)
-- [HTML/CSS/JavaScript](https://surveyjs.io/dashboard/documentation/get-started-html-css-javascript)
-
 ## Documentation
 
 - [Website](https://surveyjs.io/)
 - [Documentation](https://surveyjs.io/dashboard/documentation/overview)
-- [Live Examples](https://surveyjs.io/dashboard/examples/)
-- [What's New](https://surveyjs.io/WhatsNew)
+- [Dashboard Demos](https://surveyjs.io/dashboard/examples/)
+- [Release Notes](https://surveyjs.io/stay-updated/release-notes)
+- [Roadmap](https://surveyjs.io/stay-updated/roadmap)
+- [What's New](https://surveyjs.io/stay-updated/major-updates/2025-2026)
 
 For AI coding agents: [https://surveyjs.io/llms.txt](https://surveyjs.io/llms.txt) indexes the documentation. Any documentation page is also available as raw Markdown — append `.md` to its URL, for example [https://surveyjs.io/dashboard/documentation/overview.md](https://surveyjs.io/dashboard/documentation/overview.md).
 
-## SurveyJS ecosystem
+## SurveyJS Ecosystem
 
 | Product | Purpose | License |
 | --- | --- | --- |
@@ -165,7 +167,7 @@ For AI coding agents: [https://surveyjs.io/llms.txt](https://surveyjs.io/llms.tx
 | [PDF Generator](https://surveyjs.io/pdf-generator) | Render forms and responses as PDF | Commercial |
 | [AI Form Response Extractor](https://surveyjs.io/documentation/combine-paper-and-online-survey-form-data) | Extract responses from paper forms, PDFs, and images into a SurveyJS schema (`ai-form-response-extractor`) | MIT |
 
-## Build SurveyJS Dashboard from Sources
+## Build from Source
 
 This repository resolves `survey-core` from a local build of the [survey-library](https://github.com/surveyjs/survey-library) repository, so clone both under the same parent folder.
 
@@ -225,4 +227,4 @@ This repository resolves `survey-core` from a local build of the [survey-library
 
 ## Licensing
 
-SurveyJS Dashboard is **not available for free commercial usage**. If you want to integrate it into your application, you must purchase a [commercial license(s)](https://surveyjs.io/licensing) for software developer(s) who will be working with the SurveyJS product's APIs and implementing their integration.
+SurveyJS Dashboard requires a [commercial license](https://surveyjs.io/licensing) for each software developer who works with the SurveyJS APIs or implements the integration.
