@@ -6,6 +6,7 @@
   background: var(--sjs2-color-utility-surface-dashboard, rgba(28, 27, 32, 0.05));
 
   @media screen and (max-width: 600px) {
+    min-width: auto;
     padding: var(--sjs2-spacing-x150, 12px);
   }
 }
