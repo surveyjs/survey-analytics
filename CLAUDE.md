@@ -14,7 +14,7 @@ Unlike survey-library/survey-creator, this is a **single package** (not a monore
 
 ### Dependency on survey-core
 
-`package.json` declares `"survey-core": "../survey-library/packages/survey-core/build"`, so `npm install` copies survey-core from that **local build folder**. **survey-core must be built in the survey-library repo before installing/building here**, and after changing survey-core you must rebuild it there and re-install (or refresh) the copy. Key third-party runtime deps: **plotly.js-dist-min** (the default chart engine), **tabulator-tables** (data tables), **muuri** (drag/resize dashboard grid layout), **mongodb** (server-side aggregation).
+`package.json` declares `"survey-core": "../survey-library/packages/survey-core/build"`, so `npm install` copies survey-core from that **local build folder**. **survey-core must be built in the survey-library repo before installing/building here**, and after changing survey-core you must rebuild it there and re-install (or refresh) the copy. Key third-party runtime deps: **chart.js** (the default chart engine, plus **chartjs-plugin-datalabels**), **plotly.js-dist-min** and **apexcharts** (alternative engines), **tabulator-tables** (data tables), **muuri** (drag/resize dashboard grid layout), **mongodb** (server-side aggregation).
 
 ## Build
 
