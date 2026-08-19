@@ -1,5 +1,5 @@
 <div align="center">
-    
+
 [![SurveyJS Dashboard](https://github.com/user-attachments/assets/2b302f6f-5a23-4e88-97cb-00e3ae2faa6c)](https://surveyjs.io/dashboard/examples/)
 
 [![Build Status](https://dev.azure.com/SurveyJS/V2%20Libraries/_apis/build/status%2Fanalytics%2FAnalytics%20Main?repoName=surveyjs%2Fsurvey-analytics&branchName=master)](https://dev.azure.com/SurveyJS/V2%20Libraries/_build/latest?definitionId=161&repoName=surveyjs%2Fsurvey-analytics&branchName=master)
@@ -12,7 +12,7 @@
 <a href="https://github.com/surveyjs/survey-analytics/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+">
 <img alt="Closed issues" title="Closed issues" src="https://img.shields.io/github/issues-closed/surveyjs/survey-analytics.svg">
 </a>
-   
+
 # SurveyJS Dashboard
 </div>
 <div align="justify">
@@ -75,9 +75,9 @@ const dashboard = new Dashboard({
   legendPosition: "top",
   items: [
     { name: "overall_satisfaction", type: "gauge" },
-    { name: "role_clarity", type: "bar", answersOrder: "desc" },
+    { name: "role_clarity", type: "bar", visualizer: { answersOrder: "desc" } },
     "work_life_balance",             // a plain question name uses the default visualizer
-    { name: "environment_ratings", type: "stackedbar", legendPosition: "bottom" },
+    { name: "environment_ratings", type: "stackedbar", visualizer: { legendPosition: "bottom" } },
     { type: "pivot", questions: survey.getAllQuestions() }
   ]
 });
@@ -103,16 +103,17 @@ SurveyJS Dashboard supports three interchangeable charting engines. **[Chart.js]
 | Plotly.js | `survey-analytics/survey.analytics.plotly` | `survey-analytics/survey.analytics.plotly.css` | `SurveyAnalyticsPlotly` |
 | ApexCharts | `survey-analytics/survey.analytics.apexcharts` | `survey-analytics/survey.analytics.apexcharts.css` | `SurveyAnalyticsApexcharts` |
 
-Two further entry points cover the non-chart parts of the library:
+Three further entry points cover the remaining parts of the library:
 
 | Entry point | Purpose |
 | --- | --- |
+| `survey-analytics/survey.analytics.core` | Visualizers, tables, and the dashboard UI without a bundled charting engine, for applications that supply their own chart adapter (style sheet: `survey-analytics/survey.analytics.core.css`) |
 | `survey-analytics/survey.analytics.tabulator` | Data table view built on [Tabulator](https://tabulator.info/), with filtering, sorting, and CSV/XLSX export |
 | `survey-analytics/survey.analytics.mongo` | Server-side aggregation: builds MongoDB pipelines so large data sets are summarized in the database instead of the browser |
 
 Import exactly one charting engine per application — each engine registers itself as the active chart adapter, so importing a second one overrides the first.
 
-Every style sheet has a `.min.css` build and a `fontless` variant (for example, `survey.analytics.fontless.css`) that omits the bundled font declarations when the host application supplies its own typography.
+Every style sheet also ships as a minified `.min.css` build. The charting-engine and Tabulator style sheets additionally have a `fontless` variant (for example, `survey.analytics.fontless.css`) that omits the bundled font declarations when the host application supplies its own typography.
 
 ## Get Started
 
@@ -199,7 +200,7 @@ This repository resolves `survey-core` from a local build of the [survey-library
 1. **Run test examples**
 
     ```sh
-    npm start
+    npm run serve
     ```
 
     This command runs a local HTTP server at http://localhost:8080/. The demos live in `examples/chart.js`, `examples/apexcharts`, and `examples` (Plotly).

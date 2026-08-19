@@ -189,7 +189,7 @@ function emitNonSourceFiles(options) {
   packageData.author = "DevSoft Baltic O\u00dc <info@devsoftbaltic.com>";
   packageData.license = "SEE LICENSE IN LICENSE";
   packageData.licenseUrl = "https://surveyjs.io/licensing";
-  packageData.description = "JavaScript dashboard and survey analytics library for visualizing SurveyJS form results with interactive charts and data tables. Includes cross-filtering, date filtering, and reusable dashboard state. Uses Chart.js by default, with Plotly.js and ApexCharts support."
+  packageData.description = "JavaScript dashboard and survey analytics library for visualizing SurveyJS form results with interactive charts and data tables. Includes cross-filtering, date filtering, and reusable dashboard state. Uses Chart.js by default, with Plotly.js and ApexCharts support.";
   packageData.keywords = [
     "survey",
     "form",
