@@ -18,46 +18,11 @@ To access `IVisualizerPanelElement` objects, you can use the following propertie
 
 ## Properties
 
-### `answersOrder`
-
-**Type**: `string`
-
-Indicates the answer order in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
-
-Possible values:
-
-- `"default"` - Answers retain the initial sort order.
-- `"asc"` - Answers are sorted by ascending answer count.
-- `"desc"` - Answers are sorted by descending answer count.
-
-### `chartType`
-
-**Type**: `string`
-
-Indicates the selected chart type.
-
-Possible values:
-
-- `"bar"`
-- `"vbar"`
-- `"stackedbar"`
-- `"pie"`
-- `"doughnut"`
-- `"gauge"`
-- `"bullet"`
-- `"radar"`
-
 ### `displayName`
 
 **Type**: `string`
 
 The title of a survey question visualized by this item. The visualization item displays the same title.
-
-### `hideEmptyAnswers`
-
-**Type**: `boolean`
-
-Indicates whether answers with zero count are hidden in [bar charts](https://surveyjs.io/dashboard/documentation/chart-types#bar-chart), [histograms](https://surveyjs.io/dashboard/documentation/chart-types#histogram), and [statistics tables](https://surveyjs.io/dashboard/documentation/chart-types#statistics-table).
 
 ### `isVisible`
 
@@ -72,9 +37,3 @@ If you want to disallow users to hide visualization items, set the [`allowHideQu
 **Type**: `string`
 
 The name of a survey question visualized by this item.
-
-### `topN`
-
-**Type**: `number`
-
-Indicates whether the visualization item displays top 5, 10, or 20 answers by answer count. This property equals -1 if the Top N Answers feature is disabled.

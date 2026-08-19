@@ -10,7 +10,7 @@ source: https://surveyjs.io/dashboard/documentation/api-reference/visualizationm
 
 An object with methods used to register and unregister visualizers for individual question types.
 
-[View Demo](https://surveyjs.io/dashboard/examples/custom-survey-data-visualizer/ (linkStyle))
+[How to Implement a Custom Data Visualizer](https://github.com/surveyjs/surveyjs-howtos-and-troubleshooting/blob/main/categories/data-visualization/custom-survey-data-visualizer.md (linkStyle))
 
 ## Methods
 
@@ -49,7 +49,7 @@ Registers an alternative visualizer selector.
 
 Registers a visualizer for a specified question type.
 
-[View Demo](https://surveyjs.io/dashboard/examples/custom-survey-data-visualizer/ (linkStyle))
+[How to Implement a Custom Data Visualizer](https://github.com/surveyjs/surveyjs-howtos-and-troubleshooting/blob/main/categories/data-visualization/custom-survey-data-visualizer.md (linkStyle))
 
 **Parameters:**
 
@@ -58,6 +58,7 @@ Registers a visualizer for a specified question type.
 | `questionType` | `string` | A question [type](https://surveyjs.io/form-library/documentation/api-reference/question#getType). |
 | `constructor` | `VisualizerConstructor` | A function that returns a visualizer constructor to register. |
 | `index` | `any` | A zero-based index that specifies the visualizer's position in the visualizer list for the specified question type. Pass `0` to insert the visualizer at the beginning of the list and use it by default. If `index` is not specified, the visualizer is added to the end of the list. |
+| `visualizerType` | `string` |  |
 
 ### `unregisterVisualizer()`
 

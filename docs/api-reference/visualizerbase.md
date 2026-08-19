@@ -39,7 +39,7 @@ An object with the following properties:
 
 **Type**: `VisualizerBase`
 
-Allows you to access the footer visualizer. Returns `undefined` if the footer is absent.
+Returns the footer visualizer instance or `undefined` if the footer is not applicable.
 
 **Related APIs:** [`hasFooter`](#hasFooter)
 
@@ -47,7 +47,7 @@ Allows you to access the footer visualizer. Returns `undefined` if the footer is
 
 **Type**: `boolean`
 
-Indicates whether the visualizer displays a footer. This property is `true` when a visualized question has a comment.
+Indicates whether the visualizer renders a footer. Returns `true` if the question supports comments or an "Other" option.
 
 **Related APIs:** [`hasHeader`](#hasHeader)
 
@@ -55,7 +55,7 @@ Indicates whether the visualizer displays a footer. This property is `true` when
 
 **Type**: `boolean`
 
-Indicates whether the visualizer displays a header. This property is `true` when a visualized question has a correct answer.
+Indicates whether the visualizer renders a header. Returns `true` if the question defines a [`correctAnswer`](https://surveyjs.io/form-library/documentation/api-reference/question#correctAnswer).
 
 **Related APIs:** [`hasFooter`](#hasFooter)
 
@@ -65,9 +65,9 @@ Indicates whether the visualizer displays a header. This property is `true` when
 
 Gets or sets the current locale.
 
-If you want to inherit the locale from a visualized survey, assign a [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model) instance to the [`survey`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#survey) property of the `IVisualizationPanelOptions` object in the [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel) constructor.
+If you want to inherit the locale from a visualized survey, assign a [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model) instance to the [`survey`](https://surveyjs.io/dashboard/documentation/api-reference/idashboardoptions#survey) option passed to the Dashboard.
 
-If the survey is [translated into more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the toolbar displays a language selection drop-down menu.
+If the survey is [translated into more than one language](https://surveyjs.io/form-library/examples/survey-localization/), the dashboard toolbar displays a language selection drop-down menu.
 
 [View Demo](https://surveyjs.io/dashboard/examples/localize-survey-data-dashboard-ui/ (linkStyle))
 
@@ -83,7 +83,7 @@ Returns the identifier of a visualized question.
 
 **Type**: `boolean`
 
-Gets or sets the visibility of the visualizer's toolbar.
+Gets or sets whether the toolbar is visible.
 
 Default value: `true`
 
@@ -91,7 +91,7 @@ Default value: `true`
 
 **Type**: `boolean`
 
-Indicates whether users can select series points to cross-filter charts. To allow or disallow selection, set the [`allowSelection`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowSelection) property of the `IVisualizationPanelOptions` object in the [`VisualizationPanel`](https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel) constructor.
+Indicates whether users can select chart elements to apply cross-filtering. Controlled by the [`allowSelection`](https://surveyjs.io/dashboard/documentation/api-reference/idashboardoptions#allowSelection) option passed to the Dashboard.
 
 ### `title`
 
@@ -105,35 +105,48 @@ Available since: v2.3.8
 
 **Type**: `string`
 
-Returns the visualizer's type.
+Returns the visualizer's type identifier.
 
 ## Methods
 
+### `applyTheme()`
+
+Applies a theme to the Dashboard.
+
+Available since: v3.0.0
+
+**Parameters:**
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `theme` | `ITheme` | An [`ITheme`](https://surveyjs.io/form-library/documentation/api-reference/itheme) object with theme settings. |
+| `baseTheme` | `ITheme` | An optional [`ITheme`](https://surveyjs.io/form-library/documentation/api-reference/itheme) object used as the base theme. When specified, it is deep-merged with `theme`, and the merged result is applied. |
+
 ### `clear()`
 
-Empties the toolbar, header, footer, and content containers.
+Clears the toolbar, header, content, and footer containers.
 
-If you want to empty and delete the visualizer and all its elements from the DOM, call the [`destroy()`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#destroy) method instead.
+Does not remove the visualizer root element from the DOM. Use [`destroy()`](#destroy) to fully dispose of the visualizer.
 
 ### `destroy()`
 
-Deletes the visualizer and all its elements from the DOM.
+Deletes the visualizer and removes its DOM elements.
 
 **Related APIs:** [`clear`](#clear)
 
 ### `getCalculatedValues()`
 
-**Return value:** `Promise<Array<Object>><Array>`
+**Return value:** `Promise<ICalculationResult<number>><ICalculationResult>`
 
-Returns an array of calculated and visualized values. If a user applies a filter, the array is also filtered.
+Returns calculated values used for visualization. If a user applies a filter, the array is also filtered.
 
-To get an array of source survey results, use the [`surveyData`](https://surveyjs.io/dashboard/documentation/api-reference/visualizerbase#surveyData) property.
+To access an array of source survey results, use the [`surveyData`](#surveyData) property.
 
 ### `getState()`
 
 **Return value:** `any`
 
-Returns an object with properties that describe a current visualizer state. The properties are different for each individual visualizer.
+Returns an object with properties that describe the current visualizer state. The properties are different for each individual visualizer.
 
 > This method is overriden in classes descendant from `VisualizerBase`.
 
@@ -141,7 +154,7 @@ Returns an object with properties that describe a current visualizer state. The 
 
 ### `refresh()`
 
-Re-renders the visualizer and its content.
+Redraws the visualizer and its content.
 
 ### `registerToolbarItem()`
 
@@ -191,23 +204,26 @@ vizPanel.visualizers[0].registerToolbarItem("my-toolbar-dropdown", () => {
 | ---- | ---- | ----------- |
 | `name` | `string` | A custom name for the toolbar item. |
 | `creator` | `(toolbar?: HTMLDivElement) => HTMLElement` | A function that accepts the toolbar and should return an `HTMLElement` with the toolbar item. |
-| `order` | `number` |  |
+| `type` | `"button" \| "dropdown" \| "filter" \| "license"` |  |
+| `index` | `number` |  |
+| `groupIndex` | `number` |  |
 
 **Related APIs:** [`unregisterToolbarItem`](#unregisterToolbarItem)
 
 ### `render()`
 
-Renders the visualizer in a specified container.
+Renders the visualizer inside a specified container.
 
 **Parameters:**
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| `targetElement` | `any` | An `HTMLElement` or an `id` of a page element in which you want to render the visualizer. |
+| `targetElement` | `any` | An `HTMLElement` or the `id` of a DOM element. |
+| `isRoot` | `boolean` |  |
 
 ### `resetState()`
 
-Resets the visualizer's state.
+Resets the visualizer state.
 
 > This method is overriden in classes descendant from `VisualizerBase`.
 
@@ -217,7 +233,7 @@ Available since: v2.3.5
 
 ### `setState()`
 
-Sets the visualizer's state.
+Sets the visualizer state.
 
 [View Demo](https://surveyjs.io/dashboard/examples/save-dashboard-state-to-local-storage/ (linkStyle))
 
@@ -247,58 +263,53 @@ Unregisters a function used to create a toolbar item. Allows you to remove a too
 
 ### `updateData()`
 
-Updates visualized data.
+Updates the visualized data.
 
 **Parameters:**
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| `data` | `any` | A data array with survey results to be visualized. |
+| `data` | `any` | An array of survey result objects or a data-loading function. |
 
 ## Events
 
 ### `onAfterRender`
 
-An event that is raised after the visualizer's content is rendered.
+Raised after the visualizer content is rendered.
 
 Parameters:
 
 - `sender`: `VisualizerBase`\
-A `VisualizerBase` instance that raised the event.
-
+The current `VisualizerBase` instance.
 - `options.htmlElement`: `HTMLElement`\
-A page element with the visualizer's content.
+An `HTMLElement` that contains the rendered content.
 
 **Related APIs:** [`render`](#render), [`refresh`](#refresh)
 
 ### `onLocaleChanged`
 
-An event that is raised after a new locale is set.
+Raised after the locale changes.
 
 Parameters:
 
 - `sender`: `VisualizerBase`\
-A `VisualizerBase` instance that raised the event.
-
+The current `VisualizerBase` instance.
 - `options.locale`: `string`\
-The indentifier of a new locale (for example, "en").
+The indentifier of a new locale (for example, `"en"`).
 
 **Related APIs:** [`locale`](#locale)
 
 ### `onStateChanged`
 
-An event that is raised when the visualizer's state has changed.
+Raised when the visualizer [state](#state) changes.
 
-The state includes selected chart types, chart layout, sorting, filtering, and other customizations that a user has made while using the dashboard. Handle the `onStateChanged` event to save these customizations, for example, in `localStorage` and restore them when the user reloads the page.
+The state contains user-defined settings such as selected chart type, layout, sorting, filtering, and other runtime customizations. Handle this event to persist these customizations (for example, in `localStorage`) and restore them later.
 
 Parameters:
 
 - `sender`: `VisualizerBase`\
-A `VisualizerBase` instance that raised the event.
-
+The current `VisualizerBase` instance.
 - `state`: `any`\
-A new state of the visualizer. Includes information about the visualized elements and current locale.
+The new state of the visualizer.
 
 [View Demo](https://surveyjs.io/dashboard/examples/save-dashboard-state-to-local-storage/ (linkStyle))
-
-**Related APIs:** [`getState`](#getState), [`setState`](#setState)

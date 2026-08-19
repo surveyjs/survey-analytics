@@ -36,6 +36,6 @@ If a question has more than one [registered](https://surveyjs.io/dashboard/docum
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| `question` | `Question` | A question for which to create a visualizer. |
+| `descriptor` | `any` | A question or type descriptor to create a visualizer. |
 | `data` | `Array<{ [index: string]: any; }>` | A data array with survey results to be visualized. |
 | `options` | `{ [index: string]: any; }` | An object with any custom properties you need within the visualizer. |

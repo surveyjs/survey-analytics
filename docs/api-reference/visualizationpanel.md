@@ -2,24 +2,13 @@
 title: VisualizationPanel
 product: Dashboard
 api-type: class
-description: An object that visualizes survey results and allows users to analyze them.
+description: Obsolete.
 source: https://surveyjs.io/dashboard/documentation/api-reference/visualizationpanel
 ---
 
 # `VisualizationPanel`
 
-An object that visualizes survey results and allows users to analyze them.
-
-Constructor parameters:
-
-- `questions`: Array\<[`Question`](https://surveyjs.io/form-library/documentation/api-reference/question)\>\
-Survey questions to visualize. Call `SurveyModel`'s [`getAllQuestions()`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#getQuestionByName) method to access all survey questions and pass its result as the `questions` parameter.
-- `data`: `Array<any>`\
-Survey results.
-- `vizPanelOptions`: [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions)\
-Visualization Panel configuration.
-
-[View Demo](https://surveyjs.io/dashboard/examples/interactive-survey-data-dashboard/ (linkStyle))
+Obsolete. Use the [`Dashboard`](/dashboard/documentation/api-reference/dashboard) class instead.
 
 ## Inheritance
 
@@ -31,19 +20,19 @@ Visualization Panel configuration.
 
 **Type**: `boolean`
 
-Returns the [`allowDragDrop`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDragDrop) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
+Returns the [`allowDragDrop`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDragDrop) property value passed to the constructor.
 
 ### `allowDynamicLayout`
 
 **Type**: `boolean`
 
-Returns the [`allowDynamicLayout`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowDynamicLayout) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
+Returns the [`allowDynamicLayout`](https://surveyjs.io/dashboard/documentation/api-reference/idashboardoptions#allowDynamicLayout) property value passed to the constructor.
 
 ### `allowHideQuestions`
 
 **Type**: `boolean`
 
-Returns the [`allowHideQuestions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions) property value of the [`IVisualizationPanelOptions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions) object.
+Returns the [`allowHideQuestions`](https://surveyjs.io/dashboard/documentation/api-reference/ivisualizationpaneloptions#allowHideQuestions) property value passed to the constructor.
 
 ### `hiddenElements`
 
@@ -59,13 +48,15 @@ If you want to disallow users to hide visualization items, set the [`allowHideQu
 
 **Type**: `LayoutEngine`
 
-Returns a [`LayoutEngine`](https://surveyjs.io/dashboard/documentation/api-reference/layoutengine) instance used to arrange visualization items on `VisualizationPanel`.
+Returns a [`LayoutEngine`](https://surveyjs.io/dashboard/documentation/api-reference/layoutengine) instance that arranges visualization items within the dashboard.
 
 ### `state`
 
 **Type**: `IState`
 
-The state of `VisualizationPanel`. Includes information about the visualized elements and current locale.
+Gets or sets the Dashboard state.
+
+The state includes configuration of dashboard items and the current locale.
 
 [View Demo](https://surveyjs.io/dashboard/examples/save-dashboard-state-to-local-storage/ (linkStyle))
 
@@ -121,15 +112,9 @@ Returns a [visualizer](https://surveyjs.io/dashboard/documentation/api-reference
 | ---- | ---- | ----------- |
 | `questionName` | `string` | A question [name](https://surveyjs.io/form-library/documentation/api-reference/question#name). |
 
-### `hideAllElements()`
-
-Hides all panel elements. Users can select the elements they want to show from a drop-down menu.
-
-**Related APIs:** [`showAllElements`](#showAllElements), [`allowHideQuestions`](#allowHideQuestions)
-
 ### `refresh()`
 
-Redraws the `VisualizationPanel` and all its content.
+Redraws the dashboard and all its content.
 
 ### `setFilter()`
 
@@ -140,29 +125,9 @@ Filters visualized data based on a specified question name and value. This metho
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | `questionName` | `string` | A question [name](https://surveyjs.io/form-library/documentation/api-reference/question#name). |
-| `selectedValue` | `any` |  |
-
-**Related APIs:** [`IVisualizationPanelOptions.allowSelection`](#IVisualizationPanelOptions.allowSelection)
-
-### `showAllElements()`
-
-Shows all panel elements if they are hidden to a drop-down menu.
-
-**Related APIs:** [`hideAllElements`](#hideAllElements), [`allowHideQuestions`](#allowHideQuestions)
+| `selectedValue` | `any` | A filter value. |
 
 ## Events
-
-### `onAlternativeVisualizerChanged`
-
-An event that is raised when a user selects a different visualizer type from the Type drop-down menu.
-
-Parameters:
-
-- `sender`: `AlternativeVisualizersWrapper`\
-An object that controls altenative visualizers.
-
-- `options.visualizer`: `VisualizerBase`\
-An applied visualizer.
 
 ### `onElementHidden`
 
