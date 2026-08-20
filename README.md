@@ -46,7 +46,7 @@ Or load the library from a CDN, together with `survey-core` and the charting eng
 
 ## Usage
 
-A dashboard is declared with a single options object: pass the survey questions, the response data, and — optionally — the items you want to display and how each of them should look.
+A dashboard is declared with a single options object: pass the survey questions, the response data, and&mdash;optionally&mdash;the items you want to display and how each of them should look.
 
 ```js
 import { Model } from "survey-core";
@@ -83,7 +83,7 @@ const dashboard = new Dashboard({
 });
 ```
 
-Adjustments a user makes at runtime — chart type, sorting, item visibility, layout — are captured in a state object, so user-selected layout and visualization settings can be saved and restored:
+Adjustments a user makes at runtime&mdash;chart type, sorting, item visibility, layout&mdash;are captured in a state object, so user-selected layout and visualization settings can be saved and restored:
 
 ```js
 dashboard.onStateChanged.add((_, state) => {
@@ -95,7 +95,7 @@ dashboard.state = JSON.parse(localStorage.getItem("dashboardState"));
 
 ## Charting Engines
 
-SurveyJS Dashboard supports three interchangeable charting engines. **[Chart.js](https://www.chartjs.org/) is the default** — it is what the main `survey-analytics` entry point renders with, and it produces a noticeably smaller bundle than the alternatives. To use a different engine, import the matching entry point and style sheet instead; the API is identical.
+SurveyJS Dashboard supports three interchangeable charting engines. **[Chart.js](https://www.chartjs.org/) is the default**&mdash;it is what the main `survey-analytics` entry point renders with, and it produces a noticeably smaller bundle than the alternatives. To use a different engine, import the matching entry point and style sheet instead; the API is identical.
 
 | Engine | Import path | Style sheet | UMD global |
 | --- | --- | --- | --- |
@@ -111,7 +111,7 @@ Three further entry points cover the remaining parts of the library:
 | `survey-analytics/survey.analytics.tabulator` | Data table view built on [Tabulator](https://tabulator.info/), with filtering, sorting, and CSV/XLSX export |
 | `survey-analytics/survey.analytics.mongo` | Server-side aggregation: builds MongoDB pipelines so large data sets are summarized in the database instead of the browser |
 
-Import exactly one charting engine per application — each engine registers itself as the active chart adapter, so importing a second one overrides the first.
+Import exactly one charting engine per application&mdash;each engine registers itself as the active chart adapter, so importing a second one overrides the first.
 
 Every style sheet also ships as a minified `.min.css` build. The charting-engine and Tabulator style sheets additionally have a `fontless` variant (for example, `survey.analytics.fontless.css`) that omits the bundled font declarations when the host application supplies its own typography.
 
@@ -158,7 +158,7 @@ Every style sheet also ships as a minified `.min.css` build. The charting-engine
 
 For AI coding agents: [https://surveyjs.io/llms.txt](https://surveyjs.io/llms.txt) indexes the documentation. Any documentation page is also available as raw Markdown — append `.md` to its URL, for example [https://surveyjs.io/dashboard/documentation/overview.md](https://surveyjs.io/dashboard/documentation/overview.md).
 
-## SurveyJS Ecosystem
+## SurveyJS Product Family
 
 | Product | Purpose | License |
 | --- | --- | --- |
