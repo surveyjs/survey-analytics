@@ -81,6 +81,25 @@ test("clear header", () => {
   expect(visualizer["headerContainer"].innerHTML).toBe("");
 });
 
+test("clear removes wrapper so render can be called again", () => {
+  const visualizer = new VisualizerBase(new QuestionDropdownModel("q1"), []);
+  const container = document.createElement("div");
+  visualizer.render(container);
+  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(1);
+  visualizer.clear();
+  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(0);
+  visualizer.render(container);
+  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(1);
+});
+
+test("render is idempotent for the same root container", () => {
+  const visualizer = new VisualizerBase(new QuestionDropdownModel("q1"), []);
+  const container = document.createElement("div");
+  visualizer.render(container);
+  visualizer.render(container);
+  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(1);
+});
+
 test("custom getDataCore function", async () => {
   const statistics = [[1, 2]];
   let visualizer = new VisualizerBase({ name: "q1" } as any, [], { q1: { getDataCore: (dataInfo: IDataInfo) => statistics } });

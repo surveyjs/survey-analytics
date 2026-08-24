@@ -1571,3 +1571,23 @@ test("hideEmptyAnswers=true causes hard update on data change", () => {
   expect(destroyContentSpy).toHaveBeenCalledTimes(1);
   expect(renderContentSpy).toHaveBeenCalledTimes(2);
 });
+
+test("clear + render should not duplicate commercial banner or wrapper", () => {
+  const json = { elements: [{ type: "dropdown", name: "q1", choices: ["a"] }] };
+  const survey = new SurveyModel(json);
+  const vis = new VisualizationPanel(survey.getAllQuestions(), []);
+  const container = document.createElement("div");
+
+  vis.render(container);
+  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(1);
+  const bannerCount = vis["haveCommercialLicense"] ? 0 : 1;
+  expect(container.querySelectorAll(".sa-commercial").length).toBe(bannerCount);
+
+  vis.clear();
+  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(0);
+  expect(container.querySelectorAll(".sa-commercial").length).toBe(0);
+
+  vis.render(container);
+  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(1);
+  expect(container.querySelectorAll(".sa-commercial").length).toBe(bannerCount);
+});

@@ -577,7 +577,7 @@ export class VisualizerBase implements IDataInfo {
   }
 
   /**
-   * Clears the toolbar, header, content, and footer containers.
+   * Clears the toolbar, header, content, and footer containers and removes the license banner and visualizer wrapper from the root.
    *
    * Does not remove the visualizer root element from the DOM. Use [`destroy()`](#destroy) to fully dispose of the visualizer.
    */
@@ -593,6 +593,16 @@ export class VisualizerBase implements IDataInfo {
     }
     if(!!this.footerContainer) {
       this.destroyFooter(this.footerContainer);
+    }
+    if(!!this.renderResult) {
+      const nodesToRemove: Array<Element> = [];
+      for(let i = 0; i < this.renderResult.children.length; i++) {
+        const child = this.renderResult.children[i];
+        if(child.classList.contains("sa-commercial") || child.classList.contains("sa-visualizer-wrapper")) {
+          nodesToRemove.push(child);
+        }
+      }
+      nodesToRemove.forEach((node) => this.renderResult.removeChild(node));
     }
   }
 
@@ -806,6 +816,12 @@ export class VisualizerBase implements IDataInfo {
   render(targetElement: HTMLElement | string, isRoot = true) {
     if(typeof targetElement === "string") {
       targetElement = document.getElementById(targetElement);
+    }
+    if(!!this.renderResult) {
+      this.clear();
+    }
+    if(isRoot || this.renderResult === targetElement) {
+      targetElement.innerHTML = "";
     }
     this.renderResult = targetElement;
     if(isRoot && !this._appliedTheme) {
