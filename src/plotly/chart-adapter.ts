@@ -89,7 +89,9 @@ export class PlotlyChartAdapter implements IChartAdapter {
       displaylogo: false,
       responsive: true,
       locale: localization.currentLocale,
-      modeBarButtonsToRemove: ["toImage"],
+      showSendToCloud: false,
+      showEditInChartStudio: false,
+      modeBarButtonsToRemove: ["toImage", "sendDataToCloud", "sendChartToCloud"],
       modeBarButtonsToAdd: [
         {
           name: "toImageSjs",
