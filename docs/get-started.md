@@ -1,5 +1,5 @@
 ---
-title: SurveyJS Dashboard – Real-Time Survey Data Visualisation and Analysis
+title: SurveyJS Dashboard – Real-Time Survey Data Visualization and Analysis
 description: Get started with SurveyJS Dashboard to visualize and analyze survey results in real time. Render interactive charts and tables, apply filtering and pagination, and create custom data visualizers.
 ---
 

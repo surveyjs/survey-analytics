@@ -35,6 +35,36 @@
       "Title": "Chart Types"
     },
     {
+      "Name": "interactive-features",
+      "Title": "Interactive UI Features",
+      "Items": [
+        {
+          "Name": "date-range-filtering",
+          "Title": "Date Range Filtering"
+        },
+        {
+          "Name": "cross-filtering",
+          "Title": "Cross-Filtering"
+        },
+        {
+          "Name": "sorting",
+          "Title": "Sorting"
+        },
+        {
+          "Name": "visualization-type-selection",
+          "Title": "Visualization Type Selection"
+        },
+        {
+          "Name": "legend-based-series-toggling",
+          "Title": "Legend-Based Series Toggling"
+        },
+        {
+          "Name": "dynamic-layout-management",
+          "Title": "Dynamic Layout Management"
+        }
+      ]
+    },
+    {
       "Name": "set-up-table-view",
       "Title": "Table View for Survey Results",
       "Items": [
@@ -57,17 +87,45 @@
       ]
     },
     {
+      "Name": "integration-with-plotlyjs",
+      "Title": "Integration with Plotly.js"
+    },
+    {
       "Name": "api-reference",
       "Title": "Dashboard API",
-      "UseInPath":  true,
+      "UseInPath": true,
       "Items": [
         {
+          "Name": "dashboard",
+          "Title": "Dashboard"
+        },
+        {
+          "Name": "idashboardoptions",
+          "Title": "IDashboardOptions"
+        },
+        {
+          "Name": "dashboarditem",
+          "Title": "DashboardItem"
+        },
+        {
+          "Name": "idashboarditemoptions",
+          "Title": "IDashboardItemOptions"
+        },
+        {
+          "Name": "ipivotvisualizeroptions",
+          "Title": "IPivotVisualizerOptions"
+        },
+        {
+          "Name": "ipivotseriesoptions",
+          "Title": "IPivotSeriesOptions"
+        },
+        {
           "Name": "visualizationpanel",
-          "Title": "VisualizationPanel"
+          "Title": "VisualizationPanel (Obsolete)"
         },
         {
           "Name": "IVisualizationPanelOptions",
-          "Title": "IVisualizationPanelOptions"
+          "Title": "IVisualizationPanelOptions (Obsolete)"
         },
         {
           "Name": "visualizerbase",

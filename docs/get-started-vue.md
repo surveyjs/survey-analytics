@@ -5,15 +5,16 @@ description: Learn how to add SurveyJS Dashboard to your Vue.js application with
 
 # Add SurveyJS Dashboard to a Vue Application
 
-This step-by-step tutorial will help you get started with SurveyJS Dashboard in a Vue application. To add SurveyJS Dashboard to your application, follow the steps below:
+This tutorial explains how to integrate SurveyJS Dashboard into a Vue application and visualize survey results. Follow the steps below to set up and render a dashboard:
 
 - [Install the `survey-analytics` npm Package](#install-the-survey-analytics-npm-package)
 - [Configure Styles](#configure-styles)
 - [Load Survey Results](#load-survey-results)
-- [Configure the Visualization Panel](#configure-the-visualization-panel)
-- [Render the Visualization Panel](#render-the-visualization-panel)
+- [Configure the Dashboard](#configure-the-dashboard)
+- [Render the Dashboard](#render-the-dashboard)
+- [Activate a SurveyJS License](#activate-a-surveyjs-license)
 
-As a result, you will create the following dashboard:
+The final result is an interactive dashboard similar to the one shown below:
 
 <details>
   <summary>View Live Example</summary>
@@ -26,21 +27,27 @@ As a result, you will create the following dashboard:
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/vue3 (linkStyle))
 
-If you are looking for a quick-start application that includes all SurveyJS components, refer to the following GitHub repository: <a href="https://github.com/surveyjs/surveyjs_vue3_quickstart" target="_blank">SurveyJS + Vue 3 Quickstart Template</a>.
+If you are looking for a quick-start application that includes all SurveyJS components, refer to the following GitHub repositories:
+
+- <a href="https://github.com/surveyjs/surveyjs_vue3_quickstart" target="_blank">SurveyJS + Vue 3</a>
+- <a href="https://github.com/surveyjs/surveyjs-nuxtjs" target="_blank">SurveyJS + Nuxt</a>
+- <a href="https://github.com/surveyjs/surveyjs-vike" target="_blank">SurveyJS + Vike</a>
+- <a href="https://github.com/surveyjs/surveyjs-astro" target="_blank">SurveyJS + Astro</a>
+- <a href="https://github.com/surveyjs/surveyjs-quasar" target="_blank">SurveyJS + Quasar</a>
 
 ## Install the `survey-analytics` npm Package
 
-SurveyJS Dashboard is distributed as a <a href="https://www.npmjs.com/package/survey-analytics" target="_blank">survey-analytics</a> npm package. Run the following command to install it:
+SurveyJS Dashboard is distributed as the <a href="https://www.npmjs.com/package/survey-analytics" target="_blank">survey-analytics</a> npm package. Install it using the following command:
 
-```cmd
-npm install survey-analytics --save
+```sh
+npm install survey-analytics
 ```
 
-SurveyJS Dashboard depends on the <a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a> library. The command above installs this library as a dependency.
+SurveyJS Dashboard uses the <a href="https://www.chartjs.org/" target="_blank">Chart.js</a> library for data visualization. This dependency is installed automatically.
 
 ## Configure Styles
 
-Import the SurveyJS Dashboard style sheet as shown below:
+Create a Vue component that will render your dashboard and import the SurveyJS Dashboard stylesheet as shown below:
 
 ```html
 <script setup lang="ts">
@@ -66,7 +73,7 @@ By default, the Dashboard loads all stored responses and processes them in the b
 
 With client-side processing, the Dashboard loads the full dataset at startup and performs aggregation in the browser. This approach requires more bandwidth and client-side resources, but is sufficient and often simpler for smaller datasets.
 
-To load the survey results, send the survey ID to your server and return an array of JSON objects:
+To retrieve results, send a request to your backend and return an array of JSON objects:
 
 ```html
 <script setup lang="ts">
@@ -75,27 +82,29 @@ import { onMounted } from "vue"
 
 const SURVEY_ID = 1;
 
-function loadSurveyResults (url) {
-  return new Promise((resolve, reject) => {
-    const request = new XMLHttpRequest();
-    request.open('GET', url);
-    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    request.onload = () => {
-      const response = request.response ? JSON.parse(request.response) : [];
-      resolve(response);
+function loadSurveyResults(url: string): Promise<any[]> {
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
-    request.onerror = () => {
-      reject(request.statusText);
-    }
-    request.send();
-  });
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      throw new Error(error.message || 'Network error');
+    });
 }
 
 onMounted(() => {
-  loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
+  loadSurveyResults(`https://your-web-service.com/${SURVEY_ID}`)
     .then((surveyResults) => {
       // ...
-      // Configure and render the Visualization Panel here
+      // Configure and render the Dashboard here
       // Refer to the section below
       // ...
     });
@@ -107,7 +116,7 @@ onMounted(() => {
 </template>
 ```
 
-For demonstration purposes, this tutorial uses predefined survey results. The following code shows a survey model and the structure of the survey results array:
+For demonstration purposes, this tutorial uses predefined survey results:
 
 ```js
 const surveyJson = {
@@ -133,53 +142,55 @@ const surveyJson = {
   completedHtml: "Thank you for your feedback!",
 };
 
-const surveyResults = [{
-  "satisfaction-score": 5,
-  "nps-score": 10
-}, {
-  "satisfaction-score": 5,
-  "nps-score": 9
-}, {
-  "satisfaction-score": 3,
-  "nps-score": 6
-}, {
-  "satisfaction-score": 3,
-  "nps-score": 6
-}, {
-  "satisfaction-score": 2,
-  "nps-score": 3
-}];
+const surveyResults = [
+  { "satisfaction-score": 5, "nps-score": 10 },
+  { "satisfaction-score": 5, "nps-score": 9 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 2, "nps-score": 3 }
+];
 ```
 
-## Configure the Visualization Panel
+<div id="configure-the-visualization-panel"></div>
 
-Analytics charts are displayed in a Visualization Panel. Specify [its properties](/Documentation/Analytics?id=ivisualizationpaneloptions) in a configuration object. In this tutorial, the object enables the [`allowHideQuestions`](/Documentation/Analytics?id=ivisualizationpaneloptions#allowHideQuestions) property:
+## Configure the Dashboard
 
-```js
-const vizPanelOptions = {
-  allowHideQuestions: false
-}
-```
+Pass an [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) object to the [`Dashboard`](/dashboard/documentation/api-reference/dashboard) constructor to configure the dashboard.
 
-Pass the configuration object, survey questions, and results to the `VisualizationPanel` constructor as shown in the code below to instantiate the Visualization Panel. Assign the produced instance to a constant that will be used later to render the component:
+Specify the [`data`](/dashboard/documentation/api-reference/idashboardoptions#data) array to provide survey results. You can then either auto-generate dashboard items based on survey questions or define them manually.
+
+### Auto-Generate Dashboard Items
+
+To generate dashboard items automatically, assign survey questions to the [`questions`](/dashboard/documentation/api-reference/idashboardoptions#questions) property. Use the [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model)'s [`getAllQuestions()`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#getAllQuestions) method to retrieve them.
+
+Each generated item inherits the question's [`name`](/dashboard/documentation/api-reference/idashboarditemoptions#name) and [`title`](/dashboard/documentation/api-reference/idashboarditemoptions#title). The Dashboard also automatically selects a suitable visualization [`type`](/dashboard/documentation/api-reference/idashboarditemoptions#type) and populates the list of available alternative types ([`availableTypes`](/dashboard/documentation/api-reference/idashboarditemoptions#availableTypes)) that users can switch between.
+
+Use the [`items`](/dashboard/documentation/api-reference/idashboardoptions#items) array to control which items appear and override their configuration. This array can include question names and [full configuration objects](/dashboard/documentation/api-reference/idashboarditemoptions). When you specify a configuration object, it is merged with the auto-generated settings.
+
+The following example uses the `items` array to set the default [NPS visualization](https://surveyjs.io/dashboard/documentation/chart-types#nps-visualizer) type for the `nps-score` question:
 
 ```html
 <script setup lang="ts">
 // ...
 import { Model } from 'survey-core'
-import { VisualizationPanel } from 'survey-analytics'
+import { Dashboard } from 'survey-analytics'
 
 const surveyJson = { /* ... */ };
 const surveyResults = [ /* ... */ ];
-const vizPanelOptions = { /* ... */ };
 
 onMounted(() => {
   const survey = new Model(surveyJson);
-  const vizPanel = new VisualizationPanel(
-    survey.getAllQuestions(),
-    surveyResults,
-    vizPanelOptions
-  );
+  const dashboard = new Dashboard({
+    questions: survey.getAllQuestions(),
+    data: surveyResults,
+    items: [
+      "satisfaction-score",
+      {
+        name: "nps-score",
+        type: "nps"
+      }
+    ]
+  });
 });
 </script>
 ```
@@ -191,7 +202,7 @@ onMounted(() => {
 <script setup lang="ts">
 import 'survey-analytics/survey.analytics.css'
 import { Model } from 'survey-core'
-import { VisualizationPanel } from 'survey-analytics'
+import { Dashboard } from 'survey-analytics'
 import { onMounted } from 'vue'
 
 const surveyJson = {
@@ -217,34 +228,27 @@ const surveyJson = {
   completedHtml: "Thank you for your feedback!",
 };
 
-const surveyResults = [{
-  "satisfaction-score": 5,
-  "nps-score": 10
-}, {
-  "satisfaction-score": 5,
-  "nps-score": 9
-}, {
-  "satisfaction-score": 3,
-  "nps-score": 6
-}, {
-  "satisfaction-score": 3,
-  "nps-score": 6
-}, {
-  "satisfaction-score": 2,
-  "nps-score": 3
-}];
-
-const vizPanelOptions = {
-  allowHideQuestions: false
-}
+const surveyResults = [
+  { "satisfaction-score": 5, "nps-score": 10 },
+  { "satisfaction-score": 5, "nps-score": 9 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 2, "nps-score": 3 }
+];
 
 onMounted(() => {
   const survey = new Model(surveyJson);
-  const vizPanel = new VisualizationPanel(
-    survey.getAllQuestions(),
-    surveyResults,
-    vizPanelOptions
-  );
+  const dashboard = new Dashboard({
+    questions: survey.getAllQuestions(),
+    data: surveyResults,
+    items: [
+      "satisfaction-score",
+      {
+        name: "nps-score",
+        type: "nps"
+      }
+    ]
+  });
 });
 </script>
 
@@ -254,25 +258,105 @@ onMounted(() => {
 
 </details>
 
-## Render the Visualization Panel
+### Configure Dashboard Items Manually
 
-Switch to the component template. Add a page element that will serve as the Visualization Panel container. To render the Visualization Panel in the page element, call the `render(containerId)` method on the Visualization Panel instance you created in the previous step:
+If your dashboard is not based on a survey schema, configure all items explicitly. Populate the [`items`](/dashboard/documentation/api-reference/idashboardoptions#items) array with [`IDashboardItemOptions`](/dashboard/documentation/api-reference/idashboarditemoptions) objects. Use the [`name`](/dashboard/documentation/api-reference/idashboarditemoptions#name) property to bind each item to a data field.
+
+```html
+<script setup lang="ts">
+// ...
+import { Dashboard } from 'survey-analytics'
+
+const surveyResults = [ /* ... */ ];
+
+onMounted(() => {
+  const dashboard = new Dashboard({
+    data: surveyResults,
+    items: [
+      {
+        name: "satisfaction-score",
+        type: "bar",
+        title: "CSAT",
+        availableTypes: [ "bar", "vbar", "pie", "gauge" ]
+      },
+      {
+        name: "nps-score",
+        type: "nps",
+        title: "NPS Score",
+        allowChangeType: false
+      }
+    ]
+  });
+});
+</script>
+```
+
+<details>
+    <summary>View Full Code</summary>
+
+```html
+<script setup lang="ts">
+import 'survey-analytics/survey.analytics.css'
+import { Dashboard } from 'survey-analytics'
+import { onMounted } from 'vue'
+
+const surveyResults = [
+  { "satisfaction-score": 5, "nps-score": 10 },
+  { "satisfaction-score": 5, "nps-score": 9 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 2, "nps-score": 3 }
+];
+
+onMounted(() => {
+  const survey = new Model(surveyJson);
+  const dashboard = new Dashboard({
+    data: surveyResults,
+    items: [
+      {
+        name: "satisfaction-score",
+        type: "bar",
+        title: "CSAT",
+        availableTypes: [ "bar", "vbar", "pie", "gauge" ]
+      },
+      {
+        name: "nps-score",
+        type: "nps",
+        title: "NPS Score",
+        allowChangeType: false
+      }
+    ]
+  });
+});
+</script>
+
+<template>
+</template>
+```
+
+</details>
+
+<div id="render-the-visualization-panel"></div>
+
+## Render the Dashboard
+
+Add a container element to the component template and call the [`render(containerId)`](/dashboard/documentation/api-reference/dashboard#render) method on the `Dashboard` instance you configured to mount the dashboard.
 
 ```html
 <script setup lang="ts">
 // ...
 onMounted(() => {
   // ...
-  vizPanel.render("surveyVizPanel");
+  dashboard.render("dashboard");
 });
 </script>
 
 <template>
-  <div id="surveyVizPanel" />
+  <div id="dashboard" />
 </template>
 ```
 
-To view the application, run `npm run dev` in a command line and open [http://localhost:5173/](http://localhost:5173/) in your browser.
+Run the application with `npm run dev` and open [http://localhost:5173/](http://localhost:5173/) in your browser.
 
 <details>
     <summary>View Full Code</summary>
@@ -281,7 +365,7 @@ To view the application, run `npm run dev` in a command line and open [http://lo
 <script setup lang="ts">
 import 'survey-analytics/survey.analytics.css'
 import { Model } from 'survey-core'
-import { VisualizationPanel } from 'survey-analytics'
+import { Dashboard } from 'survey-analytics'
 import { onMounted } from "vue"
 
 const surveyJson = {
@@ -307,40 +391,33 @@ const surveyJson = {
   completedHtml: "Thank you for your feedback!",
 };
 
-const surveyResults = [{
-  "satisfaction-score": 5,
-  "nps-score": 10
-}, {
-  "satisfaction-score": 5,
-  "nps-score": 9
-}, {
-  "satisfaction-score": 3,
-  "nps-score": 6
-}, {
-  "satisfaction-score": 3,
-  "nps-score": 6
-}, {
-  "satisfaction-score": 2,
-  "nps-score": 3
-}];
-
-const vizPanelOptions = {
-  allowHideQuestions: false
-}
+const surveyResults = [
+  { "satisfaction-score": 5, "nps-score": 10 },
+  { "satisfaction-score": 5, "nps-score": 9 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 2, "nps-score": 3 }
+];
 
 onMounted(() => {
   const survey = new Model(surveyJson);
-  const vizPanel = new VisualizationPanel(
-    survey.getAllQuestions(),
-    surveyResults,
-    vizPanelOptions
-  );
-  vizPanel.render("surveyVizPanel");
+  const dashboard = new Dashboard({
+    questions: survey.getAllQuestions(),
+    data: surveyResults,
+    items: [
+      "satisfaction-score",
+      {
+        name: "nps-score",
+        type: "nps"
+      }
+    ]
+  });
+  dashboard.render("dashboard");
 });
 </script>
 
 <template>
-  <div id="surveyVizPanel" />
+  <div id="dashboard" />
 </template>
 ```
 </details>
@@ -351,7 +428,7 @@ onMounted(() => {
 
 SurveyJS Dashboard is not available for free commercial use. To integrate it into your application, you must purchase a [commercial license](https://surveyjs.io/licensing) for the software developer(s) who will be working with the Dashboard APIs and implementing the integration. If you use SurveyJS Dashboard without a license, an alert banner will appear at the top of the interface:
 
-<img src="images/alert-banner-dashboard.png" alt="SurveyJS Dashboard: Alert banner" width="772" height="561">
+<img src="images/alert-banner-dashboard.png" alt="SurveyJS Dashboard: Alert banner" width="1544" height="656">
 
 After purchasing a license, follow the steps below to activate it and remove the alert banner:
 

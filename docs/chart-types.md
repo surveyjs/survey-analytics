@@ -11,9 +11,9 @@ SurveyJS Dashboard visualizes survey data using different types of charts. This 
 
 A bar chart visualizes categorical data with rectangular bars. The length of each bar is proportional to the value it represents. SurveyJS Dashboard supports vertical and horizontal bar charts.
 
-<img src="images/chart-types-bar.png" width="374" height="423" alt="SurveyJS Dashboard: Horizontal bar chart">
+<img src="images/chart-types-bar.png" width="666" height="625" alt="SurveyJS Dashboard: Horizontal bar chart">
 
-<img src="images/chart-types-vertical-bar.png" width="374" height="423" alt="SurveyJS Dashboard: Vertical bar chart">
+<img src="images/chart-types-vertical-bar.png" width="666" height="625" alt="SurveyJS Dashboard: Vertical bar chart">
 
 Bar charts are supported by the question types listed below:
 
@@ -33,7 +33,7 @@ Bar charts are supported by the question types listed below:
 
 A pie chart is a circular graph divided into slices that represent proportions of a whole. Pie charts are great for visualizing how each category contributes to a total. They work best with fewer categories because a bigger number of slices can make chart interpretation difficult.
 
-<img src="images/chart-types-pie.png" width="520" height="376" alt="SurveyJS Dashboard: Pie chart">
+<img src="images/chart-types-pie.png" width="666" height="383" alt="SurveyJS Dashboard: Pie chart">
 
 Pie charts are supported by the following question types:
 
@@ -50,7 +50,7 @@ Pie charts are supported by the following question types:
 
 A doughnut chart is a pie chart but with a blank center. This shape may help reduce visual clutter and draw viewer's attention to the length of the arc rather than the area of the slices.
 
-<img src="images/chart-types-doughnut.png" width="520" height="377" alt="SurveyJS Dashboard: Doughnut chart">
+<img src="images/chart-types-doughnut.png" width="666" height="383" alt="SurveyJS Dashboard: Doughnut chart">
 
 Doughnut charts are supported by the following question types:
 
@@ -67,9 +67,8 @@ Doughnut charts are supported by the following question types:
 
 A histogram is a chart type that visualizes the distribution of a dataset. It divides a continuous data range into intervals and shows how many data points fall within each interval. Histograms support both vertical and horizontal views.  
 
-<img src="images/chart-types-vertical-histogram.png" width="374" height="440" alt="SurveyJS Dashboard: Vertical histogram">
-
-<img src="images/chart-types-horizontal-histogram.png" width="374" height="440" alt="SurveyJS Dashboard: Horizontal histogram">
+<img src="images/chart-types-vertical-histogram.png" width="671" height="580" alt="SurveyJS Dashboard: Vertical histogram">
+<img src="images/chart-types-horizontal-histogram.png" width="671" height="508" alt="SurveyJS Dashboard: Horizontal histogram">
 
 Histograms are supported by the following question types:
 
@@ -81,9 +80,9 @@ Histograms are supported by the following question types:
 
 ## Gauge Chart
 
-A gauge chart is used to display a single numeric value, which is the average of a given dataset. The gauge chart takes the form of a semicircle with scale marks along the arc. Inside the arc is a needle or bar indicating the value.
+A gauge chart displays a single average value of a dataset using a semicircular dial. The filled arc represents the current value's position along the scale, and the exact number is shown prominently at the center.
 
-<img src="images/chart-types-gauge.png" width="557" height="475" alt="SurveyJS Dashboard: Gauge chart">
+<img src="images/chart-types-gauge.png" width="665" height="444" alt="SurveyJS Dashboard: Gauge chart">
 
 Gauge charts are supported by the following question types:
 
@@ -92,13 +91,11 @@ Gauge charts are supported by the following question types:
 - [Expression](https://surveyjs.io/form-library/examples/expression-question-for-dynamic-form-calculations/)
 - Any of these question types used within a [Multi-Select Matrix](https://surveyjs.io/form-library/examples/multi-select-matrix-question/), [Dynamic Matrix](https://surveyjs.io/form-library/examples/dynamic-matrix-add-new-rows/), or [Dynamic Panel](https://surveyjs.io/form-library/examples/duplicate-group-of-fields-in-form/)
 
-[View Demo](https://surveyjs.io/dashboard/examples/how-to-customize-plotly-gauge-chart-javascript/ (linkStyle))
-
 ## Bullet Chart
 
-A bullet chart visualizes a single number on a horizontal strip. Similar to a gauge, it displays the average of a dataset, with the value indicated by a bar. The strip displays scale marks along its length, similar to the scale on a gauge's semicircle.
+A bullet chart visualizes a single number on a horizontal strip. Similar to a gauge, it displays the average of a dataset, with the value indicated by a bar. The strip displays scale marks along its length.
 
-<img src="images/chart-types-bullet.png" width="557" height="475" alt="SurveyJS Dashboard: Bullet chart">
+<img src="images/chart-types-bullet.png" width="665" height="295" alt="SurveyJS Dashboard: Bullet chart">
 
 Bullet charts are supported by the following question types:
 
@@ -111,19 +108,19 @@ Bullet charts are supported by the following question types:
 
 A radar chart, also known as "spider chart" or "web chart", displays multivariate data as a two-dimensional chart in which multiple axes are arranged in a circle and radiate from the same central point. Each data point is plotted on its corresponding axis, and the points are connected to form a polygon. Radar charts provide a quick and intuitive way to compare values across different variables, making it easy to identify strengths and weaknesses at a glance.
 
-<img src="images/radar-chart.png" width="914" height="678" alt="SurveyJS Dashboard: Radar chart">
+<img src="images/radar-chart.png" width="666" height="619" alt="SurveyJS Dashboard: Radar chart">
 
 Radar charts are supported by the following question types:
 
 - [Ranking](https://surveyjs.io/form-library/examples/add-ranking-question-to-form/)
 
-[View Demo](/dashboard/examples/radar-chart/ (linkStyle))
+[View Demo](/dashboard/examples/smartphone-user-experience-survey-analysis/ (linkStyle))
 
 ## Stacked Bar Chart
 
 A stacked bar chart displays each bar divided into multiple segments that visualize the percentage contribution of each category. The total length of bars represents 100%. Stacked bar charts are useful for showing the breakdown of a total into its individual components.
 
-<img src="images/chart-types-stacked-bar.png" width="718" height="392" alt="SurveyJS Dashboard: Stacked bar chart">
+<img src="images/chart-types-stacked-bar.png" width="772" height="455" alt="SurveyJS Dashboard: Stacked bar chart">
 
 Stacked bar charts are supported by the following question types:
 
@@ -131,9 +128,9 @@ Stacked bar charts are supported by the following question types:
 
 ## Word Cloud
 
-A word cloud (also "text cloud" or "tag cloud") visualizes textual data by adjusting the size of words based on their frequency. Word clouds are useful for analyzing large collections of textual data as they provide an immediate and illustrative summary of it.
+A word cloud (also "text cloud" or "tag cloud") visualizes textual data by adjusting word size based on frequency. More frequent words appear larger, which makes the key terms easy to identify. Word clouds are useful for summarizing large text datasets and providing a quick, visual overview of the most prominent terms.
 
-<img src="images/chart-types-word-cloud.png" width="678" height="503" alt="SurveyJS Dashboard: Word cloud">
+<img src="images/chart-types-word-cloud.png" width="666" height="396" alt="SurveyJS Dashboard: Word cloud">
 
 Word clouds are supported by the following question types:
 
@@ -146,7 +143,7 @@ Word clouds are supported by the following question types:
 
 A text table is a visualization type that displays textual data in a simple table, without applying any data aggregation.
 
-<img src="images/chart-types-table.png" width="677" height="409" alt="SurveyJS Dashboard: Table visualizer">
+<img src="images/chart-types-table.png" width="666" height="680" alt="SurveyJS Dashboard: Table visualizer">
 
 Text tables are supported by the following question types:
 
@@ -159,13 +156,14 @@ Text tables are supported by the following question types:
 
 A statistics table is a visualization type that aggregates data from single- and multi-select questions and displays it in a tabular format.
 
-<img src="images/chart-types-statistics-table.png" width="719" height="572" alt="SurveyJS Dashboard: Statistics table">
+<img src="images/chart-types-statistics-table.png" width="666" height="543" alt="SurveyJS Dashboard: Statistics table">
 
 Statistics tables are supported by the following question types:
 
 - [Radio Button Group](https://surveyjs.io/form-library/examples/single-select-radio-button-group/)
 - [Checkboxes](https://surveyjs.io/form-library/examples/create-checkboxes-question-in-javascript/)
 - [Dropdown](https://surveyjs.io/form-library/examples/create-dropdown-menu-in-javascript/)
+- [Yes/No (Boolean)](https://surveyjs.io/form-library/examples/yes-no-question/)
 
 ## NPS Visualizer
 
@@ -177,17 +175,100 @@ An NPS visualizer is a chart designed specifically for Net Promoter Score (NPS) 
 
 To calculate the NPS, the percentage of detractors should be subtracted from that of promoters.
 
-<img src="images/chart-types-nps.png" width="778" height="225" alt="SurveyJS Dashboard: NPS visualizer">
+<img src="images/chart-types-nps.png" width="721" height="374" alt="SurveyJS Dashboard: NPS visualizer">
 
-The NPS visualizer is supported only by [Rating Scale](https://surveyjs.io/form-library/examples/rating-scale/) questions, standalone or used within a [Multi-Select Matrix](https://surveyjs.io/form-library/examples/multi-select-matrix-question/), [Dynamic Matrix](https://surveyjs.io/form-library/examples/dynamic-matrix-add-new-rows/), or [Dynamic Panel](https://surveyjs.io/form-library/examples/duplicate-group-of-fields-in-form/). This visualizer is disabled by default. To enable it, use the following code:
+The NPS visualizer is supported only by [Rating Scale](https://surveyjs.io/form-library/examples/rating-scale/) questions, standalone or used within a [Multi-Select Matrix](https://surveyjs.io/form-library/examples/multi-select-matrix-question/), [Dynamic Matrix](https://surveyjs.io/form-library/examples/dynamic-matrix-add-new-rows/), or [Dynamic Panel](https://surveyjs.io/form-library/examples/duplicate-group-of-fields-in-form/). This visualizer is disabled by default. To enable it, set the [`type`](/dashboard/documentation/api-reference/idashboarditemoptions#type) property to `"nps"` for the dashboard item associated with the NPS question:
 
 ```js
-import { VisualizationManager, NpsVisualizer } from "survey-analytics";
+import { Dashboard } from "survey-analytics";
+// ...
+// Omitted: Data loading and `SurveyModel` initialization
+// ...
+const dashboard = new Dashboard({
+  questions: survey.getAllQuestions(),
+  data: dataFromServer,
+  items: [{
+    name: "nps_score",
+    type: "nps"
+  },
+  // ...
+  ]
+});
+```
 
-VisualizationManager.registerVisualizer("rating", NpsVisualizer);
+If you want the NPS visualization to be available for selection without making it the default, add `"nps"` to the [`availableTypes`](/dashboard/documentation/api-reference/idashboarditemoptions#availableTypes) array of the NPS dashboard item:
+
+```js
+import { Dashboard } from "survey-analytics";
+// ...
+// Omitted: Data loading and `SurveyModel` initialization
+// ...
+const dashboard = new Dashboard({
+  questions: survey.getAllQuestions(),
+  data: dataFromServer,
+  items: [{
+    name: "nps_score",
+    availableTypes: ["bar", "vbar", "pie", "doughnut", "gauge", "bullet", "nps"]
+  },
+  // ...
+  ]
+});
 ```
 
 [View Demo](https://surveyjs.io/dashboard/examples/how-to-visualize-net-promoter-score-results/ (linkStyle))
+
+## Response Count
+
+The response count visualization displays the total number of submitted responses in the dataset. It presents a single aggregated value, making it useful for quickly assessing dataset size.
+
+<img src="images/chart-type-response-count.png" width="666" height="212" alt="SurveyJS Dashboard: Response count visualization">
+
+To include this visualization in the dashboard, add an object with the [`type`](/dashboard/documentation/api-reference/idashboarditemoptions#type) property set to `"responsecount"` to the [`items`](/dashboard/documentation/api-reference/idashboardoptions#items) array. You can also specify a custom [`title`](/dashboard/documentation/api-reference/idashboarditemoptions#title):
+
+```js
+import { Dashboard } from "survey-analytics";
+// ...
+// Omitted: Data loading and `SurveyModel` initialization
+// ...
+const dashboard = new Dashboard({
+  questions: survey.getAllQuestions(),
+  data: dataFromServer,
+  items: [
+    // ...
+    { type: "responsecount", title: "Total responses" },
+    // ...
+  ]
+});
+```
+
+[View Demo](/dashboard/examples/student-feedback-survey-analysis/ (linkStyle))
+
+
+## Pivot Chart
+
+A pivot chart visualizes aggregated data across multiple dimensions, enabling multidimensional analysis. It groups data into categories and series, applies aggregation functions (such as count, sum, or average), and renders the results as an interactive chart. Users can dynamically reconfigure dimensions and aggregation settings to explore patterns, compare segments, and identify correlations within the dataset.
+
+<img src="images/chart-types-pivot.png" width="1544" height="718" alt="SurveyJS Dashboard: Pivot chart">
+
+To add a pivot chart to the Dashboard, include a dashboard item with the [`type`](/dashboard/documentation/api-reference/idashboarditemoptions#type) property set to `"pivot"`. Specify the item's [`name`](/dashboard/documentation/api-reference/idashboarditemoptions#name) and [`title`](/dashboard/documentation/api-reference/idashboarditemoptions#title), and provide the set of survey questions available for user selection via the [`questions`](/dashboard/documentation/api-reference/ipivotvisualizeroptions#questions) array:
+
+```js
+import { Dashboard } from "survey-analytics";
+// ...
+// Omitted: Data loading and `SurveyModel` initialization
+// ...
+const dashboard = new Dashboard({
+  data: dataFromServer,
+  items: [{
+    name: "pivot-chart",
+    type: "pivot",
+    title: "Household Income and Demographics Analysis",
+    questions: survey.getAllQuestions()
+  }]
+});
+```
+
+[View Demo](/dashboard/examples/household-income-analysis-pivot-chart/ (linkStyle))
 
 
 <!--

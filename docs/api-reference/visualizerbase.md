@@ -124,7 +124,7 @@ Available since: v3.0.0
 
 ### `clear()`
 
-Clears the toolbar, header, content, and footer containers.
+Clears the toolbar, header, content, and footer containers and removes the license banner and visualizer wrapper from the root.
 
 Does not remove the visualizer root element from the DOM. Use [`destroy()`](#destroy) to fully dispose of the visualizer.
 

@@ -5,15 +5,16 @@ description: Learn how to add SurveyJS Dashboard to your Angular application wit
 
 # Add SurveyJS Dashboard to an Angular Application
 
-This step-by-step tutorial will help you get started with SurveyJS Dashboard in an Angular application. To add SurveyJS Dashboard to your application, follow the steps below:
+This tutorial explains how to integrate SurveyJS Dashboard into an Angular application and visualize survey results. Follow the steps below to set up and render a dashboard:
 
 - [Install the `survey-analytics` npm Package](#install-the-survey-analytics-npm-package)
 - [Configure Styles](#configure-styles)
 - [Load Survey Results](#load-survey-results)
-- [Configure the Visualization Panel](#configure-the-visualization-panel)
-- [Render the Visualization Panel](#render-the-visualization-panel)
+- [Configure the Dashboard](#configure-the-dashboard)
+- [Render the Dashboard](#render-the-dashboard)
+- [Activate a SurveyJS License](#activate-a-surveyjs-license)
 
-As a result, you will create the following dashboard:
+The final result is an interactive dashboard similar to the one shown below:
 
 <details>
   <summary>View Live Example</summary>
@@ -26,61 +27,27 @@ As a result, you will create the following dashboard:
 
 [View Full Code on GitHub](https://github.com/surveyjs/code-examples/tree/main/get-started-analytics/angular (linkStyle))
 
-If you are looking for a quick-start application that includes all SurveyJS components, refer to the following GitHub repository: <a href="https://github.com/surveyjs/surveyjs_angular_cli" target="_blank">SurveyJS + Angular CLI Quickstart Template</a>.
+If you need a preconfigured starter project with all SurveyJS components, refer to the following repository: <a href="https://github.com/surveyjs/surveyjs_angular_cli" target="_blank">SurveyJS + Angular CLI Quickstart Template</a>.
 
 ## Install the `survey-analytics` npm Package
 
-SurveyJS Dashboard is distributed as a <a href="https://www.npmjs.com/package/survey-analytics" target="_blank">survey-analytics</a> npm package. Run the following command to install it:
+SurveyJS Dashboard is distributed as the <a href="https://www.npmjs.com/package/survey-analytics" target="_blank">survey-analytics</a> npm package. Install it using the following command:
 
-```cmd
-npm install survey-analytics --save
+```sh
+npm install survey-analytics
 ```
 
-SurveyJS Dashboard depends on the <a href="https://github.com/plotly/plotly.js#readme" target="_blank">Plotly.js</a> library. Use the following commands to install type definitions for this library:
-
-```cmd
-npm i @types/plotly.js-dist-min --save-dev
-```
-
-Due to the design of Plotly.js exports, you should also open the `tsconfig.json` file and set the `allowSyntheticDefaultImports` flag to `true`:
-
-```json
-{
-  "compilerOptions": {
-    // ...
-    "allowSyntheticDefaultImports": true
-  }
-}
-```
+SurveyJS Dashboard uses the <a href="https://www.chartjs.org/" target="_blank">Chart.js</a> library for data visualization. This dependency is installed automatically.
 
 ## Configure Styles
 
-Open the `angular.json` file and reference the SurveyJS Dashboard style sheet:
+Open the `angular.json` file and add the SurveyJS Dashboard stylesheet to the `styles` array:
 
 ```js
-{
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  // ...
-  "projects": {
-    "project-name": {
-      "projectType": "application",
-      // ...
-      "architect": {
-        "build": {
-          // ...
-          "options": {
-            // ...
-            "styles": [
-              "src/styles.css",
-              "node_modules/survey-analytics/survey.analytics.min.css"
-            ],
-            // ...
-          }
-        }
-      }
-    }
-  }
-}
+"styles": [
+  "src/styles.css",
+  "node_modules/survey-analytics/survey.analytics.min.css"
+]
 ```
 
 ## Load Survey Results
@@ -97,7 +64,7 @@ By default, the Dashboard loads all stored responses and processes them in the b
 
 With client-side processing, the Dashboard loads the full dataset at startup and performs aggregation in the browser. This approach requires more bandwidth and client-side resources, but is sufficient and often simpler for smaller datasets.
 
-To load the survey results, send the survey ID to your server and return an array of JSON objects:
+To retrieve results, send a request to your backend and return an array of JSON objects:
 
 ```js
 import { AfterViewInit, Component } from '@angular/core';
@@ -109,35 +76,42 @@ const SURVEY_ID = 1;
 })
 export class AppComponent implements AfterViewInit {
   // ...
-  ngAfterViewInit(): void {
-    loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
-      .then((surveyResults) => {
-        // ...
-        // Configure and render the Visualization Panel here
-        // Refer to the help topics below
-        // ...
-      });
+  async ngAfterViewInit(): Promise<void> {
+    try {
+      const surveyResults = await loadSurveyResults(
+        `https://your-web-service.com/${SURVEY_ID}`
+      );
+
+      // ...
+      // Configure and render the Dashboard here
+      // Refer to the section below
+      // ...
+    } catch (error) {
+      console.error('Failed to load survey results:', error);
+    }
   }
 }
 
-function loadSurveyResults (url) {
-  return new Promise((resolve, reject) => {
-    const request = new XMLHttpRequest();
-    request.open('GET', url);
-    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    request.onload = () => {
-      const response = request.response ? JSON.parse(request.response) : [];
-      resolve(response);
+function loadSurveyResults(url: string): Promise<any[]> {
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
-    request.onerror = () => {
-      reject(request.statusText);
-    }
-    request.send();
-  });
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      throw new Error(error.message || 'Network error');
+    });
 }
 ```
 
-For demonstration purposes, this tutorial uses predefined survey results. The following code shows a survey model and the structure of the survey results array:
+For demonstration purposes, this tutorial uses predefined survey results:
 
 ```js
 const surveyJson = {
@@ -163,44 +137,40 @@ const surveyJson = {
   completedHtml: "Thank you for your feedback!",
 };
 
-const surveyResults = [{
-  "satisfaction-score": 5,
-  "nps-score": 10
-}, {
-  "satisfaction-score": 5,
-  "nps-score": 9
-}, {
-  "satisfaction-score": 3,
-  "nps-score": 6
-}, {
-  "satisfaction-score": 3,
-  "nps-score": 6
-}, {
-  "satisfaction-score": 2,
-  "nps-score": 3
-}];
+const surveyResults = [
+  { "satisfaction-score": 5, "nps-score": 10 },
+  { "satisfaction-score": 5, "nps-score": 9 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 2, "nps-score": 3 }
+];
 ```
 
-## Configure the Visualization Panel
+<div id="configure-the-visualization-panel"></div>
 
-Analytics charts are displayed in a Visualization Panel. Specify [its properties](/Documentation/Analytics?id=ivisualizationpaneloptions) in a configuration object. In this tutorial, the object enables the [`allowHideQuestions`](/Documentation/Analytics?id=ivisualizationpaneloptions#allowHideQuestions) property:
+## Configure the Dashboard
 
-```js
-const vizPanelOptions = {
-  allowHideQuestions: false
-}
-```
+Pass an [`IDashboardOptions`](/dashboard/documentation/api-reference/idashboardoptions) object to the [`Dashboard`](/dashboard/documentation/api-reference/dashboard) constructor to configure the dashboard.
 
-Pass the configuration object, survey questions, and results to the `VisualizationPanel` constructor as shown in the code below to instantiate the Visualization Panel. Assign the produced instance to a constant that will be used later to render the component:
+Specify the [`data`](/dashboard/documentation/api-reference/idashboardoptions#data) array to provide survey results. You can then either auto-generate dashboard items based on survey questions or define them manually.
+
+### Auto-Generate Dashboard Items
+
+To generate dashboard items automatically, assign survey questions to the [`questions`](/dashboard/documentation/api-reference/idashboardoptions#questions) property. Use the [`SurveyModel`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model)'s [`getAllQuestions()`](https://surveyjs.io/form-library/documentation/api-reference/survey-data-model#getAllQuestions) method to retrieve them.
+
+Each generated item inherits the question's [`name`](/dashboard/documentation/api-reference/idashboarditemoptions#name) and [`title`](/dashboard/documentation/api-reference/idashboarditemoptions#title). The Dashboard also automatically selects a suitable visualization [`type`](/dashboard/documentation/api-reference/idashboarditemoptions#type) and populates the list of available alternative types ([`availableTypes`](/dashboard/documentation/api-reference/idashboarditemoptions#availableTypes)) that users can switch between.
+
+Use the [`items`](/dashboard/documentation/api-reference/idashboardoptions#items) array to control which items appear and override their configuration. This array can include question names and [full configuration objects](/dashboard/documentation/api-reference/idashboarditemoptions). When you specify a configuration object, it is merged with the auto-generated settings.
+
+The following example uses the `items` array to set the default [NPS visualization](https://surveyjs.io/dashboard/documentation/chart-types#nps-visualizer) type for the `nps-score` question:
 
 ```js
 import { AfterViewInit, Component } from '@angular/core';
 import { Model } from 'survey-core';
-import { VisualizationPanel } from 'survey-analytics';
+import { Dashboard } from 'survey-analytics';
 
 const surveyJson = { /* ... */ };
 const surveyResults = [ /* ... */ ];
-const vizPanelOptions = { /* ... */ };
 
 @Component({
   // ...
@@ -208,11 +178,17 @@ const vizPanelOptions = { /* ... */ };
 export class AppComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     const survey = new Model(surveyJson);
-    const vizPanel = new VisualizationPanel(
-      survey.getAllQuestions(),
-      surveyResults,
-      vizPanelOptions
-    );
+    const dashboard = new Dashboard({
+      questions: survey.getAllQuestions(),
+      data: surveyResults,
+      items: [
+        "satisfaction-score",
+        {
+          name: "nps-score",
+          type: "nps"
+        }
+      ]
+    });
   }
 }
 ```
@@ -223,7 +199,7 @@ export class AppComponent implements AfterViewInit {
 ```js
 import { AfterViewInit, Component } from '@angular/core';
 import { Model } from 'survey-core';
-import { VisualizationPanel } from 'survey-analytics';
+import { Dashboard } from 'survey-analytics';
 
 const surveyJson = {
   elements: [{
@@ -248,26 +224,13 @@ const surveyJson = {
   completedHtml: "Thank you for your feedback!",
 };
 
-const surveyResults = [{
-  "satisfaction-score": 5,
-  "nps-score": 10
-}, {
-  "satisfaction-score": 5,
-  "nps-score": 9
-}, {
-  "satisfaction-score": 3,
-  "nps-score": 6
-}, {
-  "satisfaction-score": 3,
-  "nps-score": 6
-}, {
-  "satisfaction-score": 2,
-  "nps-score": 3
-}];
-
-const vizPanelOptions = {
-  allowHideQuestions: false
-}
+const surveyResults = [
+  { "satisfaction-score": 5, "nps-score": 10 },
+  { "satisfaction-score": 5, "nps-score": 9 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 2, "nps-score": 3 }
+];
 
 @Component({
   selector: 'app-root',
@@ -279,27 +242,118 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const survey = new Model(surveyJson);
-    const vizPanel = new VisualizationPanel(
-      survey.getAllQuestions(),
-      surveyResults,
-      vizPanelOptions
-    );
+    const dashboard = new Dashboard({
+      questions: survey.getAllQuestions(),
+      data: surveyResults,
+      items: [
+        "satisfaction-score",
+        {
+          name: "nps-score",
+          type: "nps"
+        }
+      ]
+    });
   }
 }
 ```
 
 </details>
 
-## Render the Visualization Panel
+### Configure Dashboard Items Manually
 
-Switch to the component template. Add a page element that will serve as the Visualization Panel container:
+If your dashboard is not based on a survey schema, configure all items explicitly. Populate the [`items`](/dashboard/documentation/api-reference/idashboardoptions#items) array with [`IDashboardItemOptions`](/dashboard/documentation/api-reference/idashboarditemoptions) objects. Use the [`name`](/dashboard/documentation/api-reference/idashboarditemoptions#name) property to bind each item to a data field.
 
-```html
-<!-- app.component.html -->
-<div id="surveyVizPanel"></div>
+```js
+import { AfterViewInit, Component } from '@angular/core';
+import { Dashboard } from 'survey-analytics';
+
+const surveyResults = [ /* ... */ ];
+
+@Component({
+  // ...
+})
+export class AppComponent implements AfterViewInit {
+  ngAfterViewInit(): void {
+    const dashboard = new Dashboard({
+      data: surveyResults,
+      items: [
+        {
+          name: "satisfaction-score",
+          type: "bar",
+          title: "CSAT",
+          availableTypes: [ "bar", "vbar", "pie", "gauge" ]
+        },
+        {
+          name: "nps-score",
+          type: "nps",
+          title: "NPS Score",
+          allowChangeType: false
+        }
+      ]
+    });
+  }
+}
 ```
 
-To render the Visualization Panel in the page element, call the `render(containerId)` method on the Visualization Panel instance you created in the previous step:
+<details>
+    <summary>View Full Code</summary>
+
+```js
+import { AfterViewInit, Component } from '@angular/core';
+import { Dashboard } from 'survey-analytics';
+
+const surveyResults = [
+  { "satisfaction-score": 5, "nps-score": 10 },
+  { "satisfaction-score": 5, "nps-score": 9 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 2, "nps-score": 3 }
+];
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements AfterViewInit {
+  title = 'SurveyJS Dashboard for Angular';
+
+  ngAfterViewInit(): void {
+    const survey = new Model(surveyJson);
+    const dashboard = new Dashboard({
+      data: surveyResults,
+      items: [
+        {
+          name: "satisfaction-score",
+          type: "bar",
+          title: "CSAT",
+          availableTypes: [ "bar", "vbar", "pie", "gauge" ]
+        },
+        {
+          name: "nps-score",
+          type: "nps",
+          title: "NPS Score",
+          allowChangeType: false
+        }
+      ]
+    });
+  }
+}
+```
+
+</details>
+
+<div id="render-the-visualization-panel"></div>
+
+## Render the Dashboard
+
+Add a container element to the component template:
+
+```html
+<div id="dashboard"></div>
+```
+
+Call the [`render(containerId)`](/dashboard/documentation/api-reference/dashboard#render) method on the `Dashboard` instance you configured to mount the dashboard:
 
 ```js
 // ...
@@ -309,24 +363,24 @@ To render the Visualization Panel in the page element, call the `render(containe
 export class AppComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     // ...
-    vizPanel.render("surveyVizPanel");
+    dashboard.render("dashboard");
   }
 }
 ```
 
-To view the application, run `ng serve` in a command line and open [http://localhost:4200/](http://localhost:4200/) in your browser.
+Run the application with `ng serve` and open [http://localhost:4200/](http://localhost:4200/) in your browser.
 
 <details>
     <summary>View Full Code</summary>
 
 ```html
-<div id="surveyVizPanel"></div>
+<div id="dashboard"></div>
 ```
 
 ```js
 import { AfterViewInit, Component } from '@angular/core';
 import { Model } from 'survey-core';
-import { VisualizationPanel } from 'survey-analytics';
+import { Dashboard } from 'survey-analytics';
 
 const surveyJson = {
   elements: [{
@@ -351,26 +405,13 @@ const surveyJson = {
   completedHtml: "Thank you for your feedback!",
 };
 
-const surveyResults = [{
-  "satisfaction-score": 5,
-  "nps-score": 10
-}, {
-  "satisfaction-score": 5,
-  "nps-score": 9
-}, {
-  "satisfaction-score": 3,
-  "nps-score": 6
-}, {
-  "satisfaction-score": 3,
-  "nps-score": 6
-}, {
-  "satisfaction-score": 2,
-  "nps-score": 3
-}];
-
-const vizPanelOptions = {
-  allowHideQuestions: false
-}
+const surveyResults = [
+  { "satisfaction-score": 5, "nps-score": 10 },
+  { "satisfaction-score": 5, "nps-score": 9 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 3, "nps-score": 6 },
+  { "satisfaction-score": 2, "nps-score": 3 }
+];
 
 @Component({
   selector: 'app-root',
@@ -382,12 +423,18 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const survey = new Model(surveyJson);
-    const vizPanel = new VisualizationPanel(
-      survey.getAllQuestions(),
-      surveyResults,
-      vizPanelOptions
-    );
-    vizPanel.render("surveyVizPanel");
+    const dashboard = new Dashboard({
+      questions: survey.getAllQuestions(),
+      data: surveyResults,
+      items: [
+        "satisfaction-score",
+        {
+          name: "nps-score",
+          type: "nps"
+        }
+      ]
+    });
+    dashboard.render("dashboard");
   }
 }
 ```
@@ -399,7 +446,7 @@ export class AppComponent implements AfterViewInit {
 
 SurveyJS Dashboard is not available for free commercial use. To integrate it into your application, you must purchase a [commercial license](https://surveyjs.io/licensing) for the software developer(s) who will be working with the Dashboard APIs and implementing the integration. If you use SurveyJS Dashboard without a license, an alert banner will appear at the top of the interface:
 
-<img src="images/alert-banner-dashboard.png" alt="SurveyJS Dashboard: Alert banner" width="772" height="561">
+<img src="images/alert-banner-dashboard.png" alt="SurveyJS Dashboard: Alert banner" width="1544" height="656">
 
 After purchasing a license, follow the steps below to activate it and remove the alert banner:
 

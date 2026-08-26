@@ -40,27 +40,27 @@ The following code shows how to reference these libraries:
 <head>
     <!-- ... -->
     <!-- SurveyJS Form Library resources -->
-    <script type="text/javascript" src="https://unpkg.com/survey-core/survey.core.min.js"></script>
+    <script src="https://unpkg.com/survey-core/survey.core.min.js"></script>
     <!-- Uncomment the following lines if you also display the survey on the page -->
-    <!-- <link href="https://unpkg.com/survey-core/survey-core.min.css" type="text/css" rel="stylesheet"> -->
-    <!-- <script type="text/javascript" src="https://unpkg.com/survey-js-ui/survey-js-ui.min.js"></script> -->
+    <!-- <link href="https://unpkg.com/survey-core/survey-core.min.css" rel="stylesheet"> -->
+    <!-- <script src="https://unpkg.com/survey-js-ui/survey-js-ui.min.js"></script> -->
 
     <!-- jsPDF for export to PDF -->
-    <script type="text/javascript" src="https://unpkg.com/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/jspdf-autotable@3.5.20/dist/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://unpkg.com/jspdf/dist/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/jspdf-autotable/dist/jspdf.plugin.autotable.min.js"></script>
     
     <!-- SheetJS for export to Excel -->
-    <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+    <script src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
 
     <!-- Tabulator -->
     <link href="https://unpkg.com/tabulator-tables@6.3.1/dist/css/tabulator.min.css" rel="stylesheet">
-    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min.js"></script>
+    <script src="https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min.js"></script>
 
     <!-- SurveyJS plugin for Tabulator -->
     <link href="https://unpkg.com/survey-analytics/survey.analytics.tabulator.min.css" rel="stylesheet">
     <script src="https://unpkg.com/survey-analytics/survey.analytics.tabulator.min.js"></script>
 
-    <script type="text/javascript" src="index.js"></script>
+    <script src="index.js"></script>
 </head>
 ```
 
@@ -91,7 +91,7 @@ loadSurveyResults("https://your-web-service.com/" + SURVEY_ID)
     .then((surveyResults) => {
         // ...
         // Configure and render the Table View here
-        // Refer to the help topics below
+        // Refer to the section below
         // ...
     });
 
@@ -196,24 +196,24 @@ document.addEventListener("DOMContentLoaded", function() {
 <head>
     <title>Table View: SurveyJS Dashboard</title>
     <meta charset="utf-8">
-    <script type="text/javascript" src="https://unpkg.com/survey-core/survey.core.min.js"></script>
+    <script src="https://unpkg.com/survey-core/survey.core.min.js"></script>
 
     <!-- jsPDF for export to PDF -->
-    <script type="text/javascript" src="https://unpkg.com/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/jspdf-autotable@3.5.20/dist/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://unpkg.com/jspdf/dist/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/jspdf-autotable/dist/jspdf.plugin.autotable.min.js"></script>
     
     <!-- SheetJS for export to Excel -->
-    <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+    <script src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
 
     <!-- Tabulator -->
     <link href="https://unpkg.com/tabulator-tables@6.3.1/dist/css/tabulator.min.css" rel="stylesheet">
-    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min.js"></script>
+    <script src="https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min.js"></script>
 
     <!-- SurveyJS plugin for Tabulator -->
     <link href="https://unpkg.com/survey-analytics/survey.analytics.tabulator.min.css" rel="stylesheet">
     <script src="https://unpkg.com/survey-analytics/survey.analytics.tabulator.min.js"></script>
 
-    <script type="text/javascript" src="index.js"></script>
+    <script src="index.js"></script>
 </head>
 <body>
     <div id="surveyDataTable"></div>
@@ -281,7 +281,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 SurveyJS Dashboard is not available for free commercial use. To integrate it into your application, you must purchase a [commercial license](https://surveyjs.io/licensing) for the software developer(s) who will be working with the Dashboard APIs and implementing the integration. If you use SurveyJS Dashboard without a license, an alert banner will appear at the top of the Table View interface:
 
-<img src="images/alert-banner-table-view.png" alt="SurveyJS Table View: Alert banner" width="1544" height="864">
+<img src="images/alert-banner-table-view.png" alt="SurveyJS Table View: Alert banner" width="1544" height="736">
 
 After purchasing a license, follow the steps below to activate it and remove the alert banner:
 
