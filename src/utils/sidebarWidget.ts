@@ -3,36 +3,18 @@ import { SideBarItemCreators } from "../sideBarItemCreators";
 import { localization } from "../localizationManager";
 import "./sidebar.scss";
 
-/**
- * Options for the sidebar widget (toolbar button + sliding panel).
- * @since 3.0.0
- */
+// Options for the sidebar widget (toolbar button + sliding panel).
 export interface ISidebarOptions {
-  /**
-   * Panel title shown in the header
-   * @since 3.0.0
-   */
+  // Panel title shown in the header
   title: string;
-  /**
-   * Array of sidebar item entries (creator + optional groupIndex). Items with different groupIndex are separated by a divider.
-   * For backward compatibility, a plain array of creator functions is also accepted (all items are treated as one group).
-   * @since 3.0.0
-   */
+  // Array of sidebar item entries (creator + optional groupIndex). Items with different groupIndex are separated by a divider.
+  // For backward compatibility, a plain array of creator functions is also accepted (all items are treated as one group).
   itemCreators: SideBarItemCreators;
-  /**
-   * SVG icon name for the toolbar button (e.g. "settings_24x24").
-   * @since 3.0.0
-   */
+  // SVG icon name for the toolbar button (e.g. "settings_24x24").
   buttonIcon?: string;
-  /**
-   * Accessible title for the toolbar button.
-   * @since 3.0.0
-   */
+  // Accessible title for the toolbar button.
   buttonTitle?: string;
-  /**
-   * Optional CSS class for the panel root.
-   * @since 3.0.0
-   */
+  // Optional CSS class for the panel root.
   panelClassName?: string;
 }
 
@@ -40,11 +22,8 @@ const SIDEBAR_OPEN_CLASS = "sa-sidebar--opened";
 const SIDEBAR_BACKDROP_CLASS = "sa-sidebar__backdrop";
 const SIDEBAR_BACKDROP_OPEN_CLASS = "sa-sidebar__backdrop--opened";
 
-/**
- * Widget that renders a toolbar button which opens a sidebar (sliding) panel.
- * The panel is rendered on the side (e.g. right), shows a title with close button, and renders content from toolbarItemCreators.
- * @since 3.0.0
- */
+// Widget that renders a toolbar button which opens a sidebar (sliding) panel.
+// The panel is rendered on the side (e.g. right), shows a title with close button, and renders content from toolbarItemCreators.
 export class SidebarWidget {
   private options: ISidebarOptions;
   private buttonElement: HTMLDivElement | null = null;
@@ -56,12 +35,9 @@ export class SidebarWidget {
     this.options = options;
   }
 
-  /**
-   * Renders the toolbar button. When clicked, opens the sidebar panel.
-   * @param _toolbar - Optional toolbar container (for API compatibility with toolbar item creators).
-   * @returns The button element to be placed in the toolbar.
-   * @since 3.0.0
-   */
+  // Renders the toolbar button. When clicked, opens the sidebar panel.
+  // @param _toolbar - Optional toolbar container (for API compatibility with toolbar item creators).
+  // @returns The button element to be placed in the toolbar.
   render(_toolbar?: HTMLDivElement): HTMLDivElement {
     this.buttonElement = DocumentHelper.createElement("div", "sa-toolbar__button sa-toolbar__button-with-icon sa-sidebar__trigger") as HTMLDivElement;
     this.buttonElement.setAttribute("role", "button");
