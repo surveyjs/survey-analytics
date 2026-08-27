@@ -47,6 +47,15 @@ export class SelectBaseColumnsBuilder<T extends QuestionSelectBase> extends Defa
     if(question.hasOther && question.getStoreOthersAsComment()) {
       columns.push(new OtherColumn(question, table));
     }
+    question.visibleChoices.forEach(choice => {
+      if(Array.isArray(choice.elements)) {
+        choice.elements.forEach((nestedQuestion: Question) => {
+          const builder = ColumnsBuilderFactory.Instance.getColumnsBuilder(nestedQuestion.getType());
+          const nestedColumns = builder.buildColumns(nestedQuestion, table);
+          columns.push(...nestedColumns);
+        });
+      }
+    });
     return columns;
   }
 }

@@ -1749,3 +1749,72 @@ test("tagbox questions support splitMultiSelectIntoColumns", () => {
   expect(table.columns[1].getCellData(table, data2).displayValue).toBe("&#10004;");
   expect(table.columns[2].getCellData(table, data2).displayValue).toBe("");
 });
+
+test("radiogroup with nested choice elements creates columns for nested questions", () => {
+  const json = {
+    elements: [
+      {
+        type: "radiogroup",
+        name: "Question4",
+        title: "Use of AI",
+        choices: [
+          { value: "no_ai", text: "I did not use AI" },
+          {
+            value: "used_ai",
+            text: "I used AI",
+            elements: [
+              { type: "text", name: "Question5", title: "Which AI tool?" },
+              { type: "text", name: "Question6", title: "What was it used for?" }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const data = [{ Question4: "used_ai", Question5: "ChatGPT", Question6: "Research" }];
+  const table = new TableTest(survey, data, {}, []);
+
+  expect(table.columns.length).toBe(3);
+  expect(table.columns[0].name).toBe("Question4");
+  expect(table.columns[0].displayName).toBe("Use of AI");
+  expect(table.columns[1].name).toBe("Question5");
+  expect(table.columns[1].displayName).toBe("Which AI tool?");
+  expect(table.columns[2].name).toBe("Question6");
+  expect(table.columns[2].displayName).toBe("What was it used for?");
+
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("I used AI");
+  expect(table.columns[1].getCellData(table, data).displayValue).toBe("ChatGPT");
+  expect(table.columns[2].getCellData(table, data).displayValue).toBe("Research");
+});
+
+test("checkbox with nested choice elements creates columns for nested questions", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "tools",
+        title: "Tools Used",
+        choices: [
+          { value: "manual", text: "Manual" },
+          {
+            value: "ai",
+            text: "AI",
+            elements: [
+              { type: "text", name: "aiTool", title: "AI Tool Name" }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const data = [{ tools: ["ai"], aiTool: "GPT" }];
+  const table = new TableTest(survey, data, {}, []);
+
+  expect(table.columns.length).toBe(2);
+  expect(table.columns[0].name).toBe("tools");
+  expect(table.columns[1].name).toBe("aiTool");
+  expect(table.columns[1].displayName).toBe("AI Tool Name");
+  expect(table.columns[1].getCellData(table, data).displayValue).toBe("GPT");
+});
