@@ -980,8 +980,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
 
   protected renderBanner(container: HTMLElement): void {
     if(!this.haveCommercialLicense && this._isRoot) {
-      const banner = createCommercialLicenseLink();
-      container.appendChild(banner);
+      this.attachBanner(container, createCommercialLicenseLink());
     }
     super.renderBanner(container);
   }
@@ -1004,6 +1003,7 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
 
   protected destroyContent(container: HTMLElement) {
     this.layoutEngine?.stop();
+    this.visualizers.forEach(visualizer => visualizer.clear());
     super.destroyContent(container);
   }
 

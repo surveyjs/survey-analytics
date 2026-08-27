@@ -1572,22 +1572,43 @@ test("hideEmptyAnswers=true causes hard update on data change", () => {
   expect(renderContentSpy).toHaveBeenCalledTimes(2);
 });
 
-test("clear + render should not duplicate commercial banner or wrapper", () => {
+test("clear + render does not duplicate banner or wrapper and keeps host nodes", () => {
   const json = { elements: [{ type: "dropdown", name: "q1", choices: ["a"] }] };
   const survey = new SurveyModel(json);
   const vis = new VisualizationPanel(survey.getAllQuestions(), []);
   const container = document.createElement("div");
+  const hostChild = document.createElement("span");
+  hostChild.className = "host-content";
+  container.appendChild(hostChild);
+  const foreignBanner = document.createElement("div");
+  foreignBanner.className = "sa-commercial";
+  container.appendChild(foreignBanner);
 
   vis.render(container);
-  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(1);
   const bannerCount = vis["haveCommercialLicense"] ? 0 : 1;
-  expect(container.querySelectorAll(".sa-commercial").length).toBe(bannerCount);
+  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(1);
+  expect(container.querySelectorAll(".sa-commercial").length).toBe(bannerCount + 1);
 
   vis.clear();
   expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(0);
-  expect(container.querySelectorAll(".sa-commercial").length).toBe(0);
+  expect(container.querySelectorAll(".sa-commercial").length).toBe(1);
+  expect(container.contains(hostChild)).toBeTruthy();
+  expect(container.contains(foreignBanner)).toBeTruthy();
+  expect(() => vis.clear()).not.toThrow();
 
   vis.render(container);
   expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(1);
-  expect(container.querySelectorAll(".sa-commercial").length).toBe(bannerCount);
+  expect(container.querySelectorAll(".sa-commercial").length).toBe(bannerCount + 1);
+  expect(container.contains(hostChild)).toBeTruthy();
+});
+
+test("panel clear() clears child visualizers", () => {
+  const json = { elements: [{ type: "dropdown", name: "q1", choices: ["a"] }] };
+  const survey = new SurveyModel(json);
+  const vis = new VisualizationPanel(survey.getAllQuestions(), []);
+  vis.render(document.createElement("div"));
+  const child = vis.getVisualizer("q1");
+  const clearSpy = vi.spyOn(child, "clear");
+  vis.clear();
+  expect(clearSpy).toHaveBeenCalledTimes(1);
 });

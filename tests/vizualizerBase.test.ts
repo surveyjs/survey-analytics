@@ -81,23 +81,29 @@ test("clear header", () => {
   expect(visualizer["headerContainer"].innerHTML).toBe("");
 });
 
-test("clear removes wrapper so render can be called again", () => {
+test("clear unmounts wrapper by reference, keeps host nodes, and allows render again", () => {
   const visualizer = new VisualizerBase(new QuestionDropdownModel("q1"), []);
   const container = document.createElement("div");
-  visualizer.render(container);
-  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(1);
-  visualizer.clear();
-  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(0);
-  visualizer.render(container);
-  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(1);
-});
+  const hostChild = document.createElement("span");
+  hostChild.className = "host-content";
+  container.appendChild(hostChild);
+  const foreignWrapper = document.createElement("div");
+  foreignWrapper.className = "sa-visualizer-wrapper";
+  container.appendChild(foreignWrapper);
 
-test("render is idempotent for the same root container", () => {
-  const visualizer = new VisualizerBase(new QuestionDropdownModel("q1"), []);
-  const container = document.createElement("div");
   visualizer.render(container);
-  visualizer.render(container);
+  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(2);
+
+  visualizer.clear();
+  expect(container.contains(hostChild)).toBeTruthy();
+  expect(container.contains(foreignWrapper)).toBeTruthy();
   expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(1);
+  expect(() => visualizer.clear()).not.toThrow();
+
+  visualizer.render(container);
+  expect(container.querySelectorAll(".sa-visualizer-wrapper").length).toBe(2);
+  expect(container.contains(hostChild)).toBeTruthy();
+  expect(container.contains(foreignWrapper)).toBeTruthy();
 });
 
 test("custom getDataCore function", async () => {

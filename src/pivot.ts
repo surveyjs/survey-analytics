@@ -709,8 +709,7 @@ export class PivotModel extends HistogramModel {
 
   protected renderBanner(container: HTMLElement): void {
     if(!this.haveCommercialLicense && this.isRoot) {
-      const banner = createCommercialLicenseLink();
-      container.appendChild(banner);
+      this.attachBanner(container, createCommercialLicenseLink());
     }
     super.renderBanner(container);
   }
