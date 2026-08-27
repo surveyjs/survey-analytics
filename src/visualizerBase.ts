@@ -125,6 +125,8 @@ export class VisualizerBase implements IDataInfo {
   protected headerContainer: HTMLElement = undefined;
   protected contentContainer: HTMLElement = undefined;
   protected footerContainer: HTMLElement = undefined;
+  protected bannerContainer: HTMLElement = undefined;
+  protected wrapperContainer: HTMLElement = undefined;
   protected _supportSelection: boolean = false;
   protected _chartAdapter: IChartAdapter = undefined;
   // public static otherCommentQuestionType = "comment"; // TODO: make it configureable - allow choose what kind of question/visualizer will be used for comments/others
@@ -566,6 +568,8 @@ export class VisualizerBase implements IDataInfo {
       this.headerContainer = undefined;
       this.contentContainer = undefined;
       this.footerContainer = undefined;
+      this.bannerContainer = undefined;
+      this.wrapperContainer = undefined;
       this.renderResult.innerHTML = "";
       this.renderResult = undefined;
     }
@@ -594,16 +598,21 @@ export class VisualizerBase implements IDataInfo {
     if(!!this.footerContainer) {
       this.destroyFooter(this.footerContainer);
     }
-    if(!!this.renderResult) {
-      const nodesToRemove: Array<Element> = [];
-      for(let i = 0; i < this.renderResult.children.length; i++) {
-        const child = this.renderResult.children[i];
-        if(child.classList.contains("sa-commercial") || child.classList.contains("sa-visualizer-wrapper")) {
-          nodesToRemove.push(child);
-        }
-      }
-      nodesToRemove.forEach((node) => this.renderResult.removeChild(node));
+    this.removeFromParent(this.bannerContainer);
+    this.bannerContainer = undefined;
+    this.removeFromParent(this.wrapperContainer);
+    this.wrapperContainer = undefined;
+  }
+
+  protected removeFromParent(element: HTMLElement): void {
+    if(!!element && !!element.parentNode) {
+      element.parentNode.removeChild(element);
     }
+  }
+
+  protected attachBanner(container: HTMLElement, banner: HTMLElement): void {
+    this.bannerContainer = banner;
+    container.appendChild(banner);
   }
 
   public getSortedToolbarItemCreators(): Array<any> {
@@ -817,12 +826,6 @@ export class VisualizerBase implements IDataInfo {
     if(typeof targetElement === "string") {
       targetElement = document.getElementById(targetElement);
     }
-    if(!!this.renderResult) {
-      this.clear();
-    }
-    if(isRoot || this.renderResult === targetElement) {
-      targetElement.innerHTML = "";
-    }
     this.renderResult = targetElement;
     if(isRoot && !this._appliedTheme) {
       this._appliedTheme = this.theme;
@@ -836,8 +839,9 @@ export class VisualizerBase implements IDataInfo {
 
     let container = targetElement;
     if(isRoot) {
-      container = DocumentHelper.createElement("div", "sa-visualizer-wrapper");
-      targetElement.appendChild(container);
+      this.wrapperContainer = DocumentHelper.createElement("div", "sa-visualizer-wrapper");
+      targetElement.appendChild(this.wrapperContainer);
+      container = this.wrapperContainer;
     } else {
       container.className = "sa-visualizer";
     }

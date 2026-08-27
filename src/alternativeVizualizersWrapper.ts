@@ -225,6 +225,11 @@ export class AlternativeVisualizersWrapper
     this.visualizer.render(this.visualizerContainer, false);
   }
 
+  protected destroyContent(container: HTMLElement) {
+    this.visualizer?.clear();
+    super.destroyContent(container);
+  }
+
   protected setBackgroundColorCore(color: string) {
     super.setBackgroundColorCore(color);
     this.visualizers.forEach(visualizer => visualizer.backgroundColor = color);
