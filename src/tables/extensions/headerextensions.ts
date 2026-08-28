@@ -9,13 +9,6 @@ TableExtensions.registerExtension({
   name: "filter",
   visibleIndex: 1,
   render: function (table: Table): HTMLElement {
-    // const input = DocumentHelper.createInput(
-    //   "sa-table__global-filter sa-table__header-extension",
-    //   localization.getString("filterPlaceholder")
-    // );
-    // input.onchange = (event: any) => {
-    //   table.applyFilter(event.target.value);
-    // };
     const el = DocumentHelper.createTextEditor({
       onchange: (val) => { table.applyFilter(val); }
     });
@@ -28,11 +21,6 @@ TableExtensions.registerExtension({
   name: "showcolumn",
   visibleIndex: 20,
   render: function (table: Table): HTMLElement {
-    // const dropdown = DocumentHelper.createElement(
-    //   "select",
-    //   "sa-table__show-column sa-table__header-extension"
-    // );
-
     const allColumns = table.columns.map((column) => {
       var text = column.displayName || column.name;
       if(!!text && text.length > 20) {
@@ -81,19 +69,6 @@ TableExtensions.registerExtension({
       }, localization.getString("removeRows"), "sa-button");
     btn.className += " sa-table__header-extension sa-button-brand-tertiary";
     return btn;
-    // var btn = DocumentHelper.createElement(
-    //   "button",
-    //   "sa-table__btn sa-table__header-extension ",
-    //   { innerText: localization.getString("removeRows") }
-    // );
-    // btn.onclick = function () {
-    //   table.getCreatedRows().forEach(function (row) {
-    //     if (row.getIsSelected()) {
-    //       row.remove();
-    //     }
-    //   });
-    // };
-    // return btn;
   },
 });
 
@@ -104,24 +79,8 @@ TableExtensions.registerExtension({
   render: function (table) {
     var locales = table.getLocales();
     if(table.options.disableLocaleSwitch || locales.length < 2) return null;
-    /*
-    const el = <HTMLSelectElement>(
-      DocumentHelper.createElement("select", "sa-table__header-extension", {})
-    );
-    var optionsValues = [localization.getString("changeLocale")].concat(locales);
-    optionsValues.forEach(function (val) {
-      var option = DocumentHelper.createElement("option", "", {
-        value: val,
-        text: localization.localeNames[val] || localization.getString(val) || val,
-      });
-      el.appendChild(option);
-    });
-    el.onchange = () => {
-      table.locale = el.value;
-    };
-    */
 
-    const optionsValues = locales.map(val => { return { value: val, text: localization.localeNames[val] || localization.getString(val) || val }; });
+    const optionsValues = locales.map(val => { return { value: val, text: localization.getLocaleName(val) || val }; });
     const el = createActionDropdown({
       options: optionsValues,
       isSelected: (option: any) => false,
