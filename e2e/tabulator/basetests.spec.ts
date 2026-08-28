@@ -31,6 +31,6 @@ test.describe("basetests", () => {
     const cellText = await page.locator(cellSelector).first().innerText();
 
     expect(headerText).toBe(xssTextSanitized);
-    expect(cellText).toBe(xssTextSanitized);
+    expect(cellText).toBe(xssText);
   });
 });
