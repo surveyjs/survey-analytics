@@ -4,6 +4,8 @@ import { ColumnDataType, ITableState, QuestionLocation } from "../../src/tables/
 import { CheckboxColumnsBuilder, ColumnsBuilderFactory, CompositeColumnsBuilder } from "../../src/tables/columnbuilder";
 import { CheckboxColumn, CommentColumn, OtherColumn, SelectBaseColumn, SingleChoiceColumn } from "../../src/tables/columns";
 import { QuestionRadiogroupModel } from "survey-core";
+import { LineController } from "chart.js";
+import test from "survey-core/themes/test";
 const json = {
   questions: [
     {
@@ -1852,6 +1854,51 @@ test("showNestedQuestionParentTitle adds parent title prefix to nested columns",
   const tableNoPrefix = new TableTest(survey, data, { showNestedQuestionParentTitle: false }, []);
   expect(tableNoPrefix.columns[1].displayName).toBe("Which AI tool?");
   expect(tableNoPrefix.columns[2].displayName).toBe("What was it used for?");
+});
+
+test("nested question column keeps localized parent title prefix after locale change", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "features",
+        title: {
+          default: "Which product features matter to you?",
+          // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
+          fr: "Quelles fonctionnalités du produit sont importantes pour vous ?"
+        },
+        choices: [
+          { value: "dashboards", text: "Dashboards" },
+          {
+            value: "reports",
+            text: "Reports",
+            elements: [
+              {
+                type: "text",
+                name: "reportTopics",
+                title: {
+                  default: "What topics do you want reports on?",
+                  fr: "Sur quels sujets souhaitez-vous obtenir des rapports ?"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [], {}, []);
+
+  expect(table.columns[1].name).toBe("reportTopics");
+  expect(table.columns[1].displayName).toBe("Which product features matter to you? - What topics do you want reports on?");
+
+  table.locale = "fr";
+  // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
+  expect(table.columns[1].displayName).toBe("Quelles fonctionnalités du produit sont importantes pour vous ? - Sur quels sujets souhaitez-vous obtenir des rapports ?");
+
+  table.locale = "";
+  expect(table.columns[1].displayName).toBe("Which product features matter to you? - What topics do you want reports on?");
 });
 
 test("checkbox with splitMultiSelectIntoColumns and nested choice elements", () => {

@@ -32,6 +32,7 @@ export interface IColumn extends IColumnData {
   visibleIndex?: number;
   fromJSON(json: any): void;
   getCellData(table: ITable, data: any): ICellData;
+  addParentQuestion?(parentQuestion: Question): void;
 }
 
 export interface ITableState {
