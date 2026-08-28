@@ -1779,9 +1779,9 @@ test("radiogroup with nested choice elements creates columns for nested question
   expect(table.columns[0].name).toBe("Question4");
   expect(table.columns[0].displayName).toBe("Use of AI");
   expect(table.columns[1].name).toBe("Question5");
-  expect(table.columns[1].displayName).toBe("Which AI tool?");
+  expect(table.columns[1].displayName).toBe("Use of AI - Which AI tool?");
   expect(table.columns[2].name).toBe("Question6");
-  expect(table.columns[2].displayName).toBe("What was it used for?");
+  expect(table.columns[2].displayName).toBe("Use of AI - What was it used for?");
 
   expect(table.columns[0].getCellData(table, data).displayValue).toBe("I used AI");
   expect(table.columns[1].getCellData(table, data).displayValue).toBe("ChatGPT");
@@ -1815,7 +1815,7 @@ test("checkbox with nested choice elements creates columns for nested questions"
   expect(table.columns.length).toBe(2);
   expect(table.columns[0].name).toBe("tools");
   expect(table.columns[1].name).toBe("aiTool");
-  expect(table.columns[1].displayName).toBe("AI Tool Name");
+  expect(table.columns[1].displayName).toBe("Tools Used - AI Tool Name");
   expect(table.columns[1].getCellData(table, data).displayValue).toBe("GPT");
 });
 
@@ -1848,6 +1848,10 @@ test("showNestedQuestionParentTitle adds parent title prefix to nested columns",
   expect(table.columns[0].displayName).toBe("Use of AI");
   expect(table.columns[1].displayName).toBe("Use of AI - Which AI tool?");
   expect(table.columns[2].displayName).toBe("Use of AI - What was it used for?");
+
+  const tableNoPrefix = new TableTest(survey, data, { showNestedQuestionParentTitle: false }, []);
+  expect(tableNoPrefix.columns[1].displayName).toBe("Which AI tool?");
+  expect(tableNoPrefix.columns[2].displayName).toBe("What was it used for?");
 });
 
 test("checkbox with splitMultiSelectIntoColumns and nested choice elements", () => {
@@ -1879,7 +1883,7 @@ test("checkbox with splitMultiSelectIntoColumns and nested choice elements", () 
   expect(table.columns[1].name).toBe("tools.ai");
   expect(table.columns[1].displayName).toBe("Tools Used - AI");
   expect(table.columns[2].name).toBe("aiTool");
-  expect(table.columns[2].displayName).toBe("AI Tool Name");
+  expect(table.columns[2].displayName).toBe("Tools Used - AI Tool Name");
   expect(table.columns[2].getCellData(table, data).displayValue).toBe("GPT");
 });
 

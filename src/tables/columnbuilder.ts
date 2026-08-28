@@ -52,7 +52,7 @@ export class SelectBaseColumnsBuilder<T extends QuestionSelectBase> extends Defa
         choice.elements.forEach((nestedQuestion: Question) => {
           const builder = ColumnsBuilderFactory.Instance.getColumnsBuilder(nestedQuestion.getType());
           const nestedColumns = builder.buildColumns(nestedQuestion, table);
-          if(table.options.showNestedQuestionParentTitle) {
+          if(table.options.showNestedQuestionParentTitle !== false) {
             const parentTitle = table.useNamesAsTitles
               ? question.name
               : (question.locTitle?.renderedHtml || question.title || "").trim() || question.name;
