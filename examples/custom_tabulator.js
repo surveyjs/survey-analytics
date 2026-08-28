@@ -20,7 +20,8 @@ var surveyAnalyticsTabulator = new SurveyAnalyticsTabulator.Tabulator(
     // useNamesAsTitles: true,
     // columnMinWidth: 50,
     // pageSize: 10,
-    // paginationEnabled: false
+    // paginationEnabled: false,
+    showNestedQuestionParentTitle: true
   }
 );
 
