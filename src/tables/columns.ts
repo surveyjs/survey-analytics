@@ -13,6 +13,7 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
   isComment?: boolean;
   private nameValue: string;
   private displayNameValue?: string;
+  private parentQuestions: Question[] = [];
 
   constructor(protected question: T, protected table: ITable) {
     this.dataType = this.getDataType();
@@ -43,12 +44,21 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
   }
   get displayName(): string {
     if(!this.displayNameValue) {
-      this.displayName = this.getDisplayName();
+      this.displayName = this.getDisplayNamePrefix() + this.getDisplayName();
     }
     return this.processText(this.displayNameValue);
   }
   public set displayName(val: string) {
     this.displayNameValue = val;
+  }
+
+  // prefixes must be re-computed on locale change, so parent questions are stored instead of a baked-in title string
+  public addParentQuestion(parentQuestion: Question): void {
+    this.parentQuestions.unshift(parentQuestion);
+    this.displayNameValue = undefined;
+  }
+  protected getDisplayNamePrefix(): string {
+    return this.parentQuestions.map(q => this.getQuestionDisplayName(q) + " - ").join("");
   }
 
   // question titles may contain user-defined HTML which must not reach table headers or tooltips
@@ -60,10 +70,13 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
     return text;
   }
 
-  protected getDisplayName(): string {
+  protected getQuestionDisplayName(question: Question): string {
     return this.table.useNamesAsTitles
-      ? this.question.name
-      : (this.question.locTitle?.renderedHtml || this.question.title || "").trim() || this.question.name;
+      ? question.name
+      : (question.locTitle?.renderedHtml || question.title || "").trim() || question.name;
+  }
+  protected getDisplayName(): string {
+    return this.getQuestionDisplayName(this.question);
   }
   protected getName(): string {
     return this.question.name;

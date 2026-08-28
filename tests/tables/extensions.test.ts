@@ -9,6 +9,8 @@ import { QuestionLocation } from "../../src/tables/config";
 export * from "../../src/tables/extensions/headerextensions";
 export * from "../../src/tables/extensions/footerextensions";
 export * from "../../src/analytics-localization/german";
+export * from "../../src/analytics-localization/russian";
+export * from "../../src/analytics-localization/french";
 
 const json = {
   questions: [
@@ -165,6 +167,23 @@ test("locale selector uses titles", () => {
   expect(changeLocaleHeaderExtension).toBeDefined();
   const renderResult = changeLocaleHeaderExtension.render(tabulator, undefined) as HTMLSelectElement;
   expect(renderResult.textContent).toBe("Change LocaleEnglishDeutsch");
+});
+
+test("locale selector uses native names for locales without analytics translations", async () => {
+  await import("survey-core/survey.i18n");
+  const survey = new SurveyModel({ elements: [{ type: "text", name: "q1", title: {
+    default: "T",
+    ru: "Tr",
+    fr: "Tf",
+    "zh-tw": "Tt",
+    "zh-cn": "Tc",
+    ko: "Tk",
+  } }] });
+  const tabulator = new Tabulator(survey, []);
+  const changeLocaleHeaderExtension = TableExtensions.findExtension("header", "changelocale");
+  const renderResult = changeLocaleHeaderExtension.render(tabulator, undefined) as HTMLElement;
+  // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
+  expect(renderResult.textContent).toBe("Change LocaleEnglishРусскийFrançais繁體中文简体中文한국어");
 });
 
 test("changelocale respects disableLocaleSwitch", () => {

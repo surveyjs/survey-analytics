@@ -227,7 +227,16 @@ export abstract class Table implements ITable {
   }
   protected processLoadedDataItem(item: any): any {
     var dataItem: any = {};
-    this._survey.data = item;
+    // clear previous row values: assigning survey.data merges, which leaks values (e.g. nested questions) into rows that lack them
+    this._survey.setDataCore(item, true);
+    // setDataCore does not refresh nested questions (e.g. inside choice items), update them explicitly
+    const questions = this._survey.getAllQuestions();
+    this._survey.getAllQuestions(false, false, true).forEach((question) => {
+      // skip questions whose values are owned by a parent question (e.g. inside composite questions)
+      if(questions.indexOf(question) < 0 && (<any>question).data === this._survey) {
+        question.updateValueFromSurvey(this._survey.getValue(question.getValueName()), true);
+      }
+    });
     this._columns.forEach((column) => {
       const opt = column.getCellData(this, item);
       if(typeof this._options.onGetQuestionValue === "function") {

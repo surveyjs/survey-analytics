@@ -4,6 +4,8 @@ import { ColumnDataType, ITableState, QuestionLocation } from "../../src/tables/
 import { CheckboxColumnsBuilder, ColumnsBuilderFactory, CompositeColumnsBuilder } from "../../src/tables/columnbuilder";
 import { CheckboxColumn, CommentColumn, OtherColumn, SelectBaseColumn, SingleChoiceColumn } from "../../src/tables/columns";
 import { QuestionRadiogroupModel } from "survey-core";
+import { LineController } from "chart.js";
+
 const json = {
   questions: [
     {
@@ -1748,4 +1750,246 @@ test("tagbox questions support splitMultiSelectIntoColumns", () => {
   expect(table.columns[0].getCellData(table, data2).displayValue).toBe("");
   expect(table.columns[1].getCellData(table, data2).displayValue).toBe("&#10004;");
   expect(table.columns[2].getCellData(table, data2).displayValue).toBe("");
+});
+
+test("radiogroup with nested choice elements creates columns for nested questions", () => {
+  const json = {
+    elements: [
+      {
+        type: "radiogroup",
+        name: "Question4",
+        title: "Use of AI",
+        choices: [
+          { value: "no_ai", text: "I did not use AI" },
+          {
+            value: "used_ai",
+            text: "I used AI",
+            elements: [
+              { type: "text", name: "Question5", title: "Which AI tool?" },
+              { type: "text", name: "Question6", title: "What was it used for?" }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const data = [{ Question4: "used_ai", Question5: "ChatGPT", Question6: "Research" }];
+  const table = new TableTest(survey, data, {}, []);
+
+  expect(table.columns.length).toBe(3);
+  expect(table.columns[0].name).toBe("Question4");
+  expect(table.columns[0].displayName).toBe("Use of AI");
+  expect(table.columns[1].name).toBe("Question5");
+  expect(table.columns[1].displayName).toBe("Use of AI - Which AI tool?");
+  expect(table.columns[2].name).toBe("Question6");
+  expect(table.columns[2].displayName).toBe("Use of AI - What was it used for?");
+
+  expect(table.columns[0].getCellData(table, data).displayValue).toBe("I used AI");
+  expect(table.columns[1].getCellData(table, data).displayValue).toBe("ChatGPT");
+  expect(table.columns[2].getCellData(table, data).displayValue).toBe("Research");
+});
+
+test("checkbox with nested choice elements creates columns for nested questions", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "tools",
+        title: "Tools Used",
+        choices: [
+          { value: "manual", text: "Manual" },
+          {
+            value: "ai",
+            text: "AI",
+            elements: [
+              { type: "text", name: "aiTool", title: "AI Tool Name" }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const data = [{ tools: ["ai"], aiTool: "GPT" }];
+  const table = new TableTest(survey, data, {}, []);
+
+  expect(table.columns.length).toBe(2);
+  expect(table.columns[0].name).toBe("tools");
+  expect(table.columns[1].name).toBe("aiTool");
+  expect(table.columns[1].displayName).toBe("Tools Used - AI Tool Name");
+  expect(table.columns[1].getCellData(table, data).displayValue).toBe("GPT");
+});
+
+test("showChoiceNestedQuestionParentTitle adds parent title prefix to nested columns", () => {
+  const json = {
+    elements: [
+      {
+        type: "radiogroup",
+        name: "Question4",
+        title: "Use of AI",
+        choices: [
+          { value: "no_ai", text: "I did not use AI" },
+          {
+            value: "used_ai",
+            text: "I used AI",
+            elements: [
+              { type: "text", name: "Question5", title: "Which AI tool?" },
+              { type: "text", name: "Question6", title: "What was it used for?" }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const data = [{ Question4: "used_ai", Question5: "ChatGPT", Question6: "Research" }];
+  const table = new TableTest(survey, data, { showChoiceNestedQuestionParentTitle: true }, []);
+
+  expect(table.columns.length).toBe(3);
+  expect(table.columns[0].displayName).toBe("Use of AI");
+  expect(table.columns[1].displayName).toBe("Use of AI - Which AI tool?");
+  expect(table.columns[2].displayName).toBe("Use of AI - What was it used for?");
+
+  const tableNoPrefix = new TableTest(survey, data, { showChoiceNestedQuestionParentTitle: false }, []);
+  expect(tableNoPrefix.columns[1].displayName).toBe("Which AI tool?");
+  expect(tableNoPrefix.columns[2].displayName).toBe("What was it used for?");
+});
+
+test("nested question column keeps localized parent title prefix after locale change", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "features",
+        title: {
+          default: "Which product features matter to you?",
+          // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
+          fr: "Quelles fonctionnalités du produit sont importantes pour vous ?"
+        },
+        choices: [
+          { value: "dashboards", text: "Dashboards" },
+          {
+            value: "reports",
+            text: "Reports",
+            elements: [
+              {
+                type: "text",
+                name: "reportTopics",
+                title: {
+                  default: "What topics do you want reports on?",
+                  fr: "Sur quels sujets souhaitez-vous obtenir des rapports ?"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const table = new TableTest(survey, [], {}, []);
+
+  expect(table.columns[1].name).toBe("reportTopics");
+  expect(table.columns[1].displayName).toBe("Which product features matter to you? - What topics do you want reports on?");
+
+  table.locale = "fr";
+  // eslint-disable-next-line surveyjs/eslint-plugin-i18n/only-english-or-code
+  expect(table.columns[1].displayName).toBe("Quelles fonctionnalités du produit sont importantes pour vous ? - Sur quels sujets souhaitez-vous obtenir des rapports ?");
+
+  table.locale = "";
+  expect(table.columns[1].displayName).toBe("Which product features matter to you? - What topics do you want reports on?");
+});
+
+test("checkbox with splitMultiSelectIntoColumns and nested choice elements", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "tools",
+        title: "Tools Used",
+        choices: [
+          { value: "manual", text: "Manual" },
+          {
+            value: "ai",
+            text: "AI",
+            elements: [
+              { type: "text", name: "aiTool", title: "AI Tool Name" }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const data = [{ tools: ["ai"], aiTool: "GPT" }];
+  const table = new TableTest(survey, data, { splitMultiSelectIntoColumns: true }, []);
+
+  expect(table.columns[0].name).toBe("tools.manual");
+  expect(table.columns[0].displayName).toBe("Tools Used - Manual");
+  expect(table.columns[1].name).toBe("tools.ai");
+  expect(table.columns[1].displayName).toBe("Tools Used - AI");
+  expect(table.columns[2].name).toBe("aiTool");
+  expect(table.columns[2].displayName).toBe("Tools Used - AI Tool Name");
+  expect(table.columns[2].getCellData(table, data).displayValue).toBe("GPT");
+});
+
+test("checkbox with splitMultiSelectIntoColumns and showChoiceNestedQuestionParentTitle", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "tools",
+        title: "Tools Used",
+        choices: [
+          { value: "manual", text: "Manual" },
+          {
+            value: "ai",
+            text: "AI",
+            elements: [
+              { type: "text", name: "aiTool", title: "AI Tool Name" }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const data = [{ tools: ["ai"], aiTool: "GPT" }];
+  const table = new TableTest(survey, data, { splitMultiSelectIntoColumns: true, showChoiceNestedQuestionParentTitle: true }, []);
+
+  expect(table.columns[2].name).toBe("aiTool");
+  expect(table.columns[2].displayName).toBe("Tools Used - AI Tool Name");
+});
+
+test("nested question value from previous row does not leak into rows without it", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "tools",
+        title: "Tools Used",
+        choices: [
+          { value: "manual", text: "Manual" },
+          {
+            value: "ai",
+            text: "AI",
+            elements: [
+              { type: "text", name: "aiTool", title: "AI Tool Name" }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const data = [
+    { tools: ["ai"], aiTool: "GPT" },
+    { tools: ["manual"] }
+  ];
+  const table = new TableTest(survey, data, {}, []);
+
+  const tableData = table.getTableData();
+  expect(tableData[0]["aiTool"]).toBe("GPT");
+  expect(tableData[1]["aiTool"]).toBe("");
 });
