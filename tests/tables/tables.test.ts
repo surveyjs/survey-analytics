@@ -1910,3 +1910,35 @@ test("checkbox with splitMultiSelectIntoColumns and showNestedQuestionParentTitl
   expect(table.columns[2].name).toBe("aiTool");
   expect(table.columns[2].displayName).toBe("Tools Used - AI Tool Name");
 });
+
+test("nested question value from previous row does not leak into rows without it", () => {
+  const json = {
+    elements: [
+      {
+        type: "checkbox",
+        name: "tools",
+        title: "Tools Used",
+        choices: [
+          { value: "manual", text: "Manual" },
+          {
+            value: "ai",
+            text: "AI",
+            elements: [
+              { type: "text", name: "aiTool", title: "AI Tool Name" }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const data = [
+    { tools: ["ai"], aiTool: "GPT" },
+    { tools: ["manual"] }
+  ];
+  const table = new TableTest(survey, data, {}, []);
+
+  const tableData = table.getTableData();
+  expect(tableData[0]["aiTool"]).toBe("GPT");
+  expect(tableData[1]["aiTool"]).toBe("");
+});
