@@ -661,6 +661,24 @@ test("strip html tags from title", () => {
   expect(element.displayName).toEqual(json.elements[0].title);
 });
 
+test("strip xss markup from question title used as visualizer title", () => {
+  const xssTitle = "Which of the following best describes you or your organization?<button id='xyz' onclick='alert();'>hello</button><img src='dymmy' onerror='alert(\"xss\");'>";
+  const json = {
+    elements: [
+      {
+        type: "text",
+        name: "question1",
+        title: xssTitle,
+      },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const visPanel = new VisualizationPanel(survey.getAllQuestions(), []);
+  const element = visPanel.getElement("question1");
+  expect(element.displayName).toEqual("Which of the following best describes you or your organization?hello");
+  expect(visPanel.getVisualizer("question1").title).toEqual("Which of the following best describes you or your organization?hello");
+});
+
 test("pass backgroundColor to children", () => {
   const json = {
     elements: [

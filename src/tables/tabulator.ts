@@ -3,6 +3,7 @@ import { ITableOptions } from "./table-interfaces";
 import { SurveyModel, Event, Question, ItemValue, ITheme, mergeObjects } from "survey-core";
 import { ColumnDataType, IColumn, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils/documentHelper";
+import { stripHtml } from "../utils";
 import { localization } from "../localizationManager";
 import { ARIAL_FONT } from "./custom_jspdf_font";
 import { svgTemplate } from "../svgbundle";
@@ -445,14 +446,14 @@ export class Tabulator extends Table {
       if(question.getType() === "matrixdynamic") {
         const matrixQuestion = question as any;
         nestedTableColumns = matrixQuestion.columns.map((col: any) => ({
-          title: col.title || col.name,
+          title: this.processTitle(col.title || col.name),
           field: col.name,
         }));
       } else if(question.getType() === "paneldynamic") {
         const panelQuestion = question as any;
         const templateQuestions = panelQuestion.template.questions;
         nestedTableColumns = templateQuestions.map((q: any) => ({
-          title: q.title || q.name,
+          title: this.processTitle(q.title || q.name),
           field: q.name,
         }));
       }
@@ -534,14 +535,14 @@ export class Tabulator extends Table {
     if(question.getType() === "matrixdynamic") {
       const matrixQuestion = question as any;
       nestedColumns = matrixQuestion.columns.map((col: any) => ({
-        title: col.title || col.name,
+        title: this.processTitle(col.title || col.name),
         field: col.name,
       }));
     } else if(question.getType() === "paneldynamic") {
       const panelQuestion = question as any;
       const templateQuestions = panelQuestion.template.questions;
       nestedColumns = templateQuestions.map((q: any) => ({
-        title: q.title || q.name,
+        title: this.processTitle(q.title || q.name),
         field: q.name,
       }));
     }
@@ -585,6 +586,13 @@ export class Tabulator extends Table {
     }
     return cellData;
   };
+
+  private processTitle(title: string): string {
+    if(!this.options || this.options.stripHtmlFromTitles !== false) {
+      return stripHtml(title);
+    }
+    return title;
+  }
 
   private getTitleFormatter(
     cell: any,
@@ -637,7 +645,12 @@ export class Tabulator extends Table {
         minWidth: this._options.columnMinWidth,
         download: this.options.downloadHiddenColumns ? true : undefined,
         formatter,
-        headerTooltip: true,
+        // Tabulator injects tooltip content via innerHTML, so the title must be escaped
+        headerTooltip: (_: MouseEvent, columnComponent: any) => {
+          const span = document.createElement("span");
+          span.textContent = columnComponent.getDefinition().title || "";
+          return span.innerHTML;
+        },
         headerWordWrap: true,
         accessorDownload: this.accessorDownload,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {

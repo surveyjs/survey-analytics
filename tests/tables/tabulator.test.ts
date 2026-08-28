@@ -53,9 +53,55 @@ test("getColumns method", () => {
 
   const columns = <any>tabulator["getColumns"]();
 
+  expect(typeof columns[1].headerTooltip).toBe("function");
   expect(JSON.parse(JSON.stringify(columns))).toEqual(
-    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 56, "width": 56 }, { "field": "car", "title": "What car are you driving?", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 384, "formatter": "plaintext", headerTooltip: true, "headerWordWrap": true }, { "field": "photo", "title": "photo", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 384, "formatter": "html", headerTooltip: true, "headerWordWrap": true }]
+    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 56, "width": 56 }, { "field": "car", "title": "What car are you driving?", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 384, "formatter": "plaintext", "headerWordWrap": true }, { "field": "photo", "title": "photo", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 384, "formatter": "html", "headerWordWrap": true }]
   );
+});
+
+const xssTitle = "Which of the following best describes you or your organization?<button id='xyz' onclick='alert();'>hello</button><img src='dymmy' onerror='alert(\"xss\");'>";
+const xssJson = {
+  questions: [
+    {
+      type: "text",
+      name: "text",
+      title: xssTitle,
+    },
+  ],
+};
+
+test("strip html from column titles by default to prevent xss", () => {
+  const survey = new SurveyModel(xssJson);
+  const tabulator = new Tabulator(survey, [], null);
+
+  expect(tabulator.columns[0].displayName).toBe("Which of the following best describes you or your organization?hello");
+
+  const columns = <any>tabulator["getColumns"]();
+  expect(columns[1].title).toBe("Which of the following best describes you or your organization?hello");
+});
+
+test("keep html in column titles when stripHtmlFromTitles is false", () => {
+  const survey = new SurveyModel(xssJson);
+  const tabulator = new Tabulator(survey, [], { stripHtmlFromTitles: false });
+
+  expect(tabulator.columns[0].displayName).toBe(xssTitle);
+});
+
+test("header tooltip content is escaped and cannot inject html", () => {
+  const survey = new SurveyModel(xssJson);
+  const tabulator = new Tabulator(survey, [], { stripHtmlFromTitles: false });
+
+  const columns = <any>tabulator["getColumns"]();
+  const tooltipContent = columns[1].headerTooltip(new MouseEvent("mousemove"), {
+    getDefinition: () => ({ title: columns[1].title }),
+  });
+
+  // Tabulator injects tooltip content via innerHTML - emulate it
+  const tooltipElement = document.createElement("div");
+  tooltipElement.innerHTML = tooltipContent;
+  expect(tooltipElement.querySelector("button")).toBeNull();
+  expect(tooltipElement.querySelector("img")).toBeNull();
+  expect(tooltipElement.textContent).toBe(xssTitle);
 });
 
 test("move column callback", () => {
@@ -212,13 +258,13 @@ test("useNamesAsTitles option", () => {
   let tabulator = new Tabulator(survey, [], null);
   let columns = <any>tabulator.getColumns();
   expect(JSON.parse(JSON.stringify(columns))).toEqual(
-    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 56, "width": 56 }, { "field": "str", "title": "String", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 384, headerTooltip: true, "headerWordWrap": true }]
+    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 56, "width": 56 }, { "field": "str", "title": "String", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 384, "headerWordWrap": true }]
   );
 
   tabulator = new Tabulator(survey, [], <any>{ useNamesAsTitles: true });
   columns = <any>tabulator.getColumns();
   expect(JSON.parse(JSON.stringify(columns))).toEqual(
-    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 56, "width": 56 }, { "field": "str", "title": "str", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 384, headerTooltip: true, "headerWordWrap": true }]
+    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 56, "width": 56 }, { "field": "str", "title": "str", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 384, "headerWordWrap": true }]
   );
 });
 
