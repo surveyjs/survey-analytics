@@ -5,7 +5,7 @@ import { CheckboxColumnsBuilder, ColumnsBuilderFactory, CompositeColumnsBuilder 
 import { CheckboxColumn, CommentColumn, OtherColumn, SelectBaseColumn, SingleChoiceColumn } from "../../src/tables/columns";
 import { QuestionRadiogroupModel } from "survey-core";
 import { LineController } from "chart.js";
-import test from "survey-core/themes/test";
+
 const json = {
   questions: [
     {
