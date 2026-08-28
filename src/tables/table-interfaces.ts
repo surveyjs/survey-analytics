@@ -73,7 +73,15 @@ export interface ITableOptions {
    * @since 3.0.0
    */
   multiSelectColumnValueFormat?: "checkmark" | "selectionOrder";
-  showNestedQuestionParentTitle?: boolean;
+  /**
+   * Specifies whether to prepend the title of a select question to the titles of questions [nested within its choices](https://surveyjs.io/form-library/examples/nest-follow-up-questions-within-choice-options/).
+   *
+   * This property applies to nested questions defined in the `elements` property of Checkboxes, Radio Button Group, Dropdown, and Multi-Select Dropdown (Tag Box) choices.
+   *
+   * Default value: `true`
+   * @since 3.0.3
+   */
+  showChoiceNestedQuestionParentTitle?: boolean;
 }
 
 export interface ITable {

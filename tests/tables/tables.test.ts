@@ -1821,7 +1821,7 @@ test("checkbox with nested choice elements creates columns for nested questions"
   expect(table.columns[1].getCellData(table, data).displayValue).toBe("GPT");
 });
 
-test("showNestedQuestionParentTitle adds parent title prefix to nested columns", () => {
+test("showChoiceNestedQuestionParentTitle adds parent title prefix to nested columns", () => {
   const json = {
     elements: [
       {
@@ -1844,14 +1844,14 @@ test("showNestedQuestionParentTitle adds parent title prefix to nested columns",
   };
   const survey = new SurveyModel(json);
   const data = [{ Question4: "used_ai", Question5: "ChatGPT", Question6: "Research" }];
-  const table = new TableTest(survey, data, { showNestedQuestionParentTitle: true }, []);
+  const table = new TableTest(survey, data, { showChoiceNestedQuestionParentTitle: true }, []);
 
   expect(table.columns.length).toBe(3);
   expect(table.columns[0].displayName).toBe("Use of AI");
   expect(table.columns[1].displayName).toBe("Use of AI - Which AI tool?");
   expect(table.columns[2].displayName).toBe("Use of AI - What was it used for?");
 
-  const tableNoPrefix = new TableTest(survey, data, { showNestedQuestionParentTitle: false }, []);
+  const tableNoPrefix = new TableTest(survey, data, { showChoiceNestedQuestionParentTitle: false }, []);
   expect(tableNoPrefix.columns[1].displayName).toBe("Which AI tool?");
   expect(tableNoPrefix.columns[2].displayName).toBe("What was it used for?");
 });
@@ -1934,7 +1934,7 @@ test("checkbox with splitMultiSelectIntoColumns and nested choice elements", () 
   expect(table.columns[2].getCellData(table, data).displayValue).toBe("GPT");
 });
 
-test("checkbox with splitMultiSelectIntoColumns and showNestedQuestionParentTitle", () => {
+test("checkbox with splitMultiSelectIntoColumns and showChoiceNestedQuestionParentTitle", () => {
   const json = {
     elements: [
       {
@@ -1956,7 +1956,7 @@ test("checkbox with splitMultiSelectIntoColumns and showNestedQuestionParentTitl
   };
   const survey = new SurveyModel(json);
   const data = [{ tools: ["ai"], aiTool: "GPT" }];
-  const table = new TableTest(survey, data, { splitMultiSelectIntoColumns: true, showNestedQuestionParentTitle: true }, []);
+  const table = new TableTest(survey, data, { splitMultiSelectIntoColumns: true, showChoiceNestedQuestionParentTitle: true }, []);
 
   expect(table.columns[2].name).toBe("aiTool");
   expect(table.columns[2].displayName).toBe("Tools Used - AI Tool Name");
