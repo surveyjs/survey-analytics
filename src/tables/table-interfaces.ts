@@ -73,6 +73,7 @@ export interface ITableOptions {
    * @since 3.0.0
    */
   multiSelectColumnValueFormat?: "checkmark" | "selectionOrder";
+  showNestedQuestionParentTitle?: boolean;
 }
 
 export interface ITable {
