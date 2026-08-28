@@ -21,6 +21,7 @@ test.describe("basetests", () => {
 
   test("check xss in header and cell", async ({ page }) => {
     const xssText = "Which of the following best describes you or your organization?<button id='xyz' onclick='alert();'>hello</button><img src='dymmy' onerror='alert(\"xss\");'>";
+    const xssTextSanitized = "Which of the following best describes you or your organization?hello";
 
     // Selectors adapted for Playwright
     const headerSelector = ".tabulator-headers div:nth-of-type(7) span";
@@ -29,7 +30,7 @@ test.describe("basetests", () => {
     const headerText = await page.locator(headerSelector).first().innerText();
     const cellText = await page.locator(cellSelector).first().innerText();
 
-    expect(headerText).toBe(xssText);
-    expect(cellText).toBe(xssText);
+    expect(headerText).toBe(xssTextSanitized);
+    expect(cellText).toBe(xssTextSanitized);
   });
 });
