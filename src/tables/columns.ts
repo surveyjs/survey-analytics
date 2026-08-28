@@ -1,5 +1,5 @@
 import { ItemValue, MatrixRowModel, Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixDynamicModel, QuestionMatrixModel, QuestionPanelDynamicModel, QuestionRadiogroupModel, QuestionSelectBase, QuestionTagboxModel, settings } from "survey-core";
-import { createImagesContainer, createLinksContainer } from "../utils";
+import { createImagesContainer, createLinksContainer, stripHtml } from "../utils";
 import { ICellData, IColumn, ColumnDataType, QuestionLocation, IColumnData } from "./config";
 import { ITableOptions, ITable } from "./table-interfaces";
 
@@ -45,10 +45,19 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
     if(!this.displayNameValue) {
       this.displayName = this.getDisplayName();
     }
-    return this.displayNameValue;
+    return this.processText(this.displayNameValue);
   }
   public set displayName(val: string) {
     this.displayNameValue = val;
+  }
+
+  // question titles may contain user-defined HTML which must not reach table headers or tooltips
+  protected processText(text: string): string {
+    const options = this.table.options;
+    if(!options || options.stripHtmlFromTitles !== false) {
+      return stripHtml(text);
+    }
+    return text;
   }
 
   protected getDisplayName(): string {

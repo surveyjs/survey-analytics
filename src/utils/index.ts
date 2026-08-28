@@ -30,6 +30,10 @@ export function createCommercialLicenseLink() {
   return container;
 }
 
+export function stripHtml(text: string): string {
+  return (text || "").replace(/(<([^>]+)>)/gi, "");
+}
+
 export function createLoadingIndicator() {
   const container = DocumentHelper.createElement("div", "sa-data-loading-indicator-panel");
   const loadingIndicator = DocumentHelper.createElement("div", "sa-data-loading-indicator");
