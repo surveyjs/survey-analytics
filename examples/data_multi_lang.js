@@ -54,6 +54,69 @@ var json = {
         "Signature",
     },
     {
+      type: "checkbox",
+      name: "features",
+      title: {
+        default: "Which product features are important to you?",
+        ru: "Какие функции продукта важны для вас?",
+        fr: "Quelles fonctionnalités du produit sont importantes pour vous ?"
+      },
+      choices: [
+        {
+          value: "reporting",
+          text: {
+            default: "Reporting",
+            ru: "Отчётность",
+            fr: "Rapports"
+          },
+          elements: [
+            {
+              type: "text",
+              name: "reportingDetails",
+              title: {
+                default: "What would you like to report on?",
+                ru: "О чём вы хотели бы получать отчёты?",
+                fr: "Sur quels sujets souhaitez-vous obtenir des rapports ?"
+              }
+            }
+          ]
+        },
+        {
+          value: "integrations",
+          text: {
+            default: "Integrations",
+            ru: "Интеграции",
+            fr: "Intégrations"
+          },
+          elements: [
+            {
+              type: "dropdown",
+              name: "integrationType",
+              title: {
+                default: "Which integration do you need?",
+                ru: "Какая интеграция вам нужна?",
+                fr: "De quelle intégration avez-vous besoin ?"
+              },
+              choices: [
+                {
+                  value: "CRM",
+                  text: { default: "CRM", ru: "CRM", fr: "CRM" }
+                },
+                {
+                  value: "HR",
+                  text: { default: "HR", ru: "HR", fr: "RH" }
+                },
+                {
+                  value: "Marketing",
+                  text: { default: "Marketing", ru: "Маркетинг", fr: "Marketing" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       type: "file",
       title: "Please upload your photo",
       name: "image"
@@ -139,6 +202,9 @@ for (let index = 0; index < 10; index++) {
   data.push({
     text: "저는 7년 동안 한국에서 살았어요",
     satisfaction: randomIntFromInterval(0, 2),
+    features: index % 2 === 0 ? ["reporting", "integrations"] : ["reporting"],
+    reportingDetails: index % 2 === 0 ? "Usage and adoption" : "Usage trends",
+    integrationType: index % 2 === 0 ? "CRM" : "",
     matrix: {
       "Row 1": "Column 1",
       "Row 2": "Column 2"
