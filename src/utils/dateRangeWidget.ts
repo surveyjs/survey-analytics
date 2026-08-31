@@ -72,7 +72,7 @@ export class DateRangeWidget {
     return messageDiv;
   }
 
-  private createDateEditor(dateValue: number, changeHandler: (input: HTMLInputElement) => void): HTMLElement {
+  private createDateEditor(dateValue: number, changeHandler: (input: HTMLInputElement) => void, label: string): HTMLElement {
     const dateEditor = DocumentHelper.createElement("div", "sa-date-range_editor");
     const formBox = DocumentHelper.createElement("div", "sa-date-range_editor-formbox");
     const content = DocumentHelper.createElement("div", "sa-date-range_editor-content");
@@ -81,6 +81,7 @@ export class DateRangeWidget {
         type: "date"
       }
     );
+    input.setAttribute("aria-label", label);
     this.setDateIntoInput(dateValue, input);
 
     input.onchange = (e) => {
@@ -164,7 +165,7 @@ export class DateRangeWidget {
         this.dateRangeContainer.classList.add(DateRangeWidget.invalidRangeClassName);
         this.rangeErrorMessage.textContent = input.validationMessage;
       }
-    });
+    }, localization.getString("startDate"));
     dateRangeEditors.appendChild(this.startDateEditor);
     this.startDateInput = this.startDateEditor.querySelector("input");
     this.setDateIntoInput(currentDateRange.start, this.startDateInput);
@@ -182,7 +183,7 @@ export class DateRangeWidget {
         this.dateRangeContainer.classList.add(DateRangeWidget.invalidRangeClassName);
         this.rangeErrorMessage.textContent = input.validationMessage;
       }
-    });
+    }, localization.getString("endDate"));
     dateRangeEditors.appendChild(this.endDateEditor);
     rangeContainer.appendChild(this.createErrorMessage());
 

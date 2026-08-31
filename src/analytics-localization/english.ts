@@ -70,6 +70,8 @@ export var englishStrings = {
   responsesText: "response(s)",
   noData: "No data",
   selectDateRange: "Select date range...",
+  startDate: "Start date",
+  endDate: "End date",
   includeToday: "Include today",
   reportingPeriodCustom: "Custom",
   reportingPeriodLast7days: "Last 7 days",
