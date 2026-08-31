@@ -31,6 +31,8 @@ test("DateRangeWidget render shows date inputs with correct values", () => {
   expect(inputs.length).toBe(2);
   expect(inputs[0].value).toBe("2025-12-01");
   expect(inputs[1].value).toBe("2025-12-14");
+  expect(inputs[0].getAttribute("aria-label")).toBe("Start date");
+  expect(inputs[1].getAttribute("aria-label")).toBe("End date");
 });
 
 test("DateRangeWidget render is not show dropdown & answerCoun", () => {
