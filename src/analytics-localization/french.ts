@@ -137,6 +137,10 @@ export var frenchStrings = {
   noData: "Aucune donnée",
   // [Auto-translated] "Select date range..."
   selectDateRange: "Sélectionnez la plage de dates...",
+  // [Auto-translated] "Start date"
+  startDate: "Date de début",
+  // [Auto-translated] "End date"
+  endDate: "Date de fin",
   // [Auto-translated] "Include today"
   includeToday: "Incluez aujourd’hui",
   // [Auto-translated] "Custom"

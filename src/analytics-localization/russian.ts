@@ -137,6 +137,10 @@ export var russianStrings = {
   noData: "Нет данных",
   // [Auto-translated] "Select date range..."
   selectDateRange: "Выберите диапазон дат...",
+  // [Auto-translated] "Start date"
+  startDate: "Дата начала работы",
+  // [Auto-translated] "End date"
+  endDate: "Дата окончания",
   // [Auto-translated] "Include today"
   includeToday: "Включить сегодняшний день",
   // [Auto-translated] "Custom"

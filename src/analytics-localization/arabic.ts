@@ -137,6 +137,10 @@ export var arabicStrings = {
   noData: "لا توجد بيانات",
   // [Auto-translated] "Select date range..."
   selectDateRange: "اختر نطاق التاريخ...",
+  // [Auto-translated] "Start date"
+  startDate: "تاريخ البدء",
+  // [Auto-translated] "End date"
+  endDate: "تاريخ النهاية",
   // [Auto-translated] "Include today"
   includeToday: "أدرج اليوم",
   // [Auto-translated] "Custom"

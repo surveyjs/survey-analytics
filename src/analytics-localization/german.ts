@@ -137,6 +137,10 @@ export var germanStrings = {
   noData: "Keine Daten",
   // [Auto-translated] "Select date range..."
   selectDateRange: "Datumsbereich auswählen...",
+  // [Auto-translated] "Start date"
+  startDate: "Startdatum",
+  // [Auto-translated] "End date"
+  endDate: "Enddatum",
   // [Auto-translated] "Include today"
   includeToday: "Heute einbeziehen",
   // [Auto-translated] "Custom"

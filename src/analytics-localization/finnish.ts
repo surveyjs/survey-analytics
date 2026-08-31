@@ -137,6 +137,10 @@ export var finnishStrings = {
   noData: "Ei dataa",
   // [Auto-translated] "Select date range..."
   selectDateRange: "Valitse päivämääräväli...",
+  // [Auto-translated] "Start date"
+  startDate: "Aloituspäivä",
+  // [Auto-translated] "End date"
+  endDate: "Päättymispäivä",
   // [Auto-translated] "Include today"
   includeToday: "Sisällytä tänään",
   // [Auto-translated] "Custom"

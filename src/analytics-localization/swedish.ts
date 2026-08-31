@@ -137,6 +137,10 @@ export var swedishStrings = {
   noData: "Inga data",
   // [Auto-translated] "Select date range..."
   selectDateRange: "Välj datumintervall...",
+  // [Auto-translated] "Start date"
+  startDate: "Startdatum",
+  // [Auto-translated] "End date"
+  endDate: "Slutdatum",
   // [Auto-translated] "Include today"
   includeToday: "Inkludera idag",
   // [Auto-translated] "Custom"

@@ -137,6 +137,10 @@ export var japaneseStrings = {
   noData: "データなし",
   // [Auto-translated] "Select date range..."
   selectDateRange: "日付範囲を選択してください...",
+  // [Auto-translated] "Start date"
+  startDate: "開始日",
+  // [Auto-translated] "End date"
+  endDate: "終了日",
   // [Auto-translated] "Include today"
   includeToday: "今日も含めて",
   // [Auto-translated] "Custom"

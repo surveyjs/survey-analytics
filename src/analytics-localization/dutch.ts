@@ -137,6 +137,10 @@ export var dutchStrings = {
   noData: "Geen gegevens",
   // [Auto-translated] "Select date range..."
   selectDateRange: "Selecteer datumbereik...",
+  // [Auto-translated] "Start date"
+  startDate: "Startdatum",
+  // [Auto-translated] "End date"
+  endDate: "Einddatum",
   // [Auto-translated] "Include today"
   includeToday: "Vandaag opnemen",
   // [Auto-translated] "Custom"

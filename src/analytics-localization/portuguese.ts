@@ -137,6 +137,10 @@ export var portugueseStrings = {
   noData: "Sem dados",
   // [Auto-translated] "Select date range..."
   selectDateRange: "Selecione o intervalo de datas...",
+  // [Auto-translated] "Start date"
+  startDate: "Data de início",
+  // [Auto-translated] "End date"
+  endDate: "Data de término",
   // [Auto-translated] "Include today"
   includeToday: "Incluir hoje",
   // [Auto-translated] "Custom"

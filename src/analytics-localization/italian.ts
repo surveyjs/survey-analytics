@@ -137,6 +137,10 @@ export var italianStrings = {
   noData: "Nessun dato",
   // [Auto-translated] "Select date range..."
   selectDateRange: "Seleziona l'intervallo di date...",
+  // [Auto-translated] "Start date"
+  startDate: "Data di inizio",
+  // [Auto-translated] "End date"
+  endDate: "Data di fine",
   // [Auto-translated] "Include today"
   includeToday: "Include oggi",
   // [Auto-translated] "Custom"

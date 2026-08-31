@@ -137,6 +137,10 @@ export var farsiStrings = {
   noData: "داده ای وجود ندارد",
   // [Auto-translated] "Select date range..."
   selectDateRange: "بازه زمانی را انتخاب کنید...",
+  // [Auto-translated] "Start date"
+  startDate: "تاریخ شروع",
+  // [Auto-translated] "End date"
+  endDate: "تاریخ پایان",
   // [Auto-translated] "Include today"
   includeToday: "امروز را شامل کنید",
   // [Auto-translated] "Custom"

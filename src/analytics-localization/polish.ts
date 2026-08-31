@@ -137,6 +137,10 @@ export var plStrings = {
   noData: "Brak danych",
   // [Auto-translated] "Select date range..."
   selectDateRange: "Wybierz przedział dat...",
+  // [Auto-translated] "Start date"
+  startDate: "Data rozpoczęcia",
+  // [Auto-translated] "End date"
+  endDate: "Data zakończenia",
   // [Auto-translated] "Include today"
   includeToday: "Uwzględnić dziś",
   // [Auto-translated] "Custom"

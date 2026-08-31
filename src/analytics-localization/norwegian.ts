@@ -137,6 +137,10 @@ export var norwegianStrings = {
   noData: "Ingen data",
   // [Auto-translated] "Select date range..."
   selectDateRange: "Velg datointervall...",
+  // [Auto-translated] "Start date"
+  startDate: "Startdato",
+  // [Auto-translated] "End date"
+  endDate: "Sluttdato",
   // [Auto-translated] "Include today"
   includeToday: "Inkluder i dag",
   // [Auto-translated] "Custom"
