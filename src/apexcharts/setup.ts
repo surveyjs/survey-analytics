@@ -60,6 +60,98 @@ export class ApexChartsSetup {
     };
   }
 
+  static dataLabelFitPadding = 4;
+  static measureCtx: CanvasRenderingContext2D | null | undefined;
+
+  static defaultBarPlotDataLabelsConfig() {
+    return {
+      position: "center",
+      hideOverflowingLabels: true,
+    };
+  }
+
+  static getLabelMeasureContext(): CanvasRenderingContext2D | null {
+    if(ApexChartsSetup.measureCtx !== undefined) {
+      return ApexChartsSetup.measureCtx;
+    }
+    if(typeof document === "undefined") {
+      ApexChartsSetup.measureCtx = null;
+      return null;
+    }
+    ApexChartsSetup.measureCtx = document.createElement("canvas").getContext("2d");
+    return ApexChartsSetup.measureCtx;
+  }
+
+  static doesLabelFitInBar(val: number, opts: any, labelText: any): boolean {
+    if(val === 0 || val == null) {
+      return false;
+    }
+    const w = opts?.w;
+    const globals = w?.globals;
+    if(!globals || !globals.gridWidth || !globals.gridHeight) {
+      return true;
+    }
+
+    const isHorizontal = !!w.config?.plotOptions?.bar?.horizontal;
+    const isStacked = !!w.config?.chart?.stacked;
+    const seriesCount = Math.max(w.config?.series?.length || 1, 1);
+    const categoryCount = Math.max(globals.labels?.length || w.config?.xaxis?.categories?.length || 1, 1);
+    const maxY = globals.maxY || 0;
+    const ratio = maxY ? Math.abs(Number(val)) / maxY : 0;
+
+    let barWidth: number;
+    let barHeight: number;
+    if(isHorizontal) {
+      barWidth = globals.gridWidth * ratio;
+      const categorySize = globals.gridHeight / categoryCount;
+      const thickness = isStacked ? categorySize : categorySize / seriesCount;
+      const barHeightPercent = parseFloat(w.config?.plotOptions?.bar?.barHeight) / 100;
+      barHeight = thickness * (isNaN(barHeightPercent) ? 0.7 : barHeightPercent);
+    } else {
+      barHeight = globals.gridHeight * ratio;
+      const categorySize = globals.gridWidth / categoryCount;
+      const thickness = isStacked ? categorySize : categorySize / seriesCount;
+      const columnWidthPercent = parseFloat(w.config?.plotOptions?.bar?.columnWidth) / 100;
+      barWidth = thickness * (isNaN(columnWidthPercent) ? 0.7 : columnWidthPercent);
+    }
+
+    const lines = Array.isArray(labelText) ? labelText.map(String) : String(labelText ?? "").split("\n");
+    const fontSize = parseFloat(w.config?.dataLabels?.style?.fontSize) || 14;
+    const padding = ApexChartsSetup.dataLabelFitPadding * 2;
+    const ctx = ApexChartsSetup.getLabelMeasureContext();
+    let textWidth = 0;
+    if(ctx && typeof ctx.measureText === "function") {
+      const fontFamily = w.config?.dataLabels?.style?.fontFamily || "sans-serif";
+      const fontWeight = w.config?.dataLabels?.style?.fontWeight || "normal";
+      ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+      for(const line of lines) {
+        textWidth = Math.max(textWidth, ctx.measureText(line).width);
+      }
+    }
+    const approxWidth = Math.max(...lines.map((line: string) => line.length), 0) * fontSize * 0.6;
+    textWidth = Math.max(textWidth, approxWidth);
+    const textHeight = lines.length * fontSize * 1.2;
+
+    return textWidth + padding <= barWidth && textHeight + padding <= barHeight;
+  }
+
+  static wrapBarDataLabelFormatter(formatter: (val: any, opts: any) => any) {
+    return function(val: any, opts: any) {
+      const text = formatter(val, opts);
+      if(!ApexChartsSetup.doesLabelFitInBar(Number(val), opts, text)) {
+        return "";
+      }
+      return text;
+    };
+  }
+
+  static createBarDataLabelsConfig(theme: DashboardTheme, formatter?: (val: any, opts: any) => any) {
+    return {
+      ...ApexChartsSetup.defaultDataLabelsConfig(theme),
+      formatter: ApexChartsSetup.wrapBarDataLabelFormatter(formatter || function(val: any) { return val; }),
+    };
+  }
+
   static defaultTooltipConfig(theme: DashboardTheme) {
     const font = theme.tooltipFont;
 
@@ -467,12 +559,9 @@ export class ApexChartsSetup {
     };
 
     // Data label settings
-    const dataLabels: any = {
-      ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
-      formatter: function(val, opts) {
-        return dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], formatLargeNumber(Number(val)));
-      },
-    };
+    const dataLabels: any = ApexChartsSetup.createBarDataLabelsConfig(model.theme, function(val, opts) {
+      return dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], formatLargeNumber(Number(val)));
+    });
 
     // Chart options settings
     const plotOptions: any = {
@@ -480,6 +569,7 @@ export class ApexChartsSetup {
         horizontal: true,
         distributed: !isHistogram && !hasSeries,
         barHeight: isHistogram ? "100%" : (1 - ApexChartsSetup.defaultBarGap) * 100 + "%",
+        dataLabels: ApexChartsSetup.defaultBarPlotDataLabelsConfig(),
       }
     };
 
@@ -586,12 +676,9 @@ export class ApexChartsSetup {
     };
 
     // Data label settings
-    const dataLabels: any = {
-      ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
-      formatter: function(val, opts) {
-        return dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], formatLargeNumber(Number(val)));
-      }
-    };
+    const dataLabels: any = ApexChartsSetup.createBarDataLabelsConfig(model.theme, function(val, opts) {
+      return dataListFormatter(model, texts[opts.seriesIndex][opts.dataPointIndex], formatLargeNumber(Number(val)));
+    });
 
     // Chart options settings
     const plotOptions: any = {
@@ -599,6 +686,7 @@ export class ApexChartsSetup {
         horizontal: false,
         distributed: !isHistogram && !hasSeries,
         columnWidth: isHistogram ? "100%" : (1 - ApexChartsSetup.defaultBarGap) * 100 + "%",
+        dataLabels: ApexChartsSetup.defaultBarPlotDataLabelsConfig(),
       }
     };
 
@@ -815,15 +903,14 @@ export class ApexChartsSetup {
     };
 
     // Data label settings
-    const dataLabels: any = {
-      ...ApexChartsSetup.defaultDataLabelsConfig(model.theme),
-    };
+    const dataLabels: any = ApexChartsSetup.createBarDataLabelsConfig(model.theme);
 
     // Chart options settings
     const plotOptions: any = {
       bar: {
         horizontal: true,
         barHeight: (1 - ApexChartsSetup.defaultBarGap) * 100 + "%",
+        dataLabels: ApexChartsSetup.defaultBarPlotDataLabelsConfig(),
       }
     };
 

@@ -129,4 +129,57 @@ describe("ApexCharts large number formatting", () => {
     const result = formatter(2530000, { seriesIndex: 0, dataPointIndex: 3 });
     expect(result).toBe("2.53M");
   });
+
+  test("bar data labels hide overflow but keep tooltip enabled", () => {
+    const barConfig = ApexChartsSetup.setupBar(selectBase, largeNumberAnswersData);
+    expect(barConfig.plotOptions.bar.dataLabels.hideOverflowingLabels).toBe(true);
+    expect(barConfig.tooltip.enabled).toBe(true);
+
+    const vbarConfig = ApexChartsSetup.setupVBar(selectBase, largeNumberAnswersData);
+    expect(vbarConfig.plotOptions.bar.dataLabels.hideOverflowingLabels).toBe(true);
+    expect(vbarConfig.tooltip.enabled).toBe(true);
+
+    const stackedConfig = ApexChartsSetup.setupStackedBar(selectBase, largeNumberAnswersData);
+    expect(stackedConfig.plotOptions.bar.dataLabels.hideOverflowingLabels).toBe(true);
+    expect(stackedConfig.tooltip.enabled).toBe(true);
+  });
+
+  test("bar data labels hide when they do not fit inside the bar", () => {
+    const config = ApexChartsSetup.setupBar(selectBase, largeNumberAnswersData);
+    const formatter = config.dataLabels.formatter;
+    expect(formatter(0, { seriesIndex: 0, dataPointIndex: 0 })).toBe("");
+
+    const smallBarOpts = {
+      seriesIndex: 0,
+      dataPointIndex: 0,
+      w: {
+        config: {
+          chart: { stacked: false },
+          plotOptions: { bar: { horizontal: true, barHeight: "95%" } },
+          series: [{ data: [12] }],
+          xaxis: { categories: ["A"] },
+          dataLabels: { style: { fontSize: "14px" } },
+        },
+        globals: {
+          gridWidth: 400,
+          gridHeight: 40,
+          maxY: 100,
+          labels: ["A"],
+        },
+      },
+    };
+    expect(ApexChartsSetup.doesLabelFitInBar(12, smallBarOpts, "1.25M (99.99%)")).toBe(false);
+
+    const largeBarOpts = {
+      ...smallBarOpts,
+      w: {
+        ...smallBarOpts.w,
+        globals: {
+          ...smallBarOpts.w.globals,
+          maxY: 12,
+        },
+      },
+    };
+    expect(ApexChartsSetup.doesLabelFitInBar(12, largeBarOpts, "12")).toBe(true);
+  });
 });

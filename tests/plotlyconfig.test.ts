@@ -65,8 +65,18 @@ test("check bar config with showPercentages", async () => {
   expect([config.traces[0].text]).toEqual(selectBase.getPercentages((await selectBase.getAnswersData()).datasets));
   // expect(config.traces[0].width).toBe(0.9);
   expect(config.traces[0].textposition).toBe("inside");
+  expect(config.traces[0].constraintext).toBe("inside");
   expect(config.traces[0].texttemplate).toBe("%{value} (%{text}%)");
+  expect(config.layout.uniformtext.mode).toBe("hide");
   (<any>selectBase)._showPercentages = false;
+});
+
+test("vbar hides inside labels that do not fit and keeps hover", async () => {
+  const config = PlotlySetup.setupVBar(selectBase, await selectBase.getAnswersData());
+  expect(config.traces[0].textposition).toBe("inside");
+  expect(config.traces[0].constraintext).toBe("inside");
+  expect(config.layout.uniformtext.mode).toBe("hide");
+  expect(config.traces[0].hoverlabel).toBeDefined();
 });
 
 test("check bar config tick labels", async () => {
