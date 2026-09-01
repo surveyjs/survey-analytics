@@ -1,6 +1,6 @@
 <div align="center">
 
-[![SurveyJS Dashboard](https://github.com/user-attachments/assets/2b302f6f-5a23-4e88-97cb-00e3ae2faa6c)](https://surveyjs.io/dashboard/examples/)
+<img width="1200" height="600" alt="readme_overview_dashboard" src="https://github.com/user-attachments/assets/24809dd8-1228-43a6-b828-2e9d84a41822" />
 
 [![Build Status](https://dev.azure.com/SurveyJS/V2%20Libraries/_apis/build/status%2Fanalytics%2FAnalytics%20Main?repoName=surveyjs%2Fsurvey-analytics&branchName=master)](https://dev.azure.com/SurveyJS/V2%20Libraries/_build/latest?definitionId=161&repoName=surveyjs%2Fsurvey-analytics&branchName=master)
 <a href="https://github.com/microsoft/playwright">
