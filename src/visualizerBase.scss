@@ -34,7 +34,7 @@
 .sa-visualizer__footer-title {
   @include sjs2--typography--default-strong;
   display: inline-block;
-  color: #404040;
+  color: var(--sjs2-color-fg-basic-secondary);
   line-height: 34px;
   vertical-align: middle;
   margin: 0;
