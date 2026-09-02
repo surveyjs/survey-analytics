@@ -261,22 +261,22 @@ export class DateRangeWidget {
   }
 
   public destroy() {
-    this.dateRangeContainer = undefined;
     this.dateRangeContainer.innerHTML = "";
-    this.startDateEditor = undefined;
+    this.dateRangeContainer = undefined;
     this.startDateEditor.innerHTML = "";
-    this.endDateEditor = undefined;
+    this.startDateEditor = undefined;
     this.endDateEditor.innerHTML = "";
-    this.startDateInput = undefined;
+    this.endDateEditor = undefined;
     this.startDateInput.innerHTML = "";
-    this.endDateInput = undefined;
+    this.startDateInput = undefined;
     this.endDateInput.innerHTML = "";
-    this.countLabel = undefined;
+    this.endDateInput = undefined;
     this.countLabel.innerHTML = "";
-    this.rangeErrorMessage = undefined;
+    this.countLabel = undefined;
     this.rangeErrorMessage.innerHTML = "";
-    this.datePeriodContainer = undefined;
+    this.rangeErrorMessage = undefined;
     this.datePeriodContainer.innerHTML = "";
+    this.datePeriodContainer = undefined;
     this.includeTodayContainer = undefined;
     this.includeTodayCheckbox = undefined;
   }
