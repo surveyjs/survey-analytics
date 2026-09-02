@@ -17,6 +17,9 @@ import { DefaultColumn } from "./columns";
 export interface ITableOptions {
   [index: string]: any;
 
+  // removes HTML tags from question titles used as column headers/tooltips; enabled by default to prevent XSS
+  stripHtmlFromTitles?: boolean;
+
   /**
    * Specifies whether to use question names instead of question titles as column headings.
    *

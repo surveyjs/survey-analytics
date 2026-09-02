@@ -602,7 +602,10 @@ export class Tabulator extends Table {
         minWidth: this._options.columnMinWidth,
         download: this.options.downloadHiddenColumns ? true : undefined,
         formatter,
-        headerTooltip: true,
+        // render the tooltip as plain text: Tabulator injects string tooltips via innerHTML (XSS)
+        headerTooltip: () => DocumentHelper.createElement("div", "", {
+          textContent: column.displayName || column.name,
+        }),
         headerWordWrap: true,
         accessorDownload: this.accessorDownload,
         titleFormatter: (cell: any, formatterParams: any, onRendered: any) => {

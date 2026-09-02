@@ -1,5 +1,5 @@
 import { ItemValue, MatrixRowModel, Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixDynamicModel, QuestionMatrixModel, QuestionPanelDynamicModel, QuestionRadiogroupModel, QuestionSelectBase, QuestionTagboxModel, settings } from "survey-core";
-import { createImagesContainer, createLinksContainer } from "../utils";
+import { createImagesContainer, createLinksContainer, stripHtml } from "../utils";
 import { ICellData, IColumn, ColumnDataType, QuestionLocation, IColumnData } from "./config";
 import { ITableOptions, Table } from "./table";
 
@@ -44,6 +44,10 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
   get displayName(): string {
     if(!this.displayNameValue) {
       this.displayName = this.getDisplayName();
+    }
+    // guard against XSS in user-defined question titles
+    if(!this.table || this.table.options.stripHtmlFromTitles !== false) {
+      return stripHtml(this.displayNameValue);
     }
     return this.displayNameValue;
   }
