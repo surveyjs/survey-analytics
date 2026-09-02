@@ -109,7 +109,7 @@ Three further entry points cover the remaining parts of the library:
 | --- | --- |
 | `survey-analytics/survey.analytics.core` | Visualizers, tables, and the dashboard UI without a bundled charting engine, for applications that supply their own chart adapter (style sheet: `survey-analytics/survey.analytics.core.css`) |
 | `survey-analytics/survey.analytics.tabulator` | Data table view built on [Tabulator](https://tabulator.info/), with filtering, sorting, and CSV/XLSX export |
-| `survey-analytics/survey.analytics.mongo` | Server-side aggregation: builds MongoDB pipelines so large data sets are summarized in the database instead of the browser |
+| `survey-analytics/survey.analytics.mongo` | Server-side aggregation: builds MongoDB pipelines so large data sets are summarized in the database instead of the browser. Requires the [`mongodb`](https://www.npmjs.com/package/mongodb) package, which is declared as an optional peer dependency&mdash;install it explicitly (`npm install mongodb`) when using this entry point |
 
 Import exactly one charting engine per application&mdash;each engine registers itself as the active chart adapter, so importing a second one overrides the first.
 
