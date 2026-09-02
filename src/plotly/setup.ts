@@ -96,6 +96,24 @@ export class PlotlySetup {
     return insideLabelFont;
   }
 
+  static defaultUniformTextConfig(theme: DashboardTheme) {
+    const size = parseFloat(theme.insideLabelFont.size);
+    return {
+      minsize: size && !isNaN(size) ? size : 10,
+      mode: "hide" as const,
+    };
+  }
+
+  static defaultInsideBarTextConfig(theme: DashboardTheme) {
+    return {
+      textposition: "inside",
+      constraintext: "inside",
+      textangle: 0,
+      insidetextanchor: "middle",
+      insidetextfont: PlotlySetup.defaultInsideLabelFont(theme),
+    };
+  }
+
   static defaultAxisXConfig(theme: DashboardTheme) {
     return {
       ...PlotlySetup.defaultAxisConfig(theme),
@@ -388,10 +406,7 @@ export class PlotlySetup {
       customdata: labels,
       hoverinfo: "text",
       orientation: "h",
-      textposition: "inside",
-      textangle: 0,
-      insidetextanchor: "middle",
-      insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
+      ...PlotlySetup.defaultInsideBarTextConfig(model.theme),
       hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
     if(!hasSeries && !isHistogram) {
@@ -472,6 +487,7 @@ export class PlotlySetup {
       modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
       plot_bgcolor: "transparent",
       paper_bgcolor: "transparent",
+      uniformtext: PlotlySetup.defaultUniformTextConfig(model.theme),
     };
 
     if(hasSeries) {
@@ -522,15 +538,17 @@ export class PlotlySetup {
       ({ labels, seriesLabels, colors, texts, datasets } = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets));
     }
 
+    const isLine = model.chartType === "line";
     const traces: any = [];
     const traceConfig: any = {
-      type: model.chartType === "line" ? "line" : "bar",
+      type: isLine ? "line" : "bar",
       x: labels,
       customdata: hasSeries ? seriesLabels : labels,
       hoverinfo: hasSeries ? undefined : "x+y",
       orientation: "v",
-      insidetextanchor: "middle",
-      insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
+      ...(isLine ? {
+        insidetextfont: PlotlySetup.defaultInsideLabelFont(model.theme),
+      } : PlotlySetup.defaultInsideBarTextConfig(model.theme)),
       hoverlabel: PlotlySetup.defaultTooltipConfig(model.theme),
     };
 
@@ -610,6 +628,9 @@ export class PlotlySetup {
       },
       modebar: { ...PlotlySetup.defaultModebarConfig(model.theme) },
     };
+    if(!isLine) {
+      layout.uniformtext = PlotlySetup.defaultUniformTextConfig(model.theme);
+    }
     if(labelsTitle) {
       layout.xaxis.title = { text: labelsTitle };
     }

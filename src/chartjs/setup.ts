@@ -66,6 +66,63 @@ export class ChartJsSetup {
     };
   }
 
+  static dataLabelFitPadding = 4;
+
+  static shouldDisplayBarDataLabel(context: any, formatter?: (value: any, context: any) => any): boolean {
+    const value = context.dataset?.data?.[context.dataIndex];
+    if(value === 0 || value == null) {
+      return false;
+    }
+    const label = formatter ? formatter(value, context) : value;
+    return ChartJsSetup.doesLabelFitInBar(context, label);
+  }
+
+  static doesLabelFitInBar(context: any, labelText: any): boolean {
+    const bar = context.chart?.getDatasetMeta?.(context.datasetIndex)?.data?.[context.dataIndex];
+    if(!bar) {
+      return true;
+    }
+    const props = typeof bar.getProps === "function" ? bar.getProps(["width", "height"], true) : bar;
+    const barWidth = Math.abs(props.width ?? 0);
+    const barHeight = Math.abs(props.height ?? 0);
+    if(!barWidth || !barHeight) {
+      return false;
+    }
+
+    const lines = Array.isArray(labelText) ? labelText.map(String) : String(labelText ?? "").split("\n");
+    const font = context.chart?.options?.plugins?.datalabels?.font || {};
+    const fontSize = font.size || 14;
+    const lineHeight = fontSize * (font.lineHeight || 1.2);
+    const padding = ChartJsSetup.dataLabelFitPadding * 2;
+    const ctx = context.chart?.ctx;
+    let textWidth = 0;
+    if(ctx && typeof ctx.measureText === "function") {
+      const prevFont = ctx.font;
+      ctx.font = `${font.weight || "normal"} ${fontSize}px ${font.family || "sans-serif"}`;
+      for(const line of lines) {
+        textWidth = Math.max(textWidth, ctx.measureText(line).width);
+      }
+      ctx.font = prevFont;
+    } else {
+      textWidth = Math.max(...lines.map((line: string) => line.length), 0) * fontSize * 0.6;
+    }
+
+    return textWidth + padding <= barWidth && lines.length * lineHeight + padding <= barHeight;
+  }
+
+  static createBarDataLabelsConfig(theme: DashboardTheme, formatter?: (value: any, context: any) => any) {
+    const config: any = {
+      ...ChartJsSetup.defaultDataLabelsConfig(theme),
+      display: function(context: any) {
+        return ChartJsSetup.shouldDisplayBarDataLabel(context, formatter);
+      },
+    };
+    if(formatter) {
+      config.formatter = formatter;
+    }
+    return config;
+  }
+
   static defaultTooltipConfig(theme: DashboardTheme) {
     const font = theme.tooltipFont;
     return {
@@ -430,12 +487,9 @@ export class ChartJsSetup {
             },
           },
         },
-        datalabels: {
-          ...ChartJsSetup.defaultDataLabelsConfig(model.theme),
-          formatter: function(val: number, context: any) {
-            return dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], formatLargeNumber(val));
-          }
-        }
+        datalabels: ChartJsSetup.createBarDataLabelsConfig(model.theme, function(val: number, context: any) {
+          return dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], formatLargeNumber(val));
+        }),
       },
       scales: {
         x: xAxisConfig,
@@ -564,12 +618,9 @@ export class ChartJsSetup {
             },
           },
         },
-        datalabels: {
-          ...ChartJsSetup.defaultDataLabelsConfig(model.theme),
-          formatter: function(val: number, context: any) {
-            return dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], formatLargeNumber(val));
-          }
-        }
+        datalabels: ChartJsSetup.createBarDataLabelsConfig(model.theme, function(val: number, context: any) {
+          return dataListFormatter(model, texts[context.datasetIndex][context.dataIndex], formatLargeNumber(val));
+        }),
       },
       scales: {
         x: xAxisConfig,
@@ -762,12 +813,7 @@ export class ChartJsSetup {
         tooltip: {
           ...ChartJsSetup.defaultTooltipConfig(model.theme),
         },
-        datalabels: {
-          ...ChartJsSetup.defaultDataLabelsConfig(model.theme),
-          display: function(context: any) {
-            return context.dataset.data[context.dataIndex] !== 0;
-          },
-        }
+        datalabels: ChartJsSetup.createBarDataLabelsConfig(model.theme),
       },
       scales: {
         x: {
