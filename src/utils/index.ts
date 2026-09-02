@@ -286,6 +286,10 @@ export function createImagesContainer(
   return linksContainer;
 }
 
+export function stripHtml(html: string): string {
+  return (html || "").replace(/(<([^>]+)>)/gi, "");
+}
+
 export function toPrecision(value: number, precision = 2): number {
   const base = Math.pow(10, precision);
   return Math.round(base * value) / base;

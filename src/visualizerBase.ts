@@ -2,7 +2,7 @@ import { Question, QuestionCommentModel, Event, settings, hasLicense } from "sur
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { VisualizationManager } from "./visualizationManager";
-import { DocumentHelper, createLoadingIndicator } from "./utils";
+import { DocumentHelper, createLoadingIndicator, stripHtml } from "./utils";
 import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
 
@@ -716,9 +716,7 @@ export class VisualizerBase implements IDataInfo {
 
   protected processText(text: string): string {
     if(this.options.stripHtmlFromTitles !== false) {
-      let originalText = text || "";
-      let processedText = originalText.replace(/(<([^>]+)>)/gi, "");
-      return processedText;
+      return stripHtml(text);
     }
     return text;
   }

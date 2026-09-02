@@ -55,7 +55,7 @@ test("getColumns method", () => {
   const columns = <any>tabulator["getColumns"]();
 
   expect(JSON.parse(JSON.stringify(columns))).toEqual(
-    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "car", "title": "What car are you driving?", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 248, "formatter": "plaintext", headerTooltip: true, "headerWordWrap": true }, { "field": "photo", "title": "photo", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 248, "formatter": "html", headerTooltip: true, "headerWordWrap": true }]
+    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "car", "title": "What car are you driving?", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 248, "formatter": "plaintext", "headerWordWrap": true }, { "field": "photo", "title": "photo", "widthShrink": 1, "visible": true, "headerSort": false, "minWidth": 248, "formatter": "html", "headerWordWrap": true }]
   );
 });
 
@@ -213,13 +213,13 @@ test("useNamesAsTitles option", () => {
   let tabulator = new Tabulator(survey, [], null);
   let columns = <any>tabulator.getColumns();
   expect(JSON.parse(JSON.stringify(columns))).toEqual(
-    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "str", "title": "String", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 248, headerTooltip: true, "headerWordWrap": true }]
+    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "str", "title": "String", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 248, "headerWordWrap": true }]
   );
 
   tabulator = new Tabulator(survey, [], <any>{ useNamesAsTitles: true });
   columns = <any>tabulator.getColumns();
   expect(JSON.parse(JSON.stringify(columns))).toEqual(
-    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "str", "title": "str", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 248, headerTooltip: true, "headerWordWrap": true }]
+    [{ "headerSort": false, "download": false, "resizable": false, "minWidth": 60, "width": 60 }, { "field": "str", "title": "str", "widthShrink": 1, "visible": true, "headerSort": false, "formatter": "plaintext", minWidth: 248, "headerWordWrap": true }]
   );
 });
 
@@ -615,4 +615,43 @@ test("should allow enabling nested tables via options", () => {
   const tabulator = new Tabulator(survey, [], { useNestedTables: "tabulator" });
 
   expect(tabulator.options.useNestedTables).toBe("tabulator");
+});
+
+const xssTitle = "Which of the following best describes you or your organization?<button id='xyz' onclick='alert();'>hello</button><img src='dymmy' onerror='alert(\"xss\");'>";
+const strippedXssTitle = "Which of the following best describes you or your organization?hello";
+
+test("strip html from question title used as column title", () => {
+  const surveyJson = {
+    questions: [{ type: "text", name: "text", title: xssTitle }],
+  };
+  const survey = new SurveyModel(surveyJson);
+
+  let tabulator = new Tabulator(survey, [], null);
+  expect(tabulator.columns[0].displayName).toBe(strippedXssTitle);
+  let columnDef = tabulator.getColumns()[1];
+  expect(columnDef.title).toBe(strippedXssTitle);
+
+  tabulator = new Tabulator(survey, [], <any>{ stripHtmlFromTitles: false });
+  expect(tabulator.columns[0].displayName).toBe(xssTitle);
+});
+
+test("header tooltip does not inject html from question title", () => {
+  const surveyJson = {
+    questions: [{ type: "text", name: "text", title: xssTitle }],
+  };
+  const survey = new SurveyModel(surveyJson);
+
+  let tabulator = new Tabulator(survey, [], null);
+  let headerTooltip = tabulator.getColumns()[1].headerTooltip;
+  expect(typeof headerTooltip).toBe("function");
+  let tooltipElement = headerTooltip();
+  expect(tooltipElement instanceof HTMLElement).toBeTruthy();
+  expect(tooltipElement.textContent).toBe(strippedXssTitle);
+  expect(tooltipElement.querySelector("img, button")).toBeNull();
+
+  // even with stripping disabled, the tooltip must render the title as plain text
+  tabulator = new Tabulator(survey, [], <any>{ stripHtmlFromTitles: false });
+  tooltipElement = tabulator.getColumns()[1].headerTooltip();
+  expect(tooltipElement.textContent).toBe(xssTitle);
+  expect(tooltipElement.querySelector("img, button")).toBeNull();
 });
