@@ -71,13 +71,12 @@ You can save this state to your preferred storage and restore it later to provid
 
 ### Charting Engines
 
-SurveyJS Dashboard supports three interchangeable charting engines:
+SurveyJS Dashboard supports two interchangeable charting engines:
 
-- Chart.js
-- Plotly.js
-- ApexCharts
+- <a href="https://www.chartjs.org/" target="_blank">Chart.js</a>
+- <a href="https://github.com/plotly/plotly.js#readme" target="blank">Plotly.js</a>
 
-Chart.js is the default charting engine. You can select another supported engine without changing the Dashboard API.
+Chart.js is the default charting engine. You can select Plotly.js without changing the Dashboard API.
 
 SurveyJS Dashboard also provides separate optional modules for:
 
@@ -118,7 +117,7 @@ The `survey-analytics` package provides the dashboard UI, visualization logic, f
 
 It works with `survey-core` to interpret SurveyJS form questions and match collected response data to suitable visualizations.
 
-Chart rendering is provided through an interchangeable chart adapter. Chart.js is used by default, while dedicated package entry points enable Plotly.js or ApexCharts.
+Chart rendering is provided through an interchangeable chart adapter. Chart.js is used by default, while dedicated package entry points enable Plotly.js.
 
 Additional optional modules provide data-table functionality and server-side aggregation for specialized scenarios.
 
