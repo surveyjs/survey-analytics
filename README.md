@@ -113,7 +113,7 @@ Three further entry points cover the remaining parts of the library:
 
 Import exactly one charting engine per application&mdash;each engine registers itself as the active chart adapter, so importing a second one overrides the first.
 
-Every style sheet also ships as a minified `.min.css` build. The charting-engine and Tabulator style sheets additionally have a `fontless` variant (for example, `survey.analytics.fontless.css`) that omits the bundled font declarations when the host application supplies its own typography.
+Every style sheet also ships as a minified `.min.css` build. No style sheet declares `@font-face` rules&mdash;the default Open Sans typeface is declared by `survey-core.css`, which SurveyJS Dashboard already requires, so nothing is loaded from an external font host. The `fontless` variants (for example, `survey.analytics.fontless.css`) are kept as deprecated aliases and are identical to the style sheets they mirror.
 
 ## Get Started
 
