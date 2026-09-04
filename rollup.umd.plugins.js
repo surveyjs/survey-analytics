@@ -272,8 +272,10 @@ function createCssPlugin(options) {
     name: "emit-css",
     writeBundle() {
       emitCssFile({ rootDir, buildDir, entry, isProduction });
-      if(entry.fontlessCssFiles && entry.fontlessCssFiles.length > 0) {
-        emitCssFile({ rootDir, buildDir, entry: { key: entry.key + ".fontless", cssFiles: entry.fontlessCssFiles }, isProduction });
+      // Every style sheet is fontless now that the @font-face rules live in survey-core.
+      // The ".fontless" name stays as a published alias so existing links keep resolving.
+      if(entry.emitFontlessAlias) {
+        emitCssFile({ rootDir, buildDir, entry: { key: entry.key + ".fontless", cssFiles: entry.cssFiles }, isProduction });
       }
     }
   };
