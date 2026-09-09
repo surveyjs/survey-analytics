@@ -4,7 +4,27 @@ import { expect, test as baseTest } from "@playwright/test";
 export const url_summary = "http://127.0.0.1:8080/examples/summarytest.html";
 export const url_tabulator = "http://127.0.0.1:8080/examples/tabulator.html";
 
+// Web fonts (Open Sans, several weights) load lazily over the network: neither survey-core
+// nor survey-analytics ships a font, the example pages declare the faces themselves. A
+// screenshot taken before they finish captures fallback-font rendering, and anything that
+// measures text - a popup sizing itself to its content - keeps the size it was laid out
+// with. document.fonts.status === "loaded" is NOT enough: it reports "loaded" whenever no
+// load is currently in progress, so it returns true in the gap before a lazily-used weight
+// has even started loading. Instead, explicitly kick off every declared @font-face, await
+// them all, then wait for the set to settle.
+export async function waitForFonts(page: Page): Promise<void> {
+  await page.evaluate(async() => {
+    const fonts: any = (document as any).fonts;
+    if(!fonts) return;
+    const pending: Array<Promise<unknown>> = [];
+    fonts.forEach((face: any) => pending.push(face.load().catch(() => undefined)));
+    await Promise.all(pending);
+    await fonts.ready;
+  });
+}
+
 export const initSummary = async (page: Page, json: any, data, options, elements?, state?) => {
+  await waitForFonts(page);
   await page.evaluate(([json, data, options, elements, state]) => {
     var model = new (window as any).Survey.SurveyModel(json);
     (window as any).survey = model;
@@ -26,6 +46,7 @@ export const initSummary = async (page: Page, json: any, data, options, elements
 };
 
 export const initTabulator = async (page, json, data, options?, state?, columnsData?) => {
+  await waitForFonts(page);
   await page.evaluate(({ json, data, options, state, columnsData }) => {
     var survey = new (window as any).Survey.SurveyModel(json);
     const tabulator = new (window as any).SurveyAnalyticsTabulator.Tabulator(survey, data, options, columnsData);
@@ -92,6 +113,7 @@ export async function resetFocusToBody(page: Page): Promise<void> {
 // });
 
 export async function compareScreenshot(page: Page, elementSelector: string | Locator | undefined, screenshotName: string, mask?: Array<Locator>): Promise<void> {
+  await waitForFonts(page);
   await page.addStyleTag({
     content: "textarea::-webkit-resizer { visibility: hidden !important; }"
   });

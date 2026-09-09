@@ -52,7 +52,9 @@ const usedCssVariableKeys: string[] = [
 
 export class DashboardTheme implements ITheme {
   static barGap = 0.05;
-  static fontFamily = "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif";
+  // Mirrors survey-core's --sjs2-typography-font-family-text: used only when that
+  // variable cannot be read.
+  static fontFamily = "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif";
   private _cssStyleDeclaration;
   private _computedValuesCache: { [key: string]: string } = {};
   private _appliedCssVariableKeys: string[] = [];
@@ -173,7 +175,13 @@ export class DashboardTheme implements ITheme {
   }
 
   public isFontLoaded(fontFaceName: string) {
-    return !fontFaceName || !document || !document.fonts || document.fonts.check("1em " + fontFaceName);
+    if(!fontFaceName || !document || !document.fonts) return true;
+    // A font-family value is a fallback list, and document.fonts.check() answers true as
+    // soon as any entry in it resolves - the generic keyword that ends the list always
+    // does. Only the first family is a web font that has to be downloaded, so that is the
+    // one to ask about; otherwise the check degrades into a constant true.
+    const firstFamily = fontFaceName.split(",")[0].trim();
+    return !firstFamily || document.fonts.check("1em " + firstFamily);
   }
 
   public isAxisLabelFontLoaded() {

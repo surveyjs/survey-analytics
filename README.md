@@ -113,7 +113,7 @@ Three further entry points cover the remaining parts of the library:
 
 Import exactly one charting engine per application&mdash;each engine registers itself as the active chart adapter, so importing a second one overrides the first.
 
-Every style sheet also ships as a minified `.min.css` build. No style sheet declares `@font-face` rules&mdash;the default Open Sans typeface is declared by `survey-core.css`, which SurveyJS Dashboard already requires, so nothing is loaded from an external font host. The `fontless` variants (for example, `survey.analytics.fontless.css`) are kept as deprecated aliases and are identical to the style sheets they mirror.
+Every style sheet also ships as a minified `.min.css` build. No style sheet declares `@font-face` rules, and neither does `survey-core.css`: the style sheets only name font families through the `--sjs2-typography-font-family-*` design tokens (Open Sans first, then a system fallback stack) and leave loading the font to the host page. The `fontless` variants (for example, `survey.analytics.fontless.css`) are kept as deprecated aliases and are identical to the style sheets they mirror.
 
 ## Get Started
 
