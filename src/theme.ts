@@ -52,9 +52,7 @@ const usedCssVariableKeys: string[] = [
 
 export class DashboardTheme implements ITheme {
   static barGap = 0.05;
-  // Mirrors survey-core's --sjs2-typography-font-family-text: used only when that
-  // variable cannot be read.
-  static fontFamily = "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif";
+  static fontFamily = "'Open Sans', 'Segoe UI', SegoeUI, Arial, sans-serif";
   private _cssStyleDeclaration;
   private _computedValuesCache: { [key: string]: string } = {};
   private _appliedCssVariableKeys: string[] = [];
