@@ -1,5 +1,5 @@
 ---
-title: Export Survey Results to PDF or Excel | Open-Source JS Form Builder for Angular
+title: Export Survey Results to PDF or Excel | Self-Hosted JS Form Builder for Angular
 description: Convert your survey data to manageable table format  for easy filtering and analysis. Save survey results as PDF or Excel files to visualize or share with others. View free demo for Angular with a step-by-step setup guide.
 ---
 
@@ -73,7 +73,7 @@ Open the `angular.json` file and reference the Tabulator and Table View style sh
 
 ### Add Fonts
 
-Starting with SurveyJS v3.1.0, fonts are no longer included in SurveyJS packages. Load Open Sans separately to preserve the default appearance, unless your application already does so. If you use a custom font, load it instead. Otherwise, the browser uses a fallback font, which may affect spacing and layout.
+Starting with SurveyJS v3.0.4, fonts are no longer included in SurveyJS packages. Load Open Sans separately to preserve the default appearance, unless your application already does so. If you use a custom font, load it instead. Otherwise, the browser uses a fallback font, which may affect spacing and layout.
 
 To add Open Sans using [Fontsource](https://fontsource.org/docs/getting-started/install), run the following command:
 
