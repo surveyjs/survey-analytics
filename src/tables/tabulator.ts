@@ -700,13 +700,37 @@ export class Tabulator extends Table {
 
   public setColumnVisibility(columnName: string, isVisible: boolean): void {
     super.setColumnVisibility(columnName, isVisible);
+    this.applyColumnVisibility(columnName);
     if(this.isRendered) {
-      if(isVisible) {
-        this.tabulatorTables.showColumn(columnName);
-      } else {
-        this.tabulatorTables.hideColumn(columnName);
-      }
       this.layout();
+    }
+  }
+
+  protected setAllColumnsVisibility(isVisible: boolean): void {
+    this.lockStateChanged();
+    try {
+      this._columns.forEach((column) => {
+        if(column.isVisible !== isVisible) {
+          super.setColumnVisibility(column.name, isVisible);
+          this.applyColumnVisibility(column.name);
+        }
+      });
+    } finally {
+      this.unlockStateChanged();
+    }
+    this.stateChanged();
+    if(this.isRendered) {
+      this.layout();
+    }
+  }
+
+  private applyColumnVisibility(columnName: string): void {
+    if(!this.isRendered) return;
+    const column = this.getColumnByName(columnName);
+    if(this.isColumnVisible(column)) {
+      this.tabulatorTables.showColumn(columnName);
+    } else {
+      this.tabulatorTables.hideColumn(columnName);
     }
   }
 

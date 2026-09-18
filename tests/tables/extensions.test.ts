@@ -32,6 +32,31 @@ const survey = new SurveyModel(json);
 const tabulator = new Tabulator(survey, [], null);
 (<any>TableExtensions).extensions["row"] = [];
 
+test("showcolumn dropdown has Select all / Clear selection", () => {
+  const survey = new SurveyModel({
+    elements: [
+      { type: "text", name: "q1", title: "Question 1" },
+      { type: "text", name: "q2", title: "Question 2" },
+    ]
+  });
+  const tabulator = new Tabulator(survey, []);
+  const showColumnExtension = TableExtensions.findExtension("header", "showcolumn");
+  const dropdown = showColumnExtension.render(tabulator, undefined) as HTMLElement;
+  const items = dropdown.querySelectorAll(".sa-action-dropdown-item");
+
+  expect(items[0].textContent).toBe("Clear selection");
+  expect(items[0].classList.contains("sa-action-dropdown-item--toggle-all")).toBe(true);
+  expect(items.length).toBe(3);
+
+  (items[0] as HTMLElement).click();
+  expect(tabulator.columns.every(column => !column.isVisible)).toBe(true);
+  expect(items[0].textContent).toBe("Select all");
+
+  (items[0] as HTMLElement).click();
+  expect(tabulator.columns.every(column => column.isVisible)).toBe(true);
+  expect(items[0].textContent).toBe("Clear selection");
+});
+
 test("registerExtension method", () => {
   var extension: any = {
     name: "test",
