@@ -3,6 +3,8 @@ import { Table } from "../table";
 import { DocumentHelper } from "../../utils/documentHelper";
 import { TableExtensions } from "./tableextensions";
 import { createActionDropdown } from "../../utils/dropdownActionWidget";
+import { ColumnVisibilityAction } from "../../utils/columnVisibilityAction";
+import { IDropdownItemOption } from "../../utils/dropdownBase";
 
 TableExtensions.registerExtension({
   location: "header",
@@ -21,32 +23,12 @@ TableExtensions.registerExtension({
   name: "showcolumn",
   visibleIndex: 20,
   render: function (table: Table): HTMLElement {
-    const allColumns = table.columns.map((column) => {
-      var text = column.displayName || column.name;
-      if(!!text && text.length > 20) {
-        text = text.substring(0, 20) + "...";
-      }
-      return {
-        value: column.name,
-        text: text,
-        title: column.displayName || column.name,
-        icon: "check-24x24"
-      };
-    });
+    const visibilityAction = new ColumnVisibilityAction(table);
     const dropdown = createActionDropdown({
-      options: allColumns,
-      isSelected: (option: any) => {
-        const hiddenColumns = table.columns.filter((column: any) => !column.isVisible);
-        return hiddenColumns.length === 0 || hiddenColumns.filter(el => el.name === option.value).length === 0;
-      },
-      handler: (e: any) => {
-        if(!!e) {
-          if(!e) return;
-          const column = table.columns.filter((column: any) => column.name === e)[0];
-          table.setColumnVisibility(e, !column.isVisible);
-          return false;
-        }
-      },
+      options: () => visibilityAction.getOptions(),
+      isSelected: (option: IDropdownItemOption) => visibilityAction.isSelected(option),
+      updateOption: (option: IDropdownItemOption) => visibilityAction.updateOption(option),
+      handler: (value: string) => visibilityAction.handleSelect(value),
       title: localization.getString("columns")
     });
     dropdown.className += " sa-table__show-column sa-table__header-extension";
