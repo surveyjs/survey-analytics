@@ -282,6 +282,28 @@ export abstract class Table implements ITable {
     this.stateChanged();
   }
 
+  public hideAllColumns(): void {
+    this.setAllColumnsVisibility(false);
+  }
+
+  public showAllColumns(): void {
+    this.setAllColumnsVisibility(true);
+  }
+
+  protected setAllColumnsVisibility(isVisible: boolean): void {
+    this.lockStateChanged();
+    try {
+      this._columns.forEach((column) => {
+        if(column.isVisible !== isVisible) {
+          this.setColumnVisibility(column.name, isVisible);
+        }
+      });
+    } finally {
+      this.unlockStateChanged();
+    }
+    this.stateChanged();
+  }
+
   public setColumnWidth(columnName: string, width: string | number) {
     var column = this.getColumnByName(columnName);
     column.width = width;

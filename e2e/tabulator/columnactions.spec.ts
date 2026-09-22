@@ -52,6 +52,31 @@ test.describe("columnactions", () => {
     await expect(await getColumnsVisibilityArray()).toEqual([true, true, true]);
   });
 
+  test("Check Select all / Clear selection in Columns dropdown", async ({ page }) => {
+    const getColumnsVisibilityArray = async () =>
+      await page.evaluate(() =>
+        (window as any).surveyAnalyticsTabulator.state.elements.map((column: any) => column.isVisible)
+      );
+    const columnsDropdown = page.locator("#tabulatorContainer .sa-table__show-column.sa-table__header-extension");
+
+    await columnsDropdown.click();
+    await expect(page.locator(".sa-action-dropdown-item--toggle-all")).toHaveText("Clear selection");
+
+    await getListItemByText(page, "Clear selection").click();
+    await expect(await getColumnsVisibilityArray()).toEqual([false, false, false]);
+    await expect(page.locator("#tabulatorContainer .tabulator-col-title", { hasText: "Question 1" })).not.toBeVisible();
+    await expect(page.locator("#tabulatorContainer .tabulator-col-title", { hasText: "Question 2" })).not.toBeVisible();
+    await expect(page.locator("#tabulatorContainer .tabulator-col-title", { hasText: "Question 3" })).not.toBeVisible();
+    await expect(page.locator(".sa-action-dropdown-item--toggle-all")).toHaveText("Select all");
+
+    await getListItemByText(page, "Select all").click();
+    await expect(await getColumnsVisibilityArray()).toEqual([true, true, true]);
+    await expect(page.locator("#tabulatorContainer .tabulator-col-title", { hasText: "Question 1" })).toBeVisible();
+    await expect(page.locator("#tabulatorContainer .tabulator-col-title", { hasText: "Question 2" })).toBeVisible();
+    await expect(page.locator("#tabulatorContainer .tabulator-col-title", { hasText: "Question 3" })).toBeVisible();
+    await expect(page.locator(".sa-action-dropdown-item--toggle-all")).toHaveText("Clear selection");
+  });
+
   test("Check move to details", async ({ page }) => {
     const getColumnsLocationsArray = async () =>
       await page.evaluate(() =>

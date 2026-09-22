@@ -122,6 +122,37 @@ test("getState, setState, onStateChanged", () => {
   expect(tables.state).toEqual(initialState);
 });
 
+test("hideAllColumns/showAllColumns", () => {
+  const tables = new TableTest(new SurveyModel(json), [], null, []);
+  let stateChangedCount = 0;
+  tables.onStateChanged.add(() => {
+    stateChangedCount++;
+  });
+
+  expect(tables.columns.map(column => column.isVisible)).toEqual([true, true]);
+  tables.hideAllColumns();
+  expect(tables.columns.map(column => column.isVisible)).toEqual([false, false]);
+  expect(stateChangedCount).toBe(1);
+
+  tables.showAllColumns();
+  expect(tables.columns.map(column => column.isVisible)).toEqual([true, true]);
+  expect(stateChangedCount).toBe(2);
+
+  tables.setColumnVisibility("car", false);
+  expect(stateChangedCount).toBe(3);
+  tables.showAllColumns();
+  expect(tables.columns.map(column => column.isVisible)).toEqual([true, true]);
+  expect(stateChangedCount).toBe(4);
+
+  tables.setColumnLocation("photo", QuestionLocation.Row);
+  tables.setColumnVisibility("car", false);
+  tables.showAllColumns();
+  expect(tables.getColumnByName("car").isVisible).toBe(true);
+  expect(tables.getColumnByName("photo").isVisible).toBe(true);
+  expect(tables.isColumnVisible(tables.getColumnByName("car"))).toBe(true);
+  expect(tables.isColumnVisible(tables.getColumnByName("photo"))).toBe(false);
+});
+
 test("partial state", () => {
   let tables = new TableTest(new SurveyModel(), [], null, []);
   tables.state = { locale: "ru" };
