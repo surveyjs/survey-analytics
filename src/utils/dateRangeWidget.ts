@@ -1,5 +1,6 @@
 import { DocumentHelper } from "./documentHelper";
 import { localization } from "../localizationManager";
+import { endOfDay, startOfDay } from "./calculationDateRanges";
 import { DateRangeModel, DatePeriodEnum, datePeriodsFunctions, IDateRangeModelOptions } from "./dateRangeModel";
 import { IDropdownItemOption } from "./dropdownBase";
 import { createDropdown } from "./dropdownWidget";
@@ -8,6 +9,20 @@ import "./dateRangeWidget.scss";
 
 export type { DatePeriodEnum };
 export { datePeriodsFunctions };
+
+function formatLocalDate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return date.getFullYear() + "-" + month + "-" + day;
+}
+
+function localDateFromInput(value: string): Date {
+  const parts = value.split("-");
+  if(parts.length !== 3) {
+    return new Date(NaN);
+  }
+  return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+}
 
 export interface IDateRangeWidgetOptions extends IDateRangeModelOptions {
   showAnswerCount?: boolean;
@@ -38,13 +53,13 @@ export class DateRangeWidget {
   private updateMinMaxAttributes(): void {
     const dateRange = this.model.currentDateRange;
     if(dateRange.end !== undefined) {
-      this.startDateInput.max = new Date(dateRange.end).toISOString().split("T")[0];
+      this.startDateInput.max = formatLocalDate(new Date(dateRange.end));
     } else {
       this.startDateInput.removeAttribute("max");
     }
 
     if(dateRange.start !== undefined) {
-      this.endDateInput.min = new Date(dateRange.start).toISOString().split("T")[0];
+      this.endDateInput.min = formatLocalDate(new Date(dateRange.start));
     } else {
       this.endDateInput.removeAttribute("min");
     }
@@ -53,7 +68,7 @@ export class DateRangeWidget {
   private setDateIntoInput(dateValue: number, input: HTMLInputElement): void {
     if(!!dateValue) {
       const date = new Date(dateValue);
-      input.value = date.toISOString().split("T")[0];
+      input.value = formatLocalDate(date);
     } else {
       input.value = "";
     }
@@ -158,7 +173,7 @@ export class DateRangeWidget {
 
     this.startDateEditor = this.createDateEditor(currentDateRange.start, (input: HTMLInputElement) => {
       if(input.checkValidity()) {
-        this.model.setFilter((new Date(input.value)).getTime(), this.model.currentDateRange.end, true);
+        this.model.setFilter(startOfDay(localDateFromInput(input.value)).getTime(), this.model.currentDateRange.end, true);
         this.updateElements();
       } else {
         this.startDateEditor.classList.add(DateRangeWidget.invalidRangeEditorClassName);
@@ -176,7 +191,7 @@ export class DateRangeWidget {
 
     this.endDateEditor = this.createDateEditor(currentDateRange.end, (input: HTMLInputElement) => {
       if(input.checkValidity()) {
-        this.model.setFilter(this.model.currentDateRange.start, (new Date(input.value)).getTime(), true);
+        this.model.setFilter(this.model.currentDateRange.start, endOfDay(localDateFromInput(input.value)).getTime(), true);
         this.updateElements();
       } else {
         this.endDateEditor.classList.add(DateRangeWidget.invalidRangeEditorClassName);
