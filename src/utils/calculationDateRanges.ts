@@ -4,17 +4,11 @@ export interface IDateRange {
 }
 
 export function startOfDay(d: Date): Date {
-  const year = d.getUTCFullYear();
-  const month = d.getUTCMonth();
-  const date = d.getUTCDate();
-  return new Date(Date.UTC(year, month, date));
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
 export function endOfDay(d: Date): Date {
-  const year = d.getUTCFullYear();
-  const month = d.getUTCMonth();
-  const date = d.getUTCDate();
-  return new Date(Date.UTC(year, month, date, 23, 59, 59, 999));
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
 }
 
 export function toRange(start: Date | number, end: Date | number): IDateRange {
@@ -29,9 +23,9 @@ export function toRange(start: Date | number, end: Date | number): IDateRange {
  */
 export function getLast7Days(refDate = new Date()): IDateRange {
   const end = endOfDay(refDate);
-  end.setUTCDate(refDate.getUTCDate() - 1);
+  end.setDate(refDate.getDate() - 1);
   const start = startOfDay(end);
-  start.setUTCDate(end.getUTCDate() - 6);
+  start.setDate(end.getDate() - 6);
   return toRange(start, end);
 }
 
@@ -41,9 +35,9 @@ export function getLast7Days(refDate = new Date()): IDateRange {
  */
 export function getLast14Days(refDate = new Date()): IDateRange {
   const end = endOfDay(refDate);
-  end.setUTCDate(refDate.getUTCDate() - 1);
+  end.setDate(refDate.getDate() - 1);
   const start = startOfDay(end);
-  start.setUTCDate(end.getUTCDate() - 13);
+  start.setDate(end.getDate() - 13);
   return toRange(start, end);
 }
 
@@ -53,9 +47,9 @@ export function getLast14Days(refDate = new Date()): IDateRange {
  */
 export function getLast28Days(refDate = new Date()): IDateRange {
   const end = endOfDay(refDate);
-  end.setUTCDate(refDate.getUTCDate() - 1);
+  end.setDate(refDate.getDate() - 1);
   const start = startOfDay(end);
-  start.setUTCDate(end.getUTCDate() - 27);
+  start.setDate(end.getDate() - 27);
   return toRange(start, end);
 }
 
@@ -65,9 +59,9 @@ export function getLast28Days(refDate = new Date()): IDateRange {
  */
 export function getLast30Days(refDate = new Date()): IDateRange {
   const end = endOfDay(refDate);
-  end.setUTCDate(refDate.getUTCDate() - 1);
+  end.setDate(refDate.getDate() - 1);
   const start = startOfDay(end);
-  start.setUTCDate(end.getUTCDate() - 29);
+  start.setDate(end.getDate() - 29);
   return toRange(start, end);
 }
 
@@ -77,14 +71,14 @@ export function getLast30Days(refDate = new Date()): IDateRange {
  */
 export function getLastWeekMon(refDate = new Date()): IDateRange {
   const d = startOfDay(refDate);
-  const day = d.getUTCDay();
+  const day = d.getDay();
   const daysToMonday = day === 0 ? 6 : day - 1;
   const thisMonday = startOfDay(d);
-  thisMonday.setUTCDate(d.getUTCDate() - daysToMonday);
+  thisMonday.setDate(d.getDate() - daysToMonday);
   const lastMonday = startOfDay(thisMonday);
-  lastMonday.setUTCDate(thisMonday.getUTCDate() - 7);
+  lastMonday.setDate(thisMonday.getDate() - 7);
   const lastSunday = startOfDay(lastMonday);
-  lastSunday.setUTCDate(lastMonday.getUTCDate() + 6);
+  lastSunday.setDate(lastMonday.getDate() + 6);
   return toRange(lastMonday, lastSunday);
 }
 
@@ -94,13 +88,13 @@ export function getLastWeekMon(refDate = new Date()): IDateRange {
  */
 export function getLastWeekSun(refDate = new Date()): IDateRange {
   const d = startOfDay(refDate);
-  const daysToSunday = d.getUTCDay();
+  const daysToSunday = d.getDay();
   const thisSunday = startOfDay(d);
-  thisSunday.setUTCDate(d.getUTCDate() - daysToSunday);
+  thisSunday.setDate(d.getDate() - daysToSunday);
   const lastSunday = startOfDay(thisSunday);
-  lastSunday.setUTCDate(thisSunday.getUTCDate() - 7);
+  lastSunday.setDate(thisSunday.getDate() - 7);
   const lastSaturday = startOfDay(lastSunday);
-  lastSaturday.setUTCDate(lastSunday.getUTCDate() + 6);
+  lastSaturday.setDate(lastSunday.getDate() + 6);
   return toRange(lastSunday, lastSaturday);
 }
 
@@ -110,8 +104,8 @@ export function getLastWeekSun(refDate = new Date()): IDateRange {
  */
 export function getLastMonth(refDate = new Date()): IDateRange {
   const date = startOfDay(refDate);
-  const end = new Date(Date.UTC(date.getFullYear(), date.getMonth(), 0));
-  const start = new Date(Date.UTC(date.getFullYear(), date.getMonth() - 1, 1));
+  const end = new Date(date.getFullYear(), date.getMonth(), 0);
+  const start = new Date(date.getFullYear(), date.getMonth() - 1, 1);
   return toRange(start, end);
 }
 
@@ -121,11 +115,11 @@ export function getLastMonth(refDate = new Date()): IDateRange {
  */
 export function getLastQuarter(refDate = new Date()): IDateRange {
   const date = startOfDay(refDate);
-  const q = Math.floor(date.getUTCMonth() / 3) + 1;
+  const q = Math.floor(date.getMonth() / 3) + 1;
   const lastQ = q === 1 ? 4 : q - 1;
-  const year = lastQ === 4 ? date.getUTCFullYear() - 1 : date.getUTCFullYear();
-  const start = new Date(Date.UTC(year, (lastQ - 1) * 3, 1));
-  const end = new Date(Date.UTC(year, lastQ * 3, 0));
+  const year = lastQ === 4 ? date.getFullYear() - 1 : date.getFullYear();
+  const start = new Date(year, (lastQ - 1) * 3, 1);
+  const end = new Date(year, lastQ * 3, 0);
   return toRange(start, end);
 }
 
@@ -135,8 +129,8 @@ export function getLastQuarter(refDate = new Date()): IDateRange {
  */
 export function getLastYear(refDate = new Date()): IDateRange {
   const date = startOfDay(refDate);
-  const start = new Date(Date.UTC(date.getFullYear() - 1, 0, 1));
-  const end = new Date(Date.UTC(date.getFullYear() - 1, 11, 31));
+  const start = new Date(date.getFullYear() - 1, 0, 1);
+  const end = new Date(date.getFullYear() - 1, 11, 31);
   return toRange(start, end);
 }
 
@@ -147,9 +141,9 @@ export function getLastYear(refDate = new Date()): IDateRange {
 export function getThisWeekToDateSun(refDate = new Date(), includeToday = false): IDateRange {
   const ref = startOfDay(refDate);
   const end = endOfDay(ref);
-  if(!includeToday) end.setUTCDate(ref.getUTCDate() - 1);
+  if(!includeToday) end.setDate(ref.getDate() - 1);
   const start = startOfDay(ref);
-  start.setUTCDate(ref.getUTCDate() - ref.getUTCDay());
+  start.setDate(ref.getDate() - ref.getDay());
   return toRange(start.getTime() <= end.getTime() ? start : end, end);
 }
 
@@ -160,11 +154,11 @@ export function getThisWeekToDateSun(refDate = new Date(), includeToday = false)
 export function getThisWeekToDateMon(refDate = new Date(), includeToday = false): IDateRange {
   const ref = startOfDay(refDate);
   const end = endOfDay(ref);
-  if(!includeToday) end.setUTCDate(ref.getUTCDate() - 1);
+  if(!includeToday) end.setDate(ref.getDate() - 1);
   const start = startOfDay(ref);
-  const day = ref.getUTCDay();
+  const day = ref.getDay();
   const diff = day === 0 ? 6 : day - 1;
-  start.setUTCDate(ref.getUTCDate() - diff);
+  start.setDate(ref.getDate() - diff);
   return toRange(start.getTime() <= end.getTime() ? start : end, end);
 }
 
@@ -175,8 +169,8 @@ export function getThisWeekToDateMon(refDate = new Date(), includeToday = false)
 export function getThisMonthToDate(refDate = new Date(), includeToday = false): IDateRange {
   const date = startOfDay(refDate);
   const end = endOfDay(date);
-  if(!includeToday) end.setUTCDate(date.getUTCDate() - 1);
-  const start = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
+  if(!includeToday) end.setDate(date.getDate() - 1);
+  const start = new Date(date.getFullYear(), date.getMonth(), 1);
   return toRange(start.getTime() <= end.getTime() ? start : end, end);
 }
 
@@ -187,9 +181,9 @@ export function getThisMonthToDate(refDate = new Date(), includeToday = false): 
 export function getThisQuarterToDate(refDate = new Date(), includeToday = false): IDateRange {
   const date = startOfDay(refDate);
   const end = endOfDay(date);
-  if(!includeToday) end.setUTCDate(date.getUTCDate() - 1);
-  const q = Math.floor(date.getUTCMonth() / 3) + 1;
-  const start = new Date(Date.UTC(date.getUTCFullYear(), (q - 1) * 3, 1));
+  if(!includeToday) end.setDate(date.getDate() - 1);
+  const q = Math.floor(date.getMonth() / 3) + 1;
+  const start = new Date(date.getFullYear(), (q - 1) * 3, 1);
   return toRange(start.getTime() <= end.getTime() ? start : end, end);
 }
 
@@ -200,7 +194,7 @@ export function getThisQuarterToDate(refDate = new Date(), includeToday = false)
 export function getThisYearToDate(refDate = new Date(), includeToday = false): IDateRange {
   const date = startOfDay(refDate);
   const end = endOfDay(date);
-  if(!includeToday) end.setUTCDate(date.getUTCDate() - 1);
-  const start = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  if(!includeToday) end.setDate(date.getDate() - 1);
+  const start = new Date(date.getFullYear(), 0, 1);
   return toRange(start.getTime() <= end.getTime() ? start : end, end);
 }

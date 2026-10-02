@@ -307,3 +307,33 @@ describe("calculationDateRanges for 30.01.2026", () => {
     expectEndOfDay(range, new Date("2026-01-30"));
   });
 });
+
+describe("calculationDateRanges use the local calendar", () => {
+  test("getLast7Days keeps the local day when UTC is still the previous day", () => {
+    const refDate = new Date(2026, 9, 2, 0, 30, 0);
+    const range = getLast7Days(refDate);
+    expect(range.start).toBe(new Date(2026, 8, 25, 0, 0, 0, 0).getTime());
+    expect(range.end).toBe(new Date(2026, 9, 1, 23, 59, 59, 999).getTime());
+  });
+
+  test("getLastMonth uses the local month on the first local morning", () => {
+    const refDate = new Date(2026, 9, 1, 0, 30, 0);
+    const range = getLastMonth(refDate);
+    expect(range.start).toBe(new Date(2026, 8, 1, 0, 0, 0, 0).getTime());
+    expect(range.end).toBe(new Date(2026, 8, 30, 23, 59, 59, 999).getTime());
+  });
+
+  test("getLastQuarter uses the local quarter on the first local morning", () => {
+    const refDate = new Date(2026, 9, 1, 0, 30, 0);
+    const range = getLastQuarter(refDate);
+    expect(range.start).toBe(new Date(2026, 6, 1, 0, 0, 0, 0).getTime());
+    expect(range.end).toBe(new Date(2026, 8, 30, 23, 59, 59, 999).getTime());
+  });
+
+  test("getLastYear uses the local year on the first local morning", () => {
+    const refDate = new Date(2026, 0, 1, 0, 30, 0);
+    const range = getLastYear(refDate);
+    expect(range.start).toBe(new Date(2025, 0, 1, 0, 0, 0, 0).getTime());
+    expect(range.end).toBe(new Date(2025, 11, 31, 23, 59, 59, 999).getTime());
+  });
+});
