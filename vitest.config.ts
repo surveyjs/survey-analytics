@@ -19,7 +19,7 @@ export default defineConfig({
     fileParallelism: false,
     css: false,
     env: {
-      TZ: "UTC",
+      TZ: process.env.TZ || "UTC",
     },
     environment: "jsdom",
     environmentMatchGlobs: [["tests/mongo/**", "node"]],
