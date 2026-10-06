@@ -83,53 +83,12 @@ npm install @fontsource/open-sans
 
 The configuration below includes the font style sheets for weights 400, 600, and 700. Add them once to your application's global styles.
 
-<details>
-    <summary>NgModule-based components</summary>
-
-```js
-// angular.json
-{
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  // ...
-  "projects": {
-    "project-name": {
-      "projectType": "application",
-      // ...
-      "architect": {
-        "build": {
-          // ...
-          "options": {
-            // ...
-            "styles": [
-              "src/styles.css",
-              "node_modules/@fontsource/open-sans/400.css",
-              "node_modules/@fontsource/open-sans/600.css",
-              "node_modules/@fontsource/open-sans/700.css",
-              "node_modules/tabulator-tables/dist/css/tabulator.css",
-              "node_modules/survey-analytics/survey.analytics.tabulator.css"
-            ],
-            // ...
-          }
-        }
-      }
-    }
-  }
-}
+```css
+/* styles.css */
+@import '@fontsource/open-sans/400.css';
+@import '@fontsource/open-sans/600.css';
+@import '@fontsource/open-sans/700.css';
 ```
-</details>
-
-<details>
-    <summary>Standalone components</summary>
-
-```js
-// app.component.ts
-import "@fontsource/open-sans/400.css";
-import "@fontsource/open-sans/600.css";
-import "@fontsource/open-sans/700.css";
-import "tabulator-tables/dist/css/tabulator.css";
-import "survey-analytics/survey.analytics.tabulator.css";
-```
-</details>
 
 ## Load Survey Results
 

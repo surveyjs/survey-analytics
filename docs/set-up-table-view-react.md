@@ -63,15 +63,13 @@ To add Open Sans using [Fontsource](https://fontsource.org/docs/getting-started/
 npm install @fontsource/open-sans
 ```
 
-The following example imports font weights 400, 600, and 700 alongside the component style sheets. You can also place the font imports in your application's entry file or root layout to load them once for all SurveyJS components.
+The following example imports font weights 400, 600, and 700. Place the font imports in your application's entry file or root layout to load them once for all SurveyJS components.
 
 ```js
-// components/Tabulator.tsx
+// app/layout.tsx or pages/_app.tsx
 import '@fontsource/open-sans/400.css';
 import '@fontsource/open-sans/600.css';
 import '@fontsource/open-sans/700.css';
-import 'tabulator-tables/dist/css/tabulator.css';
-import 'survey-analytics/survey.analytics.tabulator.css';
 ```
 
 ## Load Survey Results
@@ -269,12 +267,16 @@ export default function SurveyTabulator() {
     <summary>View Full Code</summary>
 
 ```js
-// components/Tabulator.tsx
-'use client'
-
+// app/layout.tsx or pages/_app.tsx
 import '@fontsource/open-sans/400.css';
 import '@fontsource/open-sans/600.css';
 import '@fontsource/open-sans/700.css';
+```
+
+```js
+// components/Tabulator.tsx
+'use client'
+
 import 'tabulator-tables/dist/css/tabulator.css';
 import 'survey-analytics/survey.analytics.tabulator.css';
 import { useState, useEffect } from 'react';

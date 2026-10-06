@@ -63,14 +63,13 @@ To add Open Sans using [Fontsource](https://fontsource.org/docs/getting-started/
 npm install @fontsource/open-sans
 ```
 
-The following example imports font weights 400, 600, and 700 alongside the component style sheets. You can also place the font imports in your application's entry file or root layout to load them once for all SurveyJS components.
+The following example imports font weights 400, 600, and 700. Place the font imports in your application's entry file or root layout to load them once for all SurveyJS components.
 
 ```js
-// components/Dashboard.tsx
+// app/layout.tsx or pages/_app.tsx
 import '@fontsource/open-sans/400.css';
 import '@fontsource/open-sans/600.css';
 import '@fontsource/open-sans/700.css';
-import 'survey-analytics/survey.analytics.css';
 ```
 
 ## Load Survey Results
@@ -231,10 +230,14 @@ export default function DashboardComponent() {
     <summary>View Full Code</summary>
 
 ```js
-// components/Dashboard.tsx
+// app/layout.tsx or pages/_app.tsx
 import '@fontsource/open-sans/400.css';
 import '@fontsource/open-sans/600.css';
 import '@fontsource/open-sans/700.css';
+```
+
+```js
+// components/Dashboard.tsx
 import 'survey-analytics/survey.analytics.css';
 import { useState } from 'react';
 import { Model } from 'survey-core';
@@ -349,10 +352,14 @@ export default function DashboardComponent() {
     <summary>View Full Code</summary>
 
 ```js
-// components/Dashboard.tsx
+// app/layout.tsx or pages/_app.tsx
 import '@fontsource/open-sans/400.css';
 import '@fontsource/open-sans/600.css';
 import '@fontsource/open-sans/700.css';
+```
+
+```js
+// components/Dashboard.tsx
 import 'survey-analytics/survey.analytics.css';
 import { useState } from 'react';
 import { Model } from 'survey-core';
@@ -478,13 +485,17 @@ Run the application with `npm run dev` and open [http://localhost:3000/](http://
     <summary>View Full Code</summary>
 
 ```js
+// app/layout.tsx or pages/_app.tsx
+import '@fontsource/open-sans/400.css';
+import '@fontsource/open-sans/600.css';
+import '@fontsource/open-sans/700.css';
+```
+
+```js
 // components/Dashboard.tsx
 'use client'
 
 import { useState, useEffect } from 'react';
-import '@fontsource/open-sans/400.css';
-import '@fontsource/open-sans/600.css';
-import '@fontsource/open-sans/700.css';
 import 'survey-analytics/survey.analytics.css';
 import { Model } from 'survey-core';
 import { Dashboard } from 'survey-analytics';
