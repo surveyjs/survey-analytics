@@ -16,28 +16,34 @@ afterEach(() => {
 });
 
 test("DateRangeWidget shows local calendar dates", () => {
-  const start = new Date(2026, 8, 25, 0, 0, 0, 0);
-  const end = new Date(2026, 9, 1, 23, 59, 59, 999);
-  const config = <IDateRangeWidgetOptions>{
-    onDateRangeChanged: mockOnDateRangeChanged,
-    dateRange: [start, end]
-  };
-  const model = new DateRangeModel(config);
-  const widget = new DateRangeWidget(model, config);
+  const originalTimezone = process.env.TZ;
+  process.env.TZ = "Pacific/Kiritimati";
+  try {
+    const start = new Date(2026, 8, 25, 0, 0, 0, 0);
+    const end = new Date(2026, 9, 1, 23, 59, 59, 999);
+    const config = <IDateRangeWidgetOptions>{
+      onDateRangeChanged: mockOnDateRangeChanged,
+      dateRange: [start, end]
+    };
+    const model = new DateRangeModel(config);
+    const widget = new DateRangeWidget(model, config);
 
-  const element = widget.render();
-  const inputs = element.querySelectorAll("input[type='date']");
+    const element = widget.render();
+    const inputs = element.querySelectorAll("input[type='date']");
 
-  expect(inputs[0].value).toBe("2026-09-25");
-  expect(inputs[1].value).toBe("2026-10-01");
+    expect(inputs[0].value).toBe("2026-09-25");
+    expect(inputs[1].value).toBe("2026-10-01");
 
-  (inputs[0] as HTMLInputElement).value = "2026-09-20";
-  inputs[0].dispatchEvent(new Event("change"));
-  expect(model.currentDateRange.start).toBe(new Date(2026, 8, 20, 0, 0, 0, 0).getTime());
+    (inputs[0] as HTMLInputElement).value = "2026-09-20";
+    inputs[0].dispatchEvent(new Event("change"));
+    expect(model.currentDateRange.start).toBe(new Date(2026, 8, 20, 0, 0, 0, 0).getTime());
 
-  (inputs[1] as HTMLInputElement).value = "2026-09-30";
-  inputs[1].dispatchEvent(new Event("change"));
-  expect(model.currentDateRange.end).toBe(new Date(2026, 8, 30, 23, 59, 59, 999).getTime());
+    (inputs[1] as HTMLInputElement).value = "2026-09-30";
+    inputs[1].dispatchEvent(new Event("change"));
+    expect(model.currentDateRange.end).toBe(new Date(2026, 8, 30, 23, 59, 59, 999).getTime());
+  } finally {
+    process.env.TZ = originalTimezone;
+  }
 });
 
 test("DateRangeWidget render shows date inputs with correct values", () => {
