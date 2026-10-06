@@ -405,6 +405,7 @@ export class ChartJsSetup {
     if(!isHistogram) {
       const reversedAnswersData = reverseAll(labels, seriesLabels, colors, hasSeries, texts, datasets);
       labels = reversedAnswersData.labels;
+      texts = reversedAnswersData.texts;
       datasets = reversedAnswersData.datasets;
     }
 
