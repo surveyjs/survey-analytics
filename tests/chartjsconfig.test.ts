@@ -126,6 +126,27 @@ test("check bar tooltip config with showPercentages", async () => {
   selectBase.showPercentages = false;
 });
 
+test("horizontal bars keep percentages aligned with reversed values", () => {
+  selectBase.showPercentages = true;
+  const config = ChartJsSetup.setupBar(selectBase, {
+    datasets: [[941, 24, 25]],
+    labels: ["agree", "disagree", "neutral"],
+    colors: ["#111111", "#222222", "#333333"],
+    texts: [["95.05", "2.42", "2.53"]],
+    seriesLabels: [],
+    values: ["agree", "disagree", "neutral"],
+  } as any);
+  const tooltipLabel = config.options.plugins.tooltip.callbacks.label;
+  const dataLabel = config.options.plugins.datalabels.formatter;
+
+  expect(tooltipLabel({ datasetIndex: 0, dataIndex: 0, parsed: { x: 25 } })).toBe("25 (2.53%)");
+  expect(tooltipLabel({ datasetIndex: 0, dataIndex: 2, parsed: { x: 941 } })).toBe("941 (95.05%)");
+  expect(dataLabel(25, { datasetIndex: 0, dataIndex: 0 })).toBe("25 (2.53%)");
+  expect(dataLabel(941, { datasetIndex: 0, dataIndex: 2 })).toBe("941 (95.05%)");
+
+  selectBase.showPercentages = false;
+});
+
 test("getTruncatedLabel method", () => {
   const label = "Some very very very very long string for unit testing !";
 
