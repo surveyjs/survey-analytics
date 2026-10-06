@@ -3,7 +3,7 @@
   "name": "survey-analytics",
   "scripts": {
     "serve": "http-server --silent",
-    "test": "vitest run",
+    "test": "TZ=UTC vitest run && TZ=Pacific/Kiritimati vitest run tests/calculationDateRanges.test.ts -t \"getLast7Days keeps the local day\"",
     "test:dev": "vitest --watch",
     "test:debug": "vitest --inspect-brk --no-file-parallelism",
     "e2e": "playwright test --project chromium --ui",

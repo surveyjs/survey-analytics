@@ -1,7 +1,7 @@
 import { createRequire } from "node:module";
 import { vi } from "vitest";
 
-process.env.TZ = "UTC";
+process.env.TZ ||= "UTC";
 
 const originalToLocaleDateString = Date.prototype.toLocaleDateString;
 Date.prototype.toLocaleDateString = function(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string {
