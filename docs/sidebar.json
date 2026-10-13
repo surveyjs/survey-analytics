@@ -87,6 +87,10 @@
       ]
     },
     {
+      "Name": "localization",
+      "Title": "Localization & Globalization"
+    },
+    {
       "Name": "integration-with-plotlyjs",
       "Title": "Integration with Plotly.js"
     },
