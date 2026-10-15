@@ -6,6 +6,7 @@ import { IState } from "../src/config";
 import { PostponeHelper, VisualizerBase } from "../src/visualizerBase";
 import { PivotModel } from "../src/pivot";
 import { NumberModel } from "../src/number";
+import { HistogramModel } from "../src/histogram";
 import { Matrix } from "../src/matrix";
 import { ApexChartsAdapter } from "../src/apexcharts/chart-adapter";
 import { DatePeriodEnum, DateRangeModel } from "../src/utils/dateRangeModel";
@@ -902,4 +903,33 @@ test("showToolbar: false option disables the toolbar", () => {
   const container = document.createElement("div");
   dashboard.render(container);
   expect(container.querySelector(".sa-toolbar")).toBeNull();
+});
+
+test("Dashboard item should pass custom intervals to histogram visualizer", async () => {
+  const survey = new SurveyModel({
+    elements: [{ type: "text", inputType: "number", name: "pressure" }]
+  });
+  const data = [{ pressure: 65 }, { pressure: 85 }, { pressure: 95 }, { pressure: 100 }, { pressure: 120 }];
+  const dashboard = new Dashboard({
+    questions: survey.getAllQuestions(),
+    data,
+    items: [{
+      name: "pressure",
+      visualizer: {
+        intervals: [
+          { start: 60, end: 90, label: "60-90" },
+          { start: 90, end: 110, label: "90-110" },
+          { start: 110, end: 130, label: "110-130" }
+        ]
+      }
+    }]
+  });
+
+  const visualizer = dashboard.getVisualizer("pressure");
+  const visualizers = visualizer instanceof AlternativeVisualizersWrapper ? visualizer.getVisualizers() : [visualizer];
+  const histogram = visualizers.filter(v => v.type === "histogram")[0] as HistogramModel;
+  expect(histogram).toBeDefined();
+  expect(histogram.intervalsMode).toBe("custom");
+  expect(histogram.getLabels()).toStrictEqual(["60-90", "90-110", "110-130"]);
+  expect((await histogram.getCalculatedValues()).data).toStrictEqual([[2, 2, 1]]);
 });

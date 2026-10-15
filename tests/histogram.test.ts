@@ -265,6 +265,50 @@ test("number custom intervals for small result sets", async () => {
   expect(histData.data).toMatchObject([[0, 0, 3, 5, 0]]);
 });
 
+test("number custom intervals on the visualizer level", async () => {
+  const question: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "number",
+    name: "age",
+  };
+  const histogram = new HistogramModel(question, data, {
+    intervals: [
+      { start: 0, end: 18, label: "under 18" },
+      { start: 18, end: 100, label: "18+" }
+    ]
+  });
+
+  const histData = await histogram.getCalculatedValues();
+
+  expect(histogram.hasCustomIntervals).toBeTruthy();
+  expect(histogram.intervalsMode).toBe("custom");
+  expect(histogram.getValues()).toMatchObject([0, 18]);
+  expect(histogram.getLabels()).toMatchObject(["under 18", "18+"]);
+  expect(histData.data).toMatchObject([[3, 5]]);
+});
+
+test("question-level custom intervals take precedence over visualizer-level ones", () => {
+  const question: any = {
+    getType: () => "text",
+    type: "text",
+    inputType: "number",
+    name: "age",
+  };
+  const histogram = new HistogramModel(question, data, {
+    intervals: [
+      { start: 0, end: 100, label: "visualizer level" }
+    ],
+    age: {
+      intervals: [
+        { start: 0, end: 100, label: "question level" }
+      ]
+    }
+  });
+
+  expect(histogram.getLabels()).toMatchObject(["question level"]);
+});
+
 test("histogram series default algorithm data", async () => {
   const question: any = {
     getType: () => "text",
