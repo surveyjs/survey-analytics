@@ -8,8 +8,11 @@ import { IChartAdapter, VisualizerBase } from "../visualizerBase";
 if(registerables) {
   Chart.register(...registerables);
 }
-if(ChartDataLabels) {
-  Chart.register(ChartDataLabels);
+
+// chartjs-plugin-datalabels is attached per chart instead of being registered globally (Chart.register),
+// otherwise it would draw labels on every Chart.js chart in the host application (#869)
+function getChartPlugins(...plugins: any[]): any[] {
+  return [ChartDataLabels, ...plugins].filter(plugin => !!plugin);
 }
 
 export const chartTypes = {
@@ -170,6 +173,7 @@ export class ChartJsAdapter implements IChartAdapter {
               },
             },
           },
+          plugins: getChartPlugins(),
         };
 
         return new Chart(canvas, config);
@@ -219,12 +223,7 @@ export class ChartJsAdapter implements IChartAdapter {
       (this.model as any).labelTruncateLength
     );
     const gaugeValuePlugin = this.createGaugeValuePlugin(chartOptions);
-    if(axisLabelTooltipPlugin) {
-      config.plugins = [...(config.plugins || []), axisLabelTooltipPlugin];
-    }
-    if(gaugeValuePlugin) {
-      config.plugins = [...(config.plugins || []), gaugeValuePlugin];
-    }
+    config.plugins = getChartPlugins(axisLabelTooltipPlugin, gaugeValuePlugin);
 
     if(this.model instanceof SelectBase && this.model.supportSelection) {
       const _model = this.model as SelectBase;
