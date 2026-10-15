@@ -371,13 +371,24 @@ export class HistogramModel extends SelectBase {
     return this.intervals.map(interval => interval.label);
   }
 
+  // Question-level intervals (options[questionName].intervals) take precedence over visualizer-level ones (options.intervals)
+  private get customIntervals(): Array<{start: number, end: number, label: string}> {
+    if(Array.isArray(this.questionOptions?.intervals)) {
+      return this.questionOptions.intervals;
+    }
+    if(Array.isArray(this.options.intervals)) {
+      return this.options.intervals;
+    }
+    return undefined;
+  }
+
   public get hasCustomIntervals() {
-    return !!this.questionOptions && Array.isArray(this.questionOptions.intervals);
+    return !!this.customIntervals;
   }
 
   public get intervals(): Array<{start: number, end: number, label: string}> {
     if(this.hasCustomIntervals) {
-      return this.questionOptions.intervals;
+      return this.customIntervals;
     }
 
     if(this.dataType == "rating") {
