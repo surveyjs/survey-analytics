@@ -1,3 +1,5 @@
+import { Chart } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { QuestionDropdownModel } from "survey-core";
 import { SelectBase } from "../src/selectBase";
 import { NumberModel } from "../src/number";
@@ -64,6 +66,30 @@ test("getChartTypesByVisualizerType returns a copy", () => {
 test("getChartTypesByVisualizerType returns empty array for unknown type", () => {
   const adapterTypes = ChartJsAdapter.getChartTypesByVisualizerType("unknown");
   expect(adapterTypes).toEqual([]);
+});
+
+test("datalabels plugin is not registered globally (#869)", () => {
+  expect(Chart.registry.plugins.get("datalabels")).toBeUndefined();
+});
+
+test("datalabels plugin is attached to each chart config (#869)", async () => {
+  vi.stubGlobal("ResizeObserver", class { observe() { } unobserve() { } disconnect() { } });
+  const selectQuestion = new QuestionDropdownModel("q1");
+  selectQuestion.choices = [
+    { value: "option1", text: "Option 1" },
+    { value: "option2", text: "Option 2" }
+  ];
+  const model = new SelectBase(selectQuestion, [{ q1: "option1" }, { q1: "option2" }], {});
+  const localAdapter = new ChartJsAdapter(model);
+  const chartNode = document.createElement("div");
+  document.body.appendChild(chartNode);
+
+  await localAdapter.create(chartNode);
+  expect(localAdapter.chart.config.plugins).toContain(ChartDataLabels);
+
+  localAdapter.destroy(chartNode);
+  chartNode.remove();
+  vi.unstubAllGlobals();
 });
 
 test("custom gauge value plugin draws text at arc baseline with offsetY", () => {
