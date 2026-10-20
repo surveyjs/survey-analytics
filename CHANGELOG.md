@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.2.2 (2026-10-20)
+
+
+### Bug Fixes
+
+* **chartjs:** don't register chartjs-plugin-datalabels globally ([#872](https://github.com/surveyjs/survey-analytics/issues/872)) ([c1056dc](https://github.com/surveyjs/survey-analytics/commit/c1056dca0f1f7797804882b3c91d5f6eab4c6445)), closes [#869](https://github.com/surveyjs/survey-analytics/issues/869)
+
 ### 3.2.1 (2026-10-13)
 
 ## 3.2.0 (2026-10-06)
