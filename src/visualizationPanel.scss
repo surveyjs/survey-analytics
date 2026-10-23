@@ -89,6 +89,13 @@
   box-shadow: var(--sjs2-border-effect-surface-default);
 }
 
+// Don't clip an opened dropdown list when the card is shorter than the list
+// and keep it above the next card even if focus has left the dropdown (#874)
+.sa-question:has(.sa-dropdown-list.sa-dropdown--opened) {
+  overflow: visible;
+  z-index: 1;
+}
+
 .sa-question .sa-question__content {
   position: relative;
   padding: 0 var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px) var(--sjs2-spacing-x500, 40px);

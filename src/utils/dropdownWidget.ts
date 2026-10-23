@@ -151,14 +151,6 @@ export class DropdownWidget extends DropdownBase {
     if(menuRect.left + menuRect.width > documentWidth - 20) {
       this.dropdownList.style.width = `${documentWidth - menuRect.left - 40}px`;
     }
-
-    const panelContainer = this.dropdownElement.closest(".sa-visualizer");
-    if(panelContainer) {
-      const panelContainerRect = panelContainer.getBoundingClientRect();
-      if((menuRect.y + menuRect.height) > (panelContainerRect.y + panelContainerRect.height)) {
-        this.dropdownList.style.height = `${panelContainerRect.height - menuRect.y + panelContainerRect.y}px`;
-      }
-    }
   }
 
   protected onOpenedByKeyboard(): void {
