@@ -117,6 +117,7 @@ function emitCssFile(options) {
   const compileResult = sass.compileString(scssContent, {
     style: isProduction ? "compressed" : "expanded",
     sourceMap: !isProduction,
+    sourceMapIncludeSources: true,
     loadPaths: [rootDir],
     url: new URL("file://" + rootDir.replace(/\\/g, "/") + "/")
   });

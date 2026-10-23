@@ -49,12 +49,11 @@ export function createUmdConfig(options) {
       }),
       typescript({
         tsconfig: tsconfig,
-        compilerOptions: declarationDir ? {
+        compilerOptions: {
           inlineSources: true,
           sourceMap: true,
-          declaration: true,
-          declarationDir: declarationDir
-        } : {}
+          ...(declarationDir ? { declaration: true, declarationDir: declarationDir } : {})
+        }
       }),
     ],
     output: [
@@ -124,6 +123,8 @@ export function createEsmConfig(options) {
       typescript({
         tsconfig: tsconfig,
         compilerOptions: {
+          inlineSources: true,
+          sourceMap: true,
           declaration: false,
           declarationDir: null,
           "target": "ES2019"
