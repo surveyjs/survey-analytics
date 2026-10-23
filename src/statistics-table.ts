@@ -188,5 +188,6 @@ VisualizationManager.registerVisualizer("radiogroup", StatisticsTable, undefined
 VisualizationManager.registerVisualizer("dropdown", StatisticsTable, undefined, "choices");
 VisualizationManager.registerVisualizer("checkbox", StatisticsTable, undefined, "choices");
 VisualizationManager.registerVisualizer("boolean", StatisticsTableBoolean, undefined, "options");
+VisualizationManager.registerVisualizer("options", StatisticsTableBoolean, undefined, "options");
 VisualizationManager.registerVisualizer("table", StatisticsTable, undefined, "choices");
 VisualizationManager.registerVisualizer("choices", StatisticsTable, undefined, "choices");

@@ -46,3 +46,27 @@ test("Strange visualizer in avaiable types list", () => {
   expect((visualizer.getVisualizers()[0] as SelectBase).chartTypes).toStrictEqual(["bar", "vbar", "pie", "doughnut"]);
   expect(visualizer.getVisualizers()[1].type).toBe("choices");
 });
+
+test("Strange visualizer in avaiable types list for boolean question", () => {
+  const json = {
+    elements: [
+      { "type": "boolean", "name": "recommended", "title": "Have you recommended our product?" },
+    ]
+  };
+  const survey = new SurveyModel(json);
+  const dashboard = new Dashboard({
+    questions: survey.getAllQuestions(),
+    data: [{ recommended: true }]
+  });
+  expect(dashboard.items.length).toBe(1);
+  const item = dashboard.items[0];
+  expect(item.visualizerTypes).toStrictEqual(["boolean", "options"]);
+  expect(item.availableTypes).toStrictEqual(["pie", "doughnut", "bar"]);
+  expect(dashboard.visualizers.length).toBe(1);
+  const visualizer = dashboard.visualizers[0] as AlternativeVisualizersWrapper;
+  expect(visualizer.type).toBe("alternative");
+  expect(visualizer.getVisualizers().map(v => v.type)).toStrictEqual(["boolean", "options"]);
+  const switchItems = visualizer["getVisualizerSwitchItems"]();
+  expect(switchItems.map(i => i.value)).toStrictEqual(["pie", "doughnut", "bar", "options"]);
+  expect(switchItems.filter(i => i.text.indexOf("visualizer_") === 0)).toStrictEqual([]);
+});
