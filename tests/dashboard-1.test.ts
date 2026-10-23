@@ -303,3 +303,34 @@ test("IPivotVisualizerOptions passed to pivot", () => {
   expect(pivot.secondaryYAxes[0].valueName).toBe("question2");
   expect(pivot.secondaryYAxes[0].aggregation).toBe("count");
 });
+
+test("Dashboard item with vhistogram type should render vertical histogram, #873", () => {
+  const json = {
+    elements: [
+      { type: "text", inputType: "number", name: "age" },
+    ],
+  };
+  const survey = new SurveyModel(json);
+  const dashboard = new Dashboard({
+    questions: survey.getAllQuestions(),
+    data: [{ age: 20 }, { age: 40 }, { age: 60 }],
+    items: [{
+      name: "age",
+      type: "vhistogram",
+      allowChangeType: false,
+      visualizer: {
+        intervals: [
+          { start: 0, end: 30, label: "Under 30" },
+          { start: 30, end: 50, label: "30-49" },
+          { start: 50, end: 100, label: "50+" }
+        ]
+      }
+    }]
+  });
+  const item = dashboard.items[0];
+  expect(item.type).toBe("vhistogram");
+  expect(item.visualizerType).toBe("histogram");
+  const histogram = item.visualizer as HistogramModel;
+  expect(histogram.type).toBe("histogram");
+  expect(histogram.chartType).toBe("vhistogram");
+});

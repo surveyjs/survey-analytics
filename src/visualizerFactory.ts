@@ -100,6 +100,12 @@ export class VisualizerFactory {
       );
       if(type) {
         visualizer.setVisualizer(type);
+        // setVisualizer also applies the visualizer type as a chart type (e.g. "histogram"),
+        // so restore the chart type requested by the descriptor (e.g. "vhistogram")
+        const activeVisualizer = visualizer.getVisualizer();
+        if(!!descriptor.chartType && !!activeVisualizer && !!activeVisualizer["setChartType"]) {
+          activeVisualizer["setChartType"](descriptor.chartType);
+        }
       }
       return visualizer;
     }
