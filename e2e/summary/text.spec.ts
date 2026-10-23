@@ -37,4 +37,32 @@ test.describe("text", () => {
     });
     await expect(cells).toEqual(["answer1", "answer2", "answer3"]);
   });
+
+  const shortCardJson = {
+    elements: [
+      { type: "boolean", name: "recommended", title: "Have you recommended our product?" },
+      { type: "comment", name: "feedback", title: "Any comments?" }
+    ]
+  };
+  const shortCardData = [{ recommended: true, feedback: "Great product" }];
+
+  for(const allowDynamicLayout of [true, false]) {
+    test(`chart type dropdown is not cut off in a short card (#874), allowDynamicLayout: ${allowDynamicLayout}`, async ({ page }) => {
+      await initSummary(page, shortCardJson, shortCardData, { allowDynamicLayout });
+
+      await page.locator(".sa-question").nth(1).locator(".sa-dropdown-header").first().click();
+      const list = page.locator(".sa-dropdown-list.sa-dropdown--opened");
+      await expect(list).toBeVisible();
+
+      // The list should show all items without internal scrolling, and its last item shouldn't be covered or clipped
+      const isFullyVisible = await list.evaluate((listElement: HTMLElement) => {
+        const items = listElement.querySelectorAll(".sa-dropdown-item");
+        const lastItem = items[items.length - 1] as HTMLElement;
+        const rect = lastItem.getBoundingClientRect();
+        const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        return listElement.scrollHeight <= listElement.clientHeight && !!hit && lastItem.contains(hit);
+      });
+      expect(isFullyVisible).toBe(true);
+    });
+  }
 });
