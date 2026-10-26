@@ -661,3 +661,60 @@ test("should allow enabling nested tables via options", () => {
 
   expect(tabulator.options.useNestedTables).toBe("tabulator");
 });
+
+test("tabulator redraws on container width change outside of ResizeObserver callback (#420)", async () => {
+  const observers: Array<{ callback: () => void, target: Element, disconnected: boolean }> = [];
+  vi.stubGlobal("ResizeObserver", class {
+    private entry: { callback: () => void, target: Element, disconnected: boolean };
+    constructor(callback: () => void) {
+      this.entry = { callback, target: null, disconnected: false };
+      observers.push(this.entry);
+    }
+    observe(target: Element) { this.entry.target = target; }
+    unobserve() { }
+    disconnect() { this.entry.disconnected = true; }
+  });
+  const frames: Array<FrameRequestCallback> = [];
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => frames.push(callback));
+  vi.stubGlobal("cancelAnimationFrame", (handle: number) => { frames[handle - 1] = undefined; });
+  const runFrames = () => frames.splice(0).forEach(callback => callback && callback(0));
+
+  mockTimeout();
+  const survey = new SurveyModel({ questions: [{ type: "text", name: "q1" }] });
+  const tabulator = new Tabulator(survey, [{ q1: "a" }]);
+  const rendered = new Promise((resolve) => {
+    tabulator.onAfterRender.add(() => resolve(undefined));
+  });
+  tabulator.render(document.createElement("div"));
+  await rendered;
+  restoreTimeout();
+
+  expect(tabulator.tabulatorTables.options.autoResize).toBe(false);
+  const containerObserver = observers.filter(o => o.target === tabulator["tableContainer"]);
+  expect(containerObserver.length).toBe(1);
+
+  const container = tabulator["tableContainer"] as HTMLElement;
+  let width = 0;
+  Object.defineProperty(container, "clientWidth", { configurable: true, get: () => width });
+  const redraw = vi.spyOn(tabulator.tabulatorTables, "redraw").mockImplementation(() => undefined);
+
+  width = 500;
+  containerObserver[0].callback();
+  expect(redraw).toHaveBeenCalledTimes(0);
+  runFrames();
+  expect(redraw).toHaveBeenCalledTimes(1);
+
+  containerObserver[0].callback();
+  runFrames();
+  expect(redraw).toHaveBeenCalledTimes(1);
+
+  width = 400;
+  containerObserver[0].callback();
+  containerObserver[0].callback();
+  runFrames();
+  expect(redraw).toHaveBeenCalledTimes(2);
+
+  tabulator.destroy();
+  expect(containerObserver[0].disconnected).toBe(true);
+  vi.unstubAllGlobals();
+});
