@@ -158,6 +158,8 @@ export class Tabulator extends Table {
   private readonly COLUMN_MIN_WIDTH = 155;
   public tabulatorTables: TabulatorFull = null;
   private tableContainer: HTMLElement = null;
+  private resizeObserver: ResizeObserver = null;
+  private resizeFrame: number = 0;
   private currentDownloadType: string = "";
 
   protected supportSoftRefresh() {
@@ -209,6 +211,7 @@ export class Tabulator extends Table {
         paginationSize: this.currentPageSize,
         movableColumns: true,
         maxHeight: "50vw",
+        autoResize: false,
         columns,
         rowFormatter: this.rowFormatter,
         paginationElement: paginationElement,
@@ -265,6 +268,7 @@ export class Tabulator extends Table {
     }
 
     this.tabulatorTables = new Tabulator.tabulatorTablesConstructor(this.tableContainer, config);
+    this.observeContainerResize();
     this.tabulatorTables.on("columnResized", this.columnResizedCallback);
     this.tabulatorTables.on("columnMoved", this.columnMovedCallback);
     this.tabulatorTables.on("tableBuilt", () => {
@@ -330,7 +334,34 @@ export class Tabulator extends Table {
     return exportAsAction;
   }
 
+  // Tabulator's own autoResize redraws synchronously inside its ResizeObserver callback,
+  // which makes browsers report "ResizeObserver loop completed with undelivered notifications".
+  private observeContainerResize(): void {
+    this.stopObservingContainerResize();
+    if(typeof ResizeObserver === "undefined") return;
+    const container = this.tableContainer;
+    let lastWidth = container.clientWidth;
+    this.resizeObserver = new ResizeObserver(() => {
+      cancelAnimationFrame(this.resizeFrame);
+      this.resizeFrame = requestAnimationFrame(() => {
+        const width = container.clientWidth;
+        if(!width || width === lastWidth) return;
+        lastWidth = width;
+        this.tabulatorTables?.redraw();
+      });
+    });
+    this.resizeObserver.observe(container);
+  }
+
+  private stopObservingContainerResize(): void {
+    if(!this.resizeObserver) return;
+    this.resizeObserver.disconnect();
+    this.resizeObserver = null;
+    cancelAnimationFrame(this.resizeFrame);
+  }
+
   public destroy = () => {
+    this.stopObservingContainerResize();
     this.tabulatorTables.destroy();
     super.destroy();
   };

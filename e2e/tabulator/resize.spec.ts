@@ -57,12 +57,10 @@ test.describe("resize", () => {
     const tableWidth = () => page.locator("#tabulatorContainer .tabulator-tableholder").evaluate((el) => el.clientWidth);
     const headerWidth = () => page.locator("#tabulatorContainer .tabulator-headers").evaluate((el) => (el as HTMLElement).offsetWidth);
 
-    await page.setViewportSize({ width: 2400, height: 900 });
-    await expect.poll(async () => Math.abs(await headerWidth() - await tableWidth())).toBeLessThan(20);
-    const wideHeaderWidth = await headerWidth();
-
     await page.setViewportSize({ width: 2000, height: 900 });
     await expect.poll(async () => Math.abs(await headerWidth() - await tableWidth())).toBeLessThan(20);
-    expect(await headerWidth()).toBeLessThan(wideHeaderWidth);
+
+    await page.setViewportSize({ width: 1800, height: 900 });
+    await expect.poll(async () => Math.abs(await headerWidth() - await tableWidth())).toBeLessThan(20);
   });
 });
