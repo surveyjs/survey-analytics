@@ -1,4 +1,5 @@
 import { Question, SurveyModel } from "survey-core";
+import { localization } from "../../src/localizationManager";
 import { vi } from "vitest";
 // eslint-disable-next-line surveyjs/no-imports-from-entries
 import { Tabulator } from "../../src/entries/tabulator-umd";
@@ -202,6 +203,76 @@ test("check that tabulator take into account downloadRowRange option", () => {
   (<any>tabulator).options.tabulatorOptions.downloadRowRange = "active";
   tabulator.render(document.createElement("table"));
   expect(tabulator.tabulatorTables.options.downloadRowRange).toBe("active");
+});
+
+test.each(["ar", "fa", "he", "ar-SA"])("tabulator uses rtl mode for %s", (locale) => {
+  const prevLocale = localization.currentLocale;
+  mockTimeout();
+  try {
+    const survey = new SurveyModel(json);
+    survey.locale = locale;
+    const container = document.createElement("div");
+    const tabulator = new Tabulator(survey, [], null);
+    tabulator.render(container);
+    expect(container.getAttribute("dir")).toBe("rtl");
+    expect(tabulator.tabulatorTables.options.textDirection).toBe("rtl");
+    expect(container.querySelector(".tabulator").classList.contains("tabulator-rtl")).toBe(true);
+  } finally {
+    localization.currentLocale = prevLocale;
+    restoreTimeout();
+  }
+});
+
+test("tabulator stays ltr for english", () => {
+  const prevLocale = localization.currentLocale;
+  mockTimeout();
+  try {
+    const survey = new SurveyModel(json);
+    survey.locale = "en";
+    const container = document.createElement("div");
+    const tabulator = new Tabulator(survey, [], null);
+    tabulator.render(container);
+    expect(container.hasAttribute("dir")).toBe(false);
+    expect(tabulator.tabulatorTables.options.textDirection).toBe("auto");
+    expect(container.querySelector(".tabulator").classList.contains("tabulator-rtl")).toBe(false);
+  } finally {
+    localization.currentLocale = prevLocale;
+    restoreTimeout();
+  }
+});
+
+test("tabulator textDirection option overrides rtl locale direction", () => {
+  const prevLocale = localization.currentLocale;
+  mockTimeout();
+  try {
+    const survey = new SurveyModel(json);
+    survey.locale = "ar";
+    const tabulator = new Tabulator(survey, [], { tabulatorOptions: { textDirection: "ltr" } });
+    tabulator.render(document.createElement("div"));
+    expect(tabulator.tabulatorTables.options.textDirection).toBe("ltr");
+  } finally {
+    localization.currentLocale = prevLocale;
+    restoreTimeout();
+  }
+});
+
+test("tabulator switches to rtl when the locale changes", () => {
+  const prevLocale = localization.currentLocale;
+  mockTimeout();
+  try {
+    const survey = new SurveyModel(json);
+    const container = document.createElement("div");
+    const tabulator = new Tabulator(survey, [], null);
+    tabulator.render(container);
+    expect(tabulator.tabulatorTables.options.textDirection).toBe("auto");
+    tabulator.locale = "fa";
+    expect(container.getAttribute("dir")).toBe("rtl");
+    expect(tabulator.tabulatorTables.options.textDirection).toBe("rtl");
+    expect(container.querySelector(".tabulator").classList.contains("tabulator-rtl")).toBe(true);
+  } finally {
+    localization.currentLocale = prevLocale;
+    restoreTimeout();
+  }
 });
 
 test("check that tabulator take into account downloadHiddenColumns option", () => {
