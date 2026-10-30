@@ -1,6 +1,6 @@
 import { GetDataFn, Table, TableRow } from "./table";
 import { ITableOptions } from "./table-interfaces";
-import { SurveyModel, Event, Question, ItemValue, ITheme, mergeObjects } from "survey-core";
+import { SurveyModel, Event, Question, ItemValue, ITheme, mergeObjects, surveyLocalization } from "survey-core";
 import { ColumnDataType, IColumn, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils/documentHelper";
 import { stripHtml } from "../utils";
@@ -78,6 +78,20 @@ export const defaultOptions: ITabulatorOptions = {
       }
     },
   },
+};
+
+const rtlLanguages = ["ar", "fa", "he"];
+
+// survey-core records direction only for locales registered with rtl: true.
+// Fall back to the language code so ar/fa/he still enable RTL when that pack is not loaded,
+// and so regional codes such as "ar-SA" follow their base language.
+const isRtlLocale = (locale: string): boolean => {
+  if(!locale) return false;
+  const normalized = locale.toLowerCase();
+  const language = normalized.split("-")[0];
+  const directions = surveyLocalization.localeDirections;
+  if(directions[normalized] === "rtl" || directions[language] === "rtl") return true;
+  return rtlLanguages.indexOf(language) !== -1;
 };
 
 const escapeCellFormula = (field: string) => {
@@ -166,6 +180,10 @@ export class Tabulator extends Table {
     return true;
   }
 
+  private isRtlLanguage(): boolean {
+    return isRtlLocale(this._survey.rootLang) || isRtlLocale(localization.currentLocale);
+  }
+
   protected softRefresh() {
     if(!this.isRendered) return;
     this.layout(true);
@@ -177,6 +195,11 @@ export class Tabulator extends Table {
       targetNode = document.getElementById(targetNode);
     }
     targetNode.className += " sa-table sa-tabulator";
+    if(this.isRtlLanguage()) {
+      targetNode.setAttribute("dir", "rtl");
+    } else {
+      targetNode.removeAttribute("dir");
+    }
     if(!this._appliedTheme) {
       this._appliedTheme = this.theme;
     }
@@ -224,6 +247,7 @@ export class Tabulator extends Table {
           jspdf: this._options.jspdf,
           XLSX: this._options.xlsx
         },
+        textDirection: this.isRtlLanguage() ? "rtl" : "auto",
         columnDefaults: {
           tooltip: (_: MouseEvent, cell: any) => {
             const span = document.createElement("span");
@@ -519,6 +543,7 @@ export class Tabulator extends Table {
           data: displayData,
           columns: nestedTableColumns,
           pagination: false,
+          textDirection: this.isRtlLanguage() ? "rtl" : "auto",
         });
 
         // Cache instance on the element for reuse / potential future teardown.
