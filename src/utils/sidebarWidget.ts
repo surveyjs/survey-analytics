@@ -46,7 +46,7 @@ export class SidebarWidget {
     this.buttonElement.setAttribute("aria-expanded", "false");
 
     if(this.options.buttonTitle) {
-      this.buttonElement.title = this.options.buttonTitle;
+      DocumentHelper.setTooltip(this.buttonElement, this.options.buttonTitle);
     }
 
     const iconName = this.options.buttonIcon ?? "settings_24x24";
@@ -99,7 +99,7 @@ export class SidebarWidget {
     this.panelElement.appendChild(header);
 
     const closeBtn = DocumentHelper.createElement("button", panelClassName + "__close", { type: "button" });
-    closeBtn.setAttribute("aria-label", localization.getString("close"));
+    DocumentHelper.setTooltip(closeBtn, localization.getString("close"));
     closeBtn.appendChild(DocumentHelper.createSvgElement("close-16x16"));
     closeBtn.addEventListener("click", () => this.close());
     header.appendChild(closeBtn);

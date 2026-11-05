@@ -1,4 +1,5 @@
 import { DocumentHelper } from "./documentHelper";
+import { localization } from "../localizationManager";
 import { DropdownBase, IDropdownItemOption } from "./dropdownBase";
 
 /**
@@ -101,6 +102,7 @@ export class DropdownWidget extends DropdownBase {
     const resetElement = document.createElement("div");
     resetElement.className = this.className + "-action " + this.className + "-reset";
     resetElement.appendChild(DocumentHelper.createSvgElement("cancel_24x24"));
+    DocumentHelper.setTooltip(resetElement, localization.getString("clearButton"));
     header.appendChild(resetElement);
     resetElement.addEventListener("click", (e) => {
       this.options.resetHandler!();

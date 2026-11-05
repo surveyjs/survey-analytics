@@ -138,15 +138,22 @@ export abstract class DropdownBase {
     });
   }
 
+  // An explicit option title that differs from the visible text (e.g., "Export as PDF" for "PDF") is shown
+  // in the survey-core tooltip. Otherwise the native `title` only repeats the text (useful when it's truncated).
+  protected updateItemTitle(item: HTMLElement, option: IDropdownItemOption): void {
+    const hint = !!option.title && option.title !== option.text ? option.title : "";
+    DocumentHelper.setTooltip(item, hint);
+    if(!hint && !!option.text) {
+      item.title = option.text;
+    }
+  }
+
   protected createOptionItem(option: IDropdownItemOption): HTMLLIElement {
     const dropdownItem = document.createElement("li");
     dropdownItem.className = this.className + "-item" + (option.className ? " " + option.className : "");
-    const itemTitle = option.title || option.text;
-    if(!!itemTitle) {
-      dropdownItem.title = itemTitle;
-    }
     dropdownItem.dataset.value = option.value;
     dropdownItem.setAttribute("role", "option");
+    this.updateItemTitle(dropdownItem, option);
     dropdownItem.setAttribute("tabindex", "-1");
     dropdownItem.id = `${this.className}-item-${option.value}`;
 

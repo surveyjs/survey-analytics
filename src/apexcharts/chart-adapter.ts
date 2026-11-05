@@ -5,6 +5,7 @@ import { localization } from "../localizationManager";
 import { ApexChartsOptions, ApexChartsSetup } from "./setup";
 import { IChartAdapter, VisualizerBase } from "../visualizerBase";
 import { removeUndefinedProperties } from "../utils/utils";
+import { DocumentHelper } from "../utils/documentHelper";
 
 export const chartTypes = {
   "boolean": ["pie", "doughnut", "bar"],
@@ -21,6 +22,8 @@ export const chartTypes = {
 export class ApexChartsAdapter implements IChartAdapter {
   private _chart: ApexCharts = undefined;
   private _pieCharts: ApexCharts[] = undefined;
+  private stopObservingToolbarTitles: () => void;
+  private toolbarTitlesNode: HTMLElement;
 
   static getChartTypesByVisualizerType(vType: string): Array<string> {
     return (chartTypes[vType] || []).slice();
@@ -81,6 +84,12 @@ export class ApexChartsAdapter implements IChartAdapter {
   }
 
   public async update(chartNode: HTMLElement): Promise<ApexChartsOptions> {
+    if(this.toolbarTitlesNode !== chartNode) {
+      // ApexCharts re-renders its toolbar (e.g., the icon-only "Menu" button) along with the chart.
+      this.stopObservingToolbarTitles?.();
+      this.toolbarTitlesNode = chartNode;
+      this.stopObservingToolbarTitles = DocumentHelper.observeNativeTitles(chartNode, ".apexcharts-toolbar [title]");
+    }
     const _chartType = (this.model as any).chartType;
     const answersData = await this.model.getAnswersData();
     var chartOptions = ApexChartsSetup.setup(_chartType, this.model, answersData as any);
@@ -169,6 +178,9 @@ export class ApexChartsAdapter implements IChartAdapter {
   }
 
   public destroy(node: HTMLElement): void {
+    this.stopObservingToolbarTitles?.();
+    this.stopObservingToolbarTitles = undefined;
+    this.toolbarTitlesNode = undefined;
     if(this._chart) {
       this._chart.destroy();
       this._chart = undefined;

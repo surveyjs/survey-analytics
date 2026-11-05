@@ -339,9 +339,9 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   private createHideButtonElement(element: IVisualizerPanelRenderedElement) {
     const hideElement = document.createElement("div");
     hideElement.className = "sa-question__hide-action";
-    hideElement.title = localization.getString("hideButton");
     hideElement.setAttribute("role", "button");
     hideElement.setAttribute("tabindex", "0");
+    DocumentHelper.setTooltip(hideElement, localization.getString("hideButton"));
     hideElement.appendChild(DocumentHelper.createSvgElement("close-16x16"));
     hideElement.addEventListener("click", (e) => {
       setTimeout(() => this.hideElement(element.name), 0);

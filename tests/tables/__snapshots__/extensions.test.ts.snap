@@ -10,7 +10,9 @@ exports[`render image in details 1`] = `
     >
       <td>
         <button
+          aria-label="Show as Column"
           class="sa-table__svg-button"
+          data-sv-tooltip="Show as Column"
           title="Show as Column"
         >
           <svg>

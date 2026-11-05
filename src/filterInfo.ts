@@ -17,6 +17,7 @@ export class FilterInfo {
     const filterClear = DocumentHelper.createButton(() => {
       visualizer.setSelection(undefined);
     }, undefined, undefined, "close-16x16");
+    DocumentHelper.setTooltip(filterClear, localization.getString("clearButton"));
     this._htmlElement.appendChild(filterClear);
     this._htmlElement.appendChild(this.text);
   }
