@@ -11,7 +11,7 @@ TableExtensions.registerExtension({
   render: function (table: Table, options: any) {
     const btn = DocumentHelper.createSvgButton("drag-24x24");
     btn.className = "sa-table__svg-button sa-table__drag-button";
-    btn.title = localization.getString("columnReorder");
+    DocumentHelper.setTooltip(btn, localization.getString("columnReorder"));
     // const btn = DocumentHelper.createElement(
     //   "button",
     //   "sa-table__svg-button sa-table__drag-button"
@@ -35,14 +35,14 @@ TableExtensions.registerExtension({
     const descTitle = localization.getString("descOrder");
     const ascTitle = localization.getString("ascOrder");
     var btn = DocumentHelper.createSvgButton("reorder-24x24");
-    btn.title = localization.getString("defaultOrder");
+    DocumentHelper.setTooltip(btn, localization.getString("defaultOrder"));
     var direction = "asc";
     btn.onclick = () => {
       if(direction == "asc") {
-        btn.title = descTitle;
+        DocumentHelper.setTooltip(btn, descTitle);
         direction = "desc";
       } else {
-        btn.title = ascTitle;
+        DocumentHelper.setTooltip(btn, ascTitle);
         direction = "asc";
       }
       table.sortByColumn(options.columnName, direction);
@@ -127,12 +127,12 @@ TableExtensions.registerExtension({
     function updateState(column: IColumn) {
       if(column.isPublic) {
         button.className = "sa-table__svg-button";
-        button.title = localization.getString("makePrivateColumn");
+        DocumentHelper.setTooltip(button, localization.getString("makePrivateColumn"));
         makePrivateSvg.style.display = "none";
         makePublicSvg.style.display = "block";
       } else {
         button.className = "sa-table__svg-button sa-table__svg-button--active";
-        button.title = localization.getString("makePublicColumn");
+        DocumentHelper.setTooltip(button, localization.getString("makePublicColumn"));
         makePrivateSvg.style.display = "block";
         makePublicSvg.style.display = "none";
       }

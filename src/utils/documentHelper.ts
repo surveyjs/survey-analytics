@@ -1,3 +1,4 @@
+import { initTooltips, tooltipAttributeName } from "survey-core";
 import { localization } from "../localizationManager";
 
 export class DocumentHelper {
@@ -111,6 +112,57 @@ export class DocumentHelper {
     return buttonElement;
   }
 
+  // Shows the survey-core tooltip (the same one survey and Creator action bars use) for an icon-only control.
+  // `title` is kept for test/automation selectors; the survey-core tooltip manager removes it only while
+  // its own tooltip is visible, so the native browser tooltip doesn't duplicate it. Because `title` can
+  // disappear (also on keyboard focus), the accessible name comes from `aria-label`, which stays put.
+  // `aria-label` is prohibited on generic elements (a role-less div/span), so it's set on controls only:
+  // set `role` before calling this method.
+  public static setTooltip(element: HTMLElement, text: string): void {
+    if(!element) return;
+    const isControl = element.tagName === "BUTTON" || element.hasAttribute("role");
+    if(text) {
+      element.title = text;
+      if(isControl) {
+        element.setAttribute("aria-label", text);
+      }
+      element.setAttribute(tooltipAttributeName, text);
+      initTooltips(element);
+    } else {
+      element.removeAttribute("title");
+      element.removeAttribute("aria-label");
+      element.removeAttribute(tooltipAttributeName);
+    }
+  }
+
+  // Third-party widgets (Tabulator pagination, the ApexCharts toolbar) render controls with a native `title`.
+  // Mirrors such a title into the survey-core tooltip whenever the widget (re)renders the control, provided
+  // the title adds something to the visible text. `aria-label` is left to the widget.
+  // Returns a function that stops observing.
+  public static observeNativeTitles(root: HTMLElement, selector = "[title]"): () => void {
+    if(!root) return () => { };
+    const apply = () => {
+      root.querySelectorAll<HTMLElement>(selector).forEach((el) => {
+        const title = el.getAttribute("title");
+        // The survey-core tooltip takes `title` off while it is visible; nothing to sync then.
+        if(!title) return;
+        if(title !== (el.textContent || "").trim()) {
+          if(el.getAttribute(tooltipAttributeName) !== title) {
+            el.setAttribute(tooltipAttributeName, title);
+          }
+        } else if(el.hasAttribute(tooltipAttributeName)) {
+          el.removeAttribute(tooltipAttributeName);
+        }
+      });
+    };
+    apply();
+    initTooltips(root);
+    if(typeof MutationObserver === "undefined") return () => { };
+    const observer = new MutationObserver(apply);
+    observer.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ["title"] });
+    return () => observer.disconnect();
+  }
+
   public static setStyles(element: HTMLElement, styles: Record<string, any>): void {
     if(!element || !styles) return;
 
@@ -168,7 +220,7 @@ export class DocumentHelper {
     );
     btn.appendChild(DocumentHelper.createSvgElement(path));
     if(title) {
-      btn.title = title;
+      DocumentHelper.setTooltip(btn, title);
     }
     return btn;
   }
@@ -190,13 +242,13 @@ export class DocumentHelper {
     const toggle = (e: any) => {
       if(state === "first") {
         state = "second";
-        button.title = text2;
+        DocumentHelper.setTooltip(button, text2);
         button.removeChild(svg1);
         button.appendChild(svg2);
         handler2(e);
       } else if(state === "second") {
         state = "first";
-        button.title = text1;
+        DocumentHelper.setTooltip(button, text1);
         button.removeChild(svg2);
         button.appendChild(svg1);
         handler1(e);
@@ -204,10 +256,10 @@ export class DocumentHelper {
     };
 
     if(state === "first") {
-      button.title = text1;
+      DocumentHelper.setTooltip(button, text1);
       button.appendChild(svg1);
     } else if((state = "second")) {
-      button.title = text2;
+      DocumentHelper.setTooltip(button, text2);
       button.appendChild(svg2);
     }
 

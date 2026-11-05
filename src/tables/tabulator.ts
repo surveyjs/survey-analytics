@@ -293,6 +293,9 @@ export class Tabulator extends Table {
 
     this.tabulatorTables = new Tabulator.tabulatorTablesConstructor(this.tableContainer, config);
     this.observeContainerResize();
+    // Tabulator re-renders its page buttons ("First Page", "Show Page 2", ...) on every page change.
+    this.stopObservingPaginationTitles?.();
+    this.stopObservingPaginationTitles = DocumentHelper.observeNativeTitles(paginationElement);
     this.tabulatorTables.on("columnResized", this.columnResizedCallback);
     this.tabulatorTables.on("columnMoved", this.columnMovedCallback);
     this.tabulatorTables.on("tableBuilt", () => {
@@ -384,8 +387,12 @@ export class Tabulator extends Table {
     cancelAnimationFrame(this.resizeFrame);
   }
 
+  private stopObservingPaginationTitles: () => void;
+
   public destroy = () => {
     this.stopObservingContainerResize();
+    this.stopObservingPaginationTitles?.();
+    this.stopObservingPaginationTitles = undefined;
     this.tabulatorTables.destroy();
     super.destroy();
   };

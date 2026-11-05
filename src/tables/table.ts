@@ -1,5 +1,5 @@
 import { SurveyModel, Question, Event, Serializer, EventBase, surveyLocalization } from "survey-core";
-import { hasLicense } from "survey-core";
+import { hasLicense, initTooltips } from "survey-core";
 import {
   IPermission,
   QuestionLocation,
@@ -121,6 +121,8 @@ export abstract class Table implements ITable {
       targetNode = document.getElementById(targetNode);
     }
     targetNode.innerHTML = "";
+    // Table buttons get `data-sv-tooltip` while still detached; registering the render target also covers a shadow root host.
+    initTooltips(targetNode);
     if(!this.haveCommercialLicense) {
       targetNode.appendChild(createCommercialLicenseLink());
     }
