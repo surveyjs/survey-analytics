@@ -1,4 +1,4 @@
-import { Question, QuestionCommentModel, Event, settings, hasLicense, ITheme, mergeObjects } from "survey-core";
+import { Question, QuestionCommentModel, Event, settings, hasLicense, ITheme, mergeObjects, initTooltips } from "survey-core";
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { VisualizationManager } from "./visualizationManager";
@@ -827,6 +827,10 @@ export class VisualizerBase implements IDataInfo {
       targetElement = document.getElementById(targetElement);
     }
     this.renderResult = targetElement;
+    if(isRoot) {
+      // Buttons get `data-sv-tooltip` while still detached; registering the render target also covers a shadow root host.
+      initTooltips(targetElement);
+    }
     if(isRoot && !this._appliedTheme) {
       this._appliedTheme = this.theme;
       this.onThemeChanged();
