@@ -367,9 +367,14 @@ export class VisualizerBase implements IDataInfo {
       return undefined;
     }
     if(!this._footerVisualizer) {
+      const commentPrefix = (settings || {}).commentPrefix;
       const question = new QuestionCommentModel(
-        this.question.name + (settings || {}).commentPrefix
+        this.question.name + commentPrefix
       );
+      // The name keys the footer's options and state; the data key follows the parent's valueName, as survey-core stores the comment
+      if(this.dataNames[0] !== this.question.name) {
+        question.valueName = this.dataNames[0] + commentPrefix;
+      }
       question.title = this.processText(this.question.title);
 
       let visualizerOptions = Object.assign({}, this.options);

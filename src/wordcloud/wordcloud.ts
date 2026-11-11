@@ -116,7 +116,7 @@ export class WordCloud extends VisualizerBase {
     this.surveyData.forEach((dataRow) => {
       const nestedDataRows = getNestedDataRows(dataRow, this.dataPath);
       nestedDataRows.forEach(row => {
-        const rowValue: any = row[this.question.name];
+        const rowValue: any = row[this.dataNames[0]];
         if(!!rowValue) {
           if(Array.isArray(rowValue)) {
             rowValue.forEach(processString);

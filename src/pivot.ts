@@ -598,11 +598,11 @@ export class PivotModel extends HistogramModel {
 
   public updateStatisticsSeriesValue(statistics: Array<Array<number>>, dataRow: { [index: string]: any }, valueIndex: number, seriesValueIndexes: { [index: string]: number }): void {
     for(let j = 0; j < this.questionsY.length; ++j) {
-      if(dataRow[this.questionsY[j].name] !== undefined) {
+      if(dataRow[this.questionsY[j].dataNames[0]] !== undefined) {
         const questionValueType = this.getQuestionValueType(this.questionsY[j].question);
         let seriseValueIndexName = this.questionsY[j].name;
         if(questionValueType === "enum" || questionValueType === "date") {
-          seriseValueIndexName += "_" + dataRow[this.questionsY[j].name];
+          seriseValueIndexName += "_" + dataRow[this.questionsY[j].dataNames[0]];
         }
         const seriesValueIndex = seriesValueIndexes[seriseValueIndexName];
         statistics[seriesValueIndex][valueIndex] = this.calculateAggregation(dataRow, this.yAxes[j], statistics[seriesValueIndex][valueIndex]);

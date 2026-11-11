@@ -15,7 +15,7 @@ export class RankingModel extends SelectBase {
   }
 
   getQuestionResults() {
-    const name = this.question.name;
+    const name = this.dataNames[0];
     return this.data.map((dataItem) => dataItem[name]);
   }
 
