@@ -229,9 +229,12 @@ export class DataProvider {
   public fixDropdownData(dataNames: string[], valuePath?: Array<string>): void {
     const path = Array.isArray(valuePath) && valuePath.length > 0 ? valuePath : [dataNames[0]];
     const key = path[path.length - 1];
+    // Assigning a "__proto__" key would set the row's prototype instead of its matrix value
+    if(key === "__proto__") return;
     (this.data || []).forEach((dataItem) => {
       const container = getValueByPath(dataItem, path.slice(0, path.length - 1));
       if(!container || typeof container !== "object" || Array.isArray(container)) return;
+      if(!Object.prototype.hasOwnProperty.call(container, key)) return;
       let rawDataItem = container[key];
       if(!!rawDataItem && typeof rawDataItem === "object" && !Array.isArray(rawDataItem)) {
         const arrayData = [];

@@ -2,25 +2,34 @@
 // question's answer in nested objects ({ address: { street } }). Survey-core gives each question its data path
 // (question.getDataPath()), and the dashboard reads every answer through it.
 
+// Path keys come from the survey JSON (valueName) and from the responses, so a path step follows own keys only:
+// an inherited "__proto__" / "constructor" step would reach Object.prototype (prototype pollution on a write).
+function hasOwnKey(obj: any, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(obj, key);
+}
+
 // A row's value at a path of keys, undefined when a step is missing or is not an object. A key is never split
 // at ".": a dotted valueName ("a.b") is one literal key.
 export function getValueByPath(row: any, path: Array<string>): any {
   let res = row;
   for(let i = 0; i < path.length; i++) {
-    if(res === null || typeof res !== "object" || Array.isArray(res)) return undefined;
+    if(res === null || typeof res !== "object" || Array.isArray(res) || !hasOwnKey(res, path[i])) return undefined;
     res = res[path[i]];
   }
   return res;
 }
 
 // The object { [path[0]]: { ... { [last]: value } } } (a records filter takes the shape of a record).
+// A path with a "__proto__" key builds nothing: assigning it would set the object's prototype.
 export function createObjectByPath(path: Array<string>, value: any, target: { [index: string]: any } = {}): { [index: string]: any } {
+  if(path.indexOf("__proto__") > -1) return target;
   let obj = target;
   for(let i = 0; i < path.length - 1; i++) {
-    if(obj[path[i]] === null || typeof obj[path[i]] !== "object") {
-      obj[path[i]] = {};
+    const key = path[i];
+    if(!hasOwnKey(obj, key) || obj[key] === null || typeof obj[key] !== "object") {
+      obj[key] = {};
     }
-    obj = obj[path[i]];
+    obj = obj[key];
   }
   obj[path[path.length - 1]] = value;
   return target;
