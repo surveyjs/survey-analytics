@@ -33,6 +33,12 @@ A typical workflow is as follows:
 
 SurveyJS Dashboard does not provide data storage. You retain control over how survey definitions and response data are stored, retrieved, secured, and processed in your own infrastructure.
 
+### Surveys with Nested Data
+
+A survey can store the values of a panel's or page's questions in an object: set the container's `valueName` or the survey's `dataNesting` property (see [Nested Data](https://surveyjs.io/form-library/documentation/design-survey-nested-data)). SurveyJS Dashboard visualizes such a survey as usual: each question inside a nesting panel or page gets its own visualizer and its own Table View column, named after the question. The response objects have the nested shape (`{ "address": { "street": "Main St" } }`), and Dashboard reads each answer at the question's path in the response.
+
+Responses saved before the survey started to nest its data are flat (`{ "street": "Main St" }`), and SurveyJS Dashboard and Table View do not read the answers of the inner questions from them. To visualize such responses, convert them to the nested shape, or create the `Model` for them from a survey JSON that sets `"dataNesting": "none"`. A dashboard reads one shape, so for a data set that mixes old and new responses, convert the flat ones.
+
 ## Key Features
 
 ### Charts and Data Visualizations

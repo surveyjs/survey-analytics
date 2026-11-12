@@ -11,3 +11,5 @@ Refer to one of the following tutorials to set up Table View for SurveyJS Dashbo
 - [Vue](/dashboard/documentation/set-up-table-view/vue)
 - [React](/dashboard/documentation/set-up-table-view/react)
 - [HTML/CSS/JavaScript](/dashboard/documentation/set-up-table-view/html-css-javascript)
+
+Table View shows each question inside a nesting panel or page (see [Surveys with Nested Data](/dashboard/documentation/overview#surveys-with-nested-data)) in its own column, and with server-side data processing, a filter or sort on the column of such a question sends the question's data path as its field name, for example `"address.street"`. Columns for a matrix row, a choice, or a comment keep their column names (`"m.r1"`).
