@@ -4,6 +4,7 @@ import { SurveyModel, Event, Question, ItemValue, ITheme, mergeObjects, surveyLo
 import { ColumnDataType, IColumn, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils/documentHelper";
 import { stripHtml } from "../utils";
+import { getQuestionValuePath, getValueByPath } from "../utils/dataPath";
 import { localization } from "../localizationManager";
 import { ARIAL_FONT } from "./custom_jspdf_font";
 import { svgTemplate } from "../svgbundle";
@@ -280,8 +281,8 @@ export class Tabulator extends Table {
           const dataLoadingPromise = (this.data as GetDataFn)({
             offset: (params.page - 1) * params.size,
             limit: params.size,
-            filter: this.tabulatorTables?.getFilters(false),
-            sort: this.tabulatorTables?.getSorters().map(s => ({ field: s.field, direction: s.dir })),
+            filter: this.tabulatorTables?.getFilters(false).map(f => this.getRemoteFilter(f)),
+            sort: this.tabulatorTables?.getSorters().map(s => ({ field: this.getRemoteDataField(s.field), direction: s.dir })),
             callback: dataLoadingCallback
           });
           if(dataLoadingPromise) {
@@ -425,6 +426,18 @@ export class Tabulator extends Table {
     this._rows.push(tableRow);
   };
 
+  // A remote filter or sort item names the column's data field: "address.street" for an inner question
+  // (nested data, survey-library #12233), the column name otherwise.
+  private getRemoteDataField(field: any): any {
+    if(typeof field !== "string") return field;
+    const column: any = this.getColumnByName(field);
+    return !!column && typeof column.getDataField === "function" ? column.getDataField() : field;
+  }
+  private getRemoteFilter(filter: any): any {
+    const field = this.getRemoteDataField(filter?.field);
+    return !filter || field === filter.field ? filter : Object.assign({}, filter, { field });
+  }
+
   private getNestedCellDisplayValue(question: Question, field: string, value: any): any {
     if(value === undefined || value === null) return value;
     let choices: any[];
@@ -457,6 +470,35 @@ export class Tabulator extends Table {
     return value;
   }
 
+  // The columns of a nested table: one per matrix column or template question. `path` is where a record holds the
+  // value: a template question inside a nesting panel reads it under the panel's key (nested data, survey-library
+  // #12233: { title, addr: { kind } }).
+  private getNestedTableColumns(question: Question): Array<{ title: string, field: string, path: Array<string> }> {
+    if(question.getType() === "matrixdynamic") {
+      const matrixQuestion = question as any;
+      return matrixQuestion.columns.map((col: any) => ({
+        title: this.processTitle(col.title || col.name),
+        field: col.name,
+        path: [col.name],
+      }));
+    }
+    if(question.getType() === "paneldynamic") {
+      const panelQuestion = question as any;
+      const templateQuestions = panelQuestion.template.questions;
+      return templateQuestions.map((q: any) => ({
+        title: this.processTitle(q.title || q.name),
+        field: q.name,
+        path: getQuestionValuePath(q, q.getValueName(), true),
+      }));
+    }
+    return [];
+  }
+
+  // A column given without a path (a caller's own column list) reads the record by its field.
+  private getNestedRecordValue(record: any, col: { field: string, path?: Array<string> }): any {
+    return Array.isArray(col.path) ? getValueByPath(record, col.path) : record?.[col.field];
+  }
+
   private createNestedTable(nestedTableColumns: any[], cellData: any, question?: Question): HTMLElement {
     const container = document.createElement("div");
     container.className = "sa-nested-table-container";
@@ -478,7 +520,7 @@ export class Tabulator extends Table {
       const tr = document.createElement("tr");
       nestedTableColumns.forEach((col: any) => {
         const td = document.createElement("td");
-        const rawValue = row[col.field];
+        const rawValue = this.getNestedRecordValue(row, col);
         const value = question ? this.getNestedCellDisplayValue(question, col.field, rawValue) : rawValue;
         td.textContent = value !== undefined && value !== null ? (typeof value === "object" ? JSON.stringify(value) : String(value)) : "";
         tr.appendChild(td);
@@ -504,21 +546,7 @@ export class Tabulator extends Table {
         return "<span>Error: Question not found</span>";
       }
 
-      let nestedTableColumns: any[] = [];
-      if(question.getType() === "matrixdynamic") {
-        const matrixQuestion = question as any;
-        nestedTableColumns = matrixQuestion.columns.map((col: any) => ({
-          title: this.processTitle(col.title || col.name),
-          field: col.name,
-        }));
-      } else if(question.getType() === "paneldynamic") {
-        const panelQuestion = question as any;
-        const templateQuestions = panelQuestion.template.questions;
-        nestedTableColumns = templateQuestions.map((q: any) => ({
-          title: this.processTitle(q.title || q.name),
-          field: q.name,
-        }));
-      }
+      const nestedTableColumns = this.getNestedTableColumns(question);
 
       if(this.options.useNestedTables === true) {
         return this.createNestedTable(nestedTableColumns, cellData, question);
@@ -540,7 +568,7 @@ export class Tabulator extends Table {
         const displayData = cellData.map((row: any) => {
           const transformedRow: any = {};
           nestedTableColumns.forEach((col: any) => {
-            transformedRow[col.field] = this.getNestedCellDisplayValue(question, col.field, row[col.field]);
+            transformedRow[col.field] = this.getNestedCellDisplayValue(question, col.field, this.getNestedRecordValue(row, col));
           });
           return transformedRow;
         });
@@ -548,7 +576,7 @@ export class Tabulator extends Table {
         const nestedTable = new (Tabulator as any).tabulatorTablesConstructor(tableEl, {
           // layout: "fitDataFill",
           data: displayData,
-          columns: nestedTableColumns,
+          columns: nestedTableColumns.map(col => ({ title: col.title, field: col.field })),
           pagination: false,
           textDirection: this.isRtlLanguage() ? "rtl" : "auto",
         });
@@ -594,26 +622,12 @@ export class Tabulator extends Table {
       return "";
     }
 
-    let nestedColumns: any[] = [];
-    if(question.getType() === "matrixdynamic") {
-      const matrixQuestion = question as any;
-      nestedColumns = matrixQuestion.columns.map((col: any) => ({
-        title: this.processTitle(col.title || col.name),
-        field: col.name,
-      }));
-    } else if(question.getType() === "paneldynamic") {
-      const panelQuestion = question as any;
-      const templateQuestions = panelQuestion.template.questions;
-      nestedColumns = templateQuestions.map((q: any) => ({
-        title: this.processTitle(q.title || q.name),
-        field: q.name,
-      }));
-    }
+    const nestedColumns = this.getNestedTableColumns(question);
 
     const header = nestedColumns.map(col => col.title).join(" | ");
     const rows = nestedData.map(rowData => {
       return nestedColumns.map(col => {
-        const rawValue = rowData[col.field];
+        const rawValue = this.getNestedRecordValue(rowData, col);
         const value = this.getNestedCellDisplayValue(question, col.field, rawValue);
         return value !== undefined && value !== null ? (typeof value === "object" ? JSON.stringify(value) : String(value)) : "";
       }).join(" | ");
@@ -629,7 +643,8 @@ export class Tabulator extends Table {
       const column = this.getColumnByName(questionName);
       if(!!column && rowComponent) {
         const dataRow = rowComponent.getData().surveyOriginalData;
-        const dataCell = dataRow[questionName];
+        // the answer at the column's question path (nested data, survey-library #12233)
+        const dataCell = typeof (<any>column).getRowValue === "function" ? (<any>column).getRowValue(dataRow) : dataRow[questionName];
         if(column.dataType === ColumnDataType.Image) {
           return questionName;
         }

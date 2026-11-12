@@ -1,5 +1,6 @@
 import { ItemValue, MatrixRowModel, Question, QuestionCheckboxModel, QuestionCompositeModel, QuestionCustomModel, QuestionDropdownModel, QuestionFileModel, QuestionMatrixDropdownModel, QuestionMatrixDynamicModel, QuestionMatrixModel, QuestionPanelDynamicModel, QuestionRadiogroupModel, QuestionSelectBase, QuestionTagboxModel, settings } from "survey-core";
 import { createImagesContainer, createLinksContainer, stripHtml } from "../utils";
+import { getQuestionValuePath, getValueByPath } from "../utils/dataPath";
 import { ICellData, IColumn, ColumnDataType, QuestionLocation, IColumnData } from "./config";
 import { ITableOptions, ITable } from "./table-interfaces";
 
@@ -14,6 +15,7 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
   private nameValue: string;
   private displayNameValue?: string;
   private parentQuestions: Question[] = [];
+  private rowValuePathValue: Array<string> | null;
 
   constructor(protected question: T, protected table: ITable) {
     this.dataType = this.getDataType();
@@ -85,21 +87,40 @@ export class BaseColumn<T extends Question = Question> implements IColumn {
     return ColumnDataType.Text;
   }
   protected getDisplayValueCore(data: any) {
-    return data[this.name];
+    return this.getRowValue(data, this.name);
+  }
+
+  // Nested data (survey-library #12233): the question's answer in a raw response row, read at its data path
+  // (["address", "street"]; ["v"] for a question with its own valueName). A column without a question (made for a
+  // state entry) and a question whose value is owned by a parent question (a composite's content: its data is the
+  // composite, not its value scope, and its path does not start at the row) read the row by the key they used before.
+  public getRowValue(data: any, key: string = this.name): any {
+    const path = this.getRowValuePath();
+    if(!path) return !!data ? data[key] : undefined;
+    return getValueByPath(data, path);
+  }
+  // The field a remote data source (GetDataFn) sees for this column: the data path joined with "." for an inner
+  // question ("address.street"), else the column name. A column with a suffix (a matrix row, a choice, a comment)
+  // keeps its name.
+  public getDataField(): string {
+    const path = this.getRowValuePath();
+    if(!!path && path.length > 1 && this.name === this.question.name) return path.join(".");
+    return this.name;
+  }
+  private getRowValuePath(): Array<string> | null {
+    if(this.rowValuePathValue === undefined) {
+      const question = this.question;
+      const data = !!question ? (<any>question).data : undefined;
+      const readsOwnScope = !!data && data === question.getValueScope();
+      this.rowValuePathValue = readsOwnScope ? getQuestionValuePath(question, question.getValueName()) : null;
+    }
+    return this.rowValuePathValue;
   }
 
   protected getDisplayValue(data: any, table: ITable, options: ITableOptions): any {
-    let displayValue = this.getDisplayValueCore(data);
     const question = this.question;
-
-    if(!!question) {
-      if(options.useValuesAsLabels) {
-        displayValue = question.value;
-      } else {
-        displayValue = question.displayValue;
-      }
-    }
-    return displayValue;
+    if(!question) return this.getDisplayValueCore(data);
+    return options.useValuesAsLabels ? question.value : question.displayValue;
   }
   private formatDisplayValue(displayValue: any) {
     return typeof displayValue === "string"
@@ -183,7 +204,7 @@ export class FlattenedCheckboxColumn extends BaseColumn<QuestionCheckboxModel | 
   }
 
   protected getDisplayValue(data: any, table: ITable, options: ITableOptions): any {
-    const questionValue = data[this.question.name];
+    const questionValue = this.getRowValue(data, this.question.name);
     if(!Array.isArray(questionValue)) {
       return "";
     }
@@ -246,7 +267,7 @@ export class MatrixColumn extends BaseColumn<QuestionMatrixModel> {
   }
 
   protected getDisplayValue(data: any, table: ITable, options: ITableOptions) {
-    let displayValue = data[this.valueName];
+    let displayValue = this.getRowValue(data, this.valueName);
     if(this.valuePath && typeof displayValue === "object") {
       displayValue = displayValue[this.valuePath];
       if(displayValue !== undefined) {
@@ -314,7 +335,7 @@ export class MatrixDropdownColumn extends BaseColumn<QuestionMatrixDropdownModel
 
   }
   protected getDisplayValue(data: any, table: ITable, options: ITableOptions) {
-    let displayValue = data[this.question.name];
+    let displayValue = this.getRowValue(data, this.question.name);
     const question = this.question;
     if(this.rowValue && this.colName && typeof displayValue === "object") {
       let [rowId, colId] = [this.rowValue, this.colName];
