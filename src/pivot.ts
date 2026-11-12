@@ -10,6 +10,7 @@ import { IAxisDescription } from "./axisDescription";
 import { ToggleWidget } from "./utils/toggle";
 import { createDropdown } from "./utils/dropdownWidget";
 import { DocumentHelper } from "./utils/documentHelper";
+import { getQuestionValuePath, getValueByPath } from "./utils/dataPath";
 
 /**
  * Defines configuration options for a pivot chart series.
@@ -536,8 +537,9 @@ export class PivotModel extends HistogramModel {
         return this._cachedValues;
       }
       const hash = {};
+      const valuePath = this.valuePath;
       this.data.forEach(dataItem => {
-        const answerData = dataItem[this.dataNames[0]];
+        const answerData = getValueByPath(dataItem, valuePath);
         if(answerData !== undefined) {
           // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
           this._pivotContinuousData.push({ continuous: this.getContinuousValue(answerData), row: dataItem });
@@ -598,11 +600,12 @@ export class PivotModel extends HistogramModel {
 
   public updateStatisticsSeriesValue(statistics: Array<Array<number>>, dataRow: { [index: string]: any }, valueIndex: number, seriesValueIndexes: { [index: string]: number }): void {
     for(let j = 0; j < this.questionsY.length; ++j) {
-      if(dataRow[this.questionsY[j].name] !== undefined) {
+      const seriesAnswer = getValueByPath(dataRow, this.getCachedValuePath("y" + j, () => this.questionsY[j].valuePath));
+      if(seriesAnswer !== undefined) {
         const questionValueType = this.getQuestionValueType(this.questionsY[j].question);
         let seriseValueIndexName = this.questionsY[j].name;
         if(questionValueType === "enum" || questionValueType === "date") {
-          seriseValueIndexName += "_" + dataRow[this.questionsY[j].name];
+          seriseValueIndexName += "_" + seriesAnswer;
         }
         const seriesValueIndex = seriesValueIndexes[seriseValueIndexName];
         statistics[seriesValueIndex][valueIndex] = this.calculateAggregation(dataRow, this.yAxes[j], statistics[seriesValueIndex][valueIndex]);
@@ -616,7 +619,7 @@ export class PivotModel extends HistogramModel {
     }
     const qName = series.valueName || series.dataName;
     const aggregationQuestion = this.questions.filter((q) => q.name === qName)[0];
-    const value = dataRow[aggregationQuestion?.valueName || qName];
+    const value = getValueByPath(dataRow, this.getCachedValuePath("a" + qName, () => getQuestionValuePath(aggregationQuestion, aggregationQuestion?.valueName || qName)));
     if(value === undefined) {
       return currentValue;
     }
@@ -635,7 +638,21 @@ export class PivotModel extends HistogramModel {
     return currentValue;
   }
 
+  // Nested data (survey-library #12233): the value paths are computed once per calculation, not once per row
+  private _valuePathsCache: { [key: string]: Array<string> } = undefined;
+  private getCachedValuePath(key: string, getPath: () => Array<string>): Array<string> {
+    if(!this._valuePathsCache) {
+      this._valuePathsCache = {};
+    }
+    if(!this._valuePathsCache[key]) {
+      this._valuePathsCache[key] = getPath();
+    }
+    return this._valuePathsCache[key];
+  }
+
   protected getCalculatedValuesCore(): ICalculationResult {
+    this._valuePathsCache = undefined;
+    const valuePath = this.valuePath;
     const statistics: Array<Array<number>> = [];
     const series = this.getSeriesValues();
     if(series.length === 0) {
@@ -652,7 +669,7 @@ export class PivotModel extends HistogramModel {
         statistics.push(values.map(i => 0));
       }
       this.data.forEach(dataRow => {
-        let answerData = dataRow[this.dataNames[0]];
+        let answerData = getValueByPath(dataRow, valuePath);
         if(!Array.isArray(answerData)) {
           answerData = [answerData];
         }

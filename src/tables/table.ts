@@ -234,9 +234,12 @@ export abstract class Table implements ITable {
     // setDataCore does not refresh nested questions (e.g. inside choice items), update them explicitly
     const questions = this._survey.getAllQuestions();
     this._survey.getAllQuestions(false, false, true).forEach((question) => {
-      // skip questions whose values are owned by a parent question (e.g. inside composite questions)
-      if(questions.indexOf(question) < 0 && (<any>question).data === this._survey) {
-        question.updateValueFromSurvey(this._survey.getValue(question.getValueName()), true);
+      // skip questions whose values are owned by a parent question (e.g. inside composite questions) and questions
+      // with no data yet (a panel just created for a dynamic panel's record); a question reads its value from its own
+      // value scope, as survey-core does: the survey, or a nesting panel's scope (survey-library #12233)
+      const valueScope = question.getValueScope();
+      if(!!valueScope && questions.indexOf(question) < 0 && (<any>question).data === valueScope) {
+        question.updateValueFromSurvey(valueScope.getValue(question.getValueName()), true);
       }
     });
     this._columns.forEach((column) => {

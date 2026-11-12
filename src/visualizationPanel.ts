@@ -16,6 +16,7 @@ import { IDropdownItemOption } from "./utils/dropdownBase";
 import { DocumentHelper } from "./utils/documentHelper";
 import { createActionDropdown } from "./utils/dropdownActionWidget";
 import { createDropdown } from "./utils/dropdownWidget";
+import { createObjectByPath, getQuestionValuePath } from "./utils/dataPath";
 
 import "./visualizationPanel.scss";
 
@@ -592,7 +593,9 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
         const dataName = question.valueName || question.name
           || question.question?.valueName || question.question?.name
           || question.dataField || question.questionName;
-        this.setFilter(dataName, selectedValue);
+        // A question filters by its data path (nested data, survey-library #12233)
+        const path = typeof (<any>question).getDataPath === "function" ? this.getQuestionFilterPath(question) : [dataName];
+        this.setFilterByPath(path, selectedValue);
       };
     }
 
@@ -1028,18 +1031,36 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
    * @param selectedValue A filter value.
    */
   public setFilter(questionName: string, selectedValue: any) {
-    if(!this.dataPath) {
-      this.dataProvider.setFilter(questionName, selectedValue);
+    // A question's name filters by the question's data path (nested data, survey-library #12233); any other string
+    // is a data key, as before.
+    const question: any = (this.questions || []).map(q => Array.isArray(q) ? q[0] : q)
+      .filter(q => !!q && q.name === questionName && typeof q.getDataPath === "function")[0];
+    this.setFilterByPath(!!question ? this.getQuestionFilterPath(question) : [questionName], selectedValue);
+  }
+
+  // The keys from a row (from a record inside records) down to the question's value.
+  protected getQuestionFilterPath(question: any): Array<string> {
+    return getQuestionValuePath(question, question.valueName || question.name, this.recordsPath.length > 0, !!this.options.flatRecords);
+  }
+
+  // path: the keys from a row (from a record inside records) down to the value.
+  protected setFilterByPath(path: Array<string>, selectedValue: any) {
+    const recordsPath = this.recordsPath;
+    if(recordsPath.length === 0) {
+      this.dataProvider.setFilterByPath(path, selectedValue);
     } else {
+      // A records filter takes the shape of a record, matched against each record at the records path
       if(selectedValue !== undefined && selectedValue !== null) {
         if(typeof selectedValue === "object" && Object.keys(selectedValue)[0]) {
           const seriesValue = Object.keys(selectedValue)[0];
-          this.dataProvider.setFilter(this.dataPath, { [questionName]: selectedValue[seriesValue], [DataProvider.seriesMarkerKey]: seriesValue });
+          const recordFilter = createObjectByPath(path, selectedValue[seriesValue]);
+          recordFilter[DataProvider.seriesMarkerKey] = seriesValue;
+          this.dataProvider.setFilterByPath(recordsPath, recordFilter);
         } else {
-          this.dataProvider.setFilter(this.dataPath, { [questionName]: selectedValue });
+          this.dataProvider.setFilterByPath(recordsPath, createObjectByPath(path, selectedValue));
         }
       } else {
-        this.dataProvider.setFilter(this.dataPath, undefined);
+        this.dataProvider.setFilterByPath(recordsPath, undefined);
       }
     }
     this.updateResetFilterButtonDisabled();

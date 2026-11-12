@@ -1630,3 +1630,18 @@ test("panel clear() clears child visualizers", () => {
   vis.clear();
   expect(clearSpy).toHaveBeenCalledTimes(1);
 });
+
+test("a text question with valueName gets a visualizer named by the question name (question valueName)", async () => {
+  const survey = new SurveyModel({ elements: [{ type: "text", name: "q", valueName: "v" }] });
+  const panel = new VisualizationPanel(survey.getAllQuestions(), [{ v: "hello" }, { v: "world" }]);
+
+  expect(panel.visualizers.map(v => v.name)).toEqual(["q"]);
+  expect(panel.getVisualizer("v")).toBeUndefined();
+  const wrapper = panel.getVisualizer("q") as AlternativeVisualizersWrapper;
+  const visualizers = wrapper.getVisualizers();
+  const text = visualizers.filter(v => v instanceof Text)[0];
+  const wordCloud = visualizers.filter(v => v instanceof WordCloud)[0];
+  expect(text.name).toBe("q");
+  expect((await text.getCalculatedValues()).data).toEqual([["hello"], ["world"]]);
+  expect((await wordCloud.getCalculatedValues()).data).toEqual([[1, 1]]);
+});

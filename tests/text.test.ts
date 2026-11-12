@@ -77,3 +77,13 @@ test("text visualizer - columns", async () => {
   expect(series.length).toBe(1);
   expect(data.length).toBe(1);
 });
+
+test("Text reads the answers by the question's valueName (question valueName)", async () => {
+  const question = new QuestionTextModel("q");
+  question.valueName = "v";
+  const text = new Text(question, [{ v: "hello" }, { v: "world" }]);
+
+  const { series, data }: any = await text.getCalculatedValues();
+  expect(data).toEqual([["hello"], ["world"]]);
+  expect(series.length).toBe(1);
+});

@@ -65,3 +65,17 @@ test("getCalculatedValues keeps umlauts", async () => {
   expect(data.data[0][0]).toBe(2);
 });
 
+test("WordCloud counts the words read by the question's valueName (question valueName)", async () => {
+  const question = new QuestionCommentModel("q1");
+  question.valueName = "v1";
+  const wc = new WordCloud(question, [
+    { v1: "mega answer" },
+    { v1: "mega" },
+  ]);
+  const data = await wc.getCalculatedValues();
+
+  expect(data).toEqual({
+    data: [[2, 1]],
+    values: ["mega", "answer"],
+  });
+});

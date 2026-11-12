@@ -9,6 +9,7 @@ import { DashboardTheme } from "./theme";
 import { SidebarWidget } from "./utils/sidebarWidget";
 import { DocumentHelper } from "./utils/documentHelper";
 import { SideBarItemCreators } from "./sideBarItemCreators";
+import { getQuestionValuePath } from "./utils/dataPath";
 
 import "./visualizerBase.scss";
 
@@ -47,6 +48,10 @@ export interface IAnswersData {
 export interface IDataInfo {
   name: string; // TODO - remove from this interface
   dataPath?: string;
+  // Nested data (survey-library #12233), internal: the keys from a row down to the records (replaces dataPath when
+  // set), and one path per data name from a row or a record down to the value (each defaults to [dataName]).
+  recordsPath?: Array<string>;
+  valuePaths?: Array<Array<string>>;
   dataNames: Array<string>;
   getValues(): Array<any>;
   getLabels(): Array<string>;
@@ -326,6 +331,29 @@ export class VisualizerBase implements IDataInfo {
     return this.options.dataPath;
   }
 
+  // Nested data (survey-library #12233). The keys from a row down to the records this visualizer reads: a records
+  // visualizer passes its own value path (options.recordsPath); empty when it reads the row itself. dataPath keeps
+  // its meaning (the records key, a string).
+  get recordsPath(): Array<string> {
+    if(Array.isArray(this.options.recordsPath)) return this.options.recordsPath;
+    return !!this.dataPath ? [this.dataPath] : [];
+  }
+
+  // The keys from a row (a record inside records) down to the question's value. A subclass that reads its own
+  // data name, a footer (options.valuePath) and a descriptor without a question keep reading one key.
+  get valuePath(): Array<string> {
+    if(Array.isArray(this.options.valuePath)) return this.options.valuePath;
+    const dataName = this.dataNames[0];
+    const question: any = this.question;
+    if(!question || dataName !== (question.valueName || question.name)) return [dataName];
+    return getQuestionValuePath(question, dataName, this.recordsPath.length > 0, !!this.options.flatRecords);
+  }
+
+  // One value path per data name.
+  get valuePaths(): Array<Array<string>> {
+    return this.dataNames.map((dataName, index) => index === 0 ? this.valuePath : [dataName]);
+  }
+
   /**
    * Indicates whether the visualizer renders a header. Returns `true` if the question defines a [`correctAnswer`](https://surveyjs.io/form-library/documentation/api-reference/question#correctAnswer).
    * @see hasFooter
@@ -367,12 +395,20 @@ export class VisualizerBase implements IDataInfo {
       return undefined;
     }
     if(!this._footerVisualizer) {
+      const commentPrefix = (settings || {}).commentPrefix;
       const question = new QuestionCommentModel(
-        this.question.name + (settings || {}).commentPrefix
+        this.question.name + commentPrefix
       );
+      // The name keys the footer's options and state; the data key follows the parent's valueName, as survey-core stores the comment
+      if(this.dataNames[0] !== this.question.name) {
+        question.valueName = this.dataNames[0] + commentPrefix;
+      }
       question.title = this.processText(this.question.title);
 
       let visualizerOptions = Object.assign({}, this.options);
+      // survey-core stores the comment beside the value, inside its nesting object (nested data, survey-library #12233)
+      const valuePath = this.valuePath;
+      visualizerOptions.valuePath = valuePath.slice(0, valuePath.length - 1).concat([valuePath[valuePath.length - 1] + commentPrefix]);
       visualizerOptions.renderContent = undefined;
       delete visualizerOptions.allowChangeVisualizerType;
       this._footerVisualizer = this.createVisualizer(question, visualizerOptions);

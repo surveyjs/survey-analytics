@@ -53,6 +53,7 @@ export class MatrixDropdownGrouped extends SelectBase {
       name: this.dataNames[0],
       dataNames: series,
       dataPath: this.dataPath,
+      recordsPath: this.recordsPath,
       getValues: () => values,
       getLabels: () => values,
       getSeriesValues: () => rows,

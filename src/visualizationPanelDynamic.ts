@@ -18,8 +18,17 @@ export class VisualizationPanelDynamic extends VisualizerBase {
     options.allowDynamicLayout = false;
     options.dataProvider = this.dataProvider;
     options.dataPath = this.dataNames[0];
+    // The records are read at this question's own path, so a dynamic panel inside a nesting panel reads row.top.inner
+    options.recordsPath = this.valuePath;
+    options.flatRecords = this.hasFlatRecords;
+    options.valuePath = undefined;
     this._contentVisualizer = new VisualizationPanel(this.getQuestions(), [], options, undefined, false);
     this._contentVisualizer.onAfterRender.add(this.onAfterRenderPanelCallback);
+  }
+
+  // A record's nesting panels nest inside it (decisions RN3); a composite's content stays flat (N5).
+  protected get hasFlatRecords(): boolean {
+    return false;
   }
 
   public get contentVisualizer(): VisualizationPanel {

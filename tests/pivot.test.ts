@@ -963,3 +963,21 @@ test("getChartAxisSetting seriesName contains provided series labels", () => {
 
   expect(result.seriesName).toEqual(["female", "male"]);
 });
+
+test("Y-axis questions are read by their valueName (question valueName)", async () => {
+  const valueNameSurvey = new SurveyModel({
+    elements: json.elements.map((el, index) => ({ ...el, valueName: "v" + (index + 1) }))
+  });
+  const valueNameData = data.map(row => ({ v1: row.question1, v2: row.question2, v3: row.question3 }));
+  const flatPivot = new PivotModel(survey.getAllQuestions(), data);
+  const pivot = new PivotModel(valueNameSurvey.getAllQuestions(), valueNameData);
+
+  flatPivot.setAxisQuestions("question1", "question2", "question3");
+  pivot.setAxisQuestions("question1", "question2", "question3");
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual((await flatPivot.getCalculatedValues()).data);
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual([[1, 2], [3, 1], [4, 1], [2500, 1000]]);
+
+  flatPivot.setAxisQuestions("question3", "question1");
+  pivot.setAxisQuestions("question3", "question1");
+  expect((await pivot.getCalculatedValues()).data).toStrictEqual((await flatPivot.getCalculatedValues()).data);
+});

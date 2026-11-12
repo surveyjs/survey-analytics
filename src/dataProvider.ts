@@ -1,4 +1,5 @@
 import { Event } from "survey-core";
+import { getValueByPath } from "./utils/dataPath";
 
 export type SummaryFilter = { field: string, type: string, value: any };
 export type GetDataUsingCallbackFn = (params: { visualizer: any, filter?: Array<SummaryFilter>, callback?: (response: { data: Array<Object>, error?: any }) => void }) => void;
@@ -11,6 +12,13 @@ export class DataProvider {
   private _filteredData: Array<{ [index: string]: any }>;
   protected filterValues: { [index: string]: any } = {};
   protected systemFilterValues: { [index: string]: any } = {};
+  // Nested data (survey-library #12233): the keys each filter reads a row by. A filter is reported and stored by
+  // its field, the path joined with "."; the row is read by the path, so a dotted key ("a.b") stays one key.
+  private filterPaths: { [field: string]: Array<string> } = {};
+
+  private getFilterPath(field: string): Array<string> {
+    return this.filterPaths[field] || [field];
+  }
 
   private convertFilterValuesToSummaryFilters(filterValues: { [index: string]: any }): Array<SummaryFilter> {
     return Object.keys(filterValues).map(key => ({ field: key, type: "=", value: filterValues[key] }));
@@ -53,7 +61,7 @@ export class DataProvider {
               if(filterValueType === "object" && "start" in filterValue && "end" in filterValue) {
                 filterValueType = "range";
               }
-              const questionValue = item[key];
+              const questionValue = getValueByPath(item, this.getFilterPath(key));
               if(Array.isArray(questionValue)) {
                 if(filterValueType === "object") {
                   return !questionArrayValueContainsValue(questionValue, filterValue);
@@ -93,7 +101,7 @@ export class DataProvider {
                 }
                 return false;
               }
-              return item[key] !== filterValues[key];
+              return questionValue !== filterValue;
             }
           );
         });
@@ -104,7 +112,11 @@ export class DataProvider {
     return this._filteredData;
   }
 
-  private setFilterCore(questionName: string, selectedValue: any, filterObject: any): void {
+  private setFilterCore(path: Array<string>, selectedValue: any, filterObject: any): void {
+    const questionName = path.join(".");
+    if(selectedValue !== undefined) {
+      this.filterPaths[questionName] = path;
+    }
     var filterChanged = true;
     if(selectedValue !== undefined) {
       filterChanged = filterObject[questionName] !== selectedValue;
@@ -137,7 +149,7 @@ export class DataProvider {
    * @since 3.0.0
    */
   public setSystemFilter(questionName: string, selectedValue: any): void {
-    this.setFilterCore(questionName, selectedValue, this.systemFilterValues);
+    this.setFilterCore([questionName], selectedValue, this.systemFilterValues);
   }
 
   /**
@@ -152,7 +164,17 @@ export class DataProvider {
    * Sets filter by question name and value.
    */
   public setFilter(questionName: string, selectedValue: any): void {
-    this.setFilterCore(questionName, selectedValue, this.filterValues);
+    this.setFilterCore([questionName], selectedValue, this.filterValues);
+  }
+
+  // Internal (nested data, survey-library #12233): filters by the value at a path of keys; the field is the path
+  // joined with ".". A one-key path goes through setFilter.
+  public setFilterByPath(path: Array<string>, selectedValue: any): void {
+    if(path.length === 1) {
+      this.setFilter(path[0], selectedValue);
+    } else {
+      this.setFilterCore(path, selectedValue, this.filterValues);
+    }
   }
 
   /**
@@ -203,9 +225,17 @@ export class DataProvider {
     return this.convertFilterValuesToSummaryFilters(this.filterValues);
   }
 
-  public fixDropdownData(dataNames: string[]): void {
+  // valuePath: the matrix value's keys in a row (nested data, survey-library #12233), [dataNames[0]] by default.
+  public fixDropdownData(dataNames: string[], valuePath?: Array<string>): void {
+    const path = Array.isArray(valuePath) && valuePath.length > 0 ? valuePath : [dataNames[0]];
+    const key = path[path.length - 1];
+    // Assigning a "__proto__" key would set the row's prototype instead of its matrix value
+    if(key === "__proto__") return;
     (this.data || []).forEach((dataItem) => {
-      let rawDataItem = dataItem[dataNames[0]];
+      const container = getValueByPath(dataItem, path.slice(0, path.length - 1));
+      if(!container || typeof container !== "object" || Array.isArray(container)) return;
+      if(!Object.prototype.hasOwnProperty.call(container, key)) return;
+      let rawDataItem = container[key];
       if(!!rawDataItem && typeof rawDataItem === "object" && !Array.isArray(rawDataItem)) {
         const arrayData = [];
         Object.keys(rawDataItem).forEach((key) => {
@@ -213,7 +243,7 @@ export class DataProvider {
           nestedDataItem[DataProvider.seriesMarkerKey] = key;
           arrayData.push(nestedDataItem);
         });
-        dataItem[dataNames[0]] = arrayData;
+        container[key] = arrayData;
       }
     });
   }
@@ -237,6 +267,10 @@ function questionArrayValueContainsValue(questionValues: Array<any>, filterValue
   return false;
 }
 
+function isPlainObject(value: any): boolean {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
 function questionValueContainsValue(questionValue: any, filterValue: any) {
   const questionValueKeys = Object.keys(questionValue);
   const filterValueKeys = Object.keys(filterValue);
@@ -244,7 +278,10 @@ function questionValueContainsValue(questionValue: any, filterValue: any) {
   if(filterValueKeys.length > questionValueKeys.length) return false;
 
   for(var key of filterValueKeys) {
-    if(filterValue[key] != questionValue[key]) return false;
+    // A records filter takes the shape of a record: { address: { kind: "a" } } (nested data, survey-library #12233)
+    if(isPlainObject(filterValue[key]) && isPlainObject(questionValue[key])) {
+      if(!questionValueContainsValue(questionValue[key], filterValue[key])) return false;
+    } else if(filterValue[key] != questionValue[key]) return false;
   }
 
   return true;

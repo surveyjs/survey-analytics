@@ -4,6 +4,7 @@ import { VisualizationManager } from "./visualizationManager";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils/documentHelper";
 import { getNestedDataRows } from "./statisticCalculators";
+import { getValueByPath } from "./utils/dataPath";
 
 import "./text.scss";
 
@@ -90,10 +91,12 @@ export class Text extends VisualizerBase {
     let result: Array<Array<string>> = [];
     let columnCount = 0;
 
+    const recordsPath = this.recordsPath;
+    const valuePath = this.valuePath;
     this.surveyData.forEach((dataRow) => {
-      const nestedDataRows = getNestedDataRows(dataRow, this.dataPath);
+      const nestedDataRows = getNestedDataRows(dataRow, recordsPath);
       nestedDataRows.forEach(row => {
-        const rowValue: any = row[this.question.name];
+        const rowValue: any = getValueByPath(row, valuePath);
         let dataStrings: Array<string> = [];
         if(!!rowValue) {
           if(Array.isArray(rowValue)) {

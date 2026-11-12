@@ -330,4 +330,117 @@ describe("MongoDbAdapter", () => {
       "values": ["großmutter", "one1", "string", "two2"],
     });
   });
+
+  describe("nested data", () => {
+    // A panel with valueName "address" stores its questions' values in an object, so the caller (a GetDataFn) passes
+    // the question's data path joined with "." as questionId / field. Mongo reads a dotted id as a path.
+    const nestedSurveyJson = {
+      elements: [
+        { type: "text", name: "q1" },
+        {
+          type: "panel", name: "panel1", valueName: "address",
+          elements: [
+            { type: "radiogroup", name: "kind", choices: ["a", "b", "c"] },
+            { type: "text", inputType: "number", name: "num" },
+            { type: "comment", name: "street" },
+            { type: "matrix", name: "m", columns: ["c1", "c2"], rows: ["r1", "r2"] }
+          ]
+        }
+      ]
+    };
+    const flatRows = [
+      { q1: "x", kind: "a", num: 10, street: "Main street", m: { r1: "c1", r2: "c2" } },
+      { q1: "y", kind: "b", num: 20, street: "Second street", m: { r1: "c1" } },
+      { q1: "x", kind: "a", num: 30, street: "Main avenue", m: { r1: "c2", r2: "c2" } },
+      { q1: "y", kind: "c" }
+    ];
+    const toNested = (row: any) => {
+      const { q1, ...address } = row;
+      return { q1, address };
+    };
+    const nestedRows = flatRows.map(toNested);
+
+    async function insertResponses(postid: string, rows: Array<any>) {
+      await db.collection("test").insertMany(rows.map(row => ({ postid, json: row })));
+    }
+
+    test("retrieveSummary reads a select, a number, a text and a matrix inside an object by a dotted questionId (nested data, survey-library #12233)", async () => {
+      await insertResponses("survey_flat", flatRows);
+      await insertResponses("survey_nested", nestedRows);
+      const cases = [
+        { name: "kind", questionType: "radiogroup", visualizerType: "radiogroup" },
+        { name: "num", questionType: "text", visualizerType: "number" },
+        { name: "street", questionType: "comment", visualizerType: "wordcloud" },
+        { name: "m", questionType: "matrix", visualizerType: "matrix" }
+      ];
+      for(const c of cases) {
+        const flat: any = await adapter.retrieveSummary("test", "survey_flat", c.name, c.questionType, c.visualizerType, []);
+        const nested: any = await adapter.retrieveSummary("test", "survey_nested", "address." + c.name, c.questionType, c.visualizerType, []);
+        expect(nested, c.name).toStrictEqual(flat);
+        expect(JSON.stringify(flat), c.name).not.toBe(JSON.stringify(transformers[c.visualizerType]([])));
+      }
+      expect(await adapter.retrieveSummary("test", "survey_nested", "address.kind", "radiogroup", "radiogroup", []))
+        .toStrictEqual({ data: [[2, 1, 1]], values: ["a", "b", "c"] });
+    });
+
+    test("retrieveSummary of a nested select matches the SelectBase calculation of the nested survey (nested data, survey-library #12233)", async () => {
+      ensureWindowForVisualizerImports();
+      const { SelectBase } = await import("../../src/selectBase");
+      const survey = new SurveyModel(nestedSurveyJson);
+      const question = survey.getQuestionByName("kind");
+      expect(question.getDataPath()).toEqual(["address", "kind"]);
+      await insertResponses("survey_nested_select", nestedRows);
+
+      const transformed: any = await adapter.retrieveSummary("test", "survey_nested_select", question.getDataPath().join("."), "radiogroup", "radiogroup", []);
+      const expected = await new SelectBase(question, nestedRows, {}).getCalculatedValues();
+      expect(mapToExpectedOrder(transformed, expected)).toStrictEqual(expected);
+    });
+
+    test("retrieveSummary of a pivot with one inner question (nested data, survey-library #12233)", async () => {
+      ensureWindowForVisualizerImports();
+      const { PivotModel } = await import("../../src/pivot");
+      await insertResponses("survey_pivot_flat", flatRows);
+      await insertResponses("survey_pivot_nested", nestedRows);
+
+      const flat: any = await adapter.retrieveSummary("test", "survey_pivot_flat", "kind|q1", "pivot", "pivot", []);
+      const nested: any = await adapter.retrieveSummary("test", "survey_pivot_nested", "address.kind|q1", "pivot", "pivot", []);
+      expect(nested).toStrictEqual(flat);
+      expect(nested).toStrictEqual({ data: [[2, 0, 0], [0, 1, 1]], series: ["x", "y"], values: ["a", "b", "c"] });
+      // The inner question on the series axis
+      expect(await adapter.retrieveSummary("test", "survey_pivot_nested", "q1|address.kind", "pivot", "pivot", []))
+        .toStrictEqual(await adapter.retrieveSummary("test", "survey_pivot_flat", "q1|kind", "pivot", "pivot", []));
+
+      const survey = new SurveyModel(nestedSurveyJson);
+      const model = new PivotModel(survey.getAllQuestions(), nestedRows);
+      model.setAxisQuestions("kind", "q1");
+      const expected = await model.getCalculatedValues();
+      expect(mapToExpectedOrder(nested, expected)).toStrictEqual(expected);
+    });
+
+    test("retrieve and retrievePaginated filter and sort by a dotted field (nested data, survey-library #12233)", async () => {
+      // The existing retrieve / retrievePaginated tests store the answers at the document's top level and name the
+      // field without a "json." prefix; these documents follow the same convention.
+      await db.collection("test").insertMany([
+        { id: "1", q1: "x", address: { street: "Main", kind: "a" } },
+        { id: "2", q1: "y", address: { street: "Second", kind: "a" } },
+        { id: "3", q1: "x", address: { street: "Main", kind: "b" } },
+        { id: "4", q1: "y", address: { street: "Third", kind: "a" } }
+      ]);
+
+      const found: any = await adapter.retrieve("test", [{ field: "address.street", value: "Main" }]);
+      expect(found.map(d => d.id).sort()).toEqual(["1", "3"]);
+
+      const filtered: any = await adapter.retrievePaginated("test", [{ field: "address.street", value: "Main" }], [{ field: "id", value: "desc" }], 0, 10);
+      expect(filtered.totalCount).toBe(2);
+      expect(filtered.data.map(d => d.id)).toEqual(["3", "1"]);
+
+      const sorted: any = await adapter.retrievePaginated("test", [{ field: "address.kind", value: "a" }], [{ field: "address.street", value: "desc" }], 0, 2);
+      expect(sorted.totalCount).toBe(3);
+      expect(sorted.data.map(d => d.address.street)).toEqual(["Third", "Second"]);
+
+      const ascending: any = await adapter.retrievePaginated("test", [], [{ field: "address.street", value: "asc" }, { field: "id", value: "asc" }], 1, 2);
+      expect(ascending.totalCount).toBe(4);
+      expect(ascending.data.map(d => d.id)).toEqual(["3", "2"]);
+    });
+  });
 });

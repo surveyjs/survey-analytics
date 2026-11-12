@@ -2,6 +2,7 @@ import { QuestionDropdownModel, ItemValue, QuestionImagePickerModel, SurveyModel
 import { SelectBase, hideEmptyAnswersInData } from "../src/selectBase";
 import { VisualizationManager } from "../src/visualizationManager";
 import { VisualizerBase } from "../src/visualizerBase";
+import { Text } from "../src/text";
 import { DataProvider } from "../src/dataProvider";
 import { getDefaultColors } from "./helpers";
 
@@ -708,4 +709,17 @@ test("getSelectedItemByValue works for choicesFromQuestion", () => {
   const item = vis.getSelectedItemByValue("Performance");
   expect(item).toBeDefined();
   expect(item.value).toEqual("Performance");
+});
+
+test("the comment footer reads the comment by the question's valueName (question valueName)", async () => {
+  const survey = new SurveyModel({
+    elements: [{ type: "dropdown", name: "q", valueName: "v", showOtherItem: true, choices: ["a", "b"] }]
+  });
+  const selectBase = new SelectBase(survey.getQuestionByName("q"), [{ v: "other", "v-Comment": "xyz" }, { v: "a" }]);
+  const footer = selectBase.footerVisualizer as Text;
+
+  expect(footer).toBeInstanceOf(Text);
+  expect(footer.name).toBe("q-Comment");
+  expect(footer.dataNames).toEqual(["v-Comment"]);
+  expect((await footer.getCalculatedValues()).data).toEqual([["xyz"]]);
 });

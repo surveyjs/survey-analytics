@@ -6,3 +6,4 @@ playwright-report/
 examples/
 *.config.js
 .gitignore
+promts/
