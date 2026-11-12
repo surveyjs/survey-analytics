@@ -6,6 +6,7 @@ import { DocumentHelper } from "../utils/documentHelper";
 import { localization } from "../localizationManager";
 import { WordCloudWidget, defaultOptions } from "./widget";
 import { getNestedDataRows } from "../statisticCalculators";
+import { getValueByPath } from "../utils/dataPath";
 
 export class WordCloudAdapter {
   private _wordcloud: any;
@@ -113,10 +114,12 @@ export class WordCloud extends VisualizerBase {
       }
     };
 
+    const recordsPath = this.recordsPath;
+    const valuePath = this.valuePath;
     this.surveyData.forEach((dataRow) => {
-      const nestedDataRows = getNestedDataRows(dataRow, this.dataPath);
+      const nestedDataRows = getNestedDataRows(dataRow, recordsPath);
       nestedDataRows.forEach(row => {
-        const rowValue: any = row[this.dataNames[0]];
+        const rowValue: any = getValueByPath(row, valuePath);
         if(!!rowValue) {
           if(Array.isArray(rowValue)) {
             rowValue.forEach(processString);

@@ -1,8 +1,10 @@
 import { DataProvider } from "./dataProvider";
 import { ICalculatedDataInfo, ICalculationResult, IDataInfo } from "./visualizerBase";
+import { getValueByPath } from "./utils/dataPath";
 
 export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo): ICalculationResult {
   const dataNames = dataInfo.dataNames;
+  const valuePaths = dataInfo.valuePaths || dataNames.map(dataName => [dataName]);
   const statistics: Array<Array<Array<number>>> = [];
 
   const values = dataInfo.getValues();
@@ -31,8 +33,8 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
     return valuesIndex[val];
   };
 
-  const processDataRow = (dataRow, dataName, index) => {
-    const rowValue = dataRow[dataName];
+  const processDataRow = (dataRow, index) => {
+    const rowValue = getValueByPath(dataRow, valuePaths[index]);
     if(rowValue !== undefined || processMissingAnswers) {
       const rowValues = Array.isArray(rowValue) ? rowValue : [rowValue];
       if(series.length > 0) {
@@ -71,10 +73,10 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
   };
 
   data.forEach((dataRow: any) => {
-    const nestedDataRows = getNestedDataRows(dataRow, dataInfo.dataPath);
+    const nestedDataRows = getNestedDataRows(dataRow, dataInfo.recordsPath || dataInfo.dataPath);
     nestedDataRows.forEach(nestedDataRow => {
       dataNames.forEach((dataName, index) => {
-        processDataRow(nestedDataRow, dataName, index);
+        processDataRow(nestedDataRow, index);
       });
     });
   });
@@ -86,7 +88,8 @@ export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInf
   };
 }
 
-export function histogramStatisticsCalculator(data: any, intervals: Array<{start: number | Date, end: number | Date, label: string}>, dataInfo: IDataInfo, aggregateDataNames = []): ICalculationResult {
+// aggregateDataPaths: the value path of each aggregate data name in a row (nested data, survey-library #12233)
+export function histogramStatisticsCalculator(data: any, intervals: Array<{start: number | Date, end: number | Date, label: string}>, dataInfo: IDataInfo, aggregateDataNames = [], aggregateDataPaths?: Array<Array<string>>): ICalculationResult {
   const seriesValues = dataInfo.getSeriesValues();
   const statistics: Array<Array<number>> = [];
   if(seriesValues.length === 0) {
@@ -98,8 +101,8 @@ export function histogramStatisticsCalculator(data: any, intervals: Array<{start
       for(let j = 0; j < intervals.length; ++j) {
         if(intervals[j].start <= dataValue.continuous && (dataValue.continuous < intervals[j].end || j == intervals.length - 1)) {
           if(aggregateDataNames.length > 0) {
-            aggregateDataNames.forEach(aggregateDataName => {
-              const aggregateDataValue = dataValue.row[aggregateDataName];
+            aggregateDataNames.forEach((aggregateDataName, index) => {
+              const aggregateDataValue = getValueByPath(dataValue.row, (aggregateDataPaths || [])[index] || [aggregateDataName]);
               const numberValue = parseFloat(aggregateDataValue);
               if(aggregateDataValue !== undefined && !isNaN(numberValue)) {
                 statistics[i][j] += numberValue;
@@ -131,9 +134,9 @@ export function mathStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo):
   let actualAnswerCount = 0;
 
   data.forEach((dataRow) => {
-    const nestedDataRows = getNestedDataRows(dataRow, dataInfo.dataPath);
+    const nestedDataRows = getNestedDataRows(dataRow, dataInfo.recordsPath || dataInfo.dataPath);
     nestedDataRows.forEach(nestedDataRow => {
-      const answerData = nestedDataRow[dataInfo.dataNames[0]];
+      const answerData = getValueByPath(nestedDataRow, (dataInfo.valuePaths || [])[0] || [dataInfo.dataNames[0]]);
       if(answerData !== undefined) {
         const questionValue: number = +answerData;
         actualAnswerCount++;
@@ -159,18 +162,12 @@ export function mathStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo):
   };
 }
 
-export function getNestedDataRows(dataRow: any, dataPath: string): Array<any> {
-  let nestedDataRows = [];
-  if(!dataPath) {
-    nestedDataRows = [dataRow];
-  } else {
-    if(dataRow[dataPath] === undefined) return [];
-    if(typeof dataRow[dataPath] !== "object") return [];
-    if(Array.isArray(dataRow[dataPath])) {
-      nestedDataRows = dataRow[dataPath];
-    } else {
-      nestedDataRows = [dataRow[dataPath]];
-    }
-  }
-  return nestedDataRows;
+// The records a row holds at a records key (a string, as dataPath) or at a path of keys (nested data,
+// survey-library #12233): an array of records, an object as one record, or the row itself for no path.
+export function getNestedDataRows(dataRow: any, dataPath: string | Array<string>): Array<any> {
+  const path = Array.isArray(dataPath) ? dataPath : (!!dataPath ? [dataPath] : []);
+  if(path.length === 0) return [dataRow];
+  const records = getValueByPath(dataRow, path);
+  if(records === undefined || records === null || typeof records !== "object") return [];
+  return Array.isArray(records) ? records : [records];
 }

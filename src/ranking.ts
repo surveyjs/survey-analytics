@@ -2,6 +2,8 @@ import { VisualizationManager } from "./visualizationManager";
 import { SelectBase } from "./selectBase";
 import { QuestionRankingModel } from "survey-core";
 import { ICalculationResult } from "./visualizerBase";
+import { getNestedDataRows } from "./statisticCalculators";
+import { getValueByPath } from "./utils/dataPath";
 
 export class RankingModel extends SelectBase {
 
@@ -15,8 +17,13 @@ export class RankingModel extends SelectBase {
   }
 
   getQuestionResults() {
-    const name = this.dataNames[0];
-    return this.data.map((dataItem) => dataItem[name]);
+    const results = [];
+    const recordsPath = this.recordsPath;
+    const valuePath = this.valuePath;
+    this.data.forEach(dataItem => {
+      getNestedDataRows(dataItem, recordsPath).forEach(row => results.push(getValueByPath(row, valuePath)));
+    });
+    return results;
   }
 
   getEmptyData() {

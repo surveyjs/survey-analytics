@@ -4,6 +4,7 @@ import { SelectBase } from "./selectBase";
 import { VisualizationManager } from "./visualizationManager";
 import { IAnswersData, ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { getNestedDataRows, histogramStatisticsCalculator } from "./statisticCalculators";
+import { getQuestionValuePath, getValueByPath } from "./utils/dataPath";
 import { DocumentHelper } from "./utils/documentHelper";
 import { localization } from "./localizationManager";
 import { createDropdown } from "./utils/dropdownWidget";
@@ -327,10 +328,12 @@ export class HistogramModel extends SelectBase {
       this._continuousData = {};
       series.forEach(seriesValue => this._continuousData[seriesValue] = []);
       const hash = {};
+      const recordsPath = this.recordsPath;
+      const valuePath = this.valuePath;
       this.data.forEach(dataRow => {
-        const nestedDataRows = getNestedDataRows(dataRow, this.dataPath);
+        const nestedDataRows = getNestedDataRows(dataRow, recordsPath);
         nestedDataRows.forEach(nestedDataRow => {
-          const answerData = nestedDataRow[this.dataNames[0]];
+          const answerData = getValueByPath(nestedDataRow, valuePath);
           if(answerData !== undefined) {
             const seriesValue = nestedDataRow[DataProvider.seriesMarkerKey] || "";
             // TODO: _continuousData should be sorted in order to speed-up statistics calculation in the getData function
@@ -525,7 +528,17 @@ export class HistogramModel extends SelectBase {
 
   protected getCalculatedValuesCore(): ICalculationResult {
     const continuousValues = this.getContinuousValues();
-    return histogramStatisticsCalculator(this._continuousData, this.intervals, this, [this.aggregateDataName].filter(name => !!name));
+    const aggregateDataNames = [this.aggregateDataName].filter(name => !!name);
+    return histogramStatisticsCalculator(this._continuousData, this.intervals, this, aggregateDataNames, aggregateDataNames.map(name => this.getAggregateDataPath(name)));
+  }
+
+  // An aggregate data name that is a question's name is read at the question's data path (nested data,
+  // survey-library #12233); any other name is a data key, as before.
+  private getAggregateDataPath(name: string): Array<string> {
+    const survey: any = this.question?.survey;
+    const question: any = !!survey && typeof survey.getQuestionByName === "function" ? survey.getQuestionByName(name) : undefined;
+    if(!question) return [name];
+    return getQuestionValuePath(question, question.valueName || question.name, this.recordsPath.length > 0, !!this.options.flatRecords);
   }
 
   public async getCalculatedValues(): Promise<ICalculationResult> {

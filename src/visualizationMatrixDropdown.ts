@@ -44,10 +44,13 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
     this._childOptions.transposeData = true;
     this._childOptions.dataProvider = this.dataProvider;
     this._childOptions.dataPath = this.dataNames[0];
+    this._childOptions.recordsPath = this.valuePath;
+    this._childOptions.flatRecords = false;
+    this._childOptions.valuePath = undefined;
     this._childOptions.seriesValues = question.rows.map((row: ItemValue) => row.value);
     this._childOptions.seriesLabels = question.rows.map((row: ItemValue) => row.text);
 
-    this.dataProvider.fixDropdownData(this.dataNames);
+    this.dataProvider.fixDropdownData(this.dataNames, this.valuePath);
     if(this.canGroupColumns) {
       var creators = VisualizationManager.getVisualizersByType("matrixdropdown-grouped");
       this._contentVisualizer = new creators[0](this.question, [], this._childOptions);
@@ -81,7 +84,7 @@ export class VisualizationMatrixDropdown extends VisualizerBase {
 
   updateData(data: Array<{ [index: string]: any }>) {
     super.updateData(data);
-    this.dataProvider.fixDropdownData(this.dataNames);
+    this.dataProvider.fixDropdownData(this.dataNames, this.valuePath);
   }
 
   getQuestions(): Array<Question> {

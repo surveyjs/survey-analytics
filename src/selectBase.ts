@@ -533,7 +533,10 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
   }
 
   protected onDataChanged(): void {
-    const filter = this.dataProvider.getFilters().find(f => f.field === this.dataNames[0]);
+    // A filter's field is the value path joined with "." (nested data, survey-library #12233). Inside records the filter
+    // belongs to the records key and holds a record-shaped value; the comparison by dataNames[0] is kept as before.
+    const field = this.recordsPath.length > 0 ? this.dataNames[0] : this.valuePath.join(".");
+    const filter = this.dataProvider.getFilters().find(f => f.field === field);
     const newFilterValue = filter?.value;
     const currentSelectionValue = this.selectedItem?.value;
     if(newFilterValue !== currentSelectionValue) {

@@ -12,6 +12,10 @@ export class VisualizationComposite extends VisualizationPanelDynamic {
     super(question, data, options, type || "composite");
   }
 
+  protected get hasFlatRecords(): boolean {
+    return true;
+  }
+
   getQuestions(): Array<Question> {
     const questionComposite: QuestionCompositeModel = <any>this.question;
     const innerQuestions = [];

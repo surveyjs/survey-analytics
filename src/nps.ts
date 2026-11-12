@@ -4,6 +4,8 @@ import { VisualizationManager } from "./visualizationManager";
 import { toPrecision } from "./utils";
 import { localization } from "./localizationManager";
 import { DocumentHelper } from "./utils/documentHelper";
+import { getNestedDataRows } from "./statisticCalculators";
+import { getValueByPath } from "./utils/dataPath";
 
 import "./nps.scss";
 
@@ -111,19 +113,23 @@ export class NpsVisualizer extends VisualizerBase {
       total: 0,
     };
 
-    this.data.forEach((row) => {
-      const rowValue: any = row[this.dataNames[0]];
-      const scoreValue = parseInt(rowValue);
-      if(!Number.isNaN(scoreValue)) {
-        if(scoreValue <= NpsVisualizer.DetractorScore) {
-          result.detractors++;
-        } else if(scoreValue >= NpsVisualizer.PromoterScore) {
-          result.promoters++;
-        } else {
-          result.passive++;
+    const recordsPath = this.recordsPath;
+    const valuePath = this.valuePath;
+    this.data.forEach((dataRow) => {
+      getNestedDataRows(dataRow, recordsPath).forEach(row => {
+        const rowValue: any = getValueByPath(row, valuePath);
+        const scoreValue = parseInt(rowValue);
+        if(!Number.isNaN(scoreValue)) {
+          if(scoreValue <= NpsVisualizer.DetractorScore) {
+            result.detractors++;
+          } else if(scoreValue >= NpsVisualizer.PromoterScore) {
+            result.promoters++;
+          } else {
+            result.passive++;
+          }
+          result.total++;
         }
-        result.total++;
-      }
+      });
     });
 
     return {
