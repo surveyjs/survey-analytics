@@ -7,6 +7,8 @@
   align-content: center;
   gap: 16px var(--sjs2-spacing-x200, 16px);
   flex-wrap: wrap;
+  min-width: 0;
+  container-type: inline-size;
 }
 
 .sa-date-range-container {
@@ -14,17 +16,22 @@
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
-  max-width: min-content;
+  width: min(100%, max-content);
+  min-width: 0;
 }
 
 .sa-date-range_editors {
   display: flex;
   align-items: center;
   gap: var(--sjs2-spacing-x150, 12px);
+  width: 100%;
+  min-width: 0;
 }
 
 .sa-date-range_editor {
   display: flex;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .sa-date-range_editor-formbox {
@@ -36,6 +43,8 @@
   align-items: flex-start;
   gap: var(--sjs2-layout-component-formbox-small-gap);
   align-self: stretch;
+  flex: 1 1 auto;
+  min-width: 0;
   border-radius: var(--sjs2-radius-form, 8px);
   background: var(--sjs2-color-component-formbox-default-bg, rgba(28, 27, 32, 0.05));
   box-shadow: var(--sjs2-border-effect-component-formbox-default);
@@ -147,18 +156,36 @@
   padding: var(--sjs2-layout-component-input-small-content-padding-vertical)
     var(--sjs2-layout-component-input-small-content-padding-horizontal);
   align-items: flex-start;
-  flex: 1 0 0;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .sa-date-range_editor-input {
-  flex: 1 0 auto;
-  min-width: max-content;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
   color: var(--sjs2-color-component-input-default-value, #1c1b20);
   background: transparent;
   border: none;
   outline: none;
 
   @include sjs2--typography--default;
+
+  &::-webkit-datetime-edit {
+    min-width: 0;
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    padding: 0;
+  }
+}
+
+// The native date text plus the calendar icon no longer fits. Drop the icon
+// and the extra padding so the date stays readable instead of being clipped.
+@container (max-width: 270px) {
+  .sa-date-range_editor-input::-webkit-calendar-picker-indicator {
+    display: none;
+  }
 }
 
 .sa-vertical-divider {
