@@ -811,6 +811,10 @@ export class SelectBase extends VisualizerBase implements IVisualizerWithSelecti
       labels = temp;
       values = this.getSeriesValues();
     }
+    if(colors.length > 0 && colors.length < labels.length) {
+      const palette = colors;
+      colors = labels.map((_, i) => palette[i % palette.length]);
+    }
 
     var texts = this.showPercentages ? this.getPercentages(datasets) : datasets;
 

@@ -279,6 +279,44 @@ test("change answers order", async () => {
   });
 });
 
+test("colors are repeated when choices exceed palette size and answers are sorted", async () => {
+  const question = new QuestionDropdownModel("q1");
+  const choiceCount = 20;
+  const data: Array<any> = [];
+  for(let i = 1; i <= choiceCount; i++) {
+    question.choices.push(new ItemValue("item" + i, "Item " + i));
+    for(let n = 0; n < i; n++) {
+      data.push({ q1: "item" + i });
+    }
+  }
+  const visualizer = new SelectBase(question, data, {});
+  const palette = visualizer.getColors();
+  expect(palette.length).toBeGreaterThan(0);
+  expect(palette.length).toBeLessThan(choiceCount);
+
+  const defaultData = await visualizer.getAnswersData();
+  const colorByLabel: { [label: string]: string } = {};
+  defaultData.labels.forEach((label, i) => colorByLabel[label] = palette[i % palette.length]);
+
+  for(const order of ["asc", "desc"]) {
+    visualizer.answersOrder = order;
+    const sortedData = await visualizer.getAnswersData();
+    expect(sortedData.colors.length).toBe(choiceCount);
+    sortedData.labels.forEach((label, i) => {
+      expect(sortedData.colors[i]).toBe(colorByLabel[label]);
+    });
+  }
+
+  visualizer.answersOrder = "default";
+  visualizer.hideEmptyAnswers = true;
+  visualizer.topN = 15;
+  const topNData = await visualizer.getAnswersData();
+  expect(topNData.colors.length).toBe(15);
+  topNData.labels.forEach((label, i) => {
+    expect(topNData.colors[i]).toBe(colorByLabel[label]);
+  });
+});
+
 test("check allowSelection option", () => {
   const question = new QuestionDropdownModel("q1");
   let visualizer = new SelectBase(question, [], {});
