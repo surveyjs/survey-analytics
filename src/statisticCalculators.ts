@@ -1,5 +1,6 @@
 import { DataProvider } from "./dataProvider";
 import { ICalculatedDataInfo, ICalculationResult, IDataInfo } from "./visualizerBase";
+import { toPrecision } from "./utils";
 
 export function defaultStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo): ICalculationResult {
   const dataNames = dataInfo.dataNames;
@@ -149,9 +150,12 @@ export function mathStatisticsCalculator(data: Array<any>, dataInfo: IDataInfo):
   });
 
   if(actualAnswerCount > 0) {
-    resultAverage = resultAverage / actualAnswerCount;
+    resultAverage = toPrecision(resultAverage / actualAnswerCount, 2);
+  } else {
+    // No answers: report zeros (same as the mongo number transformer) instead of the +/-Number.MAX_VALUE seeds
+    resultMin = 0;
+    resultMax = 0;
   }
-  resultAverage = Math.ceil(resultAverage * 100) / 100;
 
   return {
     data: [[resultAverage, resultMin, resultMax, data.length]],
