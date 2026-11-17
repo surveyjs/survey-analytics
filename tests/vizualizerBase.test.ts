@@ -215,3 +215,15 @@ test("theme chart colors override default colors", () => {
   visualizer.theme = theme;
   expect(visualizer.getColors()).toEqual(["#FF0000", "#00FF00", "#0000FF"]);
 });
+
+test("rendered root carries the theme root classes theme adapters target", () => {
+  // survey-core/themes/adapters/*.css map host variables onto --sjs2-* tokens under `.sjs-theme-overrides`.
+  const container = document.createElement("div");
+  document.body.appendChild(container);
+  const visualizer = new VisualizerBase(null, null);
+  visualizer.render(container);
+  expect(container.classList.contains("sd-theme-root")).toBe(true);
+  expect(container.classList.contains("sjs-theme-overrides")).toBe(true);
+  visualizer.destroy();
+  container.remove();
+});

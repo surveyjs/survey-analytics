@@ -67,7 +67,9 @@
   padding: var(--sjs2-layout-component-formbox-medium-padding-vertical)
     var(--sjs2-layout-component-formbox-medium-padding-horizontal);
   flex-grow: 1;
-  align-items: flex-start;
+  // Centered, not flex-start: theme adapters change the formbox/content paddings and line-height, so they
+  // no longer add up to the fixed height. With the default theme they do, and both alignments match.
+  align-items: center;
   gap: var(--sjs2-layout-component-formbox-medium-gap);
   align-self: stretch;
   width: 100%;
