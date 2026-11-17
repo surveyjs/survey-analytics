@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.2.6 (2026-11-17)
+
+
+### Features
+
+* **theme:** make the Dashboard work with survey-core theme adapters ([#884](https://github.com/surveyjs/survey-analytics/issues/884)) ([#895](https://github.com/surveyjs/survey-analytics/issues/895)) ([7aad276](https://github.com/surveyjs/survey-analytics/commit/7aad276dc04abc191f45a4e83b358cad276c1603))
+
 ### 3.2.5 (2026-11-11)
 
 
