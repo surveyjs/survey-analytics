@@ -267,3 +267,13 @@ test("gauge setup falls back to 0 and noData title for invalid values", () => {
   expect(config.data.labels[0]).toBe("No data");
   expect(config.data.datasets[0].data[0]).toBe(0);
 });
+
+test("bullet scale is not inverted when there are no answers", async () => {
+  const question: any = { type: "text", inputType: "number", name: "test" };
+  const model = new NumberModel(question, [{ }, { }]);
+
+  const config = ChartJsSetup.setupBullet(model, await model.getAnswersData());
+
+  expect(config.options.scales.x.min).toBe(0);
+  expect(config.options.scales.x.max).toBe(0);
+});

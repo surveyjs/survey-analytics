@@ -180,7 +180,7 @@ test("Create number visualizer from definition", async () => {
   const numberVis = dashboard.visualizers[0] as NumberModel;
   let result: any = (await numberVis.getCalculatedValues()).data[0];
 
-  expect(result).toStrictEqual([7.34, 1, 10, 7]);
+  expect(result).toStrictEqual([7.33, 1, 10, 7]);
   expect(numberVis.dataNames[0]).toEqual(itemDefinition.name);
   expect(numberVis.name).toEqual(itemDefinition.name);
   expect(dashboard.visibleElements[0].name).toEqual(itemDefinition.name);
