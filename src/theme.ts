@@ -43,6 +43,30 @@ const chartColorTintedCssVariableKeys = Array.from(
   (_, index) => `${chartColorCssVariablePrefix}${index + 1}-tinted`
 );
 
+let colorCanvasContext: CanvasRenderingContext2D | null;
+
+// getRGBaColor only understands what canvas `fillStyle` serializes as hex, rgba() or color(srgb ...).
+// Modern colors - oklch(), lab(), color-mix(in oklch, ...) used by the shadcn/ui and Tailwind CSS
+// theme adapters - stay in their own syntax there, and the chart engines (Chart.js, Plotly, ApexCharts)
+// cannot parse them. Painting one pixel converts any color the browser understands to sRGB.
+function toRgbaColor(color: string): string | null {
+  const rgbaColor = getRGBaColor(color);
+  if(rgbaColor || !color || typeof document === "undefined") return rgbaColor;
+  if(!colorCanvasContext) {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 1;
+    colorCanvasContext = canvas.getContext("2d", { willReadFrequently: true });
+  }
+  const ctx = colorCanvasContext;
+  if(!ctx || typeof ctx.getImageData !== "function") return rgbaColor;
+  ctx.clearRect(0, 0, 1, 1);
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, 1, 1);
+  const pixel = ctx.getImageData(0, 0, 1, 1).data;
+  if(!pixel || pixel.length < 4) return rgbaColor;
+  return `rgba(${pixel[0]}, ${pixel[1]}, ${pixel[2]}, ${Math.round(pixel[3] / 255 * 1000) / 1000})`;
+}
+
 const cssVariableKeys = Object.keys(cssVariableMap) as Array<keyof typeof cssVariableMap>;
 const usedCssVariableKeys: string[] = [
   ...cssVariableKeys.map(key => cssVariableMap[key]),
@@ -92,7 +116,7 @@ export class DashboardTheme implements ITheme {
         tempElement.style.setProperty("color", `var(${key})`);
         const computedStyle = getComputedStyle(tempElement);
         value = computedStyle.getPropertyValue("color");
-        value = getRGBaColor(value);
+        value = toRgbaColor(value);
       } else if(key.indexOf("font-family") === -1 && key.indexOf("opacity") === -1 && key.indexOf("scale") === -1) {
         tempElement.style.setProperty("width", `var(${key})`);
         const computedStyle = getComputedStyle(tempElement);
@@ -118,7 +142,10 @@ export class DashboardTheme implements ITheme {
       return;
     }
 
-    element.classList.add("sd-theme-root");
+    // Same root classes survey-core puts on a survey (css.rootTheme): theme adapters
+    // (survey-core/themes/adapters/*.css) map host design-system variables onto the
+    // --sjs2-* tokens under `.sjs-theme-overrides`, so without it they never reach the Dashboard.
+    element.classList.add("sd-theme-root", "sjs-theme-overrides");
     ensureBaseThemeStyles(element);
     DocumentHelper.setStyles(element, this.cssVariables);
     this._appliedCssVariableKeys = Object.keys(this.cssVariables);
