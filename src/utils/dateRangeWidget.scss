@@ -40,8 +40,7 @@
   padding: var(--sjs2-layout-component-formbox-small-padding-vertical)
     var(--sjs2-layout-component-formbox-small-padding-horizontal);
   height: var(--sjs2-size-small);
-  // Centered for theme adapters - see .sa-dropdown-header.
-  align-items: center;
+  align-items: flex-start;
   gap: var(--sjs2-layout-component-formbox-small-gap);
   align-self: stretch;
   flex: 1 1 auto;
