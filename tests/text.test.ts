@@ -61,6 +61,43 @@ test("multiple text visualizer", async () => {
   expect(data.length).toBe(3);
 });
 
+test("text table uses the survey scrollbar", async () => {
+  const question = new QuestionTextModel("feedback");
+  question.fromJSON({
+    "name": "feedback",
+    "type": "comment",
+    "title": "Feedback",
+  });
+  const text = new Text(question, [
+    { "feedback": "First answer" },
+    { "feedback": "Second answer" }
+  ]);
+  const container = document.createElement("div");
+  document.body.appendChild(container);
+  text.render(container);
+
+  await vi.waitFor(() => {
+    expect(container.querySelector(".sa-text-table")).toBeTruthy();
+  });
+
+  const table = container.querySelector(".sa-text-table");
+  const scroller = container.querySelector(".sv-scroll__scroller") as HTMLElement;
+  const scrollbar = container.querySelector(".sv-scroll__scrollbar") as HTMLElement;
+  expect(table.closest(".sv-scroll__container")).toBeTruthy();
+  expect(table.closest(".sv-scroll__wrapper")).toBeTruthy();
+  expect(scroller).toBeTruthy();
+  expect(scrollbar).toBeTruthy();
+  expect(scrollbar.querySelector(".sv-scroll__scrollbar-sizer")).toBeTruthy();
+
+  scroller.scrollTop = 40;
+  scroller.dispatchEvent(new Event("scroll"));
+  expect(scrollbar.scrollTop).toBe(40);
+
+  text.destroy();
+  expect(container.querySelector(".sv-scroll__wrapper")).toBeFalsy();
+  container.remove();
+});
+
 test("text visualizer - columns", async () => {
   const question = new QuestionTextModel("systolic");
   question.fromJSON({

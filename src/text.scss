@@ -9,7 +9,86 @@
   width: 100%;
   min-height: 200px;
   max-height: 500px;
-  overflow: auto;
+
+  > .sv-scroll__wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+    max-height: 500px;
+    height: auto;
+  }
+
+  .sv-scroll__scroller {
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-height: 200px;
+    max-height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .sv-scroll__scrollbar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    width: fit-content;
+    margin-inline-start: -1px;
+    visibility: hidden;
+    z-index: 30;
+    inset-inline-end: 0;
+    inset-inline-start: initial;
+
+    @-moz-document url-prefix() {
+      scrollbar-width: thin;
+      scrollbar-color: var(--sjs2-color-utility-scrollbar, rgba(17, 16, 20, 0.15)) transparent;
+    }
+
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-clip: padding-box;
+      border-radius: var(--sjs2-radius-round, 1024px);
+      background: var(--sjs2-color-utility-scrollbar, rgba(17, 16, 20, 0.15));
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+  }
+
+  .sv-scroll__wrapper:hover .sv-scroll__scrollbar {
+    visibility: visible;
+  }
+
+  .sv-scroll__scrollbar-sizer {
+    width: 1px;
+  }
+
+  .sv-scroll__container {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .sa-text-table {
@@ -28,6 +107,7 @@
   color: var(--sjs2-color-fg-basic-primary, #1c1b20);
   padding: var(--sjs2-spacing-x100, 8px) 0;
   border-bottom: var(--sjs2-border-width-x100, 1px) dashed var(--sjs2-color-border-basic-secondary, #d4d4d4);
+  overflow-wrap: anywhere;
 }
 
 .sa-text-table__cell--number {
