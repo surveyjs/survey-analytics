@@ -1,4 +1,4 @@
-import { Question, QuestionMultipleTextModel } from "survey-core";
+import { Question, QuestionMultipleTextModel, ScrollViewModel } from "survey-core";
 import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { VisualizationManager } from "./visualizationManager";
 import { localization } from "./localizationManager";
@@ -8,9 +8,12 @@ import { getNestedDataRows } from "./statisticCalculators";
 import "./text.scss";
 
 export class TextTableAdapter {
+  private scrollModel: ScrollViewModel;
+
   constructor(private model: Text) {}
 
   public async create(container: HTMLElement): Promise<void> {
+    this.releaseScroll();
     const answersData = await this.model.getAnswersData();
 
     if(answersData.datasets.length === 0 || answersData.datasets[0].length === 0) {
@@ -24,8 +27,6 @@ export class TextTableAdapter {
     const tableNode = <HTMLTableElement>(
       DocumentHelper.createElement("table", "sa-text-table")
     );
-
-    container.appendChild(tableNode);
 
     if(this.model.columns && this.model.columns.length > 0) {
       var row = DocumentHelper.createElement("tr");
@@ -51,11 +52,44 @@ export class TextTableAdapter {
     });
 
     container.className = "sa-text-table__container";
-    container.appendChild(tableNode);
+    const wrapper = DocumentHelper.createElement("div", "sv-scroll__wrapper");
+    const scroller = DocumentHelper.createElement("div", "sv-scroll__scroller");
+    const scrollContainer = DocumentHelper.createElement("div", "sv-scroll__container");
+    const scrollbar = DocumentHelper.createElement("div", "sv-scroll__scrollbar");
+    const sizer = DocumentHelper.createElement("div", "sv-scroll__scrollbar-sizer");
+    scrollContainer.appendChild(tableNode);
+    scroller.appendChild(scrollContainer);
+    scrollbar.appendChild(sizer);
+    wrapper.appendChild(scroller);
+    wrapper.appendChild(scrollbar);
+    container.appendChild(wrapper);
+
+    this.scrollModel = new ScrollViewModel();
+    scroller.addEventListener("scroll", () => this.scrollModel.onScrollContainer());
+    scrollbar.addEventListener("scroll", () => this.scrollModel.onScrollScrollbar());
+    // ScrollViewModel stores the sv-scroll elements, then attaches a ResizeObserver.
+    // jsdom has no ResizeObserver. The element refs are already stored when that constructor throws.
+    try {
+      this.scrollModel.setRootElement(wrapper);
+    } catch(error) {
+      if(typeof ResizeObserver !== "undefined") {
+        throw error;
+      }
+    }
+  }
+
+  private releaseScroll(): void {
+    if(!this.scrollModel) return;
+    this.scrollModel.unsubscribeRootElement();
+    this.scrollModel.setRootElement(undefined);
+    this.scrollModel = undefined;
   }
 
   public destroy(node: HTMLElement) {
-    node.innerHTML = "";
+    this.releaseScroll();
+    if(node) {
+      node.innerHTML = "";
+    }
   }
 }
 
