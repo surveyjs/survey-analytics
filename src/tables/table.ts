@@ -10,7 +10,7 @@ import {
 import { Details } from "./extensions/detailsextensions";
 import { localization } from "../localizationManager";
 import { ITableExtension, TableExtensions } from "./extensions/tableextensions";
-import { createCommercialLicenseLink } from "../utils";
+import { createLicenseBanner } from "../utils";
 import { ColumnsBuilderFactory } from "./columnbuilder";
 import { DefaultColumn } from "./columns";
 import { ITableOptions, ITable } from "./table-interfaces";
@@ -33,6 +33,8 @@ export abstract class Table implements ITable {
   protected tableData: any;
   protected extensions: TableExtensions;
   private haveCommercialLicense = false;
+  // Only the embedded banner can be closed, and only for the lifetime of this table
+  private isLicenseBannerClosed = false;
   protected _columns: Array<IColumn>;
   private _columnsByName: Map<string, IColumn> | null = null;
   constructor(
@@ -124,7 +126,10 @@ export abstract class Table implements ITable {
     // Table buttons get `data-sv-tooltip` while still detached; registering the render target also covers a shadow root host.
     initTooltips(targetNode);
     if(!this.haveCommercialLicense) {
-      targetNode.appendChild(createCommercialLicenseLink());
+      const banner = createLicenseBanner(this.isLicenseBannerClosed, () => { this.isLicenseBannerClosed = true; });
+      if(!!banner) {
+        targetNode.appendChild(banner);
+      }
     }
   }
 

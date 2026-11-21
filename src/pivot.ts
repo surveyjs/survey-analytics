@@ -1,6 +1,5 @@
 import { ItemValue, Question } from "survey-core";
 import { SelectBase } from "./selectBase";
-import { createCommercialLicenseLink } from "./utils";
 import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { localization } from "./localizationManager";
 import { VisualizationManager } from "./visualizationManager";
@@ -708,8 +707,8 @@ export class PivotModel extends HistogramModel {
   }
 
   protected renderBanner(container: HTMLElement): void {
-    if(!this.haveCommercialLicense && this.isRoot) {
-      this.attachBanner(container, createCommercialLicenseLink());
+    if(this.isRoot) {
+      this.renderLicenseBanner(container);
     }
     super.renderBanner(container);
   }

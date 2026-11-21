@@ -3,7 +3,7 @@ import { ITableOptions } from "./table-interfaces";
 import { SurveyModel, Event, Question, ItemValue, ITheme, mergeObjects, surveyLocalization } from "survey-core";
 import { ColumnDataType, IColumn, IColumnData, QuestionLocation } from "./config";
 import { DocumentHelper } from "../utils/documentHelper";
-import { stripHtml } from "../utils";
+import { placeEmbeddedLicenseBannerLast, stripHtml } from "../utils";
 import { localization } from "../localizationManager";
 import { ARIAL_FONT } from "./custom_jspdf_font";
 import { svgTemplate } from "../svgbundle";
@@ -222,6 +222,7 @@ export class Tabulator extends Table {
     container.appendChild(footer);
     wrapper.appendChild(container);
     targetNode.appendChild(wrapper);
+    placeEmbeddedLicenseBannerLast(targetNode);
 
     var config: any = {};
     Object.assign(

@@ -148,6 +148,8 @@ export var englishStrings = {
   aggregationSum: "Sum",
   aggregationAverage: "Average",
   close: "Close",
+  licenseEmbeddedPoweredBy: "Powered by",
+  licenseEmbeddedWhiteLabel: "White-label options",
   thousandsSuffix: "K",
   millionsSuffix: "M",
   billionsSuffix: "B"
