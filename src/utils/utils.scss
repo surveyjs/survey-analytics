@@ -39,6 +39,111 @@
   }
 }
 
+// The "embedded-<name>" banner: a small floating card in the bottom-left corner of the dashboard.
+// The host is the last child of the dashboard root: a zero-height strip that sticks to the bottom of the visible
+// part of the root, so the card takes no layout row and stays in view while the dashboard is scrolled.
+.sa-embedded-banner-host {
+  position: sticky;
+  bottom: 0;
+  z-index: 1001;
+  height: 0;
+  pointer-events: none;
+}
+
+.sa-embedded-banner {
+  position: absolute;
+  inset-inline-start: var(--sjs2-spacing-x075, 6px);
+  bottom: var(--sjs2-spacing-x075, 6px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sjs2-spacing-x150, 12px);
+  padding: var(--sjs2-spacing-x150, 12px);
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: var(--sjs2-radius-x150, 12px);
+  background-color: var(--sjs2-color-bg-basic-primary, #fff);
+  box-shadow: var(--sjs2-border-effect-floating-default, 0 4px 12px 0 rgba(0, 76, 68, 0.1));
+  pointer-events: auto;
+}
+
+.sa-embedded-banner__caption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sjs2-spacing-x075, 6px);
+  width: 100%;
+}
+
+.sa-embedded-banner__powered-by,
+.sa-embedded-banner__link {
+  @include sjs2--typography--small-strong;
+}
+
+.sa-embedded-banner__powered-by {
+  color: var(--sjs2-color-fg-basic-tertiary, rgba(28, 27, 32, 0.4));
+}
+
+// The SurveyJS logo sits in a 24px-high box, vertically centered
+.sa-embedded-banner__brand {
+  display: flex;
+  align-items: center;
+  height: var(--sjs2-size-x300, 24px);
+
+  svg {
+    width: var(--sjs2-size-x900, 72px);
+    height: var(--sjs2-size-x200, 16px);
+  }
+
+  use {
+    fill: var(--sjs2-color-project-brand-600, rgba(25, 179, 148, 1));
+  }
+}
+
+.sa-embedded-banner__link {
+  color: var(--sjs2-color-fg-basic-secondary, rgba(28, 27, 32, 0.6));
+  text-align: center;
+  text-decoration: underline;
+  text-decoration-thickness: 0.05em;
+  text-underline-offset: 0.15em;
+  white-space: nowrap;
+}
+
+.sa-embedded-banner__close {
+  position: absolute;
+  top: var(--sjs2-spacing-x050, 4px);
+  inset-inline-end: var(--sjs2-spacing-x050, 4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sjs2-spacing-x050, 4px);
+  margin: 0;
+  border: none;
+  border-radius: var(--sjs2-radius-component-action, 8px);
+  background-color: var(--sjs2-color-component-action-brand-quaternary-default-bg, transparent);
+  cursor: pointer;
+  outline: none;
+
+  svg {
+    width: var(--sjs2-size-x200, 16px);
+    height: var(--sjs2-size-x200, 16px);
+  }
+
+  use {
+    fill: var(--sjs2-color-component-action-brand-quaternary-default-icon, rgba(28, 27, 32, 0.4));
+  }
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--sjs2-color-component-action-brand-quaternary-hovered-bg, rgba(25, 179, 148, 0.1));
+
+    use {
+      fill: var(--sjs2-color-component-action-brand-quaternary-hovered-icon, #19b394);
+    }
+  }
+}
+
 // Dropdown
 .sa-dropdown,
 .sa-action-dropdown {

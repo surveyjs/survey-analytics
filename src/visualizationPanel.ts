@@ -3,7 +3,6 @@ import { IsTouch } from "survey-core";
 import { ICalculationResult, VisualizerBase } from "./visualizerBase";
 import { SelectBase, IVisualizerWithSelection, ISelectBaseVisualizerOptions } from "./selectBase";
 import { AlternativeVisualizersWrapper } from "./alternativeVizualizersWrapper";
-import { createCommercialLicenseLink } from "./utils/index";
 import { localization } from "./localizationManager";
 import { IVisualizerPanelElement, IState, IPermission } from "./config";
 import { FilterInfo } from "./filterInfo";
@@ -979,8 +978,8 @@ export class VisualizationPanel<P extends PanelElement = PanelElement> extends V
   }
 
   protected renderBanner(container: HTMLElement): void {
-    if(!this.haveCommercialLicense && this._isRoot) {
-      this.attachBanner(container, createCommercialLicenseLink());
+    if(this._isRoot) {
+      this.renderLicenseBanner(container);
     }
     super.renderBanner(container);
   }

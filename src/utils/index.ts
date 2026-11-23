@@ -1,4 +1,4 @@
-import { glc } from "survey-core";
+import { glc, getEmbeddedLicense, IEmbeddedLicense } from "survey-core";
 import { localization } from "../localizationManager";
 import { DocumentHelper } from "./documentHelper";
 
@@ -28,6 +28,72 @@ export function createCommercialLicenseLink() {
   container.appendChild(link).appendChild(containerSpan);
   containerSpan.appendChild(textSpan);
   return container;
+}
+
+const embeddedLicenseBannerClassName = "sa-embedded-banner-host";
+
+function getEmbeddedLicenseInfo(): IEmbeddedLicense | undefined {
+  const f = getEmbeddedLicense;
+  return (!!f && f()) || undefined;
+}
+
+// The "embedded-<name>" banner: a small floating card in the bottom-left corner of the dashboard instead of a full-width row.
+// The host is a zero-height strip that sticks to the bottom of the visible part of the dashboard (see placeEmbeddedLicenseBannerLast),
+// so the banner takes no layout space and everything outside the card stays interactive.
+function createEmbeddedLicenseBanner(info: IEmbeddedLicense, onClose: () => void): HTMLElement {
+  const host = DocumentHelper.createElement("div", embeddedLicenseBannerClassName);
+  const banner = DocumentHelper.createElement("div", "sa-embedded-banner");
+  const caption = DocumentHelper.createElement("div", "sa-embedded-banner__caption");
+  const poweredBy = DocumentHelper.createElement("span", "sa-embedded-banner__powered-by", { textContent: localization.getString("licenseEmbeddedPoweredBy") });
+  const brand = DocumentHelper.createElement("span", "sa-embedded-banner__brand");
+  brand.setAttribute("role", "img");
+  brand.setAttribute("aria-label", "SurveyJS");
+  brand.appendChild(DocumentHelper.createSvgElement("logo-surveyjs-72x16"));
+  caption.appendChild(poweredBy);
+  caption.appendChild(brand);
+
+  const link = DocumentHelper.createElement("a", "sa-embedded-banner__link", {
+    href: info.whiteLabelUrl,
+    target: "_blank",
+    rel: "noopener noreferrer",
+    textContent: localization.getString("licenseEmbeddedWhiteLabel")
+  });
+
+  const closeText = localization.getString("close");
+  const closeButton = DocumentHelper.createElement("button", "sa-embedded-banner__close", { type: "button", title: closeText });
+  closeButton.setAttribute("aria-label", closeText);
+  closeButton.appendChild(DocumentHelper.createSvgElement("close-tiny-16x16"));
+  closeButton.onclick = () => {
+    if(!!host.parentNode) host.parentNode.removeChild(host);
+    onClose();
+  };
+
+  banner.appendChild(caption);
+  banner.appendChild(link);
+  banner.appendChild(closeButton);
+  host.appendChild(banner);
+  return host;
+}
+
+// Returns the banner an unlicensed component shows: the regular banner, or the embedded card for the "embedded-<name>" marker.
+// Only the embedded card can be closed; `isClosed` is the owner's record of that, and `onClose` lets the owner update it.
+// Returns undefined when the embedded card was closed.
+export function createLicenseBanner(isClosed: boolean, onClose: () => void): HTMLElement | undefined {
+  const info = getEmbeddedLicenseInfo();
+  if(!info) return createCommercialLicenseLink();
+  if(isClosed) return undefined;
+  return createEmbeddedLicenseBanner(info, onClose);
+}
+
+// position: sticky keeps the embedded card at the bottom only if it follows the content, so call it after the content is attached.
+export function placeEmbeddedLicenseBannerLast(container: HTMLElement): void {
+  const children = container.children;
+  for(let i = 0; i < children.length; i++) {
+    if(children[i].classList.contains(embeddedLicenseBannerClassName)) {
+      container.appendChild(children[i]);
+      return;
+    }
+  }
 }
 
 export function stripHtml(text: string): string {

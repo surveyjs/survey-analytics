@@ -2,7 +2,7 @@ import { Question, QuestionCommentModel, Event, settings, hasLicense, ITheme, me
 import { DataProvider, GetDataFn } from "./dataProvider";
 import { VisualizerFactory } from "./visualizerFactory";
 import { VisualizationManager } from "./visualizationManager";
-import { createLoadingIndicator, getDiffsFromDefaults } from "./utils";
+import { createLicenseBanner, createLoadingIndicator, getDiffsFromDefaults, placeEmbeddedLicenseBannerLast } from "./utils";
 import { localization } from "./localizationManager";
 import { defaultStatisticsCalculator } from "./statisticCalculators";
 import { DashboardTheme } from "./theme";
@@ -127,6 +127,8 @@ export class VisualizerBase implements IDataInfo {
   protected footerContainer: HTMLElement = undefined;
   protected bannerContainer: HTMLElement = undefined;
   protected wrapperContainer: HTMLElement = undefined;
+  // Only the embedded banner can be closed, and only for the lifetime of this visualizer
+  private isLicenseBannerClosed: boolean = false;
   protected _supportSelection: boolean = false;
   protected _chartAdapter: IChartAdapter = undefined;
   // public static otherCommentQuestionType = "comment"; // TODO: make it configureable - allow choose what kind of question/visualizer will be used for comments/others
@@ -615,6 +617,17 @@ export class VisualizerBase implements IDataInfo {
     container.appendChild(banner);
   }
 
+  protected renderLicenseBanner(container: HTMLElement): void {
+    if(this.haveCommercialLicense) return;
+    const banner = createLicenseBanner(this.isLicenseBannerClosed, () => {
+      this.isLicenseBannerClosed = true;
+      this.bannerContainer = undefined;
+    });
+    if(!!banner) {
+      this.attachBanner(container, banner);
+    }
+  }
+
   public getSortedToolbarItemCreators(): Array<any> {
     const toolbarItemCreators = this.getToolbarItemCreators();
 
@@ -845,6 +858,7 @@ export class VisualizerBase implements IDataInfo {
     if(isRoot) {
       this.wrapperContainer = DocumentHelper.createElement("div", "sa-visualizer-wrapper");
       targetElement.appendChild(this.wrapperContainer);
+      placeEmbeddedLicenseBannerLast(targetElement);
       container = this.wrapperContainer;
     } else {
       container.className = "sa-visualizer";
