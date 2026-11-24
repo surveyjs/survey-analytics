@@ -1,0 +1,49 @@
+name: API gap
+description: You had to work around SurveyJS Dashboard in your application code. Tell us which API you expected instead.
+title: "[API gap] "
+labels: ["api-gap", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        SurveyJS adds small API improvements (a property, an event, an option) quickly, often in the next weekly release.
+        Please don't include application code beyond the workaround, credentials or real data.
+        Form Library issues go to https://github.com/surveyjs/survey-library/issues. Survey Creator issues go to https://github.com/surveyjs/survey-creator/issues.
+  - type: input
+    id: version
+    attributes:
+      label: Package and version
+      description: For example, survey-analytics 3.2.7 and survey-core 3.2.7. Mention the charting engine (Chart.js, Plotly.js or ApexCharts) if it matters.
+      placeholder: survey-analytics 3.2.7, survey-core 3.2.7, Chart.js
+    validations:
+      required: true
+  - type: textarea
+    id: need
+    attributes:
+      label: What you needed
+      description: What were you trying to do?
+    validations:
+      required: true
+  - type: textarea
+    id: workaround
+    attributes:
+      label: The workaround you wrote
+      description: Private members, prototype patches, overridden visualizer internals, DOM or CSS changes inside Dashboard markup, timers that wait for the dashboard to render, and so on.
+      render: ts
+    validations:
+      required: true
+  - type: textarea
+    id: expected-api
+    attributes:
+      label: The API you expected
+      description: A property, an event, a method or an option, and how you would call it.
+    validations:
+      required: true
+  - type: textarea
+    id: json
+    attributes:
+      label: Minimal survey JSON and data
+      description: The smallest survey JSON, a few response objects and the Dashboard options that show the case.
+      render: json
+    validations:
+      required: false

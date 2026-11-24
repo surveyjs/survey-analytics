@@ -1,0 +1,42 @@
+name: Bug report
+description: SurveyJS Dashboard behaves incorrectly.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please don't include application code, credentials or real data. Reduce the case to a minimal survey JSON, a few response objects and the Dashboard calls that reproduce it.
+        Form Library issues go to https://github.com/surveyjs/survey-library/issues. Survey Creator issues go to https://github.com/surveyjs/survey-creator/issues. Report security issues by email to info@devsoftbaltic.com, not in public issues.
+  - type: input
+    id: versions
+    attributes:
+      label: Package versions, charting engine and framework
+      description: For example, survey-analytics 3.2.7, survey-core 3.2.7, Chart.js, React 19.
+      placeholder: survey-analytics 3.2.7, survey-core 3.2.7, Chart.js, React 19
+    validations:
+      required: true
+  - type: textarea
+    id: json
+    attributes:
+      label: Minimal survey JSON and data
+      description: The smallest survey JSON, response data and Dashboard options that reproduce the bug.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Render the dashboard.
+        2. Switch the question1 chart to "pie".
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected-actual
+    attributes:
+      label: Expected vs. actual behavior
+      description: What you expected to happen, and what happened instead.
+    validations:
+      required: true
