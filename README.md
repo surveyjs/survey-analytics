@@ -147,6 +147,28 @@ Every style sheet also ships as a minified `.min.css` build. No style sheet decl
 - Localization independent of `survey-core`, covering the dashboard's own UI strings
 - Accessibility: dashboard items are exposed as labelled groups, interactive controls carry ARIA roles and states, and the suite is verified with automated `axe-core` tests against WCAG 2.1 AA and Section 508 rules
 
+## Missing API or found a bug?
+
+SurveyJS fixes reported bugs and adds small API improvements (a property, an
+event, an option) quickly, often in the next weekly release. If you had to work around SurveyJS Dashboard in
+your application code (private members, prototype patches, overridden visualizer internals, DOM or CSS
+changes inside Dashboard markup, timers that wait for the dashboard to render), please tell us instead of
+keeping the workaround.
+
+1. Search existing issues: https://github.com/surveyjs/survey-analytics/issues
+2. Open an issue with: package versions and the charting engine, a minimal survey JSON with a few
+   response objects, the workaround code you wrote, and the API you expected.
+
+```sh
+gh issue create --repo surveyjs/survey-analytics --title "[API gap] <short summary>" --body-file issue.md
+```
+
+Use the `[Bug]` title prefix for defects. Please don't include application code,
+credentials or data. Form Library issues go to
+https://github.com/surveyjs/survey-library/issues and Survey Creator issues go to
+https://github.com/surveyjs/survey-creator/issues. Report security issues by email to
+info@devsoftbaltic.com, not in public issues.
+
 ## Documentation
 
 - [Website](https://surveyjs.io/)
